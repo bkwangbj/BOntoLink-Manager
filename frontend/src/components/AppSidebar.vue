@@ -206,7 +206,8 @@ export default {
   flex-shrink: 0;
   overflow: hidden;
 }
-.sidebar.is-collapsed { width: var(--bl-sidebar-w-collapsed); }
+.sidebar.is-collapsed { width: var(--bl-sidebar-w-collapsed); overflow: visible; }
+.sidebar.is-collapsed .nav { overflow-x: visible; }
 
 .domain-picker {
   margin: 8px;
@@ -262,6 +263,22 @@ export default {
   position: relative;
 }
 .collapse-btn { flex-shrink: 0; }
+
+/* 折叠态：纵向堆叠 - 用户头像在上，折叠按钮在下 */
+.sidebar.is-collapsed .footer {
+  flex-direction: column-reverse;
+  align-items: stretch;
+  gap: 6px;
+  padding: 8px 6px;
+}
+.sidebar.is-collapsed .user-row {
+  flex: 0 0 auto;
+  justify-content: center;
+  padding: 6px 4px;
+}
+.sidebar.is-collapsed .collapse-btn {
+  align-self: center;
+}
 .user-row {
   display: flex; align-items: center; gap: 8px;
   flex: 1; min-width: 0;
@@ -286,6 +303,16 @@ export default {
   width: auto;
   max-width: none;
   padding: 6px;
+  z-index: 100;
+}
+/* 折叠态：弹出菜单从侧栏右侧浮出，避免被压扁 */
+.sidebar.is-collapsed .user-menu {
+  left: 100%;
+  right: auto;
+  bottom: 0;
+  margin-left: 6px;
+  margin-bottom: 0;
+  width: 260px;
 }
 .user-card {
   display: flex; align-items: center; gap: 10px;

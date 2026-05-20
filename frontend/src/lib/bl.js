@@ -3,6 +3,7 @@
  * 遵循 UI 规范：禁止原生 alert/confirm；toast/confirm/drawer 统一走 BL.*
  */
 import { h, render } from 'vue'
+import * as antdIcons from '@ant-design/icons-svg'
 
 /* ---------- ICON ---------- */
 // 仅描边风格，与规范保持一致。补齐业务图标供 BL.icon(name) 调用
@@ -225,10 +226,119 @@ const ICONS = {
   ribbon:    'M19 21l-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z'
 }
 
+/* ---------- Ant Design Icons (阿里图标) ---------- */
+// 解析 antd:xxx / antd:xxx:f / antd:xxx:tt → IconDefinition
+function pascal(kebab) {
+  return kebab.split('-').map(s => s ? s[0].toUpperCase() + s.slice(1) : '').join('')
+}
+function resolveAntdDef(name) {
+  if (!name || typeof name !== 'string') return null
+  // 支持两种写法： 'antd:database' / 'antd:database:f' / 'antd:database:tt' / 'antd:database:o'
+  const m = name.match(/^antd:([a-z0-9-]+)(?::(o|f|tt|outlined|filled|twotone))?$/i)
+  if (!m) return null
+  const base = m[1]
+  const tag = (m[2] || 'o').toLowerCase()
+  const theme = (tag === 'f' || tag === 'filled') ? 'Filled'
+              : (tag === 'tt' || tag === 'twotone') ? 'TwoTone'
+              : 'Outlined'
+  const key = pascal(base) + theme
+  return antdIcons[key] || null
+}
+// 把 antd IconDefinition 渲染成 SVG 字符串
+function renderAntdIcon(def, size, color) {
+  const root = def.icon
+  const viewBox = (root.attrs && root.attrs.viewBox) || '64 64 896 896'
+  const fill = color || 'currentColor'
+  const renderNode = (node) => {
+    const attrs = Object.entries(node.attrs || {})
+      .filter(([k]) => k !== 'focusable')
+      .map(([k, v]) => `${k}="${String(v).replace(/"/g, '&quot;')}"`)
+      .join(' ')
+    const kids = (node.children || []).map(renderNode).join('')
+    return kids
+      ? `<${node.tag}${attrs ? ' ' + attrs : ''}>${kids}</${node.tag}>`
+      : `<${node.tag}${attrs ? ' ' + attrs : ''}/>`
+  }
+  const inner = (root.children || []).map(renderNode).join('')
+  return `<svg width="${size}" height="${size}" viewBox="${viewBox}" fill="${fill}" aria-hidden="true">${inner}</svg>`
+}
+
+// 已注册的 antd 图标名（kebab-case）— 仅含 Outlined，给图标选择器使用
+const ANTD_OUTLINED_NAMES = Object.keys(antdIcons)
+  .filter(k => k.endsWith('Outlined'))
+  .map(k => k.slice(0, -8).replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/([A-Z])([A-Z][a-z])/g, '$1-$2').toLowerCase())
+const ANTD_FILLED_NAMES = Object.keys(antdIcons)
+  .filter(k => k.endsWith('Filled'))
+  .map(k => k.slice(0, -6).replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/([A-Z])([A-Z][a-z])/g, '$1-$2').toLowerCase())
+const ANTD_TWOTONE_NAMES = Object.keys(antdIcons)
+  .filter(k => k.endsWith('TwoTone'))
+  .map(k => k.slice(0, -7).replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/([A-Z])([A-Z][a-z])/g, '$1-$2').toLowerCase())
+
+export function antdIconNames(theme = 'outlined') {
+  if (theme === 'filled') return ANTD_FILLED_NAMES.slice()
+  if (theme === 'twotone') return ANTD_TWOTONE_NAMES.slice()
+  return ANTD_OUTLINED_NAMES.slice()
+}
+
+/* ---------- Custom icons (用户自定义 / 上传 SVG) ---------- */
+// localStorage 持久化结构：
+// { groups: [{ key, label, iconIds: [] }], icons: { [id]: { name, viewBox, content } } }
+const CUSTOM_STORAGE_KEY = 'bl.iconlib.custom.v1'
+function loadCustomData() {
+  try {
+    const raw = localStorage.getItem(CUSTOM_STORAGE_KEY)
+    if (!raw) return { groups: [], icons: {} }
+    const d = JSON.parse(raw)
+    return {
+      groups: Array.isArray(d.groups) ? d.groups : [],
+      icons: (d.icons && typeof d.icons === 'object') ? d.icons : {}
+    }
+  } catch { return { groups: [], icons: {} } }
+}
+function saveCustomData(d) {
+  try { localStorage.setItem(CUSTOM_STORAGE_KEY, JSON.stringify(d)) } catch {}
+}
+let CUSTOM = loadCustomData()
+const customListeners = new Set()
+export function getCustomIconData() {
+  return JSON.parse(JSON.stringify(CUSTOM))
+}
+export function setCustomIconData(next) {
+  CUSTOM = next
+  saveCustomData(CUSTOM)
+  customListeners.forEach(fn => { try { fn(CUSTOM) } catch {} })
+}
+export function onCustomIconsChange(fn) {
+  customListeners.add(fn)
+  return () => customListeners.delete(fn)
+}
+function resolveCustomIcon(name) {
+  if (!name || typeof name !== 'string') return null
+  const m = name.match(/^custom:(.+)$/)
+  if (!m) return null
+  return CUSTOM.icons[m[1]] || null
+}
+
 export function blIcon(name, size = 16, color) {
-  const d = ICONS[name] || ICONS.cube
+  // 1) 兼容已有内置图标（描边风格）
+  if (name && Object.prototype.hasOwnProperty.call(ICONS, name)) {
+    const stroke = color || 'currentColor'
+    return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${ICONS[name]}"></path></svg>`
+  }
+  // 2) Ant Design 图标（阿里图标库）
+  const def = resolveAntdDef(name)
+  if (def) return renderAntdIcon(def, size, color)
+  // 3) 用户自定义上传图标
+  const custom = resolveCustomIcon(name)
+  if (custom) {
+    const vb = custom.viewBox || '0 0 1024 1024'
+    const c = color || 'currentColor'
+    // 同时设置 fill 属性（被无 fill 的子元素继承）与 CSS color（用于解析 currentColor）
+    return `<svg width="${size}" height="${size}" viewBox="${vb}" fill="${c}" style="color:${c}" aria-hidden="true">${custom.content || ''}</svg>`
+  }
+  // 4) 回退
   const stroke = color || 'currentColor'
-  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"></path></svg>`
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${ICONS.cube}"></path></svg>`
 }
 export function blIconPath(name) { return ICONS[name] || ICONS.cube }
 
@@ -281,6 +391,65 @@ function confirm({ title = '操作确认', content = '', okText = '确定', canc
   })
 }
 
+/* ---------- PROMPT ---------- */
+function prompt({
+  title = '请输入',
+  label = '',
+  placeholder = '',
+  defaultValue = '',
+  okText = '确定',
+  cancelText = '取消',
+  validate = null   // (value) => true | string(错误信息)
+} = {}) {
+  return new Promise(resolve => {
+    const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]))
+    const mask = document.createElement('div')
+    mask.className = 'bl-modal-mask'
+    mask.innerHTML = `
+      <div class="bl-modal bl-prompt" role="dialog">
+        <div class="bl-modal-hd">${esc(title)}</div>
+        <div class="bl-modal-body">
+          ${label ? `<div class="bl-prompt-label">${esc(label)}</div>` : ''}
+          <input class="bl-input bl-prompt-input" placeholder="${esc(placeholder)}" value="${esc(defaultValue)}" />
+          <div class="bl-prompt-err" style="display:none"></div>
+        </div>
+        <div class="bl-modal-ft">
+          <button class="bl-btn" data-act="cancel">${esc(cancelText)}</button>
+          <button class="bl-btn bl-btn-primary" data-act="ok">${esc(okText)}</button>
+        </div>
+      </div>`
+    document.body.appendChild(mask)
+    const input = mask.querySelector('.bl-prompt-input')
+    const errEl = mask.querySelector('.bl-prompt-err')
+    const cleanup = (val) => { document.removeEventListener('keydown', onKey); mask.remove(); resolve(val) }
+    const tryOk = () => {
+      const v = input.value
+      if (typeof validate === 'function') {
+        const r = validate(v)
+        if (r !== true && r != null) {
+          errEl.textContent = String(r || '输入无效')
+          errEl.style.display = 'block'
+          input.focus()
+          return
+        }
+      }
+      cleanup(v)
+    }
+    const onKey = (e) => {
+      if (e.key === 'Escape') { e.preventDefault(); cleanup(null) }
+      else if (e.key === 'Enter') { e.preventDefault(); tryOk() }
+    }
+    document.addEventListener('keydown', onKey)
+    mask.addEventListener('click', e => {
+      const act = e.target?.dataset?.act
+      if (act === 'ok') tryOk()
+      else if (act === 'cancel' || e.target === mask) cleanup(null)
+    })
+    // 自动聚焦并选中默认值
+    setTimeout(() => { input.focus(); input.select() }, 0)
+  })
+}
+
 export const BL = {
   icon: blIcon,
   iconPath: blIconPath,
@@ -289,5 +458,6 @@ export const BL = {
   warning: (m) => toast(m, 'warning'),
   error:   (m) => toast(m, 'error'),
   info:    (m) => toast(m, 'info'),
-  confirm
+  confirm,
+  prompt
 }

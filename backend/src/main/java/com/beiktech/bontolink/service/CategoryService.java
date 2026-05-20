@@ -145,6 +145,8 @@ public class CategoryService {
             leaf.put("industryColor", ind.getColor());
             leaf.put("industryNsCode", ind.getNsCode());
             leaf.put("objectCount", s.get("classCount"));
+            leaf.put("linkCount", s.get("linkCount"));
+            leaf.put("propertyCount", s.get("propertyCount"));
             leaf.put("version", "1.0");
             leaves.add(leaf);
         }

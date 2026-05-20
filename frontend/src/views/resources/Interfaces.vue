@@ -25,6 +25,7 @@
     <div :class="['two-pane', !drawerOpen && 'no-detail']">
       <!-- 列表 -->
       <div class="bl-card list-card">
+        <div class="list-scroll">
         <table class="bl-table if-table">
           <thead>
             <tr>
@@ -72,6 +73,7 @@
           <div style="margin-top:12px">
             <button class="bl-btn" @click="clearFilters">清除筛选</button>
           </div>
+        </div>
         </div>
         <!-- 分页 + 批量条 -->
         <div class="list-ft">
@@ -518,7 +520,9 @@ onMounted(async () => {
 }
 .two-pane.no-detail { grid-template-columns: 1fr; }
 .list-card { flex: 1; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.list-scroll { flex: 1; min-height: 0; overflow: auto; }
 .list-ft {
+  flex-shrink: 0;
   padding: 8px 12px; border-top: 1px solid var(--bl-divider);
   display: flex; justify-content: space-between; align-items: center;
   font-size: var(--bl-fs-12);

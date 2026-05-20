@@ -1,6 +1,6 @@
 <template>
   <transition name="modal-fade">
-    <div v-if="app.domainPickerOpen" class="dom-mask" @click.self="cancel">
+    <div v-if="app.domainPickerOpen" class="dom-mask" :style="{ left: sidebarLeftOffset }" @click.self="cancel">
       <div class="dom-modal">
         <!-- Header -->
         <header class="dom-hd">
@@ -27,9 +27,11 @@
             <div v-else class="dom-top-empty">请在下方选择参与的工作领域</div>
           </div>
           <div class="dom-top-act">
-            <span class="bl-muted" style="font-size:12px">已选 <b style="color:var(--bl-primary)">{{ chosen.length }}</b> 个领域</span>
-            <button class="bl-btn" @click="clearAll" :disabled="!chosen.length">清空</button>
-            <button class="bl-btn bl-btn-primary" @click="confirm">确认</button>
+            <div class="dom-top-act-btns">
+              <button class="bl-btn" @click="clearAll" :disabled="!chosen.length">清空</button>
+              <button class="bl-btn bl-btn-primary" @click="confirm">确认</button>
+            </div>
+            <span class="dom-top-act-count">已选 <b style="color:var(--bl-primary)">{{ chosen.length }}</b> 个领域</span>
           </div>
         </section>
 
@@ -70,10 +72,9 @@
                   <div class="leaf-desc bl-truncate" :title="leaf.description || ''">{{ leaf.description || '—' }}</div>
                   <div class="leaf-meta">
                     <span><b>{{ leaf.objectCount || 0 }}</b> 个对象</span>
-                    <span class="bl-mono bl-muted">{{ leaf.categoryCode }}</span>
-                    <span class="bl-tag" style="font-size:11px">v{{ leaf.version }}</span>
+                    <span><b>{{ leaf.linkCount || 0 }}</b> 个关系</span>
+                    <span><b>{{ leaf.propertyCount || 0 }}</b> 个属性</span>
                   </div>
-                  <div class="leaf-rid bl-mono bl-muted bl-truncate" :title="leaf.rid">{{ leaf.rid }}</div>
                 </div>
                 <div class="leaf-check">
                   <span v-if="isChosen(leaf)" class="check-on" v-html="BL.icon('check', 12, '#fff')"></span>
@@ -97,6 +98,7 @@ import { nodeProfile } from '@/lib/domain.js'
 import PickerNode from './DomainPickerNode.vue'
 
 const app = useAppStore()
+const sidebarLeftOffset = computed(() => app.sidebarCollapsed ? 'var(--bl-sidebar-w-collapsed)' : 'var(--bl-sidebar-w)')
 const tree = ref([])
 const leaves = ref([])
 const treeExpanded = ref(new Set())
@@ -207,21 +209,42 @@ function cancel() { app.closeDomainPicker() }
 
 <style scoped>
 .dom-mask {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.36);
+  position: fixed;
+  top: var(--bl-topbar-h);
+  right: 0;
+  bottom: 0;
+  /* left 由组件根据 sidebar 折叠状态动态注入 */
+  background: transparent;
+  pointer-events: none;
   z-index: 1300;
-  display: flex; align-items: flex-start; justify-content: center;
-  padding-top: 4vh;
-  overflow: auto;
+  display: flex; align-items: stretch; justify-content: flex-start;
+  padding: 8px 0 8px 6px;
+  transition: left .18s ease;
+  overflow: hidden;
 }
 .dom-modal {
-  width: 1080px; max-width: 96vw;
-  height: 86vh; max-height: 800px;
+  pointer-events: auto;
+  width: 980px; max-width: calc(100% - 24px);
+  height: 100%;
   background: var(--bl-bg-1);
+  border: 1px solid var(--bl-border);
   border-radius: var(--bl-radius-3);
   box-shadow: var(--bl-shadow-3);
   display: flex; flex-direction: column;
   overflow: hidden;
+  position: relative;
+}
+/* 左侧小三角，指向 sidebar 上的触发按钮 */
+.dom-modal::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: -7px;
+  width: 12px; height: 12px;
+  background: var(--bl-bg-1);
+  border-left: 1px solid var(--bl-border);
+  border-bottom: 1px solid var(--bl-border);
+  transform: rotate(45deg);
 }
 .dom-hd {
   height: 52px; padding: 0 16px;
@@ -257,7 +280,13 @@ function cancel() { app.closeDomainPicker() }
   width: 100%; text-align: center;
 }
 .dom-top-act {
-  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0;
+}
+.dom-top-act-btns { display: flex; align-items: center; gap: 8px; }
+.dom-top-act-count {
+  font-size: 12px;
+  color: var(--bl-text-3);
+  align-self: flex-start;
 }
 .chip {
   display: flex; align-items: center; gap: 8px;
@@ -345,7 +374,7 @@ function cancel() { app.closeDomainPicker() }
   cursor: pointer;
   transition: border-color .15s, background-color .15s;
   position: relative;
-  min-height: 90px;
+  min-height: 80px;
 }
 .leaf-card:hover { border-color: var(--bl-primary); }
 .leaf-card.is-chosen {

@@ -1,6 +1,6 @@
 .claude/
-app/frontend/dist/
-app/frontend/node_modules/
+frontend/dist/
+frontend/node_modules/
 .vscode/
 .env
 .env.local

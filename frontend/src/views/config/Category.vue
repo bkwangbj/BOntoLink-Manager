@@ -250,11 +250,11 @@
                   {{ selected.status===1 ? '启用' : '禁用' }}
                 </span>
               </FieldRow>
-              <FieldRow label="标准名" hint="rdfs:label · 知识图谱通用标准显示名"><input class="bl-input" v-model="editForm.rdfsLabel" @change="saveBasic" /></FieldRow>
-              <FieldRow label="注释" hint="rdfs:comment · 给大模型 / 推理引擎 / 开发者看的正式语义定义"><textarea class="bl-textarea" rows="3" v-model="editForm.rdfsComment" @change="saveBasic"></textarea></FieldRow>
-              <FieldRow label="参考资料" hint="rdfs:seeAlso · 关联文档 / 链接 / 参考出处"><input class="bl-input" v-model="editForm.rdfsSeeAlso" @change="saveBasic" /></FieldRow>
-              <FieldRow label="定义来源" hint="rdfs:isDefinedBy · 该本体资源的权威定义出处、归属规范"><input class="bl-input" v-model="editForm.rdfsDefinedBy" @change="saveBasic" /></FieldRow>
-              <FieldRow label="说明"><textarea class="bl-textarea" rows="3" v-model="editForm.description" @change="saveBasic"></textarea></FieldRow>
+              <FieldRow label="标准名" hint="rdfs:label · 知识图谱通用标准显示名"><input class="bl-input" v-model="editForm.rdfsLabel" /></FieldRow>
+              <FieldRow label="注释" hint="rdfs:comment · 给大模型 / 推理引擎 / 开发者看的正式语义定义"><textarea class="bl-textarea" rows="3" v-model="editForm.rdfsComment"></textarea></FieldRow>
+              <FieldRow label="参考资料" hint="rdfs:seeAlso · 关联文档 / 链接 / 参考出处"><input class="bl-input" v-model="editForm.rdfsSeeAlso" /></FieldRow>
+              <FieldRow label="定义来源" hint="rdfs:isDefinedBy · 该本体资源的权威定义出处、归属规范"><input class="bl-input" v-model="editForm.rdfsDefinedBy" /></FieldRow>
+              <FieldRow label="说明"><textarea class="bl-textarea" rows="3" v-model="editForm.description"></textarea></FieldRow>
               <div class="id-row">
                 <span class="id-lbl">ID</span>
                 <span class="id-val bl-mono bl-muted" :title="selected.id">{{ selected.id }}</span>
@@ -264,6 +264,9 @@
                 <span class="id-lbl">RID</span>
                 <span class="id-val bl-mono bl-muted" :title="selected.rid">{{ selected.rid }}</span>
                 <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="复制 RID" @click="copyText(selected.rid)" v-html="BL.icon('copy', 12)"></button>
+              </div>
+              <div class="tab-save-bar">
+                <button class="bl-btn bl-btn-primary" @click="saveBasic">保存</button>
               </div>
             </div>
 
@@ -489,11 +492,55 @@
         </div>
         <div class="bl-modal-body ip-body">
           <aside class="ip-side">
-            <div v-for="cat in ICON_CATEGORIES" :key="cat.key"
-                 :class="['ip-cat', iconCat===cat.key && 'is-active']"
-                 @click="iconCat = cat.key">
-              <span>{{ cat.label }}</span>
-              <span class="ip-cat-count">{{ cat.icons.length }}</span>
+            <!-- 我的编组（自定义，置顶） -->
+            <div class="ip-side-section">
+              <div class="ip-side-head" @click="customExpanded = !customExpanded">
+                <span class="ip-side-head-chev" :class="customExpanded && 'is-open'" v-html="BL.icon('chevronRight', 11)"></span>
+                <span class="ip-side-head-title">我的图库</span>
+                <span class="ip-side-head-count">{{ customCategories.length }}</span>
+                <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="新建编组"
+                        @click.stop="createCustomGroup" v-html="BL.icon('plus', 12)"></button>
+              </div>
+              <div class="ip-side-list" v-show="customExpanded">
+                <div v-for="cat in customCategories" :key="cat.key"
+                     :class="['ip-cat ip-cat-custom', iconCat===cat.key && 'is-active']"
+                     @click="iconCat = cat.key">
+                  <template v-if="renameCustomKey === cat.rawKey">
+                    <input ref="renameInputRef"
+                           class="bl-input ip-cat-rename"
+                           v-model="renameCustomValue"
+                           @keydown.enter="commitRenameCustomGroup"
+                           @keydown.esc="cancelRenameCustomGroup"
+                           @blur="commitRenameCustomGroup"
+                           @click.stop />
+                  </template>
+                  <template v-else>
+                    <span class="ip-cat-label">{{ cat.label }}</span>
+                    <span class="ip-cat-actions">
+                      <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="重命名" @click.stop="startRenameCustomGroup(cat)" v-html="BL.icon('edit', 11)"></button>
+                      <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="删除编组" @click.stop="removeCustomGroup(cat)" v-html="BL.icon('trash', 11)"></button>
+                    </span>
+                    <span class="ip-cat-count">{{ cat.icons.length }}</span>
+                  </template>
+                </div>
+                <div v-if="!customCategories.length" class="ip-side-empty">尚无自定义编组</div>
+              </div>
+            </div>
+            <!-- 内置图标库 -->
+            <div class="ip-side-section">
+              <div class="ip-side-head" @click="builtinExpanded = !builtinExpanded">
+                <span class="ip-side-head-chev" :class="builtinExpanded && 'is-open'" v-html="BL.icon('chevronRight', 11)"></span>
+                <span class="ip-side-head-title">内置图标库</span>
+                <span class="ip-side-head-count">{{ builtinCategories.length }}</span>
+              </div>
+              <div class="ip-side-list" v-show="builtinExpanded">
+                <div v-for="cat in builtinCategories" :key="cat.key"
+                     :class="['ip-cat', iconCat===cat.key && 'is-active']"
+                     @click="iconCat = cat.key">
+                  <span>{{ cat.label }}</span>
+                  <span class="ip-cat-count">{{ cat.icons.length }}</span>
+                </div>
+              </div>
             </div>
           </aside>
           <div class="ip-main">
@@ -503,20 +550,59 @@
                 <span class="crumb-sep" v-html="BL.icon('chevronRight', 11)"></span>
                 <span>{{ currentCatLabel }}</span>
               </div>
-              <div class="ip-search">
-                <span class="ip-search-ic" v-html="BL.icon('search', 12)"></span>
-                <input class="bl-input ip-search-input" v-model="iconQ" placeholder="搜索图标名称…" />
+              <div class="ip-toolbar-right">
+                <template v-if="isCustomCat">
+                  <input ref="uploadInputRef" type="file" accept=".svg,image/svg+xml" multiple style="display:none" @change="onSvgFiles" />
+                  <template v-if="!batchMode">
+                    <button :class="['bl-btn bl-btn-sm', batchMode && 'bl-btn-primary']" @click="toggleBatchMode" :disabled="!pickerIcons.length" title="批量操作">
+                      <span v-html="BL.icon('check', 12)"></span>
+                      <span style="margin-left:4px">批量操作</span>
+                    </button>
+                    <button class="bl-btn bl-btn-primary bl-btn-sm" @click="triggerUpload">
+                      <span v-html="BL.icon('upload', 12, '#fff')"></span>
+                      <span style="margin-left:4px">上传 SVG</span>
+                    </button>
+                  </template>
+                  <template v-else>
+                    <span class="ip-batch-info">已选 <b>{{ batchSelected.size }}</b> / {{ pickerIcons.length }}</span>
+                    <button class="bl-btn bl-btn-sm" @click="selectAllBatch">全选</button>
+                    <button class="bl-btn bl-btn-sm" :disabled="!batchSelected.size" @click="clearBatchSelect">取消选择</button>
+                    <button class="bl-btn bl-btn-sm bl-btn-danger" :disabled="!batchSelected.size" @click="batchDeleteIcons">
+                      <span v-html="BL.icon('trash', 12, '#fff')"></span>
+                      <span style="margin-left:4px">删除 ({{ batchSelected.size }})</span>
+                    </button>
+                    <button class="bl-btn bl-btn-sm" @click="toggleBatchMode">退出批量</button>
+                  </template>
+                </template>
+                <div class="ip-search">
+                  <span class="ip-search-ic" v-html="BL.icon('search', 12)"></span>
+                  <input class="bl-input ip-search-input" v-model="iconQ" placeholder="搜索图标名称…" />
+                </div>
               </div>
             </div>
             <div class="ip-grid" v-if="pickerIcons.length">
               <span v-for="ic in pickerIcons" :key="ic"
-                    :class="['icon-cell ip-cell', iconStaged===ic && 'is-active']"
-                    :title="ic"
-                    @click="iconStaged = ic"
-                    @dblclick="iconStaged = ic; confirmIconPick()">
+                    :class="[
+                      'icon-cell ip-cell',
+                      !batchMode && iconStaged===ic && 'is-active',
+                      batchMode && batchSelected.has(ic) && 'is-batch-on'
+                    ]"
+                    :title="shortIconName(ic)"
+                    @click="batchMode ? toggleBatchSelect(ic) : (iconStaged = ic)"
+                    @dblclick="!batchMode && (iconStaged = ic, confirmIconPick())">
                 <span v-html="BL.icon(ic, 20)"></span>
-                <span class="ip-cell-name">{{ ic }}</span>
+                <span v-if="batchMode" class="ip-cell-check"
+                      :class="batchSelected.has(ic) && 'is-on'"
+                      v-html="batchSelected.has(ic) ? BL.icon('check', 10, '#fff') : ''"></span>
+                <button v-else-if="isCustomCat" class="ip-cell-x" title="移除"
+                        @click.stop="removeCustomIcon(ic)"
+                        v-html="BL.icon('x', 10)"></button>
               </span>
+            </div>
+            <div v-else-if="isCustomCat" class="bl-empty" style="padding:48px 0">
+              <div class="bl-empty-icon" v-html="BL.icon('folder', 32)"></div>
+              点击右上「上传 SVG」批量添加图标<br/>
+              <span class="bl-muted" style="font-size:12px">支持阿里字库 / Iconfont 导出的单色 SVG</span>
             </div>
             <div v-else class="bl-empty" style="padding:48px 0">未找到匹配的图标</div>
           </div>
@@ -531,13 +617,13 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch, reactive, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, reactive, nextTick } from 'vue'
 import PageHeader from '@/components/PageHeader.vue'
 import TreeNode from './category/TreeNode.vue'
 import FieldRow from './category/FieldRow.vue'
 import GroupGraph from './category/GroupGraph.vue'
 import { nodeProfile } from '@/lib/domain.js'
-import { BL } from '@/lib/bl.js'
+import { BL, antdIconNames, getCustomIconData, setCustomIconData, onCustomIconsChange } from '@/lib/bl.js'
 import { categoryApi, namespaceApi, groupApi, resourceApi } from '@/api'
 
 const tree = ref([])
@@ -880,7 +966,143 @@ const ICON_KEYWORDS = {
   maximize:   ['最大化','放大'],
   minimize:   ['最小化','缩小'],
   sun:        ['太阳','白天','晴'],
-  moon:       ['月亮','夜','暗']
+  moon:       ['月亮','夜','暗'],
+
+  /* —— Ant Design (阿里图标) 关键词补充 —— */
+  'antd:database':         ['库','数据','存储'],
+  'antd:hdd':              ['硬盘','存储'],
+  'antd:container':        ['容器','分组'],
+  'antd:cluster':          ['集群','分布','节点'],
+  'antd:partition':        ['分区','切片'],
+  'antd:apartment':        ['组织','结构','层级','部门'],
+  'antd:deployment-unit':  ['部署','单元','服务'],
+  'antd:share-alt':        ['共享','分享','关联'],
+  'antd:node-collapse':    ['节点','折叠'],
+  'antd:node-expand':      ['节点','展开'],
+  'antd:node-index':       ['节点','索引'],
+  'antd:sisternode':       ['兄弟','节点'],
+  'antd:subnode':          ['子节点','子'],
+  'antd:branches':         ['分支','派生','结构'],
+  'antd:fork':             ['分叉','派生','复刻'],
+  'antd:pull-request':     ['合并','请求'],
+  'antd:api':              ['接口','API'],
+  'antd:function':         ['函数','算法'],
+  'antd:experiment':       ['实验','化学','测试','研究'],
+  'antd:robot':            ['机器人','智能','AI'],
+  'antd:open-ai':          ['OpenAI','智能','AI'],
+  'antd:console-sql':      ['SQL','控制台','查询'],
+  'antd:code':             ['代码','编码'],
+  'antd:code-sandbox':     ['沙箱','代码'],
+  'antd:build':            ['构建','建造'],
+  'antd:bug':              ['缺陷','错误','Bug'],
+  'antd:bulb':             ['灯泡','灵感','想法','点子'],
+  'antd:aim':              ['瞄准','目标','靶'],
+  'antd:radar-chart':      ['雷达','分布','统计'],
+  'antd:heat-map':         ['热力','分布','热点'],
+  'antd:area-chart':       ['面积','图表','分布'],
+  'antd:bar-chart':        ['柱状','统计','条形'],
+  'antd:line-chart':       ['折线','趋势','统计'],
+  'antd:pie-chart':        ['饼图','占比','统计'],
+  'antd:fund':             ['基金','资金'],
+  'antd:fund-projection-screen': ['看板','投影','大屏'],
+  'antd:funnel-plot':      ['漏斗','转化'],
+  'antd:dashboard':        ['仪表盘','看板','大屏'],
+  'antd:dollar':           ['美元','金额','货币'],
+  'antd:bank':             ['银行','金融'],
+  'antd:gold':             ['黄金','宝藏'],
+  'antd:wallet':           ['钱包','余额'],
+  'antd:transaction':      ['交易','流转'],
+  'antd:shop':             ['店铺','商店'],
+  'antd:shopping-cart':    ['购物车','订单'],
+  'antd:gift':             ['礼物','奖励','红包'],
+  'antd:trophy':           ['奖杯','荣誉','成就'],
+  'antd:crown':            ['皇冠','VIP','顶级'],
+  'antd:fire':             ['火','热门','燃烧'],
+  'antd:rocket':           ['火箭','启动','加速'],
+  'antd:thunderbolt':      ['闪电','能源','电力'],
+  'antd:cloud':            ['云','云端'],
+  'antd:cloud-server':     ['云服务器','服务'],
+  'antd:cloud-upload':     ['云上传','上传'],
+  'antd:cloud-download':   ['云下载','下载'],
+  'antd:cloud-sync':       ['云同步','同步'],
+  'antd:safety':           ['安全','防护'],
+  'antd:safety-certificate':['证书','安全','认证'],
+  'antd:security-scan':    ['安全扫描','检测'],
+  'antd:property-safety':  ['财产','安全'],
+  'antd:audit':            ['审计','审核'],
+  'antd:verified':         ['认证','已验证','勾选'],
+  'antd:lock':             ['锁','锁定','保密'],
+  'antd:unlock':           ['解锁','开放'],
+  'antd:key':              ['密钥','钥匙','凭证'],
+  'antd:scan':             ['扫描','二维码'],
+  'antd:qrcode':           ['二维码','码'],
+  'antd:barcode':          ['条形码','条码'],
+  'antd:user':             ['用户','人员','人'],
+  'antd:team':             ['团队','成员'],
+  'antd:contacts':         ['联系人','通讯录'],
+  'antd:customer-service': ['客服','服务'],
+  'antd:idcard':           ['证件','身份'],
+  'antd:man':              ['男','男性'],
+  'antd:woman':            ['女','女性'],
+  'antd:mail':             ['邮件','信件'],
+  'antd:phone':            ['电话','通话'],
+  'antd:message':          ['消息','私信'],
+  'antd:comment':          ['评论','留言'],
+  'antd:notification':     ['通知','提醒'],
+  'antd:send':             ['发送','寄出'],
+  'antd:wechat':           ['微信'],
+  'antd:dingding':         ['钉钉'],
+  'antd:dingtalk':         ['钉钉'],
+  'antd:weibo':            ['微博'],
+  'antd:qq':               ['QQ'],
+  'antd:taobao':           ['淘宝'],
+  'antd:alipay':           ['支付宝'],
+  'antd:aliyun':           ['阿里云'],
+  'antd:alibaba':          ['阿里','阿里巴巴'],
+  'antd:tags':             ['标签','分类'],
+  'antd:tag':              ['标签','标记'],
+  'antd:flag':             ['标志','旗','里程碑'],
+  'antd:pushpin':          ['图钉','定位'],
+  'antd:environment':      ['环境','位置','地点'],
+  'antd:global':           ['全球','地球','国际'],
+  'antd:compass':          ['指南针','方向'],
+  'antd:gateway':          ['网关','入口'],
+  'antd:home':             ['首页','主页'],
+  'antd:calendar':         ['日历','日期','排期'],
+  'antd:clock-circle':     ['时钟','时间'],
+  'antd:field-time':       ['时间','时段'],
+  'antd:hourglass':        ['沙漏','等待'],
+  'antd:schedule':         ['日程','计划','排程'],
+  'antd:history':          ['历史','记录'],
+  'antd:car':              ['汽车','轿车'],
+  'antd:truck':            ['卡车','货运','物流'],
+  'antd:tool':             ['工具'],
+  'antd:setting':          ['设置','配置'],
+  'antd:control':          ['控制','操控'],
+  'antd:edit':             ['编辑','修改'],
+  'antd:form':             ['表单','单据'],
+  'antd:save':             ['保存'],
+  'antd:delete':           ['删除'],
+  'antd:copy':             ['复制','副本'],
+  'antd:scissor':          ['剪刀','裁剪'],
+  'antd:snippets':         ['代码段','片段','摘录'],
+  'antd:profile':          ['档案','简介'],
+  'antd:read':             ['阅读','查阅'],
+  'antd:book':             ['书','手册','文档'],
+  'antd:file':             ['文件'],
+  'antd:file-text':        ['文档','文本'],
+  'antd:file-protect':     ['受保护','文件保护'],
+  'antd:file-search':      ['查找','文件搜索'],
+  'antd:folder':           ['文件夹','目录','分类'],
+  'antd:folder-open':      ['打开','文件夹'],
+  'antd:inbox':            ['收件箱'],
+  'antd:solution':         ['解决方案','工单'],
+  'antd:reconciliation':   ['对账','核对'],
+  'antd:project':          ['项目','工程'],
+  'antd:medicine-box':     ['药箱','医疗'],
+  'antd:rest':             ['休息','清零'],
+  'antd:moon':             ['月亮','夜'],
+  'antd:sun':              ['太阳','白天']
 }
 
 function suggestIcons(name) {
@@ -899,42 +1121,529 @@ const iconCat = ref('all')
 const iconStaged = ref('')
 const iconPickerAutoSave = ref(false)
 
+/* ===== Ant Design 图标库（阿里图标）— 由 @ant-design/icons-svg 提供 447 个 outlined 图标 ===== */
+const ANTD_OUTLINED = antdIconNames('outlined')
+const antd = (n) => 'antd:' + n
+const ANTD_ALL = ANTD_OUTLINED.map(antd)
+const dedupe = (arr) => Array.from(new Set(arr))
+
 const ICON_CATEGORIES = [
-  { key: 'all',      label: '全部',     icons: iconChoices },
-  { key: 'common',   label: '常用',     icons: ['folder','grid','database','cube','link','share','user','cog','list','network'] },
-  { key: 'water',    label: '水利水务', icons: ['droplet','wave','dam','station'] },
-  { key: 'env',      label: '生态环境', icons: ['tree','leaf','wheat','shield','sun','moon'] },
-  { key: 'industry', label: '工业工程', icons: ['industry','factory','cog','sliders','dam','zap','car'] },
-  { key: 'data',     label: '数据结构', icons: ['database','grid','list','cube','branch','network','link','share','sliders'] },
-  { key: 'user',     label: '用户通知', icons: ['user','bell','help','ai','logout'] },
-  { key: 'action',   label: '常用操作', icons: ['edit','plus','trash','copy','search','upload','download','more','check','x','maximize','minimize'] }
+  { key: 'all',      label: '全部',
+    icons: dedupe([...iconChoices, ...ANTD_ALL]) },
+
+  { key: 'common',   label: '常用',
+    icons: dedupe([
+      'folder','grid','database','cube','link','share','user','cog','list','network',
+      antd('folder'),antd('folder-open'),antd('database'),antd('appstore'),antd('cluster'),
+      antd('apartment'),antd('partition'),antd('block'),antd('api'),antd('schedule'),
+      antd('tags'),antd('tag'),antd('appstore-add'),antd('plus'),antd('search'),
+      antd('edit'),antd('delete'),antd('save'),antd('copy'),antd('setting'),antd('tool')
+    ]) },
+
+  { key: 'ontology', label: '本体/知识图谱',
+    icons: dedupe([
+      antd('apartment'),antd('partition'),antd('cluster'),antd('deployment-unit'),
+      antd('branches'),antd('share-alt'),antd('node-collapse'),antd('node-expand'),
+      antd('node-index'),antd('sisternode'),antd('subnode'),antd('fork'),
+      antd('pull-request'),antd('block'),antd('database'),antd('container'),
+      antd('api'),antd('function'),antd('experiment'),antd('robot'),antd('open-ai'),
+      antd('schedule'),antd('build'),antd('bulb'),antd('console-sql'),antd('code'),
+      antd('code-sandbox'),antd('aim'),antd('dot-chart'),antd('radar-chart'),
+      antd('heat-map'),antd('disconnect'),antd('gateway'),antd('project'),
+      'cube','network','branch','link','share','workflow','layers'
+    ]) },
+
+  { key: 'water',    label: '水利水务',
+    icons: dedupe([
+      'droplet','wave','dam','station','ship',
+      antd('cloud'),antd('cloud-download'),antd('cloud-upload'),antd('cloud-sync'),
+      antd('cloud-server'),antd('thunderbolt'),antd('environment'),antd('compass'),
+      antd('global'),antd('aim')
+    ]) },
+
+  { key: 'env',      label: '生态环境',
+    icons: dedupe([
+      'tree','leaf','wheat','shield','sun','moon','cloud','rain','snowflake','flame',
+      antd('sun'),antd('moon'),antd('cloud'),antd('fire'),antd('bulb'),
+      antd('environment'),antd('global'),antd('safety'),antd('property-safety')
+    ]) },
+
+  { key: 'industry', label: '工业工程',
+    icons: dedupe([
+      'industry','factory','building','warehouse','briefcase','cog','sliders','dam','zap','car','truck',
+      antd('build'),antd('tool'),antd('setting'),antd('control'),antd('sliders'),
+      antd('thunderbolt'),antd('experiment'),antd('robot'),antd('rocket'),antd('car'),
+      antd('truck'),antd('shop'),antd('bank'),antd('gold'),antd('container'),
+      antd('deployment-unit'),antd('cluster'),antd('partition'),antd('api'),antd('gateway')
+    ]) },
+
+  { key: 'data',     label: '数据/对象',
+    icons: dedupe([
+      'database','grid','list','cube','branch','network','link','share','sliders','layers','workflow',
+      antd('database'),antd('hdd'),antd('container'),antd('appstore'),antd('block'),
+      antd('cluster'),antd('partition'),antd('apartment'),antd('deployment-unit'),
+      antd('share-alt'),antd('node-collapse'),antd('node-expand'),antd('node-index'),
+      antd('sisternode'),antd('subnode'),antd('branches'),antd('fork'),antd('pull-request'),
+      antd('api'),antd('function'),antd('console-sql'),antd('code'),antd('code-sandbox'),
+      antd('build'),antd('schedule'),antd('table'),antd('borderless-table')
+    ]) },
+
+  { key: 'chart',    label: '图表统计',
+    icons: dedupe([
+      antd('area-chart'),antd('bar-chart'),antd('box-plot'),antd('dot-chart'),
+      antd('fund'),antd('fund-projection-screen'),antd('fund-view'),antd('funnel-plot'),
+      antd('heat-map'),antd('line-chart'),antd('pie-chart'),antd('radar-chart'),
+      antd('rise'),antd('fall'),antd('stock'),antd('sliders'),antd('dashboard'),
+      'chart','barChart','pieChart','trendingUp','trendingDown','activity','dashboard'
+    ]) },
+
+  { key: 'arrow',    label: '方向/箭头',
+    icons: dedupe([
+      antd('arrow-up'),antd('arrow-down'),antd('arrow-left'),antd('arrow-right'),
+      antd('caret-up'),antd('caret-down'),antd('caret-left'),antd('caret-right'),
+      antd('up'),antd('down'),antd('left'),antd('right'),
+      antd('up-circle'),antd('down-circle'),antd('left-circle'),antd('right-circle'),
+      antd('up-square'),antd('down-square'),antd('left-square'),antd('right-square'),
+      antd('double-left'),antd('double-right'),antd('vertical-left'),antd('vertical-right'),
+      antd('vertical-align-top'),antd('vertical-align-middle'),antd('vertical-align-bottom'),
+      antd('swap'),antd('swap-left'),antd('swap-right'),antd('to-top'),
+      antd('rollback'),antd('rotate-left'),antd('rotate-right'),antd('undo'),antd('redo'),
+      antd('retweet'),antd('forward'),antd('backward'),antd('enter'),antd('import'),antd('export'),
+      antd('rise'),antd('fall'),antd('arrows-alt')
+    ]) },
+
+  { key: 'feedback', label: '反馈/状态',
+    icons: dedupe([
+      antd('check'),antd('close'),antd('plus'),antd('minus'),
+      antd('check-circle'),antd('close-circle'),antd('plus-circle'),antd('minus-circle'),
+      antd('check-square'),antd('close-square'),antd('plus-square'),antd('minus-square'),
+      antd('question'),antd('question-circle'),antd('exclamation'),antd('exclamation-circle'),
+      antd('warning'),antd('info'),antd('info-circle'),antd('stop'),antd('dash'),
+      antd('loading'),antd('loading3-quarters'),antd('sync'),antd('reload'),antd('poweroff'),
+      antd('pause'),antd('pause-circle'),antd('play-circle'),antd('play-square'),
+      antd('fire'),antd('bulb'),antd('issues-close'),antd('frown'),antd('smile'),antd('meh')
+    ]) },
+
+  { key: 'file',     label: '文件/文档',
+    icons: dedupe([
+      antd('file'),antd('file-add'),antd('file-done'),antd('file-text'),antd('file-search'),
+      antd('file-sync'),antd('file-protect'),antd('file-unknown'),antd('file-exclamation'),
+      antd('file-image'),antd('file-gif'),antd('file-jpg'),antd('file-pdf'),antd('file-ppt'),
+      antd('file-word'),antd('file-excel'),antd('file-markdown'),antd('file-zip'),
+      antd('folder'),antd('folder-open'),antd('folder-add'),antd('folder-view'),
+      antd('snippets'),antd('profile'),antd('container'),antd('inbox'),antd('solution'),
+      antd('book'),antd('read'),antd('reconciliation'),antd('audit'),antd('form'),
+      antd('diff'),antd('paper-clip'),antd('printer'),antd('copy'),antd('delete'),
+      antd('save'),antd('cloud-download'),antd('cloud-upload')
+    ]) },
+
+  { key: 'edit',     label: '编辑/格式',
+    icons: dedupe([
+      antd('edit'),antd('form'),antd('clear'),antd('scissor'),antd('snippets'),antd('save'),
+      antd('delete'),antd('rest'),antd('undo'),antd('redo'),antd('format-painter'),
+      antd('bold'),antd('italic'),antd('underline'),antd('strikethrough'),antd('highlight'),
+      antd('font-size'),antd('font-colors'),antd('bg-colors'),antd('line-height'),
+      antd('signature'),antd('translation'),antd('select'),antd('drag'),antd('holder'),
+      antd('ellipsis'),antd('bars')
+    ]) },
+
+  { key: 'table',    label: '表格/布局',
+    icons: dedupe([
+      antd('table'),antd('borderless-table'),antd('layout'),
+      antd('insert-row-above'),antd('insert-row-below'),antd('insert-row-left'),antd('insert-row-right'),
+      antd('delete-column'),antd('delete-row'),antd('merge-cells'),antd('merge'),antd('split-cells'),
+      antd('column-height'),antd('column-width'),
+      antd('border'),antd('border-bottom'),antd('border-top'),antd('border-left'),antd('border-right'),
+      antd('border-inner'),antd('border-outer'),antd('border-horizontal'),antd('border-verticle'),
+      antd('radius-bottomleft'),antd('radius-bottomright'),antd('radius-upleft'),antd('radius-upright'),
+      antd('radius-setting'),
+      antd('align-left'),antd('align-center'),antd('align-right'),
+      antd('pic-left'),antd('pic-center'),antd('pic-right'),
+      antd('menu'),antd('menu-fold'),antd('menu-unfold'),antd('switcher'),antd('ordered-list'),antd('unordered-list')
+    ]) },
+
+  { key: 'comm',     label: '通讯/社交',
+    icons: dedupe([
+      antd('mail'),antd('phone'),antd('message'),antd('comment'),antd('notification'),
+      antd('send'),antd('customer-service'),antd('contacts'),antd('team'),antd('group'),antd('ungroup'),
+      antd('audio'),antd('audio-muted'),antd('sound'),antd('muted'),
+      antd('video-camera'),antd('video-camera-add'),
+      antd('wechat'),antd('wechat-work'),antd('dingding'),antd('dingtalk'),antd('whats-app'),
+      antd('weibo'),antd('weibo-circle'),antd('weibo-square'),
+      antd('qq'),antd('skype'),antd('slack'),antd('slack-square'),antd('discord'),
+      antd('twitter'),antd('facebook'),antd('linkedin'),antd('instagram')
+    ]) },
+
+  { key: 'user',     label: '用户/人员',
+    icons: dedupe([
+      'user','users','team',
+      antd('user'),antd('user-add'),antd('user-delete'),antd('user-switch'),
+      antd('usergroup-add'),antd('usergroup-delete'),antd('team'),antd('contacts'),
+      antd('man'),antd('woman'),antd('idcard'),antd('solution'),antd('customer-service'),
+      antd('smile'),antd('frown'),antd('meh'),antd('crown'),antd('like'),antd('dislike'),
+      antd('robot'),antd('skin')
+    ]) },
+
+  { key: 'cloud',    label: '云/网络',
+    icons: dedupe([
+      antd('cloud'),antd('cloud-download'),antd('cloud-upload'),antd('cloud-server'),antd('cloud-sync'),
+      antd('global'),antd('wifi'),antd('api'),antd('cluster'),antd('gateway'),antd('disconnect'),
+      antd('hdd'),antd('container'),antd('database'),antd('desktop'),antd('laptop'),
+      antd('tablet'),antd('mobile'),antd('monitor'),antd('usb'),antd('printer')
+    ]) },
+
+  { key: 'bus',      label: '商业/金融',
+    icons: dedupe([
+      antd('bank'),antd('credit-card'),antd('dollar'),antd('dollar-circle'),
+      antd('euro'),antd('euro-circle'),antd('pound'),antd('pound-circle'),
+      antd('property-safety'),antd('money-collect'),antd('pay-circle'),antd('red-envelope'),
+      antd('wallet'),antd('transaction'),antd('trademark'),antd('trademark-circle'),
+      antd('copyright'),antd('copyright-circle'),antd('insurance'),antd('gold'),
+      antd('gift'),antd('shop'),antd('shopping'),antd('shopping-cart'),antd('fund'),
+      antd('stock'),antd('rise'),antd('fall'),antd('percentage'),antd('calculator'),
+      antd('barcode'),antd('qrcode'),antd('account-book'),antd('audit'),antd('book')
+    ]) },
+
+  { key: 'sec',      label: '安全/权限',
+    icons: dedupe([
+      antd('lock'),antd('unlock'),antd('safety'),antd('safety-certificate'),
+      antd('security-scan'),antd('property-safety'),antd('audit'),antd('verified'),
+      antd('file-protect'),antd('key'),antd('idcard'),antd('scan'),antd('qrcode'),
+      antd('barcode'),antd('eye'),antd('eye-invisible'),antd('shake'),antd('bug')
+    ]) },
+
+  { key: 'device',   label: '设备硬件',
+    icons: dedupe([
+      'monitor','smartphone','tablet','laptop','server','printer','keyboard','mouse',
+      antd('desktop'),antd('laptop'),antd('tablet'),antd('mobile'),antd('monitor'),
+      antd('printer'),antd('hdd'),antd('usb'),antd('wifi'),antd('camera'),antd('phone'),
+      antd('mac-command'),antd('audio'),antd('video-camera')
+    ]) },
+
+  { key: 'media',    label: '媒体',
+    icons: dedupe([
+      'image','video','camera','microphone','music','volume','play','pause','stop',
+      antd('picture'),antd('camera'),antd('video-camera'),antd('play-circle'),
+      antd('play-square'),antd('pause'),antd('pause-circle'),antd('stop'),
+      antd('step-forward'),antd('step-backward'),antd('fast-forward'),antd('fast-backward'),
+      antd('sound'),antd('muted'),antd('audio'),antd('audio-muted'),antd('gif')
+    ]) },
+
+  { key: 'time',     label: '时间日期',
+    icons: dedupe([
+      'clock','calendar','timer','history','hourglass',
+      antd('calendar'),antd('clock-circle'),antd('field-time'),antd('history'),
+      antd('hourglass'),antd('schedule'),antd('carry-out')
+    ]) },
+
+  { key: 'award',    label: '奖励/标记',
+    icons: dedupe([
+      'star','heart','flag','award','gift','bookmark','tag','hash',
+      antd('star'),antd('heart'),antd('flag'),antd('trophy'),antd('crown'),antd('gift'),
+      antd('like'),antd('dislike'),antd('tag'),antd('tags'),antd('pushpin'),antd('fire')
+    ]) },
+
+  { key: 'brand',    label: '品牌Logo',
+    icons: dedupe([
+      antd('alibaba'),antd('alipay'),antd('alipay-circle'),antd('aliwangwang'),antd('aliyun'),
+      antd('ant-design'),antd('ant-cloud'),antd('taobao'),antd('taobao-circle'),
+      antd('amazon'),antd('android'),antd('apple'),antd('baidu'),antd('chrome'),
+      antd('behance'),antd('behance-square'),antd('bilibili'),antd('codepen'),antd('codepen-circle'),
+      antd('code-sandbox'),antd('docker'),antd('dot-net'),antd('dribbble'),antd('dribbble-square'),
+      antd('dropbox'),antd('facebook'),antd('github'),antd('gitlab'),antd('google'),antd('google-plus'),
+      antd('harmony-os'),antd('html5'),antd('ie'),antd('instagram'),antd('java'),antd('java-script'),
+      antd('kubernetes'),antd('linkedin'),antd('linux'),antd('medium'),antd('medium-workmark'),
+      antd('open-ai'),antd('pinterest'),antd('python'),antd('reddit'),antd('ruby'),antd('sketch'),
+      antd('skype'),antd('slack'),antd('slack-square'),antd('spotify'),antd('tik-tok'),
+      antd('twitch'),antd('twitter'),antd('wechat'),antd('wechat-work'),antd('weibo'),
+      antd('weibo-circle'),antd('weibo-square'),antd('whats-app'),antd('windows'),
+      antd('yahoo'),antd('youtube'),antd('yuque'),antd('zhihu'),antd('mac-command')
+    ]) },
+
+  { key: 'action',   label: '常用操作',
+    icons: dedupe([
+      'edit','plus','trash','copy','search','upload','download','more','check','x','maximize','minimize',
+      antd('edit'),antd('plus'),antd('minus'),antd('delete'),antd('copy'),antd('save'),
+      antd('search'),antd('zoom-in'),antd('zoom-out'),antd('reload'),antd('sync'),
+      antd('upload'),antd('download'),antd('import'),antd('export'),antd('enter'),
+      antd('share-alt'),antd('link'),antd('disconnect'),antd('filter'),antd('select'),
+      antd('drag'),antd('expand'),antd('expand-alt'),antd('compress'),antd('shrink'),
+      antd('fullscreen'),antd('fullscreen-exit'),antd('more'),antd('ellipsis'),
+      antd('plus-circle'),antd('minus-circle'),antd('close'),antd('check'),
+      antd('login'),antd('logout'),antd('lock'),antd('unlock'),antd('setting'),antd('tool')
+    ]) },
+
+  { key: 'antd',     label: 'Ant Design 全集',
+    icons: ANTD_ALL }
 ]
 
-const currentCatLabel = computed(() => ICON_CATEGORIES.find(c => c.key === iconCat.value)?.label || '全部')
+/* ===== 自定义编组（用户上传 SVG）===== */
+const customData = ref(getCustomIconData())
+let unsubCustom = null
+
+const customCategories = computed(() =>
+  customData.value.groups.map(g => ({
+    key: 'custom:' + g.key,
+    label: g.label,
+    rawKey: g.key,
+    icons: (g.iconIds || []).map(id => 'custom:' + id),
+    custom: true
+  }))
+)
+const builtinCategories = computed(() => ICON_CATEGORIES)
+const allCategories = computed(() => [...builtinCategories.value, ...customCategories.value])
+
+const isCustomCat = computed(() => String(iconCat.value).startsWith('custom:'))
+const currentCustomGroupKey = computed(() => isCustomCat.value ? iconCat.value.slice(7) : null)
+
+const currentCatLabel = computed(() => allCategories.value.find(c => c.key === iconCat.value)?.label || '全部')
+
+const renameCustomKey = ref(null)
+const renameCustomValue = ref('')
+const renameInputRef = ref(null)
+const uploadInputRef = ref(null)
+const customExpanded = ref(true)
+const builtinExpanded = ref(true)
+
+function uid() {
+  return Math.random().toString(36).slice(2, 8) + Date.now().toString(36).slice(-4)
+}
+async function createCustomGroup() {
+  const label = await BL.prompt({
+    title: '新建编组',
+    label: '编组名称',
+    placeholder: '例如：我的水务图标',
+    defaultValue: '我的图标',
+    validate: v => !v || !v.trim() ? '名称不能为空' : true
+  })
+  if (label == null) return
+  const d = { ...customData.value, groups: [...customData.value.groups], icons: { ...customData.value.icons } }
+  const key = 'g_' + uid()
+  d.groups.push({ key, label: label.trim(), iconIds: [] })
+  setCustomIconData(d)
+  iconCat.value = 'custom:' + key
+}
+function startRenameCustomGroup(cat) {
+  renameCustomKey.value = cat.rawKey
+  renameCustomValue.value = cat.label
+  nextTick(() => { renameInputRef.value?.focus?.(); renameInputRef.value?.select?.() })
+}
+function cancelRenameCustomGroup() {
+  renameCustomKey.value = null
+  renameCustomValue.value = ''
+}
+function commitRenameCustomGroup() {
+  if (!renameCustomKey.value) return
+  const nv = renameCustomValue.value.trim()
+  if (nv) {
+    const d = { ...customData.value, groups: customData.value.groups.map(g =>
+      g.key === renameCustomKey.value ? { ...g, label: nv } : g) }
+    setCustomIconData(d)
+  }
+  cancelRenameCustomGroup()
+}
+async function removeCustomGroup(cat) {
+  const ok = await BL.confirm({
+    title: '删除编组', danger: true, okText: '删除',
+    content: `将删除编组「${cat.label}」及其下 ${cat.icons.length} 个图标？`
+  })
+  if (!ok) return
+  const grp = customData.value.groups.find(g => g.key === cat.rawKey)
+  const removeIds = new Set(grp?.iconIds || [])
+  const icons = { ...customData.value.icons }
+  removeIds.forEach(id => delete icons[id])
+  const groups = customData.value.groups.filter(g => g.key !== cat.rawKey)
+  setCustomIconData({ groups, icons })
+  if (iconCat.value === 'custom:' + cat.rawKey) iconCat.value = 'all'
+  BL.success('已删除')
+}
+function removeCustomIcon(ic) {
+  const id = String(ic || '').replace(/^custom:/, '')
+  if (!id) return
+  const groups = customData.value.groups.map(g => ({
+    ...g,
+    iconIds: (g.iconIds || []).filter(i => i !== id)
+  }))
+  const icons = { ...customData.value.icons }
+  delete icons[id]
+  setCustomIconData({ groups, icons })
+  if (iconStaged.value === ic) iconStaged.value = ''
+}
+
+/* SVG 解析：抽出 viewBox + 内部内容，将固定颜色替换为 currentColor 以支持染色 */
+function parseSvgText(text) {
+  if (typeof text !== 'string') return null
+  try {
+    const doc = new DOMParser().parseFromString(text, 'image/svg+xml')
+    const errNode = doc.querySelector('parsererror')
+    if (errNode) return null
+    const svg = doc.documentElement
+    if (!svg || svg.tagName.toLowerCase() !== 'svg') return null
+    let viewBox = svg.getAttribute('viewBox')
+    if (!viewBox) {
+      const w = svg.getAttribute('width'), h = svg.getAttribute('height')
+      viewBox = (w && h) ? `0 0 ${parseFloat(w)} ${parseFloat(h)}` : '0 0 1024 1024'
+    }
+    // 取所有子节点
+    const xs = new XMLSerializer()
+    let inner = Array.from(svg.childNodes).map(n => {
+      if (n.nodeType === 3) return n.nodeValue   // text
+      if (n.nodeType !== 1) return ''            // skip comments etc
+      return xs.serializeToString(n)
+    }).join('').trim()
+    if (!inner) return null
+    // 将 fill="#xxx"/stroke="#xxx" 统一替换为 currentColor（保留 none）
+    inner = inner
+      .replace(/\sfill="(?!none)([^"]*)"/gi, ' fill="currentColor"')
+      .replace(/\sstroke="(?!none)([^"]*)"/gi, ' stroke="currentColor"')
+      .replace(/fill:\s*#[0-9a-f]{3,8}/gi, 'fill: currentColor')
+      .replace(/stroke:\s*#[0-9a-f]{3,8}/gi, 'stroke: currentColor')
+    return { viewBox, content: inner }
+  } catch { return null }
+}
+
+function readFileText(file) {
+  return new Promise((resolve, reject) => {
+    const fr = new FileReader()
+    fr.onload = () => resolve(String(fr.result || ''))
+    fr.onerror = reject
+    fr.readAsText(file)
+  })
+}
+
+function triggerUpload() {
+  if (!isCustomCat.value) {
+    BL.warning('请先选择一个自定义编组')
+    return
+  }
+  uploadInputRef.value?.click()
+}
+
+/* —— 自定义编组：批量操作 —— */
+const batchMode = ref(false)
+const batchSelected = ref(new Set())
+function toggleBatchMode() {
+  batchMode.value = !batchMode.value
+  if (!batchMode.value) batchSelected.value = new Set()
+}
+function toggleBatchSelect(ic) {
+  const s = new Set(batchSelected.value)
+  s.has(ic) ? s.delete(ic) : s.add(ic)
+  batchSelected.value = s
+}
+function selectAllBatch() {
+  batchSelected.value = new Set(pickerIcons.value)
+}
+function clearBatchSelect() {
+  batchSelected.value = new Set()
+}
+async function batchDeleteIcons() {
+  if (!batchSelected.value.size) return
+  const ok = await BL.confirm({
+    title: '批量删除', danger: true, okText: '删除',
+    content: `将从当前编组移除 ${batchSelected.value.size} 个图标，且无法恢复？`
+  })
+  if (!ok) return
+  const removeIds = new Set([...batchSelected.value].map(ic => String(ic).replace(/^custom:/, '')))
+  const groups = customData.value.groups.map(g => ({
+    ...g,
+    iconIds: (g.iconIds || []).filter(i => !removeIds.has(i))
+  }))
+  const icons = { ...customData.value.icons }
+  removeIds.forEach(id => delete icons[id])
+  setCustomIconData({ groups, icons })
+  if (iconStaged.value && removeIds.has(String(iconStaged.value).replace(/^custom:/, ''))) iconStaged.value = ''
+  BL.success(`已删除 ${removeIds.size} 个图标`)
+  batchSelected.value = new Set()
+}
+// 切换分类 / 关闭弹窗：自动退出批量模式
+watch(iconCat, () => { batchMode.value = false; batchSelected.value = new Set() })
+watch(iconPickerOpen, v => { if (!v) { batchMode.value = false; batchSelected.value = new Set() } })
+async function onSvgFiles(e) {
+  const files = Array.from(e.target.files || [])
+  e.target.value = ''   // 允许重复选同一文件
+  if (!files.length) return
+  if (!isCustomCat.value) { BL.warning('请先选择自定义编组'); return }
+  const groupKey = currentCustomGroupKey.value
+  const d = {
+    groups: customData.value.groups.map(g => ({ ...g, iconIds: [...(g.iconIds || [])] })),
+    icons: { ...customData.value.icons }
+  }
+  const grp = d.groups.find(g => g.key === groupKey)
+  if (!grp) { BL.error('编组不存在'); return }
+  let ok = 0, fail = 0
+  for (const f of files) {
+    if (!/svg/i.test(f.type) && !/\.svg$/i.test(f.name)) { fail++; continue }
+    try {
+      const text = await readFileText(f)
+      const parsed = parseSvgText(text)
+      if (!parsed) { fail++; continue }
+      const id = 'i_' + uid()
+      const name = f.name.replace(/\.svg$/i, '')
+      d.icons[id] = { ...parsed, name }
+      grp.iconIds.push(id)
+      ok++
+    } catch { fail++ }
+  }
+  setCustomIconData(d)
+  if (ok) BL.success(`已导入 ${ok} 个图标${fail ? `，${fail} 个失败` : ''}`)
+  else BL.error('未能解析任何 SVG 文件')
+}
 
 const iconPresets = computed(() => {
   const name = selected.value?.label || selected.value?.categoryCode || ''
+  // 用户上传的自定义图标（所有编组）
+  const customIds = Object.keys(customData.value.icons || {})
+  const customAll = customIds.map(id => 'custom:' + id)
+  // 当前已选图标置首
+  const current = editForm.icon ? [editForm.icon] : []
   const sugg = suggestIcons(name)
   const seen = new Set()
   const out = []
-  for (const ic of [...sugg, ...iconChoices]) {
+  for (const ic of [...current, ...customAll, ...sugg, ...iconChoices]) {
     if (!seen.has(ic)) { seen.add(ic); out.push(ic) }
     if (out.length >= 40) break
   }
   return out
 })
 
+// 去掉 antd:/custom: 前缀展示更友好的图标名
+function shortIconName(ic) {
+  const s = String(ic || '')
+  if (s.startsWith('custom:')) {
+    const id = s.slice(7)
+    return customData.value.icons[id]?.name || id
+  }
+  return s.replace(/^antd:/, '')
+}
+
 const pickerIcons = computed(() => {
-  const cat = ICON_CATEGORIES.find(c => c.key === iconCat.value) || ICON_CATEGORIES[0]
+  const cat = allCategories.value.find(c => c.key === iconCat.value) || allCategories.value[0]
+  const list = cat?.icons || []
   const q = iconQ.value.trim().toLowerCase()
-  const list = q ? cat.icons.filter(ic => ic.toLowerCase().includes(q)) : cat.icons
-  return list
+  if (!q) return list
+  return list.filter(ic => {
+    if (ic.toLowerCase().includes(q)) return true
+    if (ic.startsWith('custom:')) {
+      const name = customData.value.icons[ic.slice(7)]?.name || ''
+      if (name.toLowerCase().includes(q)) return true
+      return false
+    }
+    // 中文/拼音关键词命中（来自 ICON_KEYWORDS 字典）
+    const kws = ICON_KEYWORDS[ic]
+    if (kws && kws.some(k => String(k).toLowerCase().includes(q))) return true
+    return false
+  })
 })
 
 function openIconPicker(autoSave = false) {
   iconStaged.value = editForm.icon || ''
   iconQ.value = ''
-  iconCat.value = 'all'
+  // 优先打开第一个自定义编组；没有则回退到「全部」
+  const firstCustom = customCategories.value[0]
+  iconCat.value = firstCustom ? firstCustom.key : 'all'
+  // 自定义编组在「我的图库」分组里，确保其展开
+  if (firstCustom) customExpanded.value = true
   iconPickerAutoSave.value = autoSave
   iconPickerOpen.value = true
 }
@@ -1214,8 +1923,10 @@ async function saveBasic() {
     payload.metadata = JSON.stringify({ ...displayOpts })
   }
   await categoryApi.update(selected.value.id, payload)
+  // 立即把表单变更同步到 selected，让中间面板头部立刻刷新（无需等待 loadTree 完成）
+  selected.value = { ...selected.value, ...editForm }
   BL.success('已保存')
-  await loadTree(false)
+  await loadTree(true)
 }
 
 async function saveNsMetadata() {
@@ -1243,8 +1954,14 @@ async function doDelete() {
 }
 
 async function newVersion() {
-  const v = prompt('版本号（如 1.1）：', '1.1')
-  if (!v) return
+  const v = await BL.prompt({
+    title: '新建版本',
+    label: '版本号',
+    placeholder: '如 1.1',
+    defaultValue: '1.1',
+    validate: v => !v || !v.trim() ? '版本号不能为空' : true
+  })
+  if (v == null) return
   await namespaceApi.createVersion({
     nsCode: selected.value.nsCode,
     version: v,
@@ -1304,7 +2021,9 @@ onMounted(async () => {
   await loadTree()
   nsList.value = await namespaceApi.list().catch(() => [])
   await loadOverview()
+  unsubCustom = onCustomIconsChange(d => { customData.value = JSON.parse(JSON.stringify(d)) })
 })
+onUnmounted(() => { unsubCustom && unsubCustom() })
 </script>
 
 <style scoped>
@@ -1405,9 +2124,10 @@ onMounted(async () => {
 .center-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
 .crumb {
   display: flex; align-items: center; gap: 6px;
-  padding: 6px 10px; margin-bottom: 8px;
-  background: var(--bl-bg-2);
-  border-radius: var(--bl-radius-2);
+  padding: 10px 16px;
+  margin: -16px -16px 0;
+  background: transparent;
+  border-bottom: 1px solid var(--bl-divider);
   font-size: var(--bl-fs-12);
   flex-wrap: wrap;
 }
@@ -1602,6 +2322,11 @@ onMounted(async () => {
 .tab:hover { color: var(--bl-text-1); }
 .tab.is-active { color: var(--bl-primary); border-color: var(--bl-primary); font-weight: 500; }
 .tab-body { flex: 1; padding: 12px 16px; overflow: auto; }
+.tab-save-bar {
+  display: flex; justify-content: flex-end;
+  margin-top: 16px; padding-top: 12px;
+  border-top: 1px dashed var(--bl-divider);
+}
 
 .color-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .color-dot { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
@@ -1620,16 +2345,16 @@ onMounted(async () => {
   border: 1px solid var(--bl-border);
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-  border-top-right-radius: var(--bl-radius-2);
-  border-bottom-right-radius: var(--bl-radius-2);
+  border-top-right-radius: var(--bl-radius-3);
+  border-bottom-right-radius: var(--bl-radius-3);
   cursor: pointer;
   padding: 2px;
   background: var(--bl-bg-1);
   flex-shrink: 0;
 }
 .color-picker-attached::-webkit-color-swatch-wrapper { padding: 0; }
-.color-picker-attached::-webkit-color-swatch { border: 0; border-radius: 2px; }
-.color-picker-attached::-moz-color-swatch { border: 0; border-radius: 2px; }
+.color-picker-attached::-webkit-color-swatch { border: 0; border-radius: 6px; }
+.color-picker-attached::-moz-color-swatch { border: 0; border-radius: 6px; }
 
 .binding-row {
   display: flex; align-items: center; gap: 8px;
@@ -1717,9 +2442,9 @@ onMounted(async () => {
   font-size: var(--bl-fs-12);
 }
 .icon-picker-modal {
-  width: 880px; max-width: 95vw;
+  width: 1280px; max-width: 95vw;
   display: flex; flex-direction: column;
-  max-height: 90vh;
+  max-height: 94vh;
 }
 .ip-hd {
   display: flex; align-items: center; justify-content: space-between;
@@ -1730,8 +2455,8 @@ onMounted(async () => {
 .ip-body {
   padding: 0 !important;
   display: grid;
-  grid-template-columns: 160px 1fr;
-  height: 480px;
+  grid-template-columns: 200px 1fr;
+  height: 580px;
   min-height: 0;
   overflow: hidden;
 }
@@ -1742,12 +2467,13 @@ onMounted(async () => {
   overflow: auto;
 }
 .ip-cat {
-  padding: 8px 16px;
+  padding: 4px 16px;
   cursor: pointer;
   font-size: var(--bl-fs-13);
   color: var(--bl-text-2);
   display: flex; align-items: center; justify-content: space-between;
   border-left: 3px solid transparent;
+  min-height: 32px;
 }
 .ip-cat:hover { background: var(--bl-bg-1); color: var(--bl-text-1); }
 .ip-cat.is-active {
@@ -1765,6 +2491,122 @@ onMounted(async () => {
   min-width: 22px; text-align: center;
 }
 .ip-cat.is-active .ip-cat-count { background: var(--bl-primary-soft); color: var(--bl-primary); }
+
+/* —— 侧栏分组（自定义 / 内置）—— */
+.ip-side {
+  background: var(--bl-bg-1);
+  padding: 10px 8px;
+  gap: 10px;
+  display: flex; flex-direction: column;
+  overflow: auto;
+}
+.ip-side-section {
+  background: var(--bl-bg-1);
+  border: 1px solid var(--bl-border);
+  border-radius: var(--bl-radius-2);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.ip-side-head {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+  user-select: none;
+  color: var(--bl-text-2);
+  font-size: var(--bl-fs-12);
+  font-weight: 600;
+  letter-spacing: .2px;
+  background: var(--bl-bg-2);
+  border-bottom: 1px solid var(--bl-divider);
+  white-space: nowrap;
+}
+.ip-side-head:hover { color: var(--bl-text-1); background: var(--bl-bg-3); }
+.ip-side-head-chev {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 14px; height: 14px;
+  transition: transform .15s ease;
+  color: var(--bl-text-3);
+}
+.ip-side-head-chev.is-open { transform: rotate(90deg); }
+.ip-side-head-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ip-side-head-count {
+  font-size: 11px;
+  color: var(--bl-text-3);
+  background: var(--bl-bg-1);
+  border: 1px solid var(--bl-divider);
+  border-radius: 10px;
+  padding: 0 6px;
+  min-width: 22px; text-align: center;
+  font-weight: 500;
+}
+.ip-side-section:has(.ip-side-head:hover) { border-color: var(--bl-text-4); }
+.ip-side-list { padding: 4px 0; }
+.ip-cat { white-space: nowrap; }
+.ip-cat > span:first-child { overflow: hidden; text-overflow: ellipsis; }
+.ip-side-empty {
+  padding: 10px 16px;
+  font-size: var(--bl-fs-12);
+  color: var(--bl-text-4);
+  text-align: center;
+}
+.ip-cat-custom { position: relative; gap: 4px; min-height: 32px; }
+.ip-cat-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ip-cat-actions {
+  display: none;
+  align-items: center; gap: 0;
+}
+.ip-cat-actions .bl-btn { height: 24px; width: 22px; padding: 0; }
+.ip-cat-custom:hover .ip-cat-actions { display: inline-flex; }
+.ip-cat-custom:hover .ip-cat-count { display: none; }
+.ip-cat-rename {
+  height: 22px; padding: 0 4px;
+  font-size: var(--bl-fs-12);
+  flex: 1; min-width: 0;
+}
+
+/* —— 工具栏右侧（上传 + 搜索）—— */
+.ip-toolbar-right { display: inline-flex; align-items: center; gap: 8px; }
+
+/* —— 上传/移除按钮 —— */
+.ip-cell { position: relative; }
+.ip-cell-x {
+  position: absolute; top: 2px; right: 2px;
+  width: 14px; height: 14px;
+  display: none;
+  align-items: center; justify-content: center;
+  border: 0; border-radius: 50%;
+  background: var(--bl-bg-3);
+  color: var(--bl-text-2);
+  cursor: pointer;
+  padding: 0;
+}
+.ip-cell:hover .ip-cell-x { display: inline-flex; }
+.ip-cell-x:hover { background: var(--bl-danger, #F53F3F); color: #fff; }
+
+/* —— 批量操作 —— */
+.ip-batch-info {
+  font-size: var(--bl-fs-12);
+  color: var(--bl-text-2);
+  margin-right: 4px;
+}
+.ip-batch-info b { color: var(--bl-primary); }
+.ip-cell.is-batch-on {
+  border-color: var(--bl-primary);
+  background: var(--bl-primary-soft);
+}
+.ip-cell-check {
+  position: absolute; top: 3px; right: 3px;
+  width: 14px; height: 14px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 3px;
+  background: var(--bl-bg-1);
+  border: 1px solid var(--bl-border);
+  box-sizing: border-box;
+}
+.ip-cell-check.is-on {
+  background: var(--bl-primary);
+  border-color: var(--bl-primary);
+}
 .ip-main {
   display: flex; flex-direction: column;
   padding: 14px 16px;
@@ -1790,7 +2632,7 @@ onMounted(async () => {
 .ip-grid {
   flex: 1; min-height: 0;
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(15, 1fr);
   gap: 8px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -1798,19 +2640,9 @@ onMounted(async () => {
   padding-right: 4px;
 }
 .ip-cell {
-  flex-direction: column;
-  gap: 4px;
-  aspect-ratio: auto;
-  padding: 10px 4px;
-  height: auto;
+  aspect-ratio: 1;
+  padding: 0;
 }
-.ip-cell-name {
-  font-size: 11px;
-  color: var(--bl-text-3);
-  max-width: 100%;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-.ip-cell.is-active .ip-cell-name { color: var(--bl-primary); }
 .icon-cell {
   width: 100%; aspect-ratio: 1;
   display: inline-flex; align-items: center; justify-content: center;
