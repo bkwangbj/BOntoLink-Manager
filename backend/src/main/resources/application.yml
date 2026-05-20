@@ -1,0 +1,29 @@
+server:
+  port: 8088
+  servlet:
+    context-path: /bontolink
+
+spring:
+  application:
+    name: bontolink-backend
+  profiles:
+    active: sqlite
+  jackson:
+    default-property-inclusion: non_null
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.beiktech.bontolink.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 30
+    cache-enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.beiktech.bontolink: DEBUG
+    org.springframework.jdbc.core: INFO

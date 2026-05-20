@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/bontolink
+    username: postgres
+    password: postgres
+    hikari:
+      maximum-pool-size: 16
+      minimum-idle: 2
+      pool-name: BontoLinkPGPool
+      connection-test-query: SELECT 1
+
+bontolink:
+  db:
+    dialect: postgresql
+    schema-init: classpath:db/schema-postgresql.sql
+    data-init: classpath:db/data.sql
