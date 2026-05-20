@@ -92,7 +92,7 @@ onBeforeUnmount(() => {
 .topbar-r { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
 
 .brand { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; }
-.brand-img { height: 30px; width: auto; display: block; }
+.brand-img { height: 36px; width: auto; display: block; }
 .brand-sep { color: var(--bl-text-4); font-size: var(--bl-fs-24); line-height: 1; }
 .brand-suffix {
   font-size: var(--bl-fs-20);
