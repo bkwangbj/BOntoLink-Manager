@@ -22,15 +22,16 @@ defineProps({ item: Object, collapsed: Boolean })
   color: var(--bl-text-2);
   cursor: pointer; position: relative;
   font-size: var(--bl-fs-14);
+  justify-content: center;
 }
 .nav-item:hover { background: var(--bl-bg-hover); color: var(--bl-text-1); }
 .nav-item:hover .en { opacity: 1; }
 .nav-item.is-active { background: var(--bl-primary-soft); color: var(--bl-primary); font-weight: 500; }
-.nav-item.is-active::before {
+/* .nav-item.is-active::before {
   content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px;
   background: var(--bl-primary); border-radius: 2px;
-}
+} */
 .ic { width: 16px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .lbl { flex: 1; min-width: 0; }
-.en { font-size: var(--bl-fs-11); color: var(--bl-text-3); opacity: 0; transition: opacity .15s; }
+.en { font-size: var(--bl-fs-11); color: var(--bl-text-3); opacity: 0; transition: opacity .15s; display: none; }
 </style>

@@ -7,7 +7,27 @@
           <input class="bl-input search-input" placeholder="搜索分类（中文 / 拼音 / 简拼）" v-model="treeQ" />
         </div>
         <button class="bl-btn" @click="exportTree" v-html="iconText('download','导出')"></button>
-        <button class="bl-btn bl-btn-primary" @click="openCreate('industry', null)" v-html="iconText('plus','新建')"></button>
+        <div class="create-split">
+          <button class="bl-btn bl-btn-primary create-split-main" @click="openCreateAuto" v-html="iconText('plus','新建')"></button>
+          <button class="bl-btn bl-btn-primary create-split-arrow" :title="'更多新建'" @click.stop="createMenuOpen = !createMenuOpen" v-html="BL.icon('chevronDown', 12, '#fff')"></button>
+          <div v-if="createMenuOpen" class="create-menu-mask" @click="createMenuOpen = false"></div>
+          <div v-if="createMenuOpen" class="create-menu">
+            <div class="create-menu-item" @click="openCreateAuto">
+              <span v-html="BL.icon('plus', 12)"></span>
+              <div class="create-menu-text">
+                <span>新建</span>
+                <span class="create-menu-sub">在选中节点下新增子级</span>
+              </div>
+            </div>
+            <div class="create-menu-item" @click="openCreateIndustry">
+              <span v-html="BL.icon('industry', 12)"></span>
+              <div class="create-menu-text">
+                <span>新建行业</span>
+                <span class="create-menu-sub">新增一个顶级行业</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </template>
     </PageHeader>
 
@@ -26,7 +46,22 @@
             </button>
           </div>
           <span class="bl-sep"></span>
-          <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="新增" @click="openCreate('industry', null)" v-html="BL.icon('plus', 12)"></button>
+          <div class="tb-add" ref="tbAddRef" @mouseenter="openTbAdd" @mouseleave="scheduleCloseTbAdd">
+            <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="新增" @click="openCreateAuto" v-html="BL.icon('plus', 12)"></button>
+          </div>
+          <Teleport to="body">
+            <div v-if="tbAddOpen" class="tb-add-menu" :style="tbAddMenuStyle"
+                 @mouseenter="openTbAdd" @mouseleave="scheduleCloseTbAdd">
+              <div class="tb-add-item" @click="tbAddOpen=false; openCreateAuto()">
+                <span v-html="BL.icon('plus', 12)"></span>
+                <div class="create-menu-text"><span>新建</span><span class="create-menu-sub">在选中节点下新增子级</span></div>
+              </div>
+              <div class="tb-add-item" @click="tbAddOpen=false; openCreateIndustry()">
+                <span v-html="BL.icon('industry', 12)"></span>
+                <div class="create-menu-text"><span>新建行业</span><span class="create-menu-sub">新增一个顶级行业</span></div>
+              </div>
+            </div>
+          </Teleport>
           <button :class="['bl-btn bl-btn-text bl-btn-sm bl-btn-icon', treeSearchOpen && 'is-on']" title="搜索" @click="toggleTreeSearch" v-html="BL.icon('search', 12)"></button>
         </div>
         <div v-if="treeSearchOpen" class="pane-search-row">
@@ -44,6 +79,7 @@
               :selected="selected"
               :search="treeQ"
               :expanded="expandedSet"
+              :stats-map="treeStatsMap"
               @select="onSelect"
               @toggle="onToggle"
               @ctx="onCtx" />
@@ -58,6 +94,7 @@
                  @click="onSelect(row)">
               <span class="li-ico" :style="{ background: nodeProfile(row).color }" v-html="BL.icon(nodeProfile(row).icon, 12, '#fff')"></span>
               <span class="bl-grow bl-truncate">{{ row.label || row.categoryCode }}</span>
+              <span class="li-count" :title="`${treeStatsMap[row.id]?.classCount ?? 0} 个对象`">{{ treeStatsMap[row.id]?.classCount ?? 0 }}</span>
             </div>
           </template>
         </div>
@@ -92,9 +129,10 @@
           </div>
 
           <div class="stats">
-            <div class="stat-card" v-for="s in globalStats" :key="s.key">
+            <div class="stat-card" v-for="s in globalStats" :key="s.key" :style="{ '--sc': s.color }">
+              <span class="stat-wm" v-html="BL.icon(s.icon, 60, s.color)"></span>
               <div class="stat-hd">
-                <span class="stat-ic" :style="{ color: s.color, background: s.color + '14' }" v-html="BL.icon(s.icon, 14, s.color)"></span>
+                <span class="stat-ic" :style="{ color: s.color, background: s.color + '1f' }" v-html="BL.icon(s.icon, 14, s.color)"></span>
                 <span class="stat-lbl">{{ s.label }}</span>
               </div>
               <div class="stat-val">{{ fmt(s.value) }}</div>
@@ -168,9 +206,10 @@
           </div>
 
           <div class="stats">
-            <div class="stat-card" v-for="s in statCards" :key="s.key">
+            <div class="stat-card" v-for="s in statCards" :key="s.key" :style="{ '--sc': s.color }">
+              <span class="stat-wm" v-html="BL.icon(s.icon, 60, s.color)"></span>
               <div class="stat-hd">
-                <span class="stat-ic" :style="{ color: s.color, background: s.color + '14' }" v-html="BL.icon(s.icon, 14, s.color)"></span>
+                <span class="stat-ic" :style="{ color: s.color, background: s.color + '1f' }" v-html="BL.icon(s.icon, 14, s.color)"></span>
                 <span class="stat-lbl">{{ s.label }}</span>
                 <button v-if="s.createLabel" class="stat-add" :title="s.createLabel" @click.stop="jumpTo(s.link)" v-html="BL.icon('plus', 12)"></button>
               </div>
@@ -250,11 +289,17 @@
                   {{ selected.status===1 ? '启用' : '禁用' }}
                 </span>
               </FieldRow>
-              <FieldRow label="标准名" hint="rdfs:label · 知识图谱通用标准显示名"><input class="bl-input" v-model="editForm.rdfsLabel" /></FieldRow>
+              <FieldRow label="标准名" inline hint="rdfs:label · 知识图谱通用标准显示名"><input class="bl-input" v-model="editForm.rdfsLabel" /></FieldRow>
               <FieldRow label="注释" hint="rdfs:comment · 给大模型 / 推理引擎 / 开发者看的正式语义定义"><textarea class="bl-textarea" rows="3" v-model="editForm.rdfsComment"></textarea></FieldRow>
-              <FieldRow label="参考资料" hint="rdfs:seeAlso · 关联文档 / 链接 / 参考出处"><input class="bl-input" v-model="editForm.rdfsSeeAlso" /></FieldRow>
-              <FieldRow label="定义来源" hint="rdfs:isDefinedBy · 该本体资源的权威定义出处、归属规范"><input class="bl-input" v-model="editForm.rdfsDefinedBy" /></FieldRow>
-              <FieldRow label="说明"><textarea class="bl-textarea" rows="3" v-model="editForm.description"></textarea></FieldRow>
+              <div class="tab-save-bar">
+                <button class="bl-btn bl-btn-primary" @click="saveBasic">保存</button>
+              </div>
+            </div>
+
+            <!-- 其他 -->
+            <div v-if="tab==='other'">
+              <FieldRow label="参考资料" hint="rdfs:seeAlso · 关联文档 / 链接 / 参考出处"><textarea class="bl-textarea" rows="3" v-model="editForm.rdfsSeeAlso"></textarea></FieldRow>
+              <FieldRow label="定义来源" hint="rdfs:isDefinedBy · 该本体资源的权威定义出处、归属规范"><textarea class="bl-textarea" rows="3" v-model="editForm.rdfsDefinedBy"></textarea></FieldRow>
               <div class="id-row">
                 <span class="id-lbl">ID</span>
                 <span class="id-val bl-mono bl-muted" :title="selected.id">{{ selected.id }}</span>
@@ -323,28 +368,10 @@
             <div v-if="tab==='display' && selected.categoryType === 3">
               <div class="display-section">
                 <div class="display-label">分组颜色</div>
-                <div class="color-row">
-                  <span v-for="c in colorChoices" :key="c"
-                        :class="['color-dot', editForm.color===c && 'is-active']"
-                        :style="{ background: c }"
-                        @click="editForm.color = c"></span>
-                </div>
-                <div class="hex-picker-group" style="margin-top:10px">
-                  <input class="bl-input bl-mono hex-input" v-model="editForm.color" placeholder="#RRGGBB" />
-                  <input type="color" class="color-picker color-picker-attached" v-model="editForm.color" title="自定义颜色" />
-                </div>
+                <ColorPickerField v-model="editForm.color" />
               </div>
               <div class="display-section">
-                <div class="display-label-row">
-                  <span class="display-label">图标</span>
-                  <a class="more-link" @click="openIconPicker(false)">更多选择</a>
-                </div>
-                <div class="icon-grid">
-                  <span v-for="ic in iconPresets" :key="ic"
-                        :class="['icon-cell', editForm.icon===ic && 'is-active']"
-                        @click="editForm.icon = ic"
-                        v-html="BL.icon(ic, 16)"></span>
-                </div>
+                <IconPickerField v-model="editForm.icon" label="图标" :suggest-name="selected.label || selected.categoryCode" :preset-count="32" />
               </div>
               <div class="display-section">
                 <div class="display-label">描述</div>
@@ -366,33 +393,13 @@
               </div>
             </div>
 
-            <!-- 样式 -->
+            <!-- 显示（行业/领域） -->
             <div v-if="tab==='style'">
               <div class="fr fr-icon">
-                <div class="fr-label-row">
-                  <span class="fr-label">图标</span>
-                  <a class="more-link" @click="openIconPicker(true)">更多选择</a>
-                </div>
-                <div class="icon-grid">
-                  <span v-for="ic in iconPresets" :key="ic"
-                        :class="['icon-cell', editForm.icon===ic && 'is-active']"
-                        @click="editForm.icon = ic; saveBasic()"
-                        v-html="BL.icon(ic, 16)"></span>
-                </div>
+                <IconPickerField v-model="editForm.icon" label="图标" :suggest-name="selected.label || selected.categoryCode" :preset-count="32" @change="saveBasic" />
               </div>
               <FieldRow label="颜色">
-                <div class="color-stack">
-                  <div class="color-row">
-                    <span v-for="c in colorChoices" :key="c"
-                          :class="['color-dot', editForm.color===c && 'is-active']"
-                          :style="{ background: c }"
-                          @click="editForm.color = c; saveBasic()"></span>
-                  </div>
-                  <div class="hex-picker-group">
-                    <input class="bl-input bl-mono hex-input" v-model="editForm.color" @change="saveBasic" placeholder="#RRGGBB" />
-                    <input type="color" class="color-picker color-picker-attached" v-model="editForm.color" @change="saveBasic" title="自定义颜色" />
-                  </div>
-                </div>
+                <ColorPickerField v-model="editForm.color" @change="saveBasic" />
               </FieldRow>
               <FieldRow label="预览">
                 <div class="bl-row" style="gap:10px">
@@ -431,16 +438,10 @@
             </select>
           </FieldRow>
           <FieldRow label="图标">
-            <select class="bl-input" v-model="formData.icon">
-              <option v-for="ic in iconChoices" :key="ic" :value="ic">{{ ic }}</option>
-            </select>
+            <IconPickerField v-model="formData.icon" label="图标" :suggest-name="formData.rdfsLabel" :preset-count="32" />
           </FieldRow>
           <FieldRow label="颜色">
-            <div class="color-row">
-              <span v-for="c in colorChoices" :key="c"
-                    :class="['color-dot', formData.color===c && 'is-active']"
-                    :style="{ background: c }" @click="formData.color = c"></span>
-            </div>
+            <ColorPickerField v-model="formData.color" />
           </FieldRow>
           <FieldRow label="说明"><textarea class="bl-textarea" v-model="formData.description" rows="3"></textarea></FieldRow>
         </div>
@@ -496,34 +497,65 @@
             <div class="ip-side-section">
               <div class="ip-side-head" @click="customExpanded = !customExpanded">
                 <span class="ip-side-head-chev" :class="customExpanded && 'is-open'" v-html="BL.icon('chevronRight', 11)"></span>
-                <span class="ip-side-head-title">我的图库</span>
+                <span class="ip-side-head-title">业务图库</span>
                 <span class="ip-side-head-count">{{ customCategories.length }}</span>
                 <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="新建编组"
                         @click.stop="createCustomGroup" v-html="BL.icon('plus', 12)"></button>
               </div>
               <div class="ip-side-list" v-show="customExpanded">
-                <div v-for="cat in customCategories" :key="cat.key"
-                     :class="['ip-cat ip-cat-custom', iconCat===cat.key && 'is-active']"
-                     @click="iconCat = cat.key">
-                  <template v-if="renameCustomKey === cat.rawKey">
-                    <input ref="renameInputRef"
-                           class="bl-input ip-cat-rename"
-                           v-model="renameCustomValue"
-                           @keydown.enter="commitRenameCustomGroup"
-                           @keydown.esc="cancelRenameCustomGroup"
-                           @blur="commitRenameCustomGroup"
-                           @click.stop />
+                <template v-for="top in customTopGroups" :key="top.id">
+                  <!-- 顶级(行业) -->
+                  <div :class="['ip-cat ip-cat-custom ip-cat-parent', iconCat===top.id && 'is-active']"
+                       @click="iconCat = top.id">
+                    <span class="ip-cat-parent-chev"
+                          :class="expandedCustomParents.has(top.id) && 'is-open'"
+                          @click.stop="toggleCustomParent(top.id)"
+                          v-html="BL.icon('chevronRight', 10)"></span>
+                    <template v-if="renameCustomKey === top.id">
+                      <input ref="renameInputRef"
+                             class="bl-input ip-cat-rename"
+                             v-model="renameCustomValue"
+                             @keydown.enter="commitRenameCustomGroup"
+                             @keydown.esc="cancelRenameCustomGroup"
+                             @blur="commitRenameCustomGroup"
+                             @click.stop />
+                    </template>
+                    <template v-else>
+                      <span class="ip-cat-label">{{ top.name }}</span>
+                      <span class="ip-cat-actions">
+                        <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="新建子分组" @click.stop="createCustomGroup(top.id)" v-html="BL.icon('plus', 11)"></button>
+                        <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="重命名" @click.stop="startRenameCustomGroup({ rawKey: top.id, label: top.name })" v-html="BL.icon('edit', 11)"></button>
+                        <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="删除编组" @click.stop="removeCustomGroup({ rawKey: top.id, label: top.name, icons: iconsByGroup[top.id] || [] })" v-html="BL.icon('trash', 11)"></button>
+                      </span>
+                      <span class="ip-cat-count">{{ aggregateIconsOfGroup(top).length }}</span>
+                    </template>
+                  </div>
+                  <!-- 二级(领域) -->
+                  <template v-if="expandedCustomParents.has(top.id)">
+                    <div v-for="child in customChildrenOf(top.id)" :key="child.id"
+                         :class="['ip-cat ip-cat-custom ip-cat-child', iconCat===child.id && 'is-active']"
+                         @click="iconCat = child.id">
+                      <template v-if="renameCustomKey === child.id">
+                        <input ref="renameInputRef"
+                               class="bl-input ip-cat-rename"
+                               v-model="renameCustomValue"
+                               @keydown.enter="commitRenameCustomGroup"
+                               @keydown.esc="cancelRenameCustomGroup"
+                               @blur="commitRenameCustomGroup"
+                               @click.stop />
+                      </template>
+                      <template v-else>
+                        <span class="ip-cat-label">{{ child.name }}</span>
+                        <span class="ip-cat-actions">
+                          <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="重命名" @click.stop="startRenameCustomGroup({ rawKey: child.id, label: child.name })" v-html="BL.icon('edit', 11)"></button>
+                          <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="删除编组" @click.stop="removeCustomGroup({ rawKey: child.id, label: child.name, icons: iconsByGroup[child.id] || [] })" v-html="BL.icon('trash', 11)"></button>
+                        </span>
+                        <span class="ip-cat-count">{{ (iconsByGroup[child.id] || []).length }}</span>
+                      </template>
+                    </div>
                   </template>
-                  <template v-else>
-                    <span class="ip-cat-label">{{ cat.label }}</span>
-                    <span class="ip-cat-actions">
-                      <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="重命名" @click.stop="startRenameCustomGroup(cat)" v-html="BL.icon('edit', 11)"></button>
-                      <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="删除编组" @click.stop="removeCustomGroup(cat)" v-html="BL.icon('trash', 11)"></button>
-                    </span>
-                    <span class="ip-cat-count">{{ cat.icons.length }}</span>
-                  </template>
-                </div>
-                <div v-if="!customCategories.length" class="ip-side-empty">尚无自定义编组</div>
+                </template>
+                <div v-if="!customTopGroups.length" class="ip-side-empty">尚无自定义编组</div>
               </div>
             </div>
             <!-- 内置图标库 -->
@@ -622,9 +654,13 @@ import PageHeader from '@/components/PageHeader.vue'
 import TreeNode from './category/TreeNode.vue'
 import FieldRow from './category/FieldRow.vue'
 import GroupGraph from './category/GroupGraph.vue'
+import IconPickerField from '@/components/IconPickerField.vue'
+import ColorPickerField from '@/components/ColorPickerField.vue'
 import { nodeProfile } from '@/lib/domain.js'
-import { BL, antdIconNames, getCustomIconData, setCustomIconData, onCustomIconsChange } from '@/lib/bl.js'
-import { categoryApi, namespaceApi, groupApi, resourceApi } from '@/api'
+import { BL, antdIconNames, getCustomIconData, setCustomIconData, onCustomIconsChange,
+         customIconUpsert, customIconRemoveByIds, customGroupUpsert, customGroupRemove } from '@/lib/bl.js'
+import { ANTD_ZH, antdZhName } from '@/lib/icon-zh.js'
+import { categoryApi, namespaceApi, groupApi, resourceApi, iconLibApi } from '@/api'
 
 const tree = ref([])
 const treeQ = ref('')
@@ -768,9 +804,9 @@ const detailTabs = computed(() => {
   if (!selected.value) return []
   const t = selected.value.categoryType
   if (t === 3) {
-    return [{ key: 'members', label: '成员' }, { key: 'display', label: '样式' }]
+    return [{ key: 'members', label: '成员' }, { key: 'display', label: '显示' }]
   }
-  const base = [{ key: 'basic', label: '基础信息' }, { key: 'style', label: '样式' }]
+  const base = [{ key: 'basic', label: '基础信息' }, { key: 'style', label: '显示' }, { key: 'other', label: '其他' }]
   if (t === 2) base.splice(1, 0, { key: 'namespace', label: '命名空间' })
   return base
 })
@@ -1377,24 +1413,73 @@ const ICON_CATEGORIES = [
     icons: ANTD_ALL }
 ]
 
-/* ===== 自定义编组（用户上传 SVG）===== */
-const customData = ref(getCustomIconData())
+/* ===== 共享「业务图库」(后端持久化) ===== */
+const customData = ref(getCustomIconData())     // { groups: [{id,parentId,name,sort}], icons: [{id,groupId,...}], iconsById }
 let unsubCustom = null
 
+// 把图标按 groupId 索引
+const iconsByGroup = computed(() => {
+  const m = {}
+  for (const ic of (customData.value.icons || [])) {
+    if (!m[ic.groupId]) m[ic.groupId] = []
+    m[ic.groupId].push('custom:' + ic.id)
+  }
+  return m
+})
+
+// 顶级（行业）和子级（领域）
+const customTopGroups = computed(() =>
+  (customData.value.groups || [])
+    .filter(g => !g.parentId)
+    .slice()
+    .sort((a, b) => (a.sort || 0) - (b.sort || 0))
+)
+const customChildrenOf = (parentId) =>
+  (customData.value.groups || [])
+    .filter(g => g.parentId === parentId)
+    .slice()
+    .sort((a, b) => (a.sort || 0) - (b.sort || 0))
+
+// 把每个分组转换为 picker 用的 category 对象
+// 顶级分组聚合所有子分组的图标(本级 + 子节点),子分组只展示自身
+function aggregateIconsOfGroup(g) {
+  const own = iconsByGroup.value[g.id] || []
+  if (g.parentId) return own  // 子节点
+  const children = (customData.value.groups || []).filter(x => x.parentId === g.id)
+  if (!children.length) return own
+  const seen = new Set()
+  const out = []
+  for (const list of [own, ...children.map(c => iconsByGroup.value[c.id] || [])]) {
+    for (const ic of list) {
+      if (!seen.has(ic)) { seen.add(ic); out.push(ic) }
+    }
+  }
+  return out
+}
+function groupToCategory(g) {
+  return {
+    key: g.id,
+    rawKey: g.id,
+    label: g.name,
+    icons: aggregateIconsOfGroup(g),
+    custom: true,
+    parentId: g.parentId || null
+  }
+}
+
+// 用于"全部 customCategories"扁平列表(供 allCategories 等使用)
 const customCategories = computed(() =>
-  customData.value.groups.map(g => ({
-    key: 'custom:' + g.key,
-    label: g.label,
-    rawKey: g.key,
-    icons: (g.iconIds || []).map(id => 'custom:' + id),
-    custom: true
-  }))
+  (customData.value.groups || []).map(groupToCategory)
 )
 const builtinCategories = computed(() => ICON_CATEGORIES)
 const allCategories = computed(() => [...builtinCategories.value, ...customCategories.value])
 
-const isCustomCat = computed(() => String(iconCat.value).startsWith('custom:'))
-const currentCustomGroupKey = computed(() => isCustomCat.value ? iconCat.value.slice(7) : null)
+const isCustomCat = computed(() => {
+  const k = iconCat.value
+  if (!k) return false
+  return (customData.value.groups || []).some(g => g.id === k)
+})
+const currentCustomGroupKey = computed(() => isCustomCat.value ? iconCat.value : null)
 
 const currentCatLabel = computed(() => allCategories.value.find(c => c.key === iconCat.value)?.label || '全部')
 
@@ -1404,25 +1489,68 @@ const renameInputRef = ref(null)
 const uploadInputRef = ref(null)
 const customExpanded = ref(true)
 const builtinExpanded = ref(true)
+const expandedCustomParents = ref(new Set())   // 顶级分组的折叠展开
+const customLibLoaded = ref(false)
 
-function uid() {
-  return Math.random().toString(36).slice(2, 8) + Date.now().toString(36).slice(-4)
+async function loadCustomLib() {
+  try {
+    const data = await iconLibApi.all()
+    setCustomIconData(data || { groups: [], icons: [] })
+    // 默认展开所有顶级分组
+    const s = new Set()
+    for (const g of (data?.groups || [])) {
+      if (!g.parentId) s.add(g.id)
+    }
+    expandedCustomParents.value = s
+    customLibLoaded.value = true
+    // 若数据为空,自动按行业/领域 seed
+    if (!(data?.groups || []).length) {
+      try {
+        await iconLibApi.seed(false)
+        const reloaded = await iconLibApi.all()
+        setCustomIconData(reloaded || { groups: [], icons: [] })
+        const s2 = new Set()
+        for (const g of (reloaded?.groups || [])) {
+          if (!g.parentId) s2.add(g.id)
+        }
+        expandedCustomParents.value = s2
+      } catch {}
+    }
+  } catch (e) {
+    BL.warning('「业务图库」加载失败,请检查后端')
+  }
 }
-async function createCustomGroup() {
+
+function toggleCustomParent(id) {
+  const s = new Set(expandedCustomParents.value)
+  s.has(id) ? s.delete(id) : s.add(id)
+  expandedCustomParents.value = s
+}
+
+async function createCustomGroup(parentId = null) {
   const label = await BL.prompt({
-    title: '新建编组',
+    title: parentId ? '新建子编组' : '新建编组',
     label: '编组名称',
-    placeholder: '例如：我的水务图标',
-    defaultValue: '我的图标',
+    placeholder: parentId ? '例如:水土保持' : '例如:水利行业',
+    defaultValue: '',
     validate: v => !v || !v.trim() ? '名称不能为空' : true
   })
   if (label == null) return
-  const d = { ...customData.value, groups: [...customData.value.groups], icons: { ...customData.value.icons } }
-  const key = 'g_' + uid()
-  d.groups.push({ key, label: label.trim(), iconIds: [] })
-  setCustomIconData(d)
-  iconCat.value = 'custom:' + key
+  try {
+    const g = await iconLibApi.createGroup(parentId || null, label.trim())
+    customGroupUpsert(g)
+    if (!parentId) {
+      const s = new Set(expandedCustomParents.value); s.add(g.id); expandedCustomParents.value = s
+    } else {
+      const s = new Set(expandedCustomParents.value); s.add(parentId); expandedCustomParents.value = s
+    }
+    iconCat.value = g.id
+    BL.success('已创建')
+  } catch (e) {
+    BL.error(e?.msg || e?.message || '创建失败')
+  }
 }
+
 function startRenameCustomGroup(cat) {
   renameCustomKey.value = cat.rawKey
   renameCustomValue.value = cat.label
@@ -1432,42 +1560,48 @@ function cancelRenameCustomGroup() {
   renameCustomKey.value = null
   renameCustomValue.value = ''
 }
-function commitRenameCustomGroup() {
+async function commitRenameCustomGroup() {
   if (!renameCustomKey.value) return
   const nv = renameCustomValue.value.trim()
-  if (nv) {
-    const d = { ...customData.value, groups: customData.value.groups.map(g =>
-      g.key === renameCustomKey.value ? { ...g, label: nv } : g) }
-    setCustomIconData(d)
-  }
+  const id = renameCustomKey.value
   cancelRenameCustomGroup()
+  if (!nv) return
+  try {
+    const g = await iconLibApi.renameGroup(id, nv)
+    customGroupUpsert(g)
+  } catch (e) {
+    BL.error(e?.msg || '重命名失败')
+  }
 }
+
 async function removeCustomGroup(cat) {
+  const children = customChildrenOf(cat.rawKey)
+  const iconCnt = (cat.icons || []).length + children.reduce((s, c) => s + ((iconsByGroup.value[c.id] || []).length), 0)
   const ok = await BL.confirm({
     title: '删除编组', danger: true, okText: '删除',
-    content: `将删除编组「${cat.label}」及其下 ${cat.icons.length} 个图标？`
+    content: `将删除编组「${cat.label}」${children.length ? `及 ${children.length} 个子分组` : ''}, 共 ${iconCnt} 个图标。`
   })
   if (!ok) return
-  const grp = customData.value.groups.find(g => g.key === cat.rawKey)
-  const removeIds = new Set(grp?.iconIds || [])
-  const icons = { ...customData.value.icons }
-  removeIds.forEach(id => delete icons[id])
-  const groups = customData.value.groups.filter(g => g.key !== cat.rawKey)
-  setCustomIconData({ groups, icons })
-  if (iconCat.value === 'custom:' + cat.rawKey) iconCat.value = 'all'
-  BL.success('已删除')
+  try {
+    await iconLibApi.deleteGroup(cat.rawKey)
+    customGroupRemove(cat.rawKey)
+    if (iconCat.value === cat.rawKey) iconCat.value = 'all'
+    BL.success('已删除')
+  } catch (e) {
+    BL.error(e?.msg || '删除失败')
+  }
 }
-function removeCustomIcon(ic) {
+
+async function removeCustomIcon(ic) {
   const id = String(ic || '').replace(/^custom:/, '')
   if (!id) return
-  const groups = customData.value.groups.map(g => ({
-    ...g,
-    iconIds: (g.iconIds || []).filter(i => i !== id)
-  }))
-  const icons = { ...customData.value.icons }
-  delete icons[id]
-  setCustomIconData({ groups, icons })
-  if (iconStaged.value === ic) iconStaged.value = ''
+  try {
+    await iconLibApi.deleteIcon(id)
+    customIconRemoveByIds([id])
+    if (iconStaged.value === ic) iconStaged.value = ''
+  } catch (e) {
+    BL.error(e?.msg || '删除失败')
+  }
 }
 
 /* SVG 解析：抽出 viewBox + 内部内容，将固定颜色替换为 currentColor 以支持染色 */
@@ -1541,20 +1675,19 @@ async function batchDeleteIcons() {
   if (!batchSelected.value.size) return
   const ok = await BL.confirm({
     title: '批量删除', danger: true, okText: '删除',
-    content: `将从当前编组移除 ${batchSelected.value.size} 个图标，且无法恢复？`
+    content: `将从「业务图库」永久删除 ${batchSelected.value.size} 个图标,且无法恢复?`
   })
   if (!ok) return
-  const removeIds = new Set([...batchSelected.value].map(ic => String(ic).replace(/^custom:/, '')))
-  const groups = customData.value.groups.map(g => ({
-    ...g,
-    iconIds: (g.iconIds || []).filter(i => !removeIds.has(i))
-  }))
-  const icons = { ...customData.value.icons }
-  removeIds.forEach(id => delete icons[id])
-  setCustomIconData({ groups, icons })
-  if (iconStaged.value && removeIds.has(String(iconStaged.value).replace(/^custom:/, ''))) iconStaged.value = ''
-  BL.success(`已删除 ${removeIds.size} 个图标`)
-  batchSelected.value = new Set()
+  const removeIds = [...batchSelected.value].map(ic => String(ic).replace(/^custom:/, ''))
+  try {
+    await iconLibApi.deleteIconBatch(removeIds)
+    customIconRemoveByIds(removeIds)
+    if (iconStaged.value && removeIds.includes(String(iconStaged.value).replace(/^custom:/, ''))) iconStaged.value = ''
+    BL.success(`已删除 ${removeIds.length} 个图标`)
+    batchSelected.value = new Set()
+  } catch (e) {
+    BL.error(e?.msg || '批量删除失败')
+  }
 }
 // 切换分类 / 关闭弹窗：自动退出批量模式
 watch(iconCat, () => { batchMode.value = false; batchSelected.value = new Set() })
@@ -1564,13 +1697,8 @@ async function onSvgFiles(e) {
   e.target.value = ''   // 允许重复选同一文件
   if (!files.length) return
   if (!isCustomCat.value) { BL.warning('请先选择自定义编组'); return }
-  const groupKey = currentCustomGroupKey.value
-  const d = {
-    groups: customData.value.groups.map(g => ({ ...g, iconIds: [...(g.iconIds || [])] })),
-    icons: { ...customData.value.icons }
-  }
-  const grp = d.groups.find(g => g.key === groupKey)
-  if (!grp) { BL.error('编组不存在'); return }
+  const groupId = currentCustomGroupKey.value
+  if (!groupId) { BL.error('编组不存在'); return }
   let ok = 0, fail = 0
   for (const f of files) {
     if (!/svg/i.test(f.type) && !/\.svg$/i.test(f.name)) { fail++; continue }
@@ -1578,23 +1706,21 @@ async function onSvgFiles(e) {
       const text = await readFileText(f)
       const parsed = parseSvgText(text)
       if (!parsed) { fail++; continue }
-      const id = 'i_' + uid()
       const name = f.name.replace(/\.svg$/i, '')
-      d.icons[id] = { ...parsed, name }
-      grp.iconIds.push(id)
+      const ic = await iconLibApi.addIcon(groupId, { name, viewBox: parsed.viewBox, content: parsed.content })
+      // 后端返回字段是 camelCase: id/groupId/name/viewBox/content
+      customIconUpsert(ic)
       ok++
     } catch { fail++ }
   }
-  setCustomIconData(d)
-  if (ok) BL.success(`已导入 ${ok} 个图标${fail ? `，${fail} 个失败` : ''}`)
+  if (ok) BL.success(`已导入 ${ok} 个图标${fail ? `,${fail} 个失败` : ''}`)
   else BL.error('未能解析任何 SVG 文件')
 }
 
 const iconPresets = computed(() => {
   const name = selected.value?.label || selected.value?.categoryCode || ''
-  // 用户上传的自定义图标（所有编组）
-  const customIds = Object.keys(customData.value.icons || {})
-  const customAll = customIds.map(id => 'custom:' + id)
+  // 用户上传的自定义图标(扁平数组)
+  const customAll = (customData.value.icons || []).map(ic => 'custom:' + ic.id)
   // 当前已选图标置首
   const current = editForm.icon ? [editForm.icon] : []
   const sugg = suggestIcons(name)
@@ -1607,14 +1733,19 @@ const iconPresets = computed(() => {
   return out
 })
 
-// 去掉 antd:/custom: 前缀展示更友好的图标名
+// 去掉 antd:/custom: 前缀展示更友好的图标名；antd 图标附带中文
 function shortIconName(ic) {
   const s = String(ic || '')
   if (s.startsWith('custom:')) {
     const id = s.slice(7)
-    return customData.value.icons[id]?.name || id
+    return customData.value.iconsById?.[id]?.name || id
   }
-  return s.replace(/^antd:/, '')
+  if (s.startsWith('antd:')) {
+    const en = s.replace(/^antd:/, '')
+    const zh = ANTD_ZH[en]
+    return zh ? `${en} · ${zh}` : en
+  }
+  return s
 }
 
 const pickerIcons = computed(() => {
@@ -1625,27 +1756,33 @@ const pickerIcons = computed(() => {
   return list.filter(ic => {
     if (ic.toLowerCase().includes(q)) return true
     if (ic.startsWith('custom:')) {
-      const name = customData.value.icons[ic.slice(7)]?.name || ''
+      const name = customData.value.iconsById?.[ic.slice(7)]?.name || ''
       if (name.toLowerCase().includes(q)) return true
       return false
     }
-    // 中文/拼音关键词命中（来自 ICON_KEYWORDS 字典）
+    // antd 图标的中文名命中
+    if (ic.startsWith('antd:')) {
+      const zh = antdZhName(ic) || ''
+      if (zh && zh.toLowerCase().includes(q)) return true
+    }
+    // 中文/拼音关键词命中（来自 ICON_KEYWORDS 字典 - 旧的 antd:xxx + 内置图标）
     const kws = ICON_KEYWORDS[ic]
     if (kws && kws.some(k => String(k).toLowerCase().includes(q))) return true
     return false
   })
 })
 
-function openIconPicker(autoSave = false) {
+async function openIconPicker(autoSave = false) {
   iconStaged.value = editForm.icon || ''
   iconQ.value = ''
-  // 优先打开第一个自定义编组；没有则回退到「全部」
-  const firstCustom = customCategories.value[0]
-  iconCat.value = firstCustom ? firstCustom.key : 'all'
-  // 自定义编组在「我的图库」分组里，确保其展开
-  if (firstCustom) customExpanded.value = true
   iconPickerAutoSave.value = autoSave
   iconPickerOpen.value = true
+  customExpanded.value = true
+  // 首次打开拉取「业务图库」
+  if (!customLibLoaded.value) await loadCustomLib()
+  // 优先选中第一个顶级自定义分组,否则回退到内置「全部」
+  const firstTop = customTopGroups.value[0]
+  iconCat.value = firstTop ? firstTop.id : 'all'
 }
 function cancelIconPick() {
   iconPickerOpen.value = false
@@ -1851,6 +1988,49 @@ function openCreate(kind, parent) {
   formOpen.value = true
 }
 
+/* —— 新建按钮的下拉 —— */
+const createMenuOpen = ref(false)
+const tbAddOpen = ref(false)   // 树工具栏 + 按钮的 hover 菜单
+const tbAddRef = ref(null)
+const tbAddMenuStyle = ref({})
+let tbCloseTimer = null
+function openTbAdd() {
+  clearTimeout(tbCloseTimer)
+  tbAddOpen.value = true
+  nextTick(() => {
+    const el = tbAddRef.value?.querySelector('button') || tbAddRef.value
+    if (el) {
+      const r = el.getBoundingClientRect()
+      tbAddMenuStyle.value = { top: r.bottom + 'px', left: r.left + 'px' }
+    }
+  })
+}
+function scheduleCloseTbAdd() {
+  clearTimeout(tbCloseTimer)
+  tbCloseTimer = setTimeout(() => { tbAddOpen.value = false }, 140)
+}
+// 「新建」: 沿用原逻辑——在选中节点下加子级(无选中则建行业)
+function openCreateAuto() {
+  createMenuOpen.value = false
+  openCreate(null, selected.value)
+}
+// 「新建行业」: 强制创建顶级行业(parent='0', type=1)
+function openCreateIndustry() {
+  createMenuOpen.value = false
+  formMode.value = 'create'
+  formParent.value = null
+  Object.assign(formData, {
+    categoryType: 1,
+    categoryCode: '',
+    rdfsLabel: '',
+    nsCode: '',
+    icon: 'industry',
+    color: '#165DFF',
+    description: ''
+  })
+  formOpen.value = true
+}
+
 function openEdit() {
   if (!selected.value) return
   formMode.value = 'edit'
@@ -1989,6 +2169,15 @@ async function loadTree(preserveSelection = true) {
     const hit = findById(selected.value.id)
     if (hit) selected.value = hit
   }
+  loadTreeStats()
+}
+
+/* 全量节点对象数（树后缀角标）*/
+const treeStatsMap = ref({})
+async function loadTreeStats() {
+  const ids = flatten(tree.value).map(n => n.id)
+  if (!ids.length) { treeStatsMap.value = {}; return }
+  try { treeStatsMap.value = await categoryApi.statsBatch(ids) } catch { treeStatsMap.value = {} }
 }
 
 function onCtx(node, action) {
@@ -2031,6 +2220,60 @@ onUnmounted(() => { unsubCustom && unsubCustom() })
 .search-wrap { position: relative; width: 280px; }
 .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--bl-text-3); }
 .search-input { padding-left: 30px; }
+
+/* —— 新建分裂按钮 —— */
+.create-split { position: relative; display: inline-flex; }
+.create-split-main {
+  border-top-right-radius: 0; border-bottom-right-radius: 0;
+}
+.create-split-arrow {
+  border-top-left-radius: 0; border-bottom-left-radius: 0;
+  border-left: 1px solid rgba(255,255,255,0.35) !important;
+  padding-left: 8px; padding-right: 8px;
+}
+.create-menu-mask {
+  position: fixed; inset: 0; z-index: 40;
+}
+.create-menu {
+  position: absolute; top: calc(100% + 6px); right: 0;
+  z-index: 41; min-width: 200px;
+  background: var(--bl-bg-1);
+  border: 1px solid var(--bl-border);
+  border-radius: var(--bl-radius-2);
+  box-shadow: var(--bl-shadow-2);
+  padding: 4px;
+}
+.create-menu-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px; border-radius: var(--bl-radius-2);
+  cursor: pointer; color: var(--bl-text-1);
+}
+.create-menu-item:hover { background: var(--bl-bg-hover); }
+.create-menu-text { display: flex; flex-direction: column; line-height: 1.3; }
+.create-menu-text > span:first-child { font-size: var(--bl-fs-13); }
+.create-menu-sub { font-size: 11px; color: var(--bl-text-3); }
+
+/* —— 树工具栏 + 按钮 hover 菜单（Teleport 到 body，避免被面板裁剪）—— */
+.tb-add { position: relative; display: inline-flex; }
+.tb-add-menu {
+  position: fixed; z-index: 1400;
+  min-width: 200px;
+  background: var(--bl-bg-1);
+  border: 1px solid var(--bl-border);
+  border-radius: var(--bl-radius-2);
+  box-shadow: var(--bl-shadow-2);
+  padding: 4px;
+}
+.tb-add-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px; border-radius: var(--bl-radius-2);
+  cursor: pointer; color: var(--bl-text-1);
+  white-space: nowrap;
+}
+.tb-add-item:hover { background: var(--bl-bg-hover); }
+.tb-add-item .create-menu-text { display: flex; flex-direction: column; line-height: 1.3; }
+.tb-add-item .create-menu-text > span:first-child { font-size: var(--bl-fs-13); }
+.tb-add-item .create-menu-sub { font-size: 11px; color: var(--bl-text-3); white-space: nowrap; }
 
 .three-pane {
   flex: 1; display: grid;
@@ -2100,6 +2343,15 @@ onUnmounted(() => { unsubCustom && unsubCustom() })
   display: inline-flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
+.li-count {
+  flex-shrink: 0; margin-left: auto;
+  font-size: 11px; color: var(--bl-text-3);
+  background: var(--bl-bg-2);
+  border-radius: 9px; padding: 0 7px; min-width: 20px;
+  height: 17px; line-height: 17px; text-align: center;
+  font-feature-settings: "tnum";
+}
+.li-row.is-active .li-count { background: var(--bl-primary-soft-ss, var(--bl-bg-1)); color: var(--bl-primary); }
 
 .versions {
   border-top: 1px solid var(--bl-divider);
@@ -2148,7 +2400,8 @@ onUnmounted(() => { unsubCustom && unsubCustom() })
 }
 .ov-head { display: flex; align-items: center; justify-content: space-between; padding: 4px 0 8px; }
 .ov-chart {
-  background: var(--bl-bg-2);
+  background: transparent;
+  border: 1px solid var(--bl-border);
   border-radius: var(--bl-radius-3);
   padding: 14px 12px 10px;
 }
@@ -2188,19 +2441,39 @@ onUnmounted(() => { unsubCustom && unsubCustom() })
   .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 .stat-card {
-  background: var(--bl-bg-1);
+  --sc: var(--bl-primary);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--sc) 12%, var(--bl-bg-1)) 0%, var(--bl-bg-1) 62%);
   border: 1px solid var(--bl-border);
   border-radius: var(--bl-radius-3);
-  padding: 8px 10px;
+  padding: 10px 12px;
   display: flex; flex-direction: column; gap: 6px;
   align-items: stretch;
   text-align: left;
   min-width: 0;
-  transition: border-color .15s, box-shadow .15s;
+  transition: border-color .15s, box-shadow .15s, transform .15s;
   position: relative;
+  overflow: hidden;
 }
-.stat-card:hover { border-color: var(--bl-primary-border); box-shadow: var(--bl-shadow-1); }
-.stat-hd { display: flex; align-items: center; justify-content: flex-start; gap: 6px; }
+/* 左侧品牌色条 */
+.stat-card::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: var(--sc);
+  opacity: .85;
+}
+.stat-card:hover {
+  border-color: color-mix(in srgb, var(--sc) 45%, var(--bl-border));
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--sc) 18%, transparent);
+  transform: translateY(-1px);
+}
+/* 大图标水印 */
+.stat-wm {
+  position: absolute; right: -10px; bottom: -14px;
+  opacity: .08; pointer-events: none; line-height: 0;
+  transform: rotate(-8deg);
+}
+.stat-hd { display: flex; align-items: center; justify-content: flex-start; gap: 6px; position: relative; z-index: 1; }
 .stat-add {
   margin-left: auto;
   width: 22px; height: 22px;
@@ -2224,6 +2497,7 @@ onUnmounted(() => { unsubCustom && unsubCustom() })
   line-height: 1.1;
   font-feature-settings: "tnum";
   text-align: center;
+  position: relative; z-index: 1;
 }
 .stat-act {
   font-size: var(--bl-fs-12);
@@ -2551,6 +2825,19 @@ onUnmounted(() => { unsubCustom && unsubCustom() })
 }
 .ip-cat-custom { position: relative; gap: 4px; min-height: 32px; }
 .ip-cat-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* 2 级树缩进与展开箭头 */
+.ip-cat-parent { padding-left: 6px; font-weight: 500; }
+.ip-cat-parent-chev {
+  display: inline-flex; width: 14px; height: 14px;
+  align-items: center; justify-content: center;
+  color: var(--bl-text-3);
+  transition: transform .15s;
+  cursor: pointer;
+}
+.ip-cat-parent-chev.is-open { transform: rotate(90deg); }
+.ip-cat-child { padding-left: 28px; font-size: 12.5px; }
+.ip-cat-child .ip-cat-label { color: var(--bl-text-2); }
 .ip-cat-actions {
   display: none;
   align-items: center; gap: 0;

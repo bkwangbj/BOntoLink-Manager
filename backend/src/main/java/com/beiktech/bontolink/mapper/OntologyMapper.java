@@ -127,4 +127,58 @@ public interface OntologyMapper {
             "   AND target_class_id IN <foreach collection='ids' item='j' open='(' separator=',' close=')'>#{j}</foreach>" +
             "</script>")
     java.util.List<java.util.Map<String, Object>> findLinksWithin(@Param("ids") java.util.Collection<String> ids);
+
+    /* —— 对象类型列表/详情 聚合 —— */
+
+    /** 单条对象类型详情（全字段；表中不存在的注释字段 rdfs_see_also / rdfs_defined_by 暂未建列） */
+    @Select("SELECT id, rid, api_name, ns_code, category_code, display_name, rdfs_label, rdfs_comment, " +
+            " description, icon, color, status, metadata, create_time, update_time " +
+            " FROM ont_class WHERE id = #{id}")
+    Map<String, Object> findClassById(@Param("id") String id);
+
+    /** 单类的属性总数 / 普通属性数（普通 = is_primary = 0） */
+    @Select("SELECT COUNT(*) FROM ont_class_property WHERE class_id = #{id}")
+    int countPropertiesOfClass(@Param("id") String id);
+
+    @Select("SELECT COUNT(*) FROM ont_class_property WHERE class_id = #{id} AND is_primary = 0")
+    int countNormalPropertiesOfClass(@Param("id") String id);
+
+    /** 出/入向关系数 */
+    @Select("SELECT COUNT(*) FROM ont_class_link WHERE source_class_id = #{id} OR target_class_id = #{id}")
+    int countLinksOfClass(@Param("id") String id);
+
+    /** 同领域(category_code)的数据源数 — 暂用领域归属推算，待 ont_class_ds 落地后改成精确关联 */
+    @Select("SELECT COUNT(*) FROM sys_data_source WHERE category_code = #{categoryCode}")
+    int countDatasourcesByCategory(@Param("categoryCode") String categoryCode);
+
+    /** 子类数（按 parent_class_id；当前 schema 暂无该列，返回 0 即可，留接口） */
+    @Select("SELECT 0")
+    int countChildClassesOfClass(@Param("id") String id);
+
+    /** 类的动作数 */
+    @Select("SELECT COUNT(*) FROM ont_class_action WHERE class_id = #{id}")
+    int countActionsOfClass(@Param("id") String id);
+
+    /** 类实现的接口数 */
+    @Select("SELECT COUNT(*) FROM ont_interface_class WHERE class_id = #{id}")
+    int countInterfacesOfClass(@Param("id") String id);
+
+    /** 类实现的接口列表 */
+    @Select("SELECT i.id, i.api_name, i.display_name, i.rdfs_label, i.icon, i.color, i.status " +
+            " FROM ont_interface i " +
+            " INNER JOIN ont_interface_class ic ON ic.interface_id = i.id " +
+            " WHERE ic.class_id = #{id} ORDER BY i.create_time")
+    List<Map<String, Object>> listInterfacesOfClass(@Param("id") String id);
+
+    /** 类相关的动作列表 */
+    @Select("SELECT id, rid, api_name, action_kind, display_name, rdfs_label, status FROM ont_class_action WHERE class_id = #{id} ORDER BY create_time")
+    List<Map<String, Object>> listActionsOfClass(@Param("id") String id);
+
+    /** 类相关的关系（出向 + 入向） */
+    @Select("SELECT id, rid, api_name, source_class_id, target_class_id, cardinality, display_name, rdfs_label, status FROM ont_class_link WHERE source_class_id = #{id} OR target_class_id = #{id} ORDER BY create_time")
+    List<Map<String, Object>> listLinksOfClass(@Param("id") String id);
+
+    /** 类同领域的数据源（按 category_code 简单关联） */
+    @Select("SELECT id, ds_code, ds_name, ds_type, status FROM sys_data_source WHERE category_code = #{categoryCode} ORDER BY create_time")
+    List<Map<String, Object>> listDatasourcesByCategory(@Param("categoryCode") String categoryCode);
 }

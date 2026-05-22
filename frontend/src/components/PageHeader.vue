@@ -1,6 +1,6 @@
 <template>
   <header class="ph">
-    <div class="ph-main">
+    <div class="ph-main" :title="tip">
       <h1 class="ph-title">{{ title }}</h1>
       <div v-if="subtitle" class="ph-sub">{{ subtitle }}</div>
     </div>
@@ -11,7 +11,9 @@
 </template>
 
 <script setup>
-defineProps({ title: String, subtitle: String })
+import { computed } from 'vue'
+const props = defineProps({ title: String, subtitle: String })
+const tip = computed(() => props.subtitle ? `${props.title} · ${props.subtitle}` : props.title)
 </script>
 
 <style scoped>
@@ -23,8 +25,24 @@ defineProps({ title: String, subtitle: String })
   border-bottom: 1px solid var(--bl-border);
   flex-shrink: 0;
 }
-.ph-main { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.ph-title { margin: 0; font-size: 18px; font-weight: 600; line-height: 1.2; }
-.ph-sub { font-size: var(--bl-fs-12); color: var(--bl-text-3); }
-.ph-r { display: flex; align-items: center; gap: 12px; }
+/* 标题 + 副标题在同一行；空间不够时副标题先省略 */
+.ph-main {
+  display: flex; align-items: baseline; gap: 12px;
+  min-width: 0; flex: 1;
+  overflow: hidden;
+}
+.ph-title {
+  margin: 0; font-size: 18px; font-weight: 600; line-height: 1.2;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.ph-sub {
+  font-size: var(--bl-fs-12);
+  color: var(--bl-text-3);
+  min-width: 0; flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ph-r { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
 </style>

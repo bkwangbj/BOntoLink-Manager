@@ -280,43 +280,77 @@ export function antdIconNames(theme = 'outlined') {
   return ANTD_OUTLINED_NAMES.slice()
 }
 
-/* ---------- Custom icons (用户自定义 / 上传 SVG) ---------- */
-// localStorage 持久化结构：
-// { groups: [{ key, label, iconIds: [] }], icons: { [id]: { name, viewBox, content } } }
-const CUSTOM_STORAGE_KEY = 'bl.iconlib.custom.v1'
-function loadCustomData() {
-  try {
-    const raw = localStorage.getItem(CUSTOM_STORAGE_KEY)
-    if (!raw) return { groups: [], icons: {} }
-    const d = JSON.parse(raw)
-    return {
-      groups: Array.isArray(d.groups) ? d.groups : [],
-      icons: (d.icons && typeof d.icons === 'object') ? d.icons : {}
-    }
-  } catch { return { groups: [], icons: {} } }
-}
-function saveCustomData(d) {
-  try { localStorage.setItem(CUSTOM_STORAGE_KEY, JSON.stringify(d)) } catch {}
-}
-let CUSTOM = loadCustomData()
+/* ---------- 共享「业务图库」(API + 内存缓存) ---------- */
+// 结构与后端对齐：groups: [{ id, parentId, name, sort }], icons: [{ id, groupId, name, viewBox, content }]
+// 内存中再构造一份 iconsById 供 BL.icon('custom:<id>') O(1) 命中
+let CUSTOM = { groups: [], icons: [], iconsById: {} }
 const customListeners = new Set()
-export function getCustomIconData() {
-  return JSON.parse(JSON.stringify(CUSTOM))
+
+function rebuildIconsById() {
+  const m = {}
+  for (const ic of CUSTOM.icons) m[ic.id] = ic
+  CUSTOM.iconsById = m
 }
+
+/** 取当前快照（仅供组件读取，写入用 setCustomIconData） */
+export function getCustomIconData() {
+  return {
+    groups: CUSTOM.groups.slice(),
+    icons: CUSTOM.icons.slice(),
+    iconsById: { ...CUSTOM.iconsById }
+  }
+}
+
+/** 全量替换（用于 API 拉取后写入） */
 export function setCustomIconData(next) {
-  CUSTOM = next
-  saveCustomData(CUSTOM)
+  CUSTOM = {
+    groups: Array.isArray(next?.groups) ? next.groups.slice() : [],
+    icons: Array.isArray(next?.icons) ? next.icons.slice() : [],
+    iconsById: {}
+  }
+  rebuildIconsById()
   customListeners.forEach(fn => { try { fn(CUSTOM) } catch {} })
 }
+
 export function onCustomIconsChange(fn) {
   customListeners.add(fn)
   return () => customListeners.delete(fn)
 }
+
+/** 局部更新工具：插入/删除单条图标（供组件在乐观更新时使用） */
+export function customIconUpsert(icon) {
+  const i = CUSTOM.icons.findIndex(x => x.id === icon.id)
+  if (i >= 0) CUSTOM.icons.splice(i, 1, icon)
+  else CUSTOM.icons.push(icon)
+  CUSTOM.iconsById[icon.id] = icon
+  customListeners.forEach(fn => { try { fn(CUSTOM) } catch {} })
+}
+export function customIconRemoveByIds(ids) {
+  const s = new Set(ids)
+  CUSTOM.icons = CUSTOM.icons.filter(x => !s.has(x.id))
+  for (const id of ids) delete CUSTOM.iconsById[id]
+  customListeners.forEach(fn => { try { fn(CUSTOM) } catch {} })
+}
+export function customGroupUpsert(group) {
+  const i = CUSTOM.groups.findIndex(x => x.id === group.id)
+  if (i >= 0) CUSTOM.groups.splice(i, 1, group)
+  else CUSTOM.groups.push(group)
+  customListeners.forEach(fn => { try { fn(CUSTOM) } catch {} })
+}
+export function customGroupRemove(id) {
+  CUSTOM.groups = CUSTOM.groups.filter(x => x.id !== id && x.parentId !== id)
+  // 同步清掉孤立的 icon（所属组已删）
+  const liveGroupIds = new Set(CUSTOM.groups.map(g => g.id))
+  CUSTOM.icons = CUSTOM.icons.filter(ic => liveGroupIds.has(ic.groupId))
+  rebuildIconsById()
+  customListeners.forEach(fn => { try { fn(CUSTOM) } catch {} })
+}
+
 function resolveCustomIcon(name) {
   if (!name || typeof name !== 'string') return null
   const m = name.match(/^custom:(.+)$/)
   if (!m) return null
-  return CUSTOM.icons[m[1]] || null
+  return CUSTOM.iconsById[m[1]] || null
 }
 
 export function blIcon(name, size = 16, color) {

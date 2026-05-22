@@ -212,13 +212,13 @@ function cancel() { app.closeDomainPicker() }
   position: fixed;
   top: var(--bl-topbar-h);
   right: 0;
-  bottom: 0;
+  bottom: 40px;                /* 与视口底部保持 40px 距离 */
   /* left 由组件根据 sidebar 折叠状态动态注入 */
   background: transparent;
   pointer-events: none;
   z-index: 1300;
   display: flex; align-items: stretch; justify-content: flex-start;
-  padding: 8px 0 8px 6px;
+  padding: 8px 0 0 6px;
   transition: left .18s ease;
   overflow: hidden;
 }
@@ -227,24 +227,26 @@ function cancel() { app.closeDomainPicker() }
   width: 980px; max-width: calc(100% - 24px);
   height: 100%;
   background: var(--bl-bg-1);
-  border: 1px solid var(--bl-border);
+  border: 1px solid var(--bl-border-strong);
   border-radius: var(--bl-radius-3);
   box-shadow: var(--bl-shadow-3);
   display: flex; flex-direction: column;
   overflow: hidden;
   position: relative;
 }
-/* 左侧小三角，指向 sidebar 上的触发按钮 */
-.dom-modal::before {
+/* 左侧小三角，指向 sidebar 上的触发按钮（挂在 mask 上，避开 modal 的 overflow:hidden 裁剪） */
+.dom-mask::before {
   content: '';
   position: absolute;
   top: 28px;
-  left: -7px;
+  left: 0;
   width: 12px; height: 12px;
   background: var(--bl-bg-1);
-  border-left: 1px solid var(--bl-border);
-  border-bottom: 1px solid var(--bl-border);
+  border-left: 1px solid var(--bl-border-strong);
+  border-bottom: 1px solid var(--bl-border-strong);
   transform: rotate(45deg);
+  pointer-events: none;
+  z-index: 2;
 }
 .dom-hd {
   height: 52px; padding: 0 16px;
@@ -323,6 +325,7 @@ function cancel() { app.closeDomainPicker() }
   grid-template-columns: 220px 1fr;
   gap: 12px; padding: 12px 16px;
   overflow: hidden;
+  background: var(--bl-bg-2);     /* 与上方已选区一致的灰底 */
 }
 .dom-tree {
   background: var(--bl-bg-1);

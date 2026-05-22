@@ -1,78 +1,878 @@
 <template>
-  <div class="page">
-    <PageHeader title="对象类型" subtitle="Object types · 本体业务实体的元数据定义">
-      <template #actions>
-        <div class="search-wrap">
-          <span class="search-icon" v-html="BL.icon('search', 14)"></span>
-          <input class="bl-input search-input" placeholder="搜索对象类型 / api_name" v-model="q" />
+  <div class="ot-page">
+    <!-- 顶部操作栏 48px -->
+    <header class="ot-topbar">
+      <div class="ot-title-wrap" :title="titleTip">
+        <span class="ot-title">对象类别</span>
+        <span class="ot-subtitle">对象、属性、物理映射、规则</span>
+      </div>
+      <div class="ot-actions">
+        <select class="bl-input ot-select" v-model="filterDomain" :title="'业务领域'">
+          <option value="">全部业务领域</option>
+          <option v-for="d in domainOpts" :key="d.code" :value="d.code">{{ d.label }}</option>
+        </select>
+        <select class="bl-input ot-select" v-model="filterStatus" :title="'状态'">
+          <option value="">全部状态</option>
+          <option value="1">启用</option>
+          <option value="0">禁用</option>
+        </select>
+        <div class="ot-search">
+          <span class="ot-search-ic" v-html="BL.icon('search', 14)"></span>
+          <input class="bl-input ot-search-input" v-model="q" placeholder="搜索对象（名称/编码）" />
+          <button v-if="q" class="ot-search-clear" @click="q=''" v-html="BL.icon('x', 10)"></button>
         </div>
-        <button class="bl-btn">筛选</button>
-        <button class="bl-btn bl-btn-primary">新建对象类型</button>
-      </template>
-    </PageHeader>
+        <button class="bl-btn bl-btn-primary" @click="onCreate">
+          <span v-html="BL.icon('plus', 12, '#fff')"></span>
+          <span style="margin-left:4px">新建对象</span>
+        </button>
+      </div>
+    </header>
 
-    <div class="body">
-      <div class="bl-card">
-        <table class="bl-table">
-          <thead>
-            <tr>
-              <th></th>
-              <th>显示名</th>
-              <th>API name</th>
-              <th>命名空间</th>
-              <th>分类编码</th>
-              <th>状态</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="c in filtered" :key="c.id" @contextmenu.prevent="onCtx($event, c)">
-              <td style="width:48px">
-                <div class="bl-icon-block bl-icon-block-sm" :style="{ background: c.color || '#165DFF' }" v-html="BL.icon(c.icon || 'cube', 12, '#fff')"></div>
-              </td>
-              <td>{{ c.display_name || c.rdfs_label }}</td>
-              <td class="bl-mono">{{ c.api_name }}</td>
-              <td><span class="bl-tag">{{ c.ns_code }}</span></td>
-              <td class="bl-mono">{{ c.category_code }}</td>
-              <td>
-                <span :class="['bl-tag', c.status===1 ? 'bl-tag-success' : 'bl-tag-warning']">
-                  {{ c.status===1 ? 'Active' : 'Draft' }}
-                </span>
-              </td>
-              <td><button class="bl-btn bl-btn-sm bl-btn-text" v-html="BL.icon('more', 14)"></button></td>
-            </tr>
-          </tbody>
-        </table>
-        <div v-if="!filtered.length" class="bl-empty">
-          <div class="bl-empty-icon" v-html="BL.icon('cube', 32)"></div>
-          暂无对象类型，<a>创建第一个 →</a>
+    <!-- 主体区域 -->
+    <section class="ot-body">
+      <!-- 左侧 TAB 页签 -->
+      <div class="ot-pane" :style="paneStyle">
+        <div class="ot-tabs">
+          <button v-for="v in viewTabs" :key="v.k" :class="['ot-tab', viewMode === v.k && 'is-on']" @click="viewMode = v.k">
+            <span v-html="BL.icon(v.icon, 12)"></span>
+            <span style="margin-left:4px">{{ v.label }}</span>
+          </button>
+        </div>
+
+        <!-- 列表 -->
+        <div v-if="viewMode === 'list'" class="ot-list-card">
+          <div class="ot-list-scroll">
+            <table class="bl-table ot-table">
+              <thead>
+                <tr>
+                  <th style="width:28px"><input type="checkbox" :checked="allChecked" @change="toggleAll" /></th>
+                  <th style="width:44px"></th>
+                  <th>对象</th>
+                  <th>领域</th>
+                  <th>属性数</th>
+                  <th>父类</th>
+                  <th>子类数</th>
+                  <th>数据源数</th>
+                  <th>关联表数</th>
+                  <th>RID</th>
+                  <th>状态</th>
+                  <th style="width:90px"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="r in paged" :key="r.id"
+                    :class="['ot-row', selected?.id===r.id && 'is-active']"
+                    @click="openDrawer(r)">
+                  <td @click.stop><input type="checkbox" :checked="checked.has(r.id)" @change="toggleOne(r.id)" /></td>
+                  <td>
+                    <span class="ot-ic" :style="{ background: r.color || '#165DFF' }" v-html="BL.icon(r.icon || 'cube', 12, '#fff')"></span>
+                  </td>
+                  <td class="ot-cell-obj">
+                    <div class="ot-obj-label bl-truncate">{{ r.rdfs_label || r.display_name || r.api_name }}</div>
+                    <div class="ot-obj-api bl-mono bl-muted bl-truncate">{{ r.api_name }}</div>
+                  </td>
+                  <td><span class="bl-muted">{{ r.categoryLabel || '—' }}</span></td>
+                  <td>
+                    <a class="ot-link" @click.stop="openDrawer(r, 'props')">
+                      {{ r.propNormal ?? 0 }} <span class="bl-muted">|</span> {{ r.propTotal ?? 0 }}
+                    </a>
+                  </td>
+                  <td>
+                    <a v-if="r.parentLabel" class="ot-link">{{ r.parentLabel }}<span class="bl-mono bl-muted" style="margin-left:4px">{{ r.parentApiName }}</span></a>
+                    <span v-else class="bl-muted">—</span>
+                  </td>
+                  <td><a class="ot-link" @click.stop="openDrawer(r, 'hierarchy')">{{ r.childCount ?? 0 }}</a></td>
+                  <td><a class="ot-link" @click.stop="openDrawer(r, 'ds')">{{ r.dsCount ?? 0 }}</a></td>
+                  <td class="bl-truncate" :title="(r.relatedTables || []).join('、')">
+                    <span v-if="(r.relatedTables || []).length" class="bl-mono">{{ (r.relatedTables || []).join('、') }}</span>
+                    <span v-else class="bl-muted">—</span>
+                  </td>
+                  <td class="ot-rid">
+                    <span class="bl-mono bl-muted bl-truncate" :title="r.rid">{{ shortRid(r.rid) }}</span>
+                    <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" @click.stop="copyText(r.rid)" v-html="BL.icon('copy', 11)"></button>
+                  </td>
+                  <td>
+                    <span :class="['bl-tag', r.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']">
+                      {{ r.status === 1 ? '启用' : '禁用' }}
+                    </span>
+                  </td>
+                  <td @click.stop>
+                    <div class="bl-row" style="gap:0">
+                      <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="编辑" @click="openDrawer(r, 'overview')" v-html="BL.icon('edit', 12)"></button>
+                      <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" :title="r.status===1?'禁用':'启用'" @click="toggleStatus(r)" v-html="BL.icon('zap', 12)"></button>
+                      <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="删除" @click="removeOne(r)" v-html="BL.icon('trash', 12)"></button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div v-if="!paged.length" class="bl-empty" style="padding:60px">
+              <div class="bl-empty-icon" v-html="BL.icon('cube', 36)"></div>
+              <div>未匹配到对象类型</div>
+              <div style="margin-top:12px">
+                <button class="bl-btn" @click="clearFilters">清除筛选</button>
+              </div>
+            </div>
+          </div>
+          <!-- 分页钉底 -->
+          <div class="ot-pager">
+            <div class="ot-pager-l">
+              <template v-if="checked.size">
+                已选 <b style="color:var(--bl-primary)">{{ checked.size }}</b> 项
+                <button class="bl-btn bl-btn-sm bl-btn-danger" style="margin-left:8px" @click="removeBatch">批量删除</button>
+              </template>
+              <template v-else>
+                共 {{ filtered.length }} 项
+              </template>
+            </div>
+            <div class="ot-pager-r">
+              <span class="bl-muted" style="font-size:12px;margin-right:8px">每页</span>
+              <select class="bl-input ot-page-size" v-model.number="pageSize">
+                <option :value="20">20</option>
+                <option :value="50">50</option>
+                <option :value="100">100</option>
+              </select>
+              <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="page<=1" @click="page--">‹</button>
+              <span class="bl-muted" style="font-size:12px">{{ page }} / {{ totalPages }}</span>
+              <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="page>=totalPages" @click="page++">›</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 卡片 -->
+        <div v-else-if="viewMode === 'card'" class="ot-card-grid">
+          <div v-for="r in filtered" :key="r.id" class="ot-card" @click="openDrawer(r)">
+            <div class="ot-card-hd">
+              <div class="ot-ic ot-ic-lg" :style="{ background: r.color || '#165DFF' }" v-html="BL.icon(r.icon || 'cube', 18, '#fff')"></div>
+              <div class="bl-grow" style="min-width:0">
+                <div class="ot-card-title bl-truncate">{{ r.rdfs_label || r.display_name || r.api_name }}</div>
+                <div class="ot-card-api bl-mono bl-muted bl-truncate">{{ r.api_name }}</div>
+              </div>
+              <span :class="['bl-tag', r.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']">{{ r.status === 1 ? '启用' : '禁用' }}</span>
+            </div>
+            <div class="ot-card-stats">
+              <div class="ot-card-stat"><span class="bl-muted">属性</span><b>{{ r.propTotal ?? 0 }}</b></div>
+              <div class="ot-card-stat"><span class="bl-muted">关系</span><b>{{ r.linkCount ?? 0 }}</b></div>
+              <div class="ot-card-stat"><span class="bl-muted">动作</span><b>{{ r.actionCount ?? 0 }}</b></div>
+              <div class="ot-card-stat"><span class="bl-muted">数据源</span><b>{{ r.dsCount ?? 0 }}</b></div>
+            </div>
+            <div class="ot-card-ft bl-muted">{{ r.categoryLabel || '—' }}</div>
+          </div>
+          <div v-if="!filtered.length" class="bl-empty" style="padding:60px;grid-column:1/-1">
+            <div class="bl-empty-icon" v-html="BL.icon('cube', 36)"></div>
+            <div>未匹配到对象类型</div>
+          </div>
+        </div>
+
+        <!-- 图谱（占位） -->
+        <div v-else class="ot-graph-stub">
+          <div class="bl-empty" style="padding:80px">
+            <div class="bl-empty-icon" v-html="BL.icon('network', 48)"></div>
+            <div>图谱视图建设中</div>
+            <div class="bl-muted" style="margin-top:8px;font-size:12px">支持行业 → 领域 → 分组 → 对象 → 接口 → 关系探索</div>
+          </div>
         </div>
       </div>
-    </div>
+
+      <!-- 右侧抽屉（浮在左侧之上） -->
+      <transition name="ot-drawer">
+      <aside v-if="drawerOpen" class="ot-drawer" :style="{ width: drawerWidth + 'px' }">
+        <div class="ot-drag-handle"
+             @mousedown="onDragStart"
+             :class="resizing && 'is-resizing'"></div>
+        <div class="ot-drawer-hd">
+          <div class="ot-drawer-hd-l">
+            <div class="ot-ic ot-ic-lg" :style="{ background: selected?.color || '#165DFF' }" v-html="BL.icon(selected?.icon || 'cube', 18, '#fff')"></div>
+            <div class="bl-grow" style="min-width:0">
+              <div class="ot-drawer-title">
+                <span class="bl-truncate">{{ selected?.rdfs_label || selected?.display_name || selected?.api_name }}</span>
+                <span class="bl-mono bl-muted" style="font-size:12px">({{ selected?.api_name }})</span>
+                <span :class="['bl-tag', selected?.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']">{{ selected?.status === 1 ? '启用' : '禁用' }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="ot-drawer-hd-r">
+            <button class="bl-btn bl-btn-sm" @click="onAi"><span v-html="BL.icon('ai', 12)"></span><span style="margin-left:4px">AI 助手</span></button>
+            <button class="bl-btn bl-btn-sm" @click="onViewInstances"><span v-html="BL.icon('database', 12)"></span><span style="margin-left:4px">查看实例</span></button>
+            <button class="bl-btn bl-btn-sm bl-btn-primary" @click="onEdit"><span v-html="BL.icon('edit', 12, '#fff')"></span><span style="margin-left:4px">编辑</span></button>
+            <span class="ot-drawer-sep"></span>
+            <button class="bl-btn bl-btn-text bl-btn-icon" :title="drawerMaxed ? '恢复' : '最大'" @click="toggleMax" v-html="BL.icon(drawerMaxed ? 'minimize' : 'maximize', 14)"></button>
+            <button class="bl-btn bl-btn-text bl-btn-icon" :title="drawerMined ? '恢复' : '最小'" @click="toggleMin" v-html="BL.icon('minimize', 14)"></button>
+            <button class="bl-btn bl-btn-text bl-btn-icon" title="关闭" @click="closeDrawer" v-html="BL.icon('x', 14)"></button>
+          </div>
+        </div>
+
+        <div class="ot-drawer-body">
+          <!-- 左侧 TAB 分组 -->
+          <nav class="ot-tab-side">
+            <div v-for="g in tabGroups" :key="g.key" class="ot-tab-group">
+              <div class="ot-tab-group-hd" @click="toggleGroup(g.key)">
+                <span class="ot-tab-group-chev" :class="!collapsedGroups.has(g.key) && 'is-open'" v-html="BL.icon('chevronRight', 11)"></span>
+                <span>{{ g.label }}</span>
+              </div>
+              <div v-show="!collapsedGroups.has(g.key)" class="ot-tab-group-body">
+                <button v-for="t in g.tabs" :key="t.key"
+                        :class="['ot-tab-item', drawerTab === t.key && 'is-on']"
+                        @click="drawerTab = t.key">
+                  {{ t.label }}
+                </button>
+              </div>
+            </div>
+          </nav>
+
+          <!-- 右侧 TAB 内容区 -->
+          <section class="ot-tab-pane">
+            <!-- 概览 -->
+            <div v-if="drawerTab === 'overview'" class="ot-tab-content">
+              <div class="ot-section-title">基础信息</div>
+              <div class="ot-grid">
+                <FieldRow label="API 名称" inline><span class="bl-mono">{{ detail.api_name }}</span></FieldRow>
+                <FieldRow label="编码" inline><span class="bl-mono">{{ detail.category_code }}</span></FieldRow>
+                <FieldRow label="标准名 (rdfs:label)" inline>{{ detail.rdfs_label || '—' }}</FieldRow>
+                <FieldRow label="命名空间" inline><span class="bl-tag">{{ detail.ns_code || '—' }}</span></FieldRow>
+                <FieldRow label="状态" inline>
+                  <span :class="['bl-tag', detail.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']">{{ detail.status === 1 ? '启用' : '禁用' }}</span>
+                </FieldRow>
+                <FieldRow label="所属领域" inline>{{ selected?.categoryLabel || '—' }}</FieldRow>
+              </div>
+
+              <div class="ot-section-title">语义注释</div>
+              <FieldRow label="注释 (rdfs:comment)"><div class="bl-muted">{{ detail.rdfs_comment || '尚未填写' }}</div></FieldRow>
+              <FieldRow label="说明"><div class="bl-muted">{{ detail.description || '—' }}</div></FieldRow>
+              <FieldRow label="参考资料 (rdfs:seeAlso)"><div class="bl-muted">{{ detail.rdfs_see_also || '—' }}</div></FieldRow>
+              <FieldRow label="定义来源 (rdfs:isDefinedBy)"><div class="bl-muted">{{ detail.rdfs_defined_by || '—' }}</div></FieldRow>
+
+              <div class="ot-section-title">统计</div>
+              <div class="ot-stat-grid">
+                <div class="ot-stat-card"><div class="ot-stat-lbl">属性总数</div><div class="ot-stat-val">{{ detail.propTotal ?? 0 }}</div></div>
+                <div class="ot-stat-card"><div class="ot-stat-lbl">普通属性</div><div class="ot-stat-val">{{ detail.propNormal ?? 0 }}</div></div>
+                <div class="ot-stat-card"><div class="ot-stat-lbl">关系</div><div class="ot-stat-val">{{ detail.linkCount ?? 0 }}</div></div>
+                <div class="ot-stat-card"><div class="ot-stat-lbl">动作</div><div class="ot-stat-val">{{ detail.actionCount ?? 0 }}</div></div>
+                <div class="ot-stat-card"><div class="ot-stat-lbl">接口</div><div class="ot-stat-val">{{ detail.interfaceCount ?? 0 }}</div></div>
+              </div>
+
+              <div class="ot-section-title">RID</div>
+              <div class="bl-row" style="gap:8px;align-items:center">
+                <span class="bl-mono bl-muted">{{ detail.rid || selected?.rid }}</span>
+                <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" @click="copyText(detail.rid || selected?.rid)" v-html="BL.icon('copy', 12)"></button>
+              </div>
+            </div>
+
+            <!-- 属性 -->
+            <div v-else-if="drawerTab === 'props'" class="ot-tab-content">
+              <div class="ot-tab-toolbar">
+                <span class="bl-muted">共 {{ (detail.properties || []).length }} 个属性</span>
+                <div class="bl-grow"></div>
+                <button class="bl-btn bl-btn-sm bl-btn-primary"><span v-html="BL.icon('plus', 12, '#fff')"></span><span style="margin-left:4px">新增属性</span></button>
+              </div>
+              <table class="bl-table">
+                <thead>
+                  <tr>
+                    <th>属性</th>
+                    <th>类型</th>
+                    <th>主键</th>
+                    <th>必填</th>
+                    <th>状态</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="p in (detail.properties || [])" :key="p.id">
+                    <td>
+                      <div>{{ p.display_name || p.rdfs_label || p.api_name }}</div>
+                      <div class="bl-mono bl-muted" style="font-size:11px">{{ p.api_name }}</div>
+                    </td>
+                    <td><span class="bl-tag">{{ p.data_type || '—' }}</span></td>
+                    <td>{{ p.is_primary ? '是' : '—' }}</td>
+                    <td>{{ p.is_required ? '是' : '—' }}</td>
+                    <td><span :class="['bl-tag', p.status === 1 ? 'bl-tag-success' : 'bl-tag-warning']">{{ p.status === 1 ? '启用' : '禁用' }}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div v-if="!(detail.properties || []).length" class="bl-empty" style="padding:32px">暂无属性</div>
+            </div>
+
+            <!-- 值类型（占位） -->
+            <div v-else-if="drawerTab === 'valueType'" class="ot-tab-content">
+              <Placeholder icon="sliders" label="值类型清单" desc="按 XSD 派生类型呈现各属性的值域、长度/数值约束、枚举值等,待与值类型模块联动" />
+            </div>
+
+            <!-- 关联表 -->
+            <div v-else-if="drawerTab === 'tables'" class="ot-tab-content">
+              <div class="ot-tab-toolbar">
+                <span class="bl-muted">主数据集 + 补充数据集</span>
+                <div class="bl-grow"></div>
+                <button class="bl-btn bl-btn-sm bl-btn-primary"><span v-html="BL.icon('plus', 12, '#fff')"></span><span style="margin-left:4px">关联数据表</span></button>
+              </div>
+              <table class="bl-table">
+                <thead>
+                  <tr><th>排序</th><th>关联类型</th><th>物理表</th><th>主键</th><th>JOIN</th><th>别名</th></tr>
+                </thead>
+                <tbody>
+                  <tr v-for="ds in (detail.datasources || [])" :key="ds.id">
+                    <td>—</td>
+                    <td><span class="bl-tag bl-tag-primary">主数据集</span></td>
+                    <td class="bl-mono">{{ ds.ds_code }}</td>
+                    <td>—</td>
+                    <td>LEFT</td>
+                    <td>main</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div v-if="!(detail.datasources || []).length" class="bl-empty" style="padding:32px">暂未配置关联表</div>
+            </div>
+
+            <!-- 关系 -->
+            <div v-else-if="drawerTab === 'links'" class="ot-tab-content">
+              <div class="ot-tab-toolbar">
+                <span class="bl-muted">共 {{ (detail.links || []).length }} 条关系</span>
+              </div>
+              <table class="bl-table">
+                <thead><tr><th>关系</th><th>API</th><th>方向</th><th>基数</th></tr></thead>
+                <tbody>
+                  <tr v-for="l in (detail.links || [])" :key="l.id">
+                    <td>{{ l.display_name || l.rdfs_label || l.api_name }}</td>
+                    <td class="bl-mono">{{ l.api_name }}</td>
+                    <td>
+                      <span v-if="l.source_class_id === detail.id" class="bl-tag">出向</span>
+                      <span v-else class="bl-tag">入向</span>
+                    </td>
+                    <td><span class="bl-tag">{{ l.cardinality || 'many_to_many' }}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div v-if="!(detail.links || []).length" class="bl-empty" style="padding:32px">暂无关系</div>
+            </div>
+
+            <!-- 类层次 -->
+            <div v-else-if="drawerTab === 'hierarchy'" class="ot-tab-content">
+              <Placeholder icon="branch" label="类继承层次" desc="呈现父类 / 子类 / 兄弟类的树状结构,支持点击跳转" />
+            </div>
+
+            <!-- 对象图谱 -->
+            <div v-else-if="drawerTab === 'graph'" class="ot-tab-content">
+              <Placeholder icon="network" label="对象关联图谱" desc="以当前对象为中心,展示其 1-2 度可达的关联对象、关系、动作" />
+            </div>
+
+            <!-- 等价 -->
+            <div v-else-if="drawerTab === 'equiv'" class="ot-tab-content">
+              <Placeholder icon="share" label="等价类 (OWL: equivalentClass)" desc="维护与当前对象语义完全等价的本体类清单" />
+            </div>
+
+            <!-- 不相交 -->
+            <div v-else-if="drawerTab === 'disjoint'" class="ot-tab-content">
+              <Placeholder icon="x" label="不相交类 (OWL: disjointWith)" desc="标记与当前对象互斥、不能同时成立的本体类" />
+            </div>
+
+            <!-- 互斥并集 -->
+            <div v-else-if="drawerTab === 'disjointUnion'" class="ot-tab-content">
+              <Placeholder icon="branch" label="互斥并集 (OWL: disjointUnionOf)" desc="互斥 + 覆盖全部父类的子类划分(如:在职 / 离职 / 退休)" />
+            </div>
+
+            <!-- 接口 -->
+            <div v-else-if="drawerTab === 'iface'" class="ot-tab-content">
+              <div class="ot-tab-toolbar">
+                <span class="bl-muted">已实现 {{ (detail.interfaces || []).length }} 个接口</span>
+                <div class="bl-grow"></div>
+                <button class="bl-btn bl-btn-sm bl-btn-primary"><span v-html="BL.icon('plus', 12, '#fff')"></span><span style="margin-left:4px">实现接口</span></button>
+              </div>
+              <table class="bl-table">
+                <thead><tr><th>接口</th><th>API</th><th>状态</th></tr></thead>
+                <tbody>
+                  <tr v-for="i in (detail.interfaces || [])" :key="i.id">
+                    <td>
+                      <div class="bl-row" style="gap:8px;align-items:center">
+                        <span class="ot-ic" :style="{ background: i.color || '#165DFF' }" v-html="BL.icon(i.icon || 'station', 11, '#fff')"></span>
+                        {{ i.display_name || i.rdfs_label || i.api_name }}
+                      </div>
+                    </td>
+                    <td class="bl-mono">{{ i.api_name }}</td>
+                    <td><span :class="['bl-tag', i.status === 1 ? 'bl-tag-success' : 'bl-tag-warning']">{{ i.status === 1 ? '启用' : '废弃' }}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div v-if="!(detail.interfaces || []).length" class="bl-empty" style="padding:32px">暂未实现任何接口</div>
+            </div>
+
+            <!-- 动作 -->
+            <div v-else-if="drawerTab === 'actions'" class="ot-tab-content">
+              <div class="ot-tab-toolbar">
+                <span class="bl-muted">共 {{ (detail.actions || []).length }} 个动作</span>
+              </div>
+              <table class="bl-table">
+                <thead><tr><th>动作</th><th>API</th><th>类型</th><th>状态</th></tr></thead>
+                <tbody>
+                  <tr v-for="a in (detail.actions || [])" :key="a.id">
+                    <td>{{ a.display_name || a.rdfs_label || a.api_name }}</td>
+                    <td class="bl-mono">{{ a.api_name }}</td>
+                    <td><span class="bl-tag">{{ a.action_kind || '—' }}</span></td>
+                    <td><span :class="['bl-tag', a.status === 1 ? 'bl-tag-success' : 'bl-tag-warning']">{{ a.status === 1 ? '启用' : '禁用' }}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div v-if="!(detail.actions || []).length" class="bl-empty" style="padding:32px">暂无动作</div>
+            </div>
+
+            <!-- 函数 -->
+            <div v-else-if="drawerTab === 'fn'" class="ot-tab-content">
+              <Placeholder icon="branch" label="派生属性函数" desc="管理与当前对象关联的 Function 计算逻辑,支持实时计算与 TTL 缓存" />
+            </div>
+
+            <!-- 数据源 -->
+            <div v-else-if="drawerTab === 'ds'" class="ot-tab-content">
+              <div class="ot-tab-toolbar">
+                <span class="bl-muted">同领域数据源 {{ (detail.datasources || []).length }} 个</span>
+              </div>
+              <table class="bl-table">
+                <thead><tr><th>编码</th><th>名称</th><th>类型</th><th>状态</th></tr></thead>
+                <tbody>
+                  <tr v-for="d in (detail.datasources || [])" :key="d.id">
+                    <td class="bl-mono">{{ d.ds_code }}</td>
+                    <td>{{ d.ds_name }}</td>
+                    <td><span class="bl-tag">{{ d.ds_type }}</span></td>
+                    <td><span :class="['bl-tag', d.status === 1 ? 'bl-tag-success' : 'bl-tag-warning']">{{ d.status === 1 ? '启用' : '禁用' }}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div v-if="!(detail.datasources || []).length" class="bl-empty" style="padding:32px">同领域暂无数据源</div>
+            </div>
+
+            <!-- 使用情况 -->
+            <div v-else-if="drawerTab === 'usage'" class="ot-tab-content">
+              <Placeholder icon="activity" label="使用情况" desc="呈现引用本对象的接口/页面/实例数量、最近调用时间、热度趋势" />
+            </div>
+          </section>
+        </div>
+      </aside>
+      </transition>
+    </section>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import PageHeader from '@/components/PageHeader.vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch, h } from 'vue'
 import { BL } from '@/lib/bl.js'
-import { resourceApi } from '@/api'
+import { resourceApi, categoryApi } from '@/api'
+import FieldRow from '@/views/config/category/FieldRow.vue'
 
+// 占位组件（内嵌 functional 风格）
+const Placeholder = {
+  props: { icon: { type: String, default: 'cube' }, label: String, desc: String },
+  setup(props) {
+    return () => h('div', { class: 'bl-empty', style: 'padding:60px' }, [
+      h('div', { class: 'bl-empty-icon', innerHTML: BL.icon(props.icon, 40) }),
+      h('div', { style: 'margin-top:8px;font-weight:500' }, props.label),
+      h('div', { class: 'bl-muted', style: 'margin-top:6px;font-size:12px;max-width:360px;margin-left:auto;margin-right:auto' }, props.desc),
+      h('div', { class: 'bl-muted', style: 'margin-top:14px;font-size:11px' }, '该 TAB 待与对应模块联调')
+    ])
+  }
+}
+
+/* ===== 数据 ===== */
 const rows = ref([])
+const tree = ref([])
+
+/* ===== 顶部筛选 ===== */
 const q = ref('')
-const filtered = computed(() => {
-  const k = q.value.trim().toLowerCase()
-  if (!k) return rows.value
-  return rows.value.filter(r => [r.api_name, r.display_name, r.rdfs_label, r.ns_code].filter(Boolean).some(s => String(s).toLowerCase().includes(k)))
+const filterDomain = ref('')
+const filterStatus = ref('')
+
+const titleTip = computed(() => '对象类别 · 对象、属性、物理映射、规则')
+
+// 业务领域选项：仅显示"领域"(category_type=2)节点
+const domainOpts = computed(() => {
+  const out = []
+  const walk = (ns) => {
+    for (const n of (ns || [])) {
+      if (n.categoryType === 2) out.push({ code: n.categoryCode, label: n.label || n.rdfsLabel || n.categoryCode })
+      if (n.children?.length) walk(n.children)
+    }
+  }
+  walk(tree.value)
+  return out
 })
-function onCtx(e, c) { BL.info(`右键 · ${c.api_name}`) }
-onMounted(async () => { rows.value = await resourceApi.classes().catch(() => []) })
+
+const filtered = computed(() => {
+  let list = rows.value
+  if (filterDomain.value) list = list.filter(r => r.category_code === filterDomain.value)
+  if (filterStatus.value !== '') list = list.filter(r => String(r.status) === filterStatus.value)
+  const k = q.value.trim().toLowerCase()
+  if (k) {
+    list = list.filter(r => [r.api_name, r.display_name, r.rdfs_label, r.category_code, r.rid]
+      .filter(Boolean).some(s => String(s).toLowerCase().includes(k)))
+  }
+  return list
+})
+
+/* ===== 视图切换 ===== */
+const viewMode = ref('list')
+const viewTabs = [
+  { k: 'list', label: '列表', icon: 'list' },
+  { k: 'card', label: '卡片', icon: 'grid' },
+  { k: 'graph', label: '图谱', icon: 'network' }
+]
+
+/* ===== 分页 ===== */
+const page = ref(1)
+const pageSize = ref(20)
+const totalPages = computed(() => Math.max(1, Math.ceil(filtered.value.length / pageSize.value)))
+const paged = computed(() => {
+  const start = (page.value - 1) * pageSize.value
+  return filtered.value.slice(start, start + pageSize.value)
+})
+watch(filtered, () => { if (page.value > totalPages.value) page.value = 1 })
+
+/* ===== 多选 ===== */
+const checked = ref(new Set())
+const allChecked = computed(() => paged.value.length > 0 && paged.value.every(r => checked.value.has(r.id)))
+function toggleAll() {
+  const s = new Set(checked.value)
+  if (allChecked.value) paged.value.forEach(r => s.delete(r.id))
+  else paged.value.forEach(r => s.add(r.id))
+  checked.value = s
+}
+function toggleOne(id) {
+  const s = new Set(checked.value)
+  s.has(id) ? s.delete(id) : s.add(id)
+  checked.value = s
+}
+
+/* ===== 右侧抽屉 ===== */
+const selected = ref(null)
+const detail = ref({})
+const drawerOpen = ref(false)
+const drawerTab = ref('overview')
+const drawerWidth = ref(0)
+const drawerMaxed = ref(false)
+const drawerMined = ref(false)
+const resizing = ref(false)
+
+// 抽屉尺寸约束
+const DRAWER_MIN = 450
+function drawerMaxPx() {
+  return Math.floor(window.innerWidth * 0.85)
+}
+function defaultDrawerWidth() {
+  // 默认占左侧 TAB 区 85%（视为占视口 85%）
+  return Math.max(DRAWER_MIN, Math.floor(window.innerWidth * 0.55))
+}
+
+const paneStyle = computed(() => ({}))
+
+function openDrawer(r, tab = 'overview') {
+  selected.value = r
+  drawerTab.value = tab
+  drawerOpen.value = true
+  drawerMaxed.value = false
+  drawerMined.value = false
+  if (!drawerWidth.value) drawerWidth.value = defaultDrawerWidth()
+  loadDetail(r.id)
+}
+function closeDrawer() {
+  drawerOpen.value = false
+  selected.value = null
+}
+function toggleMax() {
+  if (drawerMaxed.value) { drawerWidth.value = defaultDrawerWidth(); drawerMaxed.value = false }
+  else { drawerWidth.value = drawerMaxPx(); drawerMaxed.value = true; drawerMined.value = false }
+}
+function toggleMin() {
+  if (drawerMined.value) { drawerWidth.value = defaultDrawerWidth(); drawerMined.value = false }
+  else { drawerWidth.value = DRAWER_MIN; drawerMined.value = true; drawerMaxed.value = false }
+}
+
+// 拖拽 resize
+let dragStartX = 0
+let dragStartW = 0
+function onDragStart(e) {
+  resizing.value = true
+  dragStartX = e.clientX
+  dragStartW = drawerWidth.value
+  document.body.style.cursor = 'col-resize'
+  document.body.style.userSelect = 'none'
+  window.addEventListener('mousemove', onDragMove)
+  window.addEventListener('mouseup', onDragEnd)
+}
+function onDragMove(e) {
+  const dx = dragStartX - e.clientX
+  const next = Math.min(drawerMaxPx(), Math.max(DRAWER_MIN, dragStartW + dx))
+  drawerWidth.value = next
+  drawerMaxed.value = next === drawerMaxPx()
+  drawerMined.value = next === DRAWER_MIN
+}
+function onDragEnd() {
+  resizing.value = false
+  document.body.style.cursor = ''
+  document.body.style.userSelect = ''
+  window.removeEventListener('mousemove', onDragMove)
+  window.removeEventListener('mouseup', onDragEnd)
+}
+
+onBeforeUnmount(() => {
+  window.removeEventListener('mousemove', onDragMove)
+  window.removeEventListener('mouseup', onDragEnd)
+})
+
+async function loadDetail(id) {
+  try {
+    detail.value = await resourceApi.classDetail(id)
+  } catch {
+    detail.value = {}
+  }
+}
+
+/* ===== TAB 分组结构 ===== */
+const tabGroups = [
+  { key: 'basic', label: '基础信息', tabs: [
+    { key: 'overview', label: '概览' },
+    { key: 'props', label: '属性' },
+    { key: 'valueType', label: '值类型' }
+  ]},
+  { key: 'rel', label: '关联关系', tabs: [
+    { key: 'tables', label: '关联表' },
+    { key: 'links', label: '关系' },
+    { key: 'hierarchy', label: '类层次' },
+    { key: 'graph', label: '对象图谱' }
+  ]},
+  { key: 'rule', label: '规则约束', tabs: [
+    { key: 'equiv', label: '等价' },
+    { key: 'disjoint', label: '不相交' },
+    { key: 'disjointUnion', label: '互斥并集' },
+    { key: 'iface', label: '接口' }
+  ]},
+  { key: 'biz', label: '业务应用', tabs: [
+    { key: 'actions', label: '动作' },
+    { key: 'fn', label: '函数' },
+    { key: 'ds', label: '数据源' },
+    { key: 'usage', label: '使用情况' }
+  ]}
+]
+const collapsedGroups = ref(new Set())
+function toggleGroup(k) {
+  const s = new Set(collapsedGroups.value)
+  s.has(k) ? s.delete(k) : s.add(k)
+  collapsedGroups.value = s
+}
+
+/* ===== 工具函数 ===== */
+function shortRid(rid) {
+  if (!rid) return '—'
+  return rid.length > 28 ? rid.slice(0, 28) + '…' : rid
+}
+async function copyText(t) {
+  if (!t) return
+  try { await navigator.clipboard.writeText(String(t)); BL.success('已复制') }
+  catch { BL.warning('复制失败,请手动选取') }
+}
+function clearFilters() { q.value = ''; filterDomain.value = ''; filterStatus.value = '' }
+function onCreate() { BL.info('新建对象待联调') }
+function onEdit() { BL.info('编辑面板待联调') }
+function onAi() { BL.info('AI 助手待联调') }
+function onViewInstances() { BL.info('查看实例待联调') }
+async function toggleStatus(r) {
+  BL.info(`切换 ${r.api_name} 状态待联调`)
+}
+async function removeOne(r) {
+  const ok = await BL.confirm({ title: '删除对象', content: `确定删除 ${r.rdfs_label || r.api_name}?`, danger: true, okText: '删除' })
+  if (!ok) return
+  BL.info('删除待联调')
+}
+async function removeBatch() {
+  const ok = await BL.confirm({ title: '批量删除', content: `确认删除 ${checked.value.size} 个对象?`, danger: true })
+  if (!ok) return
+  BL.info('批量删除待联调')
+}
+
+/* ===== 生命周期 ===== */
+onMounted(async () => {
+  try { tree.value = await categoryApi.tree() } catch {}
+  try { rows.value = await resourceApi.classes({ aggregate: true }) } catch { rows.value = [] }
+})
 </script>
 
 <style scoped>
-.page { display: flex; flex-direction: column; height: 100%; }
-.body { padding: 12px; flex: 1; overflow: auto; }
-.search-wrap { position: relative; width: 280px; }
-.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--bl-text-3); }
-.search-input { padding-left: 30px; }
+.ot-page { display: flex; flex-direction: column; height: 100%; }
+
+/* —— 顶部操作栏 48px —— */
+.ot-topbar {
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 20px 12px; gap: 16px;
+  border-bottom: 1px solid var(--bl-border);
+  background: var(--bl-bg-1);
+}
+.ot-title-wrap {
+  display: flex; align-items: baseline; gap: 12px;
+  min-width: 0; flex: 1; overflow: hidden;
+}
+.ot-title {
+  font-size: 18px; font-weight: 600; line-height: 1.2;
+  color: var(--bl-text-1);
+  white-space: nowrap; flex-shrink: 0;
+}
+.ot-subtitle {
+  font-size: var(--bl-fs-12); color: var(--bl-text-3);
+  min-width: 0; flex: 1;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ot-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.ot-select { width: 180px; height: 30px; }
+.ot-search { position: relative; width: 240px; }
+.ot-search-ic { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--bl-text-3); }
+.ot-search-input { padding-left: 30px; padding-right: 28px; height: 30px; }
+.ot-search-clear {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  width: 16px; height: 16px; border: 0; background: var(--bl-bg-3); color: var(--bl-text-3);
+  border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+}
+
+/* —— 主体 —— */
+.ot-body { flex: 1; position: relative; display: flex; overflow: hidden; }
+.ot-pane { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+
+/* —— 视图切换 tabs —— */
+.ot-tabs { display: flex; gap: 4px; padding: 8px 12px 0; }
+.ot-tab {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 6px 12px; border-radius: var(--bl-radius-2) var(--bl-radius-2) 0 0;
+  border: 1px solid transparent; border-bottom: 0;
+  background: transparent; color: var(--bl-text-3); cursor: pointer;
+  font-size: var(--bl-fs-13);
+}
+.ot-tab:hover { color: var(--bl-text-1); }
+.ot-tab.is-on { color: var(--bl-primary); background: var(--bl-bg-1); border-color: var(--bl-divider); }
+
+/* —— 列表 —— */
+.ot-list-card {
+  flex: 1; margin: 0 12px 12px; display: flex; flex-direction: column;
+  background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: var(--bl-radius-3);
+  overflow: hidden; min-height: 0;
+}
+.ot-list-scroll { flex: 1; min-height: 0; overflow: auto; }
+.ot-table { width: 100%; }
+.ot-table th, .ot-table td { white-space: nowrap; }
+.ot-row { cursor: pointer; }
+.ot-row:hover { background: var(--bl-bg-hover); }
+.ot-row.is-active { background: var(--bl-primary-soft); }
+.ot-ic {
+  width: 20px; height: 20px; border-radius: 4px;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.ot-ic-lg { width: 36px; height: 36px; border-radius: var(--bl-radius-3); }
+.ot-cell-obj { min-width: 200px; max-width: 280px; }
+.ot-obj-label { font-size: var(--bl-fs-13); color: var(--bl-text-1); font-weight: 500; }
+.ot-obj-api { font-size: 11px; }
+.ot-link { color: var(--bl-primary); cursor: pointer; }
+.ot-link:hover { text-decoration: underline; }
+.ot-rid { display: inline-flex; align-items: center; gap: 4px; }
+
+/* —— 分页钉底 —— */
+.ot-pager {
+  flex-shrink: 0; padding: 8px 12px; border-top: 1px solid var(--bl-divider);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: var(--bl-fs-12);
+}
+.ot-pager-r { display: inline-flex; align-items: center; gap: 4px; }
+.ot-page-size { width: 64px; height: 26px; }
+
+/* —— 卡片网格 —— */
+.ot-card-grid {
+  flex: 1; margin: 0 12px 12px; padding: 4px;
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  overflow: auto;
+  align-content: start;
+}
+.ot-card {
+  background: var(--bl-bg-1); border: 1px solid var(--bl-border);
+  border-radius: var(--bl-radius-3); padding: 12px; cursor: pointer;
+  transition: border-color .15s, box-shadow .15s;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.ot-card:hover { border-color: var(--bl-primary); box-shadow: var(--bl-shadow-1); }
+.ot-card-hd { display: flex; align-items: center; gap: 10px; }
+.ot-card-title { font-size: 14px; font-weight: 600; color: var(--bl-text-1); }
+.ot-card-api { font-size: 11px; }
+.ot-card-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+  padding-top: 10px; border-top: 1px dashed var(--bl-divider);
+}
+.ot-card-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 11px; }
+.ot-card-stat b { font-size: 16px; color: var(--bl-text-1); }
+.ot-card-ft { font-size: 11px; }
+
+/* —— 图谱占位 —— */
+.ot-graph-stub { flex: 1; margin: 0 12px 12px; display: flex; align-items: center; justify-content: center; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: var(--bl-radius-3); }
+
+/* —— 右侧抽屉 —— */
+.ot-drawer {
+  position: absolute; top: 0; right: 0; bottom: 0;
+  background: var(--bl-bg-1);
+  border-left: 1px solid var(--bl-border);
+  box-shadow: -2px 0 12px rgba(0, 0, 0, 0.06);
+  display: flex; flex-direction: column;
+  z-index: 5;
+  min-width: 450px;
+}
+.ot-drag-handle {
+  position: absolute; left: -2px; top: 0; bottom: 0; width: 5px;
+  cursor: col-resize; background: transparent;
+  transition: background-color .15s;
+}
+.ot-drag-handle:hover, .ot-drag-handle.is-resizing { background: var(--bl-primary); }
+
+.ot-drawer-hd {
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--bl-divider); gap: 8px;
+}
+.ot-drawer-hd-l { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+.ot-drawer-hd-r { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.ot-drawer-title { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; min-width: 0; }
+.ot-drawer-sep { width: 1px; height: 18px; background: var(--bl-divider); margin: 0 4px; }
+
+.ot-drawer-body { flex: 1; display: grid; grid-template-columns: 160px 1fr; overflow: hidden; min-height: 0; }
+.ot-tab-side {
+  background: var(--bl-bg-2); border-right: 1px solid var(--bl-divider);
+  overflow: auto; padding: 6px 0;
+}
+.ot-tab-group { padding: 4px 0; }
+.ot-tab-group-hd {
+  display: flex; align-items: center; gap: 4px;
+  padding: 6px 12px; cursor: pointer;
+  font-size: var(--bl-fs-12); font-weight: 600; color: var(--bl-text-3);
+  user-select: none;
+}
+.ot-tab-group-hd:hover { color: var(--bl-text-1); }
+.ot-tab-group-chev { display: inline-flex; transition: transform .15s; }
+.ot-tab-group-chev.is-open { transform: rotate(90deg); }
+.ot-tab-group-body { display: flex; flex-direction: column; }
+.ot-tab-item {
+  text-align: left; padding: 7px 12px 7px 26px;
+  border: 0; background: transparent; cursor: pointer;
+  font-size: var(--bl-fs-13); color: var(--bl-text-2);
+  border-left: 3px solid transparent;
+}
+.ot-tab-item:hover { background: var(--bl-bg-1); color: var(--bl-text-1); }
+.ot-tab-item.is-on { background: var(--bl-bg-1); color: var(--bl-primary); font-weight: 500; border-left-color: var(--bl-primary); }
+
+.ot-tab-pane { overflow: auto; padding: 16px 20px; min-width: 0; }
+.ot-tab-content { display: flex; flex-direction: column; gap: 8px; }
+.ot-tab-toolbar { display: flex; align-items: center; gap: 8px; padding-bottom: 12px; }
+.ot-section-title {
+  font-size: var(--bl-fs-13); font-weight: 600; color: var(--bl-text-2);
+  padding: 12px 0 6px; border-bottom: 1px solid var(--bl-divider); margin-bottom: 8px;
+}
+.ot-section-title:first-child { padding-top: 0; }
+.ot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; }
+
+.ot-stat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.ot-stat-card { padding: 8px 10px; background: var(--bl-bg-2); border-radius: var(--bl-radius-2); }
+.ot-stat-lbl { font-size: 11px; color: var(--bl-text-3); }
+.ot-stat-val { font-size: 18px; font-weight: 600; color: var(--bl-text-1); margin-top: 2px; font-feature-settings: "tnum"; }
+
+/* —— transition —— */
+.ot-drawer-enter-active, .ot-drawer-leave-active { transition: transform .25s ease, opacity .2s ease; }
+.ot-drawer-enter-from, .ot-drawer-leave-to { transform: translateX(20px); opacity: 0; }
 </style>

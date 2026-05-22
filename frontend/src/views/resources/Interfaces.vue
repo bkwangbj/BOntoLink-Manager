@@ -7,7 +7,19 @@
             {{ t.label }}<span class="seg-cnt">{{ statusCount(t.k) }}</span>
           </button>
         </div>
-        <select class="bl-input" style="width:180px" v-model="domainFilter">
+        <div class="if-view-toggle">
+          <button :class="['vt-btn', !groupMode && 'is-on']" @click="groupMode=false" title="列表视图">
+            <span v-html="BL.icon('list', 13)"></span><span>列表</span>
+          </button>
+          <button :class="['vt-btn', groupMode && 'is-on']" @click="groupMode=true" title="按行业分组">
+            <span v-html="BL.icon('layers', 13)"></span><span>分组</span>
+          </button>
+        </div>
+        <select class="bl-input hd-filter" v-model="industryFilter" title="所属行业">
+          <option value="">全部行业</option>
+          <option v-for="i in industryFilterOptions" :key="i" :value="i">{{ i }}</option>
+        </select>
+        <select class="bl-input" style="width:160px" v-model="domainFilter" title="业务领域">
           <option value="">全部业务领域</option>
           <option v-for="d in domainOpts" :key="d.code" :value="d.code">{{ d.name }}</option>
         </select>
@@ -22,7 +34,7 @@
       </template>
     </PageHeader>
 
-    <div :class="['two-pane', !drawerOpen && 'no-detail']">
+    <div class="two-pane">
       <!-- 列表 -->
       <div class="bl-card list-card">
         <div class="list-scroll">
@@ -30,41 +42,55 @@
           <thead>
             <tr>
               <th style="width:30px"><input type="checkbox" :checked="allChecked" @change="toggleAll" /></th>
-              <th></th>
-              <th>接口名称</th>
+              <th><span class="th-sort" @click="toggleSort('name')">接口名称<span class="th-arrow">{{ sortArrow('name') }}</span></span></th>
+              <th><span class="th-sort" @click="toggleSort('industry')">所属行业<span class="th-arrow">{{ sortArrow('industry') }}</span></span></th>
               <th>描述</th>
-              <th>属性数</th>
-              <th>实现数</th>
-              <th>所在领域</th>
-              <th>状态</th>
+              <th><span class="th-sort" @click="toggleSort('prop')">属性数<span class="th-arrow">{{ sortArrow('prop') }}</span></span></th>
+              <th><span class="th-sort" @click="toggleSort('impl')">实现数<span class="th-arrow">{{ sortArrow('impl') }}</span></span></th>
+              <th><span class="th-sort" @click="toggleSort('domain')">所在领域<span class="th-arrow">{{ sortArrow('domain') }}</span></span></th>
+              <th><span class="th-sort" @click="toggleSort('status')">状态<span class="th-arrow">{{ sortArrow('status') }}</span></span></th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="r in pageRows" :key="r.id" :class="['if-row', selected?.id===r.id && 'is-active']" @click="openDetail(r, 'overview')">
-              <td @click.stop><input type="checkbox" :checked="checked.has(r.id)" @change="toggleCheck(r.id)" /></td>
-              <td>
-                <span class="if-ic" :style="{ background: r.color || '#13C2C2' }" v-html="BL.icon(r.icon || 'station', 12, '#fff')"></span>
-              </td>
-              <td>
-                <div class="if-name">{{ r.display_name || r.rdfs_label }}</div>
-                <div class="if-api bl-mono bl-muted">{{ r.api_name }}</div>
-              </td>
-              <td class="bl-truncate" style="max-width:280px" :title="r.rdfs_comment">{{ r.rdfs_comment || '—' }}</td>
-              <td @click.stop="openDetail(r, 'props')"><a class="link">{{ r.prop_count || 0 }}</a></td>
-              <td @click.stop="openDetail(r, 'impl')"><a class="link">{{ r.impl_count || 0 }}</a></td>
-              <td><span class="bl-tag">{{ r.ns_code || '—' }}</span></td>
-              <td>
-                <span :class="['bl-tag', r.status===1 ? 'bl-tag-success' : 'bl-tag-warning']">{{ r.status===1 ? '启用' : '实验' }}</span>
-              </td>
-              <td @click.stop>
-                <div class="bl-row" style="gap:0">
-                  <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="编辑" @click="openDetail(r, 'overview')" v-html="BL.icon('edit', 12)"></button>
-                  <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" :title="r.status===1 ? '禁用' : '启用'" @click="toggleStatus(r)" v-html="BL.icon('zap', 12)"></button>
-                  <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="删除" @click="removeOne(r)" v-html="BL.icon('trash', 12)"></button>
-                </div>
-              </td>
-            </tr>
+            <template v-for="row in displayRows" :key="row.key">
+              <!-- 分组标题行 -->
+              <tr v-if="row.type==='group'" class="if-group-row" @click="toggleGroup(row.key)">
+                <td :colspan="9">
+                  <span class="if-group-chev" v-html="BL.icon(row.collapsed ? 'chevronRight' : 'chevronDown', 12)"></span>
+                  <span class="if-group-label">{{ row.label }}</span>
+                  <span class="if-group-count">{{ row.count }}</span>
+                </td>
+              </tr>
+              <!-- 接口行 -->
+              <tr v-else :class="['if-row', groupMode && 'is-grouped', selected?.id===row.data.id && 'is-active']" @click="openDetail(row.data, 'overview')">
+                <td @click.stop><input type="checkbox" :checked="checked.has(row.data.id)" @change="toggleCheck(row.data.id)" /></td>
+                <td>
+                  <div class="if-name-cell">
+                    <span class="if-ic" :style="{ background: row.data.color || '#13C2C2' }" v-html="BL.icon(row.data.icon || 'station', 12, '#fff')"></span>
+                    <div class="if-name-text">
+                      <div class="if-name bl-truncate" :title="row.data.display_name || row.data.rdfs_label">{{ row.data.display_name || row.data.rdfs_label }}</div>
+                      <div class="if-api bl-mono bl-muted">{{ row.data.api_name }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="bl-truncate" :title="ifDomainPath(row.data)">{{ ifIndustry(row.data) }}</span></td>
+                <td class="bl-truncate" style="max-width:260px" :title="row.data.rdfs_comment">{{ row.data.rdfs_comment || '—' }}</td>
+                <td @click.stop="openDetail(row.data, 'props')"><a class="link">{{ row.data.prop_count || 0 }}</a></td>
+                <td @click.stop="openDetail(row.data, 'impl')"><a class="link">{{ row.data.impl_count || 0 }}</a></td>
+                <td><span class="bl-tag">{{ row.data.ns_code || '—' }}</span></td>
+                <td>
+                  <span :class="['bl-tag', row.data.status===1 ? 'bl-tag-success' : 'bl-tag-warning']">{{ row.data.status===1 ? '启用' : '实验' }}</span>
+                </td>
+                <td @click.stop>
+                  <div class="bl-row" style="gap:0">
+                    <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="编辑" @click="openDetail(row.data, 'overview')" v-html="BL.icon('edit', 12)"></button>
+                    <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" :title="row.data.status===1 ? '禁用' : '启用'" @click="toggleStatus(row.data)" v-html="BL.icon('zap', 12)"></button>
+                    <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="删除" @click="removeOne(row.data)" v-html="BL.icon('trash', 12)"></button>
+                  </div>
+                </td>
+              </tr>
+            </template>
           </tbody>
         </table>
         <div v-if="!filtered.length" class="bl-empty" style="padding:60px">
@@ -84,18 +110,31 @@
             </template>
             <template v-else>
               共 {{ filtered.length }} 项
+              <span v-if="groupMode" class="bl-muted" style="margin-left:8px">· {{ groupCount }} 个行业</span>
             </template>
           </div>
-          <div class="bl-row" style="gap:4px">
+          <div class="bl-row" style="gap:4px" v-if="!groupMode">
+            <span class="bl-muted" style="font-size:12px;margin-right:6px">每页</span>
+            <select class="bl-input if-page-size" v-model.number="pageSize">
+              <option :value="10">10</option>
+              <option :value="20">20</option>
+              <option :value="50">50</option>
+            </select>
             <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="page<=1" @click="page--">‹</button>
             <span class="bl-muted" style="font-size:12px">{{ page }} / {{ totalPages }}</span>
             <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="page>=totalPages" @click="page++">›</button>
           </div>
+          <div class="bl-row" style="gap:4px" v-else>
+            <button class="bl-btn bl-btn-sm bl-btn-text" @click="expandAllGroups">展开全部</button>
+            <button class="bl-btn bl-btn-sm bl-btn-text" @click="collapseAllGroups">折叠全部</button>
+          </div>
         </div>
       </div>
 
-      <!-- 右侧详情面板（固定占位） -->
-      <aside v-if="drawerOpen" class="if-detail">
+      <!-- 右侧详情抽屉（浮层，可拖拽/最大/最小） -->
+      <transition name="if-drawer">
+      <aside v-if="drawerOpen" class="if-detail" :style="{ width: drawerWidth + 'px' }">
+        <div class="if-drag-handle" @mousedown="onDragStart" :class="resizing && 'is-resizing'"></div>
         <div class="detail-hd">
           <div class="bl-row" style="gap:10px;flex:1;min-width:0">
             <span class="if-ic if-ic-lg" :style="{ background: form.color || '#13C2C2' }" v-html="BL.icon(form.icon || 'station', 18, '#fff')"></span>
@@ -104,7 +143,11 @@
               <div class="bl-mono bl-muted" style="font-size:11px">{{ form.api_name || '—' }}</div>
             </div>
           </div>
-          <button class="bl-btn bl-btn-text bl-btn-icon" @click="drawerOpen=false" v-html="BL.icon('x', 14)"></button>
+          <div class="bl-row" style="gap:4px;flex-shrink:0">
+            <button class="bl-btn bl-btn-text bl-btn-icon" :title="drawerMaxed ? '恢复' : '最大'" @click="toggleMax" v-html="BL.icon(drawerMaxed ? 'minimize' : 'maximize', 14)"></button>
+            <button class="bl-btn bl-btn-text bl-btn-icon" :title="drawerMined ? '恢复' : '最小'" @click="toggleMin" v-html="BL.icon('minimize', 14)"></button>
+            <button class="bl-btn bl-btn-text bl-btn-icon" title="关闭" @click="drawerOpen=false" v-html="BL.icon('x', 14)"></button>
+          </div>
         </div>
 
         <div class="tabs">
@@ -119,8 +162,8 @@
             <FieldRow label="API 名称" inline hint="snake_case · 全局唯一 · 创建后不可修改">
               <input class="bl-input bl-mono" :value="form.api_name" :readonly="!!form.id" :disabled="!!form.id" />
             </FieldRow>
-            <FieldRow label="标准对外名称" hint="rdfs:label"><input class="bl-input" v-model="form.rdfs_label" /></FieldRow>
-            <FieldRow label="显示名称"><input class="bl-input" v-model="form.display_name" /></FieldRow>
+            <FieldRow label="标准对外名称" inline hint="rdfs:label"><input class="bl-input" v-model="form.rdfs_label" /></FieldRow>
+            <FieldRow label="显示名称" inline><input class="bl-input" v-model="form.display_name" /></FieldRow>
             <FieldRow label="状态" inline>
               <div class="radio-group">
                 <label class="radio-item"><input type="radio" :value="1" v-model.number="form.status" /> 启用</label>
@@ -141,8 +184,8 @@
             <FieldRow label="注释" hint="rdfs:comment · 给大模型 / 推理引擎 / 开发者看的正式语义定义">
               <textarea class="bl-textarea" rows="3" v-model="form.rdfs_comment"></textarea>
             </FieldRow>
-            <FieldRow label="参考资料" hint="rdfs:seeAlso · 关联文档 / 链接 / 参考出处"><input class="bl-input" v-model="form.rdfs_see_also" /></FieldRow>
-            <FieldRow label="定义来源" hint="rdfs:isDefinedBy · 权威定义出处"><input class="bl-input" v-model="form.rdfs_defined_by" /></FieldRow>
+            <FieldRow label="参考资料" hint="rdfs:seeAlso · 关联文档 / 链接 / 参考出处"><textarea class="bl-textarea" rows="2" v-model="form.rdfs_see_also"></textarea></FieldRow>
+            <FieldRow label="定义来源" hint="rdfs:isDefinedBy · 权威定义出处"><textarea class="bl-textarea" rows="2" v-model="form.rdfs_defined_by"></textarea></FieldRow>
             <FieldRow label="说明"><textarea class="bl-textarea" rows="2" v-model="form.description"></textarea></FieldRow>
 
             <div class="sec">规则配置</div>
@@ -154,25 +197,10 @@
           <!-- 显示 -->
           <div v-if="drawerTab==='style'">
             <div class="sec">分组颜色</div>
-            <div class="color-row">
-              <span v-for="c in colorPalette" :key="c"
-                    :class="['color-dot', form.color===c && 'is-active']"
-                    :style="{ background: c }"
-                    @click="form.color = c"></span>
-            </div>
-            <div class="hex-picker-group" style="margin-top:10px">
-              <input class="bl-input bl-mono hex-input" v-model="form.color" placeholder="#RRGGBB" />
-              <input type="color" class="color-picker color-picker-attached" v-model="form.color" title="自定义颜色" />
-            </div>
+            <ColorPickerField v-model="form.color" />
 
             <div class="sec">图标</div>
-            <div class="icon-row">
-              <span v-for="ic in iconPalette" :key="ic"
-                    :class="['icon-cell', form.icon===ic && 'is-active']"
-                    @click="form.icon = ic"
-                    v-html="BL.icon(ic, 18)"></span>
-              <input class="bl-input bl-mono" style="width:140px; margin-left:8px" v-model="form.icon" placeholder="自定义图标 key" />
-            </div>
+            <IconPickerField v-model="form.icon" label="" :preset-count="32" :suggest-name="form.rdfs_label || form.display_name || form.api_name" />
 
             <div class="sec">RID</div>
             <div class="rid-row">
@@ -184,26 +212,71 @@
           <!-- 属性 -->
           <div v-if="drawerTab==='props'">
             <div class="row-between">
-              <span class="bl-muted" style="font-size:12px">共 {{ properties.length }} 个属性</span>
-              <button class="bl-btn bl-btn-primary bl-btn-sm" @click="addPropForm">
-                <span v-html="BL.icon('plus', 12, '#fff')"></span>
-                <span style="margin-left:4px">新增属性</span>
-              </button>
+              <span class="bl-muted" style="font-size:12px">共 {{ realPropCount }} 个属性</span>
+              <div class="bl-row" style="gap:8px">
+                <button v-if="propChecked.size" class="bl-btn bl-btn-sm bl-btn-danger" @click="removePropsBatch">
+                  <span v-html="BL.icon('trash', 12)"></span>
+                  <span style="margin-left:4px">删除 ({{ propChecked.size }})</span>
+                </button>
+                <button class="bl-btn bl-btn-primary bl-btn-sm" @click="addPropRow">
+                  <span v-html="BL.icon('plus', 12, '#fff')"></span>
+                  <span style="margin-left:4px">新增属性</span>
+                </button>
+              </div>
             </div>
-            <table class="bl-table" style="margin-top:8px">
-              <thead><tr><th>编码</th><th>名称</th><th>类型</th><th>必填</th><th>注释</th><th></th></tr></thead>
+            <table class="bl-table prop-table" style="margin-top:8px">
+              <thead>
+                <tr>
+                  <th style="width:34px"><input type="checkbox" :checked="allPropsChecked" @change="togglePropAll" /></th>
+                  <th>编码</th><th>名称</th><th>类型</th><th>必填</th><th>注释</th><th style="width:64px"></th>
+                </tr>
+              </thead>
               <tbody>
-                <tr v-for="p in properties" :key="p.id">
-                  <td class="bl-mono">{{ p.api_name }}</td>
-                  <td>{{ p.display_name || p.rdfs_label }}</td>
-                  <td><span class="bl-tag">{{ p.data_type }}</span></td>
-                  <td><span :class="['bl-tag', p.is_required ? 'bl-tag-danger' : '']">{{ p.is_required ? '必填' : '可选' }}</span></td>
-                  <td class="bl-truncate" style="max-width:200px" :title="p.rdfs_comment">{{ p.rdfs_comment || '—' }}</td>
-                  <td><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="removeProp(p)" v-html="BL.icon('trash', 12)"></button></td>
+                <tr v-for="p in properties" :key="p.id"
+                    :class="['prop-row', p._editing && 'is-editing']"
+                    @dblclick="editPropRow(p)">
+                  <td @click.stop><input type="checkbox" :checked="propChecked.has(p.id)" :disabled="p._isNew" @change="togglePropCheck(p.id)" /></td>
+                  <!-- 编码 -->
+                  <td>
+                    <input v-if="p._editing && p._isNew" class="bl-input bl-mono" v-model="p.api_name" placeholder="snake_case" />
+                    <span v-else class="bl-mono">{{ p.api_name }}</span>
+                  </td>
+                  <!-- 名称 -->
+                  <td>
+                    <input v-if="p._editing" class="bl-input" v-model="p.display_name" placeholder="显示名" />
+                    <span v-else>{{ p.display_name || p.rdfs_label || '—' }}</span>
+                  </td>
+                  <!-- 类型 -->
+                  <td>
+                    <select v-if="p._editing" class="bl-input" v-model="p.data_type">
+                      <option v-for="t in xsdTypes" :key="t" :value="t">{{ t }}</option>
+                    </select>
+                    <span v-else class="bl-tag">{{ p.data_type }}</span>
+                  </td>
+                  <!-- 必填 -->
+                  <td>
+                    <select v-if="p._editing" class="bl-input" v-model.number="p.is_required">
+                      <option :value="1">必填</option>
+                      <option :value="0">可选</option>
+                    </select>
+                    <span v-else :class="['bl-tag', p.is_required ? 'bl-tag-danger' : '']">{{ p.is_required ? '必填' : '可选' }}</span>
+                  </td>
+                  <!-- 注释 -->
+                  <td>
+                    <input v-if="p._editing" class="bl-input" v-model="p.rdfs_comment" placeholder="注释" />
+                    <span v-else class="bl-truncate prop-comment" :title="p.rdfs_comment">{{ p.rdfs_comment || '—' }}</span>
+                  </td>
+                  <!-- 操作（仅编辑态显示 保存/取消） -->
+                  <td @click.stop>
+                    <div v-if="p._editing" class="bl-row" style="gap:0">
+                      <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="保存" @click="savePropRow(p)" v-html="BL.icon('check', 13)"></button>
+                      <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="取消" @click="cancelPropRow(p)" v-html="BL.icon('x', 13)"></button>
+                    </div>
+                  </td>
                 </tr>
               </tbody>
             </table>
-            <div v-if="!properties.length" class="bl-empty" style="padding:32px">尚未定义接口属性</div>
+            <div v-if="!properties.length" class="bl-empty" style="padding:32px">尚未定义接口属性，点击「新增属性」添加</div>
           </div>
 
           <!-- 实现 -->
@@ -235,34 +308,7 @@
           <button class="bl-btn bl-btn-primary" @click="saveInterface">保存</button>
         </div>
       </aside>
-    </div>
-
-    <!-- 新增属性弹窗 -->
-    <div v-if="propFormOpen" class="bl-modal-mask" @click.self="propFormOpen=false">
-      <div class="bl-modal" style="width:440px">
-        <div class="bl-modal-hd">新增接口属性</div>
-        <div class="bl-modal-body bl-col" style="gap:10px">
-          <FieldRow label="API 名称 *" inline><input class="bl-input bl-mono" v-model="propForm.api_name" placeholder="snake_case" /></FieldRow>
-          <FieldRow label="属性代码" inline><input class="bl-input bl-mono" v-model="propForm.prop_code" placeholder="camelCase" /></FieldRow>
-          <FieldRow label="数据类型 *" inline>
-            <select class="bl-input" v-model="propForm.data_type">
-              <option v-for="t in xsdTypes" :key="t" :value="t">{{ t }}</option>
-            </select>
-          </FieldRow>
-          <FieldRow label="显示名"><input class="bl-input" v-model="propForm.display_name" /></FieldRow>
-          <FieldRow label="必填" inline>
-            <div class="radio-group">
-              <label class="radio-item"><input type="radio" :value="1" v-model.number="propForm.is_required" /> 必填</label>
-              <label class="radio-item"><input type="radio" :value="0" v-model.number="propForm.is_required" /> 可选</label>
-            </div>
-          </FieldRow>
-          <FieldRow label="注释"><textarea class="bl-textarea" rows="2" v-model="propForm.rdfs_comment"></textarea></FieldRow>
-        </div>
-        <div class="bl-modal-ft">
-          <button class="bl-btn" @click="propFormOpen=false">取消</button>
-          <button class="bl-btn bl-btn-primary" @click="submitProp">添加</button>
-        </div>
-      </div>
+      </transition>
     </div>
 
     <!-- 绑定实现类弹窗 -->
@@ -293,24 +339,73 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, reactive } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, reactive } from 'vue'
 import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
+import IconPickerField from '@/components/IconPickerField.vue'
+import ColorPickerField from '@/components/ColorPickerField.vue'
 import { BL } from '@/lib/bl.js'
 import { interfaceApi, resourceApi, categoryApi } from '@/api'
 
 const rows = ref([])
 const statusFilter = ref('all')
 const domainFilter = ref('')
+const industryFilter = ref('')
 const q = ref('')
 const checked = ref(new Set())
 const page = ref(1)
-const PAGE_SIZE = 10
+const pageSize = ref(10)
 
 const drawerOpen = ref(false)
 const drawerTab = ref('overview')
 const selected = ref(null)
 const form = reactive({})
+
+/* —— 抽屉尺寸 / 拖拽 —— */
+const drawerWidth = ref(0)
+const drawerMaxed = ref(false)
+const drawerMined = ref(false)
+const resizing = ref(false)
+const DRAWER_MIN = 420
+function drawerMaxPx() { return Math.floor(window.innerWidth * 0.85) }
+function defaultDrawerWidth() { return Math.max(DRAWER_MIN, Math.min(560, Math.floor(window.innerWidth * 0.45))) }
+function ensureDrawerSize() {
+  if (!drawerWidth.value) drawerWidth.value = defaultDrawerWidth()
+  drawerMaxed.value = false; drawerMined.value = false
+}
+function toggleMax() {
+  if (drawerMaxed.value) { drawerWidth.value = defaultDrawerWidth(); drawerMaxed.value = false }
+  else { drawerWidth.value = drawerMaxPx(); drawerMaxed.value = true; drawerMined.value = false }
+}
+function toggleMin() {
+  if (drawerMined.value) { drawerWidth.value = defaultDrawerWidth(); drawerMined.value = false }
+  else { drawerWidth.value = DRAWER_MIN; drawerMined.value = true; drawerMaxed.value = false }
+}
+let dragStartX = 0, dragStartW = 0
+function onDragStart(e) {
+  resizing.value = true
+  dragStartX = e.clientX; dragStartW = drawerWidth.value
+  document.body.style.cursor = 'col-resize'; document.body.style.userSelect = 'none'
+  window.addEventListener('mousemove', onDragMove)
+  window.addEventListener('mouseup', onDragEnd)
+}
+function onDragMove(e) {
+  const dx = dragStartX - e.clientX
+  const next = Math.min(drawerMaxPx(), Math.max(DRAWER_MIN, dragStartW + dx))
+  drawerWidth.value = next
+  drawerMaxed.value = next === drawerMaxPx()
+  drawerMined.value = next === DRAWER_MIN
+}
+function onDragEnd() {
+  resizing.value = false
+  document.body.style.cursor = ''; document.body.style.userSelect = ''
+  window.removeEventListener('mousemove', onDragMove)
+  window.removeEventListener('mouseup', onDragEnd)
+}
+onBeforeUnmount(() => {
+  window.removeEventListener('mousemove', onDragMove)
+  window.removeEventListener('mouseup', onDragEnd)
+})
 const properties = ref([])
 const implementers = ref([])
 const allClasses = ref([])
@@ -332,28 +427,107 @@ function statusCount(k) {
   return rows.value.filter(r => String(r.status) === k).length
 }
 
+/* —— 所属行业(由 category_code 解析) —— */
+const catInfoByCode = ref({})   // code -> { label, industryLabel, path }
+function ifIndustry(r) {
+  const info = catInfoByCode.value[r.category_code]
+  return info ? (info.industryLabel || info.label) : '—'
+}
+function ifDomainPath(r) {
+  const info = catInfoByCode.value[r.category_code]
+  return info ? info.path : (r.category_code || '')
+}
+
+/* —— 排序 —— */
+const sortKey = ref('')
+const sortDir = ref('')   // 'asc' | 'desc' | ''
+function toggleSort(key) {
+  if (sortKey.value !== key) { sortKey.value = key; sortDir.value = 'asc' }
+  else if (sortDir.value === 'asc') sortDir.value = 'desc'
+  else { sortKey.value = ''; sortDir.value = '' }
+}
+function sortArrow(key) {
+  if (sortKey.value !== key) return ' ⇅'
+  return sortDir.value === 'asc' ? ' ↑' : ' ↓'
+}
+
+const industryFilterOptions = computed(() => {
+  const set = new Set()
+  rows.value.forEach(r => { const i = ifIndustry(r); if (i && i !== '—') set.add(i) })
+  return [...set].sort((a, b) => a.localeCompare(b))
+})
+
 const filtered = computed(() => {
   let list = rows.value
   if (statusFilter.value !== 'all') list = list.filter(r => String(r.status) === statusFilter.value)
-  if (domainFilter.value)         list = list.filter(r => r.category_code === domainFilter.value)
+  if (industryFilter.value)        list = list.filter(r => ifIndustry(r) === industryFilter.value)
+  if (domainFilter.value)          list = list.filter(r => r.category_code === domainFilter.value)
   const k = q.value.trim().toLowerCase()
   if (k) list = list.filter(r =>
     [r.api_name, r.interface_code, r.display_name, r.rdfs_label, r.rdfs_comment, r.ns_code]
       .filter(Boolean).some(s => String(s).toLowerCase().includes(k)))
+  if (sortKey.value && sortDir.value) {
+    const dir = sortDir.value === 'asc' ? 1 : -1
+    list = [...list].sort((a, b) => {
+      let va, vb
+      if (sortKey.value === 'name')        { va = a.display_name || a.rdfs_label || a.api_name || ''; vb = b.display_name || b.rdfs_label || b.api_name || '' }
+      else if (sortKey.value === 'industry'){ va = ifIndustry(a); vb = ifIndustry(b) }
+      else if (sortKey.value === 'prop')    { va = a.prop_count || 0; vb = b.prop_count || 0 }
+      else if (sortKey.value === 'impl')    { va = a.impl_count || 0; vb = b.impl_count || 0 }
+      else if (sortKey.value === 'domain')  { va = a.ns_code || ''; vb = b.ns_code || '' }
+      else if (sortKey.value === 'status')  { va = a.status ?? 9; vb = b.status ?? 9 }
+      if (typeof va === 'number') return (va - vb) * dir
+      return String(va).localeCompare(String(vb)) * dir
+    })
+  }
   return list
 })
-const totalPages = computed(() => Math.max(1, Math.ceil(filtered.value.length / PAGE_SIZE)))
-const pageRows   = computed(() => filtered.value.slice((page.value - 1) * PAGE_SIZE, page.value * PAGE_SIZE))
-const allChecked = computed(() => pageRows.value.length && pageRows.value.every(r => checked.value.has(r.id)))
+const totalPages = computed(() => Math.max(1, Math.ceil(filtered.value.length / pageSize.value)))
+const pageRows   = computed(() => filtered.value.slice((page.value - 1) * pageSize.value, page.value * pageSize.value))
+
+/* —— 按所属行业分组显示 —— */
+const groupMode = ref(false)
+const collapsedGroups = ref(new Set())
+function toggleGroup(key) {
+  const s = new Set(collapsedGroups.value)
+  if (s.has(key)) s.delete(key); else s.add(key)
+  collapsedGroups.value = s
+}
+const groupedRows = computed(() => {
+  const groups = new Map()
+  filtered.value.forEach(r => {
+    const key = ifIndustry(r) || '—'
+    if (!groups.has(key)) groups.set(key, [])
+    groups.get(key).push(r)
+  })
+  const out = []
+  for (const [key, items] of groups) {
+    const collapsed = collapsedGroups.value.has(key)
+    out.push({ type: 'group', key, label: key, count: items.length, collapsed })
+    if (!collapsed) items.forEach(r => out.push({ type: 'item', key: 'i' + r.id, data: r }))
+  }
+  return out
+})
+const groupCount = computed(() => new Set(filtered.value.map(r => ifIndustry(r) || '—')).size)
+const displayRows = computed(() =>
+  groupMode.value
+    ? groupedRows.value
+    : pageRows.value.map(r => ({ type: 'item', key: 'i' + r.id, data: r }))
+)
+function expandAllGroups() { collapsedGroups.value = new Set() }
+function collapseAllGroups() { collapsedGroups.value = new Set(filtered.value.map(r => ifIndustry(r) || '—')) }
+
+const visibleItems = computed(() => groupMode.value ? filtered.value : pageRows.value)
+const allChecked = computed(() => visibleItems.value.length && visibleItems.value.every(r => checked.value.has(r.id)))
 
 // 重置页码当筛选变化
 import { watch } from 'vue'
-watch([statusFilter, domainFilter, q], () => { page.value = 1 })
+watch([statusFilter, domainFilter, industryFilter, q, pageSize], () => { page.value = 1 })
 
 function toggleAll() {
   const s = new Set(checked.value)
-  if (allChecked.value) pageRows.value.forEach(r => s.delete(r.id))
-  else pageRows.value.forEach(r => s.add(r.id))
+  if (allChecked.value) visibleItems.value.forEach(r => s.delete(r.id))
+  else visibleItems.value.forEach(r => s.add(r.id))
   checked.value = s
 }
 function toggleCheck(id) {
@@ -372,6 +546,7 @@ function openCreate() {
   Object.keys(form).forEach(k => delete form[k])
   Object.assign(form, { status: 1, color: '#165DFF', icon: 'station' })
   drawerTab.value = 'overview'
+  ensureDrawerSize()
   drawerOpen.value = true
 }
 
@@ -380,14 +555,17 @@ async function openDetail(r, tab) {
   Object.keys(form).forEach(k => delete form[k])
   Object.assign(form, r)
   drawerTab.value = tab || 'overview'
+  ensureDrawerSize()
   drawerOpen.value = true
   await loadProps()
   await loadImpls()
 }
 
 async function loadProps() {
-  if (!selected.value) { properties.value = []; return }
-  properties.value = await interfaceApi.properties(selected.value.id).catch(() => [])
+  if (!selected.value) { properties.value = []; propChecked.value = new Set(); return }
+  const list = await interfaceApi.properties(selected.value.id).catch(() => [])
+  properties.value = list.map(p => ({ ...p, _editing: false, _isNew: false }))
+  propChecked.value = new Set()
 }
 async function loadImpls() {
   if (!selected.value) { implementers.value = []; return }
@@ -427,27 +605,73 @@ async function removeBatch() {
   await load()
 }
 
-/* ---- 属性 ---- */
-const propFormOpen = ref(false)
-const propForm = reactive({})
+/* ---- 属性（行内编辑） ---- */
+const propChecked = ref(new Set())
+const selectableProps = computed(() => properties.value.filter(p => !p._isNew))
+const realPropCount = computed(() => selectableProps.value.length)
+const allPropsChecked = computed(() =>
+  selectableProps.value.length > 0 && selectableProps.value.every(p => propChecked.value.has(p.id)))
 
-function addPropForm() {
-  Object.keys(propForm).forEach(k => delete propForm[k])
-  Object.assign(propForm, { data_type:'xsd:string', is_required: 0 })
-  propFormOpen.value = true
+function togglePropCheck(id) {
+  const s = new Set(propChecked.value)
+  s.has(id) ? s.delete(id) : s.add(id)
+  propChecked.value = s
 }
-async function submitProp() {
-  if (!propForm.api_name || !propForm.data_type) { BL.warning('API 名称、数据类型必填'); return }
-  await interfaceApi.addProperty(selected.value.id, propForm)
-  BL.success('已添加')
-  propFormOpen.value = false
+function togglePropAll() {
+  const s = new Set(propChecked.value)
+  if (allPropsChecked.value) selectableProps.value.forEach(p => s.delete(p.id))
+  else selectableProps.value.forEach(p => s.add(p.id))
+  propChecked.value = s
+}
+
+function addPropRow() {
+  // 在最上面插入一行草稿，进入编辑态
+  properties.value.unshift({
+    id: 'new_' + Date.now(),
+    api_name: '', prop_code: '', display_name: '',
+    data_type: 'xsd:string', is_required: 0, rdfs_comment: '',
+    _editing: true, _isNew: true
+  })
+}
+function editPropRow(p) {
+  if (p._editing) return
+  p._backup = {
+    prop_code: p.prop_code, data_type: p.data_type, display_name: p.display_name,
+    rdfs_label: p.rdfs_label, rdfs_comment: p.rdfs_comment, is_required: p.is_required
+  }
+  p._editing = true
+}
+function cancelPropRow(p) {
+  if (p._isNew) {
+    properties.value = properties.value.filter(x => x !== p)
+  } else {
+    if (p._backup) Object.assign(p, p._backup)
+    p._editing = false
+    delete p._backup
+  }
+}
+async function savePropRow(p) {
+  if (!p.api_name || !p.data_type) { BL.warning('编码、类型为必填'); return }
+  if (p._isNew && !/^[a-z][a-z0-9_]*$/.test(p.api_name)) { BL.warning('编码需 snake_case'); return }
+  const { _editing, _isNew, _backup, ...payload } = p
+  if (p._isNew) {
+    delete payload.id
+    payload.prop_code = payload.prop_code || payload.api_name
+    await interfaceApi.addProperty(selected.value.id, payload)
+  } else {
+    await interfaceApi.updateProperty(p.id, payload)
+  }
+  BL.success('已保存')
   await loadProps()
   await load()
 }
-async function removeProp(p) {
-  const ok = await BL.confirm({ title:'删除属性', content:`确定删除属性「${p.api_name}」？`, danger:true })
+async function removePropsBatch() {
+  const ids = [...propChecked.value]
+  if (!ids.length) return
+  const ok = await BL.confirm({ title:'删除属性', content:`确定删除选中的 ${ids.length} 个属性？`, danger:true, okText:'删除' })
   if (!ok) return
-  await interfaceApi.removeProperty(p.id)
+  for (const id of ids) await interfaceApi.removeProperty(id)
+  BL.success('已删除')
   await loadProps()
   await load()
 }
@@ -500,12 +724,26 @@ async function copyText(t) {
 
 onMounted(async () => {
   await load()
-  // 业务领域候选
+  // 业务领域候选 + 所属行业解析
   const tree = await categoryApi.tree().catch(() => [])
   const list = []
-  const walk = (ns) => ns.forEach(n => { if (n.categoryCode) list.push({ code:n.categoryCode, name:n.label }); if (n.children) walk(n.children) })
-  walk(tree)
+  const info = {}
+  const walk = (ns, ancestors) => ns.forEach(n => {
+    const chain = [...ancestors, n]
+    if (n.categoryCode) {
+      list.push({ code: n.categoryCode, name: n.label })
+      const industry = chain.find(x => x.categoryType === 1)
+      info[n.categoryCode] = {
+        label: n.label,
+        industryLabel: industry ? industry.label : n.label,
+        path: chain.map(x => x.label).join(' / ')
+      }
+    }
+    if (n.children) walk(n.children, chain)
+  })
+  walk(tree, [])
   domainOpts.value = list
+  catInfoByCode.value = info
 })
 </script>
 
@@ -513,13 +751,11 @@ onMounted(async () => {
 .page { display: flex; flex-direction: column; height: 100%; }
 .two-pane {
   flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 480px;
-  gap: 12px; padding: 12px;
+  position: relative;
+  display: flex;
   overflow: hidden;
 }
-.two-pane.no-detail { grid-template-columns: 1fr; }
-.list-card { flex: 1; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.list-card { flex: 1; margin: 12px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
 .list-scroll { flex: 1; min-height: 0; overflow: auto; }
 .list-ft {
   flex-shrink: 0;
@@ -548,26 +784,83 @@ onMounted(async () => {
 .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--bl-text-3); }
 .search-input { padding-left: 30px; }
 
+/* 列表 / 分组 视图切换 */
+.if-view-toggle {
+  display: inline-flex; align-items: center;
+  background: var(--bl-bg-2);
+  border-radius: var(--bl-radius-2);
+  padding: 2px;
+}
+.vt-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 26px; padding: 0 10px;
+  border: 0; background: transparent; cursor: pointer;
+  font-size: var(--bl-fs-12); color: var(--bl-text-2);
+  border-radius: var(--bl-radius-1, 4px);
+}
+.vt-btn:hover { color: var(--bl-text-1); }
+.vt-btn.is-on {
+  background: var(--bl-bg-1); color: var(--bl-primary);
+  font-weight: 500; box-shadow: var(--bl-shadow-1, 0 1px 2px rgba(0,0,0,.08));
+}
+.hd-filter { width: 130px; }
+.if-page-size { width: 64px; height: 26px; }
+
+/* 表头排序 */
+.th-sort { cursor: pointer; user-select: none; display: inline-flex; align-items: center; white-space: nowrap; }
+.th-sort:hover { color: var(--bl-primary); }
+.th-arrow { color: var(--bl-text-4); font-size: 11px; margin-left: 2px; }
+
+/* 分组标题行 */
+.if-group-row { cursor: pointer; background: var(--bl-bg-2); }
+.if-group-row:hover { background: var(--bl-bg-hover); }
+.if-group-row td {
+  padding: 7px 12px !important;
+  border-bottom: 1px solid var(--bl-border);
+}
+.if-group-chev { display: inline-flex; vertical-align: middle; color: var(--bl-text-3); margin-right: 6px; }
+.if-group-label { font-weight: 600; font-size: var(--bl-fs-13); color: var(--bl-text-1); vertical-align: middle; }
+.if-group-count {
+  margin-left: 8px;
+  font-size: 11px; color: var(--bl-text-3);
+  background: var(--bl-bg-1); border: 1px solid var(--bl-border);
+  border-radius: 9px; padding: 0 8px; line-height: 16px;
+  vertical-align: middle; font-feature-settings: "tnum";
+}
+.if-row.is-grouped td:nth-child(2) { padding-left: 22px; }
+
 .if-table thead th { position: sticky; top: 0; background: var(--bl-bg-2); z-index: 1; }
 .if-row { cursor: pointer; }
 .if-row.is-active { background: var(--bl-primary-soft); }
 .if-row.is-active td { color: var(--bl-primary); }
-.if-ic { width: 22px; height: 22px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; }
+.if-ic { width: 22px; height: 22px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .if-ic-lg { width: 36px; height: 36px; border-radius: 8px; }
+.if-name-cell { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.if-name-text { min-width: 0; }
 .if-name { font-weight: 500; }
 .if-api  { font-size: var(--bl-fs-11); }
 .link { color: var(--bl-primary); cursor: pointer; font-weight: 500; }
 .link:hover { text-decoration: underline; }
 
-/* 右侧详情面板（固定占位，非浮层） */
+/* 右侧详情抽屉（浮层，上下外置——与对象类别一致，铺满 body 高度） */
 .if-detail {
+  position: absolute; top: 0; right: 0; bottom: 0;
   background: var(--bl-bg-1);
-  border: 1px solid var(--bl-border);
-  border-radius: var(--bl-radius-3);
+  border-left: 1px solid var(--bl-border);
+  box-shadow: -2px 0 12px rgba(0, 0, 0, 0.06);
   overflow: hidden;
   display: flex; flex-direction: column;
-  min-width: 0;
+  min-width: 420px;
+  z-index: 5;
 }
+.if-drag-handle {
+  position: absolute; left: -2px; top: 0; bottom: 0; width: 5px;
+  cursor: col-resize; background: transparent;
+  transition: background-color .15s; z-index: 6;
+}
+.if-drag-handle:hover, .if-drag-handle.is-resizing { background: var(--bl-primary); }
+.if-drawer-enter-active, .if-drawer-leave-active { transition: transform .25s ease, opacity .2s ease; }
+.if-drawer-enter-from, .if-drawer-leave-to { transform: translateX(20px); opacity: 0; }
 .detail-hd {
   height: 56px; padding: 0 14px;
   display: flex; align-items: center; justify-content: space-between;
@@ -613,6 +906,16 @@ onMounted(async () => {
   padding: 8px 10px; background: var(--bl-bg-2); border-radius: var(--bl-radius-2);
   font-size: var(--bl-fs-12);
 }
+
+/* 属性行内编辑表格 */
+.prop-table { table-layout: auto; }
+.prop-table th, .prop-table td { padding: 6px 8px; vertical-align: middle; }
+.prop-table td .bl-input { height: 28px; padding: 2px 8px; font-size: var(--bl-fs-12); width: 100%; min-width: 80px; }
+.prop-row { cursor: default; }
+.prop-row:hover { background: var(--bl-bg-hover); }
+.prop-row.is-editing { background: var(--bl-primary-soft); }
+.prop-row.is-editing:hover { background: var(--bl-primary-soft); }
+.prop-comment { max-width: 160px; display: inline-block; vertical-align: middle; }
 
 .impl-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
 .impl-row {

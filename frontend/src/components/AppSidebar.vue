@@ -41,7 +41,7 @@
         <div class="avatar">G</div>
         <div class="user-info" v-show="!collapsed">
           <div class="user-name">Gary</div>
-          <div class="user-role">本体管理员 · 在线</div>
+          <div class="user-role">本体管理员</div>
         </div>
         <span v-show="!collapsed" class="user-arrow" v-html="BL.icon('chevronRight', 12)"></span>
       </div>
@@ -53,7 +53,7 @@
             <div class="user-info">
               <div class="user-name">Gary</div>
               <div class="user-role">
-                <span class="dot-online"></span>本体管理员 · 在线
+                <span class="dot-online"></span>本体管理员
               </div>
             </div>
           </div>
@@ -214,7 +214,7 @@ export default {
   padding: 6px 10px;
   background: var(--bl-bg-2);
   border-radius: var(--bl-radius-3);
-  display: flex; align-items: center; gap: 10px;
+  display: flex; align-items: center; gap: 6px;
   cursor: pointer; position: relative;
   border: 1px solid transparent;
 }
@@ -239,10 +239,19 @@ export default {
 .sidebar.is-collapsed .domain-picker > .dp-text,
 .sidebar.is-collapsed .domain-picker > .dp-arrow { display: none; }
 
-.nav { flex: 1; overflow: auto; padding: 4px 8px 8px; }
+.nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px 8px 8px;
+  /* 完全隐藏滚动条：内容用全宽，靠鼠标滚轮滚动 */
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* IE / Edge legacy */
+}
+.nav::-webkit-scrollbar { width: 0; height: 0; display: none; }  /* Chromium / Safari */
 .nav-group { padding-top: 6px; margin-top: 6px; border-top: 1px solid var(--bl-border); }
 .nav-group:first-child { border-top: 0; margin-top: 0; padding-top: 0; }
-.sidebar.is-collapsed .nav-group { margin: 4px 4px 0; padding-top: 4px; }
+.sidebar.is-collapsed .nav-group { margin: 4px 0px 0; padding-top: 4px; }
 .nav-group-title {
   padding: 4px 8px 4px 12px;
   font-size: var(--bl-fs-11);

@@ -238,3 +238,29 @@ CREATE TABLE IF NOT EXISTS sys_data_source (
 );
 CREATE INDEX IF NOT EXISTS idx_ds_category ON sys_data_source(category_code);
 CREATE INDEX IF NOT EXISTS idx_ds_type     ON sys_data_source(ds_type);
+
+-- =============================================================
+-- 「我的图库」共享图标目录(最多 2 级)与上传图标
+-- =============================================================
+CREATE TABLE IF NOT EXISTS icon_lib_group (
+  id          TEXT PRIMARY KEY,                              -- "ig-" + UUID
+  parent_id   TEXT,                                          -- NULL 顶级；2 级时存父节点 id
+  name        TEXT NOT NULL,
+  sort        INTEGER NOT NULL DEFAULT 0,
+  source      TEXT,                                          -- seed | manual
+  create_time TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  update_time TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
+CREATE INDEX IF NOT EXISTS idx_iglib_grp_parent ON icon_lib_group(parent_id);
+
+CREATE TABLE IF NOT EXISTS icon_lib_icon (
+  id          TEXT PRIMARY KEY,                              -- "ii-" + UUID
+  group_id    TEXT NOT NULL,                                 -- 关联 icon_lib_group.id (叶子节点)
+  name        TEXT NOT NULL,                                 -- 文件名(去 .svg)
+  view_box    TEXT NOT NULL DEFAULT '0 0 1024 1024',
+  content     TEXT NOT NULL,                                 -- 内部 SVG 片段(已替换为 currentColor)
+  sort        INTEGER NOT NULL DEFAULT 0,
+  create_time TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  update_time TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
+CREATE INDEX IF NOT EXISTS idx_iglib_ico_group ON icon_lib_icon(group_id);

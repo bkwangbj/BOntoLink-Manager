@@ -7,6 +7,25 @@
           <span class="ov-item ov-ok"><span class="ov-lbl">正常</span><b>{{ overview.normal ?? 0 }}</b></span>
           <span class="ov-item ov-risk"><span class="ov-lbl">风险</span><b>{{ overview.risk ?? 0 }}</b></span>
         </div>
+        <div class="ds-view-toggle">
+          <button :class="['vt-btn', !groupMode && 'is-on']" @click="groupMode=false" title="列表视图">
+            <span v-html="BL.icon('list', 13)"></span><span>列表</span>
+          </button>
+          <button :class="['vt-btn', groupMode && 'is-on']" @click="groupMode=true" title="按领域分组">
+            <span v-html="BL.icon('layers', 13)"></span><span>分组</span>
+          </button>
+        </div>
+        <select class="bl-input hd-filter" v-model="filterIndustry" title="所属领域">
+          <option value="">全部领域</option>
+          <option v-for="i in industryFilterOptions" :key="i" :value="i">{{ i }}</option>
+        </select>
+        <select class="bl-input hd-filter" v-model="filterStatus" title="状态">
+          <option value="">全部状态</option>
+          <option value="online">在线</option>
+          <option value="risk">风险</option>
+          <option value="offline">离线</option>
+          <option value="disabled">禁用</option>
+        </select>
         <div class="search-wrap">
           <span class="search-icon" v-html="BL.icon('search', 14)"></span>
           <input class="bl-input search-input" placeholder="搜索数据源（名称 / 编码 / 类型）" v-model="q" />
@@ -21,40 +40,88 @@
     <div :class="['three-pane', !cfgOpen && 'no-cfg']">
       <!-- 左栏：数据源列表 -->
       <section class="pane pane-list">
+        <div class="ds-list-scroll">
         <table class="bl-table ds-table">
           <thead>
             <tr>
-              <th></th>
-              <th>数据库名</th>
-              <th>引用数</th>
-              <th>状态</th>
+              <th>
+                <span class="th-sort" @click="toggleSort('dsName')">数据库名<span class="th-arrow">{{ sortArrow('dsName') }}</span></span>
+              </th>
+              <th>
+                <span class="th-sort" @click="toggleSort('industry')">所属领域<span class="th-arrow">{{ sortArrow('industry') }}</span></span>
+              </th>
+              <th>
+                <span class="th-sort" @click="toggleSort('refCount')">引用数<span class="th-arrow">{{ sortArrow('refCount') }}</span></span>
+              </th>
+              <th>
+                <span class="th-sort" @click="toggleSort('status')">状态<span class="th-arrow">{{ sortArrow('status') }}</span></span>
+              </th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="d in filtered" :key="d.id" :class="['ds-row', selected?.id===d.id && 'is-active']" @click="select(d)" @dblclick="openEdit(d)">
-              <td style="width:36px">
-                <span class="ds-ic" :style="{ background: typeColor(d.dsType) }" v-html="BL.icon(typeIcon(d.dsType), 12, '#fff')"></span>
-              </td>
-              <td>
-                <div class="ds-name bl-truncate" :title="d.dsName">{{ d.dsName }}</div>
-                <div class="ds-code bl-mono bl-muted">{{ d.dsCode }} · {{ d.dsType.toUpperCase() }}</div>
-              </td>
-              <td><span class="bl-tag">{{ d.refCount || 0 }}</span></td>
-              <td>
-                <span :class="['bl-tag', statusTag(d).cls]">{{ statusTag(d).text }}</span>
-              </td>
-              <td style="width:80px">
-                <div class="bl-row" style="gap:0">
-                  <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="测试" @click.stop="doTest(d)" v-html="BL.icon('zap', 12)"></button>
-                  <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="编辑" @click.stop="openEdit(d)" v-html="BL.icon('edit', 12)"></button>
-                  <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="删除" @click.stop="doDelete(d)" v-html="BL.icon('trash', 12)"></button>
-                </div>
-              </td>
-            </tr>
+            <template v-for="row in displayRows" :key="row.key">
+              <!-- 分组标题行 -->
+              <tr v-if="row.type==='group'" class="ds-group-row" @click="toggleDomain(row.key)">
+                <td colspan="5">
+                  <span class="ds-group-chev" v-html="BL.icon(row.collapsed ? 'chevronRight' : 'chevronDown', 12)"></span>
+                  <span class="ds-group-label">{{ row.label }}</span>
+                  <span class="ds-group-count">{{ row.count }}</span>
+                </td>
+              </tr>
+              <!-- 数据源行 -->
+              <tr v-else :class="['ds-row', groupMode && 'is-grouped', selected?.id===row.data.id && 'is-active']" @click="select(row.data)" @dblclick="openEdit(row.data)">
+                <td>
+                  <div class="ds-name-cell">
+                    <span class="ds-ic" :style="{ background: typeColor(row.data.dsType) }" v-html="BL.icon(typeIcon(row.data.dsType), 12, '#fff')"></span>
+                    <div class="ds-name-text">
+                      <div class="ds-name bl-truncate" :title="row.data.dsName">{{ row.data.dsName }}</div>
+                      <div class="ds-code bl-mono bl-muted">{{ row.data.dsCode }} · {{ row.data.dsType.toUpperCase() }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="bl-truncate" :title="dsDomainPath(row.data)">{{ dsIndustry(row.data) }}</span>
+                </td>
+                <td><span class="bl-tag">{{ row.data.refCount || 0 }}</span></td>
+                <td>
+                  <span :class="['bl-tag', statusTag(row.data).cls]">{{ statusTag(row.data).text }}</span>
+                </td>
+                <td style="width:80px">
+                  <div class="bl-row" style="gap:0">
+                    <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="测试" @click.stop="doTest(row.data)" v-html="BL.icon('zap', 12)"></button>
+                    <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="编辑" @click.stop="openEdit(row.data)" v-html="BL.icon('edit', 12)"></button>
+                    <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="删除" @click.stop="doDelete(row.data)" v-html="BL.icon('trash', 12)"></button>
+                  </div>
+                </td>
+              </tr>
+            </template>
           </tbody>
         </table>
         <div v-if="!filtered.length" class="bl-empty" style="padding:48px">暂无匹配数据源，请调整检索条件</div>
+        </div>
+        <!-- 分页钉底 -->
+        <div class="ds-pager">
+          <div class="ds-pager-l">
+            共 {{ filtered.length }} 项
+            <span v-if="groupMode" class="bl-muted" style="margin-left:8px">· {{ groupCount }} 个领域</span>
+          </div>
+          <div class="ds-pager-r" v-if="!groupMode">
+            <span class="bl-muted" style="font-size:12px;margin-right:6px">每页</span>
+            <select class="bl-input ds-page-size" v-model.number="pageSize">
+              <option :value="20">20</option>
+              <option :value="50">50</option>
+              <option :value="100">100</option>
+            </select>
+            <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="page<=1" @click="page--">‹</button>
+            <span class="bl-muted" style="font-size:12px">{{ page }} / {{ totalPages }}</span>
+            <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="page>=totalPages" @click="page++">›</button>
+          </div>
+          <div class="ds-pager-r" v-else>
+            <button class="bl-btn bl-btn-sm bl-btn-text" @click="expandAllGroups">展开全部</button>
+            <button class="bl-btn bl-btn-sm bl-btn-text" @click="collapseAllGroups">折叠全部</button>
+          </div>
+        </div>
       </section>
 
       <!-- 中栏：配置 -->
@@ -65,15 +132,15 @@
         </div>
         <div class="cfg-body">
           <div class="cfg-section">基础信息</div>
-          <FieldRow label="名称 *"><input class="bl-input" v-model="form.dsName" placeholder="例：水利主业务库" /></FieldRow>
-          <FieldRow label="编码 *" hint="同领域内唯一，关联 ont_class 引用"><input class="bl-input bl-mono" v-model="form.dsCode" /></FieldRow>
-          <FieldRow label="所属领域">
+          <FieldRow label="名称 *" inline><input class="bl-input" v-model="form.dsName" placeholder="例：水利主业务库" /></FieldRow>
+          <FieldRow label="编码 *" inline hint="同领域内唯一，关联 ont_class 引用"><input class="bl-input bl-mono" v-model="form.dsCode" /></FieldRow>
+          <FieldRow label="所属领域" inline>
             <select class="bl-input" v-model="form.categoryCode">
               <option value="">— 无 —</option>
               <option v-for="c in domainOptions" :key="c.code" :value="c.code">{{ c.name }}</option>
             </select>
           </FieldRow>
-          <FieldRow label="类型 *">
+          <FieldRow label="类型 *" inline>
             <select class="bl-input" v-model="form.dsType" @change="onTypeChange">
               <option v-for="t in dsTypes" :key="t" :value="t">{{ t.toUpperCase() }}</option>
             </select>
@@ -81,19 +148,19 @@
 
           <div class="cfg-section">连接配置</div>
           <template v-if="form.dsType !== 'mongodb'">
-            <FieldRow label="JDBC 驱动">
+            <FieldRow label="JDBC 驱动" inline>
               <select class="bl-input" v-model="form.jdbcDriver">
                 <option v-for="d in driversForType" :key="d" :value="d">{{ d }}</option>
               </select>
             </FieldRow>
-            <FieldRow label="连接地址"><input class="bl-input bl-mono" v-model="form.jdbcUrl" placeholder="jdbc:mysql://127.0.0.1:3306/xxx" /></FieldRow>
-            <FieldRow label="账号"><input class="bl-input" v-model="form.username" /></FieldRow>
-            <FieldRow label="密码"><input class="bl-input" type="password" v-model="form.password" /></FieldRow>
+            <FieldRow label="连接地址" inline><input class="bl-input bl-mono" v-model="form.jdbcUrl" placeholder="jdbc:mysql://127.0.0.1:3306/xxx" /></FieldRow>
+            <FieldRow label="账号" inline><input class="bl-input" v-model="form.username" /></FieldRow>
+            <FieldRow label="密码" inline><input class="bl-input" type="password" v-model="form.password" /></FieldRow>
           </template>
           <template v-else>
-            <FieldRow label="Mongo URL"><input class="bl-input bl-mono" v-model="form.mongoUrl" placeholder="mongodb://127.0.0.1:27017/xxx" /></FieldRow>
-            <FieldRow label="账号"><input class="bl-input" v-model="form.username" /></FieldRow>
-            <FieldRow label="密码"><input class="bl-input" type="password" v-model="form.password" /></FieldRow>
+            <FieldRow label="Mongo URL" inline><input class="bl-input bl-mono" v-model="form.mongoUrl" placeholder="mongodb://127.0.0.1:27017/xxx" /></FieldRow>
+            <FieldRow label="账号" inline><input class="bl-input" v-model="form.username" /></FieldRow>
+            <FieldRow label="密码" inline><input class="bl-input" type="password" v-model="form.password" /></FieldRow>
           </template>
 
           <div class="cfg-section">扩展信息</div>
@@ -120,22 +187,24 @@
         <template v-else>
           <!-- 顶部信息条（撑满、只有底部线） -->
           <div class="mon-info bare">
-            <div class="bl-row" style="gap:10px;flex:1;min-width:0">
-              <span class="mon-name">{{ selected.dsName }} | {{ selected.dsCode }}</span>
-              <span class="bl-tag mon-tag" :style="{ color: typeColor(selected.dsType), background: typeColor(selected.dsType) + '14' }">{{ selected.dsType.toUpperCase() }}</span>
-              <span class="bl-mono bl-muted">{{ mon.basic?.host || '—' }}</span>
-              <span class="bl-muted">版本: <span class="bl-mono">{{ mon.basic?.version || '—' }}</span></span>
-            </div>
+            <span class="mon-name bl-truncate">{{ selected.dsName }} | {{ selected.dsCode }}</span>
             <button class="bl-btn bl-btn-sm" @click="doTest(selected)" v-html="iconText('zap','测试')"></button>
           </div>
 
           <div class="mon-content">
-          <!-- 状态图例 -->
-          <div class="mon-legend">
-            <span class="legend-item"><span class="ld" style="background:#00B42A"></span>正常</span>
-            <span class="legend-item"><span class="ld" style="background:#FF7D00"></span>预警</span>
-            <span class="legend-item"><span class="ld" style="background:#F53F3F"></span>异常</span>
-            <span class="legend-item"><span class="ld" style="background:#C9CDD4"></span>闲置</span>
+          <!-- 第一行：元信息 + 状态图例 -->
+          <div class="mon-metabar">
+            <div class="mon-meta-left">
+              <span class="bl-tag mon-tag" :style="{ color: typeColor(selected.dsType), background: typeColor(selected.dsType) + '14' }">{{ selected.dsType.toUpperCase() }}</span>
+              <span class="bl-mono bl-muted">{{ mon.basic?.host || '—' }}</span>
+              <span class="bl-muted">版本: <span class="bl-mono">{{ mon.basic?.version || '—' }}</span></span>
+            </div>
+            <div class="mon-legend">
+              <span class="legend-item"><span class="ld" style="background:#00B42A"></span>正常</span>
+              <span class="legend-item"><span class="ld" style="background:#FF7D00"></span>预警</span>
+              <span class="legend-item"><span class="ld" style="background:#F53F3F"></span>异常</span>
+              <span class="legend-item"><span class="ld" style="background:#C9CDD4"></span>闲置</span>
+            </div>
           </div>
 
           <!-- 2x2 监控面板 -->
@@ -280,14 +349,114 @@ function statusTag(d) {
   if (d.connectStatus === 'risk')    return { cls:'bl-tag-warning', text:'风险' }
   return { cls:'bl-tag-success', text:'在线' }
 }
+function statusKey(d) {
+  if (!d) return ''
+  if (d.status === 0) return 'disabled'
+  if (d.connectStatus === 'offline') return 'offline'
+  if (d.connectStatus === 'risk') return 'risk'
+  return 'online'
+}
+const STATUS_ORDER = { online: 0, risk: 1, offline: 2, disabled: 3 }
+
+/* —— 所属领域(由 categoryCode 解析) —— */
+const catInfoByCode = ref({})   // code -> { label, industryLabel, path }
+function dsIndustry(d) {
+  const info = catInfoByCode.value[d.categoryCode]
+  return info ? (info.label || info.industryLabel) : (d.categoryCode || '—')
+}
+function dsDomainPath(d) {
+  const info = catInfoByCode.value[d.categoryCode]
+  return info ? info.path : (d.categoryCode || '')
+}
+
+/* —— 排序 / 筛选 —— */
+const sortKey = ref('')
+const sortDir = ref('')   // 'asc' | 'desc' | ''
+function toggleSort(key) {
+  if (sortKey.value !== key) { sortKey.value = key; sortDir.value = 'asc' }
+  else if (sortDir.value === 'asc') sortDir.value = 'desc'
+  else { sortKey.value = ''; sortDir.value = '' }
+}
+function sortArrow(key) {
+  if (sortKey.value !== key) return ' ⇅'
+  return sortDir.value === 'asc' ? ' ↑' : ' ↓'
+}
+const filterIndustry = ref('')
+const filterStatus = ref('')
+const industryFilterOptions = computed(() => {
+  const set = new Set()
+  rows.value.forEach(d => { const i = dsIndustry(d); if (i && i !== '—') set.add(i) })
+  return [...set].sort((a, b) => a.localeCompare(b))
+})
 
 const filtered = computed(() => {
+  let list = rows.value
   const k = q.value.trim().toLowerCase()
-  if (!k) return rows.value
-  return rows.value.filter(r =>
-    [r.dsName, r.dsCode, r.dsType, r.remark].filter(Boolean)
-      .some(s => String(s).toLowerCase().includes(k)))
+  if (k) {
+    list = list.filter(r =>
+      [r.dsName, r.dsCode, r.dsType, r.remark, dsIndustry(r)].filter(Boolean)
+        .some(s => String(s).toLowerCase().includes(k)))
+  }
+  if (filterIndustry.value) list = list.filter(d => dsIndustry(d) === filterIndustry.value)
+  if (filterStatus.value) list = list.filter(d => statusKey(d) === filterStatus.value)
+  if (sortKey.value && sortDir.value) {
+    const dir = sortDir.value === 'asc' ? 1 : -1
+    list = [...list].sort((a, b) => {
+      let va, vb
+      if (sortKey.value === 'dsName') { va = a.dsName || ''; vb = b.dsName || '' }
+      else if (sortKey.value === 'industry') { va = dsIndustry(a); vb = dsIndustry(b) }
+      else if (sortKey.value === 'refCount') { va = a.refCount || 0; vb = b.refCount || 0 }
+      else if (sortKey.value === 'status') { va = STATUS_ORDER[statusKey(a)] ?? 9; vb = STATUS_ORDER[statusKey(b)] ?? 9 }
+      if (typeof va === 'number') return (va - vb) * dir
+      return String(va).localeCompare(String(vb)) * dir
+    })
+  }
+  return list
 })
+
+/* —— 分页 —— */
+const page = ref(1)
+const pageSize = ref(20)
+const totalPages = computed(() => Math.max(1, Math.ceil(filtered.value.length / pageSize.value)))
+const paged = computed(() => {
+  const start = (page.value - 1) * pageSize.value
+  return filtered.value.slice(start, start + pageSize.value)
+})
+watch([filtered, pageSize], () => { if (page.value > totalPages.value) page.value = 1 })
+
+/* —— 按所属领域分组显示 —— */
+const groupMode = ref(false)
+const collapsedDomains = ref(new Set())
+function toggleDomain(key) {
+  const s = new Set(collapsedDomains.value)
+  if (s.has(key)) s.delete(key); else s.add(key)
+  collapsedDomains.value = s
+}
+const groupedRows = computed(() => {
+  const groups = new Map()
+  filtered.value.forEach(d => {
+    const key = dsIndustry(d) || '—'
+    if (!groups.has(key)) groups.set(key, [])
+    groups.get(key).push(d)
+  })
+  const out = []
+  for (const [key, items] of groups) {
+    const collapsed = collapsedDomains.value.has(key)
+    out.push({ type: 'group', key, label: key, count: items.length, collapsed })
+    if (!collapsed) items.forEach(d => out.push({ type: 'item', key: 'i' + d.id, data: d }))
+  }
+  return out
+})
+const groupCount = computed(() => new Set(filtered.value.map(d => dsIndustry(d) || '—')).size)
+const displayRows = computed(() =>
+  groupMode.value
+    ? groupedRows.value
+    : paged.value.map(d => ({ type: 'item', key: 'i' + d.id, data: d }))
+)
+function expandAllGroups() { collapsedDomains.value = new Set() }
+function collapseAllGroups() {
+  collapsedDomains.value = new Set(filtered.value.map(d => dsIndustry(d) || '—'))
+}
 
 async function loadAll() {
   rows.value    = await datasourceApi.list().catch(() => [])
@@ -297,9 +466,23 @@ async function loadAll() {
     const ns = await namespaceApi.list().catch(() => [])
     const tree = await categoryApi.tree().catch(() => [])
     const list = []
-    const walk = (nodes) => nodes.forEach(n => { if (n.categoryCode) list.push({ code: n.categoryCode, name: n.label }); if (n.children) walk(n.children) })
-    walk(tree)
+    const info = {}
+    const walk = (nodes, ancestors) => nodes.forEach(n => {
+      const chain = [...ancestors, n]
+      if (n.categoryCode) {
+        list.push({ code: n.categoryCode, name: n.label })
+        const industry = chain.find(x => x.categoryType === 1)
+        info[n.categoryCode] = {
+          label: n.label,
+          industryLabel: industry ? industry.label : n.label,
+          path: chain.map(x => x.label).join(' / ')
+        }
+      }
+      if (n.children) walk(n.children, chain)
+    })
+    walk(tree, [])
     domainOptions.value = list
+    catInfoByCode.value = info
   }
 }
 
@@ -456,11 +639,11 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
 .three-pane {
   flex: 1;
   display: grid;
-  grid-template-columns: minmax(420px, 1.2fr) 380px 1.4fr;
+  grid-template-columns: minmax(540px, 1.9fr) 380px 1fr;
   gap: 12px; padding: 12px; overflow: hidden;
 }
 /* 中间编辑面板关闭时，右侧监控扩展占满 */
-.three-pane.no-cfg { grid-template-columns: minmax(420px, 1.2fr) 1fr; }
+.three-pane.no-cfg { grid-template-columns: minmax(540px, 1.7fr) 1fr; }
 .three-pane.no-cfg > .pane-cfg { display: none; }
 .pane {
   background: var(--bl-bg-1);
@@ -469,7 +652,15 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
   overflow: hidden;
   display: flex; flex-direction: column;
 }
-.pane-list { overflow: auto; }
+.pane-list { display: flex; flex-direction: column; overflow: hidden; }
+.ds-list-scroll { flex: 1; min-height: 0; overflow: auto; }
+.ds-pager {
+  flex-shrink: 0; padding: 8px 12px; border-top: 1px solid var(--bl-divider);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: var(--bl-fs-12);
+}
+.ds-pager-r { display: inline-flex; align-items: center; gap: 4px; }
+.ds-page-size { width: 64px; height: 26px; }
 .pane-cfg { transition: width .2s; }
 
 .ds-table { width: 100%; }
@@ -479,7 +670,62 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
 .ds-ic {
   width: 22px; height: 22px; border-radius: 4px;
   display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
 }
+.ds-name-cell { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.ds-name-text { min-width: 0; }
+
+/* 表头排序 */
+.th-sort { cursor: pointer; user-select: none; display: inline-flex; align-items: center; white-space: nowrap; }
+.th-sort:hover { color: var(--bl-primary); }
+.th-arrow { color: var(--bl-text-4); font-size: 11px; margin-left: 2px; }
+
+/* 列表 / 分组 视图切换 */
+.ds-view-toggle {
+  display: inline-flex; align-items: center;
+  background: var(--bl-bg-2);
+  border-radius: var(--bl-radius-2);
+  padding: 2px;
+}
+.vt-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 26px; padding: 0 10px;
+  border: 0; background: transparent; cursor: pointer;
+  font-size: var(--bl-fs-12); color: var(--bl-text-2);
+  border-radius: var(--bl-radius-1, 4px);
+}
+.vt-btn:hover { color: var(--bl-text-1); }
+.vt-btn.is-on {
+  background: var(--bl-bg-1); color: var(--bl-primary);
+  font-weight: 500; box-shadow: var(--bl-shadow-1, 0 1px 2px rgba(0,0,0,.08));
+}
+
+/* 分组标题行 */
+.ds-group-row { cursor: pointer; background: var(--bl-bg-2); }
+.ds-group-row:hover { background: var(--bl-bg-hover); }
+.ds-group-row td {
+  padding: 7px 12px !important;
+  border-bottom: 1px solid var(--bl-border);
+}
+.ds-group-chev {
+  display: inline-flex; vertical-align: middle;
+  color: var(--bl-text-3); margin-right: 6px;
+}
+.ds-group-label {
+  font-weight: 600; font-size: var(--bl-fs-13); color: var(--bl-text-1);
+  vertical-align: middle;
+}
+.ds-group-count {
+  margin-left: 8px;
+  font-size: 11px; color: var(--bl-text-3);
+  background: var(--bl-bg-1); border: 1px solid var(--bl-border);
+  border-radius: 9px; padding: 0 8px; line-height: 16px;
+  vertical-align: middle; font-feature-settings: "tnum";
+}
+.ds-row.is-grouped td:first-child { padding-left: 24px; }
+
+/* 顶部筛选下拉 */
+.hd-filter { width: 130px; }
 .ds-name { font-weight: 500; color: var(--bl-text-1); }
 .ds-code { font-size: var(--bl-fs-11); }
 
@@ -490,6 +736,9 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
   border-bottom: 1px solid var(--bl-divider);
 }
 .cfg-body { flex: 1; overflow: auto; padding: 8px 14px; }
+/* 表单 inline 行:收窄 label 列、缩小间距,让输入框(值)更宽 */
+.cfg-body :deep(.fr.fr-inline) { gap: 8px; }
+.cfg-body :deep(.fr.fr-inline .fr-label) { width: 72px; }
 .cfg-section {
   font-size: var(--bl-fs-12); color: var(--bl-text-3);
   margin: 12px 0 6px; padding-left: 8px;
@@ -505,19 +754,27 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
 
 /* 顶部信息条：撑满、只有底部一条分隔线，与系统其他面板头部一致 */
 .mon-info {
-  display: flex; align-items: center; gap: 10px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
   padding: 12px 14px;
   border-bottom: 1px solid var(--bl-divider);
   flex-shrink: 0;
 }
-.mon-name { font-size: var(--bl-fs-14); font-weight: 600; }
+.mon-name { font-size: var(--bl-fs-14); font-weight: 600; flex: 1; min-width: 0; }
 .mon-tag { font-weight: 600; }
+
+/* 第一行：元信息 + 图例 */
+.mon-metabar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+}
+.mon-meta-left { display: inline-flex; align-items: center; gap: 10px; min-width: 0; flex-wrap: wrap; }
 
 /* 状态图例 */
 .mon-legend {
   display: flex; gap: 16px;
   padding: 0 4px;
   font-size: var(--bl-fs-12); color: var(--bl-text-2);
+  flex-shrink: 0;
 }
 .legend-item { display: inline-flex; align-items: center; gap: 6px; }
 .legend-item .ld { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }

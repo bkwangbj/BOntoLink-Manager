@@ -59,13 +59,26 @@ export const groupApi = {
 
 export const resourceApi = {
   stats:       () => http.get('/resource/discover/stats'),
-  classes:     () => http.get('/resource/classes'),
+  classes:     (params) => http.get('/resource/classes', { params }),
+  classDetail: (id) => http.get(`/resource/classes/${id}`),
   links:       () => http.get('/resource/links'),
   actions:     () => http.get('/resource/actions'),
   interfaces:  () => http.get('/resource/interfaces'),
   interface:   (id) => http.get(`/resource/interfaces/${id}`),
   properties:  (id) => http.get(`/resource/classes/${id}/properties`),
   graph:       () => http.get('/resource/graph')
+}
+
+/* 共享「业务图库」(图标目录树 + 上传 SVG) */
+export const iconLibApi = {
+  all:           () => http.get('/icon-lib'),
+  seed:          (force = false) => http.post(`/icon-lib/seed?force=${force}`),
+  createGroup:   (parentId, name) => http.post('/icon-lib/groups', { parentId, name }),
+  renameGroup:   (id, name) => http.put(`/icon-lib/groups/${id}`, { name }),
+  deleteGroup:   (id) => http.delete(`/icon-lib/groups/${id}`),
+  addIcon:       (groupId, payload) => http.post(`/icon-lib/groups/${groupId}/icons`, payload),
+  deleteIcon:    (id) => http.delete(`/icon-lib/icons/${id}`),
+  deleteIconBatch: (ids) => http.post('/icon-lib/icons/batch-delete', { ids })
 }
 
 export const interfaceApi = {

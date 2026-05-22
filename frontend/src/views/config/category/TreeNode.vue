@@ -11,6 +11,7 @@
       <span class="tn-label bl-truncate" :title="node.label">
         <span v-html="highlight(node.label, search)"></span>
       </span>
+      <span class="tn-count" :title="`${objCount} 个对象`">{{ objCount }}</span>
     </div>
     <div v-if="hasChildren && isOpen" class="tn-children">
       <TreeNode
@@ -19,6 +20,7 @@
         :selected="selected"
         :search="search"
         :expanded="expanded"
+        :stats-map="statsMap"
         @select="$emit('select', $event)"
         @toggle="$emit('toggle', $event)"
         @ctx="(n,a)=>$emit('ctx', n, a)" />
@@ -50,13 +52,15 @@ import { nodeProfile } from '@/lib/domain.js'
 const props = defineProps({
   node: Object, selected: Object,
   search: String,
-  expanded: Set
+  expanded: Set,
+  statsMap: { type: Object, default: () => ({}) }
 })
 const emit = defineEmits(['select', 'toggle', 'ctx'])
 
 const hasChildren = computed(() => Array.isArray(props.node.children) && props.node.children.length > 0)
 const isOpen = computed(() => props.expanded?.has(props.node.id))
 const prof = computed(() => nodeProfile(props.node))
+const objCount = computed(() => props.statsMap?.[props.node.id]?.classCount ?? 0)
 
 function typeText(t) { return t === 1 ? '行业' : t === 2 ? '领域' : t === 3 ? '分组' : '' }
 
@@ -133,6 +137,15 @@ function escape(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<'
   flex-shrink: 0;
 }
 .tn-label { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; }
+.tn-count {
+  flex-shrink: 0; margin-left: auto;
+  font-size: 11px; color: var(--bl-text-3);
+  background: var(--bl-bg-2);
+  border-radius: 9px; padding: 0 7px; min-width: 20px;
+  height: 17px; line-height: 17px; text-align: center;
+  font-feature-settings: "tnum";
+}
+.tn.is-active .tn-count { background: var(--bl-primary-soft-ss, var(--bl-bg-1)); color: var(--bl-primary); }
 .tn-tag {
   font-family: var(--bl-font-mono);
   font-size: var(--bl-fs-11);
