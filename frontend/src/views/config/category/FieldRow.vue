@@ -46,6 +46,7 @@ defineProps({ label: String, hint: String, inline: Boolean })
 .fr.fr-inline .fr-label {
   width: 52px;
   flex-shrink: 0;
+  align-self: center;   /* 抵消基础 .fr-label 的 flex-start，让 label 与 value 行内垂直居中 */
 }
 .fr.fr-inline .fr-value { flex: 1; }
 </style>
