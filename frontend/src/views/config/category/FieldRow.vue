@@ -44,7 +44,7 @@ defineProps({ label: String, hint: String, inline: Boolean })
   gap: 12px;
 }
 .fr.fr-inline .fr-label {
-  width: 90px;
+  width: 52px;
   flex-shrink: 0;
 }
 .fr.fr-inline .fr-value { flex: 1; }

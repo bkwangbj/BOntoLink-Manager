@@ -558,11 +558,11 @@
                 <div v-if="!customTopGroups.length" class="ip-side-empty">尚无自定义编组</div>
               </div>
             </div>
-            <!-- 内置图标库 -->
+            <!-- 功能图标库 -->
             <div class="ip-side-section">
               <div class="ip-side-head" @click="builtinExpanded = !builtinExpanded">
                 <span class="ip-side-head-chev" :class="builtinExpanded && 'is-open'" v-html="BL.icon('chevronRight', 11)"></span>
-                <span class="ip-side-head-title">内置图标库</span>
+                <span class="ip-side-head-title">功能图标库</span>
                 <span class="ip-side-head-count">{{ builtinCategories.length }}</span>
               </div>
               <div class="ip-side-list" v-show="builtinExpanded">
@@ -2702,6 +2702,7 @@ onUnmounted(() => { unsubCustom && unsubCustom() })
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   gap: 6px;
+  max-width: 386px;
 }
 .fr-icon {
   display: flex; flex-direction: column; gap: 8px;

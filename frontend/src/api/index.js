@@ -69,6 +69,38 @@ export const resourceApi = {
   graph:       () => http.get('/resource/graph')
 }
 
+/* 对象类型补充元数据 (等价/不相交/互斥并集/等价属性/互斥属性 等) */
+export const classMetaApi = {
+  candidates:        () => http.get('/class-meta/classes'),
+
+  listGroup:         (classId, type) => http.get('/class-meta/class-group', { params: { classId, type } }),
+  addGroup:          (data) => http.post('/class-meta/class-group', data),
+  updateGroup:       (id, data) => http.put(`/class-meta/class-group/${id}`, data),
+  removeGroup:       (id) => http.delete(`/class-meta/class-group/${id}`),
+
+  listDisjointUnion: (parentClassId) => http.get('/class-meta/disjoint-union', { params: { parentClassId } }),
+  addDisjointUnion:  (data) => http.post('/class-meta/disjoint-union', data),
+  updateDisjointUnion: (id, data) => http.put(`/class-meta/disjoint-union/${id}`, data),
+  removeDisjointUnion: (id) => http.delete(`/class-meta/disjoint-union/${id}`),
+
+  listPropEquiv:     (classId) => http.get('/class-meta/property-equivalent', { params: { classId } }),
+  addPropEquiv:      (data) => http.post('/class-meta/property-equivalent', data),
+  updatePropEquiv:   (id, data) => http.put(`/class-meta/property-equivalent/${id}`, data),
+  removePropEquiv:   (id) => http.delete(`/class-meta/property-equivalent/${id}`),
+
+  listPropDisjoint:  (classId) => http.get('/class-meta/property-disjoint', { params: { classId } }),
+  addPropDisjoint:   (data) => http.post('/class-meta/property-disjoint', data),
+  updatePropDisjoint:(id, data) => http.put(`/class-meta/property-disjoint/${id}`, data),
+  removePropDisjoint:(id) => http.delete(`/class-meta/property-disjoint/${id}`),
+
+  listProps:         (classId) => http.get(`/class-meta/classes/${classId}/properties`),
+  addProp:           (classId, data) => http.post(`/class-meta/classes/${classId}/properties`, data),
+  updateProp:        (propId, data) => http.put(`/class-meta/properties/${propId}`, data),
+  removeProp:        (propId) => http.delete(`/class-meta/properties/${propId}`),
+
+  updateClass:       (id, data) => http.put(`/class-meta/classes/${id}`, data),
+}
+
 /* 共享「业务图库」(图标目录树 + 上传 SVG) */
 export const iconLibApi = {
   all:           () => http.get('/icon-lib'),

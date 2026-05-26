@@ -29,6 +29,12 @@ public class IconLibController {
         return R.ok(service.seedFromCategory(force));
     }
 
+    /** 按分组关键字批量种入演示图标(图标=0 的分组生效；force=true 覆盖) */
+    @PostMapping("/seed-icons")
+    public R<Map<String, Object>> seedIcons(@RequestParam(value = "force", required = false, defaultValue = "false") boolean force) {
+        return R.ok(service.seedDemoIcons(force));
+    }
+
     /* ===== Group CRUD ===== */
     @PostMapping("/groups")
     public R<IconLibGroup> createGroup(@RequestBody Map<String, Object> body) {

@@ -46,7 +46,6 @@
               <thead>
                 <tr>
                   <th style="width:28px"><input type="checkbox" :checked="allChecked" @change="toggleAll" /></th>
-                  <th style="width:44px"></th>
                   <th>对象</th>
                   <th>领域</th>
                   <th>属性数</th>
@@ -64,12 +63,14 @@
                     :class="['ot-row', selected?.id===r.id && 'is-active']"
                     @click="openDrawer(r)">
                   <td @click.stop><input type="checkbox" :checked="checked.has(r.id)" @change="toggleOne(r.id)" /></td>
-                  <td>
-                    <span class="ot-ic" :style="{ background: r.color || '#165DFF' }" v-html="BL.icon(r.icon || 'cube', 12, '#fff')"></span>
-                  </td>
                   <td class="ot-cell-obj">
-                    <div class="ot-obj-label bl-truncate">{{ r.rdfs_label || r.display_name || r.api_name }}</div>
-                    <div class="ot-obj-api bl-mono bl-muted bl-truncate">{{ r.api_name }}</div>
+                    <div class="ot-name-cell">
+                      <span class="ot-ic" :style="{ background: r.color || '#165DFF' }" v-html="BL.icon(r.icon || 'cube', 12, '#fff')"></span>
+                      <div class="ot-name-text">
+                        <div class="ot-obj-label bl-truncate" :title="r.rdfs_label || r.display_name || r.api_name">{{ r.rdfs_label || r.display_name || r.api_name }}</div>
+                        <div class="ot-obj-api bl-mono bl-muted bl-truncate">{{ r.api_name }}</div>
+                      </div>
+                    </div>
                   </td>
                   <td><span class="bl-muted">{{ r.categoryLabel || '—' }}</span></td>
                   <td>
@@ -89,7 +90,7 @@
                   </td>
                   <td class="ot-rid">
                     <span class="bl-mono bl-muted bl-truncate" :title="r.rid">{{ shortRid(r.rid) }}</span>
-                    <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" @click.stop="copyText(r.rid)" v-html="BL.icon('copy', 11)"></button>
+                    <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="复制 RID" @click.stop="copyText(r.rid)" v-html="BL.icon('copy', 11)"></button>
                   </td>
                   <td>
                     <span :class="['bl-tag', r.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']">
@@ -197,7 +198,6 @@
             <button class="bl-btn bl-btn-sm bl-btn-primary" @click="onEdit"><span v-html="BL.icon('edit', 12, '#fff')"></span><span style="margin-left:4px">编辑</span></button>
             <span class="ot-drawer-sep"></span>
             <button class="bl-btn bl-btn-text bl-btn-icon" :title="drawerMaxed ? '恢复' : '最大'" @click="toggleMax" v-html="BL.icon(drawerMaxed ? 'minimize' : 'maximize', 14)"></button>
-            <button class="bl-btn bl-btn-text bl-btn-icon" :title="drawerMined ? '恢复' : '最小'" @click="toggleMin" v-html="BL.icon('minimize', 14)"></button>
             <button class="bl-btn bl-btn-text bl-btn-icon" title="关闭" @click="closeDrawer" v-html="BL.icon('x', 14)"></button>
           </div>
         </div>
@@ -222,73 +222,14 @@
 
           <!-- 右侧 TAB 内容区 -->
           <section class="ot-tab-pane">
-            <!-- 概览 -->
+            <!-- 概览（4 sub-tabs: 基础/显示/类表达式/其他） -->
             <div v-if="drawerTab === 'overview'" class="ot-tab-content">
-              <div class="ot-section-title">基础信息</div>
-              <div class="ot-grid">
-                <FieldRow label="API 名称" inline><span class="bl-mono">{{ detail.api_name }}</span></FieldRow>
-                <FieldRow label="编码" inline><span class="bl-mono">{{ detail.category_code }}</span></FieldRow>
-                <FieldRow label="标准名 (rdfs:label)" inline>{{ detail.rdfs_label || '—' }}</FieldRow>
-                <FieldRow label="命名空间" inline><span class="bl-tag">{{ detail.ns_code || '—' }}</span></FieldRow>
-                <FieldRow label="状态" inline>
-                  <span :class="['bl-tag', detail.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']">{{ detail.status === 1 ? '启用' : '禁用' }}</span>
-                </FieldRow>
-                <FieldRow label="所属领域" inline>{{ selected?.categoryLabel || '—' }}</FieldRow>
-              </div>
-
-              <div class="ot-section-title">语义注释</div>
-              <FieldRow label="注释 (rdfs:comment)"><div class="bl-muted">{{ detail.rdfs_comment || '尚未填写' }}</div></FieldRow>
-              <FieldRow label="说明"><div class="bl-muted">{{ detail.description || '—' }}</div></FieldRow>
-              <FieldRow label="参考资料 (rdfs:seeAlso)"><div class="bl-muted">{{ detail.rdfs_see_also || '—' }}</div></FieldRow>
-              <FieldRow label="定义来源 (rdfs:isDefinedBy)"><div class="bl-muted">{{ detail.rdfs_defined_by || '—' }}</div></FieldRow>
-
-              <div class="ot-section-title">统计</div>
-              <div class="ot-stat-grid">
-                <div class="ot-stat-card"><div class="ot-stat-lbl">属性总数</div><div class="ot-stat-val">{{ detail.propTotal ?? 0 }}</div></div>
-                <div class="ot-stat-card"><div class="ot-stat-lbl">普通属性</div><div class="ot-stat-val">{{ detail.propNormal ?? 0 }}</div></div>
-                <div class="ot-stat-card"><div class="ot-stat-lbl">关系</div><div class="ot-stat-val">{{ detail.linkCount ?? 0 }}</div></div>
-                <div class="ot-stat-card"><div class="ot-stat-lbl">动作</div><div class="ot-stat-val">{{ detail.actionCount ?? 0 }}</div></div>
-                <div class="ot-stat-card"><div class="ot-stat-lbl">接口</div><div class="ot-stat-val">{{ detail.interfaceCount ?? 0 }}</div></div>
-              </div>
-
-              <div class="ot-section-title">RID</div>
-              <div class="bl-row" style="gap:8px;align-items:center">
-                <span class="bl-mono bl-muted">{{ detail.rid || selected?.rid }}</span>
-                <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" @click="copyText(detail.rid || selected?.rid)" v-html="BL.icon('copy', 12)"></button>
-              </div>
+              <TabOverview :detail="detail" @saved="onClassSaved" />
             </div>
 
-            <!-- 属性 -->
+            <!-- 属性（行内编辑） -->
             <div v-else-if="drawerTab === 'props'" class="ot-tab-content">
-              <div class="ot-tab-toolbar">
-                <span class="bl-muted">共 {{ (detail.properties || []).length }} 个属性</span>
-                <div class="bl-grow"></div>
-                <button class="bl-btn bl-btn-sm bl-btn-primary"><span v-html="BL.icon('plus', 12, '#fff')"></span><span style="margin-left:4px">新增属性</span></button>
-              </div>
-              <table class="bl-table">
-                <thead>
-                  <tr>
-                    <th>属性</th>
-                    <th>类型</th>
-                    <th>主键</th>
-                    <th>必填</th>
-                    <th>状态</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="p in (detail.properties || [])" :key="p.id">
-                    <td>
-                      <div>{{ p.display_name || p.rdfs_label || p.api_name }}</div>
-                      <div class="bl-mono bl-muted" style="font-size:11px">{{ p.api_name }}</div>
-                    </td>
-                    <td><span class="bl-tag">{{ p.data_type || '—' }}</span></td>
-                    <td>{{ p.is_primary ? '是' : '—' }}</td>
-                    <td>{{ p.is_required ? '是' : '—' }}</td>
-                    <td><span :class="['bl-tag', p.status === 1 ? 'bl-tag-success' : 'bl-tag-warning']">{{ p.status === 1 ? '启用' : '禁用' }}</span></td>
-                  </tr>
-                </tbody>
-              </table>
-              <div v-if="!(detail.properties || []).length" class="bl-empty" style="padding:32px">暂无属性</div>
+              <TabProps :class-id="selected?.id" />
             </div>
 
             <!-- 值类型（占位） -->
@@ -353,19 +294,45 @@
               <Placeholder icon="network" label="对象关联图谱" desc="以当前对象为中心,展示其 1-2 度可达的关联对象、关系、动作" />
             </div>
 
-            <!-- 等价 -->
+            <!-- 等价类 -->
             <div v-else-if="drawerTab === 'equiv'" class="ot-tab-content">
-              <Placeholder icon="share" label="等价类 (OWL: equivalentClass)" desc="维护与当前对象语义完全等价的本体类清单" />
+              <TabClassGroup :class-id="selected?.id" type="equivalent" />
             </div>
 
-            <!-- 不相交 -->
+            <!-- 不相交类 -->
             <div v-else-if="drawerTab === 'disjoint'" class="ot-tab-content">
-              <Placeholder icon="x" label="不相交类 (OWL: disjointWith)" desc="标记与当前对象互斥、不能同时成立的本体类" />
+              <TabClassGroup :class-id="selected?.id" type="disjoint" />
             </div>
 
-            <!-- 互斥并集 -->
+            <!-- 互斥并集类 -->
             <div v-else-if="drawerTab === 'disjointUnion'" class="ot-tab-content">
-              <Placeholder icon="branch" label="互斥并集 (OWL: disjointUnionOf)" desc="互斥 + 覆盖全部父类的子类划分(如:在职 / 离职 / 退休)" />
+              <TabDisjointUnion
+                :class-id="selected?.id"
+                :parent-label="selected?.rdfs_label || selected?.display_name || selected?.api_name"
+                :parent-api="selected?.api_name"
+                :parent-icon="selected?.icon || 'cube'"
+                :parent-color="selected?.color || '#165DFF'" />
+            </div>
+
+            <!-- 等价属性 -->
+            <div v-else-if="drawerTab === 'propEquiv'" class="ot-tab-content">
+              <TabPropertyRelation
+                :class-id="selected?.id"
+                :class-label="selected?.rdfs_label || selected?.display_name || selected?.api_name"
+                type="equivalent" />
+            </div>
+
+            <!-- 不相交属性 -->
+            <div v-else-if="drawerTab === 'propDisjoint'" class="ot-tab-content">
+              <TabPropertyRelation
+                :class-id="selected?.id"
+                :class-label="selected?.rdfs_label || selected?.display_name || selected?.api_name"
+                type="disjoint" />
+            </div>
+
+            <!-- 被引用 -->
+            <div v-else-if="drawerTab === 'refBy'" class="ot-tab-content">
+              <Placeholder icon="link" label="被引用" desc="呈现引用当前对象的接口 / 关系 / 派生属性 / 视图清单" />
             </div>
 
             <!-- 接口 -->
@@ -445,6 +412,9 @@
       </aside>
       </transition>
     </section>
+
+    <!-- 新建对象类型向导 -->
+    <NewObjectTypeWizard v-model:open="wizardOpen" @next="onWizardNext" />
   </div>
 </template>
 
@@ -453,6 +423,12 @@ import { ref, computed, onMounted, onBeforeUnmount, watch, h } from 'vue'
 import { BL } from '@/lib/bl.js'
 import { resourceApi, categoryApi } from '@/api'
 import FieldRow from '@/views/config/category/FieldRow.vue'
+import TabOverview from '@/views/resources/objecttype/TabOverview.vue'
+import TabProps from '@/views/resources/objecttype/TabProps.vue'
+import TabClassGroup from '@/views/resources/objecttype/TabClassGroup.vue'
+import TabDisjointUnion from '@/views/resources/objecttype/TabDisjointUnion.vue'
+import TabPropertyRelation from '@/views/resources/objecttype/TabPropertyRelation.vue'
+import NewObjectTypeWizard from '@/views/resources/objecttype/NewObjectTypeWizard.vue'
 
 // 占位组件（内嵌 functional 风格）
 const Placeholder = {
@@ -620,7 +596,13 @@ async function loadDetail(id) {
   }
 }
 
-/* ===== TAB 分组结构 ===== */
+/* 概览保存后刷新详情 + 列表 */
+async function onClassSaved(id) {
+  try { rows.value = await resourceApi.classes({ aggregate: true }) } catch {}
+  await loadDetail(id)
+}
+
+/* ===== TAB 分组结构（与对象类型设计文档严格一致） ===== */
 const tabGroups = [
   { key: 'basic', label: '基础信息', tabs: [
     { key: 'overview', label: '概览' },
@@ -634,14 +616,17 @@ const tabGroups = [
     { key: 'graph', label: '对象图谱' }
   ]},
   { key: 'rule', label: '规则约束', tabs: [
-    { key: 'equiv', label: '等价' },
-    { key: 'disjoint', label: '不相交' },
-    { key: 'disjointUnion', label: '互斥并集' },
+    { key: 'equiv', label: '等价类' },
+    { key: 'disjoint', label: '不相交类' },
+    { key: 'disjointUnion', label: '互斥并集类' },
+    { key: 'propEquiv', label: '等价属性' },
+    { key: 'propDisjoint', label: '不相交属性' },
     { key: 'iface', label: '接口' }
   ]},
   { key: 'biz', label: '业务应用', tabs: [
     { key: 'actions', label: '动作' },
     { key: 'fn', label: '函数' },
+    { key: 'refBy', label: '被引用' },
     { key: 'ds', label: '数据源' },
     { key: 'usage', label: '使用情况' }
   ]}
@@ -664,7 +649,14 @@ async function copyText(t) {
   catch { BL.warning('复制失败,请手动选取') }
 }
 function clearFilters() { q.value = ''; filterDomain.value = ''; filterStatus.value = '' }
-function onCreate() { BL.info('新建对象待联调') }
+/* —— 新建对象类型向导 —— */
+const wizardOpen = ref(false)
+function onCreate() { wizardOpen.value = true }
+function onWizardNext(payload) {
+  // 步骤 1 收集到的数据源绑定信息，正式联调后用于创建对象 + 数据集 + 属性
+  console.log('[wizard] step-1 payload', payload)
+  BL.info('已收集主表/附表/字段映射，下一步「对象类型详情」对接中')
+}
 function onEdit() { BL.info('编辑面板待联调') }
 function onAi() { BL.info('AI 助手待联调') }
 function onViewInstances() { BL.info('查看实例待联调') }
@@ -759,7 +751,9 @@ onMounted(async () => {
   flex-shrink: 0;
 }
 .ot-ic-lg { width: 36px; height: 36px; border-radius: var(--bl-radius-3); }
-.ot-cell-obj { min-width: 200px; max-width: 280px; }
+.ot-cell-obj { min-width: 220px; max-width: 320px; }
+.ot-name-cell { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.ot-name-text { min-width: 0; flex: 1; }
 .ot-obj-label { font-size: var(--bl-fs-13); color: var(--bl-text-1); font-weight: 500; }
 .ot-obj-api { font-size: 11px; }
 .ot-link { color: var(--bl-primary); cursor: pointer; }

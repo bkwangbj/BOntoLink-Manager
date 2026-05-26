@@ -26,14 +26,12 @@
           </div>
           <div class="bl-modal-body ip-body">
             <aside class="ip-side">
-              <!-- 业务图库 -->
+              <!-- 业务图库（结构来自行业 / 领域分类，不可编辑） -->
               <div class="ip-side-section">
                 <div class="ip-side-head" @click="customExpanded = !customExpanded">
                   <span class="ip-side-head-chev" :class="customExpanded && 'is-open'" v-html="BL.icon('chevronRight', 11)"></span>
                   <span class="ip-side-head-title">业务图库</span>
                   <span class="ip-side-head-count">{{ customTopGroups.length }}</span>
-                  <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="新建编组"
-                          @click.stop="createGroup()" v-html="BL.icon('plus', 12)"></button>
                 </div>
                 <div class="ip-side-list" v-show="customExpanded">
                   <template v-for="top in customTopGroups" :key="top.id">
@@ -41,49 +39,26 @@
                          @click="iconCat = top.id">
                       <span class="ip-cat-parent-chev" :class="expandedParents.has(top.id) && 'is-open'"
                             @click.stop="toggleParent(top.id)" v-html="BL.icon('chevronRight', 10)"></span>
-                      <template v-if="renameKey === top.id">
-                        <input ref="renameInputRef" class="bl-input ip-cat-rename"
-                               v-model="renameVal" @keydown.enter="commitRename" @keydown.esc="cancelRename"
-                               @blur="commitRename" @click.stop />
-                      </template>
-                      <template v-else>
-                        <span class="ip-cat-label">{{ top.name }}</span>
-                        <span class="ip-cat-actions">
-                          <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="新建子分组" @click.stop="createGroup(top.id)" v-html="BL.icon('plus', 11)"></button>
-                          <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="重命名" @click.stop="startRename(top)" v-html="BL.icon('edit', 11)"></button>
-                          <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="删除编组" @click.stop="removeGroup(top)" v-html="BL.icon('trash', 11)"></button>
-                        </span>
-                        <span class="ip-cat-count">{{ aggregateIcons(top).length }}</span>
-                      </template>
+                      <span class="ip-cat-label">{{ top.name }}</span>
+                      <span class="ip-cat-count">{{ aggregateIcons(top).length }}</span>
                     </div>
                     <template v-if="expandedParents.has(top.id)">
                       <div v-for="child in childrenOf(top.id)" :key="child.id"
                            :class="['ip-cat ip-cat-custom ip-cat-child', iconCat===child.id && 'is-active']"
                            @click="iconCat = child.id">
-                        <template v-if="renameKey === child.id">
-                          <input ref="renameInputRef" class="bl-input ip-cat-rename"
-                                 v-model="renameVal" @keydown.enter="commitRename" @keydown.esc="cancelRename"
-                                 @blur="commitRename" @click.stop />
-                        </template>
-                        <template v-else>
-                          <span class="ip-cat-label">{{ child.name }}</span>
-                          <span class="ip-cat-actions">
-                            <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="重命名" @click.stop="startRename(child)" v-html="BL.icon('edit', 11)"></button>
-                            <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="删除编组" @click.stop="removeGroup(child)" v-html="BL.icon('trash', 11)"></button>
-                          </span>
-                          <span class="ip-cat-count">{{ (iconsByGroup[child.id] || []).length }}</span>
-                        </template>
+                        <span class="ip-cat-label">{{ child.name }}</span>
+                        <span class="ip-cat-count">{{ (iconsByGroup[child.id] || []).length }}</span>
                       </div>
                     </template>
                   </template>
-                  <div v-if="!customTopGroups.length" class="ip-side-empty">尚无自定义编组</div>
+                  <div v-if="!customTopGroups.length" class="ip-side-empty">业务图库结构未初始化</div>
                 </div>
               </div>
-              <!-- 内置图标库 -->
+              <!-- 功能图标库 -->
               <div class="ip-side-section">
                 <div class="ip-side-head" @click="builtinExpanded = !builtinExpanded">
                   <span class="ip-side-head-chev" :class="builtinExpanded && 'is-open'" v-html="BL.icon('chevronRight', 11)"></span>
-                  <span class="ip-side-head-title">内置图标库</span>
+                  <span class="ip-side-head-title">功能图标库</span>
                   <span class="ip-side-head-count">{{ ICON_CATEGORIES.length }}</span>
                 </div>
                 <div class="ip-side-list" v-show="builtinExpanded">
@@ -164,10 +139,10 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { BL, antdIconNames,
          getCustomIconData, setCustomIconData, onCustomIconsChange,
-         customIconUpsert, customIconRemoveByIds, customGroupUpsert, customGroupRemove } from '@/lib/bl.js'
+         customIconUpsert, customIconRemoveByIds } from '@/lib/bl.js'
 import { ANTD_ZH, antdZhName } from '@/lib/icon-zh.js'
 import { iconLibApi } from '@/api'
 
@@ -279,9 +254,6 @@ const iconCat = ref('all')
 const customExpanded = ref(true)
 const builtinExpanded = ref(true)
 const expandedParents = ref(new Set())
-const renameKey = ref(null)
-const renameVal = ref('')
-const renameInputRef = ref(null)
 const uploadInputRef = ref(null)
 const batchMode = ref(false)
 const batchSelected = ref(new Set())
@@ -375,51 +347,6 @@ function confirmPick() {
 /* ===== group ops ===== */
 function toggleParent(id) {
   const s = new Set(expandedParents.value); s.has(id) ? s.delete(id) : s.add(id); expandedParents.value = s
-}
-async function createGroup(parentId = null) {
-  const name = await BL.prompt({
-    title: parentId ? '新建子编组' : '新建编组',
-    label: '编组名称',
-    placeholder: parentId ? '例如:水土保持' : '例如:水利行业',
-    defaultValue: '',
-    validate: v => !v || !v.trim() ? '名称不能为空' : true
-  })
-  if (name == null) return
-  try {
-    const g = await iconLibApi.createGroup(parentId || null, name.trim())
-    customGroupUpsert(g)
-    if (parentId) { const s = new Set(expandedParents.value); s.add(parentId); expandedParents.value = s }
-    else { const s = new Set(expandedParents.value); s.add(g.id); expandedParents.value = s }
-    iconCat.value = g.id
-    BL.success('已创建')
-  } catch (e) { BL.error(e?.msg || '创建失败') }
-}
-function startRename(g) {
-  renameKey.value = g.id
-  renameVal.value = g.name
-  nextTick(() => { renameInputRef.value?.focus?.(); renameInputRef.value?.select?.() })
-}
-function cancelRename() { renameKey.value = null; renameVal.value = '' }
-async function commitRename() {
-  if (!renameKey.value) return
-  const nv = renameVal.value.trim(), id = renameKey.value
-  cancelRename()
-  if (!nv) return
-  try { customGroupUpsert(await iconLibApi.renameGroup(id, nv)) }
-  catch (e) { BL.error(e?.msg || '重命名失败') }
-}
-async function removeGroup(g) {
-  const kids = childrenOf(g.id)
-  const cnt = (iconsByGroup.value[g.id] || []).length + kids.reduce((s, c) => s + ((iconsByGroup.value[c.id] || []).length), 0)
-  const ok = await BL.confirm({ title: '删除编组', danger: true, okText: '删除',
-    content: `将删除编组「${g.name}」${kids.length ? `及 ${kids.length} 个子分组` : ''}, 共 ${cnt} 个图标。` })
-  if (!ok) return
-  try {
-    await iconLibApi.deleteGroup(g.id)
-    customGroupRemove(g.id)
-    if (iconCat.value === g.id) iconCat.value = 'all'
-    BL.success('已删除')
-  } catch (e) { BL.error(e?.msg || '删除失败') }
 }
 async function removeIcon(ic) {
   const id = String(ic || '').replace(/^custom:/, '')
@@ -531,15 +458,19 @@ defineExpose({ open })
   color: var(--bl-primary);
   cursor: pointer; font-size: var(--bl-fs-12);
   transition: background-color .15s, border-color .15s;
+  max-width: 386px;
 }
 .ipf-more-row:hover { background: var(--bl-primary-soft); border-color: var(--bl-primary); }
 .icon-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  grid-template-columns: repeat(8, minmax(0, 1fr));
   gap: 6px;
+  justify-items: center;
+  max-width: 386px;
 }
 .icon-cell {
-  width: 100%; aspect-ratio: 1; max-height: 48px;
+  width: 100%; max-width: 56px;
+  aspect-ratio: 1;
   display: inline-flex; align-items: center; justify-content: center;
   border: 1px solid var(--bl-border); border-radius: var(--bl-radius-2);
   cursor: pointer; transition: border-color .15s, background-color .15s;
@@ -621,15 +552,6 @@ defineExpose({ open })
 .icon-picker-modal .ip-cat.is-active .ip-cat-count { background: var(--bl-primary-soft); color: var(--bl-primary); }
 .icon-picker-modal .ip-cat-custom { position: relative; gap: 4px; min-height: 32px; }
 .icon-picker-modal .ip-cat-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.icon-picker-modal .ip-cat-actions {
-  display: none; align-items: center; gap: 0;
-}
-.icon-picker-modal .ip-cat-actions .bl-btn { height: 20px; width: 20px; padding: 0; }
-.icon-picker-modal .ip-cat-custom:hover .ip-cat-actions { display: inline-flex; }
-.icon-picker-modal .ip-cat-custom:hover .ip-cat-count { display: none; }
-.icon-picker-modal .ip-cat-rename {
-  height: 22px; padding: 0 4px; font-size: var(--bl-fs-12); flex: 1; min-width: 0;
-}
 .icon-picker-modal .ip-cat-parent { padding-left: 6px; font-weight: 500; }
 .icon-picker-modal .ip-cat-parent-chev {
   display: inline-flex; width: 14px; height: 14px;

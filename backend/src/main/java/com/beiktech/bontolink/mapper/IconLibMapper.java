@@ -22,6 +22,12 @@ public interface IconLibMapper {
     @Select("SELECT COUNT(*) FROM icon_lib_group")
     int countGroups();
 
+    @Select("SELECT COUNT(*) FROM icon_lib_icon")
+    int countIcons();
+
+    @Select("SELECT COUNT(*) FROM icon_lib_icon WHERE group_id = #{groupId}")
+    int countIconsByGroup(@Param("groupId") String groupId);
+
     @Insert("INSERT INTO icon_lib_group(id, parent_id, name, sort, source) VALUES(#{id},#{parentId},#{name},#{sort},#{source})")
     void insertGroup(IconLibGroup g);
 

@@ -1,0 +1,209 @@
+<template>
+  <div class="tab-overview">
+    <!-- 顶部一级页签 -->
+    <div class="ov-tabs">
+      <button v-for="t in tabs" :key="t.k" :class="['ov-tab', sub===t.k && 'is-on']" @click="sub = t.k">{{ t.label }}</button>
+    </div>
+
+    <!-- 基础 -->
+    <div v-if="sub==='basic'" class="ov-form">
+      <div class="ov-section-title">基础信息</div>
+      <div class="ov-grid">
+        <FieldRow label="名称" inline hint="display_name"><input class="bl-input" v-model="form.display_name" /></FieldRow>
+        <FieldRow label="API" inline hint="api_name · snake_case · 唯一不可变"><input class="bl-input bl-mono" :value="form.api_name" disabled /></FieldRow>
+        <FieldRow label="领域" inline hint="category_code"><span class="bl-tag">{{ form.categoryLabel || form.category_code || '—' }}</span></FieldRow>
+        <FieldRow label="父类" inline hint="parent_class_id"><span>{{ form.parent_class_id ? (parentLabel || form.parent_class_id) : '—' }}</span></FieldRow>
+      </div>
+
+      <FieldRow label="注释" hint="rdfs:comment"><textarea class="bl-textarea" rows="2" v-model="form.rdfs_comment"></textarea></FieldRow>
+      <FieldRow label="元数据公理" hint="JSON · 机器可读：查询约束 / 推理规则">
+        <textarea class="bl-textarea bl-mono" rows="3" v-model="form.metadata" placeholder='{"query":"...","unit_normalization":true}'></textarea>
+        <div class="bl-muted" style="font-size:11px;margin-top:4px">示例: {"reasoner":"hermit","cache_ttl":300}</div>
+      </FieldRow>
+
+      <div class="ov-section-title">标志位</div>
+      <div class="ov-flags">
+        <div class="flag-grp">
+          <span class="flag-lbl">顶层类</span>
+          <button :class="['flag-btn', form.is_thing===1 && 'is-on']" @click="form.is_thing = form.is_thing===1?0:1">是</button>
+          <button :class="['flag-btn', form.is_thing!==1 && 'is-on']" @click="form.is_thing = 0">否</button>
+        </div>
+        <div class="flag-grp">
+          <span class="flag-lbl">底层类</span>
+          <button :class="['flag-btn', form.is_nothing===1 && 'is-on']" @click="form.is_nothing = form.is_nothing===1?0:1">是</button>
+          <button :class="['flag-btn', form.is_nothing!==1 && 'is-on']" @click="form.is_nothing = 0">否</button>
+        </div>
+        <div class="flag-grp">
+          <span class="flag-lbl">公共类</span>
+          <button :class="['flag-btn', form.is_common===1 && 'is-on']" @click="form.is_common = form.is_common===1?0:1">是</button>
+          <button :class="['flag-btn', form.is_common!==1 && 'is-on']" @click="form.is_common = 0">否</button>
+        </div>
+        <div class="flag-grp">
+          <span class="flag-lbl">启用状态</span>
+          <button :class="['flag-btn', form.status===1 && 'is-on']" @click="form.status = 1">启用</button>
+          <button :class="['flag-btn', form.status===0 && 'is-on']" @click="form.status = 0">禁用</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 显示 -->
+    <div v-if="sub==='style'" class="ov-form">
+      <div class="ov-section-title">分组颜色</div>
+      <ColorPickerField v-model="form.color" />
+      <div class="ov-section-title">图标</div>
+      <IconPickerField v-model="form.icon" label="" :preset-count="32" :suggest-name="form.rdfs_label || form.display_name || form.api_name" />
+    </div>
+
+    <!-- 类表达式 -->
+    <div v-if="sub==='expr'" class="ov-form">
+      <div class="ov-section-title">类表达式类型</div>
+      <div class="expr-types">
+        <button v-for="t in exprTypes" :key="t.k" :class="['expr-btn', form.class_expr_type===t.k && 'is-on']" @click="form.class_expr_type = t.k">
+          <span v-html="BL.icon(t.icon, 12)"></span><span style="margin-left:4px">{{ t.label }}</span>
+        </button>
+      </div>
+      <FieldRow label="表达式内容" hint="JSON · 与表达式类型严格对应">
+        <textarea class="bl-textarea bl-mono" rows="6" v-model="form.class_expr_content" :placeholder="exprPlaceholder"></textarea>
+        <div class="bl-muted" style="font-size:11px;margin-top:4px">{{ exprHint }}</div>
+      </FieldRow>
+    </div>
+
+    <!-- 其他 -->
+    <div v-if="sub==='other'" class="ov-form">
+      <FieldRow label="参考资料" hint="rdfs:seeAlso"><textarea class="bl-textarea" rows="2" v-model="form.rdfs_see_also"></textarea></FieldRow>
+      <FieldRow label="定义来源" hint="rdfs:isDefinedBy"><textarea class="bl-textarea" rows="2" v-model="form.rdfs_defined_by"></textarea></FieldRow>
+      <div class="ov-grid">
+        <FieldRow label="ID" inline>
+          <div class="rid-row">
+            <span class="bl-mono">{{ form.id || '—' }}</span>
+            <button v-if="form.id" class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="复制 ID" @click="copy(form.id)" v-html="BL.icon('copy', 12)"></button>
+          </div>
+        </FieldRow>
+        <FieldRow label="RID" inline>
+          <div class="rid-row">
+            <span class="bl-mono bl-truncate" :title="form.rid">{{ form.rid || '—' }}</span>
+            <button v-if="form.rid" class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="复制 RID" @click="copy(form.rid)" v-html="BL.icon('copy', 12)"></button>
+          </div>
+        </FieldRow>
+        <FieldRow label="创建时间" inline><span class="bl-mono bl-muted">{{ form.create_time || '—' }}</span></FieldRow>
+        <FieldRow label="更新时间" inline><span class="bl-mono bl-muted">{{ form.update_time || '—' }}</span></FieldRow>
+      </div>
+    </div>
+
+    <!-- 底部保存 -->
+    <div class="ov-ft">
+      <button class="bl-btn" @click="onReset">重置</button>
+      <button class="bl-btn bl-btn-primary" @click="onSave">保存</button>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, watch, reactive } from 'vue'
+import { BL } from '@/lib/bl.js'
+import { classMetaApi } from '@/api'
+import FieldRow from '@/views/config/category/FieldRow.vue'
+import IconPickerField from '@/components/IconPickerField.vue'
+import ColorPickerField from '@/components/ColorPickerField.vue'
+
+const props = defineProps({ detail: { type: Object, default: () => ({}) } })
+const emit = defineEmits(['saved'])
+
+const sub = ref('basic')
+const tabs = [
+  { k: 'basic', label: '基础' },
+  { k: 'style', label: '显示' },
+  { k: 'expr',  label: '类表达式' },
+  { k: 'other', label: '其他' }
+]
+const exprTypes = [
+  { k: '',             label: '普通业务类',     icon: 'cube' },
+  { k: 'union',        label: '并集 union',      icon: 'share' },
+  { k: 'intersection', label: '交集 intersection', icon: 'layers' },
+  { k: 'complement',   label: '补集 complement',   icon: 'x' },
+  { k: 'enumeration',  label: '枚举 enumeration', icon: 'list' }
+]
+
+const form = reactive({})
+const parentLabel = ref('')
+
+function loadFromDetail() {
+  Object.keys(form).forEach(k => delete form[k])
+  Object.assign(form, props.detail || {})
+  form.is_thing  = Number(form.is_thing  ?? 0)
+  form.is_nothing= Number(form.is_nothing?? 0)
+  form.is_common = Number(form.is_common ?? 0)
+  form.status    = Number(form.status    ?? 1)
+}
+watch(() => props.detail, loadFromDetail, { immediate: true, deep: true })
+
+const exprPlaceholder = computed(() => {
+  switch (form.class_expr_type) {
+    case 'union':        return '{"unionIds":["class-xxx","class-yyy"]}'
+    case 'intersection': return '{"intersectionIds":["class-xxx","class-yyy"]}'
+    case 'complement':   return '{"complementId":"class-xxx"}'
+    case 'enumeration':  return '{"enumValues":["大型","中型","小型"],"enumCodes":["large","medium","small"]}'
+    default: return '{}'
+  }
+})
+const exprHint = computed(() => {
+  switch (form.class_expr_type) {
+    case 'union':        return 'A 或 B 都属于当前类（满足任一条件即可）'
+    case 'intersection': return 'A 且 B 才属于当前类（同时满足全部条件）'
+    case 'complement':   return '不属于某一类的所有实例（排除指定类）'
+    case 'enumeration':  return '类的实例是固定的几个枚举值'
+    default: return '无复杂逻辑的基础业务类，class_expr_content 留空 {}'
+  }
+})
+
+async function onSave() {
+  if (!form.id) { BL.warning('未选中对象'); return }
+  try {
+    await classMetaApi.updateClass(form.id, { ...form })
+    BL.success('已保存')
+    emit('saved', form.id)
+  } catch (e) {
+    BL.error(e?.msg || '保存失败')
+  }
+}
+function onReset() { loadFromDetail() }
+async function copy(t) {
+  try { await navigator.clipboard.writeText(String(t || '')); BL.success('已复制') } catch {}
+}
+</script>
+
+<style scoped>
+.tab-overview { display: flex; flex-direction: column; gap: 12px; }
+
+.ov-tabs { display: flex; border-bottom: 1px solid var(--bl-divider); position: sticky; top: 0; background: var(--bl-bg-1); z-index: 1; }
+.ov-tab { padding: 8px 14px; border: 0; background: transparent; cursor: pointer;
+  color: var(--bl-text-2); font-size: 13px; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.ov-tab.is-on { color: var(--bl-primary); border-color: var(--bl-primary); font-weight: 500; }
+
+.ov-form { display: flex; flex-direction: column; gap: 6px; }
+.ov-section-title { font-size: 12px; color: var(--bl-text-3); margin: 12px 0 4px;
+  padding-left: 8px; border-left: 3px solid var(--bl-primary); font-weight: 500; }
+.ov-section-title:first-child { margin-top: 0; }
+.ov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 16px; }
+
+.ov-flags { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.flag-grp { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px;
+  background: var(--bl-bg-2); border-radius: 4px; }
+.flag-lbl { font-size: 12px; color: var(--bl-text-3); margin-right: 4px; min-width: 60px; }
+.flag-btn { height: 24px; padding: 0 10px; border: 1px solid var(--bl-border);
+  background: var(--bl-bg-1); border-radius: 3px; font-size: 12px; cursor: pointer; color: var(--bl-text-2); }
+.flag-btn.is-on { border-color: var(--bl-primary); background: var(--bl-primary-soft); color: var(--bl-primary); font-weight: 500; }
+
+.expr-types { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.expr-btn { display: inline-flex; align-items: center; padding: 6px 12px;
+  border: 1px solid var(--bl-border); background: var(--bl-bg-1); border-radius: 4px;
+  font-size: 12px; cursor: pointer; color: var(--bl-text-2); }
+.expr-btn.is-on { border-color: var(--bl-primary); background: var(--bl-primary-soft); color: var(--bl-primary); font-weight: 500; }
+
+.rid-row { display: flex; align-items: center; gap: 6px;
+  padding: 4px 8px; background: var(--bl-bg-2); border-radius: 3px; font-size: 12px; }
+
+.ov-ft { position: sticky; bottom: 0; background: var(--bl-bg-1);
+  border-top: 1px solid var(--bl-divider); padding: 10px 0 0;
+  display: flex; justify-content: flex-end; gap: 8px; }
+</style>

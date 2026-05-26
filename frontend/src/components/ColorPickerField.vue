@@ -24,7 +24,9 @@ const props = defineProps({
     type: Array,
     default: () => ([
       '#165DFF','#00B42A','#722ED1','#FF7D00','#EB2F96','#13C2C2','#FADB14','#F53F3F','#86909C','#2F54EB',
-      '#52C41A','#9254DE','#FA8C16','#36CFC9','#FF4D4F','#1D39C4','#389E0D','#531DAB','#D48806','#08979C'
+      '#52C41A','#9254DE','#FA8C16','#36CFC9','#FF4D4F','#1D39C4','#389E0D','#531DAB','#D48806','#08979C',
+      // 追加 4 个：青灰、深粉、暖橙、墨绿
+      '#4E5969','#C41D7F','#D46B08','#135200'
     ])
   }
 })
@@ -46,7 +48,7 @@ function onNative(e) { emit('update:modelValue', e.target.value); emit('change',
 
 <style scoped>
 .cpf { width: 100%; }
-.cpf-swatches { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+.cpf-swatches { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; max-width: 386px; }
 .cpf-dot {
   width: 18px; height: 18px; border-radius: 4px;   /* 小方块 */
   cursor: pointer; border: 2px solid transparent;

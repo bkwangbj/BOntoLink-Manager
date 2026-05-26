@@ -338,3 +338,82 @@ INSERT INTO ont_class_property(id, rid, class_id, api_name, data_type, display_n
 ('cp-wfld-1','ri.ont.class.property.cp-wfld-1','class-wfld-01','warningLevel','string','警戒水位',0,1),
 ('cp-wstat-1','ri.ont.class.property.cp-wstat-1','class-wstat-01','reportMonth','string','报告月份',1,1),
 ('cp-wstat-2','ri.ont.class.property.cp-wstat-2','class-wstat-02','reportPeriod','string','报告期',1,1);
+
+-- ============================================================
+-- 对象类型补充元数据 mock：等价 / 不相交 / 互斥并集 / 等价属性 / 互斥属性
+-- ============================================================
+DELETE FROM ont_class_group;
+DELETE FROM ont_class_disjoint_union;
+DELETE FROM ont_property_equivalent;
+DELETE FROM ont_property_disjoint;
+DELETE FROM ont_class_ds;
+
+-- 把核心几条对象做一些补全（类表达式 / 公共类 / 父类 / 注释属性）：用 UPDATE 避免与既有 INSERT 冲突
+UPDATE ont_class SET class_expr_type = NULL, class_expr_content = '{}', is_common = 1
+  WHERE id = 'class-00000000-0000-0000-0000-000000000001';
+UPDATE ont_class SET class_expr_type = 'union',
+  class_expr_content = '{"unionIds":["class-whyd-01","class-whyd-02"]}'
+  WHERE id = 'class-whyd-03';
+UPDATE ont_class SET parent_class_id = 'class-00000000-0000-0000-0000-000000000001'
+  WHERE id = 'class-whyd-01';
+UPDATE ont_class SET parent_class_id = 'class-00000000-0000-0000-0000-000000000001'
+  WHERE id = 'class-whyd-02';
+UPDATE ont_class SET parent_class_id = 'class-00000000-0000-0000-0000-000000000004'
+  WHERE id = 'class-weng-01';
+UPDATE ont_class SET rdfs_see_also = '领域本体规范 V3.0', rdfs_defined_by = '水利公共本体库'
+  WHERE id = 'class-00000000-0000-0000-0000-000000000001';
+
+-- 等价类: HydrologyStation ≡ RainfallStation
+INSERT INTO ont_class_group(id, class_id, ref_class_id, group_type, status, rdfs_comment) VALUES
+('class-group-eq-01',
+ CASE WHEN 'class-00000000-0000-0000-0000-000000000001' < 'class-whyd-01' THEN 'class-00000000-0000-0000-0000-000000000001' ELSE 'class-whyd-01' END,
+ CASE WHEN 'class-00000000-0000-0000-0000-000000000001' < 'class-whyd-01' THEN 'class-whyd-01' ELSE 'class-00000000-0000-0000-0000-000000000001' END,
+ 'equivalent', 1, '水文测站与雨量监测点在测量行为上等价');
+
+-- 不相交类: River vs Reservoir
+INSERT INTO ont_class_group(id, class_id, ref_class_id, group_type, status, rdfs_comment) VALUES
+('class-group-dj-01',
+ CASE WHEN 'class-00000000-0000-0000-0000-000000000002' < 'class-00000000-0000-0000-0000-000000000004' THEN 'class-00000000-0000-0000-0000-000000000002' ELSE 'class-00000000-0000-0000-0000-000000000004' END,
+ CASE WHEN 'class-00000000-0000-0000-0000-000000000002' < 'class-00000000-0000-0000-0000-000000000004' THEN 'class-00000000-0000-0000-0000-000000000004' ELSE 'class-00000000-0000-0000-0000-000000000002' END,
+ 'disjoint', 1, '河流与水库为不相交的水体类型');
+
+-- 互斥并集: HydrologyStation = {RainfallStation, RunoffSeries, EvaporationStation}
+INSERT INTO ont_class_disjoint_union(id, parent_class_id, sub_class_id, status, rdfs_comment) VALUES
+('class-disjoint-union-h-01','class-00000000-0000-0000-0000-000000000001','class-whyd-01',1,'雨量监测点'),
+('class-disjoint-union-h-02','class-00000000-0000-0000-0000-000000000001','class-whyd-02',1,'径流过程'),
+('class-disjoint-union-h-03','class-00000000-0000-0000-0000-000000000001','class-whyd-03',1,'蒸发监测点');
+
+-- 等价属性: HydrologyStation.stationName ↔ HydrologyStation.stationCode 是反例 → 跨类对齐示例（同类型等价）
+INSERT INTO ont_property_equivalent(id, class_id1, prop_id1, class_id2, prop_id2, status, rdfs_comment) VALUES
+('prop-equivalent-01',
+ 'class-00000000-0000-0000-0000-000000000001','cp-1',
+ 'class-whyd-01','cp-whyd-1',
+ 1,'两类的「编码」型属性语义一致');
+
+-- 互斥属性: HydrologyStation.longitude vs HydrologyStation.latitude (示例：演示同类互斥)
+INSERT INTO ont_property_disjoint(id, class_id1, prop_id1, class_id2, prop_id2, status, rdfs_comment) VALUES
+('prop-disjoint-01',
+ 'class-00000000-0000-0000-0000-000000000001','cp-3',
+ 'class-00000000-0000-0000-0000-000000000001','cp-4',
+ 1,'示例：经度与纬度作为独立位置维度，互斥演示');
+
+-- 对象-数据集关联 (主表 + 补充表)
+INSERT INTO ont_class_ds(id, class_id, ds_code, physical_table, rel_type, alias, pk_keys, join_on_keys, join_type, sort, status) VALUES
+('class-ds-01','class-00000000-0000-0000-0000-000000000001','water_main_db','t_hydrology_station',1,'main','station_code',NULL,'LEFT',1,1),
+('class-ds-02','class-00000000-0000-0000-0000-000000000001','water_mongo','c_station_observation',2,'s1',NULL,'station_code','LEFT',2,1);
+
+-- 补全部分类属性的扩展字段（prop_type / 物理映射 / OWL 特性 / XSD 约束）
+UPDATE ont_class_property SET prop_type='data', prop_code='station_code', is_key=1, is_required=1,
+  physical_table='t_hydrology_station', physical_column='station_code',
+  xsd_length=8, owl_inverse_functional=1 WHERE id='cp-1';
+UPDATE ont_class_property SET prop_type='data', prop_code='station_name', is_required=1,
+  physical_table='t_hydrology_station', physical_column='station_name',
+  xsd_min_length=2, xsd_max_length=64 WHERE id='cp-2';
+UPDATE ont_class_property SET prop_type='data', prop_code='longitude',
+  physical_table='t_hydrology_station', physical_column='lng',
+  xsd_min_inclusive='-180', xsd_max_inclusive='180', owl_functional=1 WHERE id='cp-3';
+UPDATE ont_class_property SET prop_type='data', prop_code='latitude',
+  physical_table='t_hydrology_station', physical_column='lat',
+  xsd_min_inclusive='-90', xsd_max_inclusive='90', owl_functional=1 WHERE id='cp-4';
+UPDATE ont_class_property SET prop_type='data', prop_code='river_name', is_key=1, is_required=1,
+  physical_table='t_river', physical_column='name' WHERE id='cp-5';

@@ -102,30 +102,159 @@ CREATE TABLE IF NOT EXISTS ont_class (
   display_name    TEXT,
   rdfs_label      TEXT,
   rdfs_comment    TEXT,
+  rdfs_see_also   TEXT,
+  rdfs_defined_by TEXT,
   description     TEXT,
   icon            TEXT,
   color           TEXT,
   status          INTEGER NOT NULL DEFAULT 1,
   metadata        TEXT,
+  -- 类层级
+  parent_class_id TEXT,
+  -- OWL 复杂类表达式
+  class_expr_type    TEXT,            -- NULL/0=普通; union/intersection/complement/enumeration
+  class_expr_content TEXT,            -- JSON
+  is_thing        INTEGER NOT NULL DEFAULT 0,
+  is_nothing      INTEGER NOT NULL DEFAULT 0,
+  is_common       INTEGER NOT NULL DEFAULT 0,
   create_time     TEXT NOT NULL DEFAULT (datetime('now','localtime')),
   update_time     TEXT NOT NULL DEFAULT (datetime('now','localtime'))
 );
+CREATE INDEX IF NOT EXISTS idx_class_parent ON ont_class(parent_class_id);
+CREATE INDEX IF NOT EXISTS idx_class_cat    ON ont_class(category_code);
 
+-- 类属性（扩展版：含 OWL 特性 / XSD 约束 / 物理映射）
 CREATE TABLE IF NOT EXISTS ont_class_property (
   id              TEXT PRIMARY KEY,
   rid             TEXT,
   class_id        TEXT NOT NULL,
-  api_name        TEXT NOT NULL,
-  data_type       TEXT,
+  category_code   TEXT,
+  api_name        TEXT NOT NULL,                 -- 类内唯一
+  prop_code       TEXT,                          -- 属性编码 (camelCase)
+  prop_type       TEXT DEFAULT 'data',           -- data / object / annotation
+  data_type       TEXT,                          -- XSD 数据类型 (对象属性为空)
   display_name    TEXT,
   rdfs_label      TEXT,
   rdfs_comment    TEXT,
+  rdfs_see_also   TEXT,
+  rdfs_defined_by TEXT,
+  -- 物理映射
+  class_ds_id     TEXT,                          -- 来源数据集 (main/s1/s2)
+  physical_table  TEXT,
+  physical_column TEXT,
+  -- 主键 / 必填 / 派生
   is_primary      INTEGER NOT NULL DEFAULT 0,
   is_required     INTEGER NOT NULL DEFAULT 0,
+  is_key          INTEGER NOT NULL DEFAULT 0,
+  is_derived      INTEGER NOT NULL DEFAULT 0,
+  is_multi_valued_prop      INTEGER NOT NULL DEFAULT 0,
+  is_range_constraint_prop  INTEGER NOT NULL DEFAULT 0,
+  -- 对象属性 / 子属性
+  range_class_id  TEXT,                          -- 对象属性值域类 ID
+  sub_property_of TEXT,                          -- 父属性 ID
+  -- XSD 约束
+  xsd_min_length  INTEGER,
+  xsd_max_length  INTEGER,
+  xsd_length      INTEGER,
+  xsd_pattern     TEXT,
+  xsd_min_inclusive TEXT,
+  xsd_max_inclusive TEXT,
+  -- OWL 特性
+  owl_functional         INTEGER NOT NULL DEFAULT 0,
+  owl_inverse_functional INTEGER NOT NULL DEFAULT 0,
+  owl_transitive         INTEGER NOT NULL DEFAULT 0,
+  owl_symmetric          INTEGER NOT NULL DEFAULT 0,
+  owl_asymmetric         INTEGER NOT NULL DEFAULT 0,
+  owl_reflexive          INTEGER NOT NULL DEFAULT 0,
+  owl_irreflexive        INTEGER NOT NULL DEFAULT 0,
+  metadata        TEXT,
+  sort            INTEGER NOT NULL DEFAULT 0,
   status          INTEGER NOT NULL DEFAULT 1,
   create_time     TEXT NOT NULL DEFAULT (datetime('now','localtime')),
   update_time     TEXT NOT NULL DEFAULT (datetime('now','localtime'))
 );
+CREATE INDEX IF NOT EXISTS idx_cprop_class ON ont_class_property(class_id);
+CREATE INDEX IF NOT EXISTS idx_cprop_type  ON ont_class_property(prop_type);
+
+-- 等价 / 不相交（ont_class_group）
+CREATE TABLE IF NOT EXISTS ont_class_group (
+  id              TEXT PRIMARY KEY,              -- class-group-<uuid>
+  class_id        TEXT NOT NULL,                 -- 小 ID
+  ref_class_id    TEXT NOT NULL,                 -- 大 ID
+  group_type      TEXT NOT NULL,                 -- equivalent / disjoint
+  rdfs_comment    TEXT,
+  rdfs_see_also   TEXT,
+  rdfs_defined_by TEXT,
+  status          INTEGER NOT NULL DEFAULT 1,
+  create_time     TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  update_time     TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  UNIQUE (group_type, class_id, ref_class_id)
+);
+CREATE INDEX IF NOT EXISTS idx_cgroup_cls ON ont_class_group(class_id);
+CREATE INDEX IF NOT EXISTS idx_cgroup_ref ON ont_class_group(ref_class_id);
+
+-- 互斥并集 (ont_class_disjoint_union)
+CREATE TABLE IF NOT EXISTS ont_class_disjoint_union (
+  id              TEXT PRIMARY KEY,              -- class-disjoint-union-<uuid>
+  parent_class_id TEXT NOT NULL,
+  sub_class_id    TEXT NOT NULL,
+  status          INTEGER NOT NULL DEFAULT 1,
+  rdfs_comment    TEXT,
+  rdfs_see_also   TEXT,
+  rdfs_defined_by TEXT,
+  create_time     TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  update_time     TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  UNIQUE (parent_class_id, sub_class_id)
+);
+CREATE INDEX IF NOT EXISTS idx_cdu_parent ON ont_class_disjoint_union(parent_class_id);
+
+-- 等价属性
+CREATE TABLE IF NOT EXISTS ont_property_equivalent (
+  id              TEXT PRIMARY KEY,              -- prop-equivalent-<uuid>
+  class_id1       TEXT NOT NULL,
+  prop_id1        TEXT NOT NULL,
+  class_id2       TEXT NOT NULL,
+  prop_id2        TEXT NOT NULL,
+  status          INTEGER NOT NULL DEFAULT 1,
+  rdfs_comment    TEXT,
+  create_time     TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  update_time     TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
+CREATE INDEX IF NOT EXISTS idx_peq_p1 ON ont_property_equivalent(prop_id1);
+CREATE INDEX IF NOT EXISTS idx_peq_p2 ON ont_property_equivalent(prop_id2);
+
+-- 互斥属性
+CREATE TABLE IF NOT EXISTS ont_property_disjoint (
+  id              TEXT PRIMARY KEY,              -- prop-disjoint-<uuid>
+  class_id1       TEXT NOT NULL,
+  prop_id1        TEXT NOT NULL,
+  class_id2       TEXT NOT NULL,
+  prop_id2        TEXT NOT NULL,
+  status          INTEGER NOT NULL DEFAULT 1,
+  rdfs_comment    TEXT,
+  create_time     TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  update_time     TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
+CREATE INDEX IF NOT EXISTS idx_pdj_p1 ON ont_property_disjoint(prop_id1);
+CREATE INDEX IF NOT EXISTS idx_pdj_p2 ON ont_property_disjoint(prop_id2);
+
+-- 对象数据集关联（主表 + 补充数据集）
+CREATE TABLE IF NOT EXISTS ont_class_ds (
+  id              TEXT PRIMARY KEY,              -- class-ds-<uuid>
+  class_id        TEXT NOT NULL,
+  ds_code         TEXT,
+  physical_table  TEXT,
+  rel_type        INTEGER NOT NULL DEFAULT 1,    -- 1=主数据集 2=补充数据集
+  alias           TEXT,                          -- main / s1 / s2 ...
+  pk_keys         TEXT,                          -- 主表主键(逗号分隔)
+  join_on_keys    TEXT,                          -- 补充表关联键(逗号分隔)
+  join_type       TEXT DEFAULT 'LEFT',
+  sort            INTEGER NOT NULL DEFAULT 0,
+  status          INTEGER NOT NULL DEFAULT 1,
+  create_time     TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  update_time     TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
+CREATE INDEX IF NOT EXISTS idx_cds_class ON ont_class_ds(class_id);
 
 CREATE TABLE IF NOT EXISTS ont_class_link (
   id              TEXT PRIMARY KEY,
@@ -264,3 +393,46 @@ CREATE TABLE IF NOT EXISTS icon_lib_icon (
   update_time TEXT NOT NULL DEFAULT (datetime('now','localtime'))
 );
 CREATE INDEX IF NOT EXISTS idx_iglib_ico_group ON icon_lib_icon(group_id);
+
+-- =============================================================
+-- 兼容旧数据库：以下 ALTER TABLE 在新建库时多余（首次启动时报"列已存在"），
+-- 在已存在的旧库上才生效；初始化器把错误降级为日志，不会阻塞启动。
+-- =============================================================
+ALTER TABLE ont_class ADD COLUMN rdfs_see_also   TEXT;
+ALTER TABLE ont_class ADD COLUMN rdfs_defined_by TEXT;
+ALTER TABLE ont_class ADD COLUMN parent_class_id TEXT;
+ALTER TABLE ont_class ADD COLUMN class_expr_type    TEXT;
+ALTER TABLE ont_class ADD COLUMN class_expr_content TEXT;
+ALTER TABLE ont_class ADD COLUMN is_thing   INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE ont_class ADD COLUMN is_nothing INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE ont_class ADD COLUMN is_common  INTEGER NOT NULL DEFAULT 0;
+
+ALTER TABLE ont_class_property ADD COLUMN category_code   TEXT;
+ALTER TABLE ont_class_property ADD COLUMN prop_code       TEXT;
+ALTER TABLE ont_class_property ADD COLUMN prop_type       TEXT DEFAULT 'data';
+ALTER TABLE ont_class_property ADD COLUMN rdfs_see_also   TEXT;
+ALTER TABLE ont_class_property ADD COLUMN rdfs_defined_by TEXT;
+ALTER TABLE ont_class_property ADD COLUMN class_ds_id     TEXT;
+ALTER TABLE ont_class_property ADD COLUMN physical_table  TEXT;
+ALTER TABLE ont_class_property ADD COLUMN physical_column TEXT;
+ALTER TABLE ont_class_property ADD COLUMN is_key          INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE ont_class_property ADD COLUMN is_derived      INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE ont_class_property ADD COLUMN is_multi_valued_prop      INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE ont_class_property ADD COLUMN is_range_constraint_prop  INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE ont_class_property ADD COLUMN range_class_id  TEXT;
+ALTER TABLE ont_class_property ADD COLUMN sub_property_of TEXT;
+ALTER TABLE ont_class_property ADD COLUMN xsd_min_length  INTEGER;
+ALTER TABLE ont_class_property ADD COLUMN xsd_max_length  INTEGER;
+ALTER TABLE ont_class_property ADD COLUMN xsd_length      INTEGER;
+ALTER TABLE ont_class_property ADD COLUMN xsd_pattern     TEXT;
+ALTER TABLE ont_class_property ADD COLUMN xsd_min_inclusive TEXT;
+ALTER TABLE ont_class_property ADD COLUMN xsd_max_inclusive TEXT;
+ALTER TABLE ont_class_property ADD COLUMN owl_functional         INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE ont_class_property ADD COLUMN owl_inverse_functional INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE ont_class_property ADD COLUMN owl_transitive         INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE ont_class_property ADD COLUMN owl_symmetric          INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE ont_class_property ADD COLUMN owl_asymmetric         INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE ont_class_property ADD COLUMN owl_reflexive          INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE ont_class_property ADD COLUMN owl_irreflexive        INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE ont_class_property ADD COLUMN metadata        TEXT;
+ALTER TABLE ont_class_property ADD COLUMN sort            INTEGER NOT NULL DEFAULT 0;
