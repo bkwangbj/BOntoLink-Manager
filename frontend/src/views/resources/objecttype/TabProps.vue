@@ -20,6 +20,9 @@
         </div>
       </div>
       <div class="pp-actions">
+        <button v-if="checked.size" class="bl-btn bl-btn-sm" @click="openBatchFormat">
+          <span v-html="BL.icon('sliders', 12)"></span><span style="margin-left:4px">批量格式化 ({{ checked.size }})</span>
+        </button>
         <button v-if="checked.size" class="bl-btn bl-btn-sm bl-btn-danger" @click="onBatchDelete">
           <span v-html="BL.icon('trash', 12)"></span><span style="margin-left:4px">删除 ({{ checked.size }})</span>
         </button>
@@ -67,6 +70,8 @@
             <th>名称</th>
             <th>编码</th>
             <th>类型</th>
+            <th>值类型</th>
+            <th>格式化</th>
             <th>主键</th>
             <th>必填</th>
             <th>多值</th>
@@ -97,6 +102,21 @@
                 </select>
                 <span v-else class="bl-tag">{{ p.data_type || '—' }}</span>
               </td>
+              <!-- 值类型 -->
+              <td>
+                <select v-if="p._editing" class="bl-input bl-input-xs" v-model="p.value_type">
+                  <option value="">— 无 —</option>
+                  <option v-for="vt in valueTypeOptions" :key="vt.id" :value="vt.id">{{ vt.rdfs_label || vt.api_name }}</option>
+                </select>
+                <span v-else>{{ valueTypeLabel(p.value_type) }}</span>
+              </td>
+              <!-- 格式化 -->
+              <td @click.stop="openFormat(p)">
+                <span :class="['fmt-pill', propFormatMap[p.id]?.format_enabled && 'is-on']" :title="propFormatMap[p.id]?.format_enabled ? '已配置 - 点击编辑' : '未配置 - 点击设置'">
+                  <span v-html="BL.icon('sliders', 11)"></span>
+                  <span style="margin-left:4px">{{ formatPreview(p) }}</span>
+                </span>
+              </td>
               <td class="t-center"><input type="checkbox" :checked="p.is_key" :disabled="!p._editing || p.prop_type!=='data'" @change="p.is_key = p.is_key ? 0 : 1" /></td>
               <td class="t-center"><input type="checkbox" :checked="p.is_required" :disabled="!p._editing || p.prop_type!=='data'" @change="p.is_required = p.is_required ? 0 : 1" /></td>
               <td class="t-center"><input type="checkbox" :checked="p.is_multi_valued_prop" :disabled="!p._editing || p.prop_type!=='data'" @change="p.is_multi_valued_prop = p.is_multi_valued_prop ? 0 : 1" /></td>
@@ -125,13 +145,22 @@
       </table>
       <div v-if="!displayRows.length" class="bl-empty" style="padding:32px">暂无属性，点击「新增属性」添加</div>
     </div>
+
+    <!-- 属性格式化弹窗 (单条 / 批量共用) -->
+    <PropertyFormatModal v-model:open="fmtOpen"
+                         :property-id="fmtPropertyId"
+                         :property-ids="fmtPropertyIds"
+                         property-scope="class"
+                         :data-type="fmtDataType"
+                         @saved="onFormatSaved" />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { BL } from '@/lib/bl.js'
-import { classMetaApi } from '@/api'
+import { classMetaApi, valueTypeApi, propertyFormatApi } from '@/api'
+import PropertyFormatModal from '@/components/PropertyFormatModal.vue'
 
 const props = defineProps({ classId: { type: String, default: '' } })
 
@@ -148,7 +177,63 @@ async function load() {
   const list = await classMetaApi.listProps(props.classId).catch(() => [])
   rows.value = (list || []).map(p => ({ ...p, _editing: false, _isNew: false }))
   checked.value = new Set()
+  await loadValueTypeOptions()
+  await loadPropFormats()
 }
+
+/* 值类型下拉 */
+const valueTypeOptions = ref([])
+async function loadValueTypeOptions() {
+  if (valueTypeOptions.value.length) return
+  valueTypeOptions.value = (await valueTypeApi.list().catch(() => [])).filter(v => v.status === 1)
+}
+function valueTypeLabel(id) {
+  if (!id) return '—'
+  const v = valueTypeOptions.value.find(x => x.id === id)
+  return v ? (v.rdfs_label || v.api_name) : id
+}
+
+/* 属性格式化批量加载 */
+const propFormatMap = ref({})
+async function loadPropFormats() {
+  const ids = rows.value.filter(p => !p._isNew).map(p => p.id)
+  if (!ids.length) { propFormatMap.value = {}; return }
+  try {
+    const list = await propertyFormatApi.byProperties(ids)
+    const m = {}; (list || []).forEach(f => { m[f.property_id] = f })
+    propFormatMap.value = m
+  } catch { propFormatMap.value = {} }
+}
+function formatPreview(p) {
+  const f = propFormatMap.value[p.id]
+  if (!f || !f.format_enabled) return '未设置'
+  return ({ general:'常规', number:'数值', currency:'货币', accounting:'会计', date:'日期', time:'时间', percent:'百分比', fraction:'分数', scientific:'科学记数', text:'文本', special:'特殊', custom:'自定义' })[f.format_type] || f.format_type
+}
+
+/* 属性格式化弹窗 (单条) */
+const fmtOpen = ref(false)
+const fmtPropertyId = ref('')
+const fmtPropertyIds = ref([])
+const fmtDataType = ref('')
+function openFormat(p) {
+  if (p._isNew) { BL.warning('请先保存属性后再设置格式化'); return }
+  fmtPropertyId.value = p.id
+  fmtPropertyIds.value = []
+  fmtDataType.value = p.data_type || ''
+  fmtOpen.value = true
+}
+/* 批量格式化: 选中行中已保存的部分 */
+function openBatchFormat() {
+  const ids = rows.value.filter(p => checked.value.has(p.id) && !p._isNew).map(p => p.id)
+  if (!ids.length) { BL.warning('选中的属性均为未保存的新增项,无法批量格式化'); return }
+  // 选取一个代表性 data_type 用于分类过滤 (取众数,简化处理用第一项)
+  const first = rows.value.find(p => p.id === ids[0])
+  fmtPropertyId.value = ''
+  fmtPropertyIds.value = ids
+  fmtDataType.value = first?.data_type || ''
+  fmtOpen.value = true
+}
+async function onFormatSaved() { await loadPropFormats() }
 watch(() => props.classId, load, { immediate: true })
 
 const displayRows = computed(() => {
@@ -277,4 +362,17 @@ document.addEventListener('click', () => { addMenu.value = false })
 .t-center { text-align: center; }
 .pp-ic { width: 20px; height: 20px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; }
 .pp-table .bl-input.bl-input-xs { height: 26px; padding: 0 6px; font-size: 12px; min-width: 80px; width: 100%; }
+.fmt-pill {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px; border-radius: 9px;
+  font-size: 11px; color: var(--bl-text-3);
+  background: var(--bl-bg-2); border: 1px dashed var(--bl-border);
+  cursor: pointer; white-space: nowrap;
+  transition: background-color .12s, color .12s, border-color .12s;
+}
+.fmt-pill:hover { color: var(--bl-primary); border-color: var(--bl-primary); }
+.fmt-pill.is-on {
+  color: var(--bl-primary); background: var(--bl-primary-soft);
+  border-style: solid; border-color: var(--bl-primary); font-weight: 500;
+}
 </style>

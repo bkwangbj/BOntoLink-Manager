@@ -150,6 +150,7 @@ const menus = [
     { path: '/resources/link-types',   icon: 'link',    label: '关系类型', en: 'Link types' },
     { path: '/resources/action-types', icon: 'zap',     label: '动作类型', en: 'Action types' },
     { path: '/resources/value-types',  icon: 'list',    label: '值类型',   en: 'Value types' },
+    { path: '/resources/enum-types',   icon: 'layers',  label: '枚举类型', en: 'Enum types' },
     { path: '/resources/shared-props', icon: 'share',   label: '共享属性', en: 'Shared props' },
     { path: '/resources/functions',    icon: 'branch',  label: '函数',     en: 'Functions' },
     { path: '/resources/interfaces',   icon: 'station', label: '接口',     en: 'Interfaces' },

@@ -664,6 +664,12 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
 .pane-cfg { transition: width .2s; }
 
 .ds-table { width: 100%; }
+/* 滚动时表头固定 */
+.ds-table thead th {
+  position: sticky; top: 0; z-index: 2;
+  background: var(--bl-bg-2);
+  box-shadow: inset 0 -1px 0 var(--bl-divider);   /* 用 inset 阴影代替 border，避免 sticky 下 border 失效 */
+}
 .ds-row { cursor: pointer; }
 .ds-row.is-active { background: var(--bl-primary-soft); }
 .ds-row.is-active td { color: var(--bl-primary); }

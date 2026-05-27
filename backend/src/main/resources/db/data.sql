@@ -417,3 +417,146 @@ UPDATE ont_class_property SET prop_type='data', prop_code='latitude',
   xsd_min_inclusive='-90', xsd_max_inclusive='90', owl_functional=1 WHERE id='cp-4';
 UPDATE ont_class_property SET prop_type='data', prop_code='river_name', is_key=1, is_required=1,
   physical_table='t_river', physical_column='name' WHERE id='cp-5';
+
+-- ============================================================
+-- 枚举类型 + 值类型 + 属性格式化 mock 数据
+-- ============================================================
+DELETE FROM ont_enum_items;
+DELETE FROM ont_enum_types;
+DELETE FROM ont_enum_group;
+DELETE FROM ont_enum_level_code_rule;
+DELETE FROM ont_value_types;
+DELETE FROM ont_valuetypes_usage_config;
+DELETE FROM t_ont_property_format;
+
+-- 枚举分组(两层)
+INSERT INTO ont_enum_group(id, parent_id, group_name, sort_num, category_code, status) VALUES
+('enum-groups-gb',      NULL, '国标标准',     1, NULL,                  'active'),
+('enum-groups-water',   NULL, '水利行业',     2, NULL,                  'active'),
+('enum-groups-water-monitor','enum-groups-water','监测分类', 1, 'dom_water_hydrology', 'active');
+
+-- 枚举类型 (4 条:行政区划/性别/工程类型/岗位)
+INSERT INTO ont_enum_types(id, group_id, rid, api_name, category_code, enum_type, max_level, top_code, status, rdfs_label, rdfs_comment, rdfs_see_also, rdfs_defined_by) VALUES
+('enum-types-area-district',  'enum-groups-gb','ri.ont.enum.library.area_district','area_district',NULL,'general_multi',5,NULL,'active',
+ '行政区划 (国标 GB/T 2260)','中华人民共和国行政区划代码国家标准，覆盖省、市、县、乡镇、村五级层级编码','http://www.mca.gov.cn/article/sj/xzqh/2024/','GB/T 2260-2024'),
+('enum-types-gender','enum-groups-gb','ri.ont.enum.library.gender','gender',NULL,'general_single',1,NULL,'active',
+ '性别 (国标 GB/T 2261.1)','一级通用：男 / 女 / 未知',NULL,'GB/T 2261.1-2003'),
+('enum-types-eng-kind','enum-groups-water-monitor','ri.ont.enum.library.eng_kind','eng_kind','dom_water_engineering','biz_multi',2,NULL,'active',
+ '水利工程类型','按主体功能划分:水库 / 水电站 / 泵站 / 闸坝 / 堤防 / 渠道',NULL,'水利公共本体库'),
+('enum-types-job',  'enum-groups-water','ri.ont.enum.library.job','job',NULL,'biz_single',1,NULL,'inactive',
+ '岗位类型','业务一级:管理 / 技术 / 调度 / 维护(已停用)',NULL,'人事公共本体库');
+
+-- 行政区划：示例 5 条(北京市 -> 市辖区 -> 东城区 -> 东华门街道 -> 多福巷社区)
+INSERT INTO ont_enum_items(id, enum_id, code, api_name, label, parent_code, level, sort_num, status) VALUES
+('enum-item-ad-110000','enum-types-area-district','110000','beijing','北京市',NULL,1,1,'active'),
+('enum-item-ad-110100','enum-types-area-district','110100','shixiaqu','市辖区','110000',2,1,'active'),
+('enum-item-ad-110101','enum-types-area-district','110101','dongcheng','东城区','110100',3,1,'active'),
+('enum-item-ad-110102','enum-types-area-district','110102','xicheng','西城区','110100',3,2,'active'),
+('enum-item-ad-110101001','enum-types-area-district','110101001','donghuamen','东华门街道','110101',4,1,'active'),
+('enum-item-ad-110101001001','enum-types-area-district','110101001001','duofuxiang','多福巷社区','110101001',5,1,'active');
+
+-- 性别
+INSERT INTO ont_enum_items(id, enum_id, code, api_name, label, parent_code, level, sort_num, status) VALUES
+('enum-item-g-male',  'enum-types-gender','1','male','男',  NULL,1,1,'active'),
+('enum-item-g-female','enum-types-gender','2','female','女',NULL,1,2,'active'),
+('enum-item-g-unkn',  'enum-types-gender','9','unknown','未知',NULL,1,3,'active');
+
+-- 水利工程类型
+INSERT INTO ont_enum_items(id, enum_id, code, api_name, label, parent_code, level, sort_num, status) VALUES
+('enum-item-eng-01','enum-types-eng-kind','01','reservoir','水库',  NULL,1,1,'active'),
+('enum-item-eng-02','enum-types-eng-kind','02','hydropower','水电站',NULL,1,2,'active'),
+('enum-item-eng-03','enum-types-eng-kind','03','pump_station','泵站',NULL,1,3,'active'),
+('enum-item-eng-04','enum-types-eng-kind','04','sluice','闸坝',     NULL,1,4,'active'),
+('enum-item-eng-05','enum-types-eng-kind','05','levee','堤防',      NULL,1,5,'active'),
+('enum-item-eng-06','enum-types-eng-kind','06','channel','渠道',    NULL,1,6,'active'),
+('enum-item-eng-0101','enum-types-eng-kind','0101','large_reservoir','大型水库','01',2,1,'active'),
+('enum-item-eng-0102','enum-types-eng-kind','0102','medium_reservoir','中型水库','01',2,2,'active'),
+('enum-item-eng-0103','enum-types-eng-kind','0103','small_reservoir','小型水库','01',2,3,'active');
+
+-- 行政区划层次编码规则(5 层)
+INSERT INTO ont_enum_level_code_rule(id, enum_id, code_name, rule_level, code_separator, code_len, total_len, fill_char, fill_pos) VALUES
+('enum_level_code_rule-ad-1','enum-types-area-district','省(区)',1,'',2,6,'0',0),
+('enum_level_code_rule-ad-2','enum-types-area-district','地(市、州)',2,'',2,6,'0',0),
+('enum_level_code_rule-ad-3','enum-types-area-district','区(县)',3,'',2,6,'0',0),
+('enum_level_code_rule-ad-4','enum-types-area-district','乡(镇)',4,'',3,9,'0',1),
+('enum_level_code_rule-ad-5','enum-types-area-district','村(社区)',5,'',3,12,'0',1);
+
+-- 行政区划同步配置 (一条示例,关联 MySQL 数据源)
+INSERT INTO ont_enum_sync_config(id, enum_id, data_source_id, table_alias, table_name,
+    field_code, field_name, field_sort, field_status, filter_sql, sync_mode, sync_strategy) VALUES
+('enum-sync-config-ad','enum-types-area-district','ds-mysql-main','行政区划表','t_area',
+ 'area_code','area_name','area_code','status','parent_code IS NULL','level_diff','once');
+
+-- 同步日志样例 (2 条)
+INSERT INTO ont_enum_sync_log(id, enum_id, sync_type, add_count, update_count, del_count, fail_count, sync_status, error_msg, oper_user, sync_time) VALUES
+('enum-sync-log-ad-1','enum-types-area-district','manual', 32,  0, 0, 0, 'success', NULL, 'admin', datetime('now','localtime','-2 days')),
+('enum-sync-log-ad-2','enum-types-area-district','auto',    3,  1, 0, 0, 'success', NULL, NULL,    datetime('now','localtime','-12 hours'));
+
+-- 默认使用配置 (1 条系统默认)
+INSERT INTO ont_valuetypes_usage_config(id, max_select_level, allow_non_leaf, display_format, is_system_default) VALUES
+('vt-usage-config-default',0,0,'label',1);
+
+-- 值类型 (5 条覆盖各 base_type/constraint_type)
+INSERT INTO ont_value_types(id, rid, api_name, category_code, base_type, constraint_type, constraint_config, enum_id, default_usage_config_id, status, rdfs_label, rdfs_comment) VALUES
+('value-types-text',     'ri.ont.value.types.text',     'text',     NULL,'String','Length','{"min":0,"max":255}',NULL,NULL,1,'文本','基础字符串文本，长度 0-255'),
+('value-types-mobile',   'ri.ont.value.types.mobile',   'mobile',   NULL,'String','Regex', '{"pattern":"^1[3-9]\\\\d{9}$"}',NULL,NULL,1,'手机号','中国大陆 11 位手机号'),
+('value-types-rid',      'ri.ont.value.types.rid',      'rid_text', NULL,'String','RID',   '{}',NULL,NULL,1,'RID','平台全局资源标识'),
+('value-types-area',     'ri.ont.value.types.area',     'area_code',NULL,'String','Enum',  NULL,'enum-types-area-district','vt-usage-config-default',1,'行政区划','基于国标行政区划的层级编码'),
+('value-types-gender',   'ri.ont.value.types.gender',   'gender_code',NULL,'String','Enum',NULL,'enum-types-gender','vt-usage-config-default',1,'性别','基于国标性别枚举');
+
+-- 给部分现有属性挂上格式化配置（覆盖多种分类的示例）
+INSERT INTO t_ont_property_format(
+    format_id, property_id, property_scope, format_enabled, format_type,
+    decimal_places, use_thousand_sep, negative_mode, currency_symbol, accounting_align,
+    date_pattern, time_pattern, locale, fraction_type, special_type, custom_format,
+    text_force, text_max_length, text_regex, percent_auto_multiply
+) VALUES
+-- 经度 (decimal) → 数值 6 位小数, 无千分位
+('property-format-cp-3','cp-3','class',1,'number',
+ 6, 0, 3, '¥', 1,
+ 'yyyy-MM-dd','HH:mm:ss','zh-CN','# ?/?','zipcode','G/通用格式',
+ 0, NULL, NULL, 1),
+-- 纬度 (decimal) → 数值 6 位小数
+('property-format-cp-4','cp-4','class',1,'number',
+ 6, 0, 3, '¥', 1,
+ 'yyyy-MM-dd','HH:mm:ss','zh-CN','# ?/?','zipcode','G/通用格式',
+ 0, NULL, NULL, 1),
+-- 测站编码 (string) → 特殊: 邮政编码风格 (强制保留前导零)
+('property-format-cp-1','cp-1','class',1,'special',
+ 0, 0, 3, '¥', 1,
+ 'yyyy-MM-dd','HH:mm:ss','zh-CN','# ?/?','zipcode','G/通用格式',
+ 0, NULL, NULL, 1),
+-- 接口属性: 采样时间 (xsd:dateTime) → 日期 yyyy-MM-dd HH:mm:ss
+('property-format-ip-1','interface-pro-001','interface',1,'date',
+ 0, 0, 3, '¥', 1,
+ 'yyyy-MM-dd HH:mm:ss','HH:mm:ss','zh-CN','# ?/?','zipcode','G/通用格式',
+ 0, NULL, NULL, 1),
+-- 接口属性: 观测值 (xsd:decimal) → 数值 4 位小数,千位分隔
+('property-format-ip-2','interface-pro-002','interface',1,'number',
+ 4, 1, 3, '¥', 1,
+ 'yyyy-MM-dd','HH:mm:ss','zh-CN','# ?/?','zipcode','G/通用格式',
+ 0, NULL, NULL, 1),
+-- 接口属性: 经度 (xsd:decimal) → 数值 6 位
+('property-format-ip-3','interface-pro-003','interface',1,'number',
+ 6, 0, 3, '¥', 1,
+ 'yyyy-MM-dd','HH:mm:ss','zh-CN','# ?/?','zipcode','G/通用格式',
+ 0, NULL, NULL, 1),
+-- 接口属性: 阈值 (xsd:decimal) → 数值 2 位,千位分隔
+('property-format-ip-9','interface-pro-009','interface',1,'number',
+ 2, 1, 3, '¥', 1,
+ 'yyyy-MM-dd','HH:mm:ss','zh-CN','# ?/?','zipcode','G/通用格式',
+ 0, NULL, NULL, 1),
+-- 接口属性: 本期读数 (xsd:decimal) → 货币 2 位,千分位
+('property-format-ip-11','interface-pro-011','interface',1,'currency',
+ 2, 1, 3, '¥', 1,
+ 'yyyy-MM-dd','HH:mm:ss','zh-CN','# ?/?','zipcode','G/通用格式',
+ 0, NULL, NULL, 1),
+-- 接口属性: 水表编号 (xsd:string) → 文本,正则校验
+('property-format-ip-10','interface-pro-010','interface',1,'text',
+ 0, 0, 3, '¥', 1,
+ 'yyyy-MM-dd','HH:mm:ss','zh-CN','# ?/?','zipcode','G/通用格式',
+ 1, 32, '^M[0-9]{6,12}$', 1);
+
+-- 给部分属性绑定 value_type
+UPDATE ont_class_property SET value_type='value-types-text' WHERE id IN ('cp-2','cp-5');
+UPDATE ont_class_property SET value_type='value-types-area' WHERE id='cp-1';

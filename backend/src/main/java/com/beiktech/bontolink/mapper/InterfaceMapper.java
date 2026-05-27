@@ -66,11 +66,11 @@ public interface InterfaceMapper {
 
     @Insert("""
         INSERT INTO ont_interface_property(
-            id, rid, interface_id, api_name, prop_code, data_type, category_code,
+            id, rid, interface_id, api_name, prop_code, data_type, value_type, category_code,
             display_name, rdfs_label, rdfs_comment, rdfs_see_also, rdfs_defined_by,
             is_required, metadata, status
         ) VALUES (
-            #{id}, #{rid}, #{interface_id}, #{api_name}, #{prop_code}, #{data_type}, #{category_code},
+            #{id}, #{rid}, #{interface_id}, #{api_name}, #{prop_code}, #{data_type}, #{value_type}, #{category_code},
             #{display_name}, #{rdfs_label}, #{rdfs_comment}, #{rdfs_see_also}, #{rdfs_defined_by},
             #{is_required}, #{metadata}, #{status}
         )
@@ -79,7 +79,7 @@ public interface InterfaceMapper {
 
     @Update("""
         UPDATE ont_interface_property SET
-            prop_code=#{prop_code}, data_type=#{data_type}, display_name=#{display_name},
+            prop_code=#{prop_code}, data_type=#{data_type}, value_type=#{value_type}, display_name=#{display_name},
             rdfs_label=#{rdfs_label}, rdfs_comment=#{rdfs_comment},
             is_required=#{is_required}, metadata=#{metadata}, status=#{status}
         WHERE id=#{id}

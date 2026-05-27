@@ -101,6 +101,54 @@ export const classMetaApi = {
   updateClass:       (id, data) => http.put(`/class-meta/classes/${id}`, data),
 }
 
+/* 值类型 (Value types) */
+export const valueTypeApi = {
+  list:          () => http.get('/value-types'),
+  get:           (id) => http.get(`/value-types/${id}`),
+  create:        (data) => http.post('/value-types', data),
+  update:        (id, data) => http.put(`/value-types/${id}`, data),
+  remove:        (id) => http.delete(`/value-types/${id}`),
+  listUsageConfigs: () => http.get('/value-types/usage-configs'),
+  createUsageConfig: (data) => http.post('/value-types/usage-configs', data),
+  updateUsageConfig: (id, data) => http.put(`/value-types/usage-configs/${id}`, data),
+}
+
+/* 枚举类型 (Enum types) */
+export const enumTypeApi = {
+  listGroups:    () => http.get('/enum-types/groups'),
+  createGroup:   (data) => http.post('/enum-types/groups', data),
+  updateGroup:   (id, data) => http.put(`/enum-types/groups/${id}`, data),
+  removeGroup:   (id) => http.delete(`/enum-types/groups/${id}`),
+  list:          () => http.get('/enum-types'),
+  get:           (id) => http.get(`/enum-types/${id}`),
+  create:        (data) => http.post('/enum-types', data),
+  update:        (id, data) => http.put(`/enum-types/${id}`, data),
+  remove:        (id) => http.delete(`/enum-types/${id}`),
+  listItems:     (enumId) => http.get(`/enum-types/${enumId}/items`),
+  addItem:       (enumId, data) => http.post(`/enum-types/${enumId}/items`, data),
+  updateItem:    (id, data) => http.put(`/enum-types/items/${id}`, data),
+  removeItem:    (id) => http.delete(`/enum-types/items/${id}`),
+  listLevelRules:(enumId) => http.get(`/enum-types/${enumId}/level-rules`),
+  saveLevelRules:(enumId, rules) => http.post(`/enum-types/${enumId}/level-rules`, rules),
+  /* 同步规则 */
+  getSyncConfig: (enumId) => http.get(`/enum-types/${enumId}/sync-config`),
+  saveSyncConfig:(enumId, data) => http.post(`/enum-types/${enumId}/sync-config`, data),
+  listSyncLogs: (enumId) => http.get(`/enum-types/${enumId}/sync-logs`),
+  runSync:      (enumId, body) => http.post(`/enum-types/${enumId}/sync-run`, body || {}),
+  testSync:     (enumId, body) => http.post(`/enum-types/${enumId}/sync-test`, body || {}),
+  /* 被引用查询 */
+  listReferences:(enumId) => http.get(`/enum-types/${enumId}/references`),
+}
+
+/* 属性格式化 */
+export const propertyFormatApi = {
+  byProperties:  (ids) => http.get('/property-format/by-properties', { params: { ids: ids.join(',') }, paramsSerializer: { indexes: null } }),
+  get:           (propertyId) => http.get(`/property-format/property/${propertyId}`),
+  save:          (propertyId, data) => http.put(`/property-format/property/${propertyId}`, data),
+  remove:        (propertyId) => http.delete(`/property-format/property/${propertyId}`),
+  batchSave:     (ids, format, scope = 'class') => http.put('/property-format/batch', { ids, format, property_scope: scope }),
+}
+
 /* 共享「业务图库」(图标目录树 + 上传 SVG) */
 export const iconLibApi = {
   all:           () => http.get('/icon-lib'),

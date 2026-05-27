@@ -133,6 +133,7 @@ CREATE TABLE IF NOT EXISTS ont_class_property (
   prop_code       TEXT,                          -- 属性编码 (camelCase)
   prop_type       TEXT DEFAULT 'data',           -- data / object / annotation
   data_type       TEXT,                          -- XSD 数据类型 (对象属性为空)
+  value_type      TEXT,                          -- 值类型 RID (基于 data_type 派生)
   display_name    TEXT,
   rdfs_label      TEXT,
   rdfs_comment    TEXT,
@@ -314,12 +315,14 @@ CREATE TABLE IF NOT EXISTS ont_interface_property (
   api_name        TEXT NOT NULL,               -- snake_case
   prop_code       TEXT,                        -- 属性代码
   data_type       TEXT,                        -- XSD 数据类型
+  value_type      TEXT,                        -- 值类型 RID (基于 data_type 派生可选值)
   category_code   TEXT,
   display_name    TEXT,
   rdfs_label      TEXT,
   rdfs_comment    TEXT,
   rdfs_see_also   TEXT,
   rdfs_defined_by TEXT,
+  -- 配置状态: 0=Required(NOT NULL 约束) / 1=Optional(允许 NULL) / 2=Multiple(单独关系表存多值)
   is_required     INTEGER NOT NULL DEFAULT 0,
   metadata        TEXT,
   status          INTEGER NOT NULL DEFAULT 1,
@@ -436,3 +439,175 @@ ALTER TABLE ont_class_property ADD COLUMN owl_reflexive          INTEGER NOT NUL
 ALTER TABLE ont_class_property ADD COLUMN owl_irreflexive        INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE ont_class_property ADD COLUMN metadata        TEXT;
 ALTER TABLE ont_class_property ADD COLUMN sort            INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE ont_class_property ADD COLUMN value_type      TEXT;
+
+ALTER TABLE ont_interface_property ADD COLUMN value_type TEXT;
+
+-- =============================================================
+-- 属性格式化 (t_ont_property_format) — 与属性表 1:1 关联
+-- =============================================================
+CREATE TABLE IF NOT EXISTS t_ont_property_format (
+  format_id        TEXT PRIMARY KEY,                   -- "property-format-" + UUID
+  property_id      TEXT NOT NULL UNIQUE,               -- 关联 ont_class_property.id 或 ont_interface_property.id
+  property_scope   TEXT NOT NULL DEFAULT 'class',      -- class | interface (区分属性归属)
+  format_enabled   INTEGER NOT NULL DEFAULT 0,
+  format_type      TEXT NOT NULL DEFAULT 'general',    -- general/number/currency/accounting/date/time/percent/fraction/scientific/text/special/custom
+  decimal_places   INTEGER DEFAULT 2,
+  use_thousand_sep INTEGER DEFAULT 0,
+  negative_mode    INTEGER DEFAULT 3,                  -- 0=红括号 1=黑括号 2=红无符号 3=黑负号 4=红负号
+  currency_symbol  TEXT DEFAULT '¥',
+  accounting_align INTEGER DEFAULT 1,
+  date_pattern     TEXT DEFAULT 'yyyy-MM-dd',
+  time_pattern     TEXT DEFAULT 'HH:mm:ss',
+  locale           TEXT DEFAULT 'zh-CN',
+  fraction_type    TEXT DEFAULT '# ?/?',
+  special_type     TEXT DEFAULT 'zipcode',             -- zipcode/lowerChinese/upperChinese/rmbUpper/wanUnit/plusMinus
+  custom_format    TEXT DEFAULT 'G/通用格式',
+  text_force       INTEGER DEFAULT 0,
+  text_max_length  INTEGER,
+  text_regex       TEXT,
+  percent_auto_multiply INTEGER DEFAULT 1,
+  create_time      TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  update_time      TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  create_user      TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_propfmt_prop ON t_ont_property_format(property_id);
+
+-- =============================================================
+-- 值类型 (Value types)
+-- =============================================================
+CREATE TABLE IF NOT EXISTS ont_value_types (
+  id                       TEXT PRIMARY KEY,             -- "value-types-" + UUID
+  rid                      TEXT NOT NULL UNIQUE,
+  api_name                 TEXT NOT NULL UNIQUE,
+  category_code            TEXT,
+  base_type                TEXT NOT NULL,                -- String / Integer / Decimal / Boolean / DateTime
+  constraint_type          TEXT NOT NULL,                -- RID / UUID / Length / Regex / Enum
+  constraint_config        TEXT,                         -- JSON (非 Enum 类型使用)
+  enum_id                  TEXT,                         -- 关联 ont_enum_types.id (仅 Enum)
+  default_usage_config_id  TEXT,
+  status                   INTEGER NOT NULL DEFAULT 1,
+  rdfs_label               TEXT,
+  rdfs_comment             TEXT,
+  rdfs_see_also            TEXT,
+  rdfs_defined_by          TEXT,
+  create_time              TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  update_time              TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
+CREATE INDEX IF NOT EXISTS idx_vt_cat  ON ont_value_types(category_code);
+CREATE INDEX IF NOT EXISTS idx_vt_enum ON ont_value_types(enum_id);
+
+CREATE TABLE IF NOT EXISTS ont_valuetypes_usage_config (
+  id                 TEXT PRIMARY KEY,                   -- "vt-usage-config-" + UUID
+  max_select_level   INTEGER NOT NULL DEFAULT 0,         -- 0 = 不限制
+  allow_non_leaf     INTEGER NOT NULL DEFAULT 0,
+  display_format     TEXT NOT NULL DEFAULT 'label',      -- label / code / code_label / full_label
+  is_system_default  INTEGER NOT NULL DEFAULT 0,
+  create_time        TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  update_time        TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
+
+-- =============================================================
+-- 枚举类型 (Enum types)
+-- =============================================================
+-- 枚举分组(树形)
+CREATE TABLE IF NOT EXISTS ont_enum_group (
+  id            TEXT PRIMARY KEY,                       -- "enum-groups-" + UUID
+  parent_id     TEXT,                                   -- NULL = 顶级
+  group_name    TEXT NOT NULL,
+  sort_num      INTEGER NOT NULL DEFAULT 0,
+  category_code TEXT,
+  status        TEXT NOT NULL DEFAULT 'active',
+  create_time   TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  update_time   TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
+CREATE INDEX IF NOT EXISTS idx_eg_parent ON ont_enum_group(parent_id);
+
+-- 枚举类型主表
+CREATE TABLE IF NOT EXISTS ont_enum_types (
+  id            TEXT PRIMARY KEY,                       -- "enum-types-" + UUID
+  group_id      TEXT,
+  rid           TEXT,
+  api_name      TEXT NOT NULL UNIQUE,
+  category_code TEXT,
+  enum_type     TEXT NOT NULL DEFAULT 'general_single', -- general_single / general_multi / biz_single / biz_multi
+  max_level     INTEGER NOT NULL DEFAULT 1,
+  top_code      TEXT,
+  status        TEXT NOT NULL DEFAULT 'active',
+  rdfs_label    TEXT,
+  rdfs_comment  TEXT,
+  rdfs_see_also TEXT,
+  rdfs_defined_by TEXT,
+  create_time   TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  update_time   TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
+CREATE INDEX IF NOT EXISTS idx_et_group ON ont_enum_types(group_id);
+
+-- 枚举项(数据)
+CREATE TABLE IF NOT EXISTS ont_enum_items (
+  id           TEXT PRIMARY KEY,                        -- "enum-item-" + UUID
+  enum_id      TEXT NOT NULL,                          -- 关联 ont_enum_types.id
+  code         TEXT NOT NULL,                          -- 完整编码 (例: 110101)
+  api_name     TEXT,                                   -- 英文 (例: dongcheng)
+  label        TEXT NOT NULL,                          -- 中文名
+  parent_code  TEXT,                                   -- 父级编码 (建树用)
+  level        INTEGER NOT NULL DEFAULT 1,
+  sort_num     INTEGER NOT NULL DEFAULT 0,
+  status       TEXT NOT NULL DEFAULT 'active',
+  create_time  TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  update_time  TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
+CREATE INDEX IF NOT EXISTS idx_eitem_enum ON ont_enum_items(enum_id);
+CREATE INDEX IF NOT EXISTS idx_eitem_parent ON ont_enum_items(parent_code);
+
+-- 枚举层次编码规则
+CREATE TABLE IF NOT EXISTS ont_enum_level_code_rule (
+  id             TEXT PRIMARY KEY,                     -- "enum_level_code_rule-" + UUID
+  enum_id        TEXT NOT NULL,
+  code_name      TEXT NOT NULL,
+  rule_level     INTEGER NOT NULL,
+  code_separator TEXT DEFAULT '',
+  code_len       INTEGER NOT NULL,
+  total_len      INTEGER NOT NULL,
+  fill_char      TEXT DEFAULT '0',
+  fill_pos       INTEGER DEFAULT 0,                    -- 0 = 前补 / 1 = 后补
+  create_time    TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  update_time    TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
+CREATE INDEX IF NOT EXISTS idx_elcr_enum ON ont_enum_level_code_rule(enum_id);
+
+-- 枚举数据库同步配置 (一对一关联枚举主表)
+CREATE TABLE IF NOT EXISTS ont_enum_sync_config (
+  id             TEXT PRIMARY KEY,                       -- "enum-sync-config-" + UUID
+  enum_id        TEXT NOT NULL UNIQUE,                   -- 关联 ont_enum_types.id
+  data_source_id TEXT,                                   -- 数据源 (MySQL / Oracle / HTTP 等)
+  table_alias    TEXT,                                   -- 业务自定义备注名称
+  table_name     TEXT,                                   -- 数据表真实名称
+  field_code     TEXT,                                   -- 编码字段
+  field_name     TEXT,                                   -- 名称字段
+  field_sort     TEXT,                                   -- 排序字段
+  field_status   TEXT,                                   -- 状态字段
+  filter_sql     TEXT,                                   -- 顶级筛选 SQL 表达式
+  sync_mode      TEXT DEFAULT 'level_diff',              -- level_diff / full_overwrite / incremental
+  sync_strategy  TEXT DEFAULT 'once',                    -- once / daily / weekly / monthly
+  create_time    TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  update_time    TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
+CREATE INDEX IF NOT EXISTS idx_esc_enum ON ont_enum_sync_config(enum_id);
+
+-- 枚举同步日志
+CREATE TABLE IF NOT EXISTS ont_enum_sync_log (
+  id           TEXT PRIMARY KEY,                         -- "enum-sync-log-" + UUID
+  enum_id      TEXT NOT NULL,                            -- 关联 ont_enum_types.id
+  sync_type    TEXT NOT NULL DEFAULT 'manual',           -- manual / auto
+  add_count    INTEGER NOT NULL DEFAULT 0,
+  update_count INTEGER NOT NULL DEFAULT 0,
+  del_count    INTEGER NOT NULL DEFAULT 0,
+  fail_count   INTEGER NOT NULL DEFAULT 0,
+  sync_status  TEXT NOT NULL DEFAULT 'running',          -- running / success / failed
+  error_msg    TEXT,
+  oper_user    TEXT,
+  sync_time    TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
+CREATE INDEX IF NOT EXISTS idx_eslog_enum ON ont_enum_sync_log(enum_id);
+CREATE INDEX IF NOT EXISTS idx_eslog_time ON ont_enum_sync_log(sync_time);

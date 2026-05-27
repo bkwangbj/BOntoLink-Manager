@@ -7,6 +7,14 @@
         <span class="ot-subtitle">对象、属性、物理映射、规则</span>
       </div>
       <div class="ot-actions">
+        <!-- 分组：仅列表视图下启用，按所属领域折叠分组 -->
+        <button :class="['ot-group-btn', groupMode && 'is-on']"
+                :disabled="viewMode !== 'list'"
+                :title="viewMode !== 'list' ? '仅列表视图可用' : (groupMode ? '取消分组' : '按领域分组')"
+                @click="groupMode = !groupMode">
+          <span v-html="BL.icon('layers', 12)"></span>
+          <span style="margin-left:4px">分组</span>
+        </button>
         <select class="bl-input ot-select" v-model="filterDomain" :title="'业务领域'">
           <option value="">全部业务领域</option>
           <option v-for="d in domainOpts" :key="d.code" :value="d.code">{{ d.label }}</option>
@@ -46,65 +54,76 @@
               <thead>
                 <tr>
                   <th style="width:28px"><input type="checkbox" :checked="allChecked" @change="toggleAll" /></th>
-                  <th>对象</th>
-                  <th>领域</th>
-                  <th>属性数</th>
-                  <th>父类</th>
-                  <th>子类数</th>
-                  <th>数据源数</th>
+                  <th><span class="th-sort" @click="toggleSort('name')">对象<span class="th-arrow">{{ sortArrow('name') }}</span></span></th>
+                  <th><span class="th-sort" @click="toggleSort('category')">领域<span class="th-arrow">{{ sortArrow('category') }}</span></span></th>
+                  <th><span class="th-sort" @click="toggleSort('prop')">属性数<span class="th-arrow">{{ sortArrow('prop') }}</span></span></th>
+                  <th><span class="th-sort" @click="toggleSort('parent')">父类<span class="th-arrow">{{ sortArrow('parent') }}</span></span></th>
+                  <th><span class="th-sort" @click="toggleSort('child')">子类数<span class="th-arrow">{{ sortArrow('child') }}</span></span></th>
+                  <th><span class="th-sort" @click="toggleSort('ds')">数据源数<span class="th-arrow">{{ sortArrow('ds') }}</span></span></th>
                   <th>关联表数</th>
                   <th>RID</th>
-                  <th>状态</th>
+                  <th><span class="th-sort" @click="toggleSort('status')">状态<span class="th-arrow">{{ sortArrow('status') }}</span></span></th>
                   <th style="width:90px"></th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="r in paged" :key="r.id"
-                    :class="['ot-row', selected?.id===r.id && 'is-active']"
-                    @click="openDrawer(r)">
-                  <td @click.stop><input type="checkbox" :checked="checked.has(r.id)" @change="toggleOne(r.id)" /></td>
-                  <td class="ot-cell-obj">
-                    <div class="ot-name-cell">
-                      <span class="ot-ic" :style="{ background: r.color || '#165DFF' }" v-html="BL.icon(r.icon || 'cube', 12, '#fff')"></span>
-                      <div class="ot-name-text">
-                        <div class="ot-obj-label bl-truncate" :title="r.rdfs_label || r.display_name || r.api_name">{{ r.rdfs_label || r.display_name || r.api_name }}</div>
-                        <div class="ot-obj-api bl-mono bl-muted bl-truncate">{{ r.api_name }}</div>
+                <template v-for="row in displayRows" :key="row.key">
+                  <!-- 分组标题行 -->
+                  <tr v-if="row.type==='group'" class="ot-group-row" @click="toggleDomain(row.key)">
+                    <td :colspan="11">
+                      <span class="ot-group-chev" v-html="BL.icon(row.collapsed ? 'chevronRight' : 'chevronDown', 12)"></span>
+                      <span class="ot-group-label">{{ row.label }}</span>
+                      <span class="ot-group-count">{{ row.count }}</span>
+                    </td>
+                  </tr>
+                  <!-- 对象行 -->
+                  <tr v-else
+                      :class="['ot-row', groupMode && 'is-grouped', selected?.id===row.data.id && 'is-active']"
+                      @click="openDrawer(row.data)">
+                    <td @click.stop><input type="checkbox" :checked="checked.has(row.data.id)" @change="toggleOne(row.data.id)" /></td>
+                    <td class="ot-cell-obj">
+                      <div class="ot-name-cell">
+                        <span class="ot-ic" :style="{ background: row.data.color || '#165DFF' }" v-html="BL.icon(row.data.icon || 'cube', 12, '#fff')"></span>
+                        <div class="ot-name-text">
+                          <div class="ot-obj-label bl-truncate" :title="row.data.rdfs_label || row.data.display_name || row.data.api_name">{{ row.data.rdfs_label || row.data.display_name || row.data.api_name }}</div>
+                          <div class="ot-obj-api bl-mono bl-muted bl-truncate">{{ row.data.api_name }}</div>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td><span class="bl-muted">{{ r.categoryLabel || '—' }}</span></td>
-                  <td>
-                    <a class="ot-link" @click.stop="openDrawer(r, 'props')">
-                      {{ r.propNormal ?? 0 }} <span class="bl-muted">|</span> {{ r.propTotal ?? 0 }}
-                    </a>
-                  </td>
-                  <td>
-                    <a v-if="r.parentLabel" class="ot-link">{{ r.parentLabel }}<span class="bl-mono bl-muted" style="margin-left:4px">{{ r.parentApiName }}</span></a>
-                    <span v-else class="bl-muted">—</span>
-                  </td>
-                  <td><a class="ot-link" @click.stop="openDrawer(r, 'hierarchy')">{{ r.childCount ?? 0 }}</a></td>
-                  <td><a class="ot-link" @click.stop="openDrawer(r, 'ds')">{{ r.dsCount ?? 0 }}</a></td>
-                  <td class="bl-truncate" :title="(r.relatedTables || []).join('、')">
-                    <span v-if="(r.relatedTables || []).length" class="bl-mono">{{ (r.relatedTables || []).join('、') }}</span>
-                    <span v-else class="bl-muted">—</span>
-                  </td>
-                  <td class="ot-rid">
-                    <span class="bl-mono bl-muted bl-truncate" :title="r.rid">{{ shortRid(r.rid) }}</span>
-                    <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="复制 RID" @click.stop="copyText(r.rid)" v-html="BL.icon('copy', 11)"></button>
-                  </td>
-                  <td>
-                    <span :class="['bl-tag', r.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']">
-                      {{ r.status === 1 ? '启用' : '禁用' }}
-                    </span>
-                  </td>
-                  <td @click.stop>
-                    <div class="bl-row" style="gap:0">
-                      <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="编辑" @click="openDrawer(r, 'overview')" v-html="BL.icon('edit', 12)"></button>
-                      <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" :title="r.status===1?'禁用':'启用'" @click="toggleStatus(r)" v-html="BL.icon('zap', 12)"></button>
-                      <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="删除" @click="removeOne(r)" v-html="BL.icon('trash', 12)"></button>
-                    </div>
-                  </td>
-                </tr>
+                    </td>
+                    <td><span class="bl-muted">{{ row.data.categoryLabel || '—' }}</span></td>
+                    <td>
+                      <a class="ot-link" @click.stop="openDrawer(row.data, 'props')">
+                        {{ row.data.propNormal ?? 0 }} <span class="bl-muted">|</span> {{ row.data.propTotal ?? 0 }}
+                      </a>
+                    </td>
+                    <td>
+                      <a v-if="row.data.parentLabel" class="ot-link">{{ row.data.parentLabel }}<span class="bl-mono bl-muted" style="margin-left:4px">{{ row.data.parentApiName }}</span></a>
+                      <span v-else class="bl-muted">—</span>
+                    </td>
+                    <td><a class="ot-link" @click.stop="openDrawer(row.data, 'hierarchy')">{{ row.data.childCount ?? 0 }}</a></td>
+                    <td><a class="ot-link" @click.stop="openDrawer(row.data, 'ds')">{{ row.data.dsCount ?? 0 }}</a></td>
+                    <td class="bl-truncate" :title="(row.data.relatedTables || []).join('、')">
+                      <span v-if="(row.data.relatedTables || []).length" class="bl-mono">{{ (row.data.relatedTables || []).join('、') }}</span>
+                      <span v-else class="bl-muted">—</span>
+                    </td>
+                    <td class="ot-rid">
+                      <span class="bl-mono bl-muted bl-truncate" :title="row.data.rid">{{ shortRid(row.data.rid) }}</span>
+                      <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="复制 RID" @click.stop="copyText(row.data.rid)" v-html="BL.icon('copy', 11)"></button>
+                    </td>
+                    <td>
+                      <span :class="['bl-tag', row.data.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']">
+                        {{ row.data.status === 1 ? '启用' : '禁用' }}
+                      </span>
+                    </td>
+                    <td @click.stop>
+                      <div class="bl-row" style="gap:0">
+                        <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="编辑" @click="openDrawer(row.data, 'overview')" v-html="BL.icon('edit', 12)"></button>
+                        <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" :title="row.data.status===1?'禁用':'启用'" @click="toggleStatus(row.data)" v-html="BL.icon('zap', 12)"></button>
+                        <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="删除" @click="removeOne(row.data)" v-html="BL.icon('trash', 12)"></button>
+                      </div>
+                    </td>
+                  </tr>
+                </template>
               </tbody>
             </table>
             <div v-if="!paged.length" class="bl-empty" style="padding:60px">
@@ -120,13 +139,23 @@
             <div class="ot-pager-l">
               <template v-if="checked.size">
                 已选 <b style="color:var(--bl-primary)">{{ checked.size }}</b> 项
-                <button class="bl-btn bl-btn-sm bl-btn-danger" style="margin-left:8px" @click="removeBatch">批量删除</button>
+                <button class="bl-btn bl-btn-sm bl-btn-danger" style="margin-left:8px" @click="removeBatch">
+                  <span v-html="BL.icon('trash', 12)"></span><span style="margin-left:4px">批量删除</span>
+                </button>
+                <button class="bl-btn bl-btn-sm" style="margin-left:6px" @click="batchSetStatus(1)">
+                  <span v-html="BL.icon('check', 12)"></span><span style="margin-left:4px">启用</span>
+                </button>
+                <button class="bl-btn bl-btn-sm" style="margin-left:6px" @click="batchSetStatus(0)">
+                  <span v-html="BL.icon('power', 12)"></span><span style="margin-left:4px">禁用</span>
+                </button>
+                <button class="bl-btn bl-btn-sm bl-btn-text" style="margin-left:6px" @click="checked = new Set()">取消选择</button>
               </template>
               <template v-else>
                 共 {{ filtered.length }} 项
+                <span v-if="groupMode" class="bl-muted" style="margin-left:8px">· {{ groupCount }} 个领域</span>
               </template>
             </div>
-            <div class="ot-pager-r">
+            <div class="ot-pager-r" v-if="!groupMode">
               <span class="bl-muted" style="font-size:12px;margin-right:8px">每页</span>
               <select class="bl-input ot-page-size" v-model.number="pageSize">
                 <option :value="20">20</option>
@@ -136,6 +165,10 @@
               <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="page<=1" @click="page--">‹</button>
               <span class="bl-muted" style="font-size:12px">{{ page }} / {{ totalPages }}</span>
               <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="page>=totalPages" @click="page++">›</button>
+            </div>
+            <div class="ot-pager-r" v-else>
+              <button class="bl-btn bl-btn-sm bl-btn-text" @click="expandAllGroups">展开全部</button>
+              <button class="bl-btn bl-btn-sm bl-btn-text" @click="collapseAllGroups">折叠全部</button>
             </div>
           </div>
         </div>
@@ -467,6 +500,19 @@ const domainOpts = computed(() => {
   return out
 })
 
+/* ===== 排序 ===== */
+const sortKey = ref('')
+const sortDir = ref('')  // 'asc' | 'desc' | ''
+function toggleSort(key) {
+  if (sortKey.value !== key) { sortKey.value = key; sortDir.value = 'asc' }
+  else if (sortDir.value === 'asc') sortDir.value = 'desc'
+  else { sortKey.value = ''; sortDir.value = '' }
+}
+function sortArrow(key) {
+  if (sortKey.value !== key) return ' ⇅'
+  return sortDir.value === 'asc' ? ' ↑' : ' ↓'
+}
+
 const filtered = computed(() => {
   let list = rows.value
   if (filterDomain.value) list = list.filter(r => r.category_code === filterDomain.value)
@@ -475,6 +521,25 @@ const filtered = computed(() => {
   if (k) {
     list = list.filter(r => [r.api_name, r.display_name, r.rdfs_label, r.category_code, r.rid]
       .filter(Boolean).some(s => String(s).toLowerCase().includes(k)))
+  }
+  // 排序
+  if (sortKey.value && sortDir.value) {
+    const dir = sortDir.value === 'asc' ? 1 : -1
+    list = [...list].sort((a, b) => {
+      let va, vb
+      switch (sortKey.value) {
+        case 'name':     va = a.rdfs_label || a.display_name || a.api_name || ''; vb = b.rdfs_label || b.display_name || b.api_name || ''; break
+        case 'category': va = a.categoryLabel || ''; vb = b.categoryLabel || ''; break
+        case 'prop':     va = a.propTotal || 0; vb = b.propTotal || 0; break
+        case 'parent':   va = a.parentLabel || ''; vb = b.parentLabel || ''; break
+        case 'child':    va = a.childCount || 0; vb = b.childCount || 0; break
+        case 'ds':       va = a.dsCount || 0; vb = b.dsCount || 0; break
+        case 'status':   va = a.status ?? 9; vb = b.status ?? 9; break
+        default:         va = ''; vb = ''
+      }
+      if (typeof va === 'number') return (va - vb) * dir
+      return String(va).localeCompare(String(vb)) * dir
+    })
   }
   return list
 })
@@ -496,6 +561,39 @@ const paged = computed(() => {
   return filtered.value.slice(start, start + pageSize.value)
 })
 watch(filtered, () => { if (page.value > totalPages.value) page.value = 1 })
+
+/* ===== 按所属领域分组显示 ===== */
+const groupMode = ref(false)
+const collapsedDomains = ref(new Set())
+function toggleDomain(key) {
+  const s = new Set(collapsedDomains.value)
+  s.has(key) ? s.delete(key) : s.add(key)
+  collapsedDomains.value = s
+}
+function rowGroupKey(r) { return r.categoryLabel || '—' }
+const groupedRows = computed(() => {
+  const groups = new Map()
+  filtered.value.forEach(r => {
+    const k = rowGroupKey(r)
+    if (!groups.has(k)) groups.set(k, [])
+    groups.get(k).push(r)
+  })
+  const out = []
+  for (const [key, items] of groups) {
+    const collapsed = collapsedDomains.value.has(key)
+    out.push({ type: 'group', key, label: key, count: items.length, collapsed })
+    if (!collapsed) items.forEach(r => out.push({ type: 'item', key: 'i' + r.id, data: r }))
+  }
+  return out
+})
+const groupCount = computed(() => new Set(filtered.value.map(rowGroupKey)).size)
+const displayRows = computed(() =>
+  groupMode.value
+    ? groupedRows.value
+    : paged.value.map(r => ({ type: 'item', key: 'i' + r.id, data: r }))
+)
+function expandAllGroups() { collapsedDomains.value = new Set() }
+function collapseAllGroups() { collapsedDomains.value = new Set(filtered.value.map(rowGroupKey)) }
 
 /* ===== 多选 ===== */
 const checked = ref(new Set())
@@ -673,6 +771,14 @@ async function removeBatch() {
   if (!ok) return
   BL.info('批量删除待联调')
 }
+async function batchSetStatus(status) {
+  const n = checked.value.size
+  if (!n) return
+  const verb = status === 1 ? '启用' : '禁用'
+  const ok = await BL.confirm({ title: `批量${verb}`, content: `确认${verb} ${n} 个对象?`, okText: verb })
+  if (!ok) return
+  BL.info(`批量${verb}待联调`)
+}
 
 /* ===== 生命周期 ===== */
 onMounted(async () => {
@@ -742,9 +848,54 @@ onMounted(async () => {
 .ot-list-scroll { flex: 1; min-height: 0; overflow: auto; }
 .ot-table { width: 100%; }
 .ot-table th, .ot-table td { white-space: nowrap; }
+/* 滚动表头固定 */
+.ot-table thead th {
+  position: sticky; top: 0; z-index: 2;
+  background: var(--bl-bg-2);
+  box-shadow: inset 0 -1px 0 var(--bl-divider);
+}
+/* 表头排序 */
+.th-sort { cursor: pointer; user-select: none; display: inline-flex; align-items: center; white-space: nowrap; }
+.th-sort:hover { color: var(--bl-primary); }
+.th-arrow { color: var(--bl-text-4); font-size: 11px; margin-left: 2px; }
 .ot-row { cursor: pointer; }
 .ot-row:hover { background: var(--bl-bg-hover); }
 .ot-row.is-active { background: var(--bl-primary-soft); }
+.ot-row.is-grouped td:nth-child(2) { padding-left: 22px; }
+/* 分组标题行 */
+.ot-group-row { cursor: pointer; background: var(--bl-bg-2); }
+.ot-group-row:hover { background: var(--bl-bg-hover); }
+.ot-group-row td {
+  padding: 7px 12px !important;
+  border-bottom: 1px solid var(--bl-border);
+}
+.ot-group-chev { display: inline-flex; vertical-align: middle; color: var(--bl-text-3); margin-right: 6px; }
+.ot-group-label { font-weight: 600; font-size: var(--bl-fs-13); color: var(--bl-text-1); vertical-align: middle; }
+.ot-group-count {
+  margin-left: 8px;
+  font-size: 11px; color: var(--bl-text-3);
+  background: var(--bl-bg-1); border: 1px solid var(--bl-border);
+  border-radius: 9px; padding: 0 8px; line-height: 16px;
+  vertical-align: middle; font-feature-settings: "tnum";
+}
+/* 顶部工具栏里的「分组」开关 */
+.ot-group-btn {
+  display: inline-flex; align-items: center;
+  height: 30px; padding: 0 12px;
+  border: 1px solid var(--bl-border);
+  background: var(--bl-bg-1);
+  color: var(--bl-text-2);
+  border-radius: var(--bl-radius-2);
+  font-size: var(--bl-fs-13);
+  cursor: pointer;
+  transition: border-color .12s, color .12s, background-color .12s;
+}
+.ot-group-btn:hover:not(:disabled) { color: var(--bl-primary); border-color: var(--bl-primary); }
+.ot-group-btn.is-on {
+  background: var(--bl-primary-soft); border-color: var(--bl-primary);
+  color: var(--bl-primary); font-weight: 500;
+}
+.ot-group-btn:disabled { opacity: .5; cursor: not-allowed; }
 .ot-ic {
   width: 20px; height: 20px; border-radius: 4px;
   display: inline-flex; align-items: center; justify-content: center;

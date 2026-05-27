@@ -9,10 +9,12 @@
     <div v-if="sub==='basic'" class="ov-form">
       <div class="ov-section-title">基础信息</div>
       <div class="ov-grid">
-        <FieldRow label="名称" inline hint="display_name"><input class="bl-input" v-model="form.display_name" /></FieldRow>
-        <FieldRow label="API" inline hint="api_name · snake_case · 唯一不可变"><input class="bl-input bl-mono" :value="form.api_name" disabled /></FieldRow>
-        <FieldRow label="领域" inline hint="category_code"><span class="bl-tag">{{ form.categoryLabel || form.category_code || '—' }}</span></FieldRow>
-        <FieldRow label="父类" inline hint="parent_class_id"><span>{{ form.parent_class_id ? (parentLabel || form.parent_class_id) : '—' }}</span></FieldRow>
+        <FieldRow label="名称" inline hint="display_name · 给人看的展示名称"><input class="bl-input" v-model="form.display_name" /></FieldRow>
+        <FieldRow label="API" inline hint="api_name · snake_case · 程序唯一标识 · 不可修改"><input class="bl-input bl-mono" :value="form.api_name" disabled /></FieldRow>
+        <FieldRow label="标准名" inline hint="rdfs:label · 本体标准展示标签"><input class="bl-input" v-model="form.rdfs_label" /></FieldRow>
+        <FieldRow label="命名空间" inline hint="ns_code · 绑定的命名空间编码"><input class="bl-input bl-mono" v-model="form.ns_code" /></FieldRow>
+        <FieldRow label="领域" inline hint="category_code · 所属业务领域"><span class="bl-tag">{{ form.categoryLabel || form.category_code || '—' }}</span></FieldRow>
+        <FieldRow label="父类" inline hint="parent_class_id · 本体继承父类 ID (类层次中维护)"><span>{{ form.parent_class_id ? (parentLabel || form.parent_class_id) : '—' }}</span></FieldRow>
       </div>
 
       <FieldRow label="注释" hint="rdfs:comment"><textarea class="bl-textarea" rows="2" v-model="form.rdfs_comment"></textarea></FieldRow>

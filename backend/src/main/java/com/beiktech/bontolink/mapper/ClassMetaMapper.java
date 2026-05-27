@@ -156,7 +156,7 @@ public interface ClassMetaMapper {
     /* ============ ont_class_property CRUD (扩展版) ============ */
 
     @Select("""
-        SELECT id, class_id, category_code, api_name, prop_code, prop_type, data_type,
+        SELECT id, class_id, category_code, api_name, prop_code, prop_type, data_type, value_type,
                display_name, rdfs_label, rdfs_comment, rdfs_see_also, rdfs_defined_by,
                class_ds_id, physical_table, physical_column,
                is_primary, is_required, is_key, is_derived, is_multi_valued_prop, is_range_constraint_prop,
@@ -173,7 +173,7 @@ public interface ClassMetaMapper {
 
     @Insert("""
         INSERT INTO ont_class_property(
-            id, rid, class_id, category_code, api_name, prop_code, prop_type, data_type,
+            id, rid, class_id, category_code, api_name, prop_code, prop_type, data_type, value_type,
             display_name, rdfs_label, rdfs_comment, rdfs_see_also, rdfs_defined_by,
             class_ds_id, physical_table, physical_column,
             is_primary, is_required, is_key, is_derived, is_multi_valued_prop, is_range_constraint_prop,
@@ -183,7 +183,7 @@ public interface ClassMetaMapper {
             owl_asymmetric, owl_reflexive, owl_irreflexive,
             metadata, sort, status
         ) VALUES (
-            #{id}, #{rid}, #{class_id}, #{category_code}, #{api_name}, #{prop_code}, #{prop_type}, #{data_type},
+            #{id}, #{rid}, #{class_id}, #{category_code}, #{api_name}, #{prop_code}, #{prop_type}, #{data_type}, #{value_type},
             #{display_name}, #{rdfs_label}, #{rdfs_comment}, #{rdfs_see_also}, #{rdfs_defined_by},
             #{class_ds_id}, #{physical_table}, #{physical_column},
             #{is_primary}, #{is_required}, #{is_key}, #{is_derived}, #{is_multi_valued_prop}, #{is_range_constraint_prop},
@@ -198,7 +198,7 @@ public interface ClassMetaMapper {
 
     @Update("""
         UPDATE ont_class_property SET
-            prop_code = #{prop_code}, prop_type = #{prop_type}, data_type = #{data_type},
+            prop_code = #{prop_code}, prop_type = #{prop_type}, data_type = #{data_type}, value_type = #{value_type},
             display_name = #{display_name}, rdfs_label = #{rdfs_label}, rdfs_comment = #{rdfs_comment},
             rdfs_see_also = #{rdfs_see_also}, rdfs_defined_by = #{rdfs_defined_by},
             class_ds_id = #{class_ds_id}, physical_table = #{physical_table}, physical_column = #{physical_column},
