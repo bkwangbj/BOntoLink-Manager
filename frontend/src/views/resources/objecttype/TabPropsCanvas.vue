@@ -19,7 +19,7 @@
         <button class="er-tbtn" title="重置缩放 (Ctrl+0)" @click="zoom = 1"><span v-html="BL.icon('search', 13)"></span></button>
         <div class="er-tdiv"></div>
         <button class="er-tbtn" :class="showGrid && 'is-on'" title="显示网格" @click="showGrid = !showGrid"><span v-html="BL.icon('grid', 14)"></span></button>
-        <button class="er-tbtn" title="导出 PNG" @click="onExport"><span v-html="BL.icon('download', 14)"></span></button>
+        <button class="er-tbtn" title="导出 PNG" @click="onExport"><span v-html="BL.icon('inbox', 14)"></span></button>
       </div>
       <div class="er-status">
         <span class="er-mode-label">当前模式: <b>{{ currentModeLabel }}</b></span>
@@ -28,7 +28,10 @@
     </div>
 
     <!-- 画布 -->
-    <div :class="['er-canvas', showGrid && 'is-grid']" ref="canvasRef" @click.self="onCanvasClick">
+    <div :class="['er-canvas', showGrid && 'is-grid', `is-mode-${mode}`]"
+         ref="canvasRef"
+         @click.self="onCanvasClick"
+         @mousedown="onCanvasMouseDown">
       <div class="er-stage" :style="{ transform: `scale(${zoom})`, transformOrigin: 'top left' }">
         <!-- SVG 连线层 (放在卡片下方,通过 z-index 控制) -->
         <svg class="er-svg" :width="stageW" :height="stageH">
@@ -36,7 +39,7 @@
           <g v-for="ln in mappingLines" :key="ln.key">
             <line :x1="ln.x1" :y1="ln.y1" :x2="ln.x2" :y2="ln.y2"
                   :stroke="ln.color" :stroke-width="ln.selected ? 3 : 2"
-                  class="er-line" @click="onSelectLine(ln)" />
+                  class="er-line" @click="onSelectLineForDelete(ln)" />
             <circle :cx="ln.x1" :cy="ln.y1" r="4" :fill="ln.color" />
             <circle :cx="ln.x2" :cy="ln.y2" r="4" :fill="ln.color" />
           </g>
@@ -51,6 +54,14 @@
               <tspan dx="0" dy="0">{{ rel.idx }}</tspan>
             </text>
           </g>
+          <!-- 连线模式拖拽中的临时线 -->
+          <g v-if="dragConnect.active">
+            <line :x1="dragConnect.x1" :y1="dragConnect.y1" :x2="dragConnect.x2" :y2="dragConnect.y2"
+                  :stroke="dragConnect.valid ? '#1677ff' : '#f53f3f'"
+                  stroke-width="2" stroke-dasharray="4 4" />
+            <circle :cx="dragConnect.x1" :cy="dragConnect.y1" r="4" :fill="dragConnect.valid ? '#1677ff' : '#f53f3f'" />
+            <circle :cx="dragConnect.x2" :cy="dragConnect.y2" r="4" :fill="dragConnect.valid ? '#1677ff' : '#f53f3f'" />
+          </g>
         </svg>
 
         <!-- 对象类卡片 -->
@@ -62,9 +73,19 @@
           </div>
           <div class="er-prop-list" ref="propListRef">
             <div v-for="(p, i) in propertiesSorted" :key="p.id"
-                 :class="['er-prow', selected.kind==='prop' && selected.id===p.id && 'is-sel', p._mapped && 'is-mapped']"
+                 :class="['er-prow',
+                          selected.kind==='prop' && selected.id===p.id && 'is-sel',
+                          p._mapped && 'is-mapped',
+                          highlightProps.has(p.id) && 'is-hl',
+                          mode==='sort' && 'is-sortable']"
                  :data-prop-id="p.id"
+                 :draggable="mode==='sort'"
+                 @dragstart="onPropDragStart(i, $event)"
+                 @dragover="onPropDragOver(i, $event)"
+                 @dragend="onPropDragEnd"
                  @click.stop="onSelectProp(p)">
+              <!-- 拖拽插入指示线 (排序模式) -->
+              <div v-if="mode==='sort' && sortInsertIdx===i && sortDragFromIdx!==-1 && sortDragFromIdx!==i" class="er-sort-hint"></div>
               <span class="er-row-no">{{ i + 1 }}</span>
               <span class="er-prop-ic" :style="{ background: propIconColor(p) }" v-html="BL.icon(propIcon(p), 10, '#fff')"></span>
               <span class="er-dt-ic" :title="p.data_type">{{ dataTypeShort(p.data_type) }}</span>
@@ -74,6 +95,7 @@
               <span class="er-dot er-dot-out"
                     :class="propDotClass(p)"
                     :data-anchor="`prop:${p.id}`"
+                    @mousedown="onAnchorMouseDown($event, 'prop', p)"
                     @click.stop="onAnchorClick('prop', p)"></span>
             </div>
             <div v-if="!properties.length" class="bl-empty" style="padding:24px">尚无属性</div>
@@ -91,7 +113,10 @@
           </div>
           <div class="er-field-list">
             <div v-for="f in sortedFieldsOf(ds)" :key="ds.id + '_' + f.name"
-                 :class="['er-frow', selected.kind==='field' && selected.id===`${ds.id}:${f.name}` && 'is-sel', f._mapped && 'is-mapped']"
+                 :class="['er-frow',
+                          selected.kind==='field' && selected.id===`${ds.id}:${f.name}` && 'is-sel',
+                          f._mapped && 'is-mapped',
+                          highlightFields.has(`${ds.id}:${f.name}`) && 'is-hl']"
                  :data-field-id="`${ds.id}:${f.name}`"
                  @click.stop="onSelectField(ds, f)">
               <span class="er-dot er-dot-in"
@@ -139,16 +164,16 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { BL } from '@/lib/bl.js'
-import { resourceApi } from '@/api'
+import { resourceApi, classMetaApi } from '@/api'
 
 const props = defineProps({ classId: { type: String, default: '' } })
 
 /* 操作模式 */
 const modes = [
-  { k: 'select',  label: '选择模式', icon: 'pointer', key: 'V' },
-  { k: 'sort',    label: '排序模式', icon: 'sort',    key: 'S' },
-  { k: 'connect', label: '连线模式', icon: 'link',    key: 'L' },
-  { k: 'delete',  label: '删除模式', icon: 'trash',   key: 'D' }
+  { k: 'select',  label: '选择模式', icon: 'navigation', key: 'V' },  // 箭头光标
+  { k: 'sort',    label: '排序模式', icon: 'menu',       key: 'S' },  // 三横线 (列表)
+  { k: 'connect', label: '连线模式', icon: 'link',       key: 'L' },
+  { k: 'delete',  label: '删除模式', icon: 'trash',      key: 'D' }
 ]
 const mode = ref('select')
 const currentModeLabel = computed(() => modes.find(m => m.k === mode.value)?.label || '—')
@@ -419,36 +444,277 @@ function onSelectRelLine(rel) {
   }
   recomputeLines()
 }
-function onAnchorClick(kind, payload) {
-  // 选择模式下点击锚点 = 选中所属行;连线/删除模式 = 留作后续拖拽实现入口
-  if (mode.value === 'select') {
-    if (kind === 'prop') onSelectProp(payload)
-    else if (kind === 'field') onSelectField(payload.dsId && datasources.value.find(d => d.id === payload.dsId), payload.f)
-  } else if (mode.value === 'connect') {
-    BL.info('连线模式: 按住属性圆点拖到目标字段圆点 (拖拽实现待联调)')
-  } else if (mode.value === 'delete') {
-    BL.info('删除模式: 点击连线后可删除')
-  }
+function onAnchorClick(/* kind, payload */) {
+  // 锚点的点击交互完全由 mousedown/mouseup 拖拽流程承担,此处保留空函数兼容旧调用点
 }
 function onCanvasClick() {
   selected.kind = null; selected.id = null; selected.summary = null
 }
 
-/* —— 删除连线占位 —— */
-function onDeleteSelected() {
-  if (selected.kind === 'line') {
-    BL.info('需调用 PUT /api/class-meta/properties/{id} 清空 physical_table / physical_column (待联调)')
-  } else if (selected.kind === 'rel') {
-    BL.info('需调用 PUT /api/class-meta/classes/{id}/datasources/{dsId} 清空 join_on_keys (待联调)')
+/* —— 连线模式: 锚点拖拽创建映射 —— */
+const dragConnect = reactive({ active: false, from: null, x1: 0, y1: 0, x2: 0, y2: 0, valid: true, msg: '' })
+
+function getStageXY(ev) {
+  const box = canvasRef.value.getBoundingClientRect()
+  const z = zoom.value || 1
+  return {
+    x: (ev.clientX - box.left + canvasRef.value.scrollLeft) / z,
+    y: (ev.clientY - box.top + canvasRef.value.scrollTop) / z
   }
 }
-function onClearMappings() { BL.info('清除全部映射: 待联调 (批量更新所有属性的 physical_* 字段)') }
-function onAddSupplement() { BL.info('新增辅助物理表: 待联调 (打开数据源选择,创建一条 ont_class_ds rel_type=2)') }
-
-/* —— 导出 PNG (占位) —— */
-function onExport() {
-  BL.info('导出 PNG: 当前为占位实现 (建议使用 html-to-image / dom-to-image 库,后续接入)')
+function getAnchorCenter(el) {
+  if (!el) return null
+  const cBox = canvasRef.value.getBoundingClientRect()
+  const z = zoom.value || 1
+  const b = el.getBoundingClientRect()
+  return {
+    x: (b.left - cBox.left + canvasRef.value.scrollLeft) / z + b.width / (2 * z),
+    y: (b.top - cBox.top + canvasRef.value.scrollTop) / z + b.height / (2 * z)
+  }
 }
+function findAnchorAt(clientX, clientY) {
+  // 通过 elementsFromPoint 查找命中的锚点
+  const els = document.elementsFromPoint(clientX, clientY)
+  for (const el of els) {
+    const a = el.closest && el.closest('[data-anchor]')
+    if (a) return a
+  }
+  return null
+}
+function parseAnchor(el) {
+  const v = el?.getAttribute?.('data-anchor') || ''
+  // "prop:cp-1" / "field:class-ds-01:station_code" / "rel:class-ds-01:station_code"
+  if (v.startsWith('prop:')) return { kind: 'prop', propId: v.slice(5) }
+  if (v.startsWith('field:')) { const [, dsId, name] = v.split(':'); return { kind: 'field', dsId, name } }
+  if (v.startsWith('rel:'))   { const [, dsId, name] = v.split(':'); return { kind: 'rel',   dsId, name } }
+  return null
+}
+function onAnchorMouseDown(ev, kind, payload) {
+  if (mode.value !== 'connect') return
+  if (ev.button !== 0) return
+  if (kind === 'prop') {
+    const p = payload
+    if (p.prop_type === 'object' || p.prop_type === 'annotation' || p.is_derived) {
+      BL.warning('关联属性 / 注释属性 / 计算派生属性 禁止连线')
+      return
+    }
+    if (p._mapped) {
+      BL.warning('该属性已映射,请先在删除模式下移除原连线')
+      return
+    }
+    const el = ev.currentTarget
+    const A = getAnchorCenter(el)
+    if (!A) return
+    dragConnect.active = true
+    dragConnect.from = { kind: 'prop', propId: p.id, is_key: !!p.is_key }
+    dragConnect.x1 = A.x; dragConnect.y1 = A.y
+    dragConnect.x2 = A.x; dragConnect.y2 = A.y
+    dragConnect.valid = true
+    ev.preventDefault()
+    window.addEventListener('mousemove', onConnectDragMove)
+    window.addEventListener('mouseup', onConnectDragEnd)
+  }
+}
+function onConnectDragMove(ev) {
+  if (!dragConnect.active) return
+  const xy = getStageXY(ev)
+  dragConnect.x2 = xy.x; dragConnect.y2 = xy.y
+  // 实时校验目标锚点的合法性
+  const hit = findAnchorAt(ev.clientX, ev.clientY)
+  const target = parseAnchor(hit)
+  if (target && target.kind === 'field') {
+    const ds = datasources.value.find(d => d.id === target.dsId)
+    const f = ds && (ds.physical_fields || []).find(x => x.name === target.name)
+    if (!ds || !f) { dragConnect.valid = false; dragConnect.msg = '无效字段'; return }
+    if (f._mapped) { dragConnect.valid = false; dragConnect.msg = '该字段已被映射'; return }
+    // 主键属性需要 PK 字段;非主键属性映射到任意字段
+    dragConnect.valid = true; dragConnect.msg = ''
+  } else {
+    dragConnect.valid = true; dragConnect.msg = ''
+  }
+}
+async function onConnectDragEnd(ev) {
+  window.removeEventListener('mousemove', onConnectDragMove)
+  window.removeEventListener('mouseup', onConnectDragEnd)
+  if (!dragConnect.active) return
+  const hit = findAnchorAt(ev.clientX, ev.clientY)
+  const target = parseAnchor(hit)
+  dragConnect.active = false
+  if (!target || target.kind !== 'field') return
+  const ds = datasources.value.find(d => d.id === target.dsId)
+  const f = ds && (ds.physical_fields || []).find(x => x.name === target.name)
+  if (!ds || !f) { BL.error('目标字段不存在'); return }
+  if (f._mapped) { BL.warning('该字段已被映射'); return }
+  const propId = dragConnect.from.propId
+  const p = properties.value.find(x => x.id === propId)
+  if (!p) return
+  try {
+    await classMetaApi.updateProp(p.id, {
+      ...p, _mapped: undefined,
+      physical_table: ds.physical_table,
+      physical_column: f.name,
+      class_ds_id: ds.id
+    })
+    BL.success(`映射已创建: ${p.api_name} → ${ds.physical_table}.${f.name}`)
+    await loadDetail()
+  } catch (e) { BL.error(e?.msg || '映射保存失败') }
+}
+
+/* —— 删除模式: 点击连线删除映射 —— */
+async function onSelectLineForDelete(ln) {
+  if (mode.value !== 'delete') { onSelectLine(ln); return }
+  const p = properties.value.find(x => x.id === ln.propId)
+  if (!p) return
+  const ok = await BL.confirm({ title: '删除映射', content: `确定删除「${p.api_name} → ${ln.field}」的映射？`, danger: true, okText: '删除' })
+  if (!ok) return
+  try {
+    await classMetaApi.updateProp(p.id, {
+      ...p, _mapped: undefined,
+      physical_table: null, physical_column: null, class_ds_id: null
+    })
+    BL.success('映射已删除')
+    await loadDetail()
+  } catch (e) { BL.error(e?.msg || '删除失败') }
+}
+async function onDeleteSelected() {
+  if (selected.kind === 'line') {
+    const ln = mappingLines.value.find(x => x.key === selected.id)
+    if (ln) await onSelectLineForDelete(ln)
+  } else if (selected.kind === 'rel') {
+    BL.info('表间关联删除需更新 ont_class_ds.join_on_keys (待联调)')
+  }
+}
+
+/* —— 排序模式: 拖拽属性行调整顺序 —— */
+const sortDragFromIdx = ref(-1)
+const sortInsertIdx = ref(-1)
+function onPropDragStart(idx, ev) {
+  if (mode.value !== 'sort') { ev.preventDefault(); return }
+  sortDragFromIdx.value = idx
+  ev.dataTransfer.effectAllowed = 'move'
+}
+function onPropDragOver(idx, ev) {
+  if (mode.value !== 'sort' || sortDragFromIdx.value < 0) return
+  ev.preventDefault()
+  sortInsertIdx.value = idx
+}
+async function onPropDragEnd() {
+  if (sortDragFromIdx.value < 0 || sortInsertIdx.value < 0 || sortDragFromIdx.value === sortInsertIdx.value) {
+    sortDragFromIdx.value = -1; sortInsertIdx.value = -1; return
+  }
+  const list = [...propertiesSorted.value]
+  const [item] = list.splice(sortDragFromIdx.value, 1)
+  list.splice(sortInsertIdx.value, 0, item)
+  const ids = list.map(p => p.id)
+  sortDragFromIdx.value = -1; sortInsertIdx.value = -1
+  try {
+    await classMetaApi.reorderProps(props.classId, ids)
+    BL.success('属性顺序已更新')
+    await loadDetail()
+  } catch (e) { BL.error(e?.msg || '排序保存失败') }
+}
+
+/* —— 清除所有映射 —— */
+async function onClearMappings() {
+  const mapped = properties.value.filter(p => p.physical_table && p.physical_column)
+  if (!mapped.length) { BL.info('当前无映射可清除'); return }
+  const ok = await BL.confirm({ title: '清除所有映射', content: `将清除 ${mapped.length} 条映射,此操作不可撤销。`, danger: true, okText: '清除' })
+  if (!ok) return
+  for (const p of mapped) {
+    await classMetaApi.updateProp(p.id, { ...p, _mapped: undefined, physical_table: null, physical_column: null, class_ds_id: null }).catch(() => {})
+  }
+  BL.success('已清除全部映射')
+  await loadDetail()
+}
+
+function onAddSupplement() {
+  BL.info('新增辅助物理表: 需打开数据源/表选择对话框 (待联调). 当前可手动从数据库种子或通过对象详情的「数据源」tab 添加')
+}
+
+/* —— 中键拖拽平移画布 —— */
+let panState = { active: false, startX: 0, startY: 0, scrollLeft: 0, scrollTop: 0 }
+function onCanvasMouseDown(ev) {
+  if (ev.button !== 1) return  // 中键
+  ev.preventDefault()
+  panState = {
+    active: true,
+    startX: ev.clientX, startY: ev.clientY,
+    scrollLeft: canvasRef.value.scrollLeft, scrollTop: canvasRef.value.scrollTop
+  }
+  document.body.style.cursor = 'grabbing'
+  window.addEventListener('mousemove', onCanvasPanMove)
+  window.addEventListener('mouseup', onCanvasPanEnd)
+}
+function onCanvasPanMove(ev) {
+  if (!panState.active) return
+  canvasRef.value.scrollLeft = panState.scrollLeft - (ev.clientX - panState.startX)
+  canvasRef.value.scrollTop  = panState.scrollTop  - (ev.clientY - panState.startY)
+}
+function onCanvasPanEnd() {
+  panState.active = false
+  document.body.style.cursor = ''
+  window.removeEventListener('mousemove', onCanvasPanMove)
+  window.removeEventListener('mouseup', onCanvasPanEnd)
+}
+
+/* —— 导出 PNG (使用浏览器原生 SVG → PNG 转换) —— */
+async function onExport() {
+  if (!canvasRef.value) return
+  try {
+    const prev = zoom.value
+    zoom.value = 1
+    await nextTick()
+    const node = canvasRef.value.querySelector('.er-stage')
+    const w = node.scrollWidth, h = node.scrollHeight
+    // 用 foreignObject 把 HTML 嵌入 SVG,再转成 PNG
+    const html = node.outerHTML.replace(/<svg /g, '<svg xmlns="http://www.w3.org/2000/svg" ')
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
+      <foreignObject width="100%" height="100%">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="width:${w}px;height:${h}px;background:#f8f9fa">${html}</div>
+      </foreignObject>
+    </svg>`
+    const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const img = new Image()
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = w * 2; canvas.height = h * 2
+      const ctx = canvas.getContext('2d')
+      ctx.scale(2, 2)
+      ctx.drawImage(img, 0, 0)
+      URL.revokeObjectURL(url)
+      canvas.toBlob((png) => {
+        const a = document.createElement('a')
+        const ts = new Date().toISOString().slice(0, 10)
+        a.download = `本体关系图_${ts}.png`
+        a.href = URL.createObjectURL(png)
+        a.click()
+        URL.revokeObjectURL(a.href)
+        BL.success('已导出 PNG')
+      })
+      zoom.value = prev
+    }
+    img.onerror = () => {
+      URL.revokeObjectURL(url); zoom.value = prev
+      BL.warning('PNG 导出失败. 建议: npm i html-to-image 后切换到 html-to-image.toPng() 方案')
+    }
+    img.src = url
+  } catch (e) {
+    BL.error(e?.message || '导出失败')
+  }
+}
+
+/* —— 选中映射线时,提供给模板用的"高亮端点"集合 —— */
+const highlightProps = computed(() => {
+  if (selected.kind !== 'line') return new Set()
+  const ln = mappingLines.value.find(x => x.key === selected.id)
+  return new Set(ln ? [ln.propId] : [])
+})
+const highlightFields = computed(() => {
+  if (selected.kind !== 'line') return new Set()
+  const ln = mappingLines.value.find(x => x.key === selected.id)
+  return new Set(ln ? [`${ln.dsId}:${ln.field}`] : [])
+})
 </script>
 
 <style scoped>
@@ -560,6 +826,27 @@ function onExport() {
 .er-dot.is-no-map { opacity: .35; cursor: not-allowed; }
 .er-dot-out { margin-left: auto; }
 .er-dot-rel { width: 10px; height: 10px; background: #FF7D00; margin-left: 4px; }
+
+/* —— 模式光标 —— */
+.er-canvas.is-mode-select { cursor: default; }
+.er-canvas.is-mode-sort .er-prow { cursor: grab; }
+.er-canvas.is-mode-sort .er-prow:active { cursor: grabbing; }
+.er-canvas.is-mode-connect .er-dot-out:not(.is-no-map) { cursor: crosshair; }
+.er-canvas.is-mode-connect .er-dot-out:not(.is-no-map):hover { transform: scale(1.4); box-shadow: 0 0 0 4px rgba(22,119,255,0.18); }
+.er-canvas.is-mode-delete .er-line { cursor: pointer; }
+.er-canvas.is-mode-delete .er-svg .er-line:hover { stroke-width: 4 !important; }
+
+/* —— 选中映射线时双端高亮 (浅蓝) —— */
+.er-prow.is-hl, .er-frow.is-hl { background: #e6f7ff !important; }
+
+/* —— 排序模式拖拽插入指示 —— */
+.er-sort-hint {
+  position: absolute; left: 6px; right: 6px; top: -1px;
+  height: 2px; background: var(--bl-primary); border-radius: 1px;
+  pointer-events: none;
+}
+.er-prow { position: relative; }
+.er-prow.is-sortable { background-image: linear-gradient(to right, transparent 60%, rgba(22,119,255,0.04)); }
 
 /* 选中信息卡片 */
 .er-sel-card {

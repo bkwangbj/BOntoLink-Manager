@@ -241,6 +241,7 @@
             <div v-for="g in tabGroups" :key="g.key" class="ot-tab-group">
               <div class="ot-tab-group-hd" @click="toggleGroup(g.key)">
                 <span class="ot-tab-group-chev" :class="!collapsedGroups.has(g.key) && 'is-open'" v-html="BL.icon('chevronRight', 11)"></span>
+                <span class="ot-tab-group-ic" :style="{ background: g.color }" v-html="BL.icon(g.icon, 11, '#fff')"></span>
                 <span>{{ g.label }}</span>
               </div>
               <div v-show="!collapsedGroups.has(g.key)" class="ot-tab-group-body">
@@ -262,7 +263,7 @@
 
             <!-- 属性（行内编辑） -->
             <div v-else-if="drawerTab === 'props'" class="ot-tab-content">
-              <TabProps :class-id="selected?.id" />
+              <TabProps :class-id="selected?.id" :class-name="selected?.display_name || selected?.api_name || ''" @navigate-tab="drawerTab = $event" />
             </div>
 
             <!-- 值类型（占位） -->
@@ -702,18 +703,18 @@ async function onClassSaved(id) {
 
 /* ===== TAB 分组结构（与对象类型设计文档严格一致） ===== */
 const tabGroups = [
-  { key: 'basic', label: '基础信息', tabs: [
+  { key: 'basic', label: '基础信息', icon: 'fileText', color: '#1677ff', tabs: [
     { key: 'overview', label: '概览' },
     { key: 'props', label: '属性' },
     { key: 'valueType', label: '值类型' }
   ]},
-  { key: 'rel', label: '关联关系', tabs: [
+  { key: 'rel', label: '关联关系', icon: 'link', color: '#FF7D00', tabs: [
     { key: 'tables', label: '关联表' },
     { key: 'links', label: '关系' },
     { key: 'hierarchy', label: '类层次' },
     { key: 'graph', label: '对象图谱' }
   ]},
-  { key: 'rule', label: '规则约束', tabs: [
+  { key: 'rule', label: '规则约束', icon: 'sliders', color: '#722ED1', tabs: [
     { key: 'equiv', label: '等价类' },
     { key: 'disjoint', label: '不相交类' },
     { key: 'disjointUnion', label: '互斥并集类' },
@@ -721,7 +722,7 @@ const tabGroups = [
     { key: 'propDisjoint', label: '不相交属性' },
     { key: 'iface', label: '接口' }
   ]},
-  { key: 'biz', label: '业务应用', tabs: [
+  { key: 'biz', label: '业务应用', icon: 'database', color: '#00B42A', tabs: [
     { key: 'actions', label: '动作' },
     { key: 'fn', label: '函数' },
     { key: 'refBy', label: '被引用' },
@@ -969,7 +970,7 @@ onMounted(async () => {
 .ot-drawer-hd {
   flex-shrink: 0;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 14px;
+  padding: 10px 10px;
   border-bottom: 1px solid var(--bl-divider); gap: 8px;
 }
 .ot-drawer-hd-l { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
@@ -1000,6 +1001,11 @@ onMounted(async () => {
   color: var(--bl-text-3);
 }
 .ot-tab-group-chev.is-open { transform: rotate(90deg); color: var(--bl-primary); }
+/* 分组示意图标 (彩色色块,使 4 个分组在视觉上更可区分) */
+.ot-tab-group-ic {
+  width: 18px; height: 18px; border-radius: 4px; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+}
 .ot-tab-group-body { display: flex; flex-direction: column; padding: 2px 0 4px; }
 .ot-tab-item {
   text-align: left; padding: 7px 12px 7px 26px;
@@ -1010,7 +1016,7 @@ onMounted(async () => {
 .ot-tab-item:hover { background: var(--bl-bg-1); color: var(--bl-text-1); }
 .ot-tab-item.is-on { background: var(--bl-bg-1); color: var(--bl-primary); font-weight: 500; border-left-color: var(--bl-primary); }
 
-.ot-tab-pane { overflow: auto; padding: 16px 20px; min-width: 0; }
+.ot-tab-pane { overflow: auto; padding: 10px 10px; min-width: 0; }
 /* height:100% 让该容器具有"确定的"高度,使下方 .tab-props 的 height:100% / .pp-canvas 的 flex:1 能正确解析 */
 .ot-tab-content { display: flex; flex-direction: column; gap: 8px; height: 100%; }
 .ot-tab-toolbar { display: flex; align-items: center; gap: 8px; padding-bottom: 12px; }

@@ -220,6 +220,10 @@ public interface ClassMetaMapper {
     @Delete("DELETE FROM ont_class_property WHERE id = #{id}")
     int deleteClassProperty(@Param("id") String id);
 
+    /** 仅更新单条属性的 sort 值 (用于拖拽排序) */
+    @Update("UPDATE ont_class_property SET sort = #{sort}, update_time = datetime('now','localtime') WHERE id = #{id}")
+    int updateClassPropertySort(@Param("id") String id, @Param("sort") int sort);
+
     /* ============ ont_class extended fields (类表达式 / 其他) ============ */
 
     @Update("""

@@ -97,6 +97,7 @@ export const classMetaApi = {
   addProp:           (classId, data) => http.post(`/class-meta/classes/${classId}/properties`, data),
   updateProp:        (propId, data) => http.put(`/class-meta/properties/${propId}`, data),
   removeProp:        (propId) => http.delete(`/class-meta/properties/${propId}`),
+  reorderProps:      (classId, ids) => http.post(`/class-meta/classes/${classId}/properties/reorder`, { ids }),
 
   updateClass:       (id, data) => http.put(`/class-meta/classes/${id}`, data),
 }

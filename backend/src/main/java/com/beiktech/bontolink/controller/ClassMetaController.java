@@ -219,6 +219,22 @@ public class ClassMetaController {
         return R.ok();
     }
 
+    /**
+     * 拖拽排序: 接收类下属性 id 数组,按数组顺序设置每条的 sort 值 (0,1,2,...).
+     * 请求体: { "ids": ["prop-1","prop-2", ...] }
+     */
+    @PostMapping("/classes/{classId}/properties/reorder")
+    @SuppressWarnings("unchecked")
+    public R<?> reorderClassProps(@PathVariable String classId, @RequestBody Map<String, Object> body) {
+        List<String> ids = (List<String>) body.get("ids");
+        if (ids == null || ids.isEmpty()) return R.error(400, "ids 必填");
+        int i = 0;
+        for (String pid : ids) {
+            mapper.updateClassPropertySort(pid, i++);
+        }
+        return R.ok();
+    }
+
     /* ============ 类基础保存 (概览各 sub-tab) ============ */
 
     @PutMapping("/classes/{id}")
