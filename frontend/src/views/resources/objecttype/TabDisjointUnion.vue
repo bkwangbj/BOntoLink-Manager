@@ -1,13 +1,14 @@
 <template>
   <div class="tab-du">
-    <!-- 顶部说明 -->
+    <!-- 顶部: 单行布局 (标题 + ? + 副标题 / 右侧操作),参考等价属性 -->
     <div class="du-head">
-      <div>
-        <div class="du-title">互斥并集</div>
-        <div class="bl-muted" style="font-size:12px">子类互不重叠，合并完整覆盖总类</div>
+      <div class="du-head-l">
+        <span class="du-title">互斥并集</span>
+        <span class="bl-help" title="子类互不重叠,合并完整覆盖总类" v-html="BL.icon('help', 14)"></span>
+        <span class="du-subtitle bl-muted">子类互不重叠,合并完整覆盖总类</span>
       </div>
       <div class="bl-row" style="gap:8px">
-        <button class="bl-btn bl-btn-sm bl-btn-danger" :disabled="!rows.length" @click="clearAll">
+        <button class="bl-btn bl-btn-sm du-danger-btn" :disabled="!rows.length" @click="clearAll">
           <span v-html="BL.icon('trash', 12)"></span><span style="margin-left:4px">清空全部</span>
         </button>
         <button class="bl-btn bl-btn-sm" :disabled="!rows.length" @click="batchDisable">
@@ -203,14 +204,36 @@ async function batchDisable() {
 </script>
 
 <style scoped>
-.tab-du { display: flex; flex-direction: column; gap: 10px; }
-.du-head { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px;
-  background: var(--bl-bg-2); border-radius: 6px; }
-.du-title { font-size: 14px; font-weight: 600; }
+.tab-du {
+  display: flex; flex-direction: column; gap: 10px;
+  height: 100%; min-height: 0;
+}
+/* 顶部: 单行紧凑布局 (与等价属性头部风格一致) */
+.du-head {
+  flex-shrink: 0;
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
 
-.du-body { display: grid; grid-template-columns: 280px 60px 1fr; gap: 0;
-  border: 1px solid var(--bl-border); border-radius: 6px; overflow: hidden; min-height: 360px; background: var(--bl-bg-1); }
-.du-pane { display: flex; flex-direction: column; min-width: 0; }
+  background: #fff; border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.du-head-l { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+.du-title { font-size: 14px; font-weight: 600; color: #333; }
+.bl-help { color: #999; cursor: help; display: inline-flex; }
+.bl-help:hover { color: var(--bl-primary); }
+.du-subtitle { font-size: 12px; color: #999; }
+/* 危险按钮: 白底红框 (与属性列表 / 等价属性 一致) */
+.du-danger-btn { background: #fff; border: 1px solid #f5222d; color: #f5222d; }
+.du-danger-btn:not(:disabled):hover { background: #fff1f0; }
+.du-danger-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+/* 主体: 占满 toolbar 之下的全部剩余空间 */
+.du-body {
+  flex: 1; min-height: 0;
+  display: grid; grid-template-columns: 280px 60px 1fr; gap: 0;
+  border: 1px solid var(--bl-border); border-radius: 6px;
+  overflow: hidden; background: var(--bl-bg-1);
+}
+.du-pane { display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
 .du-pane-hd { display: flex; justify-content: space-between; align-items: center; gap: 8px;
   padding: 8px 12px; background: #fafafa; border-bottom: 1px solid var(--bl-divider); }
 .du-pane-title { font-size: 13px; font-weight: 600; }

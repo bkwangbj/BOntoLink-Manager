@@ -90,10 +90,10 @@
             </div>
           </section>
 
-          <!-- 2. 表映射 -->
+          <!-- 2. 表映射 (单列三行,避免输入框过窄) -->
           <section ref="sec_mapping" data-sec="mapping" v-if="form.prop_type !== 'annotation' && !form.is_derived">
             <div class="pd-sec">表映射</div>
-            <div class="pd-grid-3">
+            <div class="pd-grid-1">
               <FieldRow label="数据源" inline>
                 <select class="bl-input" v-model="form.class_ds_id">
                   <option value="">— 无 —</option>
@@ -337,19 +337,20 @@ const typeClass = computed(() => {
   return 'is-data'
 })
 
-/* —— 打开时载入 —— */
-watch(() => props.open, async (v) => {
-  if (!v) return
+/* —— 重新装载: 打开时 OR 切换 property 时 —— */
+async function reloadForm() {
+  if (!props.open) return
   // 初始化表单
   Object.assign(form, defaultForm())
   if (props.property) Object.assign(form, props.property)
-  // 加载值类型 / 类候选 / 等价 / 互斥
+  // 加载值类型 / 类候选 (仅首次)
   if (!valueTypeOptions.value.length) {
     valueTypeOptions.value = (await valueTypeApi.list().catch(() => [])).filter(v => v.status === 1)
   }
   if (!classCandidates.value.length) {
     classCandidates.value = await classMetaApi.candidates().catch(() => [])
   }
+  // 加载当前属性的等价 / 互斥关系
   if (props.classId && !isNew.value) {
     const all = await classMetaApi.listPropEquiv(props.classId).catch(() => [])
     equivList.value = all.filter(r => r.property_id === form.id || r.ref_property_id === form.id)
@@ -359,8 +360,13 @@ watch(() => props.open, async (v) => {
     equivList.value = []; disjointList.value = []
   }
   activeNav.value = 'basic'
+  owlWarn.value = ''
   nextTick(() => paneRef.value?.scrollTo({ top: 0 }))
-})
+}
+/* 打开 (false → true) 时载入 */
+watch(() => props.open, (v) => { if (v) reloadForm() })
+/* 抽屉已打开,切换到不同属性时也要刷新内容 (按 id 监听,避免引用相同但内部已改) */
+watch(() => props.property?.id, () => { if (props.open) reloadForm() })
 
 /* —— 左导航 / 滚动联动 —— */
 const activeNav = ref('basic')

@@ -248,7 +248,8 @@
                 <button v-for="t in g.tabs" :key="t.key"
                         :class="['ot-tab-item', drawerTab === t.key && 'is-on']"
                         @click="drawerTab = t.key">
-                  {{ t.label }}
+                  <span class="ot-tab-label">{{ t.label }}</span>
+                  <span v-if="tabCount(t.key) !== null" class="ot-tab-cnt">{{ tabCount(t.key) }}</span>
                 </button>
               </div>
             </div>
@@ -455,7 +456,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watch, h } from 'vue'
 import { BL } from '@/lib/bl.js'
-import { resourceApi, categoryApi } from '@/api'
+import { resourceApi, categoryApi, classMetaApi } from '@/api'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import TabOverview from '@/views/resources/objecttype/TabOverview.vue'
 import TabProps from '@/views/resources/objecttype/TabProps.vue'
@@ -693,6 +694,43 @@ async function loadDetail(id) {
   } catch {
     detail.value = {}
   }
+  await loadTabCounts(id)
+}
+
+/* —— 左导航每个 tab 的数量徽标 —— */
+const tabCounts = ref({})
+async function loadTabCounts(id) {
+  if (!id) { tabCounts.value = {}; return }
+  const d = detail.value || {}
+  const base = {
+    props:    d.propTotal ?? selected.value?.propTotal ?? (d.properties || []).length,
+    tables:   (d.classDatasources || []).length,
+    links:    d.linkCount ?? (d.links || []).length,
+    hierarchy: selected.value?.childCount ?? 0,
+    iface:    d.interfaceCount ?? (d.interfaces || []).length,
+    actions:  d.actionCount ?? (d.actions || []).length,
+    ds:       (d.classDatasources || []).length || (d.datasources || []).length
+  }
+  // 规则约束 + 业务应用: 并发加载
+  try {
+    const [equiv, disjoint, disjointUnion, propEquiv, propDisjoint] = await Promise.all([
+      classMetaApi.listGroup(id, 'equivalent').catch(() => []),
+      classMetaApi.listGroup(id, 'disjoint').catch(() => []),
+      classMetaApi.listDisjointUnion(id).catch(() => []),
+      classMetaApi.listPropEquiv(id).catch(() => []),
+      classMetaApi.listPropDisjoint(id).catch(() => [])
+    ])
+    base.equiv         = equiv.length
+    base.disjoint      = disjoint.length
+    base.disjointUnion = disjointUnion.length
+    base.propEquiv     = propEquiv.length
+    base.propDisjoint  = propDisjoint.length
+  } catch {}
+  tabCounts.value = base
+}
+function tabCount(k) {
+  const n = tabCounts.value[k]
+  return (typeof n === 'number' && n > 0) ? n : null
 }
 
 /* 概览保存后刷新详情 + 列表 */
@@ -1006,20 +1044,31 @@ onMounted(async () => {
   width: 18px; height: 18px; border-radius: 4px; flex-shrink: 0;
   display: inline-flex; align-items: center; justify-content: center;
 }
-.ot-tab-group-body { display: flex; flex-direction: column; padding: 2px 0 4px; }
+.ot-tab-group-body { display: flex; flex-direction: column; padding: 4px 8px 6px; gap: 1px; }
 .ot-tab-item {
-  text-align: left; padding: 7px 12px 7px 26px;
+  text-align: left; padding: 7px 10px 7px 18px;
   border: 0; background: transparent; cursor: pointer;
   font-size: var(--bl-fs-13); color: var(--bl-text-2);
   border-left: 3px solid transparent;
+  border-radius: 4px;
+  display: flex; align-items: center; gap: 6px;
+}
+.ot-tab-label { flex: 1; min-width: 0; }
+.ot-tab-cnt {
+  font-size: 11px; color: #999;
+  background: var(--bl-bg-2); border-radius: 9px;
+  padding: 0 7px; min-width: 18px; text-align: center;
+  flex-shrink: 0;
 }
 .ot-tab-item:hover { background: var(--bl-bg-1); color: var(--bl-text-1); }
+.ot-tab-item:hover .ot-tab-cnt { background: #fff; color: var(--bl-text-2); }
 .ot-tab-item.is-on { background: var(--bl-bg-1); color: var(--bl-primary); font-weight: 500; border-left-color: var(--bl-primary); }
+.ot-tab-item.is-on .ot-tab-cnt { background: var(--bl-primary-soft); color: var(--bl-primary); }
 
 .ot-tab-pane { overflow: auto; padding: 10px 10px; min-width: 0; }
 /* height:100% 让该容器具有"确定的"高度,使下方 .tab-props 的 height:100% / .pp-canvas 的 flex:1 能正确解析 */
 .ot-tab-content { display: flex; flex-direction: column; gap: 8px; height: 100%; }
-.ot-tab-toolbar { display: flex; align-items: center; gap: 8px; padding-bottom: 12px; }
+.ot-tab-toolbar { display: flex; align-items: center; gap: 8px;  }
 .ot-section-title {
   font-size: var(--bl-fs-13); font-weight: 600; color: var(--bl-text-2);
   padding: 12px 0 6px; border-bottom: 1px solid var(--bl-divider); margin-bottom: 8px;

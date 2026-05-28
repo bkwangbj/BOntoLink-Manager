@@ -27,23 +27,35 @@
       <div class="ov-flags">
         <div class="flag-grp">
           <span class="flag-lbl">顶层类</span>
-          <button :class="['flag-btn', form.is_thing===1 && 'is-on']" @click="form.is_thing = form.is_thing===1?0:1">是</button>
-          <button :class="['flag-btn', form.is_thing!==1 && 'is-on']" @click="form.is_thing = 0">否</button>
+          <label class="ov-switch">
+            <input type="checkbox" :checked="form.is_thing===1" @change="form.is_thing = $event.target.checked ? 1 : 0" />
+            <span class="ov-switch-slider"></span>
+          </label>
+          <span :class="['ov-switch-tag', form.is_thing===1 ? 'is-on' : 'is-off']">{{ form.is_thing===1 ? '是' : '否' }}</span>
         </div>
         <div class="flag-grp">
           <span class="flag-lbl">底层类</span>
-          <button :class="['flag-btn', form.is_nothing===1 && 'is-on']" @click="form.is_nothing = form.is_nothing===1?0:1">是</button>
-          <button :class="['flag-btn', form.is_nothing!==1 && 'is-on']" @click="form.is_nothing = 0">否</button>
+          <label class="ov-switch">
+            <input type="checkbox" :checked="form.is_nothing===1" @change="form.is_nothing = $event.target.checked ? 1 : 0" />
+            <span class="ov-switch-slider"></span>
+          </label>
+          <span :class="['ov-switch-tag', form.is_nothing===1 ? 'is-on' : 'is-off']">{{ form.is_nothing===1 ? '是' : '否' }}</span>
         </div>
         <div class="flag-grp">
           <span class="flag-lbl">公共类</span>
-          <button :class="['flag-btn', form.is_common===1 && 'is-on']" @click="form.is_common = form.is_common===1?0:1">是</button>
-          <button :class="['flag-btn', form.is_common!==1 && 'is-on']" @click="form.is_common = 0">否</button>
+          <label class="ov-switch">
+            <input type="checkbox" :checked="form.is_common===1" @change="form.is_common = $event.target.checked ? 1 : 0" />
+            <span class="ov-switch-slider"></span>
+          </label>
+          <span :class="['ov-switch-tag', form.is_common===1 ? 'is-on' : 'is-off']">{{ form.is_common===1 ? '是' : '否' }}</span>
         </div>
         <div class="flag-grp">
           <span class="flag-lbl">启用状态</span>
-          <button :class="['flag-btn', form.status===1 && 'is-on']" @click="form.status = 1">启用</button>
-          <button :class="['flag-btn', form.status===0 && 'is-on']" @click="form.status = 0">禁用</button>
+          <label class="ov-switch">
+            <input type="checkbox" :checked="form.status===1" @change="form.status = $event.target.checked ? 1 : 0" />
+            <span class="ov-switch-slider"></span>
+          </label>
+          <span :class="['ov-switch-tag', form.status===1 ? 'is-on' : 'is-off']">{{ form.status===1 ? '启用' : '禁用' }}</span>
         </div>
       </div>
     </div>
@@ -177,9 +189,21 @@ async function copy(t) {
 <style scoped>
 .tab-overview { display: flex; flex-direction: column; gap: 12px; }
 
-.ov-tabs { display: flex; border-bottom: 1px solid var(--bl-divider); position: sticky; top: 0; background: var(--bl-bg-1); z-index: 1; }
-.ov-tab { padding: 8px 14px; border: 0; background: transparent; cursor: pointer;
-  color: var(--bl-text-2); font-size: 13px; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.ov-tabs {
+  display: flex; gap: 2px;
+  border-bottom: 1px solid var(--bl-divider);
+  position: sticky; top: 0; background: var(--bl-bg-1); z-index: 1;
+  height: 30px;
+}
+.ov-tab {
+  padding: 0 14px; height: 30px;
+  border: 0; background: transparent; cursor: pointer;
+  color: var(--bl-text-2); font-size: 12.5px;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  display: inline-flex; align-items: center;
+  line-height: 1;
+}
+.ov-tab:hover { color: var(--bl-text-1); }
 .ov-tab.is-on { color: var(--bl-primary); border-color: var(--bl-primary); font-weight: 500; }
 
 .ov-form { display: flex; flex-direction: column; gap: 6px; }
@@ -189,12 +213,28 @@ async function copy(t) {
 .ov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 16px; }
 
 .ov-flags { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.flag-grp { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px;
+.flag-grp { display: inline-flex; align-items: center; gap: 10px; padding: 8px 12px;
   background: var(--bl-bg-2); border-radius: 4px; }
-.flag-lbl { font-size: 12px; color: var(--bl-text-3); margin-right: 4px; min-width: 60px; }
-.flag-btn { height: 24px; padding: 0 10px; border: 1px solid var(--bl-border);
-  background: var(--bl-bg-1); border-radius: 3px; font-size: 12px; cursor: pointer; color: var(--bl-text-2); }
-.flag-btn.is-on { border-color: var(--bl-primary); background: var(--bl-primary-soft); color: var(--bl-primary); font-weight: 500; }
+.flag-lbl { font-size: 12px; color: var(--bl-text-3); min-width: 60px; }
+
+/* 开关键 (统一替代之前的二选一块状按钮) */
+.ov-switch { position: relative; display: inline-block; width: 36px; height: 18px; flex-shrink: 0; }
+.ov-switch input { opacity: 0; width: 0; height: 0; }
+.ov-switch-slider {
+  position: absolute; cursor: pointer; inset: 0;
+  background: #cccccc; border-radius: 999px; transition: background-color .15s;
+}
+.ov-switch-slider::before {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 14px; height: 14px; background: #fff; border-radius: 50%;
+  transition: transform .15s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.ov-switch input:checked + .ov-switch-slider { background: var(--bl-primary); }
+.ov-switch input:checked + .ov-switch-slider::before { transform: translateX(18px); }
+
+.ov-switch-tag { font-size: 12px; font-weight: 500; min-width: 28px; }
+.ov-switch-tag.is-on  { color: var(--bl-primary); }
+.ov-switch-tag.is-off { color: var(--bl-text-3); }
 
 .expr-types { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
 .expr-btn { display: inline-flex; align-items: center; padding: 6px 12px;
