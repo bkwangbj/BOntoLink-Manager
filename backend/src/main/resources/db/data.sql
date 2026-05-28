@@ -397,10 +397,17 @@ INSERT INTO ont_property_disjoint(id, class_id1, prop_id1, class_id2, prop_id2, 
  'class-00000000-0000-0000-0000-000000000001','cp-4',
  1,'示例：经度与纬度作为独立位置维度，互斥演示');
 
--- 对象-数据集关联 (主表 + 补充表)
-INSERT INTO ont_class_ds(id, class_id, ds_code, physical_table, rel_type, alias, pk_keys, join_on_keys, join_type, sort, status) VALUES
-('class-ds-01','class-00000000-0000-0000-0000-000000000001','water_main_db','t_hydrology_station',1,'main','station_code',NULL,'LEFT',1,1),
-('class-ds-02','class-00000000-0000-0000-0000-000000000001','water_mongo','c_station_observation',2,'s1',NULL,'station_code','LEFT',2,1);
+-- 对象-数据集关联 (主表 + 2 个补充表),包含完整物理字段清单 (用于关系图画布展示未映射字段)
+INSERT INTO ont_class_ds(id, class_id, ds_code, physical_table, table_label, rel_type, alias, pk_keys, join_on_keys, join_type, physical_fields, sort, status) VALUES
+('class-ds-01','class-00000000-0000-0000-0000-000000000001','water_main_db','t_hydrology_station','测站主表',1,'main','station_code',NULL,'LEFT',
+ '[{"name":"station_code","data_type":"string","is_pk":1,"is_fk":0},{"name":"station_name","data_type":"string","is_pk":0,"is_fk":0},{"name":"lng","data_type":"decimal","is_pk":0,"is_fk":0},{"name":"lat","data_type":"decimal","is_pk":0,"is_fk":0},{"name":"region_code","data_type":"string","is_pk":0,"is_fk":1},{"name":"river_id","data_type":"string","is_pk":0,"is_fk":1},{"name":"build_year","data_type":"integer","is_pk":0,"is_fk":0},{"name":"is_active","data_type":"boolean","is_pk":0,"is_fk":0}]',
+ 1,1),
+('class-ds-02','class-00000000-0000-0000-0000-000000000001','water_mongo','c_station_observation','测站观测补表',2,'s1',NULL,'station_code','LEFT',
+ '[{"name":"station_code","data_type":"string","is_pk":0,"is_fk":1},{"name":"observe_time","data_type":"datetime","is_pk":0,"is_fk":0},{"name":"water_level","data_type":"decimal","is_pk":0,"is_fk":0},{"name":"flow_rate","data_type":"decimal","is_pk":0,"is_fk":0},{"name":"temperature","data_type":"decimal","is_pk":0,"is_fk":0}]',
+ 2,1),
+('class-ds-03','class-00000000-0000-0000-0000-000000000001','water_main_db','t_station_river_link','测站-河流关系表',2,'s2',NULL,'station_code','INNER',
+ '[{"name":"station_code","data_type":"string","is_pk":0,"is_fk":1},{"name":"river_name","data_type":"string","is_pk":0,"is_fk":0},{"name":"river_section","data_type":"string","is_pk":0,"is_fk":0},{"name":"distance_to_estuary","data_type":"decimal","is_pk":0,"is_fk":0}]',
+ 3,1);
 
 -- 补全部分类属性的扩展字段（prop_type / 物理映射 / OWL 特性 / XSD 约束）
 UPDATE ont_class_property SET prop_type='data', prop_code='station_code', is_key=1, is_required=1,
@@ -415,8 +422,21 @@ UPDATE ont_class_property SET prop_type='data', prop_code='longitude',
 UPDATE ont_class_property SET prop_type='data', prop_code='latitude',
   physical_table='t_hydrology_station', physical_column='lat',
   xsd_min_inclusive='-90', xsd_max_inclusive='90', owl_functional=1 WHERE id='cp-4';
+-- cp-5 仍归属 River 类型,保持原映射 (用于跨类关系)
 UPDATE ont_class_property SET prop_type='data', prop_code='river_name', is_key=1, is_required=1,
   physical_table='t_river', physical_column='name' WHERE id='cp-5';
+-- 补齐 cp-1..cp-4 的 class_ds_id (HydrologyStation 主表)
+UPDATE ont_class_property SET class_ds_id='class-ds-01' WHERE id IN ('cp-1','cp-2','cp-3','cp-4');
+
+-- 给 HydrologyStation 再补两条属性,使关系图覆盖到 s1 / s2 补充表
+INSERT INTO ont_class_property(id, rid, class_id, api_name, prop_code, prop_type, data_type, display_name, rdfs_label,
+    is_required, is_key, class_ds_id, physical_table, physical_column, sort) VALUES
+('cp-6','ri.ont.class.property.cp-6','class-00000000-0000-0000-0000-000000000001',
+  'waterLevel','water_level','data','decimal','水位','waterLevel',
+  0, 0, 'class-ds-02', 'c_station_observation', 'water_level', 6),
+('cp-7','ri.ont.class.property.cp-7','class-00000000-0000-0000-0000-000000000001',
+  'affiliatedRiverName','river_name','data','string','所属河流','affiliatedRiverName',
+  0, 0, 'class-ds-03', 't_station_river_link', 'river_name', 7);
 
 -- ============================================================
 -- 枚举类型 + 值类型 + 属性格式化 mock 数据

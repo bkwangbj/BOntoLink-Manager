@@ -982,17 +982,25 @@ onMounted(async () => {
   background: var(--bl-bg-2); border-right: 1px solid var(--bl-divider);
   overflow: auto; padding: 6px 0;
 }
-.ot-tab-group { padding: 4px 0; }
+.ot-tab-group { padding: 0; }
+/* 分组之间用顶部分隔线区分 (无左侧竖条) */
+.ot-tab-group + .ot-tab-group { margin-top: 2px; border-top: 1px solid var(--bl-divider); }
 .ot-tab-group-hd {
-  display: flex; align-items: center; gap: 4px;
-  padding: 6px 12px; cursor: pointer;
-  font-size: var(--bl-fs-12); font-weight: 600; color: var(--bl-text-3);
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 12px; cursor: pointer;
+  font-size: var(--bl-fs-12); font-weight: 700;
+  color: var(--bl-text-1);
+  background: #eef2f7;
+  letter-spacing: 0.3px;
   user-select: none;
 }
-.ot-tab-group-hd:hover { color: var(--bl-text-1); }
-.ot-tab-group-chev { display: inline-flex; transition: transform .15s; }
-.ot-tab-group-chev.is-open { transform: rotate(90deg); }
-.ot-tab-group-body { display: flex; flex-direction: column; }
+.ot-tab-group-hd:hover { background: #e3eaf3; }
+.ot-tab-group-chev {
+  display: inline-flex; transition: transform .15s;
+  color: var(--bl-text-3);
+}
+.ot-tab-group-chev.is-open { transform: rotate(90deg); color: var(--bl-primary); }
+.ot-tab-group-body { display: flex; flex-direction: column; padding: 2px 0 4px; }
 .ot-tab-item {
   text-align: left; padding: 7px 12px 7px 26px;
   border: 0; background: transparent; cursor: pointer;
@@ -1003,7 +1011,8 @@ onMounted(async () => {
 .ot-tab-item.is-on { background: var(--bl-bg-1); color: var(--bl-primary); font-weight: 500; border-left-color: var(--bl-primary); }
 
 .ot-tab-pane { overflow: auto; padding: 16px 20px; min-width: 0; }
-.ot-tab-content { display: flex; flex-direction: column; gap: 8px; }
+/* height:100% 让该容器具有"确定的"高度,使下方 .tab-props 的 height:100% / .pp-canvas 的 flex:1 能正确解析 */
+.ot-tab-content { display: flex; flex-direction: column; gap: 8px; height: 100%; }
 .ot-tab-toolbar { display: flex; align-items: center; gap: 8px; padding-bottom: 12px; }
 .ot-section-title {
   font-size: var(--bl-fs-13); font-weight: 600; color: var(--bl-text-2);

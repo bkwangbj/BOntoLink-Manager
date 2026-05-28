@@ -1,5 +1,20 @@
 <template>
   <div class="tab-props">
+    <!-- 子页签: 属性列表 / 关系图 (per spec 1.1.1.1.1.1.1.3 总体布局: 顶部为双页签导航) -->
+    <div class="pp-subtabs">
+      <button :class="['pp-stab', subTab==='list' && 'is-on']" @click="subTab='list'">
+        <span v-html="BL.icon('list', 13)"></span><span style="margin-left:4px">属性列表</span>
+      </button>
+      <button :class="['pp-stab', subTab==='graph' && 'is-on']" @click="subTab='graph'">
+        <span v-html="BL.icon('link', 13)"></span><span style="margin-left:4px">关系图</span>
+      </button>
+    </div>
+
+    <!-- 关系图: ER 风格画布 -->
+    <TabPropsCanvas v-if="subTab==='graph'" :class-id="classId" class="pp-canvas" />
+
+    <!-- 属性列表 (原有视图) -->
+    <template v-if="subTab==='list'">
     <!-- 顶部工具栏 -->
     <div class="pp-toolbar">
       <div class="pp-filters">
@@ -145,6 +160,7 @@
       </table>
       <div v-if="!displayRows.length" class="bl-empty" style="padding:32px">暂无属性，点击「新增属性」添加</div>
     </div>
+    </template>
 
     <!-- 属性格式化弹窗 (单条 / 批量共用) -->
     <PropertyFormatModal v-model:open="fmtOpen"
@@ -161,8 +177,12 @@ import { ref, computed, watch } from 'vue'
 import { BL } from '@/lib/bl.js'
 import { classMetaApi, valueTypeApi, propertyFormatApi } from '@/api'
 import PropertyFormatModal from '@/components/PropertyFormatModal.vue'
+import TabPropsCanvas from './TabPropsCanvas.vue'
 
 const props = defineProps({ classId: { type: String, default: '' } })
+
+/* 子页签: 属性列表 / 关系图 — spec 1.1.1.1.1.1.1.3 */
+const subTab = ref('list')
 
 const rows = ref([])
 const checked = ref(new Set())
@@ -330,7 +350,34 @@ document.addEventListener('click', () => { addMenu.value = false })
 </script>
 
 <style scoped>
-.tab-props { display: flex; flex-direction: column; gap: 8px; }
+.tab-props {
+  display: flex; flex-direction: column; gap: 8px;
+  height: 100%; min-height: 500px;
+}
+
+/* 子页签: 属性列表 / 关系图 (紧凑型,降低占高) */
+.pp-subtabs {
+  display: flex; gap: 2px;
+  border-bottom: 1px solid var(--bl-divider);
+  height: 30px;
+}
+.pp-stab {
+  padding: 0 14px; height: 30px;
+  border: 0; background: transparent; cursor: pointer;
+  font-size: 12.5px; color: var(--bl-text-2);
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  display: inline-flex; align-items: center;
+  line-height: 1;
+}
+.pp-stab:hover { color: var(--bl-text-1); }
+.pp-stab.is-on { color: var(--bl-primary); border-color: var(--bl-primary); font-weight: 500; }
+/* 关系图画布: 占满子页签下方的全部剩余空间 */
+.pp-canvas {
+  flex: 1; min-height: 0;
+  border: 1px solid var(--bl-divider); border-radius: 6px;
+  overflow: hidden;
+}
+
 .pp-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
 .pp-filters { display: inline-flex; gap: 8px; align-items: center; }
 .pp-filters .bl-input { height: 30px; width: 140px; }

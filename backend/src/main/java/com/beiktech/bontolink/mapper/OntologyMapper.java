@@ -29,7 +29,13 @@ public interface OntologyMapper {
     @Select("SELECT id, api_name, display_name, color, icon FROM ont_class WHERE id IN (SELECT class_id FROM ont_biz_group_class WHERE category_code IS NOT NULL)")
     List<Map<String, Object>> listAllClassesLight();
 
-    @Select("SELECT id, class_id, api_name, data_type, display_name, is_primary, is_required FROM ont_class_property WHERE class_id = #{classId} ORDER BY id")
+    @Select("SELECT id, class_id, api_name, prop_code, prop_type, data_type, value_type, " +
+            "       display_name, rdfs_label, rdfs_comment, " +
+            "       is_primary, is_required, is_key, is_derived, " +
+            "       is_multi_valued_prop, is_range_constraint_prop, range_class_id, " +
+            "       class_ds_id, physical_table, physical_column, " +
+            "       sort, metadata " +
+            "  FROM ont_class_property WHERE class_id = #{classId} ORDER BY sort, id")
     List<Map<String, Object>> listProperties(@Param("classId") String classId);
 
     // 类计数（按命名空间 / 按分类编码）
@@ -150,6 +156,12 @@ public interface OntologyMapper {
     /** 同领域(category_code)的数据源数 — 暂用领域归属推算，待 ont_class_ds 落地后改成精确关联 */
     @Select("SELECT COUNT(*) FROM sys_data_source WHERE category_code = #{categoryCode}")
     int countDatasourcesByCategory(@Param("categoryCode") String categoryCode);
+
+    /** 对象类型挂接的物理数据集 (含物理字段 JSON) — 用于关系图画布 */
+    @Select("SELECT id, class_id, ds_code, physical_table, table_label, rel_type, alias, " +
+            "       pk_keys, join_on_keys, join_type, physical_fields, sort, status " +
+            "  FROM ont_class_ds WHERE class_id = #{id} ORDER BY rel_type, sort")
+    List<Map<String, Object>> listClassDatasources(@Param("id") String id);
 
     /** 子类数（按 parent_class_id；当前 schema 暂无该列，返回 0 即可，留接口） */
     @Select("SELECT 0")

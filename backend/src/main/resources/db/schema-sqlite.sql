@@ -245,11 +245,13 @@ CREATE TABLE IF NOT EXISTS ont_class_ds (
   class_id        TEXT NOT NULL,
   ds_code         TEXT,
   physical_table  TEXT,
+  table_label     TEXT,                          -- 表中文别名 (例: 测站主表)
   rel_type        INTEGER NOT NULL DEFAULT 1,    -- 1=主数据集 2=补充数据集
   alias           TEXT,                          -- main / s1 / s2 ...
   pk_keys         TEXT,                          -- 主表主键(逗号分隔)
   join_on_keys    TEXT,                          -- 补充表关联键(逗号分隔)
   join_type       TEXT DEFAULT 'LEFT',
+  physical_fields TEXT,                          -- JSON 数组: [{name,data_type,is_pk,is_fk}], 包含未映射字段
   sort            INTEGER NOT NULL DEFAULT 0,
   status          INTEGER NOT NULL DEFAULT 1,
   create_time     TEXT NOT NULL DEFAULT (datetime('now','localtime')),
@@ -442,6 +444,9 @@ ALTER TABLE ont_class_property ADD COLUMN sort            INTEGER NOT NULL DEFAU
 ALTER TABLE ont_class_property ADD COLUMN value_type      TEXT;
 
 ALTER TABLE ont_interface_property ADD COLUMN value_type TEXT;
+
+ALTER TABLE ont_class_ds ADD COLUMN table_label     TEXT;
+ALTER TABLE ont_class_ds ADD COLUMN physical_fields TEXT;
 
 -- =============================================================
 -- 属性格式化 (t_ont_property_format) — 与属性表 1:1 关联

@@ -4,6 +4,8 @@ import com.beiktech.bontolink.common.R;
 import com.beiktech.bontolink.mapper.BizCategoryMapper;
 import com.beiktech.bontolink.mapper.BizNamespaceMapper;
 import com.beiktech.bontolink.mapper.OntologyMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +21,8 @@ public class ResourceController {
     @Autowired private OntologyMapper ontologyMapper;
     @Autowired private BizCategoryMapper categoryMapper;
     @Autowired private BizNamespaceMapper namespaceMapper;
+
+    private static final ObjectMapper JSON = new ObjectMapper();
 
     @GetMapping("/discover/stats")
     public R<Map<String, Object>> discoverStats() {
@@ -98,6 +102,21 @@ public class ResourceController {
         String categoryCode = (String) info.get("category_code");
         info.put("datasources", categoryCode == null ? Collections.emptyList()
                 : ontologyMapper.listDatasourcesByCategory(categoryCode));
+        // 对象类型挂接的物理数据集 (用于关系图画布): 解析 physical_fields JSON 为对象列表
+        List<Map<String, Object>> classDs = ontologyMapper.listClassDatasources(id);
+        for (Map<String, Object> row : classDs) {
+            Object fields = row.get("physical_fields");
+            if (fields instanceof String && !((String) fields).isBlank()) {
+                try {
+                    row.put("physical_fields", JSON.readValue((String) fields, new TypeReference<List<Map<String, Object>>>() {}));
+                } catch (Exception ignored) {
+                    row.put("physical_fields", Collections.emptyList());
+                }
+            } else if (fields == null) {
+                row.put("physical_fields", Collections.emptyList());
+            }
+        }
+        info.put("classDatasources", classDs);
         info.put("propTotal", ontologyMapper.countPropertiesOfClass(id));
         info.put("propNormal", ontologyMapper.countNormalPropertiesOfClass(id));
         info.put("linkCount", ontologyMapper.countLinksOfClass(id));
