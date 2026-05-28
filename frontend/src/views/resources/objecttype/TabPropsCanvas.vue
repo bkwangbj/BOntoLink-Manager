@@ -9,8 +9,11 @@
           <span v-html="BL.icon(m.icon, 14)"></span>
         </button>
         <div class="er-tdiv"></div>
-        <button class="er-tbtn" title="新增辅助物理表" @click="onAddSupplement"><span v-html="BL.icon('plus', 14)"></span></button>
-        <button class="er-tbtn" title="清除所有映射" @click="onClearMappings"><span v-html="BL.icon('trash', 14)"></span></button>
+        <!-- 添加辅助表 (在画布中插入一个辅助表卡片) -->
+        <button class="er-tbtn" title="添加辅助表" @click="onAddSupplement"><span v-html="BL.icon('folderPlus', 14)"></span></button>
+        <!-- 清除所有映射 (scissors 区别于"删除模式"的 trash) -->
+        <button class="er-tbtn" title="清除所有映射" @click="onClearMappings"><span v-html="BL.icon('scissors', 14)"></span></button>
+        <!-- 重置布局 -->
         <button class="er-tbtn" title="重置布局 (R)" @click="onResetLayout"><span v-html="BL.icon('refresh', 14)"></span></button>
         <div class="er-tdiv"></div>
         <button class="er-tbtn" title="缩小 (Ctrl+-)" @click="zoomBy(-0.1)"><span style="font-weight:600">−</span></button>
@@ -19,7 +22,14 @@
         <button class="er-tbtn" title="重置缩放 (Ctrl+0)" @click="zoom = 1"><span v-html="BL.icon('search', 13)"></span></button>
         <div class="er-tdiv"></div>
         <button class="er-tbtn" :class="showGrid && 'is-on'" title="显示网格" @click="showGrid = !showGrid"><span v-html="BL.icon('grid', 14)"></span></button>
-        <button class="er-tbtn" title="导出 PNG" @click="onExport"><span v-html="BL.icon('inbox', 14)"></span></button>
+        <!-- 下载图片: 下载 (向下箭头) -->
+        <button class="er-tbtn" title="下载图片 (PNG)" @click="onExport"><span v-html="BL.icon('arrowDown', 14)"></span></button>
+        <div class="er-tdiv"></div>
+        <!-- 新增物理表: 文本标签按钮 +物理表 (spec §5 item 13) -->
+        <button class="er-tbtn er-tbtn-text" title="新增物理表 (创建新表 + 字段映射,不设置属性关联)" @click="onNewPhysicalTable">
+          <span v-html="BL.icon('plus', 12)"></span>
+          <span style="margin-left:4px">物理表</span>
+        </button>
       </div>
       <div class="er-status">
         <span class="er-mode-label">当前模式: <b>{{ currentModeLabel }}</b></span>
@@ -628,7 +638,15 @@ async function onClearMappings() {
 }
 
 function onAddSupplement() {
-  BL.info('新增辅助物理表: 需打开数据源/表选择对话框 (待联调). 当前可手动从数据库种子或通过对象详情的「数据源」tab 添加')
+  BL.info('添加辅助表: 需打开数据源/表选择对话框 (待联调). 当前可在对象详情的「数据源」tab 中添加')
+}
+
+/**
+ * 新增物理表 (spec §5 工具栏 item 13): 创建新表 + 字段, 不设置属性关联.
+ * 流程与"新增对象类型"类似,但仅写入 ont_class_ds 一条记录及其 physical_fields JSON.
+ */
+function onNewPhysicalTable() {
+  BL.info('新增物理表: 待联调 (打开表-字段定义对话框,保存到 ont_class_ds, rel_type=2,不设置属性映射)')
 }
 
 /* —— 中键拖拽平移画布 —— */
@@ -735,6 +753,11 @@ const highlightFields = computed(() => {
   color: var(--bl-text-2); transition: background-color .12s, color .12s;
 }
 .er-tbtn-wide { width: 52px; font-size: 12px; }
+/* 文本型工具按钮: 用于 "+物理表" */
+.er-tbtn-text {
+  width: auto; padding: 0 10px; font-size: 12px;
+  display: inline-flex; align-items: center;
+}
 .er-tbtn:hover { background: var(--bl-bg-1); color: var(--bl-primary); border-color: var(--bl-border); }
 .er-tbtn.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); border-color: var(--bl-primary); }
 .er-tdiv { width: 1px; height: 18px; background: var(--bl-divider); margin: 0 6px; }
