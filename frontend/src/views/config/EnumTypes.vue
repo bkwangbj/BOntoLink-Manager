@@ -23,8 +23,18 @@
       <!-- 左侧：分组 + 枚举树 -->
       <aside class="et-tree">
         <div class="et-tree-hd">
-          <span style="font-weight:600">分组 | 枚举</span>
-          <button class="bl-btn bl-btn-sm bl-btn-text" title="新建分组" @click="openCreateGroup()" v-html="BL.icon('plus', 12)"></button>
+          <span class="et-tree-title">枚举分组</span>
+          <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" :class="treeSearchOpen && 'is-on'" title="搜索分组 / 枚举" @click="toggleTreeSearch">
+            <span v-html="BL.icon('search', 12)"></span>
+          </button>
+          <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="新建分组" @click="openCreateGroup()">
+            <span v-html="BL.icon('plus', 12)"></span>
+          </button>
+        </div>
+        <div v-if="treeSearchOpen" class="et-tree-search">
+          <span class="et-tree-search-ic" v-html="BL.icon('search', 11)"></span>
+          <input ref="treeSearchInput" class="bl-input et-tree-search-input" v-model="treeQ" placeholder="过滤分组 / 枚举..." @keydown.esc="closeTreeSearch" />
+          <button v-if="treeQ" class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" @click="treeQ = ''" v-html="BL.icon('x', 10)"></button>
         </div>
         <div class="et-tree-list">
           <div :class="['et-row', !activeId && 'is-active']" @click="selectAll">
@@ -40,7 +50,7 @@
               <span class="et-count">{{ countInGroup(g.id) }}</span>
             </div>
             <template v-if="expanded.has(g.id)">
-              <div v-for="sg in childrenOf(g.id)" :key="sg.id"
+              <div v-for="sg in childrenOfFiltered(g.id)" :key="sg.id"
                    :class="['et-row et-subgroup', activeGroupId===sg.id && 'is-active']" @click="selectGroup(sg.id)">
                 <span class="et-pad"></span>
                 <span v-html="BL.icon('folder', 12)"></span>
@@ -63,11 +73,12 @@
       <section class="et-main">
         <!-- 类型列表(未选中具体枚举时) -->
         <template v-if="!current">
-          <div class="bl-card list-card">
+          <div class="list-card">
             <div class="list-scroll">
               <table class="bl-table et-table">
                 <thead>
                   <tr>
+                    <th class="t-center" style="width:36px"><input type="checkbox" :checked="allTypeChecked" @change="toggleTypeAll" /></th>
                     <th><span class="th-sort" @click="toggleTypeSort('name')">名称<span class="th-arrow">{{ typeSortArrow('name') }}</span></span></th>
                     <th><span class="th-sort" @click="toggleTypeSort('api')">API-NAME<span class="th-arrow">{{ typeSortArrow('api') }}</span></span></th>
                     <th><span class="th-sort" @click="toggleTypeSort('kind')">枚举类型<span class="th-arrow">{{ typeSortArrow('kind') }}</span></span></th>
@@ -80,6 +91,9 @@
                 </thead>
                 <tbody>
                   <tr v-for="e in filteredTypes" :key="e.id" @click="selectEnum(e)" class="et-trow">
+                    <td class="t-center" @click.stop>
+                      <input type="checkbox" :checked="typeChecked.has(e.id)" @change="toggleTypeCheck(e.id)" />
+                    </td>
                     <td>
                       <div class="bl-row" style="gap:6px;align-items:center">
                         <span class="enum-ic" :style="{ background: enumColor(e) }" v-html="BL.icon(enumIcon(e), 11, '#fff')"></span>
@@ -100,6 +114,27 @@
                 </tbody>
               </table>
               <div v-if="!filteredTypes.length" class="bl-empty" style="padding:48px">未匹配到枚举类型</div>
+            </div>
+            <!-- 底部: 选中提示 + 批量删除 (左) / 共 N 项 (右) -->
+            <div class="et-pager">
+              <div class="et-pager-l">
+                <template v-if="typeChecked.size">
+                  <span>已选 <b style="color:var(--bl-primary)">{{ typeChecked.size }}</b> 项</span>
+                  <button class="bl-btn bl-btn-sm et-del-btn" style="margin-left:8px" @click="batchRemoveTypes">
+                    <span v-html="BL.icon('trash', 12)"></span><span style="margin-left:4px">批量删除</span>
+                  </button>
+                  <button class="bl-btn bl-btn-sm et-ena-btn" style="margin-left:6px" @click="batchSetTypeStatus('active')">
+                    <span v-html="BL.icon('check', 12)"></span><span style="margin-left:4px">启用</span>
+                  </button>
+                  <button class="bl-btn bl-btn-sm et-dis-btn" style="margin-left:6px" @click="batchSetTypeStatus('inactive')">
+                    <span v-html="BL.icon('power', 12)"></span><span style="margin-left:4px">禁用</span>
+                  </button>
+                  <button class="bl-btn bl-btn-sm bl-btn-text et-clear-btn" style="margin-left:6px" @click="clearTypeSelection">取消选择</button>
+                </template>
+                <template v-else>
+                  共 {{ filteredTypes.length }} 项
+                </template>
+              </div>
             </div>
           </div>
         </template>
@@ -576,11 +611,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onBeforeUnmount, h } from 'vue'
+import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick, h } from 'vue'
 import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
-import { enumTypeApi } from '@/api'
+import { enumTypeApi, groupApi, groupRefApi } from '@/api'
 
 /* —— 数据 Tab 树节点 (递归) —— */
 const ItemTreeNode = {
@@ -657,15 +692,52 @@ const filteredRefs = computed(() => {
     .filter(Boolean).some(s => String(s).toLowerCase().includes(k)))
 })
 
-const topGroups = computed(() => groups.value.filter(g => !g.parent_id))
+/* —— 左侧树搜索 —— */
+const treeSearchOpen = ref(false)
+const treeQ = ref('')
+const treeSearchInput = ref(null)
+function toggleTreeSearch() {
+  treeSearchOpen.value = !treeSearchOpen.value
+  if (treeSearchOpen.value) nextTick(() => treeSearchInput.value?.focus())
+  else treeQ.value = ''
+}
+function closeTreeSearch() { treeSearchOpen.value = false; treeQ.value = '' }
+/* 用于左树过滤: 判断分组本身或其子枚举命中 */
+function groupMatchesQ(g) {
+  const k = treeQ.value.trim().toLowerCase()
+  if (!k) return true
+  if (String(g.group_name || '').toLowerCase().includes(k)) return true
+  // 子分组命中
+  if (childrenOf(g.id).some(sg => String(sg.group_name || '').toLowerCase().includes(k))) return true
+  // 子枚举命中
+  const allKids = new Set([g.id, ...childrenOf(g.id).map(c => c.id)])
+  return enumTypes.value.some(e => allKids.has(e.group_id)
+    && [e.rdfs_label, e.api_name].filter(Boolean).some(s => String(s).toLowerCase().includes(k)))
+}
+function enumMatchesQ(e) {
+  const k = treeQ.value.trim().toLowerCase()
+  if (!k) return true
+  return [e.rdfs_label, e.api_name].filter(Boolean).some(s => String(s).toLowerCase().includes(k))
+}
+
+const topGroups = computed(() => groups.value.filter(g => !g.parent_id && groupMatchesQ(g)))
 function childrenOf(id) { return groups.value.filter(g => g.parent_id === id) }
+function childrenOfFiltered(id) {
+  return groups.value.filter(g => g.parent_id === id && groupMatchesQ(g))
+}
 function countInGroup(id) {
   const allKids = new Set([id, ...childrenOf(id).map(c => c.id)])
   return enumTypes.value.filter(e => allKids.has(e.group_id)).length
 }
 function enumsInGroup(id) {
-  return enumTypes.value.filter(e => e.group_id === id)
+  return enumTypes.value.filter(e => e.group_id === id && enumMatchesQ(e))
 }
+/* 当搜索打开,自动展开有命中的分组 */
+watch(treeQ, (v) => {
+  if (!v) return
+  groups.value.forEach(g => { if (groupMatchesQ(g)) expanded.value.add(g.id) })
+  expanded.value = new Set(expanded.value)
+})
 
 /* —— 表头排序: 类型列表 —— */
 const typeSortKey = ref('')
@@ -762,8 +834,35 @@ function enumColor(e) {
 }
 
 async function loadAll() {
-  groups.value = await enumTypeApi.listGroups().catch(() => [])
-  enumTypes.value = await enumTypeApi.list().catch(() => [])
+  /* 分组现在来自统一表 ont_biz_group;枚举与分组的绑定来自 ont_biz_group_class with group_type='enum_types' */
+  const [bizGroups, refs, types] = await Promise.all([
+    groupApi.listAll().catch(() => []),     // 取全部 (含子级);旧 listByParent('') 不能匹配 parent_id IS NULL
+    groupRefApi.list('enum_types').catch(() => []),
+    enumTypeApi.list().catch(() => [])
+  ])
+  // 适配旧字段名 (Jackson 把 gName→gname, gSort→gsort)
+  const allGroups = (bizGroups || []).map(g => ({
+    id: g.id,
+    parent_id: g.parentId || g.parent_id || null,
+    group_name: g.gname || g.gName || g.g_name || g.group_name || '',
+    sort_num: g.gsort || g.gSort || g.g_sort || g.sort_num || 0,
+    category_code: g.categoryCode || g.category_code,
+    status: g.status || 'active'
+  }))
+  // 只保留与枚举类型相关的分组 (有 enum_types 引用的分组 + 其父级链)
+  const byId = new Map(allGroups.map(g => [g.id, g]))
+  const keep = new Set()
+  for (const r of (refs || [])) {
+    let cur = byId.get(r.group_id)
+    while (cur && !keep.has(cur.id)) {
+      keep.add(cur.id)
+      cur = cur.parent_id ? byId.get(cur.parent_id) : null
+    }
+  }
+  groups.value = allGroups.filter(g => keep.has(g.id))
+  // 把 group_id 注回 enum 类型 (前端继续用 e.group_id 渲染)
+  const map = new Map(); (refs || []).forEach(r => map.set(r.ref_id, r.group_id))
+  enumTypes.value = (types || []).map(t => ({ ...t, group_id: map.get(t.id) || null }))
   // 默认展开所有顶级
   expanded.value = new Set(topGroups.value.map(g => g.id))
 }
@@ -979,6 +1078,66 @@ async function removeType(e) {
   if (current.value && e.id === current.value.id) current.value = null
 }
 
+/* —— 类型列表批量选择 + 删除 —— */
+const typeChecked = ref(new Set())
+const allTypeChecked = computed(() =>
+  filteredTypes.value.length > 0 && filteredTypes.value.every(e => typeChecked.value.has(e.id))
+)
+function toggleTypeCheck(id) {
+  const s = new Set(typeChecked.value)
+  s.has(id) ? s.delete(id) : s.add(id)
+  typeChecked.value = s
+}
+function toggleTypeAll() {
+  const s = new Set(typeChecked.value)
+  if (allTypeChecked.value) filteredTypes.value.forEach(e => s.delete(e.id))
+  else filteredTypes.value.forEach(e => s.add(e.id))
+  typeChecked.value = s
+}
+async function batchRemoveTypes() {
+  const ids = [...typeChecked.value]
+  if (!ids.length) return
+  const ok = await BL.confirm({ title: '批量删除', content: `确定删除选中 ${ids.length} 个枚举类型及其全部枚举项？`, danger: true, okText: '删除' })
+  if (!ok) return
+  for (const id of ids) await enumTypeApi.remove(id).catch(() => {})
+  BL.success('已删除')
+  typeChecked.value = new Set()
+  await loadAll()
+  if (current.value && ids.includes(current.value.id)) current.value = null
+}
+
+/* —— 批量启用 / 禁用 (status: 'active' / 'inactive') —— */
+async function batchSetTypeStatus(targetStatus) {
+  const ids = [...typeChecked.value]
+  if (!ids.length) return
+  const targets = enumTypes.value.filter(t => ids.includes(t.id))
+  const toChange = targets.filter(t => t.status !== targetStatus)
+  if (!toChange.length) {
+    BL.warning(`所选 ${ids.length} 项已经全部是「${targetStatus === 'active' ? '启用' : '禁用'}」状态`)
+    return
+  }
+  const label = targetStatus === 'active' ? '启用' : '禁用'
+  const ok = await BL.confirm({
+    title: `批量${label}`,
+    content: `确定将选中的 ${toChange.length} 个枚举类型${label}?`,
+    okText: label
+  })
+  if (!ok) return
+  let okCount = 0, failCount = 0
+  for (const t of toChange) {
+    try {
+      await enumTypeApi.update(t.id, { ...t, status: targetStatus })
+      okCount++
+    } catch { failCount++ }
+  }
+  if (failCount) BL.warning(`成功 ${okCount} 个,失败 ${failCount} 个`)
+  else BL.success(`已${label} ${okCount} 个`)
+  await loadAll()
+}
+function clearTypeSelection() { typeChecked.value = new Set() }
+// 切换分组 / 过滤后清空选择,避免选择脏数据
+watch([activeGroupId, q, filterStatus], () => { typeChecked.value = new Set() })
+
 /* —— 分组表单 —— */
 const groupFormOpen = ref(false)
 const groupForm = reactive({})
@@ -1054,35 +1213,89 @@ async function removeItem(it) {
 .search-input { padding-left: 30px; }
 
 .et-body { flex: 1; display: flex; position: relative; overflow: hidden; }
-.et-inner { flex: 1; display: grid; grid-template-columns: 260px 1fr; gap: 12px; padding: 12px; min-width: 0; overflow: hidden; }
+.et-inner { flex: 1; display: grid; grid-template-columns: 240px 1fr; gap: 12px; padding: 12px; min-width: 0; overflow: hidden; }
+
+/* —— 左侧树 (对齐 LeftGroupTree 视觉) —— */
 .et-tree {
-  background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 6px;
+  background: var(--bl-bg-1);
+  border: 1px solid var(--bl-border);
+  border-radius: var(--bl-radius-3);
   display: flex; flex-direction: column; overflow: hidden;
+  min-width: 180px;
 }
-.et-tree-hd { display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 12px; border-bottom: 1px solid var(--bl-divider); font-size: 13px; background: var(--bl-bg-2); }
-.et-tree-list { flex: 1; overflow: auto; padding: 6px 4px; }
-.et-row {
+.et-tree-hd {
   display: flex; align-items: center; gap: 4px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--bl-divider);
+}
+.et-tree-title { flex: 1; font-size: 13px; font-weight: 600; color: var(--bl-text-1); }
+.et-tree-search {
+  display: flex; align-items: center; gap: 4px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--bl-divider);
+  background: var(--bl-bg-2);
+}
+.et-tree-search-ic { color: var(--bl-text-3); display: inline-flex; }
+.et-tree-search-input { height: 26px; flex: 1; font-size: 12px; }
+.et-tree-list { flex: 1; overflow: auto; padding: 6px; }
+.et-row {
+  display: flex; align-items: center; gap: 6px;
   padding: 6px 8px; border-radius: 4px; cursor: pointer;
-  font-size: 13px; color: var(--bl-text-2); user-select: none;
+  font-size: 13px; color: var(--bl-text-1); user-select: none;
 }
 .et-row:hover { background: var(--bl-bg-hover); color: var(--bl-text-1); }
 .et-row.is-active { background: var(--bl-primary-soft); color: var(--bl-primary); font-weight: 500; }
 .et-pad { width: 14px; flex-shrink: 0; }
-.et-chev { display: inline-flex; transition: transform .15s; flex-shrink: 0; }
+.et-chev {
+  width: 16px; height: 16px; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--bl-text-3);
+  transition: transform .15s;
+}
 .et-chev.is-open { transform: rotate(90deg); }
-.et-count { margin-left: auto; font-size: 11px; color: var(--bl-text-3);
-  background: var(--bl-bg-2); border-radius: 9px; padding: 0 7px; min-width: 20px; text-align: center; }
+.et-count {
+  flex-shrink: 0; margin-left: auto;
+  font-size: 11px; color: var(--bl-text-3);
+  background: var(--bl-bg-2);
+  border-radius: 9px; padding: 0 7px; min-width: 20px;
+  height: 17px; line-height: 17px; text-align: center;
+}
+.et-row.is-active .et-count { background: #fff; color: var(--bl-primary); }
 .et-subgroup { padding-left: 22px; }
 .et-enum { padding-left: 22px; }
 .enum-ic { width: 16px; height: 16px; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .enum-ic-lg { width: 32px; height: 32px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-.et-main { background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 6px;
-  display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+/* —— 右侧主区 (对齐 .bl-card 视觉: 边框 + 圆角 + 轻阴影) —— */
+.et-main {
+  background: var(--bl-bg-1);
+  border: 1px solid var(--bl-border);
+  border-radius: var(--bl-radius-3);
+  box-shadow: var(--bl-shadow-1);
+  display: flex; flex-direction: column; overflow: hidden; min-width: 0;
+}
 .list-card { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-.list-scroll { flex: 1; overflow: auto; }
+.list-scroll { flex: 1; min-height: 0; overflow: auto; }
+.et-pager {
+  flex-shrink: 0;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 12px;
+  border-top: 1px solid var(--bl-divider);
+  font-size: var(--bl-fs-12);
+}
+.et-pager-l { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 0; }
+
+/* 批量操作按钮 (统一 outline 配色) */
+.et-del-btn { background: #fff; border: 1px solid #f53f3f; color: #f53f3f; }
+.et-del-btn:hover { background: #fff1f0; }
+.et-ena-btn { background: #fff; border: 1px solid #00b42a; color: #00b42a; }
+.et-ena-btn:hover { background: #e8fff4; }
+.et-dis-btn { background: #fff; border: 1px solid #86909c; color: #4e5969; }
+.et-dis-btn:hover { background: #f7f8fa; }
+.et-clear-btn { color: var(--bl-text-3); }
+.et-clear-btn:hover { color: var(--bl-primary); }
+
+.t-center { text-align: center; }
 .et-table thead th { position: sticky; top: 0; background: var(--bl-bg-2); z-index: 1; box-shadow: inset 0 -1px 0 var(--bl-divider); }
 .th-sort { cursor: pointer; user-select: none; display: inline-flex; align-items: center; white-space: nowrap; }
 .th-sort:hover { color: var(--bl-primary); }
@@ -1119,14 +1332,14 @@ async function removeItem(it) {
 /* 弹窗内 FieldRow 标签较长(分组名称 * / 所属分组 / 枚举类型 等),加宽避免换行 */
 .bl-modal :deep(.fr.fr-inline .fr-label) { width: 84px; }
 
-/* 枚举类型新建/编辑抽屉 — 上下贴 body 边线，仅左侧描边 */
+/* 枚举类型新建/编辑抽屉 — 全局层之上,覆盖整个视口高度 */
 .et-drawer {
-  position: absolute; top: 0; right: 0; bottom: 0;
+  position: fixed; top: 0; right: 0; bottom: 0;
   background: var(--bl-bg-1);
   border-left: 1px solid var(--bl-border);
-  box-shadow: -2px 0 12px rgba(0,0,0,.06);
+  box-shadow: -4px 0 16px rgba(0,0,0,.10);
   display: flex; flex-direction: column;
-  min-width: 420px; z-index: 5;
+  min-width: 420px; z-index: 1000;
   overflow: hidden;
 }
 .et-drag-handle {

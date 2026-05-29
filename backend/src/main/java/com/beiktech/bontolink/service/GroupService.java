@@ -18,6 +18,8 @@ public class GroupService {
 
     public List<BizGroup> listByParent(String parentId) { return mapper.listByParent(parentId); }
 
+    public List<BizGroup> listAll() { return mapper.listAll(); }
+
     public BizGroup create(BizGroup g) {
         if (g.getId() == null) g.setId("group-" + UUID.randomUUID());
         if (g.getGSort() == null) g.setGSort(0);

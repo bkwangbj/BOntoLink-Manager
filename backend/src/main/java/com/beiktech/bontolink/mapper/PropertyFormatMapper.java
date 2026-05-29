@@ -5,15 +5,19 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 属性格式化 mapper (ont_property_format).
+ * src_type: 1=属性, 2=共享属性
+ */
 @Mapper
 public interface PropertyFormatMapper {
 
-    @Select("SELECT * FROM t_ont_property_format WHERE property_id = #{propertyId}")
+    @Select("SELECT * FROM ont_property_format WHERE property_id = #{propertyId}")
     Map<String, Object> findByProperty(@Param("propertyId") String propertyId);
 
     @Select("""
         <script>
-        SELECT * FROM t_ont_property_format
+        SELECT * FROM ont_property_format
         WHERE property_id IN
         <foreach collection='ids' item='i' open='(' separator=',' close=')'>#{i}</foreach>
         </script>
@@ -21,12 +25,12 @@ public interface PropertyFormatMapper {
     List<Map<String, Object>> findByProperties(@Param("ids") java.util.Collection<String> ids);
 
     @Insert("""
-        INSERT INTO t_ont_property_format(
-            format_id, property_id, property_scope, format_enabled, format_type,
+        INSERT INTO ont_property_format(
+            format_id, src_type, property_id, property_scope, format_enabled, format_type,
             decimal_places, use_thousand_sep, negative_mode, currency_symbol, accounting_align,
             date_pattern, time_pattern, locale, fraction_type, special_type, custom_format,
             text_force, text_max_length, text_regex, percent_auto_multiply, create_user)
-        VALUES (#{format_id}, #{property_id}, #{property_scope}, #{format_enabled}, #{format_type},
+        VALUES (#{format_id}, #{src_type}, #{property_id}, #{property_scope}, #{format_enabled}, #{format_type},
             #{decimal_places}, #{use_thousand_sep}, #{negative_mode}, #{currency_symbol}, #{accounting_align},
             #{date_pattern}, #{time_pattern}, #{locale}, #{fraction_type}, #{special_type}, #{custom_format},
             #{text_force}, #{text_max_length}, #{text_regex}, #{percent_auto_multiply}, #{create_user})
@@ -34,7 +38,8 @@ public interface PropertyFormatMapper {
     int insert(Map<String, Object> row);
 
     @Update("""
-        UPDATE t_ont_property_format SET
+        UPDATE ont_property_format SET
+            src_type = #{src_type},
             property_scope = #{property_scope}, format_enabled = #{format_enabled}, format_type = #{format_type},
             decimal_places = #{decimal_places}, use_thousand_sep = #{use_thousand_sep},
             negative_mode = #{negative_mode}, currency_symbol = #{currency_symbol}, accounting_align = #{accounting_align},
@@ -47,6 +52,6 @@ public interface PropertyFormatMapper {
     """)
     int updateByProperty(Map<String, Object> row);
 
-    @Delete("DELETE FROM t_ont_property_format WHERE property_id = #{propertyId}")
+    @Delete("DELETE FROM ont_property_format WHERE property_id = #{propertyId}")
     int deleteByProperty(@Param("propertyId") String propertyId);
 }

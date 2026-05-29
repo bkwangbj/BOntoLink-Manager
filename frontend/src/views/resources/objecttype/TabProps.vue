@@ -142,9 +142,13 @@
                 <span class="bl-mono bl-truncate" :title="p.api_name">{{ p.api_name }}</span>
               </td>
               <td class="t-center"><span class="bl-tag">{{ p.data_type || '—' }}</span></td>
-              <!-- 值类型 -->
-              <td class="t-center">
-                <span class="bl-truncate" :title="valueTypeLabel(p.value_type)">{{ valueTypeLabel(p.value_type) }}</span>
+              <!-- 值类型: 点击单元格 → 唤起「值类型选择面板」 -->
+              <td class="t-center vt-cell" @click.stop="openValueTypePicker(p)">
+                <span :class="['vt-pill', p.value_type && 'is-on']"
+                      :title="p.value_type ? `${valueTypeLabel(p.value_type)} · 点击修改` : '未设置 · 点击选择'">
+                  <span v-html="BL.icon('tag', 11)"></span>
+                  <span class="bl-truncate" style="margin-left:4px;max-width:100px">{{ valueTypeLabel(p.value_type) }}</span>
+                </span>
               </td>
               <!-- 格式化 -->
               <td class="t-center" @click.stop="openFormat(p)">
@@ -201,6 +205,14 @@
                           :datasources="datasources"
                           @saved="onDrawerSaved"
                           @navigate-to-tab="$emit('navigate-tab', $event)" />
+
+    <!-- 值类型选择面板 (居中模态,点击属性行「值类型」单元格唤起) -->
+    <ValueTypePickerModal v-model:open="vtpOpen"
+                          v-model="vtpSelected"
+                          :multi="false"
+                          :required="false"
+                          :subtitle="vtpSubtitle"
+                          @confirm="onValueTypeConfirm" />
   </div>
 </template>
 
@@ -209,6 +221,7 @@ import { ref, computed, watch } from 'vue'
 import { BL } from '@/lib/bl.js'
 import { classMetaApi, valueTypeApi, propertyFormatApi, resourceApi } from '@/api'
 import PropertyFormatModal from '@/components/PropertyFormatModal.vue'
+import ValueTypePickerModal from '@/components/ValueTypePickerModal.vue'
 import TabPropsCanvas from './TabPropsCanvas.vue'
 import PropertyDetailDrawer from './PropertyDetailDrawer.vue'
 
@@ -346,6 +359,42 @@ function openBatchFormat() {
   fmtOpen.value = true
 }
 async function onFormatSaved() { await loadPropFormats() }
+
+/* —— 值类型选择面板 —— */
+const vtpOpen = ref(false)
+const vtpSelected = ref('')           // 单选: 当前属性的 value_type id
+const vtpSubtitle = ref('')
+const vtpPropertyRef = ref(null)      // 触发选择的属性行 (用于确认后回写)
+function openValueTypePicker(p) {
+  if (p._isNew) { BL.warning('请先保存属性后再选择值类型'); return }
+  vtpPropertyRef.value = p
+  vtpSelected.value = p.value_type || ''
+  vtpSubtitle.value = `为「${p.display_name || p.rdfs_label || p.api_name}」选择值类型`
+  vtpOpen.value = true
+}
+async function onValueTypeConfirm({ ids, rows: picked }) {
+  const p = vtpPropertyRef.value
+  if (!p) { vtpOpen.value = false; return }
+  const newId = Array.isArray(ids) ? ids[0] : ids
+  if (newId === p.value_type) { vtpOpen.value = false; return }
+  const pickedRow = (picked && picked[0]) || valueTypeOptions.value.find(v => v.id === newId)
+  // 同步 data_type:值类型自带 data_type 时优先采用,保证表格「数据类型」列同步刷新
+  const patch = { value_type: newId || null }
+  if (pickedRow?.data_type) patch.data_type = pickedRow.data_type
+  try {
+    await classMetaApi.updateProp(p.id, patch)
+    BL.success('值类型已更新')
+    vtpOpen.value = false
+    // 先把已加载的值类型选项纳入缓存,避免标签短暂回退到 id
+    if (pickedRow && !valueTypeOptions.value.some(v => v.id === pickedRow.id)) {
+      valueTypeOptions.value = [...valueTypeOptions.value, pickedRow]
+    }
+    await load()
+  } catch (e) {
+    BL.error(e?.msg || '保存失败')
+  }
+}
+
 watch(() => props.classId, load, { immediate: true })
 
 /* 拖拽排序激活条件: 无搜索 / 无筛选 / 无表头排序时启用 */
@@ -645,6 +694,22 @@ document.addEventListener('click', () => { addMenu.value = false })
 }
 .fmt-pill:hover { color: var(--bl-primary); border-color: var(--bl-primary); }
 .fmt-pill.is-on {
+  color: var(--bl-primary); background: var(--bl-primary-soft);
+  border-style: solid; border-color: var(--bl-primary); font-weight: 500;
+}
+
+/* 值类型单元格: 整格可点 — 唤起「值类型选择面板」 */
+.vt-cell { cursor: pointer; }
+.vt-pill {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px; border-radius: 9px;
+  font-size: 11px; color: var(--bl-text-3);
+  background: var(--bl-bg-2); border: 1px dashed var(--bl-border);
+  max-width: 100%; white-space: nowrap;
+  transition: background-color .12s, color .12s, border-color .12s;
+}
+.vt-pill:hover { color: var(--bl-primary); border-color: var(--bl-primary); }
+.vt-pill.is-on {
   color: var(--bl-primary); background: var(--bl-primary-soft);
   border-style: solid; border-color: var(--bl-primary); font-weight: 500;
 }

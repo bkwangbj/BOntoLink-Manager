@@ -38,6 +38,13 @@
 
     <!-- 主体区域 -->
     <section class="ot-body">
+      <!-- 左侧分组树 -->
+      <LeftGroupTree ref="groupTreeRef"
+                     type="object_types"
+                     title="对象分组"
+                     :total-count="rows.length"
+                     store-key="object-types"
+                     @change="onGroupChange" />
       <!-- 左侧 TAB 页签 -->
       <div class="ot-pane" :style="paneStyle">
         <div class="ot-tabs">
@@ -139,16 +146,16 @@
             <div class="ot-pager-l">
               <template v-if="checked.size">
                 已选 <b style="color:var(--bl-primary)">{{ checked.size }}</b> 项
-                <button class="bl-btn bl-btn-sm bl-btn-danger" style="margin-left:8px" @click="removeBatch">
+                <button class="bl-btn bl-btn-sm ot-del-btn" style="margin-left:8px" @click="removeBatch">
                   <span v-html="BL.icon('trash', 12)"></span><span style="margin-left:4px">批量删除</span>
                 </button>
-                <button class="bl-btn bl-btn-sm" style="margin-left:6px" @click="batchSetStatus(1)">
+                <button class="bl-btn bl-btn-sm ot-ena-btn" style="margin-left:6px" @click="batchSetStatus(1)">
                   <span v-html="BL.icon('check', 12)"></span><span style="margin-left:4px">启用</span>
                 </button>
-                <button class="bl-btn bl-btn-sm" style="margin-left:6px" @click="batchSetStatus(0)">
+                <button class="bl-btn bl-btn-sm ot-dis-btn" style="margin-left:6px" @click="batchSetStatus(0)">
                   <span v-html="BL.icon('power', 12)"></span><span style="margin-left:4px">禁用</span>
                 </button>
-                <button class="bl-btn bl-btn-sm bl-btn-text" style="margin-left:6px" @click="checked = new Set()">取消选择</button>
+                <button class="bl-btn bl-btn-sm bl-btn-text ot-clear-btn" style="margin-left:6px" @click="checked = new Set()">取消选择</button>
               </template>
               <template v-else>
                 共 {{ filtered.length }} 项
@@ -458,6 +465,7 @@ import { ref, computed, onMounted, onBeforeUnmount, watch, h } from 'vue'
 import { BL } from '@/lib/bl.js'
 import { resourceApi, categoryApi, classMetaApi } from '@/api'
 import FieldRow from '@/views/config/category/FieldRow.vue'
+import LeftGroupTree from '@/components/LeftGroupTree.vue'
 import TabOverview from '@/views/resources/objecttype/TabOverview.vue'
 import TabProps from '@/views/resources/objecttype/TabProps.vue'
 import TabClassGroup from '@/views/resources/objecttype/TabClassGroup.vue'
@@ -515,8 +523,17 @@ function sortArrow(key) {
   return sortDir.value === 'asc' ? ' ↑' : ' ↓'
 }
 
+/* —— 左侧分组树 —— */
+const groupTreeRef = ref(null)
+const selectedGroupRefIds = ref(null)  // null = 全部
+function onGroupChange(/* groupId */) {
+  // 调用组件 expose 的方法,得到该分组(含子分组)下所有 ref_id 集合
+  selectedGroupRefIds.value = groupTreeRef.value?.refIdsInSelectedGroup?.() ?? null
+}
+
 const filtered = computed(() => {
   let list = rows.value
+  if (selectedGroupRefIds.value) list = list.filter(r => selectedGroupRefIds.value.has(r.id))
   if (filterDomain.value) list = list.filter(r => r.category_code === filterDomain.value)
   if (filterStatus.value !== '') list = list.filter(r => String(r.status) === filterStatus.value)
   const k = q.value.trim().toLowerCase()
@@ -863,11 +880,11 @@ onMounted(async () => {
 }
 
 /* —— 主体 —— */
-.ot-body { flex: 1; position: relative; display: flex; overflow: hidden; }
+.ot-body { flex: 1; position: relative; display: flex; gap: 12px; padding: 12px; overflow: hidden; }
 .ot-pane { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
 
 /* —— 视图切换 tabs —— */
-.ot-tabs { display: flex; gap: 4px; padding: 8px 12px 0; }
+.ot-tabs { display: flex; gap: 4px; padding:0; }
 .ot-tab {
   display: inline-flex; align-items: center; gap: 4px;
   padding: 6px 12px; border-radius: var(--bl-radius-2) var(--bl-radius-2) 0 0;
@@ -880,7 +897,7 @@ onMounted(async () => {
 
 /* —— 列表 —— */
 .ot-list-card {
-  flex: 1; margin: 0 12px 12px; display: flex; flex-direction: column;
+  flex: 1; margin: 0; display: flex; flex-direction: column;
   background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: var(--bl-radius-3);
   overflow: hidden; min-height: 0;
 }
@@ -959,9 +976,19 @@ onMounted(async () => {
 .ot-pager-r { display: inline-flex; align-items: center; gap: 4px; }
 .ot-page-size { width: 64px; height: 26px; }
 
+/* 批量操作按钮 (删除红 outline / 启用绿 outline / 禁用灰 outline / 取消选择纯文字) */
+.ot-del-btn { background: #fff; border: 1px solid #f53f3f; color: #f53f3f; }
+.ot-del-btn:hover { background: #fff1f0; }
+.ot-ena-btn { background: #fff; border: 1px solid #00b42a; color: #00b42a; }
+.ot-ena-btn:hover { background: #e8fff4; }
+.ot-dis-btn { background: #fff; border: 1px solid #86909c; color: #4e5969; }
+.ot-dis-btn:hover { background: #f7f8fa; }
+.ot-clear-btn { color: var(--bl-text-3); }
+.ot-clear-btn:hover { color: var(--bl-primary); }
+
 /* —— 卡片网格 —— */
 .ot-card-grid {
-  flex: 1; margin: 0 12px 12px; padding: 4px;
+  flex: 1; margin: 0 ; padding: 0px;
   display: grid; gap: 12px;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   overflow: auto;
@@ -986,16 +1013,16 @@ onMounted(async () => {
 .ot-card-ft { font-size: 11px; }
 
 /* —— 图谱占位 —— */
-.ot-graph-stub { flex: 1; margin: 0 12px 12px; display: flex; align-items: center; justify-content: center; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: var(--bl-radius-3); }
+.ot-graph-stub { flex: 1; margin: 0; display: flex; align-items: center; justify-content: center; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: var(--bl-radius-3); }
 
-/* —— 右侧抽屉 —— */
+/* —— 右侧抽屉 (全局层之上,覆盖整个视口高度) —— */
 .ot-drawer {
-  position: absolute; top: 0; right: 0; bottom: 0;
+  position: fixed; top: 0; right: 0; bottom: 0;
   background: var(--bl-bg-1);
   border-left: 1px solid var(--bl-border);
-  box-shadow: -2px 0 12px rgba(0, 0, 0, 0.06);
+  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.10);
   display: flex; flex-direction: column;
-  z-index: 5;
+  z-index: 1000;
   min-width: 450px;
 }
 .ot-drag-handle {

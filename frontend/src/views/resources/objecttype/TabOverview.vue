@@ -51,11 +51,11 @@
         </div>
         <div class="flag-grp">
           <span class="flag-lbl">启用状态</span>
-          <label class="ov-switch">
+          <label class="ov-switch is-status">
             <input type="checkbox" :checked="form.status===1" @change="form.status = $event.target.checked ? 1 : 0" />
             <span class="ov-switch-slider"></span>
           </label>
-          <span :class="['ov-switch-tag', form.status===1 ? 'is-on' : 'is-off']">{{ form.status===1 ? '启用' : '禁用' }}</span>
+          <span :class="['ov-switch-tag is-status', form.status===1 ? 'is-on' : 'is-off']">{{ form.status===1 ? '启用' : '禁用' }}</span>
         </div>
       </div>
     </div>
@@ -235,6 +235,12 @@ async function copy(t) {
 .ov-switch-tag { font-size: 12px; font-weight: 500; min-width: 28px; }
 .ov-switch-tag.is-on  { color: var(--bl-primary); }
 .ov-switch-tag.is-off { color: var(--bl-text-3); }
+
+/* 启用状态: 启用为绿色,禁用为红色 (区别于普通开关) */
+.ov-switch.is-status .ov-switch-slider { background: #f53f3f; }
+.ov-switch.is-status input:checked + .ov-switch-slider { background: #00b42a; }
+.ov-switch-tag.is-status.is-on  { color: #00b42a; }
+.ov-switch-tag.is-status.is-off { color: #f53f3f; }
 
 .expr-types { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
 .expr-btn { display: inline-flex; align-items: center; padding: 6px 12px;

@@ -51,10 +51,23 @@ export const namespaceApi = {
 
 export const groupApi = {
   listByParent: (parentId) => http.get('/group', { params: { parentId } }),
+  listAll:      () => http.get('/group/all'),
   create: (data) => http.post('/group', data),
   update: (id, data) => http.put(`/group/${id}`, data),
   remove: (id) => http.delete(`/group/${id}`),
   classes:(id) => http.get(`/group/${id}/classes`)
+}
+
+/* 统一分组关联 (ont_biz_group_class with ref_id + group_type)
+   group_type: object_types / link_types / action_types / value_types
+              / shared_props / functions / interface / datasources / enum_types */
+export const groupRefApi = {
+  list:       (type) => http.get('/group-refs', { params: { type } }),
+  byGroup:    (groupId, type) => http.get('/group-refs/by-group', { params: { groupId, type } }),
+  create:     (data) => http.post('/group-refs', data),
+  update:     (id, data) => http.put(`/group-refs/${id}`, data),
+  remove:     (id) => http.delete(`/group-refs/${id}`),
+  removeByRef:(refId, type) => http.delete('/group-refs/by-ref', { params: { refId, type } })
 }
 
 export const resourceApi = {
@@ -112,6 +125,17 @@ export const valueTypeApi = {
   listUsageConfigs: () => http.get('/value-types/usage-configs'),
   createUsageConfig: (data) => http.post('/value-types/usage-configs', data),
   updateUsageConfig: (id, data) => http.put(`/value-types/usage-configs/${id}`, data),
+}
+
+/* 共享属性 (Shared properties) */
+export const sharedPropertyApi = {
+  list:        () => http.get('/shared-properties'),
+  get:         (id) => http.get(`/shared-properties/${id}`),
+  create:      (data) => http.post('/shared-properties', data),
+  update:      (id, data) => http.put(`/shared-properties/${id}`, data),
+  remove:      (id) => http.delete(`/shared-properties/${id}`),
+  batchRemove: (ids) => http.post('/shared-properties/batch-delete', { ids }),
+  references:  (id) => http.get(`/shared-properties/${id}/references`),
 }
 
 /* 枚举类型 (Enum types) */

@@ -35,6 +35,12 @@
     </PageHeader>
 
     <div class="two-pane">
+      <LeftGroupTree ref="groupTreeRef"
+                     type="interface"
+                     title="接口分组"
+                     :total-count="rows.length"
+                     store-key="interfaces"
+                     @change="onGroupChange" />
       <!-- 列表 -->
       <div class="bl-card list-card">
         <div class="list-scroll">
@@ -106,7 +112,16 @@
           <div>
             <template v-if="checked.size">
               已选 <b style="color:var(--bl-primary)">{{ checked.size }}</b> 项
-              <button class="bl-btn bl-btn-sm bl-btn-danger" style="margin-left:8px" @click="removeBatch">批量删除</button>
+              <button class="bl-btn bl-btn-sm if-del-btn" style="margin-left:8px" @click="removeBatch">
+                <span v-html="BL.icon('trash', 12)"></span><span style="margin-left:4px">批量删除</span>
+              </button>
+              <button class="bl-btn bl-btn-sm if-ena-btn" style="margin-left:6px" @click="batchSetStatus(1)">
+                <span v-html="BL.icon('check', 12)"></span><span style="margin-left:4px">启用</span>
+              </button>
+              <button class="bl-btn bl-btn-sm if-dis-btn" style="margin-left:6px" @click="batchSetStatus(0)">
+                <span v-html="BL.icon('power', 12)"></span><span style="margin-left:4px">禁用</span>
+              </button>
+              <button class="bl-btn bl-btn-sm bl-btn-text if-clear-btn" style="margin-left:6px" @click="checked = new Set()">取消选择</button>
             </template>
             <template v-else>
               共 {{ filtered.length }} 项
@@ -374,6 +389,7 @@ import ColorPickerField from '@/components/ColorPickerField.vue'
 import { BL } from '@/lib/bl.js'
 import { interfaceApi, resourceApi, categoryApi, valueTypeApi, propertyFormatApi } from '@/api'
 import PropertyFormatModal from '@/components/PropertyFormatModal.vue'
+import LeftGroupTree from '@/components/LeftGroupTree.vue'
 
 const rows = ref([])
 const statusFilter = ref('all')
@@ -485,8 +501,16 @@ const industryFilterOptions = computed(() => {
   return [...set].sort((a, b) => a.localeCompare(b))
 })
 
+/* —— 左侧分组树 —— */
+const groupTreeRef = ref(null)
+const selectedGroupRefIds = ref(null)
+function onGroupChange() {
+  selectedGroupRefIds.value = groupTreeRef.value?.refIdsInSelectedGroup?.() ?? null
+}
+
 const filtered = computed(() => {
   let list = rows.value
+  if (selectedGroupRefIds.value) list = list.filter(r => selectedGroupRefIds.value.has(r.id))
   if (statusFilter.value !== 'all') list = list.filter(r => String(r.status) === statusFilter.value)
   if (industryFilter.value)        list = list.filter(r => ifIndustry(r) === industryFilter.value)
   if (domainFilter.value)          list = list.filter(r => r.category_code === domainFilter.value)
@@ -691,6 +715,35 @@ async function removeBatch() {
   await load()
 }
 
+/* —— 批量启用 / 禁用 (status: 1=启用 / 0=实验) —— */
+async function batchSetStatus(targetStatus) {
+  const ids = [...checked.value]
+  if (!ids.length) return
+  const targets = rows.value.filter(r => ids.includes(r.id))
+  const toChange = targets.filter(r => r.status !== targetStatus)
+  if (!toChange.length) {
+    BL.warning(`所选 ${ids.length} 项已经全部是「${targetStatus === 1 ? '启用' : '实验'}」状态`)
+    return
+  }
+  const label = targetStatus === 1 ? '启用' : '禁用'
+  const ok = await BL.confirm({
+    title: `批量${label}`,
+    content: `确定将选中的 ${toChange.length} 个接口${label}?`,
+    okText: label
+  })
+  if (!ok) return
+  let okCount = 0, failCount = 0
+  for (const r of toChange) {
+    try {
+      await interfaceApi.update(r.id, { ...r, status: targetStatus })
+      okCount++
+    } catch { failCount++ }
+  }
+  if (failCount) BL.warning(`成功 ${okCount} 个,失败 ${failCount} 个`)
+  else BL.success(`已${label} ${okCount} 个`)
+  await load()
+}
+
 /* ---- 属性（行内编辑） ---- */
 const propChecked = ref(new Set())
 const selectableProps = computed(() => properties.value.filter(p => !p._isNew))
@@ -854,9 +907,11 @@ onMounted(async () => {
   flex: 1;
   position: relative;
   display: flex;
+  gap: 12px;
+  padding: 12px;
   overflow: hidden;
 }
-.list-card { flex: 1; margin: 12px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.list-card { flex: 1; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
 .list-scroll { flex: 1; min-height: 0; overflow: auto; }
 .list-ft {
   flex-shrink: 0;
@@ -864,6 +919,17 @@ onMounted(async () => {
   display: flex; justify-content: space-between; align-items: center;
   font-size: var(--bl-fs-12);
 }
+.list-ft > div:first-child { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 0; }
+
+/* 批量操作按钮 (统一 outline 配色) */
+.if-del-btn { background: #fff; border: 1px solid #f53f3f; color: #f53f3f; }
+.if-del-btn:hover { background: #fff1f0; }
+.if-ena-btn { background: #fff; border: 1px solid #00b42a; color: #00b42a; }
+.if-ena-btn:hover { background: #e8fff4; }
+.if-dis-btn { background: #fff; border: 1px solid #86909c; color: #4e5969; }
+.if-dis-btn:hover { background: #f7f8fa; }
+.if-clear-btn { color: var(--bl-text-3); }
+.if-clear-btn:hover { color: var(--bl-primary); }
 
 .seg {
   display: inline-flex; background: var(--bl-bg-2);
@@ -943,16 +1009,16 @@ onMounted(async () => {
 .link { color: var(--bl-primary); cursor: pointer; font-weight: 500; }
 .link:hover { text-decoration: underline; }
 
-/* 右侧详情抽屉（浮层，上下外置——与对象类别一致，铺满 body 高度） */
+/* 右侧详情抽屉 (全局层之上,覆盖整个视口高度) */
 .if-detail {
-  position: absolute; top: 0; right: 0; bottom: 0;
+  position: fixed; top: 0; right: 0; bottom: 0;
   background: var(--bl-bg-1);
   border-left: 1px solid var(--bl-border);
-  box-shadow: -2px 0 12px rgba(0, 0, 0, 0.06);
+  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.10);
   overflow: hidden;
   display: flex; flex-direction: column;
   min-width: 420px;
-  z-index: 5;
+  z-index: 1000;
 }
 .if-drag-handle {
   position: absolute; left: -2px; top: 0; bottom: 0; width: 5px;

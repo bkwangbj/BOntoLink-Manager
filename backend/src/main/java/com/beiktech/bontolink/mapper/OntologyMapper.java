@@ -26,7 +26,8 @@ public interface OntologyMapper {
     @Select("SELECT id, rid, api_name, data_type, display_name, rdfs_label, is_required FROM ont_interface_property WHERE interface_id = #{interfaceId} ORDER BY id")
     List<Map<String, Object>> listInterfaceProperties(@Param("interfaceId") String interfaceId);
 
-    @Select("SELECT id, api_name, display_name, color, icon FROM ont_class WHERE id IN (SELECT class_id FROM ont_biz_group_class WHERE category_code IS NOT NULL)")
+    @Select("SELECT id, api_name, display_name, color, icon FROM ont_class WHERE id IN " +
+            "(SELECT ref_id FROM ont_biz_group_class WHERE group_type = 'object_types' AND category_code IS NOT NULL)")
     List<Map<String, Object>> listAllClassesLight();
 
     @Select("SELECT id, class_id, api_name, prop_code, prop_type, data_type, value_type, " +
@@ -99,8 +100,8 @@ public interface OntologyMapper {
             "</script>")
     java.util.List<String> findClassIdsByCategoryCodes(@Param("codes") java.util.Collection<String> codes);
 
-    /** 通过分组的 category_code（grp_xxx）从关联表查到 class_id */
-    @Select("<script>SELECT DISTINCT class_id FROM ont_biz_group_class WHERE category_code IN " +
+    /** 通过分组的 category_code（grp_xxx）从关联表查到 class_id (ref_id) */
+    @Select("<script>SELECT DISTINCT ref_id FROM ont_biz_group_class WHERE group_type = 'object_types' AND category_code IN " +
             "<foreach collection='codes' item='c' open='(' separator=',' close=')'>#{c}</foreach>" +
             "</script>")
     java.util.List<String> findClassIdsByGroupCategoryCodes(@Param("codes") java.util.Collection<String> codes);

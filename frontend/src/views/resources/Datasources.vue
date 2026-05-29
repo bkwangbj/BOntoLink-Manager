@@ -37,13 +37,20 @@
       </template>
     </PageHeader>
 
-    <div :class="['three-pane', !cfgOpen && 'no-cfg']">
+    <div class="ds-main">
+      <LeftGroupTree ref="groupTreeRef"
+                     type="datasources"
+                     title="数据源分组"
+                     :total-count="rows.length"
+                     store-key="datasources"
+                     @change="onGroupChange" />
       <!-- 左栏：数据源列表 -->
       <section class="pane pane-list">
         <div class="ds-list-scroll">
         <table class="bl-table ds-table">
           <thead>
             <tr>
+              <th style="width:36px" class="t-center"><input type="checkbox" :checked="allChecked" @change="toggleAll" /></th>
               <th>
                 <span class="th-sort" @click="toggleSort('dsName')">数据库名<span class="th-arrow">{{ sortArrow('dsName') }}</span></span>
               </th>
@@ -63,7 +70,7 @@
             <template v-for="row in displayRows" :key="row.key">
               <!-- 分组标题行 -->
               <tr v-if="row.type==='group'" class="ds-group-row" @click="toggleDomain(row.key)">
-                <td colspan="5">
+                <td colspan="6">
                   <span class="ds-group-chev" v-html="BL.icon(row.collapsed ? 'chevronRight' : 'chevronDown', 12)"></span>
                   <span class="ds-group-label">{{ row.label }}</span>
                   <span class="ds-group-count">{{ row.count }}</span>
@@ -71,6 +78,9 @@
               </tr>
               <!-- 数据源行 -->
               <tr v-else :class="['ds-row', groupMode && 'is-grouped', selected?.id===row.data.id && 'is-active']" @click="select(row.data)" @dblclick="openEdit(row.data)">
+                <td class="t-center" @click.stop>
+                  <input type="checkbox" :checked="checked.has(row.data.id)" @change="toggleCheck(row.data.id)" />
+                </td>
                 <td>
                   <div class="ds-name-cell">
                     <span class="ds-ic" :style="{ background: typeColor(row.data.dsType) }" v-html="BL.icon(typeIcon(row.data.dsType), 12, '#fff')"></span>
@@ -103,8 +113,23 @@
         <!-- 分页钉底 -->
         <div class="ds-pager">
           <div class="ds-pager-l">
-            共 {{ filtered.length }} 项
-            <span v-if="groupMode" class="bl-muted" style="margin-left:8px">· {{ groupCount }} 个领域</span>
+            <template v-if="checked.size">
+              已选 <b style="color:var(--bl-primary)">{{ checked.size }}</b> 项
+              <button class="bl-btn bl-btn-sm ds-del-btn" style="margin-left:8px" @click="batchRemove">
+                <span v-html="BL.icon('trash', 12)"></span><span style="margin-left:4px">批量删除</span>
+              </button>
+              <button class="bl-btn bl-btn-sm ds-ena-btn" style="margin-left:6px" @click="batchSetStatus(1)">
+                <span v-html="BL.icon('check', 12)"></span><span style="margin-left:4px">启用</span>
+              </button>
+              <button class="bl-btn bl-btn-sm ds-dis-btn" style="margin-left:6px" @click="batchSetStatus(0)">
+                <span v-html="BL.icon('power', 12)"></span><span style="margin-left:4px">禁用</span>
+              </button>
+              <button class="bl-btn bl-btn-sm bl-btn-text ds-clear-btn" style="margin-left:6px" @click="checked = new Set()">取消选择</button>
+            </template>
+            <template v-else>
+              共 {{ filtered.length }} 项
+              <span v-if="groupMode" class="bl-muted" style="margin-left:8px">· {{ groupCount }} 个领域</span>
+            </template>
           </div>
           <div class="ds-pager-r" v-if="!groupMode">
             <span class="bl-muted" style="font-size:12px;margin-right:6px">每页</span>
@@ -124,13 +149,44 @@
         </div>
       </section>
 
-      <!-- 中栏：配置 -->
-      <section class="pane pane-cfg" v-if="cfgOpen">
-        <div class="cfg-hd">
-          <span>{{ form.id ? '编辑数据源' : '新建数据源' }}</span>
-          <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" @click="cfgOpen=false" v-html="BL.icon('x', 14)"></button>
+      <!-- 全局抽屉: 数据源 / 监控 双页签 (覆盖整个视口高度) -->
+      <transition name="ds-drawer">
+      <aside v-if="drawerOpen" class="ds-drawer" :style="{ width: drawerWidth + 'px' }">
+        <!-- 左侧拖拽手柄 -->
+        <div class="ds-drag-handle" :class="resizing && 'is-resizing'" @mousedown="onDragStart"></div>
+        <!-- 顶部: 标题 + 关闭 -->
+        <div class="ds-drawer-hd">
+          <div class="ds-drawer-title">
+            <span class="ds-drawer-ic" :style="{ background: selected ? typeColor(selected.dsType) : '#1677ff' }"
+                  v-html="BL.icon(selected ? typeIcon(selected.dsType) : 'database', 16, '#fff')"></span>
+            <div>
+              <div style="font-weight:600;font-size:14px">
+                {{ drawerTab === 'config' ? (form.id ? '编辑数据源' : (selected ? '编辑数据源' : '新建数据源')) : (selected?.dsName || '数据源详情') }}
+              </div>
+              <div class="bl-mono bl-muted" style="font-size:11px">{{ selected?.dsCode || form.dsCode || '—' }}</div>
+            </div>
+          </div>
+          <button class="bl-btn bl-btn-text bl-btn-icon" @click="drawerOpen=false" v-html="BL.icon('x', 14)"></button>
         </div>
-        <div class="cfg-body">
+
+        <!-- 子页签 -->
+        <div class="ds-drawer-tabs">
+          <button :class="['ds-drawer-tab', drawerTab==='config' && 'is-on']" @click="switchTab('config')">
+            <span v-html="BL.icon('sliders', 13)"></span>
+            <span style="margin-left:4px">数据源</span>
+          </button>
+          <button :class="['ds-drawer-tab', drawerTab==='monitor' && 'is-on']" :disabled="!selected" @click="switchTab('monitor')">
+            <span v-html="BL.icon('zap', 13)"></span>
+            <span style="margin-left:4px">监控</span>
+          </button>
+          <div class="bl-grow"></div>
+          <button v-if="drawerTab==='monitor' && selected" class="bl-btn bl-btn-sm" @click="doTest(selected)">
+            <span v-html="BL.icon('zap', 12)"></span><span style="margin-left:4px">测试</span>
+          </button>
+        </div>
+
+        <!-- 数据源 (编辑) 页签 -->
+        <div v-show="drawerTab==='config'" class="cfg-body">
           <div class="cfg-section">基础信息</div>
           <FieldRow label="名称 *" inline><input class="bl-input" v-model="form.dsName" placeholder="例：水利主业务库" /></FieldRow>
           <FieldRow label="编码 *" inline hint="同领域内唯一，关联 ont_class 引用"><input class="bl-input bl-mono" v-model="form.dsCode" /></FieldRow>
@@ -172,25 +228,15 @@
             </div>
           </FieldRow>
         </div>
-        <div class="cfg-ft">
-          <button class="bl-btn" @click="cfgOpen=false">取消</button>
-          <button class="bl-btn bl-btn-primary" @click="submitForm">保存</button>
-        </div>
-      </section>
 
-      <!-- 右栏：监控 -->
-      <section class="pane pane-mon">
+
+        <!-- 监控 页签 -->
+        <div v-show="drawerTab==='monitor'" class="mon-pane">
         <div v-if="!selected" class="bl-empty" style="padding:60px">
           <div class="bl-empty-icon" v-html="BL.icon('station', 36)"></div>
           请选择左侧数据源查看监控
         </div>
         <template v-else>
-          <!-- 顶部信息条（撑满、只有底部线） -->
-          <div class="mon-info bare">
-            <span class="mon-name bl-truncate">{{ selected.dsName }} | {{ selected.dsCode }}</span>
-            <button class="bl-btn bl-btn-sm" @click="doTest(selected)" v-html="iconText('zap','测试')"></button>
-          </div>
-
           <div class="mon-content">
           <!-- 第一行：元信息 + 状态图例 -->
           <div class="mon-metabar">
@@ -286,7 +332,15 @@
           </div>
           </div>
         </template>
-      </section>
+        </div><!-- /监控 页签 -->
+
+        <!-- 底部按钮: 仅数据源页签显示保存/取消 -->
+        <div v-if="drawerTab==='config'" class="cfg-ft">
+          <button class="bl-btn" @click="drawerOpen=false">取消</button>
+          <button class="bl-btn bl-btn-primary" @click="submitForm">保存</button>
+        </div>
+      </aside>
+      </transition>
     </div>
   </div>
 </template>
@@ -297,15 +351,57 @@ import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
 import { datasourceApi, namespaceApi, categoryApi } from '@/api'
+import LeftGroupTree from '@/components/LeftGroupTree.vue'
 
 const rows = ref([])
 const overview = ref({})
 const q = ref('')
 const selected = ref(null)
-const cfgOpen = ref(false)
+const checked = ref(new Set())   // 批量选择
+const cfgOpen = ref(false)   // 兼容旧字段(用于其他历史代码引用)
 const driverMap = ref({})
 const monTab = ref('basic')
 const mon = ref({})
+
+/* 全局抽屉: 数据源 (编辑) / 监控 双页签 */
+const drawerOpen = ref(false)
+const drawerTab = ref('config')  // 'config' | 'monitor'
+function switchTab(t) {
+  if (t === 'monitor' && !selected.value) { BL.warning('请先选择一个数据源'); return }
+  drawerTab.value = t
+  if (t === 'monitor') loadMonitor()
+}
+
+/* 抽屉宽度拖拽 (持久化到 localStorage) */
+const DRAWER_MIN = 520
+function defaultDrawerWidth() {
+  return Math.max(DRAWER_MIN, Math.min(760, Math.floor(window.innerWidth * 0.50)))
+}
+function drawerMaxPx() { return Math.floor(window.innerWidth * 0.90) }
+const drawerWidth = ref(parseInt(localStorage.getItem('bl.ds-drawer.width') || '0', 10) || defaultDrawerWidth())
+const resizing = ref(false)
+let dragStartX = 0, dragStartW = 0
+function onDragStart(e) {
+  resizing.value = true
+  dragStartX = e.clientX
+  dragStartW = drawerWidth.value
+  document.body.style.cursor = 'col-resize'
+  document.body.style.userSelect = 'none'
+  window.addEventListener('mousemove', onDragMove)
+  window.addEventListener('mouseup', onDragEnd)
+}
+function onDragMove(e) {
+  const dx = dragStartX - e.clientX
+  drawerWidth.value = Math.min(drawerMaxPx(), Math.max(DRAWER_MIN, dragStartW + dx))
+}
+function onDragEnd() {
+  resizing.value = false
+  document.body.style.cursor = ''
+  document.body.style.userSelect = ''
+  localStorage.setItem('bl.ds-drawer.width', String(drawerWidth.value))
+  window.removeEventListener('mousemove', onDragMove)
+  window.removeEventListener('mouseup', onDragEnd)
+}
 
 const dsTypes = ['mysql','postgresql','oracle','mongodb','dm','kingbase','oscar','gbase','polardb','tdsql','gaussdb','oceanbase']
 
@@ -389,8 +485,16 @@ const industryFilterOptions = computed(() => {
   return [...set].sort((a, b) => a.localeCompare(b))
 })
 
+/* —— 左侧分组树 —— */
+const groupTreeRef = ref(null)
+const selectedGroupRefIds = ref(null)
+function onGroupChange() {
+  selectedGroupRefIds.value = groupTreeRef.value?.refIdsInSelectedGroup?.() ?? null
+}
+
 const filtered = computed(() => {
   let list = rows.value
+  if (selectedGroupRefIds.value) list = list.filter(r => selectedGroupRefIds.value.has(r.id))
   const k = q.value.trim().toLowerCase()
   if (k) {
     list = list.filter(r =>
@@ -488,9 +592,16 @@ async function loadAll() {
 
 async function select(d) {
   selected.value = d
+  // 点击行: 打开抽屉到"监控"页签
+  drawerOpen.value = true
+  if (drawerTab.value === 'config') {
+    // 已经处于编辑态时,同步切换为当前选中的数据源
+    Object.keys(form).forEach(k => delete form[k])
+    Object.assign(form, d)
+  } else {
+    drawerTab.value = 'monitor'
+  }
   await loadMonitor()
-  // 中间编辑面板若已打开，同步切换为当前选中的数据源
-  if (cfgOpen.value) openEdit(d)
 }
 
 async function loadMonitor() {
@@ -573,13 +684,17 @@ function trendPoints(key) {
 function openCreate() {
   Object.keys(form).forEach(k => delete form[k])
   Object.assign(form, { dsType:'mysql', status:1, refCount:0 })
-  cfgOpen.value = true
+  selected.value = null
+  drawerTab.value = 'config'
+  drawerOpen.value = true
 }
 function openEdit(d) {
   // 先清掉旧字段，再覆盖；避免新数据缺字段时残留前一条的值
   Object.keys(form).forEach(k => delete form[k])
   Object.assign(form, d)
-  cfgOpen.value = true
+  selected.value = d
+  drawerTab.value = 'config'
+  drawerOpen.value = true
 }
 function onTypeChange() {
   const list = driverMap.value[form.dsType] || []
@@ -591,7 +706,7 @@ async function submitForm() {
   if (form.id) await datasourceApi.update(form.id, form)
   else         await datasourceApi.create(form)
   BL.success('已保存')
-  cfgOpen.value = false
+  drawerOpen.value = false
   await loadAll()
 }
 
@@ -612,12 +727,68 @@ async function doDelete(d) {
   await loadAll()
 }
 
+/* —— 批量选择 + 删除 —— */
+const dataRowsFiltered = computed(() => filtered.value)  // 简化引用; filtered 已是过滤后的数据源行
+const allChecked = computed(() =>
+  dataRowsFiltered.value.length > 0 && dataRowsFiltered.value.every(r => checked.value.has(r.id))
+)
+function toggleCheck(id) {
+  const s = new Set(checked.value)
+  s.has(id) ? s.delete(id) : s.add(id)
+  checked.value = s
+}
+function toggleAll() {
+  const s = new Set(checked.value)
+  if (allChecked.value) dataRowsFiltered.value.forEach(r => s.delete(r.id))
+  else dataRowsFiltered.value.forEach(r => s.add(r.id))
+  checked.value = s
+}
+async function batchRemove() {
+  const ids = [...checked.value]
+  if (!ids.length) return
+  const ok = await BL.confirm({ title:'批量删除', content:`确定删除选中 ${ids.length} 个数据源？删除后关联引用会失效。`, danger:true, okText:'删除' })
+  if (!ok) return
+  for (const id of ids) await datasourceApi.remove(id).catch(() => {})
+  BL.success('已删除')
+  checked.value = new Set()
+  if (selected.value && ids.includes(selected.value.id)) selected.value = null
+  await loadAll()
+}
+
+/* —— 批量启用 / 禁用 (status: 1 / 0) —— */
+async function batchSetStatus(targetStatus) {
+  const ids = [...checked.value]
+  if (!ids.length) return
+  const targets = rows.value.filter(r => ids.includes(r.id))
+  const toChange = targets.filter(r => r.status !== targetStatus)
+  if (!toChange.length) {
+    BL.warning(`所选 ${ids.length} 项已经全部是「${targetStatus === 1 ? '启用' : '禁用'}」状态`)
+    return
+  }
+  const label = targetStatus === 1 ? '启用' : '禁用'
+  const ok = await BL.confirm({
+    title: `批量${label}`,
+    content: `确定将选中的 ${toChange.length} 个数据源${label}?`,
+    okText: label
+  })
+  if (!ok) return
+  let okCount = 0, failCount = 0
+  for (const r of toChange) {
+    try {
+      await datasourceApi.update(r.id, { ...r, status: targetStatus })
+      okCount++
+    } catch { failCount++ }
+  }
+  if (failCount) BL.warning(`成功 ${okCount} 个,失败 ${failCount} 个`)
+  else BL.success(`已${label} ${okCount} 个`)
+  await loadAll()
+}
+// 切换筛选 / 搜索 / 分组时清空选择
+watch([q, filterIndustry, filterStatus], () => { checked.value = new Set() })
+
 onMounted(async () => {
   await loadAll()
-  if (rows.value.length && !selected.value) {
-    await select(rows.value[0])
-    openEdit(rows.value[0])
-  }
+  // 进入页面不自动选中也不自动打开抽屉 — 由用户主动点击行或"新建"打开
 })
 watch(() => selected.value?.id, () => { monTab.value = 'basic' })
 </script>
@@ -636,16 +807,15 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
 .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--bl-text-3); }
 .search-input { padding-left: 30px; }
 
-.three-pane {
+/* 主体: 列表单独占满整个 body (配置 + 监控 已迁移到全局抽屉) */
+.ds-main {
   flex: 1;
-  display: grid;
-  grid-template-columns: minmax(540px, 1.9fr) 380px 1fr;
-  gap: 12px; padding: 12px; overflow: hidden;
+  display: flex;
+  gap: 12px; padding: 12px;
+  overflow: hidden;
 }
-/* 中间编辑面板关闭时，右侧监控扩展占满 */
-.three-pane.no-cfg { grid-template-columns: minmax(540px, 1.7fr) 1fr; }
-.three-pane.no-cfg > .pane-cfg { display: none; }
 .pane {
+  flex: 1;
   background: var(--bl-bg-1);
   border: 1px solid var(--bl-border);
   border-radius: var(--bl-radius-3);
@@ -653,14 +823,77 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
   display: flex; flex-direction: column;
 }
 .pane-list { display: flex; flex-direction: column; overflow: hidden; }
+
+/* —— 全局抽屉 (与系统其他抽屉风格一致) —— */
+.ds-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  min-width: 520px; max-width: 90vw;
+  background: var(--bl-bg-1);
+  border-left: 1px solid var(--bl-border);
+  box-shadow: -4px 0 16px rgba(0,0,0,0.10);
+  display: flex; flex-direction: column;
+  z-index: 1000;
+}
+/* 左边缘拖拽手柄 */
+.ds-drag-handle {
+  position: absolute; left: -2px; top: 0; bottom: 0; width: 5px;
+  cursor: col-resize; background: transparent;
+  transition: background-color .15s;
+  z-index: 1001;
+}
+.ds-drag-handle:hover, .ds-drag-handle.is-resizing { background: var(--bl-primary); }
+.ds-drawer-hd {
+  flex-shrink: 0; display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-bottom: 1px solid var(--bl-divider);
+}
+.ds-drawer-title { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.ds-drawer-ic {
+  width: 32px; height: 32px; border-radius: 6px;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+/* 抽屉子页签 */
+.ds-drawer-tabs {
+  flex-shrink: 0; display: flex; align-items: center; gap: 2px;
+  padding: 0 14px; border-bottom: 1px solid var(--bl-divider);
+  height: 36px;
+}
+.ds-drawer-tab {
+  padding: 0 14px; height: 36px;
+  border: 0; background: transparent; cursor: pointer;
+  font-size: 13px; color: var(--bl-text-2);
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  display: inline-flex; align-items: center;
+  line-height: 1;
+}
+.ds-drawer-tab:hover:not(:disabled) { color: var(--bl-text-1); }
+.ds-drawer-tab.is-on { color: var(--bl-primary); border-color: var(--bl-primary); font-weight: 500; }
+.ds-drawer-tab:disabled { opacity: .4; cursor: not-allowed; }
+.bl-grow { flex: 1; }
+.mon-pane { flex: 1; overflow: auto; }
+
+.ds-drawer-enter-active, .ds-drawer-leave-active { transition: transform .22s, opacity .18s; }
+.ds-drawer-enter-from, .ds-drawer-leave-to { transform: translateX(20px); opacity: 0; }
 .ds-list-scroll { flex: 1; min-height: 0; overflow: auto; }
 .ds-pager {
   flex-shrink: 0; padding: 8px 12px; border-top: 1px solid var(--bl-divider);
   display: flex; justify-content: space-between; align-items: center;
   font-size: var(--bl-fs-12);
 }
+.ds-pager-l { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 0; }
 .ds-pager-r { display: inline-flex; align-items: center; gap: 4px; }
 .ds-page-size { width: 64px; height: 26px; }
+
+/* 批量操作按钮 (统一 outline 配色) */
+.ds-del-btn { background: #fff; border: 1px solid #f53f3f; color: #f53f3f; }
+.ds-del-btn:hover { background: #fff1f0; }
+.ds-ena-btn { background: #fff; border: 1px solid #00b42a; color: #00b42a; }
+.ds-ena-btn:hover { background: #e8fff4; }
+.ds-dis-btn { background: #fff; border: 1px solid #86909c; color: #4e5969; }
+.ds-dis-btn:hover { background: #f7f8fa; }
+.ds-clear-btn { color: var(--bl-text-3); }
+.ds-clear-btn:hover { color: var(--bl-primary); }
+.t-center { text-align: center; }
 .pane-cfg { transition: width .2s; }
 
 .ds-table { width: 100%; }

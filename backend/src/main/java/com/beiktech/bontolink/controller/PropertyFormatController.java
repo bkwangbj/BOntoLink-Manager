@@ -34,6 +34,8 @@ public class PropertyFormatController {
     public R<?> upsert(@PathVariable String propertyId, @RequestBody Map<String, Object> body) {
         body.put("property_id", propertyId);
         body.putIfAbsent("property_scope", "class");
+        // 根据 property_scope 推导 src_type: shared → 2 (共享属性), 其它 → 1 (普通属性)
+        body.putIfAbsent("src_type", "shared".equals(body.get("property_scope")) ? 2 : 1);
         body.putIfAbsent("format_enabled", 0);
         body.putIfAbsent("format_type", "general");
         body.putIfAbsent("decimal_places", 2);
@@ -84,6 +86,7 @@ public class PropertyFormatController {
             Map<String, Object> payload = new LinkedHashMap<>(fmt);
             payload.put("property_id", pid);
             payload.put("property_scope", scope);
+            payload.putIfAbsent("src_type", 1);
             payload.putIfAbsent("format_enabled", 0);
             payload.putIfAbsent("format_type", "general");
             payload.putIfAbsent("decimal_places", 2);

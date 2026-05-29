@@ -8,23 +8,14 @@ import java.util.Map;
 @Mapper
 public interface EnumTypeMapper {
 
-    /* ---- 分组(树) ---- */
-    @Select("SELECT * FROM ont_enum_group ORDER BY COALESCE(parent_id,''), sort_num, create_time")
-    List<Map<String, Object>> listGroups();
+    /* ---- 分组(树) ---- 已迁移至 ont_biz_group_class with group_type='enum_types';
+       此处仅保留兼容 stub:返回空数组,前端应改用 /api/group-refs?type=enum_types */
+    default List<Map<String, Object>> listGroups() { return java.util.Collections.emptyList(); }
+    default int insertGroup(Map<String, Object> row) { return 0; }
+    default int updateGroup(Map<String, Object> row) { return 0; }
+    default int deleteGroup(@Param("id") String id) { return 0; }
 
-    @Insert("INSERT INTO ont_enum_group(id, parent_id, group_name, sort_num, category_code, status) " +
-            "VALUES(#{id}, #{parent_id}, #{group_name}, #{sort_num}, #{category_code}, #{status})")
-    int insertGroup(Map<String, Object> row);
-
-    @Update("UPDATE ont_enum_group SET group_name=#{group_name}, sort_num=#{sort_num}, " +
-            "category_code=#{category_code}, status=#{status}, " +
-            "update_time = datetime('now','localtime') WHERE id=#{id}")
-    int updateGroup(Map<String, Object> row);
-
-    @Delete("DELETE FROM ont_enum_group WHERE id = #{id}")
-    int deleteGroup(@Param("id") String id);
-
-    /* ---- 枚举类型主表 ---- */
+    /* ---- 枚举类型主表 (不再包含 group_id) ---- */
     @Select("""
         SELECT t.*,
                (SELECT COUNT(*) FROM ont_enum_items i WHERE i.enum_id = t.id) AS item_count
@@ -37,15 +28,15 @@ public interface EnumTypeMapper {
     Map<String, Object> findType(@Param("id") String id);
 
     @Insert("""
-        INSERT INTO ont_enum_types(id, group_id, rid, api_name, category_code, enum_type, max_level,
+        INSERT INTO ont_enum_types(id, rid, api_name, category_code, enum_type, max_level,
             top_code, status, rdfs_label, rdfs_comment, rdfs_see_also, rdfs_defined_by)
-        VALUES (#{id}, #{group_id}, #{rid}, #{api_name}, #{category_code}, #{enum_type}, #{max_level},
+        VALUES (#{id}, #{rid}, #{api_name}, #{category_code}, #{enum_type}, #{max_level},
             #{top_code}, #{status}, #{rdfs_label}, #{rdfs_comment}, #{rdfs_see_also}, #{rdfs_defined_by})
     """)
     int insertType(Map<String, Object> row);
 
     @Update("""
-        UPDATE ont_enum_types SET group_id=#{group_id}, enum_type=#{enum_type}, max_level=#{max_level},
+        UPDATE ont_enum_types SET enum_type=#{enum_type}, max_level=#{max_level},
             top_code=#{top_code}, status=#{status}, rdfs_label=#{rdfs_label}, rdfs_comment=#{rdfs_comment},
             rdfs_see_also=#{rdfs_see_also}, rdfs_defined_by=#{rdfs_defined_by},
             update_time = datetime('now','localtime')

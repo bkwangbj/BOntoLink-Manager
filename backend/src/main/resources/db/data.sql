@@ -80,10 +80,23 @@ INSERT INTO ont_biz_category(id, parent_id, rid, category_code, category_type, n
 ('category-30000000-0000-0000-0000-000000000001','category-20000000-0000-0000-0000-000000000003','ri.ont.biz.category.30000000-0000-0000-0000-000000000001','grp_hydrology_station',3,'w_wtr_hyd',1,1,'database','#165DFF','测站与设备'),
 ('category-30000000-0000-0000-0000-000000000002','category-20000000-0000-0000-0000-000000000003','ri.ont.biz.category.30000000-0000-0000-0000-000000000002','grp_hydrology_observation',3,'w_wtr_hyd',1,2,'database','#00B42A','观测数据');
 
--- ===== 分组（ont_biz_group） =====
+-- ===== 分组（ont_biz_group） — 系统全局共享 =====
 INSERT INTO ont_biz_group(id, parent_id, category_code, g_name, g_sort, icon, color, description) VALUES
+-- 对象类型分组 (供 ObjectTypes 左侧树)
 ('group-10000000-0000-0000-0000-000000000001','category-20000000-0000-0000-0000-000000000003','grp_hydrology_station','测站与设备',1,'database','#165DFF','水文测站、设备相关对象类型集合'),
-('group-10000000-0000-0000-0000-000000000002','category-20000000-0000-0000-0000-000000000003','grp_hydrology_observation','观测数据',2,'database','#00B42A','观测数据相关对象类型集合');
+('group-10000000-0000-0000-0000-000000000002','category-20000000-0000-0000-0000-000000000003','grp_hydrology_observation','观测数据',2,'database','#00B42A','观测数据相关对象类型集合'),
+-- 值类型分组 (供 ValueTypes 左侧树)
+('group-vt-basic',  NULL, NULL, '基础类型',     1, 'layers',  '#165DFF', '系统基础值类型 (字符串/数字/布尔/日期)'),
+('group-vt-enum',   NULL, NULL, '枚举类型',     2, 'list',    '#00B42A', '基于国标/业务枚举的值类型'),
+('group-vt-id',     NULL, NULL, '标识符类型',   3, 'key',     '#722ED1', 'RID / UUID / 编码类值类型'),
+-- 接口分组 (供 Interfaces 左侧树)
+('group-if-common',  NULL, NULL, '公共接口',    1, 'link',    '#165DFF', '通用基础接口 (可监测 / 地理实体 等)'),
+('group-if-water',   NULL, NULL, '水利领域接口', 2, 'droplet', '#00B42A', '水文 / 工程 / 水务 等领域接口'),
+('group-if-deprecated', NULL, NULL, '废弃 / 停用', 9, 'archive', '#86909C', '已停用或仅供过渡的接口'),
+-- 数据源分组 (供 Datasources 左侧树)
+('group-ds-main',    NULL, NULL, '主业务库',    1, 'database', '#165DFF', '生产主业务数据库'),
+('group-ds-obs',     NULL, NULL, '观测数据库',  2, 'cloud',    '#00B42A', '观测/监测数据存储'),
+('group-ds-3rdparty',NULL, NULL, '第三方接口',  3, 'link',     '#FF7D00', '外部系统对接数据源');
 
 -- ===== 对象类 =====
 INSERT INTO ont_class(id, rid, api_name, ns_code, category_code, display_name, rdfs_label, rdfs_comment, description, icon, color, status) VALUES
@@ -92,16 +105,16 @@ INSERT INTO ont_class(id, rid, api_name, ns_code, category_code, display_name, r
 ('class-00000000-0000-0000-0000-000000000003','ri.ont.class.00000000-0000-0000-0000-000000000003','WaterQuality','w_wtr_wae','dom_water_environment','水质指标','WaterQuality','水环境质量监测',NULL,'droplet','#722ED1',1),
 ('class-00000000-0000-0000-0000-000000000004','ri.ont.class.00000000-0000-0000-0000-000000000004','Reservoir','w_wtr_eng','dom_water_engineering','水库','Reservoir','水库工程实体',NULL,'dam','#FF7D00',1);
 
--- 对象-分组关联（测站与设备 / 观测数据 各覆盖几个对象）
-INSERT INTO ont_biz_group_class(id, group_id, class_id, category_code, g_sort) VALUES
+-- 对象-分组关联 (统一表 ont_biz_group_class with group_type='object_types')
+INSERT INTO ont_biz_group_class(id, group_id, ref_id, group_type, category_code, g_sort) VALUES
 -- 测站与设备 (grp_hydrology_station)
-('gc-1','group-10000000-0000-0000-0000-000000000001','class-00000000-0000-0000-0000-000000000001','grp_hydrology_station',1), -- HydrologyStation
-('gc-2','group-10000000-0000-0000-0000-000000000001','class-whyd-01','grp_hydrology_station',2),                              -- RainfallStation
-('gc-3','group-10000000-0000-0000-0000-000000000001','class-whyd-03','grp_hydrology_station',3),                              -- EvaporationStation
+('gc-1','group-10000000-0000-0000-0000-000000000001','class-00000000-0000-0000-0000-000000000001','object_types','grp_hydrology_station',1), -- HydrologyStation
+('gc-2','group-10000000-0000-0000-0000-000000000001','class-whyd-01','object_types','grp_hydrology_station',2),                              -- RainfallStation
+('gc-3','group-10000000-0000-0000-0000-000000000001','class-whyd-03','object_types','grp_hydrology_station',3),                              -- EvaporationStation
 -- 观测数据 (grp_hydrology_observation)
-('gc-4','group-10000000-0000-0000-0000-000000000002','class-00000000-0000-0000-0000-000000000002','grp_hydrology_observation',1), -- River
-('gc-5','group-10000000-0000-0000-0000-000000000002','class-00000000-0000-0000-0000-000000000003','grp_hydrology_observation',2), -- WaterQuality
-('gc-6','group-10000000-0000-0000-0000-000000000002','class-whyd-02','grp_hydrology_observation',3);                              -- RunoffSeries
+('gc-4','group-10000000-0000-0000-0000-000000000002','class-00000000-0000-0000-0000-000000000002','object_types','grp_hydrology_observation',1), -- River
+('gc-5','group-10000000-0000-0000-0000-000000000002','class-00000000-0000-0000-0000-000000000003','object_types','grp_hydrology_observation',2), -- WaterQuality
+('gc-6','group-10000000-0000-0000-0000-000000000002','class-whyd-02','object_types','grp_hydrology_observation',3);                              -- RunoffSeries
 
 -- 属性
 INSERT INTO ont_class_property(id, rid, class_id, api_name, data_type, display_name, rdfs_label, is_primary, is_required) VALUES
@@ -443,28 +456,37 @@ INSERT INTO ont_class_property(id, rid, class_id, api_name, prop_code, prop_type
 -- ============================================================
 DELETE FROM ont_enum_items;
 DELETE FROM ont_enum_types;
-DELETE FROM ont_enum_group;
+-- ont_enum_group 已废弃 (DROP TABLE 在 schema-sqlite.sql);此处不再 DELETE
 DELETE FROM ont_enum_level_code_rule;
 DELETE FROM ont_value_types;
 DELETE FROM ont_valuetypes_usage_config;
-DELETE FROM t_ont_property_format;
+DELETE FROM ont_property_format;
+-- 清理旧的枚举分组关联 (若存在)
+DELETE FROM ont_biz_group_class WHERE group_type = 'enum_types';
 
--- 枚举分组(两层)
-INSERT INTO ont_enum_group(id, parent_id, group_name, sort_num, category_code, status) VALUES
-('enum-groups-gb',      NULL, '国标标准',     1, NULL,                  'active'),
-('enum-groups-water',   NULL, '水利行业',     2, NULL,                  'active'),
-('enum-groups-water-monitor','enum-groups-water','监测分类', 1, 'dom_water_hydrology', 'active');
+-- 业务分组 (枚举专用,挂在 ont_biz_group): 国标标准 / 水利行业 / 监测分类
+INSERT OR IGNORE INTO ont_biz_group(id, parent_id, category_code, g_name, g_sort, icon, color, description) VALUES
+('group-enum-gb',           NULL,             NULL,                   '国标标准', 1, 'book',  '#165DFF', '国家标准枚举分组'),
+('group-enum-water',         NULL,             NULL,                   '水利行业', 2, 'droplet','#00B42A', '水利行业相关枚举'),
+('group-enum-water-monitor', 'group-enum-water','dom_water_hydrology',  '监测分类', 1, 'sliders','#FF7D00', '水文监测相关枚举');
 
--- 枚举类型 (4 条:行政区划/性别/工程类型/岗位)
-INSERT INTO ont_enum_types(id, group_id, rid, api_name, category_code, enum_type, max_level, top_code, status, rdfs_label, rdfs_comment, rdfs_see_also, rdfs_defined_by) VALUES
-('enum-types-area-district',  'enum-groups-gb','ri.ont.enum.library.area_district','area_district',NULL,'general_multi',5,NULL,'active',
+-- 枚举类型 (4 条) — 不再含 group_id,分组关系迁移至 ont_biz_group_class with group_type='enum_types'
+INSERT INTO ont_enum_types(id, rid, api_name, category_code, enum_type, max_level, top_code, status, rdfs_label, rdfs_comment, rdfs_see_also, rdfs_defined_by) VALUES
+('enum-types-area-district','ri.ont.enum.library.area_district','area_district',NULL,'general_multi',5,NULL,'active',
  '行政区划 (国标 GB/T 2260)','中华人民共和国行政区划代码国家标准，覆盖省、市、县、乡镇、村五级层级编码','http://www.mca.gov.cn/article/sj/xzqh/2024/','GB/T 2260-2024'),
-('enum-types-gender','enum-groups-gb','ri.ont.enum.library.gender','gender',NULL,'general_single',1,NULL,'active',
+('enum-types-gender','ri.ont.enum.library.gender','gender',NULL,'general_single',1,NULL,'active',
  '性别 (国标 GB/T 2261.1)','一级通用：男 / 女 / 未知',NULL,'GB/T 2261.1-2003'),
-('enum-types-eng-kind','enum-groups-water-monitor','ri.ont.enum.library.eng_kind','eng_kind','dom_water_engineering','biz_multi',2,NULL,'active',
+('enum-types-eng-kind','ri.ont.enum.library.eng_kind','eng_kind','dom_water_engineering','biz_multi',2,NULL,'active',
  '水利工程类型','按主体功能划分:水库 / 水电站 / 泵站 / 闸坝 / 堤防 / 渠道',NULL,'水利公共本体库'),
-('enum-types-job',  'enum-groups-water','ri.ont.enum.library.job','job',NULL,'biz_single',1,NULL,'inactive',
+('enum-types-job','ri.ont.enum.library.job','job',NULL,'biz_single',1,NULL,'inactive',
  '岗位类型','业务一级:管理 / 技术 / 调度 / 维护(已停用)',NULL,'人事公共本体库');
+
+-- 枚举类型 → 分组绑定 (统一表 ont_biz_group_class with group_type='enum_types')
+INSERT OR IGNORE INTO ont_biz_group_class(id, group_id, ref_id, group_type, category_code, g_sort) VALUES
+('gref-enum-ad',      'group-enum-gb',           'enum-types-area-district', 'enum_types', NULL, 1),
+('gref-enum-gender',  'group-enum-gb',           'enum-types-gender',        'enum_types', NULL, 2),
+('gref-enum-engkind', 'group-enum-water-monitor','enum-types-eng-kind',      'enum_types', 'dom_water_engineering', 1),
+('gref-enum-job',     'group-enum-water',        'enum-types-job',           'enum_types', NULL, 1);
 
 -- 行政区划：示例 5 条(北京市 -> 市辖区 -> 东城区 -> 东华门街道 -> 多福巷社区)
 INSERT INTO ont_enum_items(id, enum_id, code, api_name, label, parent_code, level, sort_num, status) VALUES
@@ -524,55 +546,85 @@ INSERT INTO ont_value_types(id, rid, api_name, category_code, base_type, constra
 ('value-types-area',     'ri.ont.value.types.area',     'area_code',NULL,'String','Enum',  NULL,'enum-types-area-district','vt-usage-config-default',1,'行政区划','基于国标行政区划的层级编码'),
 ('value-types-gender',   'ri.ont.value.types.gender',   'gender_code',NULL,'String','Enum',NULL,'enum-types-gender','vt-usage-config-default',1,'性别','基于国标性别枚举');
 
--- 给部分现有属性挂上格式化配置（覆盖多种分类的示例）
-INSERT INTO t_ont_property_format(
-    format_id, property_id, property_scope, format_enabled, format_type,
+-- ===== 值类型 → 分组绑定 (group_type='value_types') =====
+INSERT OR IGNORE INTO ont_biz_group_class(id, group_id, ref_id, group_type, category_code, g_sort) VALUES
+('gref-vt-text',   'group-vt-basic', 'value-types-text',   'value_types', NULL, 1),
+('gref-vt-mobile', 'group-vt-basic', 'value-types-mobile', 'value_types', NULL, 2),
+('gref-vt-rid',    'group-vt-id',    'value-types-rid',    'value_types', NULL, 1),
+('gref-vt-area',   'group-vt-enum',  'value-types-area',   'value_types', NULL, 1),
+('gref-vt-gender', 'group-vt-enum',  'value-types-gender', 'value_types', NULL, 2);
+
+-- ===== 接口 → 分组绑定 (group_type='interface') =====
+INSERT OR IGNORE INTO ont_biz_group_class(id, group_id, ref_id, group_type, category_code, g_sort) VALUES
+('gref-if-1','group-if-common',     'if-1','interface',NULL,1),
+('gref-if-2','group-if-common',     'if-2','interface',NULL,2),
+('gref-if-3','group-if-water',      'if-3','interface',NULL,1),
+('gref-if-4','group-if-water',      'if-4','interface',NULL,2),
+('gref-if-5','group-if-water',      'if-5','interface',NULL,3),
+('gref-if-6','group-if-water',      'if-6','interface',NULL,4),
+('gref-if-7','group-if-water',      'if-7','interface',NULL,5),
+('gref-if-8','group-if-water',      'if-8','interface',NULL,6),
+('gref-if-9','group-if-deprecated', 'if-9','interface',NULL,1);
+
+-- ===== 数据源 → 分组绑定 (group_type='datasources') =====
+INSERT OR IGNORE INTO ont_biz_group_class(id, group_id, ref_id, group_type, category_code, g_sort) VALUES
+('gref-ds-001','group-ds-main','datasource-00000000-mysql-001','datasources',NULL,1),
+('gref-ds-002','group-ds-main','datasource-00000000-mysql-002','datasources',NULL,2),
+('gref-ds-003','group-ds-main','datasource-0000-postgresql-001','datasources',NULL,3),
+('gref-ds-004','group-ds-main','datasource-0000-postgresql-002','datasources',NULL,4),
+('gref-ds-005','group-ds-main','datasource-000000-oracle-001','datasources',NULL,5),
+('gref-ds-006','group-ds-obs', 'datasource-00000-mongodb-001','datasources',NULL,1),
+('gref-ds-007','group-ds-main','datasource-0000000000-dm-001','datasources',NULL,6);
+
+-- 给部分现有属性挂上格式化配置（覆盖多种分类的示例; src_type=1 表示普通属性）
+INSERT INTO ont_property_format(
+    format_id, src_type, property_id, property_scope, format_enabled, format_type,
     decimal_places, use_thousand_sep, negative_mode, currency_symbol, accounting_align,
     date_pattern, time_pattern, locale, fraction_type, special_type, custom_format,
     text_force, text_max_length, text_regex, percent_auto_multiply
 ) VALUES
 -- 经度 (decimal) → 数值 6 位小数, 无千分位
-('property-format-cp-3','cp-3','class',1,'number',
+('property-format-cp-3', 1, 'cp-3','class',1,'number',
  6, 0, 3, '¥', 1,
  'yyyy-MM-dd','HH:mm:ss','zh-CN','# ?/?','zipcode','G/通用格式',
  0, NULL, NULL, 1),
 -- 纬度 (decimal) → 数值 6 位小数
-('property-format-cp-4','cp-4','class',1,'number',
+('property-format-cp-4', 1, 'cp-4','class',1,'number',
  6, 0, 3, '¥', 1,
  'yyyy-MM-dd','HH:mm:ss','zh-CN','# ?/?','zipcode','G/通用格式',
  0, NULL, NULL, 1),
 -- 测站编码 (string) → 特殊: 邮政编码风格 (强制保留前导零)
-('property-format-cp-1','cp-1','class',1,'special',
+('property-format-cp-1', 1, 'cp-1','class',1,'special',
  0, 0, 3, '¥', 1,
  'yyyy-MM-dd','HH:mm:ss','zh-CN','# ?/?','zipcode','G/通用格式',
  0, NULL, NULL, 1),
 -- 接口属性: 采样时间 (xsd:dateTime) → 日期 yyyy-MM-dd HH:mm:ss
-('property-format-ip-1','interface-pro-001','interface',1,'date',
+('property-format-ip-1', 1, 'interface-pro-001','interface',1,'date',
  0, 0, 3, '¥', 1,
  'yyyy-MM-dd HH:mm:ss','HH:mm:ss','zh-CN','# ?/?','zipcode','G/通用格式',
  0, NULL, NULL, 1),
 -- 接口属性: 观测值 (xsd:decimal) → 数值 4 位小数,千位分隔
-('property-format-ip-2','interface-pro-002','interface',1,'number',
+('property-format-ip-2', 1, 'interface-pro-002','interface',1,'number',
  4, 1, 3, '¥', 1,
  'yyyy-MM-dd','HH:mm:ss','zh-CN','# ?/?','zipcode','G/通用格式',
  0, NULL, NULL, 1),
 -- 接口属性: 经度 (xsd:decimal) → 数值 6 位
-('property-format-ip-3','interface-pro-003','interface',1,'number',
+('property-format-ip-3', 1, 'interface-pro-003','interface',1,'number',
  6, 0, 3, '¥', 1,
  'yyyy-MM-dd','HH:mm:ss','zh-CN','# ?/?','zipcode','G/通用格式',
  0, NULL, NULL, 1),
 -- 接口属性: 阈值 (xsd:decimal) → 数值 2 位,千位分隔
-('property-format-ip-9','interface-pro-009','interface',1,'number',
+('property-format-ip-9', 1, 'interface-pro-009','interface',1,'number',
  2, 1, 3, '¥', 1,
  'yyyy-MM-dd','HH:mm:ss','zh-CN','# ?/?','zipcode','G/通用格式',
  0, NULL, NULL, 1),
 -- 接口属性: 本期读数 (xsd:decimal) → 货币 2 位,千分位
-('property-format-ip-11','interface-pro-011','interface',1,'currency',
+('property-format-ip-11', 1, 'interface-pro-011','interface',1,'currency',
  2, 1, 3, '¥', 1,
  'yyyy-MM-dd','HH:mm:ss','zh-CN','# ?/?','zipcode','G/通用格式',
  0, NULL, NULL, 1),
 -- 接口属性: 水表编号 (xsd:string) → 文本,正则校验
-('property-format-ip-10','interface-pro-010','interface',1,'text',
+('property-format-ip-10', 1, 'interface-pro-010','interface',1,'text',
  0, 0, 3, '¥', 1,
  'yyyy-MM-dd','HH:mm:ss','zh-CN','# ?/?','zipcode','G/通用格式',
  1, 32, '^M[0-9]{6,12}$', 1);
@@ -580,3 +632,62 @@ INSERT INTO t_ont_property_format(
 -- 给部分属性绑定 value_type
 UPDATE ont_class_property SET value_type='value-types-text' WHERE id IN ('cp-2','cp-5');
 UPDATE ont_class_property SET value_type='value-types-area' WHERE id='cp-1';
+
+-- =============================================================
+-- 共享属性 (ont_shared_properties) — 跨类复用属性库
+-- 分组通过 ont_biz_group + ont_biz_group_class(group_type='shared_props') 关联
+-- =============================================================
+
+-- 共享属性分组 (3 组)
+INSERT OR IGNORE INTO ont_biz_group(id, parent_id, category_code, g_name, g_sort, icon, color, description) VALUES
+('group-sp-time',     NULL, NULL, '时间属性',     1, 'calendar', '#165DFF', '开始/结束/创建/更新时间等通用时间属性'),
+('group-sp-identity', NULL, NULL, '标识属性',     2, 'key',      '#722ED1', '名称/编码/状态等基础标识属性'),
+('group-sp-geo',      NULL, NULL, '地理属性',     3, 'mapPin',   '#00B42A', '经度/纬度/坐标系等地理属性');
+
+-- 共享属性数据 (12 条) — 覆盖时间 / 标识 / 地理 / 数值 等典型场景
+INSERT INTO ont_shared_properties(id, rid, category_code, prop_code, prop_type, data_type, value_type,
+  is_required, is_multi_valued_prop, is_range_constraint_prop,
+  xsd_min_length, xsd_max_length, xsd_pattern, xsd_min_inclusive, xsd_max_inclusive,
+  owl_functional, status, rdfs_label, rdfs_comment) VALUES
+('shared-properties-00000001','ri.ont.shared.props.start_time',  NULL, 'start_time',  'data', 'xsd:dateTime', NULL,
+  0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 1, '开始时间', '业务对象的开始时间, 通用于实体/事件/工程等'),
+('shared-properties-00000002','ri.ont.shared.props.end_time',    NULL, 'end_time',    'data', 'xsd:dateTime', NULL,
+  0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 1, '结束时间', '业务对象的结束时间, 与 start_time 配对使用'),
+('shared-properties-00000003','ri.ont.shared.props.create_time', NULL, 'create_time', 'data', 'xsd:dateTime', NULL,
+  1, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 1, '创建时间', '记录入库时间, 由系统自动生成'),
+('shared-properties-00000004','ri.ont.shared.props.update_time', NULL, 'update_time', 'data', 'xsd:dateTime', NULL,
+  1, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 1, '更新时间', '最近一次更新时间, 由系统自动维护'),
+('shared-properties-00000005','ri.ont.shared.props.name',        NULL, 'name',        'data', 'xsd:string',   'value-types-text',
+  1, 0, 0, 1, 128, NULL, NULL, NULL, 1, 1, '名称', '业务对象的中文名称, 长度 1-128 字符'),
+('shared-properties-00000006','ri.ont.shared.props.code',        NULL, 'code',        'data', 'xsd:string',   'value-types-text',
+  1, 0, 0, 2, 64, '^[A-Za-z0-9_\-]+$', NULL, NULL, 1, 1, '编码', '业务对象的唯一编码, 字母数字下划线连字符'),
+('shared-properties-00000007','ri.ont.shared.props.status',      NULL, 'status',      'data', 'xsd:string',   NULL,
+  1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '状态', '业务对象状态, 枚举: active / inactive / deprecated'),
+('shared-properties-00000008','ri.ont.shared.props.description', NULL, 'description', 'data', 'xsd:string',   NULL,
+  0, 0, 0, NULL, 2000, NULL, NULL, NULL, 0, 1, '说明', '业务对象的详细说明, 不超过 2000 字符'),
+('shared-properties-00000009','ri.ont.shared.props.longitude',  'dom_water_hydrology', 'longitude',  'data', 'xsd:decimal', NULL,
+  0, 0, 1, NULL, NULL, NULL, '-180', '180', 1, 1, '经度', '地理坐标-经度, WGS84 坐标系, 范围 [-180, 180]'),
+('shared-properties-00000010','ri.ont.shared.props.latitude',   'dom_water_hydrology', 'latitude',   'data', 'xsd:decimal', NULL,
+  0, 0, 1, NULL, NULL, NULL, '-90', '90', 1, 1, '纬度', '地理坐标-纬度, WGS84 坐标系, 范围 [-90, 90]'),
+('shared-properties-00000011','ri.ont.shared.props.altitude',   'dom_water_hydrology', 'altitude',   'data', 'xsd:decimal', NULL,
+  0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 1, '高程', '地理坐标-高程 (单位: 米), 基于 1985 国家高程基准'),
+('shared-properties-00000012','ri.ont.shared.props.creator',    NULL, 'creator',     'data', 'xsd:string',   NULL,
+  0, 0, 0, NULL, 64, NULL, NULL, NULL, 1, 1, '创建人', '记录创建人账号或姓名');
+
+-- 共享属性 ↔ 分组 关联 (ont_biz_group_class, group_type='shared_props')
+INSERT OR IGNORE INTO ont_biz_group_class(id, group_id, ref_id, group_type, category_code, g_sort) VALUES
+-- 时间属性组
+('sp-gc-01','group-sp-time',     'shared-properties-00000001', 'shared_props', NULL, 1),
+('sp-gc-02','group-sp-time',     'shared-properties-00000002', 'shared_props', NULL, 2),
+('sp-gc-03','group-sp-time',     'shared-properties-00000003', 'shared_props', NULL, 3),
+('sp-gc-04','group-sp-time',     'shared-properties-00000004', 'shared_props', NULL, 4),
+-- 标识属性组
+('sp-gc-05','group-sp-identity', 'shared-properties-00000005', 'shared_props', NULL, 1),
+('sp-gc-06','group-sp-identity', 'shared-properties-00000006', 'shared_props', NULL, 2),
+('sp-gc-07','group-sp-identity', 'shared-properties-00000007', 'shared_props', NULL, 3),
+('sp-gc-08','group-sp-identity', 'shared-properties-00000008', 'shared_props', NULL, 4),
+('sp-gc-12','group-sp-identity', 'shared-properties-00000012', 'shared_props', NULL, 5),
+-- 地理属性组
+('sp-gc-09','group-sp-geo',      'shared-properties-00000009', 'shared_props', 'dom_water_hydrology', 1),
+('sp-gc-10','group-sp-geo',      'shared-properties-00000010', 'shared_props', 'dom_water_hydrology', 2),
+('sp-gc-11','group-sp-geo',      'shared-properties-00000011', 'shared_props', 'dom_water_hydrology', 3);

@@ -80,17 +80,21 @@ CREATE TABLE IF NOT EXISTS ont_biz_group (
   update_time     TEXT NOT NULL DEFAULT (datetime('now','localtime'))
 );
 
--- 分组-对象关联表
+-- 分组关联表 (全系统共享): 通过 group_type 区分关联资源类型
+--   object_types / link_types / action_types / value_types / shared_props
+--   / functions / interface / datasources / enum_types
 CREATE TABLE IF NOT EXISTS ont_biz_group_class (
   id              TEXT PRIMARY KEY,
   group_id        TEXT NOT NULL,
-  class_id        TEXT NOT NULL,
+  ref_id          TEXT NOT NULL,                 -- 关联资源 ID (类型由 group_type 决定)
+  group_type      TEXT NOT NULL DEFAULT 'object_types',
   category_code   TEXT,
   g_sort          INTEGER NOT NULL DEFAULT 0,
   create_time     TEXT NOT NULL DEFAULT (datetime('now','localtime')),
   update_time     TEXT NOT NULL DEFAULT (datetime('now','localtime'))
 );
 CREATE INDEX IF NOT EXISTS idx_group_class_g ON ont_biz_group_class(group_id);
+CREATE INDEX IF NOT EXISTS idx_group_class_t ON ont_biz_group_class(group_type, ref_id);
 
 -- 本体业务类 / 接口 / 关系 / 动作（最小集，供其他模块占位）
 CREATE TABLE IF NOT EXISTS ont_class (
@@ -448,13 +452,22 @@ ALTER TABLE ont_interface_property ADD COLUMN value_type TEXT;
 ALTER TABLE ont_class_ds ADD COLUMN table_label     TEXT;
 ALTER TABLE ont_class_ds ADD COLUMN physical_fields TEXT;
 
+-- 分组关联表升级 (旧库迁移 class_id → ref_id + 新增 group_type)
+ALTER TABLE ont_biz_group_class ADD COLUMN ref_id     TEXT;
+ALTER TABLE ont_biz_group_class ADD COLUMN group_type TEXT NOT NULL DEFAULT 'object_types';
+-- 旧 class_id 数据回填到 ref_id (SQLite 不能 DROP COLUMN; class_id 沦为废弃列,保留兼容)
+UPDATE ont_biz_group_class SET ref_id = class_id WHERE ref_id IS NULL AND class_id IS NOT NULL;
+
 -- =============================================================
--- 属性格式化 (t_ont_property_format) — 与属性表 1:1 关联
+-- 属性格式化 (ont_property_format) — 与属性表/共享属性表 1:1 关联
+-- 通过 src_type 区分: 1=普通属性, 2=共享属性
 -- =============================================================
-CREATE TABLE IF NOT EXISTS t_ont_property_format (
+DROP TABLE IF EXISTS t_ont_property_format;  -- 老的带 t_ 前缀的表已废弃
+CREATE TABLE IF NOT EXISTS ont_property_format (
   format_id        TEXT PRIMARY KEY,                   -- "property-format-" + UUID
-  property_id      TEXT NOT NULL UNIQUE,               -- 关联 ont_class_property.id 或 ont_interface_property.id
-  property_scope   TEXT NOT NULL DEFAULT 'class',      -- class | interface (区分属性归属)
+  src_type         INTEGER NOT NULL DEFAULT 1,         -- 1=属性, 2=共享属性
+  property_id      TEXT NOT NULL UNIQUE,               -- 关联属性 ID (非外键, 由 src_type 决定具体来源表)
+  property_scope   TEXT NOT NULL DEFAULT 'class',      -- class | interface (src_type=1 时区分类属性 / 接口属性)
   format_enabled   INTEGER NOT NULL DEFAULT 0,
   format_type      TEXT NOT NULL DEFAULT 'general',    -- general/number/currency/accounting/date/time/percent/fraction/scientific/text/special/custom
   decimal_places   INTEGER DEFAULT 2,
@@ -476,7 +489,8 @@ CREATE TABLE IF NOT EXISTS t_ont_property_format (
   update_time      TEXT NOT NULL DEFAULT (datetime('now','localtime')),
   create_user      TEXT
 );
-CREATE INDEX IF NOT EXISTS idx_propfmt_prop ON t_ont_property_format(property_id);
+CREATE INDEX IF NOT EXISTS idx_propfmt_prop ON ont_property_format(property_id);
+CREATE INDEX IF NOT EXISTS idx_propfmt_src  ON ont_property_format(src_type);
 
 -- =============================================================
 -- 值类型 (Value types)
@@ -513,25 +527,14 @@ CREATE TABLE IF NOT EXISTS ont_valuetypes_usage_config (
 );
 
 -- =============================================================
--- 枚举类型 (Enum types)
+-- 枚举类型 (Enum types) — 已废弃 ont_enum_group,改用 ont_biz_group_class with group_type='enum_types'
 -- =============================================================
--- 枚举分组(树形)
-CREATE TABLE IF NOT EXISTS ont_enum_group (
-  id            TEXT PRIMARY KEY,                       -- "enum-groups-" + UUID
-  parent_id     TEXT,                                   -- NULL = 顶级
-  group_name    TEXT NOT NULL,
-  sort_num      INTEGER NOT NULL DEFAULT 0,
-  category_code TEXT,
-  status        TEXT NOT NULL DEFAULT 'active',
-  create_time   TEXT NOT NULL DEFAULT (datetime('now','localtime')),
-  update_time   TEXT NOT NULL DEFAULT (datetime('now','localtime'))
-);
-CREATE INDEX IF NOT EXISTS idx_eg_parent ON ont_enum_group(parent_id);
+-- 老的枚举分组表 (废弃,启动时清理)
+DROP TABLE IF EXISTS ont_enum_group;
 
--- 枚举类型主表
+-- 枚举类型主表 (不再含 group_id;分组关系迁移至 ont_biz_group_class)
 CREATE TABLE IF NOT EXISTS ont_enum_types (
   id            TEXT PRIMARY KEY,                       -- "enum-types-" + UUID
-  group_id      TEXT,
   rid           TEXT,
   api_name      TEXT NOT NULL UNIQUE,
   category_code TEXT,
@@ -546,7 +549,6 @@ CREATE TABLE IF NOT EXISTS ont_enum_types (
   create_time   TEXT NOT NULL DEFAULT (datetime('now','localtime')),
   update_time   TEXT NOT NULL DEFAULT (datetime('now','localtime'))
 );
-CREATE INDEX IF NOT EXISTS idx_et_group ON ont_enum_types(group_id);
 
 -- 枚举项(数据)
 CREATE TABLE IF NOT EXISTS ont_enum_items (
@@ -616,3 +618,52 @@ CREATE TABLE IF NOT EXISTS ont_enum_sync_log (
 );
 CREATE INDEX IF NOT EXISTS idx_eslog_enum ON ont_enum_sync_log(enum_id);
 CREATE INDEX IF NOT EXISTS idx_eslog_time ON ont_enum_sync_log(sync_time);
+
+-- =============================================================
+-- 共享属性 (Shared properties)
+-- 跨对象类型复用的属性,一次定义全局生效。通过 ont_biz_group_class
+-- (group_type='shared_props') 关联到业务领域分组。
+-- 引用关系通过 ont_class_properties.shared_prop_id 反向追踪(可选字段)。
+-- =============================================================
+CREATE TABLE IF NOT EXISTS ont_shared_properties (
+  id                         TEXT PRIMARY KEY,                       -- "shared-properties-" + UUID
+  rid                        TEXT,                                   -- 全局 RID
+  category_code              TEXT,                                   -- 所属领域 ont_biz_category.category_code
+  prop_code                  TEXT NOT NULL UNIQUE,                   -- 属性编码,英文小写+下划线
+  prop_type                  TEXT NOT NULL DEFAULT 'data',           -- data / object / annotation
+  is_key                     INTEGER NOT NULL DEFAULT 0,             -- HasKey
+  data_type                  TEXT,                                   -- XSD 类型: xsd:string 等
+  value_type                 TEXT,                                   -- 关联值类型 id
+  is_required                INTEGER NOT NULL DEFAULT 0,
+  is_multi_valued_prop       INTEGER NOT NULL DEFAULT 0,
+  is_range_constraint_prop   INTEGER NOT NULL DEFAULT 0,
+  xsd_min_length             INTEGER,
+  xsd_max_length             INTEGER,
+  xsd_length                 INTEGER,
+  xsd_pattern                TEXT,
+  xsd_min_inclusive          TEXT,
+  xsd_max_inclusive          TEXT,
+  owl_functional             INTEGER NOT NULL DEFAULT 0,
+  owl_inverse_functional     INTEGER NOT NULL DEFAULT 0,
+  owl_transitive             INTEGER NOT NULL DEFAULT 0,
+  owl_symmetric              INTEGER NOT NULL DEFAULT 0,
+  owl_asymmetric             INTEGER NOT NULL DEFAULT 0,
+  owl_reflexive              INTEGER NOT NULL DEFAULT 0,
+  owl_irreflexive            INTEGER NOT NULL DEFAULT 0,
+  status                     INTEGER NOT NULL DEFAULT 1,             -- 0 禁用 1 启用
+  metadata                   TEXT,                                   -- JSON: 业务元数据公理
+  rdfs_label                 TEXT,
+  rdfs_comment               TEXT,
+  rdfs_see_also              TEXT,
+  rdfs_defined_by            TEXT,
+  create_time                TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  update_time                TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
+CREATE INDEX IF NOT EXISTS idx_sp_category ON ont_shared_properties(category_code);
+CREATE INDEX IF NOT EXISTS idx_sp_code     ON ont_shared_properties(prop_code);
+CREATE INDEX IF NOT EXISTS idx_sp_status   ON ont_shared_properties(status);
+
+-- 对象类属性表 反向引用共享属性的可选字段
+-- (引用关系也可通过 prop_code 字符串匹配; 这里仅保留字段供未来强关联)
+-- 在生产数据库迁移时执行: ALTER TABLE ont_class_properties ADD COLUMN shared_prop_id TEXT;
+-- 此处不强制 ADD,避免老库重复执行报错。

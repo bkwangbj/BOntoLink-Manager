@@ -467,16 +467,17 @@ function onCancel() { emit('update:open', false) }
 </script>
 
 <style scoped>
+/* 属性详情抽屉 — 嵌套于对象抽屉之上,层级再加 1 (1010 > 对象抽屉 1000) */
 .pd-drawer {
-  position: absolute; top: 0; right: 0; bottom: 0;
+  position: fixed; top: 0; right: 0; bottom: 0;
   background: var(--bl-bg-1);
   border-left: 1px solid var(--bl-border);
-  box-shadow: -2px 0 12px rgba(0,0,0,.08);
+  box-shadow: -4px 0 16px rgba(0,0,0,.12);
   display: flex; flex-direction: column;
-  min-width: 520px; z-index: 30;
+  min-width: 520px; z-index: 1010;
 }
 .pd-drag { position: absolute; left: -2px; top: 0; bottom: 0; width: 5px;
-  cursor: col-resize; transition: background-color .15s; z-index: 31; }
+  cursor: col-resize; transition: background-color .15s; z-index: 1011; }
 .pd-drag:hover, .pd-drag.is-resizing { background: var(--bl-primary); }
 
 .pd-hd { flex-shrink: 0; display: flex; align-items: center; gap: 8px;

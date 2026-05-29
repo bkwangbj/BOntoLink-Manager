@@ -1,16 +1,22 @@
 <template>
   <Teleport to="body">
     <transition name="pf-fade">
-      <div v-if="open" class="pf-mask" @click.self="onCancel">
-        <div class="pf-modal">
-          <div class="pf-hd">
-            <div>
+      <div v-if="open" :class="['pf-mask', dm.state.free && 'is-free']" @click.self="onCancel">
+        <div class="pf-modal" :class="{ 'is-max': dm.state.maximized }" :style="dm.modalStyle.value" data-dm-root>
+          <div class="pf-hd" :class="{ 'is-draggable': !dm.state.maximized }" @mousedown="dm.startDrag">
+            <div class="pf-hd-l">
               <div class="pf-title">
                 {{ isBatch ? `批量设置格式化 (${propertyIds.length} 项)` : '属性格式化配置' }}
               </div>
               <div class="pf-sub bl-muted">{{ subtitle || '一次定义全系统生效 · 数据语义与展示规范固化' }}</div>
             </div>
-            <button class="bl-btn bl-btn-text bl-btn-icon" @click="onCancel" v-html="BL.icon('x', 14)"></button>
+            <div class="pf-hd-r" @mousedown.stop>
+              <button class="bl-btn bl-btn-text bl-btn-icon"
+                      :title="dm.state.maximized ? '还原' : '最大化'"
+                      @click="dm.toggleMax"
+                      v-html="BL.icon(dm.state.maximized ? 'minimize' : 'maximize', 13)"></button>
+              <button class="bl-btn bl-btn-text bl-btn-icon" @click="onCancel" v-html="BL.icon('x', 14)"></button>
+            </div>
           </div>
 
           <div class="pf-toggle">
@@ -191,6 +197,9 @@
               <button class="bl-btn bl-btn-primary" @click="onSave">确定</button>
             </div>
           </div>
+
+          <!-- 八向缩放热区 -->
+          <DraggableHandles v-if="!dm.state.maximized" :on="dm.startResize" />
         </div>
       </div>
     </transition>
@@ -201,6 +210,11 @@
 import { ref, reactive, computed, watch } from 'vue'
 import { BL } from '@/lib/bl.js'
 import { propertyFormatApi } from '@/api'
+import { useDraggableModal } from '@/lib/useDraggableModal.js'
+import DraggableHandles from '@/components/DraggableHandles.vue'
+
+/* 拖动 / 最大化 / 八向缩放 */
+const dm = useDraggableModal({ minWidth: 600, minHeight: 420 })
 import FieldRow from '@/views/config/category/FieldRow.vue'
 
 const props = defineProps({
@@ -313,7 +327,8 @@ const form = reactive(defaultForm())
 const preset = ref('')
 
 watch(() => props.open, async (v) => {
-  if (!v) return
+  if (!v) { dm.reset(); return }
+  dm.reset()  // 每次打开恢复默认尺寸
   preset.value = ''
   Object.assign(form, defaultForm())
   // 批量模式: 不预读单条配置,使用全默认值 (用户的设置将覆盖到所有选中项)
@@ -428,13 +443,22 @@ function onCancel() { emit('cancel'); emit('update:open', false) }
 </script>
 
 <style scoped>
-.pf-mask { position: fixed; inset: 0; background: rgba(0,0,0,.40); z-index: 999;
+/* z-index 必须高于:对象类型详情抽屉(1000) + 属性详情抽屉(1010) + 抽屉 resize 把手(1011),
+   并低于全局 toast/confirm。设为 1200 保证模态完整覆盖于所有抽屉之上 */
+.pf-mask { position: fixed; inset: 0; background: rgba(0,0,0,.40); z-index: 1200;
   display: flex; align-items: center; justify-content: center; }
-.pf-modal { background: var(--bl-bg-1); border-radius: 12px;
+/* free 模式: 关闭 flex 居中,让弹框按显式 fixed 坐标定位 */
+.pf-mask.is-free { display: block; }
+.pf-modal { position: relative; background: var(--bl-bg-1); border-radius: 12px;
   width: 800px; max-width: 95vw; height: calc(100vh - 120px); min-height: 520px;
   display: flex; flex-direction: column; overflow: hidden;
   box-shadow: 0 12px 40px rgba(0,0,0,.20); }
-.pf-hd { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--bl-divider); }
+.pf-modal.is-max { box-shadow: none; }
+.pf-hd { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--bl-divider); user-select: none; }
+.pf-hd.is-draggable { cursor: move; }
+.pf-hd.is-draggable:active { cursor: grabbing; }
+.pf-hd-l { min-width: 0; flex: 1; }
+.pf-hd-r { display: inline-flex; align-items: center; gap: 2px; flex-shrink: 0; margin-left: 12px; }
 .pf-title { font-size: 15px; font-weight: 600; }
 .pf-sub { font-size: 12px; }
 .pf-toggle { padding: 10px 16px; background: var(--bl-bg-2); border-bottom: 1px solid var(--bl-divider); font-size: 13px; }

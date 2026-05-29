@@ -33,6 +33,12 @@
     </PageHeader>
 
     <div class="vt-body">
+      <LeftGroupTree ref="groupTreeRef"
+                     type="value_types"
+                     title="值类型分组"
+                     :total-count="rows.length"
+                     store-key="value-types"
+                     @change="onGroupChange" />
       <div class="bl-card list-card">
         <div class="list-scroll">
           <table class="bl-table vt-table">
@@ -89,16 +95,16 @@
           <div class="vt-pager-l">
             <template v-if="checked.size">
               已选 <b style="color:var(--bl-primary)">{{ checked.size }}</b> 项
-              <button class="bl-btn bl-btn-sm bl-btn-danger" style="margin-left:8px" @click="batchRemove">
+              <button class="bl-btn bl-btn-sm vt-del-btn" style="margin-left:8px" @click="batchRemove">
                 <span v-html="BL.icon('trash', 12)"></span><span style="margin-left:4px">删除</span>
               </button>
-              <button class="bl-btn bl-btn-sm" style="margin-left:6px" @click="batchSetStatus(1)">
+              <button class="bl-btn bl-btn-sm vt-ena-btn" style="margin-left:6px" @click="batchSetStatus(1)">
                 <span v-html="BL.icon('check', 12)"></span><span style="margin-left:4px">启用</span>
               </button>
-              <button class="bl-btn bl-btn-sm" style="margin-left:6px" @click="batchSetStatus(0)">
+              <button class="bl-btn bl-btn-sm vt-dis-btn" style="margin-left:6px" @click="batchSetStatus(0)">
                 <span v-html="BL.icon('power', 12)"></span><span style="margin-left:4px">禁用</span>
               </button>
-              <button class="bl-btn bl-btn-sm bl-btn-text" style="margin-left:6px" @click="checked = new Set()">取消选择</button>
+              <button class="bl-btn bl-btn-sm bl-btn-text vt-clear-btn" style="margin-left:6px" @click="checked = new Set()">取消选择</button>
             </template>
             <template v-else>
               共 {{ filtered.length }} 项
@@ -213,11 +219,28 @@
                 <template v-if="form.constraint_type === 'Enum'">
                   <div class="sec sub">引用枚举</div>
                   <FieldRow label="关联枚举 *" inline>
-                    <div class="bl-row" style="gap:6px;flex:1">
-                      <select class="bl-input" v-model="form.enum_id">
-                        <option value="">— 请选择 —</option>
-                        <option v-for="e in enumTypes" :key="e.id" :value="e.id">{{ e.rdfs_label || e.api_name }} ({{ enumTypeLabel(e.enum_type) }})</option>
-                      </select>
+                    <div class="bl-row vt-enum-pick" style="gap:6px;flex:1">
+                      <!-- 已选: 国标名称 + 类型 tag + RID;未选: 灰色占位 -->
+                      <div :class="['vt-enum-display', !form.enum_id && 'is-empty']" @click="openEnumPicker">
+                        <template v-if="pickedEnum">
+                          <span class="vt-enum-ic" :style="{ background: enumColor(pickedEnum) }"
+                                v-html="BL.icon(enumIcon(pickedEnum), 12, '#fff')"></span>
+                          <span class="vt-enum-name bl-truncate" :title="pickedEnum.rdfs_label || pickedEnum.api_name">
+                            {{ pickedEnum.rdfs_label || pickedEnum.api_name }}
+                          </span>
+                          <span class="bl-tag" style="flex-shrink:0">{{ enumTypeLabel(pickedEnum.enum_type) }}</span>
+                          <span class="bl-mono bl-muted bl-truncate vt-enum-rid" :title="pickedEnum.rid">{{ pickedEnum.rid || '' }}</span>
+                        </template>
+                        <template v-else>
+                          <span class="vt-enum-ic vt-enum-ic-empty" v-html="BL.icon('list', 12)"></span>
+                          <span class="bl-muted">— 点击选择枚举 —</span>
+                        </template>
+                      </div>
+                      <button class="bl-btn bl-btn-sm" @click="openEnumPicker">
+                        <span v-html="BL.icon('search', 11)"></span>
+                        <span style="margin-left:4px">{{ form.enum_id ? '更换' : '选择' }}</span>
+                      </button>
+                      <button v-if="form.enum_id" class="bl-btn bl-btn-sm bl-btn-text" title="清除" @click="form.enum_id = ''" v-html="BL.icon('x', 11)"></button>
                       <button class="bl-btn bl-btn-sm" @click="goCreateEnum" title="跳转到枚举类型页面创建新枚举">创建</button>
                     </div>
                   </FieldRow>
@@ -318,6 +341,14 @@
         </aside>
       </transition>
     </div>
+
+    <!-- 枚举选择面板: 由"关联枚举"字段唤起 -->
+    <EnumPickerModal v-model:open="enumPickerOpen"
+                     v-model="form.enum_id"
+                     :multi="false"
+                     :required="true"
+                     subtitle="为当前值类型选择关联枚举"
+                     @confirm="onEnumConfirm" />
   </div>
 </template>
 
@@ -327,6 +358,8 @@ import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
 import { valueTypeApi, enumTypeApi, categoryApi } from '@/api'
+import LeftGroupTree from '@/components/LeftGroupTree.vue'
+import EnumPickerModal from '@/components/EnumPickerModal.vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -353,6 +386,32 @@ const tabs = [
 const rows = ref([])
 const enumTypes = ref([])
 const allEnumItems = ref({})  // enumId -> items[]
+
+/* 枚举选择面板 */
+const enumPickerOpen = ref(false)
+const pickedEnum = computed(() => form.enum_id ? enumTypes.value.find(e => e.id === form.enum_id) : null)
+function openEnumPicker() { enumPickerOpen.value = true }
+function onEnumConfirm({ ids, rows: picked }) {
+  // EnumPickerModal 已通过 v-model 写回 form.enum_id;此处仅在用户切换枚举时清空缓存并立即加载新项
+  if (picked && picked[0]) {
+    // 把后端 picker 返回的枚举行合并进 enumTypes 缓存,避免标签短暂回退到 id
+    if (!enumTypes.value.some(e => e.id === picked[0].id)) {
+      enumTypes.value = [...enumTypes.value, picked[0]]
+    }
+  }
+}
+
+/* 枚举图标 / 配色 (与 EnumPickerModal 卡片视觉保持一致) */
+function enumIcon(e) {
+  const t = e?.enum_type || 'general_single'
+  return t.endsWith('_multi') ? 'layers' : 'list'
+}
+function enumColor(e) {
+  if (!e || e.status !== 'active') return '#86909C'
+  const t = e.enum_type || 'general_single'
+  if (t.startsWith('biz')) return '#FF7D00'
+  return '#165DFF'
+}
 const domainOpts = ref([])
 const usageConfigsCache = ref([])  // 缓存 ont_valuetypes_usage_config,用于 openEdit 时回填 usageCfg
 const q = ref('')
@@ -387,8 +446,16 @@ function sortArrow(key) {
   return sortDir.value === 'asc' ? ' ↑' : ' ↓'
 }
 
+/* —— 左侧分组树 —— */
+const groupTreeRef = ref(null)
+const selectedGroupRefIds = ref(null)
+function onGroupChange() {
+  selectedGroupRefIds.value = groupTreeRef.value?.refIdsInSelectedGroup?.() ?? null
+}
+
 const filtered = computed(() => {
   let list = rows.value
+  if (selectedGroupRefIds.value) list = list.filter(r => selectedGroupRefIds.value.has(r.id))
   if (filterStatus.value === 'on')  list = list.filter(r => r.status === 1)
   if (filterStatus.value === 'off') list = list.filter(r => r.status === 0)
   if (filterCategory.value) list = list.filter(r => r.category_code === filterCategory.value)
@@ -735,7 +802,7 @@ onBeforeUnmount(() => {
   border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
 
 /* —— 主体 —— */
-.vt-body { flex: 1; position: relative; display: flex; padding: 12px; overflow: hidden; }
+.vt-body { flex: 1; position: relative; display: flex; gap: 12px; padding: 12px; overflow: hidden; }
 .list-card { flex: 1; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
 
 .list-scroll { flex: 1; min-height: 0; overflow: auto; }
@@ -759,13 +826,23 @@ onBeforeUnmount(() => {
 .vt-pager-l { display: flex; align-items: center; flex-wrap: wrap; gap: 0; min-width: 0; }
 .vt-page-size { width: 64px; height: 26px; }
 
-/* —— 抽屉 —— */
+/* 批量操作按钮 (统一 outline 配色: 删除红 / 启用绿 / 禁用灰 / 取消选择纯文字) */
+.vt-del-btn { background: #fff; border: 1px solid #f53f3f; color: #f53f3f; }
+.vt-del-btn:hover { background: #fff1f0; }
+.vt-ena-btn { background: #fff; border: 1px solid #00b42a; color: #00b42a; }
+.vt-ena-btn:hover { background: #e8fff4; }
+.vt-dis-btn { background: #fff; border: 1px solid #86909c; color: #4e5969; }
+.vt-dis-btn:hover { background: #f7f8fa; }
+.vt-clear-btn { color: var(--bl-text-3); }
+.vt-clear-btn:hover { color: var(--bl-primary); }
+
+/* —— 抽屉 (全局层之上,覆盖整个视口高度) —— */
 .vt-drawer {
-  position: absolute; top: 0; right: 0; bottom: 0;
+  position: fixed; top: 0; right: 0; bottom: 0;
   background: var(--bl-bg-1);
   border-left: 1px solid var(--bl-border);
-  box-shadow: -2px 0 12px rgba(0,0,0,.06);
-  display: flex; flex-direction: column; min-width: 480px; z-index: 5;
+  box-shadow: -4px 0 16px rgba(0,0,0,.10);
+  display: flex; flex-direction: column; min-width: 480px; z-index: 1000;
 }
 .vt-drag-handle { position: absolute; left: -2px; top: 0; bottom: 0; width: 5px;
   cursor: col-resize; transition: background-color .15s; z-index: 6; }
@@ -837,4 +914,27 @@ onBeforeUnmount(() => {
 
 /* 抽屉内 FieldRow inline label 加宽避免换行 */
 .vt-drawer :deep(.fr.fr-inline .fr-label) { width: 78px; }
+
+/* —— 引用枚举: 已选展示 + 选择/清除/创建 一行 —— */
+.vt-enum-pick { align-items: center; flex-wrap: nowrap; min-width: 0; }
+.vt-enum-display {
+  flex: 1; min-width: 0;
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 32px; padding: 0 10px;
+  border: 1px solid var(--bl-border); border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  transition: border-color .12s, background-color .12s;
+}
+.vt-enum-display:hover { border-color: var(--bl-primary); }
+.vt-enum-display.is-empty { background: var(--bl-bg-2); border-style: dashed; }
+.vt-enum-ic {
+  width: 20px; height: 20px; border-radius: 4px;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.vt-enum-ic-empty { background: transparent; color: var(--bl-text-3); }
+.vt-enum-name { flex-shrink: 1; min-width: 0; font-weight: 500; color: var(--bl-text-1); }
+.vt-enum-rid { flex-shrink: 2; min-width: 0; font-size: 11px; max-width: 40%; }
 </style>

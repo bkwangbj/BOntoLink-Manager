@@ -130,17 +130,21 @@
                 <div class="map-table-wrap">
                   <table class="bl-table map-table">
                     <thead>
+                      <!-- 行1: 分组横幅 (物理 / 属性 + 两端空位用配色填充) -->
                       <tr>
-                        <th rowspan="2" style="width:34px"><input type="checkbox" :checked="allPropsChecked" @change="togglePropAll" /></th>
+                        <th class="th-corner-l" style="width:34px"></th>
                         <th colspan="2" class="th-group bg-l">物理</th>
                         <th colspan="7" class="th-group bg-c">属性</th>
-                        <th rowspan="2" style="width:48px">操作</th>
+                        <th class="th-corner-r" style="width:48px"></th>
                       </tr>
+                      <!-- 行2: 列名 -->
                       <tr>
+                        <th class="th-col-l"><input type="checkbox" :checked="allPropsChecked" @change="togglePropAll" /></th>
                         <th class="bg-l">表</th><th class="bg-l">字段</th>
                         <th class="bg-c">代码</th><th class="bg-c">名称</th><th class="bg-c">数据类型</th>
                         <th class="bg-c t-center">主键</th><th class="bg-c t-center">必填</th>
                         <th class="bg-c t-center">多值</th><th class="bg-c t-center" title="值域约束">约束</th>
+                        <th class="th-col-r">操作</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -472,13 +476,60 @@ function goNext() {
 .map-title { font-size: 13px; font-weight: 600; }
 .map-search { position: relative; display: inline-flex; align-items: center; gap: 6px; }
 .map-search .bl-input { width: 160px; height: 26px; padding: 0 6px; font-size: 12px; }
-.map-table-wrap { overflow: auto; }
-.map-table { width: 100%; min-width: 1000px; font-size: 12px; }
+/* 滚动区: 限制最大高度,让表格在自身区域内滚动而非随整个向导滚动 */
+.map-table-wrap {
+  max-height: 240px;
+  overflow-y: scroll;   /* 始终显示纵向滚动条占位,避免行数恰好触底时的"跳动" */
+  overflow-x: auto;
+  border-top: 1px solid var(--bl-divider);
+}
+.map-table { width: 100%; min-width: 1000px; font-size: 12px; border-collapse: separate; border-spacing: 0; }
+/* 表头固定: 滚动时表头始终可见,行在其下方滚动 */
+.map-table thead th {
+  position: sticky;
+  z-index: 2;
+}
+.map-table thead tr:first-child th { top: 0; }
+.map-table thead tr:last-child th  { top: 30px; }   /* 第一行约 30px 高,第二行紧贴其下 */
 .map-table th { padding: 6px 8px; }
 .map-table td { padding: 4px 6px; }
-.th-group { font-weight: 600; text-align: center; }
+/* —— 表头两层结构 (无 rowspan,所有 th 高度严格对齐,sticky 表现一致) —— */
+/* 行1: 分组横幅 */
+.map-table thead tr:first-child th {
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+.map-table thead tr:first-child th.th-corner-l { background: #f0f7ff; }
+.map-table thead tr:first-child th.th-corner-r { background: #fff8ef; }
+
+/* 行2: 列名 + 统一颜色下划线 */
+.map-table thead tr:last-child th {
+  font-weight: 600;
+  border-bottom: 2px solid var(--bl-divider);
+}
+.map-table thead tr:last-child th.bg-l {
+  background: #e8f4ff;
+  border-bottom-color: #b6dafa;
+}
+.map-table thead tr:last-child th.bg-c {
+  background: #fff4e8;
+  border-bottom-color: #fad9b8;
+}
+/* 列名行: ☐ / 操作 两端的下划线分别匹配相邻分组色,使整行下划线连续 */
+.map-table thead tr:last-child th.th-col-l {
+  background: #f0f7ff;
+  border-bottom-color: #b6dafa;
+}
+.map-table thead tr:last-child th.th-col-r {
+  background: #fff8ef;
+  border-bottom-color: #fad9b8;
+}
+.th-group { font-weight: 700; text-align: center; font-size: 12.5px; letter-spacing: 0.5px; }
 .bg-l { background: #e8f4ff; }
 .bg-c { background: #fff4e8; }
+.map-table tbody tr { background: #fff; }
+.map-table tbody tr:nth-child(even) { background: #fafbfc; }
+.map-table tbody tr:hover { background: #f5f7fa; }
+.map-table tbody td { border-bottom: 1px solid #f0f0f0; }
 .map-table .bl-input.bl-input-xs { height: 26px; padding: 0 6px; font-size: 12px; }
 .t-center { text-align: center; }
 

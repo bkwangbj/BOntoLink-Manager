@@ -19,6 +19,12 @@ public class GroupController {
         return R.ok(service.listByParent(parentId));
     }
 
+    /** 返回所有分组 (扁平,前端组装树) */
+    @GetMapping("/all")
+    public R<List<BizGroup>> listAll() {
+        return R.ok(service.listAll());
+    }
+
     @PostMapping
     public R<BizGroup> create(@RequestBody BizGroup g) { return R.ok(service.create(g)); }
 
