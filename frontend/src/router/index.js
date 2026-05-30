@@ -7,7 +7,7 @@ const routes = [
   { path: '/workspace/instances',name: 'instances',component: () => import('@/views/workspace/Instances.vue'), meta: { title: '实例' } },
 
   { path: '/resources/object-types', name: 'objectTypes', component: () => import('@/views/resources/ObjectTypes.vue'), meta: { title: '对象类型' } },
-  { path: '/resources/link-types',   name: 'linkTypes',   component: () => import('@/views/resources/LinkTypes.vue'),   meta: { title: '关系类型' } },
+  { path: '/resources/link-types',   name: 'linkTypes',   component: () => import('@/views/resources/LinkTypes.vue'),   meta: { title: '链接' } },
   { path: '/resources/action-types', name: 'actionTypes', component: () => import('@/views/resources/ActionTypes.vue'), meta: { title: '动作类型' } },
   { path: '/resources/value-types',  name: 'valueTypes',  component: () => import('@/views/config/ValueTypes.vue'), meta: { title: '值类型' } },
   { path: '/resources/enum-types',   name: 'enumTypes',   component: () => import('@/views/config/EnumTypes.vue'),  meta: { title: '枚举类型' } },

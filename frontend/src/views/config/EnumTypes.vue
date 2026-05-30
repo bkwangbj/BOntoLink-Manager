@@ -20,59 +20,15 @@
 
     <div class="et-body">
      <div class="et-inner">
-      <!-- 左侧：分组 + 枚举树 -->
-      <aside class="et-tree">
-        <div class="et-tree-hd">
-          <span class="et-tree-title">枚举分组</span>
-          <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" :class="treeSearchOpen && 'is-on'" title="搜索分组 / 枚举" @click="toggleTreeSearch">
-            <span v-html="BL.icon('search', 12)"></span>
-          </button>
-          <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="新建分组" @click="openCreateGroup()">
-            <span v-html="BL.icon('plus', 12)"></span>
-          </button>
-        </div>
-        <div v-if="treeSearchOpen" class="et-tree-search">
-          <span class="et-tree-search-ic" v-html="BL.icon('search', 11)"></span>
-          <input ref="treeSearchInput" class="bl-input et-tree-search-input" v-model="treeQ" placeholder="过滤分组 / 枚举..." @keydown.esc="closeTreeSearch" />
-          <button v-if="treeQ" class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" @click="treeQ = ''" v-html="BL.icon('x', 10)"></button>
-        </div>
-        <div class="et-tree-list">
-          <div :class="['et-row', !activeId && 'is-active']" @click="selectAll">
-            <span v-html="BL.icon('grid', 12)"></span>
-            <span style="margin-left:6px">全部枚举</span>
-            <span class="et-count">{{ enumTypes.length }}</span>
-          </div>
-          <template v-for="g in topGroups" :key="g.id">
-            <div :class="['et-row et-group', activeGroupId===g.id && 'is-active']" @click="selectGroup(g.id)">
-              <span class="et-chev" :class="expanded.has(g.id) && 'is-open'" @click.stop="toggleExpand(g.id)" v-html="BL.icon('chevronRight', 11)"></span>
-              <span v-html="BL.icon('folder', 12)"></span>
-              <span style="margin-left:6px">{{ g.group_name }}</span>
-              <span class="et-count">{{ countInGroup(g.id) }}</span>
-            </div>
-            <template v-if="expanded.has(g.id)">
-              <div v-for="sg in childrenOfFiltered(g.id)" :key="sg.id"
-                   :class="['et-row et-subgroup', activeGroupId===sg.id && 'is-active']" @click="selectGroup(sg.id)">
-                <span class="et-pad"></span>
-                <span v-html="BL.icon('folder', 12)"></span>
-                <span style="margin-left:6px">{{ sg.group_name }}</span>
-                <span class="et-count">{{ countInGroup(sg.id) }}</span>
-              </div>
-              <div v-for="e in enumsInGroup(g.id)" :key="e.id"
-                   :class="['et-row et-enum', activeId===e.id && 'is-active']" @click="selectEnum(e)">
-                <span class="et-pad"></span>
-                <span class="enum-ic" :style="{ background: enumColor(e) }" v-html="BL.icon(enumIcon(e), 11, '#fff')"></span>
-                <span style="margin-left:6px" class="bl-truncate">{{ e.rdfs_label || e.api_name }}</span>
-                <span class="et-count">{{ e.item_count || 0 }}</span>
-              </div>
-            </template>
-          </template>
-        </div>
-      </aside>
+      <!-- 左侧: 统一行业分类树 (与对象类型 / 值类型 / 共享属性 等共用) -->
+      <CategoryTreeFilter :rows="enumTypes"
+                          title="行业分类"
+                          total-label="全部枚举"
+                          store-key="enum-types"
+                          @change="onCategoryChange" />
 
-      <!-- 右侧：列表 / 详情 -->
+      <!-- 右侧: 类型列表 (始终展示, 点击行后右侧滑出详情抽屉) -->
       <section class="et-main">
-        <!-- 类型列表(未选中具体枚举时) -->
-        <template v-if="!current">
           <div class="list-card">
             <div class="list-scroll">
               <table class="bl-table et-table">
@@ -137,24 +93,28 @@
               </div>
             </div>
           </div>
-        </template>
+      </section>
 
-        <!-- 单枚举详情(三页签) -->
-        <template v-else>
+      <!-- 枚举详情抽屉 (右侧滑入, 与其它资源模块抽屉风格一致) -->
+      <transition name="et-detail-drawer">
+        <aside v-if="current" class="et-detail-drawer" :style="{ width: detailDrawerW + 'px' }">
+          <div class="et-detail-drag" @mousedown="onDetailDragStart" :class="detailResizing && 'is-resizing'"></div>
           <div class="et-detail">
             <div class="et-detail-hd">
-              <div class="bl-row" style="gap:8px;align-items:center;flex:1;min-width:0">
+              <div class="bl-row" style="gap:10px;align-items:center;flex:1;min-width:0">
                 <span class="enum-ic-lg" :style="{ background: enumColor(current) }" v-html="BL.icon(enumIcon(current), 16, '#fff')"></span>
                 <div style="min-width:0">
-                  <div class="et-detail-title">{{ current.rdfs_label || current.api_name }}</div>
+                  <div class="et-detail-title bl-truncate">{{ current.rdfs_label || current.api_name }}</div>
                   <div class="bl-mono bl-muted" style="font-size:11px">{{ current.api_name }} · {{ enumTypeLabel(current.enum_type) }}</div>
                 </div>
                 <span :class="['bl-tag', current.status === 'active' ? 'bl-tag-success' : 'bl-tag-danger']">{{ current.status === 'active' ? '启用' : '禁用' }}</span>
               </div>
-              <!-- 顶部"编辑"按钮暂时隐藏,使用"基本信息"区右侧的编辑入口代替
-              <button class="bl-btn bl-btn-sm" @click="openEditType(current)"><span v-html="BL.icon('edit', 12)"></span><span style="margin-left:4px">编辑</span></button>
-              -->
-              <button class="bl-btn bl-btn-sm" @click="current=null"><span v-html="BL.icon('arrowLeft', 12)"></span><span style="margin-left:4px">返回列表</span></button>
+              <div class="bl-row" style="gap:4px;flex-shrink:0">
+                <button class="bl-btn bl-btn-text bl-btn-icon" :title="detailMaxed ? '恢复' : '最大化'"
+                        @click="toggleDetailMax"
+                        v-html="BL.icon(detailMaxed ? 'minimize' : 'maximize', 14)"></button>
+                <button class="bl-btn bl-btn-text bl-btn-icon" title="关闭" @click="current=null" v-html="BL.icon('x', 14)"></button>
+              </div>
             </div>
             <div class="et-tabs">
               <button v-for="t in detailTabs" :key="t.k" :class="['et-tab', activeTab===t.k && 'is-on']" @click="onPickTab(t.k)">{{ t.label }}</button>
@@ -480,8 +440,8 @@
               </div>
             </div>
           </div>
-        </template>
-      </section>
+        </aside>
+      </transition>
      </div>
 
       <!-- 枚举类型新建/编辑抽屉 (浮在右侧主区上方，上下贴边) -->
@@ -616,6 +576,7 @@ import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
 import { enumTypeApi, groupApi, groupRefApi } from '@/api'
+import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 
 /* —— 数据 Tab 树节点 (递归) —— */
 const ItemTreeNode = {
@@ -651,11 +612,15 @@ const filterStatus = ref('')
 const itemQ = ref('')
 const itemFilterStatus = ref('')
 
-const activeGroupId = ref(null)
-const activeId = ref(null)
+const activeGroupId = ref(null)   // 保留: 用于新建表单 group_id 默认值
+const activeId = ref(null)        // 选中的枚举 id (右侧详情)
 const current = ref(null)
 const activeTab = ref('detail')
-const expanded = ref(new Set())
+const expanded = ref(new Set())   // 保留: 旧分组浮层 / 其它子组件可能用到
+
+/* 行业分类过滤 (来自 CategoryTreeFilter) */
+const selectedCategoryCodes = ref(null)
+function onCategoryChange({ codes }) { selectedCategoryCodes.value = codes || null }
 
 const detailTabs = [
   { k: 'detail', label: '详情' },
@@ -767,10 +732,8 @@ function itemSortArrow(key) {
 
 const filteredTypes = computed(() => {
   let list = enumTypes.value
-  if (activeGroupId.value) {
-    const allKids = new Set([activeGroupId.value, ...childrenOf(activeGroupId.value).map(c => c.id)])
-    list = list.filter(e => allKids.has(e.group_id))
-  }
+  // 行业分类过滤 (统一组件传入的 codes Set)
+  if (selectedCategoryCodes.value) list = list.filter(e => selectedCategoryCodes.value.has(e.category_code))
   if (filterStatus.value) list = list.filter(e => e.status === filterStatus.value)
   const k = q.value.trim().toLowerCase()
   if (k) list = list.filter(e => [e.api_name, e.rdfs_label, e.rdfs_comment].filter(Boolean).some(s => String(s).toLowerCase().includes(k)))
@@ -1059,7 +1022,44 @@ function onDragEnd() {
 onBeforeUnmount(() => {
   window.removeEventListener('mousemove', onDragMove)
   window.removeEventListener('mouseup', onDragEnd)
+  window.removeEventListener('mousemove', onDetailDragMove)
+  window.removeEventListener('mouseup', onDetailDragEnd)
 })
+
+/* —— 详情抽屉拖拽 / 宽度 / 最大化 —— */
+const DETAIL_MIN = 600
+const detailDrawerW = ref(parseInt(localStorage.getItem('bl.et.detailW') || '0') || Math.max(DETAIL_MIN, Math.min(900, Math.floor(window.innerWidth * 0.55))))
+const detailResizing = ref(false)
+const detailMaxed = computed(() => detailDrawerW.value >= Math.floor(window.innerWidth * 0.85))
+let detailDragStartX = 0, detailDragStartW = 0
+function onDetailDragStart(e) {
+  detailResizing.value = true
+  detailDragStartX = e.clientX; detailDragStartW = detailDrawerW.value
+  document.body.style.cursor = 'col-resize'; document.body.style.userSelect = 'none'
+  window.addEventListener('mousemove', onDetailDragMove)
+  window.addEventListener('mouseup', onDetailDragEnd)
+}
+function onDetailDragMove(e) {
+  const max = Math.floor(window.innerWidth * 0.90)
+  const dx = detailDragStartX - e.clientX
+  detailDrawerW.value = Math.min(max, Math.max(DETAIL_MIN, detailDragStartW + dx))
+}
+function onDetailDragEnd() {
+  detailResizing.value = false
+  localStorage.setItem('bl.et.detailW', String(detailDrawerW.value))
+  document.body.style.cursor = ''; document.body.style.userSelect = ''
+  window.removeEventListener('mousemove', onDetailDragMove)
+  window.removeEventListener('mouseup', onDetailDragEnd)
+}
+function toggleDetailMax() {
+  const max = Math.floor(window.innerWidth * 0.90)
+  if (detailMaxed.value) {
+    detailDrawerW.value = Math.max(DETAIL_MIN, Math.min(900, Math.floor(window.innerWidth * 0.55)))
+  } else {
+    detailDrawerW.value = max
+  }
+  localStorage.setItem('bl.et.detailW', String(detailDrawerW.value))
+}
 async function submitType() {
   if (!typeForm.rdfs_label || !typeForm.api_name) { BL.warning('名称 / API 为必填'); return }
   if (typeForm.id) await enumTypeApi.update(typeForm.id, typeForm)
@@ -1362,6 +1362,25 @@ async function removeItem(it) {
 
 .et-drawer-enter-active, .et-drawer-leave-active { transition: transform .25s, opacity .2s; }
 .et-drawer-enter-from, .et-drawer-leave-to { transform: translateX(20px); opacity: 0; }
+
+/* —— 详情抽屉 (与新建/编辑抽屉同款,但宽度更大可放表格 + 多页签) —— */
+.et-detail-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  background: var(--bl-bg-1);
+  border-left: 1px solid var(--bl-border);
+  box-shadow: -4px 0 16px rgba(0,0,0,.10);
+  display: flex; flex-direction: column;
+  min-width: 600px; max-width: 95vw;
+  z-index: 999;             /* 比新建/编辑抽屉低一档,后者覆盖在详情之上 */
+  overflow: hidden;
+}
+.et-detail-drag {
+  position: absolute; left: -2px; top: 0; bottom: 0; width: 5px;
+  cursor: col-resize; transition: background-color .15s; z-index: 6;
+}
+.et-detail-drag:hover, .et-detail-drag.is-resizing { background: var(--bl-primary); }
+.et-detail-drawer-enter-active, .et-detail-drawer-leave-active { transition: transform .25s ease, opacity .2s ease; }
+.et-detail-drawer-enter-from, .et-detail-drawer-leave-to { transform: translateX(20px); opacity: 0; }
 
 /* ====== 详情 Tab: 基本信息 / 编码管理 头部按钮行 ====== */
 .sec-row { display: flex; align-items: center; gap: 8px; margin: 12px 0 6px; }

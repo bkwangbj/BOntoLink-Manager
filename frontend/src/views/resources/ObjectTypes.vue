@@ -38,13 +38,12 @@
 
     <!-- 主体区域 -->
     <section class="ot-body">
-      <!-- 左侧分组树 -->
-      <LeftGroupTree ref="groupTreeRef"
-                     type="object_types"
-                     title="对象分组"
-                     :total-count="rows.length"
-                     store-key="object-types"
-                     @change="onGroupChange" />
+      <!-- 左侧分组树: 统一行业分类树 (与所有资源模块共用) -->
+      <CategoryTreeFilter :rows="rows"
+                          title="行业分类"
+                          total-label="全部对象"
+                          store-key="object-types"
+                          @change="onCategoryChange" />
       <!-- 左侧 TAB 页签 -->
       <div class="ot-pane" :style="paneStyle">
         <div class="ot-tabs">
@@ -274,11 +273,6 @@
               <TabProps :class-id="selected?.id" :class-name="selected?.display_name || selected?.api_name || ''" @navigate-tab="drawerTab = $event" />
             </div>
 
-            <!-- 值类型（占位） -->
-            <div v-else-if="drawerTab === 'valueType'" class="ot-tab-content">
-              <Placeholder icon="sliders" label="值类型清单" desc="按 XSD 派生类型呈现各属性的值域、长度/数值约束、枚举值等,待与值类型模块联动" />
-            </div>
-
             <!-- 关联表 -->
             <div v-else-if="drawerTab === 'tables'" class="ot-tab-content">
               <div class="ot-tab-toolbar">
@@ -465,7 +459,7 @@ import { ref, computed, onMounted, onBeforeUnmount, watch, h } from 'vue'
 import { BL } from '@/lib/bl.js'
 import { resourceApi, categoryApi, classMetaApi } from '@/api'
 import FieldRow from '@/views/config/category/FieldRow.vue'
-import LeftGroupTree from '@/components/LeftGroupTree.vue'
+import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 import TabOverview from '@/views/resources/objecttype/TabOverview.vue'
 import TabProps from '@/views/resources/objecttype/TabProps.vue'
 import TabClassGroup from '@/views/resources/objecttype/TabClassGroup.vue'
@@ -523,17 +517,15 @@ function sortArrow(key) {
   return sortDir.value === 'asc' ? ' ↑' : ' ↓'
 }
 
-/* —— 左侧分组树 —— */
-const groupTreeRef = ref(null)
-const selectedGroupRefIds = ref(null)  // null = 全部
-function onGroupChange(/* groupId */) {
-  // 调用组件 expose 的方法,得到该分组(含子分组)下所有 ref_id 集合
-  selectedGroupRefIds.value = groupTreeRef.value?.refIdsInSelectedGroup?.() ?? null
+/* —— 左侧行业分类树 (统一组件,按 category_code 子树过滤) —— */
+const selectedCategoryCodes = ref(null)  // null = 全部, Set<string> = 当前分类及子分类的 category_code 集合
+function onCategoryChange({ codes }) {
+  selectedCategoryCodes.value = codes || null
 }
 
 const filtered = computed(() => {
   let list = rows.value
-  if (selectedGroupRefIds.value) list = list.filter(r => selectedGroupRefIds.value.has(r.id))
+  if (selectedCategoryCodes.value) list = list.filter(r => selectedCategoryCodes.value.has(r.category_code))
   if (filterDomain.value) list = list.filter(r => r.category_code === filterDomain.value)
   if (filterStatus.value !== '') list = list.filter(r => String(r.status) === filterStatus.value)
   const k = q.value.trim().toLowerCase()
@@ -760,8 +752,7 @@ async function onClassSaved(id) {
 const tabGroups = [
   { key: 'basic', label: '基础信息', icon: 'fileText', color: '#1677ff', tabs: [
     { key: 'overview', label: '概览' },
-    { key: 'props', label: '属性' },
-    { key: 'valueType', label: '值类型' }
+    { key: 'props', label: '属性' }
   ]},
   { key: 'rel', label: '关联关系', icon: 'link', color: '#FF7D00', tabs: [
     { key: 'tables', label: '关联表' },

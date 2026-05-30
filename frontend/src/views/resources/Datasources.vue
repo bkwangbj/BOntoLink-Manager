@@ -38,12 +38,11 @@
     </PageHeader>
 
     <div class="ds-main">
-      <LeftGroupTree ref="groupTreeRef"
-                     type="datasources"
-                     title="数据源分组"
-                     :total-count="rows.length"
-                     store-key="datasources"
-                     @change="onGroupChange" />
+      <CategoryTreeFilter :rows="rows"
+                          title="行业分类"
+                          total-label="全部数据源"
+                          store-key="datasources"
+                          @change="onCategoryChange" />
       <!-- 左栏：数据源列表 -->
       <section class="pane pane-list">
         <div class="ds-list-scroll">
@@ -154,18 +153,26 @@
       <aside v-if="drawerOpen" class="ds-drawer" :style="{ width: drawerWidth + 'px' }">
         <!-- 左侧拖拽手柄 -->
         <div class="ds-drag-handle" :class="resizing && 'is-resizing'" @mousedown="onDragStart"></div>
-        <!-- 顶部: 标题 + 关闭 -->
+        <!-- 顶部: 行图标 + 数据库名 + 编码·类型 (随选中行,不随页签切换) -->
         <div class="ds-drawer-hd">
           <div class="ds-drawer-title">
             <span class="ds-drawer-ic" :style="{ background: selected ? typeColor(selected.dsType) : '#1677ff' }"
                   v-html="BL.icon(selected ? typeIcon(selected.dsType) : 'database', 16, '#fff')"></span>
-            <div>
-              <div style="font-weight:600;font-size:14px">
-                {{ drawerTab === 'config' ? (form.id ? '编辑数据源' : (selected ? '编辑数据源' : '新建数据源')) : (selected?.dsName || '数据源详情') }}
+            <div style="min-width:0">
+              <div class="bl-truncate" style="font-weight:600;font-size:14px"
+                   :title="selected?.dsName || form.dsName || '新建数据源'">
+                {{ selected?.dsName || form.dsName || '新建数据源' }}
               </div>
-              <div class="bl-mono bl-muted" style="font-size:11px">{{ selected?.dsCode || form.dsCode || '—' }}</div>
+              <div class="bl-mono bl-muted bl-truncate" style="font-size:11px"
+                   :title="`${selected?.dsCode || form.dsCode || '—'}${selected?.dsType ? ' · ' + selected.dsType.toUpperCase() : ''}`">
+                {{ selected?.dsCode || form.dsCode || '—' }}
+                <span v-if="selected?.dsType"> · {{ selected.dsType.toUpperCase() }}</span>
+              </div>
             </div>
           </div>
+          <button v-if="selected" class="bl-btn bl-btn-sm ds-test-btn" @click="doTest(selected)" title="测试连接">
+            <span v-html="BL.icon('zap', 12)"></span><span style="margin-left:4px">测试</span>
+          </button>
           <button class="bl-btn bl-btn-text bl-btn-icon" @click="drawerOpen=false" v-html="BL.icon('x', 14)"></button>
         </div>
 
@@ -178,10 +185,6 @@
           <button :class="['ds-drawer-tab', drawerTab==='monitor' && 'is-on']" :disabled="!selected" @click="switchTab('monitor')">
             <span v-html="BL.icon('zap', 13)"></span>
             <span style="margin-left:4px">监控</span>
-          </button>
-          <div class="bl-grow"></div>
-          <button v-if="drawerTab==='monitor' && selected" class="bl-btn bl-btn-sm" @click="doTest(selected)">
-            <span v-html="BL.icon('zap', 12)"></span><span style="margin-left:4px">测试</span>
           </button>
         </div>
 
@@ -351,7 +354,7 @@ import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
 import { datasourceApi, namespaceApi, categoryApi } from '@/api'
-import LeftGroupTree from '@/components/LeftGroupTree.vue'
+import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 
 const rows = ref([])
 const overview = ref({})
@@ -485,16 +488,13 @@ const industryFilterOptions = computed(() => {
   return [...set].sort((a, b) => a.localeCompare(b))
 })
 
-/* —— 左侧分组树 —— */
-const groupTreeRef = ref(null)
-const selectedGroupRefIds = ref(null)
-function onGroupChange() {
-  selectedGroupRefIds.value = groupTreeRef.value?.refIdsInSelectedGroup?.() ?? null
-}
+/* —— 左侧行业分类树 (统一组件) —— */
+const selectedCategoryCodes = ref(null)
+function onCategoryChange({ codes }) { selectedCategoryCodes.value = codes || null }
 
 const filtered = computed(() => {
   let list = rows.value
-  if (selectedGroupRefIds.value) list = list.filter(r => selectedGroupRefIds.value.has(r.id))
+  if (selectedCategoryCodes.value) list = list.filter(r => selectedCategoryCodes.value.has(r.categoryCode))
   const k = q.value.trim().toLowerCase()
   if (k) {
     list = list.filter(r =>
@@ -847,6 +847,12 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
   padding: 10px 14px; border-bottom: 1px solid var(--bl-divider);
 }
 .ds-drawer-title { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+/* 头部"测试"按钮: 主色描边,与右上角 × 关闭并列 */
+.ds-test-btn {
+  background: #fff; border: 1px solid var(--bl-primary); color: var(--bl-primary);
+  flex-shrink: 0;
+}
+.ds-test-btn:hover { background: var(--bl-primary-soft); }
 .ds-drawer-ic {
   width: 32px; height: 32px; border-radius: 6px;
   display: inline-flex; align-items: center; justify-content: center;

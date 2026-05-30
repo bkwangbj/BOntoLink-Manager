@@ -147,7 +147,7 @@ const menus = [
   ]},
   { key: 'resources', title: '资源', items: [
     { path: '/resources/object-types', icon: 'cube',    label: '对象类型', en: 'Object types' },
-    { path: '/resources/link-types',   icon: 'link',    label: '关系类型', en: 'Link types' },
+    { path: '/resources/link-types',   icon: 'link',    label: '链接', en: 'Links' },
     { path: '/resources/action-types', icon: 'zap',     label: '动作类型', en: 'Action types' },
     { path: '/resources/value-types',  icon: 'list',    label: '值类型',   en: 'Value types' },
     { path: '/resources/enum-types',   icon: 'layers',  label: '枚举类型', en: 'Enum types' },

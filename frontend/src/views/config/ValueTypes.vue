@@ -33,12 +33,11 @@
     </PageHeader>
 
     <div class="vt-body">
-      <LeftGroupTree ref="groupTreeRef"
-                     type="value_types"
-                     title="值类型分组"
-                     :total-count="rows.length"
-                     store-key="value-types"
-                     @change="onGroupChange" />
+      <CategoryTreeFilter :rows="rows"
+                          title="行业分类"
+                          total-label="全部值类型"
+                          store-key="value-types"
+                          @change="onCategoryChange" />
       <div class="bl-card list-card">
         <div class="list-scroll">
           <table class="bl-table vt-table">
@@ -358,7 +357,7 @@ import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
 import { valueTypeApi, enumTypeApi, categoryApi } from '@/api'
-import LeftGroupTree from '@/components/LeftGroupTree.vue'
+import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 import EnumPickerModal from '@/components/EnumPickerModal.vue'
 import { useRouter } from 'vue-router'
 
@@ -446,16 +445,13 @@ function sortArrow(key) {
   return sortDir.value === 'asc' ? ' ↑' : ' ↓'
 }
 
-/* —— 左侧分组树 —— */
-const groupTreeRef = ref(null)
-const selectedGroupRefIds = ref(null)
-function onGroupChange() {
-  selectedGroupRefIds.value = groupTreeRef.value?.refIdsInSelectedGroup?.() ?? null
-}
+/* —— 左侧行业分类树 (统一组件, 按 category_code 子树过滤) —— */
+const selectedCategoryCodes = ref(null)
+function onCategoryChange({ codes }) { selectedCategoryCodes.value = codes || null }
 
 const filtered = computed(() => {
   let list = rows.value
-  if (selectedGroupRefIds.value) list = list.filter(r => selectedGroupRefIds.value.has(r.id))
+  if (selectedCategoryCodes.value) list = list.filter(r => selectedCategoryCodes.value.has(r.category_code))
   if (filterStatus.value === 'on')  list = list.filter(r => r.status === 1)
   if (filterStatus.value === 'off') list = list.filter(r => r.status === 0)
   if (filterCategory.value) list = list.filter(r => r.category_code === filterCategory.value)

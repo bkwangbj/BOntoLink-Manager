@@ -42,13 +42,12 @@
     </PageHeader>
 
     <div class="sp-main">
-      <!-- 左侧分组树 -->
-      <LeftGroupTree ref="treeRef"
-                     type="shared_props"
-                     title="共享属性分组"
-                     :total-count="rows.length"
-                     store-key="sharedProps"
-                     @change="onGroupChange" />
+      <!-- 左侧行业分类树 (统一组件) -->
+      <CategoryTreeFilter :rows="rows"
+                          title="行业分类"
+                          total-label="全部共享属性"
+                          store-key="sharedProps"
+                          @change="onCategoryChange" />
 
       <!-- 右侧: 列表 + 分页 -->
       <section class="pane pane-list">
@@ -183,7 +182,6 @@
 
     <!-- 新建向导 -->
     <NewSharedPropertyWizard v-model:open="wizardOpen"
-                             :preset-group-id="activeGroupId || ''"
                              @created="onCreated" />
   </div>
 </template>
@@ -193,7 +191,7 @@ import { ref, computed, onMounted } from 'vue'
 import { BL } from '@/lib/bl.js'
 import { sharedPropertyApi, categoryApi } from '@/api'
 import PageHeader from '@/components/PageHeader.vue'
-import LeftGroupTree from '@/components/LeftGroupTree.vue'
+import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 import SharedPropertyDetailDrawer from './sharedproperty/SharedPropertyDetailDrawer.vue'
 import NewSharedPropertyWizard from './sharedproperty/NewSharedPropertyWizard.vue'
 
@@ -207,9 +205,7 @@ const groupByDomain = ref(false)
 const sortKey = ref('')
 const sortDir = ref('')
 
-const treeRef = ref(null)
-const activeGroupId = ref(null)
-const groupRefIds = ref(null)
+const selectedCategoryCodes = ref(null)  // null=全部, Set<string>=当前分类子树的 category_code 集合
 
 const drawerOpen = ref(false)
 const drawerProperty = ref(null)
@@ -240,12 +236,8 @@ async function loadCategoryMap() {
 }
 onMounted(() => { load(); loadCategoryMap() })
 
-/* —— 分组筛选 (左树) —— */
-function onGroupChange(groupId) {
-  activeGroupId.value = groupId
-  if (!groupId) { groupRefIds.value = null; return }
-  groupRefIds.value = treeRef.value?.refIdsInSelectedGroup?.() || new Set()
-}
+/* —— 行业分类筛选 (左树) —— */
+function onCategoryChange({ codes }) { selectedCategoryCodes.value = codes || null }
 
 /* —— 排序 —— */
 function toggleSort(key) {
@@ -261,7 +253,7 @@ function sortArrow(key) {
 /* —— 过滤后扁平列表 (用于统计 + 分页) —— */
 const flatList = computed(() => {
   let list = rows.value
-  if (groupRefIds.value) list = list.filter(r => groupRefIds.value.has(r.id))
+  if (selectedCategoryCodes.value) list = list.filter(r => selectedCategoryCodes.value.has(r.category_code))
   if (filterDomain.value) list = list.filter(r => (r.category_code || '') === filterDomain.value)
   if (filterStatus.value !== '') list = list.filter(r => String(r.status) === filterStatus.value)
   const k = q.value.trim().toLowerCase()

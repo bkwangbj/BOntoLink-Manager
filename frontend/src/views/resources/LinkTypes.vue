@@ -1,16 +1,16 @@
 <template>
   <div class="page">
-    <PageHeader title="关系类型" subtitle="Link types · 对象之间的连接定义">
+    <PageHeader title="链接" subtitle="Links · 对象之间的连接定义">
       <template #actions>
         <input class="bl-input" placeholder="搜索 api_name" v-model="q" style="width:240px" />
-        <button class="bl-btn bl-btn-primary">新建关系</button>
+        <button class="bl-btn bl-btn-primary">新建链接</button>
       </template>
     </PageHeader>
     <div class="body">
       <div class="bl-card">
         <table class="bl-table">
           <thead>
-            <tr><th>关系</th><th>API name</th><th>源</th><th>目标</th><th>基数</th><th>状态</th></tr>
+            <tr><th>链接</th><th>API name</th><th>源</th><th>目标</th><th>基数</th><th>状态</th></tr>
           </thead>
           <tbody>
             <tr v-for="r in filtered" :key="r.id">
@@ -23,7 +23,7 @@
             </tr>
           </tbody>
         </table>
-        <div v-if="!filtered.length" class="bl-empty">暂无关系定义</div>
+        <div v-if="!filtered.length" class="bl-empty">暂无链接定义</div>
       </div>
     </div>
   </div>

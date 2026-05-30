@@ -35,12 +35,11 @@
     </PageHeader>
 
     <div class="two-pane">
-      <LeftGroupTree ref="groupTreeRef"
-                     type="interface"
-                     title="接口分组"
-                     :total-count="rows.length"
-                     store-key="interfaces"
-                     @change="onGroupChange" />
+      <CategoryTreeFilter :rows="rows"
+                          title="行业分类"
+                          total-label="全部接口"
+                          store-key="interfaces"
+                          @change="onCategoryChange" />
       <!-- 列表 -->
       <div class="bl-card list-card">
         <div class="list-scroll">
@@ -389,7 +388,7 @@ import ColorPickerField from '@/components/ColorPickerField.vue'
 import { BL } from '@/lib/bl.js'
 import { interfaceApi, resourceApi, categoryApi, valueTypeApi, propertyFormatApi } from '@/api'
 import PropertyFormatModal from '@/components/PropertyFormatModal.vue'
-import LeftGroupTree from '@/components/LeftGroupTree.vue'
+import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 
 const rows = ref([])
 const statusFilter = ref('all')
@@ -501,16 +500,13 @@ const industryFilterOptions = computed(() => {
   return [...set].sort((a, b) => a.localeCompare(b))
 })
 
-/* —— 左侧分组树 —— */
-const groupTreeRef = ref(null)
-const selectedGroupRefIds = ref(null)
-function onGroupChange() {
-  selectedGroupRefIds.value = groupTreeRef.value?.refIdsInSelectedGroup?.() ?? null
-}
+/* —— 左侧行业分类树 —— */
+const selectedCategoryCodes = ref(null)
+function onCategoryChange({ codes }) { selectedCategoryCodes.value = codes || null }
 
 const filtered = computed(() => {
   let list = rows.value
-  if (selectedGroupRefIds.value) list = list.filter(r => selectedGroupRefIds.value.has(r.id))
+  if (selectedCategoryCodes.value) list = list.filter(r => selectedCategoryCodes.value.has(r.category_code))
   if (statusFilter.value !== 'all') list = list.filter(r => String(r.status) === statusFilter.value)
   if (industryFilter.value)        list = list.filter(r => ifIndustry(r) === industryFilter.value)
   if (domainFilter.value)          list = list.filter(r => r.category_code === domainFilter.value)
