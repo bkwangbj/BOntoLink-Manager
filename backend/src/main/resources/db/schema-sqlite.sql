@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS ont_class_property (
   category_code   TEXT,
   api_name        TEXT NOT NULL,                 -- 类内唯一
   prop_code       TEXT,                          -- 属性编码 (camelCase)
-  prop_type       TEXT DEFAULT 'data',           -- data / object / annotation
+  prop_type       TEXT DEFAULT 'data',           -- data / object / annotation / struct
   data_type       TEXT,                          -- XSD 数据类型 (对象属性为空)
   value_type      TEXT,                          -- 值类型 RID (基于 data_type 派生)
   display_name    TEXT,
@@ -630,7 +630,7 @@ CREATE TABLE IF NOT EXISTS ont_shared_properties (
   rid                        TEXT,                                   -- 全局 RID
   category_code              TEXT,                                   -- 所属领域 ont_biz_category.category_code
   prop_code                  TEXT NOT NULL UNIQUE,                   -- 属性编码,英文小写+下划线
-  prop_type                  TEXT NOT NULL DEFAULT 'data',           -- data / object / annotation
+  prop_type                  TEXT NOT NULL DEFAULT 'data',           -- data / object / annotation / struct
   is_key                     INTEGER NOT NULL DEFAULT 0,             -- HasKey
   data_type                  TEXT,                                   -- XSD 类型: xsd:string 等
   value_type                 TEXT,                                   -- 关联值类型 id
@@ -667,3 +667,125 @@ CREATE INDEX IF NOT EXISTS idx_sp_status   ON ont_shared_properties(status);
 -- (引用关系也可通过 prop_code 字符串匹配; 这里仅保留字段供未来强关联)
 -- 在生产数据库迁移时执行: ALTER TABLE ont_class_properties ADD COLUMN shared_prop_id TEXT;
 -- 此处不强制 ADD,避免老库重复执行报错。
+
+-- =============================================================
+-- 结构属性 (Struct properties) — 复合共享属性
+-- 把一组共享属性组合为业务上有意义的"结构":
+--   姓名 = 名 + 姓
+--   地址 = 国家 + 城市 + 街道 + 邮编
+--   地理位置 = 经度 + 纬度 + Geohash
+--   时间段 = 开始时间 + 结束时间
+--   金额 = 数值 + 币种
+-- ont_class_property.prop_type='struct' 表示一个类属性是结构类型,通过 value_type
+-- 关联到具体 struct_id (即 ont_struct_types.id)
+-- =============================================================
+CREATE TABLE IF NOT EXISTS ont_struct_types (
+  id              TEXT PRIMARY KEY,                       -- "struct-types-" + UUID
+  struct_code     TEXT NOT NULL UNIQUE,                   -- 编码 (例: FullName / Address)
+  category_code   TEXT,                                   -- 所属领域 (与 ont_biz_category.category_code 对齐)
+  status          INTEGER NOT NULL DEFAULT 1,             -- 0 禁用 1 启用
+  rdfs_label      TEXT,                                   -- 中文名 (例: 姓名 / 地址)
+  rdfs_comment    TEXT,
+  rdfs_see_also   TEXT,
+  rdfs_defined_by TEXT,
+  create_time     TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  update_time     TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
+CREATE INDEX IF NOT EXISTS idx_struct_types_category ON ont_struct_types(category_code);
+CREATE INDEX IF NOT EXISTS idx_struct_types_status   ON ont_struct_types(status);
+
+CREATE TABLE IF NOT EXISTS ont_struct_items (
+  id         TEXT PRIMARY KEY,                            -- "struct-items-" + UUID
+  struct_id  TEXT NOT NULL,                               -- 关联 ont_struct_types.id
+  sort_no    INTEGER NOT NULL DEFAULT 0,                  -- 序号
+  prop_id    TEXT NOT NULL                                -- 关联 ont_shared_properties.id
+);
+CREATE INDEX IF NOT EXISTS idx_struct_items_struct ON ont_struct_items(struct_id);
+CREATE INDEX IF NOT EXISTS idx_struct_items_prop   ON ont_struct_items(prop_id);
+
+-- =============================================================
+-- 链接类型主表 (ont_link_types)
+-- 存储所有链接类型基础元数据,支持双向关系配置 + 基数管控 +
+-- 数据源中间表 + 生命周期 + 启停开关 等全维度能力
+-- 注: 与既有 ont_class_link 共存; ont_link_types 是新版升级模型,
+--     ont_class_link 保留作为简单关系展示的兼容表
+-- =============================================================
+CREATE TABLE IF NOT EXISTS ont_link_types (
+  id                  TEXT PRIMARY KEY,                       -- "link-types-" + UUID
+  link_type_id        TEXT NOT NULL UNIQUE,                   -- 业务唯一标识 (如 aircraft-flight-operate)
+  rid                 TEXT,                                   -- 系统资源 ID, 自动生成
+  status              TEXT NOT NULL DEFAULT 'experimental',   -- experimental / active / deprecated
+  l_object_type_id    TEXT NOT NULL,                          -- 源端对象类型 (ont_class.id)
+  r_object_type_id    TEXT NOT NULL,                          -- 目标端对象类型 (ont_class.id)
+  l_cardinality       TEXT NOT NULL DEFAULT 'one',            -- one / many
+  r_cardinality       TEXT NOT NULL DEFAULT 'one',            -- one / many
+  l_display_name      TEXT,                                   -- 源端显示名 (如"执飞航班")
+  l_plural_name       TEXT,                                   -- 源端复数名 (基数=many 时必填)
+  r_display_name      TEXT,                                   -- 目标端显示名 (如"执飞机型")
+  r_plural_name       TEXT,                                   -- 目标端复数名 (基数=many 时必填)
+  l_visibility        TEXT NOT NULL DEFAULT 'normal',         -- normal / prominent / hidden
+  r_visibility        TEXT NOT NULL DEFAULT 'normal',
+  l_api_name          TEXT,                                   -- 源端 API 名 (camelCase, 如 operatedFlights)
+  r_api_name          TEXT,                                   -- 目标端 API 名 (camelCase)
+  l_enabled           INTEGER NOT NULL DEFAULT 1,             -- BOOLEAN: 1=启用 / 0=禁用
+  r_enabled           INTEGER NOT NULL DEFAULT 1,
+  is_data_source_rel  INTEGER NOT NULL DEFAULT 0,             -- 0=常规字段关联 / 1=物理中间表关联
+  rel_data_table      TEXT,                                   -- 关联物理表名 (is_data_source_rel=1 时必填)
+  rdfs_label          TEXT,                                   -- 通用名称 (列表显示)
+  rdfs_comment        TEXT,                                   -- 备注
+  category_code       TEXT,                                   -- 所属领域 (与 ont_biz_category.category_code 对齐)
+  created_at          TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  updated_at          TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  created_by          TEXT,
+  updated_by          TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_lt_status   ON ont_link_types(status);
+CREATE INDEX IF NOT EXISTS idx_lt_l_class  ON ont_link_types(l_object_type_id);
+CREATE INDEX IF NOT EXISTS idx_lt_r_class  ON ont_link_types(r_object_type_id);
+CREATE INDEX IF NOT EXISTS idx_lt_category ON ont_link_types(category_code);
+
+-- =============================================================
+-- 关联映射表 (ont_link_mappings)
+-- 通过 seq 严格管控复合主键字段顺序;支持单主键 / 复合主键 /
+-- 外键 / 中间表列 全场景映射
+-- =============================================================
+CREATE TABLE IF NOT EXISTS ont_link_mappings (
+  mapping_id        TEXT PRIMARY KEY,                         -- "link-mappings-" + UUID
+  link_id           TEXT NOT NULL,                            -- 关联 ont_link_types.id
+  side              TEXT NOT NULL,                            -- left / right
+  seq               INTEGER NOT NULL DEFAULT 1,               -- 复合字段顺序号 (从 1 起)
+  object_field      TEXT NOT NULL,                            -- 对象属性字段名
+  join_table_column TEXT,                                     -- 中间表列名 (仅 is_data_source_rel=1 时填)
+  created_at        TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  updated_at        TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_link_side_seq ON ont_link_mappings(link_id, side, seq);
+CREATE INDEX IF NOT EXISTS idx_lm_link ON ont_link_mappings(link_id);
+
+-- =============================================================
+-- 类型类 (ont_type_class) — 通用元数据扩展
+-- 支持 属性 / 关系 / 操作 三大类别的类型类配置
+-- 通过 applicable_type 区分,通过 link_type_id / object_type_id /
+-- action_type_id 三选一定位归属对象
+-- =============================================================
+CREATE TABLE IF NOT EXISTS ont_type_class (
+  id              TEXT PRIMARY KEY,                           -- "type-class-" + UUID
+  link_type_id    TEXT,                                       -- 关联 ont_link_types.id (仅关系类用)
+  object_type_id  TEXT,                                       -- 关联 ont_class.id (仅属性类用)
+  action_type_id  TEXT,                                       -- 关联 action 表 (仅操作类用)
+  applicable_type TEXT NOT NULL,                              -- property / relation / action
+  is_deprecated   INTEGER NOT NULL DEFAULT 0,                 -- 0 可用 / 1 已弃用
+  category        TEXT NOT NULL,                              -- 英文标识 (如 vertex / timeseries / hubble)
+  category_cn     TEXT NOT NULL,                              -- 中文标识 (如 知识图谱 / 时间序列)
+  name            TEXT NOT NULL,                              -- 英文名称 (如 component / event_intent.<intent_>)
+  name_cn         TEXT NOT NULL,                              -- 中文名称
+  value           TEXT,                                       -- 配置参数 / 可选值 / 自定义内容
+  description     TEXT,                                       -- 业务说明
+  created_at      TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  updated_at      TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
+CREATE INDEX IF NOT EXISTS idx_tc_applicable ON ont_type_class(applicable_type);
+CREATE INDEX IF NOT EXISTS idx_tc_category   ON ont_type_class(category);
+CREATE INDEX IF NOT EXISTS idx_tc_link       ON ont_type_class(link_type_id);
+CREATE INDEX IF NOT EXISTS idx_tc_object     ON ont_type_class(object_type_id);
+CREATE INDEX IF NOT EXISTS idx_tc_action     ON ont_type_class(action_type_id);

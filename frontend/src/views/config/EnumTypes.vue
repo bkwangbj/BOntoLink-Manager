@@ -1213,7 +1213,10 @@ async function removeItem(it) {
 .search-input { padding-left: 30px; }
 
 .et-body { flex: 1; display: flex; position: relative; overflow: hidden; }
-.et-inner { flex: 1; display: grid; grid-template-columns: 240px 1fr; gap: 12px; padding: 12px; min-width: 0; overflow: hidden; }
+/* flex 而非固定 grid: 左树由 CategoryTreeFilter 自己管宽度 (可拖拽),
+   右侧 et-main flex:1 撑满,中间 gap 12px,消除固定列残留的空隙 */
+.et-inner { flex: 1; display: flex; gap: 12px; padding: 12px; min-width: 0; overflow: hidden; }
+.et-inner > .et-main { flex: 1; min-width: 0; }
 
 /* —— 左侧树 (对齐 LeftGroupTree 视觉) —— */
 .et-tree {

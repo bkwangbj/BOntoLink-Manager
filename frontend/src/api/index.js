@@ -138,6 +138,40 @@ export const sharedPropertyApi = {
   references:  (id) => http.get(`/shared-properties/${id}/references`),
 }
 
+/* 结构属性 (Struct types) — 一组共享属性的复合: 姓名 / 地址 / 时间段 / 金额 等 */
+export const structTypeApi = {
+  list:        () => http.get('/struct-types'),
+  get:         (id) => http.get(`/struct-types/${id}`),       // 返回结构 + items
+  items:       (id) => http.get(`/struct-types/${id}/items`),
+  create:      (data) => http.post('/struct-types', data),    // data 可带 items: [{ prop_id, sort_no }]
+  update:      (id, data) => http.put(`/struct-types/${id}`, data),  // items 整体覆盖
+  remove:      (id) => http.delete(`/struct-types/${id}`),
+  batchRemove: (ids) => http.post('/struct-types/batch-delete', { ids }),
+}
+
+/* 链接类型 (Link Types) — 升级版双向关系建模 (ont_link_types + ont_link_mappings) */
+export const linkTypeApi = {
+  list:        () => http.get('/link-types'),
+  get:         (id) => http.get(`/link-types/${id}`),         // 含 mappings + type_classes
+  mappings:    (id) => http.get(`/link-types/${id}/mappings`),
+  create:      (data) => http.post('/link-types', data),      // 可带 mappings: [{ side, seq, object_field, join_table_column }]
+  update:      (id, data) => http.put(`/link-types/${id}`, data),
+  remove:      (id) => http.delete(`/link-types/${id}`),
+  batchRemove: (ids) => http.post('/link-types/batch-delete', { ids }),
+  setStatus:   (id, status) => http.post(`/link-types/${id}/status`, { status }),
+}
+
+/* 类型类 (Type Classes) — 三类: property / relation / action */
+export const typeClassApi = {
+  list:        (params) => http.get('/type-classes', { params }),   // { applicableType, category, deprecated, catalogOnly }
+  get:         (id) => http.get(`/type-classes/${id}`),
+  stats:       () => http.get('/type-classes/category-stats'),
+  create:      (data) => http.post('/type-classes', data),
+  update:      (id, data) => http.put(`/type-classes/${id}`, data),
+  remove:      (id) => http.delete(`/type-classes/${id}`),
+  deprecate:   (id, deprecated = 1) => http.post(`/type-classes/${id}/deprecate`, { deprecated }),
+}
+
 /* 枚举类型 (Enum types) */
 export const enumTypeApi = {
   listGroups:    () => http.get('/enum-types/groups'),

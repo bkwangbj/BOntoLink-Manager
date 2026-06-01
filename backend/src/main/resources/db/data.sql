@@ -691,3 +691,185 @@ INSERT OR IGNORE INTO ont_biz_group_class(id, group_id, ref_id, group_type, cate
 ('sp-gc-09','group-sp-geo',      'shared-properties-00000009', 'shared_props', 'dom_water_hydrology', 1),
 ('sp-gc-10','group-sp-geo',      'shared-properties-00000010', 'shared_props', 'dom_water_hydrology', 2),
 ('sp-gc-11','group-sp-geo',      'shared-properties-00000011', 'shared_props', 'dom_water_hydrology', 3);
+
+-- =============================================================
+-- 共享属性 (补充: 为结构属性演示提供原子属性, 11 条)
+-- =============================================================
+INSERT INTO ont_shared_properties(id, rid, category_code, prop_code, prop_type, data_type, value_type,
+  is_required, is_multi_valued_prop, is_range_constraint_prop,
+  xsd_min_length, xsd_max_length, xsd_pattern, xsd_min_inclusive, xsd_max_inclusive,
+  owl_functional, status, rdfs_label, rdfs_comment) VALUES
+('shared-properties-00000013','ri.ont.shared.props.first_name',  NULL, 'first_name',  'data', 'xsd:string', 'value-types-text',
+  0, 0, 0, 1, 32, NULL, NULL, NULL, 1, 1, '名', '人员姓名的"名"部分'),
+('shared-properties-00000014','ri.ont.shared.props.last_name',   NULL, 'last_name',   'data', 'xsd:string', 'value-types-text',
+  0, 0, 0, 1, 32, NULL, NULL, NULL, 1, 1, '姓', '人员姓名的"姓"部分'),
+('shared-properties-00000015','ri.ont.shared.props.country',     NULL, 'country',     'data', 'xsd:string', 'value-types-text',
+  0, 0, 0, 1, 64, NULL, NULL, NULL, 1, 1, '国家', '地址-国家或地区'),
+('shared-properties-00000016','ri.ont.shared.props.city',        NULL, 'city',        'data', 'xsd:string', 'value-types-text',
+  0, 0, 0, 1, 64, NULL, NULL, NULL, 1, 1, '城市', '地址-城市'),
+('shared-properties-00000017','ri.ont.shared.props.street',      NULL, 'street',      'data', 'xsd:string', 'value-types-text',
+  0, 0, 0, NULL, 200, NULL, NULL, NULL, 1, 1, '街道', '地址-街道 / 门牌'),
+('shared-properties-00000018','ri.ont.shared.props.postal_code', NULL, 'postal_code', 'data', 'xsd:string', NULL,
+  0, 0, 1, 6, 12, '^[0-9A-Za-z\-]{4,12}$', NULL, NULL, 1, 1, '邮编', '地址-邮政编码'),
+('shared-properties-00000019','ri.ont.shared.props.phone',       NULL, 'phone',       'data', 'xsd:string', NULL,
+  0, 0, 1, 7, 20, '^[+0-9\- ]{7,20}$', NULL, NULL, 1, 1, '手机号', '联系方式-手机号'),
+('shared-properties-00000020','ri.ont.shared.props.email',       NULL, 'email',       'data', 'xsd:string', NULL,
+  0, 0, 1, 5, 128, '^[^@\s]+@[^@\s]+\.[^@\s]+$', NULL, NULL, 1, 1, '邮箱', '联系方式-电子邮箱'),
+('shared-properties-00000021','ri.ont.shared.props.geohash',     NULL, 'geohash',     'data', 'xsd:string', NULL,
+  0, 0, 1, 4, 12, '^[0-9a-z]+$', NULL, NULL, 1, 1, 'Geohash', '地理位置-Geohash 字符串编码'),
+('shared-properties-00000022','ri.ont.shared.props.amount_value',NULL, 'amount_value','data', 'xsd:decimal', NULL,
+  1, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 1, '金额数值', '货币数值,精度由 value_type 控制'),
+('shared-properties-00000023','ri.ont.shared.props.currency',    NULL, 'currency',    'data', 'xsd:string', NULL,
+  1, 0, 0, 3, 3, '^[A-Z]{3}$', NULL, NULL, 1, 1, '币种', 'ISO 4217 三字母币种 (CNY/USD/EUR ...)');
+
+-- =============================================================
+-- 结构属性类型 (ont_struct_types) — 6 条标准结构
+-- =============================================================
+INSERT INTO ont_struct_types(id, struct_code, category_code, status, rdfs_label, rdfs_comment) VALUES
+('struct-types-00000001','FullName',  NULL, 1, '姓名',     '中文姓名结构: 名 + 姓'),
+('struct-types-00000002','Address',   NULL, 1, '地址',     '行政地址结构: 国家 + 城市 + 街道 + 邮编'),
+('struct-types-00000003','Contact',   NULL, 1, '联系方式', '联系方式结构: 手机号 + 邮箱'),
+('struct-types-00000004','Location',  'dom_water_hydrology', 1, '地理位置', '地理位置结构: 经度 + 纬度 + Geohash'),
+('struct-types-00000005','Period',    NULL, 1, '时间段',   '时间段结构: 开始时间 + 结束时间'),
+('struct-types-00000006','Amount',    NULL, 1, '金额',     '货币金额结构: 数值 + 币种');
+
+-- =============================================================
+-- 结构属性条目 (ont_struct_items) — 每个结构包含的共享属性 + 顺序
+-- =============================================================
+INSERT INTO ont_struct_items(id, struct_id, sort_no, prop_id) VALUES
+-- 1. 姓名: 名 + 姓
+('struct-items-00010001','struct-types-00000001', 1, 'shared-properties-00000013'),
+('struct-items-00010002','struct-types-00000001', 2, 'shared-properties-00000014'),
+-- 2. 地址: 国家 / 城市 / 街道 / 邮编
+('struct-items-00020001','struct-types-00000002', 1, 'shared-properties-00000015'),
+('struct-items-00020002','struct-types-00000002', 2, 'shared-properties-00000016'),
+('struct-items-00020003','struct-types-00000002', 3, 'shared-properties-00000017'),
+('struct-items-00020004','struct-types-00000002', 4, 'shared-properties-00000018'),
+-- 3. 联系方式: 手机号 + 邮箱
+('struct-items-00030001','struct-types-00000003', 1, 'shared-properties-00000019'),
+('struct-items-00030002','struct-types-00000003', 2, 'shared-properties-00000020'),
+-- 4. 地理位置: 经度 / 纬度 / Geohash (复用已有的 longitude / latitude)
+('struct-items-00040001','struct-types-00000004', 1, 'shared-properties-00000009'),
+('struct-items-00040002','struct-types-00000004', 2, 'shared-properties-00000010'),
+('struct-items-00040003','struct-types-00000004', 3, 'shared-properties-00000021'),
+-- 5. 时间段: 开始时间 + 结束时间 (复用 start_time / end_time)
+('struct-items-00050001','struct-types-00000005', 1, 'shared-properties-00000001'),
+('struct-items-00050002','struct-types-00000005', 2, 'shared-properties-00000002'),
+-- 6. 金额: 数值 + 币种
+('struct-items-00060001','struct-types-00000006', 1, 'shared-properties-00000022'),
+('struct-items-00060002','struct-types-00000006', 2, 'shared-properties-00000023');
+
+-- =============================================================
+-- 链接类型 (ont_link_types) — 4 条标准示例,覆盖四种基数
+-- =============================================================
+INSERT INTO ont_link_types(id, link_type_id, rid, status,
+  l_object_type_id, r_object_type_id,
+  l_cardinality, r_cardinality,
+  l_display_name, l_plural_name, r_display_name, r_plural_name,
+  l_visibility, r_visibility,
+  l_api_name, r_api_name,
+  l_enabled, r_enabled,
+  is_data_source_rel, rel_data_table,
+  rdfs_label, rdfs_comment, category_code,
+  created_by, updated_by) VALUES
+('link-types-00000001','station-river-locatedin','ri.ont.link.types.locatedInRiver','active',
+  'class-00000000-0000-0000-0000-000000000001','class-00000000-0000-0000-0000-000000000002',
+  'many','one',
+  '所属河流',NULL,'拥有测站','测站列表',
+  'normal','normal',
+  'locatedInRiver','hasStations',
+  1,1,
+  0,NULL,
+  '测站-河流 归属','水文测站归属于一条河流; 一条河流可包含多个测站','dom_water_hydrology',
+  'admin','admin'),
+
+('link-types-00000002','river-quality-has','ri.ont.link.types.hasWaterQuality','active',
+  'class-00000000-0000-0000-0000-000000000002','class-00000000-0000-0000-0000-000000000003',
+  'one','many',
+  '水质监测','水质监测列表','所属河流',NULL,
+  'normal','normal',
+  'hasWaterQuality','river',
+  1,1,
+  0,NULL,
+  '河流-水质','河流与水质监测记录; 一条河流可有多条水质监测','dom_water_environment',
+  'admin','admin'),
+
+('link-types-00000003','aircraft-flight-operate','ri.ont.link.types.aircraftFlightOperate','experimental',
+  'class-00000000-0000-0000-0000-000000000001','class-00000000-0000-0000-0000-000000000002',
+  'many','many',
+  '执飞航班','执飞航班列表','执飞机型','执飞机队列表',
+  'normal','normal',
+  'operatedFlights','operatingAircraft',
+  1,1,
+  1,'aircraft_flight_rel',
+  '飞机-航班 多对多 (PDF 示例)','一架飞机可执飞多趟航班,一趟航班可由多架飞机执飞,依赖中间表 aircraft_flight_rel',NULL,
+  'admin','admin'),
+
+('link-types-00000004','windbreak-soilerosion-protects','ri.ont.link.types.protectsSlope','active',
+  'class-wsc-04','class-wsc-05',
+  'many','many',
+  '保护坡面','保护坡面列表','受保护防风林','防风林列表',
+  'prominent','normal',
+  'protectsSlopes','protectedByWindbreaks',
+  1,1,
+  0,NULL,
+  '防风林-水土流失 保护','防风林对水土流失监测样地的保护关系','dom_water_soilconservation',
+  'admin','admin');
+
+-- 关联映射 (ont_link_mappings)
+INSERT INTO ont_link_mappings(mapping_id, link_id, side, seq, object_field, join_table_column) VALUES
+-- link 1: 测站(many) → 河流(one), 外键 river_id 关联 river.id
+('link-mappings-00010001','link-types-00000001','left',  1, 'river_id',     NULL),
+('link-mappings-00010002','link-types-00000001','right', 1, 'id',           NULL),
+-- link 2: 河流(one) → 水质(many), 外键 river_id 关联 river.id
+('link-mappings-00020001','link-types-00000002','left',  1, 'id',           NULL),
+('link-mappings-00020002','link-types-00000002','right', 1, 'river_id',     NULL),
+-- link 3: 飞机(many) ↔ 航班(many) 中间表 aircraft_flight_rel, 复合主键示例
+('link-mappings-00030001','link-types-00000003','left',  1, 'aircraft_id', 'aircraft_id'),
+('link-mappings-00030002','link-types-00000003','right', 1, 'flight_no',   'flight_no'),
+('link-mappings-00030003','link-types-00000003','right', 2, 'flight_date', 'flight_date'),
+-- link 4: 防风林(many) ↔ 坡面(many), 简单外键关联
+('link-mappings-00040001','link-types-00000004','left',  1, 'id',           NULL),
+('link-mappings-00040002','link-types-00000004','right', 1, 'protector_id', NULL);
+
+-- =============================================================
+-- 类型类标准目录 (ont_type_class) — 覆盖 属性 / 关系 / 操作 三大类
+-- 数据来自 PDF 类型类清单, 仅做"目录预置", 业务上挂到具体对象上时再补
+-- link_type_id / object_type_id / action_type_id
+-- =============================================================
+INSERT INTO ont_type_class(id, applicable_type, is_deprecated, category, category_cn, name, name_cn, value, description) VALUES
+-- 属性类 (可用)
+('type-class-0001','property',0,'hubble','对象视图','icon','图标',NULL,'标识属性值为图标 URL, 用于展示对象自定义图标'),
+('type-class-0002','property',0,'geo','地理信息','altitude','海拔',NULL,'存储地理对象海拔高度, 用于地图 3D 渲染'),
+('type-class-0003','property',0,'analyzer','分词器','not_analyzed','不分词',NULL,'禁止 ES 对属性分词, 适用于含特殊符号 / 唯一标识类字段'),
+('type-class-0004','property',0,'vertex','知识图谱','link_merge','链接合并',NULL,'将当前对象作为中介节点隐藏, 直接展示二级关联关系'),
+('type-class-0005','property',0,'vertex','知识图谱','component_subtype','组件子类型',NULL,'提供比对象类型更细粒度的图谱分组能力'),
+('type-class-0006','property',0,'vertex','知识图谱','event_intent.<intent_>','事件意图','danger/warning/major/success','定义事件 / 告警颜色与严重等级'),
+('type-class-0007','property',0,'vertex','知识图谱','event_value','事件数值',NULL,'存储事件对应的量化数值, 用于图谱展示与阈值判断'),
+('type-class-0008','property',0,'vertex','知识图谱','min','阈值最小值',NULL,'时间序列数值低于该值时触发图谱告警'),
+('type-class-0009','property',0,'vertex','知识图谱','max','阈值最大值',NULL,'时间序列数值超出该值时触发图谱告警'),
+('type-class-0010','property',0,'vertex','知识图谱','key_measure.<measure_>','核心展示度量',NULL,'指定核心度量指标, 展示在 Vertex 主页看板'),
+('type-class-0011','property',0,'timeseries','时间序列','timeseries_id','时间序列唯一 ID',NULL,'时间序列全局唯一标识, 是 Quiver 识别序列的核心必填配置'),
+('type-class-0012','property',0,'timeseries','时间序列','timeseries_measure','序列度量字段',NULL,'指定时间序列用于统计 / 绘图的核心度量字段'),
+('type-class-0013','property',0,'timeseries','时间序列','timeseries_units','序列数值单位',NULL,'定义时间序列指标数值的计量单位'),
+-- 关系类 (可用)
+('type-class-0014','relation',0,'hierarchy','层级导航','parent','父级节点',NULL,'定义关系层级方向, 自动生成页面面包屑导航'),
+('type-class-0015','relation',0,'vertex','知识图谱','link_merge_incoming','入向链接合并',NULL,'仅对当前关系的入向链路执行节点合并'),
+('type-class-0016','relation',0,'vertex','知识图谱','link_merge_outgoing','出向链接合并',NULL,'仅对当前关系的出向链路执行节点合并'),
+('type-class-0017','relation',0,'vertex','知识图谱','component','图谱边组件',NULL,'标识当前关系链路在图谱中展示生效, 作为图谱边组件渲染'),
+('type-class-0018','relation',0,'timeseries','时间序列','parent','序列父级',NULL,'构建时间序列对象的层级关联关系'),
+-- 操作类 (可用)
+('type-class-0019','action',0,'hubble-oe','对象浏览器','hide-action','隐藏操作按钮',NULL,'在对象视图 / 对象浏览器中隐藏指定操作'),
+('type-class-0020','action',0,'actions','通用操作','generate_uuid','生成 UUID',NULL,'自动将操作字符串参数替换为全局唯一 UUID'),
+('type-class-0021','action',0,'actions','通用操作','prefill_current_user','预填充当前用户',NULL,'自动将操作参数填充为当前登录用户账号'),
+('type-class-0022','action',0,'actions','通用操作','view_object_with_type','操作后查看对象',NULL,'操作执行成功后, 弹窗展示新建 / 修改后的对象详情'),
+-- 已弃用类型类示例
+('type-class-9001','property',1,'hubble','对象视图','media_url','媒体链接展示',NULL,'[已弃用] 旧版媒体渲染能力, 新版视图已原生支持'),
+('type-class-9002','property',1,'hubble','对象视图','editable','视图可编辑',NULL,'[已弃用] 旧版视图全局编辑开关, 现统一使用行内编辑'),
+('type-class-9003','property',1,'geo','地理信息','latitude','纬度',NULL,'[已弃用] 独立纬度字段, 统一使用 geohash 存储经纬度'),
+('type-class-9004','property',1,'geo','地理信息','longitude','经度',NULL,'[已弃用] 独立经度字段, 统一使用 geohash 存储经纬度');
+
+-- 给链接类型 3 (飞机-航班) 挂一组示例类型类: vertex:component + hierarchy:parent
+INSERT INTO ont_type_class(id, link_type_id, applicable_type, is_deprecated, category, category_cn, name, name_cn, description) VALUES
+('type-class-LK-0001','link-types-00000003','relation',0,'vertex','知识图谱','component','图谱边组件','示例: 飞机-航班链接在图谱中作为边组件渲染'),
+('type-class-LK-0002','link-types-00000003','relation',0,'hierarchy','层级导航','parent','父级节点','示例: 航班作为飞机的层级父级');

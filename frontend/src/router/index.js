@@ -20,6 +20,7 @@ const routes = [
   { path: '/tools/import-export', name: 'importExport', component: () => import('@/views/tools/ImportExport.vue'), meta: { title: '导入导出' } },
 
   { path: '/config/category', name: 'category', component: () => import('@/views/config/Category.vue'), meta: { title: '行业分类管理' } },
+  { path: '/config/type-classes', name: 'typeClasses', component: () => import('@/views/config/TypeClasses.vue'), meta: { title: '类型类' } },
   { path: '/config/security', name: 'security', component: () => import('@/views/config/Security.vue'), meta: { title: '权限安全' } }
 ]
 

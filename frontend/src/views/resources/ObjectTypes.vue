@@ -325,9 +325,9 @@
               <Placeholder icon="branch" label="类继承层次" desc="呈现父类 / 子类 / 兄弟类的树状结构,支持点击跳转" />
             </div>
 
-            <!-- 对象图谱 -->
-            <div v-else-if="drawerTab === 'graph'" class="ot-tab-content">
-              <Placeholder icon="network" label="对象关联图谱" desc="以当前对象为中心,展示其 1-2 度可达的关联对象、关系、动作" />
+            <!-- 对象图谱 (Canvas: 链接类型可视化) -->
+            <div v-else-if="drawerTab === 'graph'" class="ot-tab-content ot-tab-canvas">
+              <TabLinkGraph :class-id="selected?.id" />
             </div>
 
             <!-- 等价类 -->
@@ -463,6 +463,7 @@ import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 import TabOverview from '@/views/resources/objecttype/TabOverview.vue'
 import TabProps from '@/views/resources/objecttype/TabProps.vue'
 import TabClassGroup from '@/views/resources/objecttype/TabClassGroup.vue'
+import TabLinkGraph from '@/views/resources/objecttype/TabLinkGraph.vue'
 import TabDisjointUnion from '@/views/resources/objecttype/TabDisjointUnion.vue'
 import TabPropertyRelation from '@/views/resources/objecttype/TabPropertyRelation.vue'
 import NewObjectTypeWizard from '@/views/resources/objecttype/NewObjectTypeWizard.vue'
@@ -1086,6 +1087,8 @@ onMounted(async () => {
 .ot-tab-pane { overflow: auto; padding: 10px 10px; min-width: 0; }
 /* height:100% 让该容器具有"确定的"高度,使下方 .tab-props 的 height:100% / .pp-canvas 的 flex:1 能正确解析 */
 .ot-tab-content { display: flex; flex-direction: column; gap: 8px; height: 100%; }
+/* 对象图谱: 去除上下间隙,让 SVG 画布顶满抽屉空间 */
+.ot-tab-content.ot-tab-canvas { gap: 0; padding: 0; height: 100%; }
 .ot-tab-toolbar { display: flex; align-items: center; gap: 8px;  }
 .ot-section-title {
   font-size: var(--bl-fs-13); font-weight: 600; color: var(--bl-text-2);

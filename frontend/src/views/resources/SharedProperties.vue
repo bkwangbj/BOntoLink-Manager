@@ -51,7 +51,27 @@
 
       <!-- 右侧: 列表 + 分页 -->
       <section class="pane pane-list">
-        <div class="sp-list-scroll">
+        <!-- 子页签: 普通属性 / 结构属性 -->
+        <div class="sp-subtabs">
+          <button :class="['sp-stab', activeMainTab === 'normal' && 'is-on']" @click="activeMainTab = 'normal'">
+            <span v-html="BL.icon('list', 13)"></span>
+            <span style="margin-left:4px">普通属性</span>
+            <span v-if="rows.length > 0" class="sp-stab-cnt">{{ rows.length }}</span>
+          </button>
+          <button :class="['sp-stab', activeMainTab === 'struct' && 'is-on']" @click="activeMainTab = 'struct'">
+            <span v-html="BL.icon('layers', 13)"></span>
+            <span style="margin-left:4px">结构属性</span>
+            <span v-if="structCount > 0" class="sp-stab-cnt">{{ structCount }}</span>
+          </button>
+        </div>
+
+        <!-- 结构属性视图 (左右分栏 + 拖拽宽度) -->
+        <StructTypesView v-if="activeMainTab === 'struct'"
+                         :selected-codes="selectedCategoryCodes"
+                         @counts="onStructCount" />
+
+        <!-- 普通属性: 沿用既有列表 -->
+        <div v-show="activeMainTab === 'normal'" class="sp-list-scroll">
           <table class="bl-table sp-table">
             <thead>
               <tr>
@@ -129,8 +149,8 @@
           <div v-if="!flatList.length" class="bl-empty" style="padding:48px">暂无匹配的共享属性,请调整筛选条件或点击「新建共享属性」</div>
         </div>
 
-        <!-- 分页钉底 -->
-        <div class="sp-pager">
+        <!-- 分页钉底 (普通属性 tab 专属) -->
+        <div v-show="activeMainTab === 'normal'" class="sp-pager">
           <div class="sp-pager-l">
             <template v-if="checked.size">
               已选 <b style="color:var(--bl-primary)">{{ checked.size }}</b> 项
@@ -187,15 +207,22 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { BL } from '@/lib/bl.js'
-import { sharedPropertyApi, categoryApi } from '@/api'
+import { sharedPropertyApi, categoryApi, structTypeApi } from '@/api'
 import PageHeader from '@/components/PageHeader.vue'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 import SharedPropertyDetailDrawer from './sharedproperty/SharedPropertyDetailDrawer.vue'
 import NewSharedPropertyWizard from './sharedproperty/NewSharedPropertyWizard.vue'
+import StructTypesView from './sharedproperty/StructTypesView.vue'
 
 const rows = ref([])
+const structCount = ref(0)  // 结构属性数量(由 StructTypesView 通过 @counts 回传)
+function onStructCount(n) {
+  structCount.value = typeof n === 'number' ? n : (Array.isArray(n) ? n.length : 0)
+}
+const activeMainTab = ref(localStorage.getItem('bontolink.sp.mainTab') || 'normal')
+watch(activeMainTab, v => localStorage.setItem('bontolink.sp.mainTab', v))
 const checked = ref(new Set())
 const selectedId = ref(null)
 const q = ref('')
@@ -234,7 +261,11 @@ async function loadCategoryMap() {
   walk(tree)
   categoryMap.value = m
 }
-onMounted(() => { load(); loadCategoryMap() })
+async function loadStructCount() {
+  const list = await structTypeApi.list().catch(() => [])
+  structCount.value = Array.isArray(list) ? list.length : 0
+}
+onMounted(() => { load(); loadCategoryMap(); loadStructCount() })
 
 /* —— 行业分类筛选 (左树) —— */
 function onCategoryChange({ codes }) { selectedCategoryCodes.value = codes || null }
@@ -477,6 +508,36 @@ function propTypeColor(p) {
   display: flex; flex-direction: column;
 }
 .pane-list { display: flex; flex-direction: column; overflow: hidden; }
+
+/* 主页签切换: 普通属性 / 结构属性 */
+.sp-subtabs {
+  flex-shrink: 0;
+  display: flex; gap: 2px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--bl-divider);
+  background: var(--bl-bg-1);
+}
+.sp-stab {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 0 14px; height: 38px;
+  border: 0; background: transparent; cursor: pointer;
+  font-size: 13px; color: var(--bl-text-2);
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+}
+.sp-stab:hover { color: var(--bl-text-1); }
+.sp-stab.is-on { color: var(--bl-primary); border-color: var(--bl-primary); font-weight: 500; }
+.sp-stab-cnt {
+  display: inline-block;
+  margin-left: 6px; padding: 0 7px;
+  min-width: 20px; height: 18px;
+  background: var(--bl-bg-2); color: var(--bl-text-3);
+  border-radius: 9px;
+  font-size: 11px; font-weight: 500; line-height: 18px;
+  text-align: center;
+  font-feature-settings: "tnum";
+  /* 0 / 空内容 也不会塌成纯色圆点: 至少有数字占位 */
+}
+.sp-stab.is-on .sp-stab-cnt { background: var(--bl-primary); color: #fff; }
 
 /* 表格滚动区 + 分页钉底 */
 .sp-list-scroll { flex: 1; min-height: 0; overflow: auto; }
