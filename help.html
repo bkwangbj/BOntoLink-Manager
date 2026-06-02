@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown转换文档</title>
+  <style>
+    body { 
+      font-family: 'Microsoft YaHei', 'SimSun', sans-serif; 
+      margin: 0 auto; 
+      max-width: 960px; 
+      padding: 20px; 
+      line-height: 1.6;
+    }
+    pre { 
+      background-color: #f8f8f8; 
+      border: 1px solid #ddd; 
+      padding: 10px; 
+      border-radius: 3px; 
+      overflow: auto; 
+    }
+    code { 
+      font-family: Consolas, Monaco, monospace; 
+      background-color: #f8f8f8; 
+      padding: 2px 5px; 
+      border-radius: 3px; 
+    }
+    table { 
+      border-collapse: collapse; 
+      width: 100%; 
+      margin-bottom: 20px;
+    }
+    th, td { 
+      border: 1px solid #ddd; 
+      padding: 8px; 
+    }
+    th { 
+      background-color: #f2f2f2; 
+      text-align: left; 
+    }
+    tr:nth-child(even) { 
+      background-color: #f9f9f9; 
+    }
+    img { 
+      max-width: 100%; 
+      height: auto; 
+    }
+    .toc-placeholder { 
+      margin: 20px 0; 
+      padding: 10px; 
+      background-color: #f0f0f0; 
+      border: 1px dashed #ccc; 
+      text-align: center; 
+      color: #666; 
+    }
+  </style>
+</head>
+<body>
+  <h1>Claude Code 协作复盘与改进建议</h1>
+<blockquote>
+<p>基于 BOntoLink02 项目实际协作过程的复盘</p>
+<p>版本: v1.0 · 2026-06-01</p>
+</blockquote>
+<hr />
+<h2>引言</h2>
+<p>本文是对你在 BOntoLink02 项目中与 Claude Code 协作过程的<strong>复盘性反馈</strong>,包含:</p>
+<ol>
+<li>你这次协作中<strong>做得不足</strong>的地方 + 具体改进建议</li>
+<li>社区其他用户的<strong>最佳实践</strong>与方法论</li>
+<li>你可以<strong>立刻执行</strong>的 5 个行动项</li>
+</ol>
+<p>目标:把你从&quot;打字员&quot;升级到&quot;导演&quot;,让 Claude Code 在 70-80% 的时间为你输出,你专注关键决策。</p>
+<hr />
+<h2>一、你这次协作里的不足</h2>
+<h3>1.1 “让 Claude 猜浏览器错误”——浪费了不止一轮</h3>
+<p><strong>实例</strong>:页面空白那次。</p>
+<ul>
+<li>第一次:你只发了截图 + 说&quot;页面空白,如何处理解决&quot; → 我猜 HMR 缓存 / layout 问题 → 让你硬刷 → 没解决</li>
+<li>第二次:你发 F12 Console 截图(<code>Cannot access 'refs' before initialization</code>)→ 我 30 秒定位 TDZ 修复</li>
+</ul>
+<p><strong>改进</strong>:<strong>浏览器 / 运行时问题,第一时间贴 F12 Console</strong>,不要让我从症状反推根因。一张 console 截图 ≈ 10 条猜测。</p>
+<hr />
+<h3>1.2 频繁的&quot;还原上一步修改&quot;</h3>
+<p><strong>实例</strong>:</p>
+<ul>
+<li>“启用按钮改实心绿” → 几分钟后 → “还原上一步修改”</li>
+<li>“层级不对” → 我改了 → “遮挡”(还要补)</li>
+</ul>
+<p><strong>改进</strong>:</p>
+<ul>
+<li><strong>多看两眼参考图再下指令</strong>,避免改完才发现要的不是这个</li>
+<li>把&quot;要改的&quot;和&quot;不能动的&quot;<strong>一次说清楚</strong>(否则容易过度发挥)</li>
+<li>给 Claude 一个<strong>视觉对标</strong>:“参考图2 但不要那个圆圈样式”</li>
+</ul>
+<hr />
+<h3>1.3 项目约定<strong>太晚才沉淀</strong></h3>
+<p><strong>实例</strong>:</p>
+<ul>
+<li>做了 5 个模块后才统一&quot;批量操作栏的 outline 配色&quot;</li>
+<li>做了 10 个模块的左树后才统一改成&quot;行业分类树&quot;</li>
+<li><code>UI规范.md</code> 是项目末期才写的</li>
+</ul>
+<p><strong>改进</strong>:<strong>在做第 2 个同类模块时就写下规范</strong>,而不是做了 6 个之后回头改。</p>
+<ul>
+<li>第 1 个模块:摸索</li>
+<li>第 2 个模块:写下&quot;这是约定&quot;</li>
+<li>第 3 个开始:照搬</li>
+</ul>
+<hr />
+<h3>1.4 缺少 <a href="http://CLAUDE.md">CLAUDE.md</a> / Memory</h3>
+<p><strong>问题</strong>:每次新会话我都得从头扫项目结构、问&quot;你们前端用 vite 还是 webpack&quot;。</p>
+<p><strong>改进</strong>:在项目根目录写 <code>CLAUDE.md</code>:</p>
+<pre><code class="language-markdown"># BOntoLink02
+
+## 技术栈
+- 后端: Spring Boot + SQLite + MyBatis
+- 前端: Vue 3 + Vite + 原生 CSS (无 Element/Antd)
+
+## 常用命令
+- 前端 build: cd frontend &amp;&amp; npx vite build
+- 后端启动: cd backend &amp;&amp; mvn -q -DskipTests spring-boot:run
+- 后端编译: cd backend &amp;&amp; mvn -DskipTests clean compile
+
+## 关键约定
+- CSS 类前缀: ot-/lk-/vt-/et-/sp-/if-/ds-/tc-
+- API 前缀: /api,响应包装 R&lt;T&gt; = { code, msg, data }
+- 主键: &quot;{prefix}-&quot; + UUID
+- 时间: TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+
+## 避免
+- 不要新增 Element/Antd 依赖
+- 不要改 src/lib/bl.js 已有 icon
+- 不要用 fetch,统一用 http (拦截器包装)
+</code></pre>
+<p>每个新会话 Claude 都会自动读,免去 5 分钟的&quot;项目摸底&quot;。</p>
+<hr />
+<h3>1.5 接受&quot;前端模拟&quot;实现</h3>
+<p><strong>实例</strong>:<code>TabLinkGraph.vue</code> 里我说&quot;新建链接是前端模拟,后端 API 待联调&quot;,你<strong>没有追问</strong>。结果这个功能一直是半成品。</p>
+<p><strong>改进</strong>:看到&quot;模拟 / 待联调 / TODO&quot;立刻问:<strong>“是真的没法接,还是没空接?”</strong></p>
+<ul>
+<li>如果是没空 → 加到 todo list 单独成一轮</li>
+<li>如果是没法接 → 至少留个明显的 UI 提示(“暂不支持”)</li>
+</ul>
+<hr />
+<h3>1.6 改变方向但没说原因</h3>
+<p><strong>实例</strong>:有时你说&quot;删掉这项&quot;“不要这个” — 我照做了,但<strong>不知道为什么</strong>。下次类似场景我可能又会加上。</p>
+<p><strong>改进</strong>:删除 / 拒绝时<strong>带一句理由</strong>:</p>
+<ul>
+<li>❌ “删掉这项”</li>
+<li>✅ “删掉值类型子页签 — 用户在属性表里点击值类型列单元格已经能唤起选择面板,这个 tab 是冗余的”</li>
+</ul>
+<p>理由比指令更重要 — 它能避免我以后犯同样错。</p>
+<hr />
+<h3>1.7 一次说太多碎需求</h3>
+<p><strong>实例</strong>:有几次你一次发了 3-4 张图 + 4-5 条需求,我处理时容易遗漏或合并错位。</p>
+<p><strong>改进</strong>:<strong>一次 1-3 个相关变更</strong>最容易准确执行。</p>
+<ul>
+<li>真有 5 个需求 → 列个小清单,每条单独处理</li>
+<li>或让我先 plan 再做</li>
+</ul>
+<hr />
+<h3>1.8 没有及时让我跑 verify</h3>
+<p><strong>实例</strong>:几次你说&quot;做完了吗&quot; — 实际上我已经写了代码但<strong>没跑 build</strong>。需要你提醒。</p>
+<p><strong>改进</strong>:可以在 <a href="http://CLAUDE.md">CLAUDE.md</a> 或一开始就声明:</p>
+<blockquote>
+<p>“每个改动结束必须 <code>npx vite build</code> 验证通过才算交付”</p>
+</blockquote>
+<p>或者直接在每个回合最后加一句&quot;build 一下&quot;。</p>
+<hr />
+<h3>1.9 没用过 Plan Mode / 子 agent</h3>
+<p><strong>实例</strong>:做对象图谱(Canvas)那次,我直接开干,写了 545 行。如果你让我先 plan,可能会少几次返工。</p>
+<p><strong>改进</strong>:**复杂任务(&gt; 200 行 / 涉及 3+ 文件)**先让 Claude plan:</p>
+<blockquote>
+<p>“先给我方案,我确认后再写代码”</p>
+</blockquote>
+<p>我会输出大纲、关键决策点、可选方案,你认可再实施。</p>
+<hr />
+<h3>1.10 没有积累 Memory</h3>
+<p><strong>问题</strong>:用户偏好(比如&quot;我喜欢中文回复 / 不要过度澄清 / 喜欢简短总结&quot;)每次都得重新告诉我。</p>
+<p><strong>改进</strong>:遇到偏好性的事,说&quot;记下来&quot;:</p>
+<blockquote>
+<p>“以后所有抽屉的关闭按钮都放右上角,记下来”</p>
+</blockquote>
+<p>我会写到 memory,跨会话保留。</p>
+<hr />
+<h2>二、社区里&quot;做得好&quot;的 Claude Code 用户怎么干</h2>
+<h3>2.1 工作流自动化</h3>
+<p><strong>Hooks</strong>:在 settings.json 里配置自动行为</p>
+<ul>
+<li><code>PostToolUse</code>: 每次 Edit 后自动 prettier / eslint --fix</li>
+<li><code>PreToolUse</code>: 阻止某些危险命令</li>
+<li><code>Stop</code>: 任务完成时桌面通知</li>
+</ul>
+<p><strong>示例</strong> (<code>.claude/settings.json</code>):</p>
+<pre><code class="language-json">{
+  &quot;hooks&quot;: {
+    &quot;PostToolUse&quot;: [
+      {
+        &quot;matcher&quot;: &quot;Edit|Write&quot;,
+        &quot;hooks&quot;: [{ &quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;npx prettier --write $TOOL_INPUT_FILE_PATH&quot; }]
+      }
+    ]
+  }
+}
+</code></pre>
+<p><strong>Permission allowlist</strong>:常用安全命令免授权</p>
+<pre><code class="language-json">{
+  &quot;permissions&quot;: {
+    &quot;allow&quot;: [&quot;Bash(npm:*)&quot;, &quot;Bash(git status)&quot;, &quot;Bash(git diff)&quot;, &quot;Bash(curl:*)&quot;]
+  }
+}
+</code></pre>
+<p>社区高手用 <code>/fewer-permission-prompts</code> skill 自动扫描自己常用的命令,加白名单。</p>
+<hr />
+<h3>2.2 多 agent 并行(Workflow)</h3>
+<p>复杂任务用 Workflow 把多个子任务<strong>并行</strong>:</p>
+<ul>
+<li>一个 agent 找 bug</li>
+<li>一个 agent 验证 bug 是否真实</li>
+<li>一个 agent 写修复</li>
+<li>一个 agent code review</li>
+</ul>
+<p>社区里有人用 Workflow 在 30 分钟内做完了&quot;5 个候选方案各写一个 demo,judge 评分,选最优&quot;的设计探索。</p>
+<hr />
+<h3>2.3 Subagents 分工</h3>
+<ul>
+<li><strong>Explore agent</strong>:专门做&quot;广度搜索&quot;(7-8 个文件以上的扫描),返回结论不返回原文 → 节省 context</li>
+<li><strong>Plan agent</strong>:专门做架构方案设计</li>
+<li><strong>Code-reviewer</strong>:专门做 PR 审核</li>
+</ul>
+<p>社区典型用法:</p>
+<pre><code>&quot;Use Explore agent to find all places we call the old auth API. 
+Then Plan a migration strategy. Then implement.&quot;
+</code></pre>
+<hr />
+<h3>2.4 Skill 系统</h3>
+<p>我们这次系统里<strong>没用过任何 Skill</strong>(<code>/code-review</code> / <code>/security-review</code> / <code>/verify</code> 等),但社区高手会:</p>
+<ul>
+<li><strong>提交 PR 前</strong>:<code>/code-review high</code> — 多 agent 对差异做对抗式审核</li>
+<li><strong>重大改动后</strong>:<code>/security-review</code> — 专门扫安全问题</li>
+<li><strong>担心引入 bug</strong>:<code>/verify</code> — 启动 app 实际验证行为</li>
+</ul>
+<hr />
+<h3>2.5 长期记忆(Memory)</h3>
+<p>社区里有人在 Memory 中记录:</p>
+<pre><code class="language-markdown"># user.md
+- 全栈工程师, 10 年经验, 熟悉 Vue / Spring Boot
+- 偏好中文回复, 简短总结, 不要展开&quot;为什么&quot;长篇大论
+- 不喜欢&quot;建议你看看 X 文档&quot;这种甩锅式回答
+
+# feedback.md
+- 提交代码前必须 build verify
+- 别加多余注释, 代码自解释优先
+- 用户经常用截图沟通, 优先理解图意
+
+# project.md  
+- 项目用 SQLite + 单机部署, 不需要考虑分布式
+- 后端 PowerShell 启动, 前端 vite dev
+</code></pre>
+<hr />
+<h3>2.6 Git 工作流</h3>
+<p>社区里推荐:</p>
+<ul>
+<li><strong>小步提交</strong>:每完成一个 task 就 commit,不等所有 task 完成</li>
+<li><strong>分支命名</strong>:<code>feat/link-types</code> / <code>fix/sticky-table-gap</code></li>
+<li><strong>commit message</strong> 让 Claude 自动生成符合 conventional commits 规范</li>
+<li><strong>PR 描述</strong>:让 Claude 基于 git log 自动生成</li>
+</ul>
+<hr />
+<h3>2.7 调试技巧</h3>
+<ul>
+<li><strong>Network tab 截图</strong> &gt; 描述请求失败:省时间</li>
+<li><strong>F12 console 截图</strong> &gt; 描述错误:省时间</li>
+<li><strong><code>console.log</code> 输出截图</strong> &gt; 让 Claude 猜变量值</li>
+<li><strong>Sources 断点截图</strong> &gt; “我想看 X 函数的执行流”</li>
+</ul>
+<hr />
+<h3>2.8 用 <code>/init</code> 起项目</h3>
+<p><code>/init</code> skill 会:</p>
+<ol>
+<li>扫描你的项目</li>
+<li>自动生成 <code>CLAUDE.md</code> 草稿</li>
+<li>包含目录结构、命令、依赖、约定</li>
+</ol>
+<p>新接手项目第一件事就是跑 <code>/init</code>,而不是问 Claude “这个项目是干啥的”。</p>
+<hr />
+<h3>2.9 让 Claude 写测试</h3>
+<p>社区共识:<strong>让 Claude 写代码 + 让 Claude 写测试,比让人类写测试更高效</strong>。</p>
+<p>最有效的工作流:</p>
+<ol>
+<li>让 Claude 写新功能 + 单测</li>
+<li>跑测试通过 → 提交</li>
+<li>测试失败 → Claude 自动修</li>
+<li>改 bug 时先写<strong>复现 bug 的失败测试</strong>,再修</li>
+</ol>
+<p>我们这次项目几乎<strong>没写过测试</strong>。如果加上测试,后续重构的信心会大很多。</p>
+<hr />
+<h3>2.10 限制 Claude 的破坏力</h3>
+<p>社区里&quot;翻车故事&quot;大多是:</p>
+<ul>
+<li>让 Claude 直接 <code>git push --force</code></li>
+<li>让 Claude <code>rm -rf</code> 错地方</li>
+<li>让 Claude 改生产配置</li>
+</ul>
+<p><strong>对策</strong>:</p>
+<ul>
+<li><code>--dangerously-skip-permissions</code> 慎用(只在沙箱环境)</li>
+<li>危险命令始终保留权限提示</li>
+<li>重要分支保护(GitHub branch protection rules)</li>
+<li>重要操作前先 dry-run</li>
+</ul>
+<hr />
+<h3>2.11 “Pair Programming” 节奏</h3>
+<p>社区里的高手描述节奏:</p>
+<blockquote>
+<p>“我和 Claude 协作时,我大概 30% 的时间在思考下一步,70% 的时间在看它干活 / 给反馈。<br />
+反过来一开始我 80% 在打字给指令 — 那是没用对。”</p>
+</blockquote>
+<p>把自己从&quot;打字员&quot;升级到&quot;导演&quot;,才是 Claude Code 的正确打开方式。</p>
+<hr />
+<h3>2.12 文档作为协作&quot;配置&quot;</h3>
+<p>社区有人把项目文档当 <strong>Claude 的输入</strong>而非&quot;给人看的&quot;来设计:</p>
+<ul>
+<li>命名约定 → 写到 <a href="http://CLAUDE.md">CLAUDE.md</a> → Claude 自动遵守</li>
+<li>API 规范 → 写到 docs/ → 新模块 Claude 自动对齐</li>
+<li>设计 token → CSS 变量 → Claude 不会&quot;自创颜色&quot;</li>
+</ul>
+<p>文档不再是&quot;事后整理&quot;,而是&quot;事前约束&quot;。我们这次的 <code>UI规范.md</code> 应该早 3 个月写。</p>
+<hr />
+<h2>三、给你的 5 个具体行动项(Quick Wins)</h2>
+<p>按优先级排:</p>
+<h3>Action 1: 立刻写 <a href="http://CLAUDE.md">CLAUDE.md</a>(10 分钟)</h3>
+<p>把项目最常用的命令 + 关键约定写进去。下次新会话 Claude 自动读,省 5 分钟&quot;摸底&quot;。</p>
+<h3>Action 2: 配置 permission allowlist(5 分钟)</h3>
+<p><code>.claude/settings.json</code> 加白名单:</p>
+<pre><code class="language-json">{
+  &quot;permissions&quot;: {
+    &quot;allow&quot;: [
+      &quot;Bash(npm:*)&quot;,
+      &quot;Bash(npx:*)&quot;,
+      &quot;Bash(curl:*)&quot;,
+      &quot;Bash(git status)&quot;,
+      &quot;Bash(git diff:*)&quot;,
+      &quot;Bash(git log:*)&quot;,
+      &quot;PowerShell(*)&quot;
+    ]
+  }
+}
+</code></pre>
+<p>或运行 <code>/fewer-permission-prompts</code> 让 Claude 帮你自动生成。</p>
+<h3>Action 3: 浏览器问题 → 优先贴 F12 console(永久习惯)</h3>
+<p>下次再遇到页面空白 / 报错,F12 → 右键 console → 选 + 复制(或截图)→ 第一句话就贴上。</p>
+<h3>Action 4: 写&quot;为什么不要&quot;的反馈(永久习惯)</h3>
+<p>删除 / 拒绝某个改动时,带一句理由。我会记到 memory,避免重复错。</p>
+<h3>Action 5: 复杂任务先 plan(可选,看任务大小)</h3>
+<blockquote>
+<p>“先 plan 一下方案,我确认再写代码”</p>
+</blockquote>
+<p>特别是 200+ 行 / 涉及多文件 / 改架构的任务。</p>
+<hr />
+<h2>四、你做得<strong>好</strong>的方面(别变)</h2>
+<p>平衡一下,你这些做得非常好:</p>
+<ol>
+<li><strong>截图 + 短描述</strong> — 高效到爆,业界平均水平很多倍</li>
+<li><strong>PDF 规范直接贴</strong> — 一次贴完整规范,省去拆碎需求</li>
+<li><strong>频繁视觉对标</strong> — “参考图2 / 与共享属性一致” — 节省大量决策成本</li>
+<li><strong>承认错误并还原</strong> — “还原上一步修改” 这种果断回退能力是很多人没有的</li>
+<li><strong>追求 UI 一致性</strong> — 不放任各模块各自为政,主动要求统一</li>
+<li><strong>整理沉淀文档</strong> — 主动要 UI规范 + Claude Code 使用指南,把经验沉淀</li>
+</ol>
+<p>这些占了我们高效协作的大头。<strong>保持。</strong></p>
+<hr />
+<h2>五、终极建议:养成&quot;调音&quot;习惯</h2>
+<p>每周(或每个项目阶段)花 15 分钟做一次复盘:</p>
+<ol>
+<li>这周哪 3 件事我重复说了多次 → 写进 <a href="http://CLAUDE.md">CLAUDE.md</a></li>
+<li>这周 Claude 哪 2 次答得不对 → 加到 memory feedback</li>
+<li>这周哪些权限提示烦人 → 加白名单</li>
+<li>这周哪种类型的任务效率最高 → 找规律复用</li>
+</ol>
+<p><strong>Claude Code 不是&quot;配置一次用一辈子&quot;的工具,是个需要持续调音的乐器。</strong> 一开始可能磕磕碰碰,3 个月后会越来越顺手。</p>
+<p>你这次项目积累的 <code>UI规范.md</code> + <code>ClaudeCode使用指南.md</code> 就是个很好的开始,继续保持迭代。</p>
+<hr />
+<h2>附录:相关文档</h2>
+<p>本项目还有两份配套文档,建议结合使用:</p>
+<table>
+<thead>
+<tr>
+<th>文档</th>
+<th>内容</th>
+<th>适合</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><a href="http://xn--UI-425fp4u.md">UI规范.md</a></strong></td>
+<td>项目视觉、交互、组件、命名约定</td>
+<td>新模块开发 / 设计对齐</td>
+</tr>
+<tr>
+<td><strong><a href="http://xn--ClaudeCode-dv5p628awm5cnb1c.md">ClaudeCode使用指南.md</a></strong></td>
+<td>与 Claude Code 协作的具体技巧</td>
+<td>团队培训 / 个人提升</td>
+</tr>
+<tr>
+<td><strong><a href="http://help.md">help.md</a></strong>(本文)</td>
+<td>个人协作复盘 + 业界经验 + 行动项</td>
+<td>自我反思 / 持续改进</td>
+</tr>
+</tbody>
+</table>
+<p>三份合起来形成&quot;项目知识体系 + AI 协作能力 + 个人迭代闭环&quot;。</p>
+<hr />
+<h2>六、推荐工具 / Skill 速查</h2>
+<p>下面是社区高频使用的 Skill 和工具,可以直接在 Claude Code 里用:</p>
+<table>
+<thead>
+<tr>
+<th>Skill / 工具</th>
+<th>触发命令</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/init</code></td>
+<td><code>/init</code></td>
+<td>新项目自动生成 <a href="http://CLAUDE.md">CLAUDE.md</a></td>
+</tr>
+<tr>
+<td><code>/fewer-permission-prompts</code></td>
+<td><code>/fewer-permission-prompts</code></td>
+<td>自动扫描常用命令,加白名单</td>
+</tr>
+<tr>
+<td><code>/code-review</code></td>
+<td><code>/code-review high</code></td>
+<td>多 agent 对当前 diff 做严格审核</td>
+</tr>
+<tr>
+<td><code>/security-review</code></td>
+<td><code>/security-review</code></td>
+<td>专门扫安全漏洞</td>
+</tr>
+<tr>
+<td><code>/verify</code></td>
+<td><code>/verify</code></td>
+<td>启动 app 验证改动实际是否工作</td>
+</tr>
+<tr>
+<td><code>/simplify</code></td>
+<td><code>/simplify</code></td>
+<td>自动重构、复用、简化代码</td>
+</tr>
+<tr>
+<td><code>update-config</code></td>
+<td>“allow npm commands”</td>
+<td>配置 settings.json</td>
+</tr>
+<tr>
+<td><code>deep-research</code></td>
+<td>“深度调研 X 技术”</td>
+<td>多源对抗式研究,生成有引用的报告</td>
+</tr>
+<tr>
+<td><code>schedule</code></td>
+<td>“每天早上跑 X”</td>
+<td>创建定时任务</td>
+</tr>
+<tr>
+<td><code>loop</code></td>
+<td><code>/loop 5m /foo</code></td>
+<td>周期性运行某个任务</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>文档版本</h2>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>日期</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.0</td>
+<td>2026-06-01</td>
+<td>初版整理,基于 BOntoLink02 项目实践</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><strong>最后一句话</strong></p>
+<blockquote>
+<p>Claude Code 是一面镜子。你怎么沟通,它就怎么回应。<br />
+投入 1 小时调优工具配置和习惯,后续 100 小时都会受益。</p>
+</blockquote>
+
+</body>
+</html>
