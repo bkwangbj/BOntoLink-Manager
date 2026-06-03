@@ -37,8 +37,8 @@
           </div>
         </header>
 
-        <!-- 页签 -->
-        <nav class="lke-tabs">
+        <!-- 页签 (showTabs=true 时显示, 链接模块保留; 对象模块下的 TabLinkGraph 不要 tab) -->
+        <nav v-if="showTabs" class="lke-tabs">
           <button v-for="t in tabs" :key="t.k"
                   :class="['lke-tab', activeTab === t.k && 'is-on']" @click="activeTab = t.k">{{ t.label }}</button>
         </nav>
@@ -46,221 +46,290 @@
         <!-- 主体 -->
         <div class="lke-body" :class="{ 'is-readonly': !editMode }">
 
-          <!-- 基础信息: 双向对称配置 -->
-          <section v-if="activeTab === 'basic'">
-            <!-- 全局元数据 (状态 + ID + RID) -->
+          <section v-if="!showTabs || activeTab === 'basic'">
+            <!-- 全局元数据 (状态 / ID / RID 一行三列) -->
             <div class="lke-meta-row">
-              <div class="lke-meta-l">
-                <span class="bl-muted" style="margin-right:6px">状态</span>
+              <div class="lke-meta-cell">
+                <span class="lke-meta-lbl">状态</span>
                 <select class="bl-input lke-status-sel" v-model="form.status" :disabled="!editMode">
                   <option value="experimental">实验中</option>
                   <option value="active">正式</option>
                   <option value="deprecated">已废弃</option>
                 </select>
               </div>
-              <div class="lke-meta-r">
-                <div class="lke-id-row">
-                  <span class="lke-id-lbl">ID</span>
-                  <input class="bl-input bl-mono" v-model="form.link_type_id" :disabled="!editMode || !!form.id"
-                         placeholder="aircraft-flight-operate" />
-                  <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" :title="copiedId ? '已复制' : '复制 ID'"
-                          @click="copy(form.link_type_id, 'id')"
-                          v-html="BL.icon(copiedId ? 'check' : 'copy', 12)"></button>
-                </div>
-                <div class="lke-id-row">
-                  <span class="lke-id-lbl">RID</span>
-                  <input class="bl-input bl-mono" :value="form.rid || '—'" disabled />
-                  <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" :title="copiedRid ? '已复制' : '复制 RID'"
-                          @click="copy(form.rid, 'rid')"
-                          v-html="BL.icon(copiedRid ? 'check' : 'copy', 12)"></button>
-                </div>
+              <div class="lke-meta-cell">
+                <span class="lke-meta-lbl">ID</span>
+                <input class="bl-input bl-mono" v-model="form.link_type_id" :disabled="!editMode || !!form.id"
+                       placeholder="aircraft-flight-operate" />
+                <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" :title="copiedId ? '已复制' : '复制 ID'"
+                        @click="copy(form.link_type_id, 'id')"
+                        v-html="BL.icon(copiedId ? 'check' : 'copy', 12)"></button>
+              </div>
+              <div class="lke-meta-cell">
+                <span class="lke-meta-lbl">RID</span>
+                <input class="bl-input bl-mono" :value="form.rid || '—'" disabled />
+                <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" :title="copiedRid ? '已复制' : '复制 RID'"
+                        @click="copy(form.rid, 'rid')"
+                        v-html="BL.icon(copiedRid ? 'check' : 'copy', 12)"></button>
               </div>
             </div>
 
-            <!-- 左右对称配置 -->
-            <div class="lke-sym">
-              <!-- 左端 -->
-              <div class="lke-col">
-                <div class="lke-col-hd">
-                  <span class="lke-col-tag">源</span>
-                  <select class="bl-input" v-model="form.l_object_type_id" :disabled="!editMode">
-                    <option value="">— 源对象类型 —</option>
-                    <option v-for="c in classOptions" :key="'l-'+c.id" :value="c.id">{{ c.cn || c.api_name }}</option>
-                  </select>
-                  <label class="lke-enabled" :title="form.l_enabled ? '已启用' : '已禁用'">
-                    <input type="checkbox" v-model="form.l_enabled" :true-value="1" :false-value="0" :disabled="!editMode" />
-                    <span class="lke-en-track"><span class="lke-en-dot"></span></span>
-                  </label>
-                </div>
-
-                <!-- 基数 -->
-                <div class="lke-cell">
-                  <div class="lke-cell-lbl">基数 <span class="bl-muted" v-html="BL.icon('help', 11)" title="约束源端关联数量"></span></div>
-                  <div class="lke-card-seg">
-                    <button :class="['lke-card-btn', form.l_cardinality === 'one' && 'is-on']"
-                            @click="setCard('l', 'one')" :disabled="!editMode">一个</button>
-                    <button :class="['lke-card-btn', form.l_cardinality === 'many' && 'is-on']"
-                            @click="setCard('l', 'many')" :disabled="!editMode">多个</button>
-                  </div>
-                </div>
-
-                <!-- 键配置 -->
-                <div class="lke-cell">
-                  <div class="lke-cell-lbl">{{ keyLabel('l') }} <span class="bl-muted" v-html="BL.icon('help', 11)" title="参与关联的字段"></span></div>
-                  <div class="lke-keys">
-                    <div v-for="(m, i) in leftMappings" :key="'lm-'+i" class="lke-key-row">
-                      <span class="lke-key-seq">{{ i + 1 }}</span>
-                      <input class="bl-input bl-mono" v-model="m.object_field" :disabled="!editMode" placeholder="属性字段" />
-                      <input v-if="form.is_data_source_rel" class="bl-input bl-mono" v-model="m.join_table_column"
-                             :disabled="!editMode" placeholder="中间表列" />
-                      <button v-if="editMode && leftMappings.length > 1" class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon"
-                              @click="removeMapping('left', i)" v-html="BL.icon('trash', 11)"></button>
-                    </div>
-                    <button v-if="editMode" class="bl-btn bl-btn-sm bl-btn-text lke-add-key" @click="addMapping('left')">
-                      <span v-html="BL.icon('plus', 11)"></span><span style="margin-left:4px">添加</span>
-                    </button>
-                    <div class="bl-muted lke-key-tip">支持复合主键, 可添加多个字段对</div>
-                  </div>
-                </div>
-
-                <div class="lke-cell">
-                  <div class="lke-cell-lbl">显示名称 <span class="bl-muted" v-html="BL.icon('help', 11)" title="前端展示文案"></span></div>
-                  <div class="lke-input-wrap">
-                    <input class="bl-input" v-model="form.l_display_name" :disabled="!editMode" placeholder="如: 执飞航班" />
-                    <span v-if="form.l_display_name" class="lke-valid-tag">有效</span>
-                  </div>
-                </div>
-
-                <div v-if="form.l_cardinality === 'many'" class="lke-cell">
-                  <div class="lke-cell-lbl">复数显示名称</div>
-                  <input class="bl-input" v-model="form.l_plural_name" :disabled="!editMode" placeholder="如: 执飞航班列表" />
-                </div>
-
-                <div class="lke-cell">
-                  <div class="lke-cell-lbl">可见性</div>
-                  <select class="bl-input" v-model="form.l_visibility" :disabled="!editMode">
-                    <option value="normal">正常</option>
-                    <option value="prominent">优先</option>
-                    <option value="hidden">隐藏</option>
-                  </select>
-                </div>
-
-                <div class="lke-cell">
-                  <div class="lke-cell-lbl">API 名称 <span class="bl-muted" v-html="BL.icon('help', 11)" title="代码调用名,驼峰命名,同对象下唯一"></span></div>
-                  <div class="lke-input-wrap">
-                    <input class="bl-input bl-mono" v-model="form.l_api_name" :disabled="!editMode" placeholder="operatedFlights" />
-                    <span v-if="isValidApi(form.l_api_name)" class="lke-valid-tag">有效</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 中间数据源开关 (跨两列) -->
-              <div class="lke-bridge">
-                <div class="lke-bridge-line"></div>
-              </div>
-
-              <!-- 右端 -->
-              <div class="lke-col">
-                <div class="lke-col-hd">
-                  <span class="lke-col-tag lke-col-tag-r">目标</span>
-                  <select class="bl-input" v-model="form.r_object_type_id" :disabled="!editMode">
-                    <option value="">— 目标对象类型 —</option>
-                    <option v-for="c in classOptions" :key="'r-'+c.id" :value="c.id">{{ c.cn || c.api_name }}</option>
-                  </select>
-                  <label class="lke-enabled">
-                    <input type="checkbox" v-model="form.r_enabled" :true-value="1" :false-value="0" :disabled="!editMode" />
-                    <span class="lke-en-track"><span class="lke-en-dot"></span></span>
-                  </label>
-                </div>
-
-                <div class="lke-cell">
-                  <div class="lke-cell-lbl">基数</div>
-                  <div class="lke-card-seg">
-                    <button :class="['lke-card-btn', form.r_cardinality === 'one' && 'is-on']"
-                            @click="setCard('r', 'one')" :disabled="!editMode">一个</button>
-                    <button :class="['lke-card-btn', form.r_cardinality === 'many' && 'is-on']"
-                            @click="setCard('r', 'many')" :disabled="!editMode">多个</button>
-                  </div>
-                </div>
-
-                <div class="lke-cell">
-                  <div class="lke-cell-lbl">{{ keyLabel('r') }}</div>
-                  <div class="lke-keys">
-                    <div v-for="(m, i) in rightMappings" :key="'rm-'+i" class="lke-key-row">
-                      <span class="lke-key-seq">{{ i + 1 }}</span>
-                      <input class="bl-input bl-mono" v-model="m.object_field" :disabled="!editMode" placeholder="属性字段" />
-                      <input v-if="form.is_data_source_rel" class="bl-input bl-mono" v-model="m.join_table_column"
-                             :disabled="!editMode" placeholder="中间表列" />
-                      <button v-if="editMode && rightMappings.length > 1" class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon"
-                              @click="removeMapping('right', i)" v-html="BL.icon('trash', 11)"></button>
-                    </div>
-                    <button v-if="editMode" class="bl-btn bl-btn-sm bl-btn-text lke-add-key" @click="addMapping('right')">
-                      <span v-html="BL.icon('plus', 11)"></span><span style="margin-left:4px">添加</span>
-                    </button>
-                    <div class="bl-muted lke-key-tip">支持复合主键, 字段顺序必须与对端对齐</div>
-                  </div>
-                </div>
-
-                <div class="lke-cell">
-                  <div class="lke-cell-lbl">显示名称</div>
-                  <div class="lke-input-wrap">
-                    <input class="bl-input" v-model="form.r_display_name" :disabled="!editMode" placeholder="如: 执飞机型" />
-                    <span v-if="form.r_display_name" class="lke-valid-tag">有效</span>
-                  </div>
-                </div>
-
-                <div v-if="form.r_cardinality === 'many'" class="lke-cell">
-                  <div class="lke-cell-lbl">复数显示名称</div>
-                  <input class="bl-input" v-model="form.r_plural_name" :disabled="!editMode" placeholder="如: 执飞机队列表" />
-                </div>
-
-                <div class="lke-cell">
-                  <div class="lke-cell-lbl">可见性</div>
-                  <select class="bl-input" v-model="form.r_visibility" :disabled="!editMode">
-                    <option value="normal">正常</option>
-                    <option value="prominent">优先</option>
-                    <option value="hidden">隐藏</option>
-                  </select>
-                </div>
-
-                <div class="lke-cell">
-                  <div class="lke-cell-lbl">API 名称</div>
-                  <div class="lke-input-wrap">
-                    <input class="bl-input bl-mono" v-model="form.r_api_name" :disabled="!editMode" placeholder="operatingAircraft" />
-                    <span v-if="isValidApi(form.r_api_name)" class="lke-valid-tag">有效</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 中间数据源关联 (data_source_rel) — 单独一行,在 sym 下方 -->
+            <!-- 中间数据源开关 (移到此处:位于元数据与对称配置之间, 决定下方"键"列的形态) -->
             <div class="lke-data-source">
               <label class="lke-ds-toggle">
                 <input type="checkbox" v-model="form.is_data_source_rel" :true-value="1" :false-value="0" :disabled="!editMode" />
                 <span>中间数据源 (依托物理中间表关联)</span>
               </label>
-              <input v-if="form.is_data_source_rel" class="bl-input bl-mono"
-                     v-model="form.rel_data_table" :disabled="!editMode"
-                     placeholder="中间表名 (aircraft_flight_rel)" style="margin-left:8px;flex:1;max-width:280px" />
+              <!-- 中间表选择: 与"新建对象类型 → 选择主表"同款弹框形式 -->
+              <button v-if="form.is_data_source_rel"
+                      :class="['lke-table-btn', !form.rel_data_table && 'is-empty']"
+                      :disabled="!editMode"
+                      @click="openTablePicker">
+                <span v-if="form.rel_data_table" class="bl-mono">{{ form.rel_data_table }}</span>
+                <span v-else>
+                  <span v-html="BL.icon('plus', 11)"></span>
+                  <span style="margin-left:4px">选择中间表 (物理表)</span>
+                </span>
+                <span v-if="form.rel_data_table" class="lke-table-chev" v-html="BL.icon('chevronDown', 10)"></span>
+              </button>
+              <button v-if="form.is_data_source_rel && form.rel_data_table && editMode"
+                      class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon"
+                      title="清除中间表"
+                      @click="form.rel_data_table = ''"
+                      v-html="BL.icon('x', 11)"></button>
             </div>
 
-            <!-- 类型类配置 -->
-            <div class="lke-section">
-              <div class="lke-section-hd">
-                <span>类型类 <span class="bl-muted">({{ form.type_classes?.length || 0 }})</span></span>
-                <button v-if="editMode" class="bl-btn bl-btn-sm bl-btn-text" @click="addTypeClass">
-                  <span v-html="BL.icon('plus', 11)"></span><span style="margin-left:4px">添加新类型类</span>
-                </button>
-              </div>
-              <div class="lke-tc-list" v-if="form.type_classes?.length">
-                <div v-for="(tc, i) in form.type_classes" :key="i" class="lke-tc-row">
-                  <input class="bl-input bl-mono" v-model="tc.category" placeholder="种类 (vertex)" :disabled="!editMode" style="width:140px" />
-                  <span class="bl-muted">:</span>
-                  <input class="bl-input bl-mono" v-model="tc.name" placeholder="名称 (component)" :disabled="!editMode" style="flex:1" />
-                  <button v-if="editMode" class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" @click="removeTypeClass(i)" v-html="BL.icon('x', 11)"></button>
+            <!-- 左右对称配置: 4 张卡用 grid-template-areas 钉位, 同行左右等高 -->
+            <div class="lke-sym">
+              <!-- 卡 1 (数据·源): grid 区 data-l -->
+              <div class="lke-card lke-card-data is-source">
+                  <div class="lke-col-hd">
+                    <span class="lke-col-tag">源</span>
+                    <select class="bl-input" v-model="form.l_object_type_id" :disabled="!editMode">
+                      <option value="">— 源对象类型 —</option>
+                      <option v-for="c in classOptions" :key="'l-'+c.id" :value="c.id">{{ c.cn || c.api_name }}</option>
+                    </select>
+                    <label class="lke-enabled" :title="form.l_enabled ? '已启用' : '已禁用'">
+                      <input type="checkbox" v-model="form.l_enabled" :true-value="1" :false-value="0" :disabled="!editMode" />
+                      <span class="lke-en-track"><span class="lke-en-dot"></span></span>
+                    </label>
+                  </div>
+
+                  <div class="lke-cell">
+                    <div class="lke-cell-lbl">基数 <span class="bl-muted" v-html="BL.icon('help', 11)" title="约束源端关联数量"></span></div>
+                    <div class="lke-card-seg">
+                      <button :class="['lke-card-btn', form.l_cardinality === 'one' && 'is-on']"
+                              @click="setCard('l', 'one')" :disabled="!editMode">一个</button>
+                      <button :class="['lke-card-btn', form.l_cardinality === 'many' && 'is-on']"
+                              @click="setCard('l', 'many')" :disabled="!editMode">多个</button>
+                    </div>
+                  </div>
+
+                  <div class="lke-cell">
+                    <div class="lke-cell-lbl">{{ keyLabel('l') }} <span class="bl-muted" v-html="BL.icon('help', 11)" title="参与关联的字段"></span></div>
+                    <div class="lke-keys-hd" :class="{ 'is-single': !form.is_data_source_rel }">
+                      <span class="lke-key-seq"></span>
+                      <span>对象属性</span>
+                      <span v-if="form.is_data_source_rel">关联属性</span>
+                    </div>
+                    <div class="lke-keys">
+                      <div v-for="(m, i) in leftMappings" :key="'lm-'+i" class="lke-key-row">
+                        <span class="lke-key-seq">{{ i + 1 }}</span>
+                        <select class="bl-input bl-mono" v-model="m.object_field"
+                                :disabled="!editMode || !form.l_object_type_id">
+                          <option value="">{{ form.l_object_type_id ? '— 对象属性 —' : '请先选源对象类型' }}</option>
+                          <option v-for="o in leftObjectFields" :key="'lf-'+i+'-'+o.value" :value="o.value">{{ o.label }}</option>
+                        </select>
+                        <select v-if="form.is_data_source_rel" class="bl-input bl-mono" v-model="m.join_table_column"
+                                :disabled="!editMode || !form.rel_data_table">
+                          <option value="">{{ joinPlaceholder('l') }}</option>
+                          <option v-for="o in leftJoinOptions" :key="'lj-'+i+'-'+o.value" :value="o.value">{{ o.label }}</option>
+                        </select>
+                        <button v-if="editMode && leftMappings.length > 1" class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon"
+                                @click="removeMapping('left', i)" v-html="BL.icon('trash', 11)"></button>
+                      </div>
+                      <div class="lke-key-tip">
+                        <span v-html="BL.icon('help', 11)"></span>
+                        <span>支持复合主键, 可添加多个列映射</span>
+                        <a v-if="editMode" class="lke-add-link" @click="addMapping('left')">
+                          <span v-html="BL.icon('plus', 11)"></span><span>添加</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
+                <!-- 卡 3 (展示·源): grid 区 show-l (CSS 强制放第 2 行第 1 列) -->
+                <div class="lke-card lke-card-display is-source">
+                  <div class="lke-cell">
+                    <div class="lke-cell-lbl">显示名称 <span class="bl-muted" v-html="BL.icon('help', 11)" title="前端展示文案"></span></div>
+                    <div class="lke-input-wrap">
+                      <input class="bl-input" v-model="form.l_display_name" :disabled="!editMode" placeholder="如: 执飞航班" />
+                      <span v-if="form.l_display_name" class="lke-valid-tag">有效</span>
+                    </div>
+                  </div>
+
+                  <div class="lke-cell" :class="{ 'is-na': form.l_cardinality !== 'many' }">
+                    <div class="lke-cell-lbl">复数显示名称
+                      <span v-if="form.l_cardinality !== 'many'" class="bl-muted lke-na-tip">(基数=多个 时启用)</span>
+                    </div>
+                    <input class="bl-input" v-model="form.l_plural_name"
+                           :disabled="!editMode || form.l_cardinality !== 'many'"
+                           :placeholder="form.l_cardinality === 'many' ? '如: 执飞航班列表' : '—'" />
+                  </div>
+
+                  <div class="lke-cell">
+                    <div class="lke-cell-lbl">可见性</div>
+                    <select class="bl-input" v-model="form.l_visibility" :disabled="!editMode">
+                      <option value="normal">正常</option>
+                      <option value="prominent">优先</option>
+                      <option value="hidden">隐藏</option>
+                    </select>
+                  </div>
+
+                  <div class="lke-cell">
+                    <div class="lke-cell-lbl">API 名称 <span class="bl-muted" v-html="BL.icon('help', 11)" title="代码调用名,驼峰命名,同对象下唯一"></span></div>
+                    <div class="lke-input-wrap">
+                      <input class="bl-input bl-mono" v-model="form.l_api_name" :disabled="!editMode" placeholder="operatedFlights" />
+                      <span v-if="isValidApi(form.l_api_name)" class="lke-valid-tag">有效</span>
+                    </div>
+                  </div>
+
+                  <!-- 类型类 (源) -->
+                  <div class="lke-cell lke-tc-cell">
+                    <div class="lke-cell-lbl lke-tc-hd">
+                      <span>类型类 <span class="bl-muted">({{ leftTypeClasses.length }})</span></span>
+                      <a v-if="editMode" class="lke-add-link" @click="addTypeClass('left')">
+                        <span v-html="BL.icon('plus', 11)"></span><span>添加</span>
+                      </a>
+                    </div>
+                    <div v-if="leftTypeClasses.length" class="lke-tc-list">
+                      <div v-for="(tc, i) in leftTypeClasses" :key="'l-tc-'+i" class="lke-tc-row">
+                        <input class="bl-input bl-mono" v-model="tc.category" placeholder="种类 (vertex)" :disabled="!editMode" />
+                        <span class="bl-muted">:</span>
+                        <input class="bl-input bl-mono" v-model="tc.name" placeholder="名称 (component)" :disabled="!editMode" />
+                        <button v-if="editMode" class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm"
+                                @click="removeTypeClass('left', i)" v-html="BL.icon('x', 11)"></button>
+                      </div>
+                    </div>
+                    <div v-else class="bl-muted lke-tc-empty">尚未配置类型类</div>
+                  </div>
+                </div>
+
+              <!-- 卡 2 (数据·目标): grid 区 data-r -->
+              <div class="lke-card lke-card-data is-target">
+                  <div class="lke-col-hd">
+                    <span class="lke-col-tag lke-col-tag-r">目标</span>
+                    <select class="bl-input" v-model="form.r_object_type_id" :disabled="!editMode">
+                      <option value="">— 目标对象类型 —</option>
+                      <option v-for="c in classOptions" :key="'r-'+c.id" :value="c.id">{{ c.cn || c.api_name }}</option>
+                    </select>
+                    <label class="lke-enabled">
+                      <input type="checkbox" v-model="form.r_enabled" :true-value="1" :false-value="0" :disabled="!editMode" />
+                      <span class="lke-en-track"><span class="lke-en-dot"></span></span>
+                    </label>
+                  </div>
+
+                  <div class="lke-cell">
+                    <div class="lke-cell-lbl">基数</div>
+                    <div class="lke-card-seg">
+                      <button :class="['lke-card-btn', form.r_cardinality === 'one' && 'is-on']"
+                              @click="setCard('r', 'one')" :disabled="!editMode">一个</button>
+                      <button :class="['lke-card-btn', form.r_cardinality === 'many' && 'is-on']"
+                              @click="setCard('r', 'many')" :disabled="!editMode">多个</button>
+                    </div>
+                  </div>
+
+                  <div class="lke-cell">
+                    <div class="lke-cell-lbl">{{ keyLabel('r') }}</div>
+                    <div class="lke-keys-hd" :class="{ 'is-single': !form.is_data_source_rel }">
+                      <span class="lke-key-seq"></span>
+                      <span>对象属性</span>
+                      <span v-if="form.is_data_source_rel">关联属性</span>
+                    </div>
+                    <div class="lke-keys">
+                      <div v-for="(m, i) in rightMappings" :key="'rm-'+i" class="lke-key-row">
+                        <span class="lke-key-seq">{{ i + 1 }}</span>
+                        <select class="bl-input bl-mono" v-model="m.object_field"
+                                :disabled="!editMode || !form.r_object_type_id">
+                          <option value="">{{ form.r_object_type_id ? '— 对象属性 —' : '请先选目标对象类型' }}</option>
+                          <option v-for="o in rightObjectFields" :key="'rf-'+i+'-'+o.value" :value="o.value">{{ o.label }}</option>
+                        </select>
+                        <select v-if="form.is_data_source_rel" class="bl-input bl-mono" v-model="m.join_table_column"
+                                :disabled="!editMode || !form.rel_data_table">
+                          <option value="">{{ joinPlaceholder('r') }}</option>
+                          <option v-for="o in rightJoinOptions" :key="'rj-'+i+'-'+o.value" :value="o.value">{{ o.label }}</option>
+                        </select>
+                        <button v-if="editMode && rightMappings.length > 1" class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon"
+                                @click="removeMapping('right', i)" v-html="BL.icon('trash', 11)"></button>
+                      </div>
+                      <div class="lke-key-tip">
+                        <span v-html="BL.icon('help', 11)"></span>
+                        <span>支持复合主键, 可添加多个列映射</span>
+                        <a v-if="editMode" class="lke-add-link" @click="addMapping('right')">
+                          <span v-html="BL.icon('plus', 11)"></span><span>添加</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              <!-- 卡 4 (展示·目标): grid 区 show-r -->
+              <div class="lke-card lke-card-display is-target">
+                  <div class="lke-cell">
+                    <div class="lke-cell-lbl">显示名称</div>
+                    <div class="lke-input-wrap">
+                      <input class="bl-input" v-model="form.r_display_name" :disabled="!editMode" placeholder="如: 执飞机型" />
+                      <span v-if="form.r_display_name" class="lke-valid-tag">有效</span>
+                    </div>
+                  </div>
+
+                  <div class="lke-cell" :class="{ 'is-na': form.r_cardinality !== 'many' }">
+                    <div class="lke-cell-lbl">复数显示名称
+                      <span v-if="form.r_cardinality !== 'many'" class="bl-muted lke-na-tip">(基数=多个 时启用)</span>
+                    </div>
+                    <input class="bl-input" v-model="form.r_plural_name"
+                           :disabled="!editMode || form.r_cardinality !== 'many'"
+                           :placeholder="form.r_cardinality === 'many' ? '如: 执飞机队列表' : '—'" />
+                  </div>
+
+                  <div class="lke-cell">
+                    <div class="lke-cell-lbl">可见性</div>
+                    <select class="bl-input" v-model="form.r_visibility" :disabled="!editMode">
+                      <option value="normal">正常</option>
+                      <option value="prominent">优先</option>
+                      <option value="hidden">隐藏</option>
+                    </select>
+                  </div>
+
+                  <div class="lke-cell">
+                    <div class="lke-cell-lbl">API 名称</div>
+                    <div class="lke-input-wrap">
+                      <input class="bl-input bl-mono" v-model="form.r_api_name" :disabled="!editMode" placeholder="operatingAircraft" />
+                      <span v-if="isValidApi(form.r_api_name)" class="lke-valid-tag">有效</span>
+                    </div>
+                  </div>
+
+                  <!-- 类型类 (目标) -->
+                  <div class="lke-cell lke-tc-cell">
+                    <div class="lke-cell-lbl lke-tc-hd">
+                      <span>类型类 <span class="bl-muted">({{ rightTypeClasses.length }})</span></span>
+                      <a v-if="editMode" class="lke-add-link" @click="addTypeClass('right')">
+                        <span v-html="BL.icon('plus', 11)"></span><span>添加</span>
+                      </a>
+                    </div>
+                    <div v-if="rightTypeClasses.length" class="lke-tc-list">
+                      <div v-for="(tc, i) in rightTypeClasses" :key="'r-tc-'+i" class="lke-tc-row">
+                        <input class="bl-input bl-mono" v-model="tc.category" placeholder="种类 (vertex)" :disabled="!editMode" />
+                        <span class="bl-muted">:</span>
+                        <input class="bl-input bl-mono" v-model="tc.name" placeholder="名称 (component)" :disabled="!editMode" />
+                        <button v-if="editMode" class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm"
+                                @click="removeTypeClass('right', i)" v-html="BL.icon('x', 11)"></button>
+                      </div>
+                    </div>
+                    <div v-else class="bl-muted lke-tc-empty">尚未配置类型类</div>
+                  </div>
               </div>
-              <div v-else class="bl-muted" style="font-size:12px">尚未配置类型类</div>
             </div>
 
             <!-- 备注 -->
@@ -271,14 +340,15 @@
             </div>
           </section>
 
-          <!-- 链接关系图 -->
-          <section v-else-if="activeTab === 'graph'" class="lke-graph-stub">
+          <!-- 链接关系图 (仅 showTabs 模式下作为第二个 tab 内容) -->
+          <section v-if="showTabs && activeTab === 'graph'" class="lke-graph-stub">
             <div class="bl-empty" style="padding:48px">
               <span v-html="BL.icon('link', 32)"></span>
               <div style="margin-top:12px">参考「对象类型 → 对象图谱」中的链接可视化</div>
               <div class="bl-muted" style="font-size:12px;margin-top:4px">该页签集成 Canvas 链接图谱组件 (与对象类型详情共用)</div>
             </div>
           </section>
+
         </div>
 
         <!-- 底部 -->
@@ -292,18 +362,45 @@
         </footer>
       </aside>
     </transition>
+
+    <!-- 中间表选择面板 (单选, 与新建对象类型向导同款) -->
+    <div v-if="tablePickerOpen" class="bl-modal-mask lke-table-mask" @click.self="tablePickerOpen=false">
+      <div class="bl-modal lke-table-modal">
+        <div class="bl-modal-hd">选择中间表 (单选)</div>
+        <div class="bl-modal-body lke-table-body">
+          <input class="bl-input" placeholder="搜索物理表" v-model="tablePickerQ" />
+          <div class="lke-table-list">
+            <div v-for="t in tableOptions" :key="t.physical_table"
+                 :class="['tbl-row', form.rel_data_table === t.physical_table && 'is-on']"
+                 @click="pickTable(t)">
+              <span class="tbl-side"></span>
+              <span class="bl-mono" style="font-weight:500">{{ t.physical_table }}</span>
+              <span class="bl-muted" style="font-size:11px;margin-left:6px">{{ t.columns.length }} 字段</span>
+              <span v-if="form.rel_data_table === t.physical_table" class="bl-tag bl-tag-primary" style="margin-left:auto;font-size:10px">已选</span>
+            </div>
+            <div v-if="!tableOptions.length" class="bl-empty" style="padding:24px">未匹配到物理表</div>
+          </div>
+        </div>
+        <div class="bl-modal-ft">
+          <button class="bl-btn" @click="tablePickerOpen=false">取消</button>
+        </div>
+      </div>
+    </div>
   </Teleport>
 </template>
 
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
 import { BL } from '@/lib/bl.js'
-import { linkTypeApi } from '@/api'
+import { linkTypeApi, resourceApi } from '@/api'
 
 const props = defineProps({
   open: { type: Boolean, default: false },
   linkId: { type: String, default: '' },
-  allClasses: { type: Array, default: () => [] }
+  allClasses: { type: Array, default: () => [] },
+  /* 是否显示顶部 tab (基础信息 / 链接关系图)
+     默认 true: 链接模块主页 LinkTypes.vue 用; 对象模块下 TabLinkGraph 传 false */
+  showTabs: { type: Boolean, default: true }
 })
 const emit = defineEmits(['update:open', 'saved', 'deleted'])
 
@@ -343,17 +440,18 @@ const classOptions = computed(() => (props.allClasses || []).map(c => ({
 })))
 
 /* —— 打开生命周期 —— */
-watch(() => props.open, async (v) => {
-  if (!v) return
+async function loadEditor() {
   activeTab.value = 'basic'
   if (props.linkId) {
-    // 加载详情
     const res = await linkTypeApi.get(props.linkId).catch(() => null)
     if (res) {
       Object.assign(form, defaultForm(), res)
       form.mappings = (res.mappings || []).map(m => ({ ...m }))
       form.type_classes = (res.type_classes || []).map(tc => ({ ...tc }))
-      editMode.value = false  // 已有数据默认只读
+    } else {
+      Object.assign(form, defaultForm())
+      form.mappings = []
+      form.type_classes = []
     }
   } else {
     Object.assign(form, defaultForm())
@@ -362,9 +460,14 @@ watch(() => props.open, async (v) => {
       { side: 'right', seq: 1, object_field: '', join_table_column: '' }
     ]
     form.type_classes = []
-    editMode.value = true
   }
-})
+  editMode.value = true   // 不论新建 / 已有, 默认就是编辑模式
+  if (form.l_object_type_id) ensureProps(form.l_object_type_id)
+  if (form.r_object_type_id) ensureProps(form.r_object_type_id)
+}
+// open 0→1 加载;切换 linkId (抽屉常驻、连续点不同链接) 也要重新加载
+watch(() => props.open,  v => { if (v) loadEditor() })
+watch(() => props.linkId, () => { if (props.open) loadEditor() })
 
 /* —— 基数切换 —— */
 function setCard(side, val) {
@@ -379,17 +482,17 @@ function keyLabel(side) {
   return '键 (外键)'
 }
 
-/* —— 映射 —— */
+/* —— 映射 (左右独立增删,视觉自动占位补齐) —— */
 function addMapping(side) {
-  const list = form.mappings.filter(m => m.side === side)
-  const seq = (list[list.length - 1]?.seq || 0) + 1
+  const list = side === 'left' ? leftMappings.value : rightMappings.value
+  const seq = list.length + 1
   form.mappings.push({ side, seq, object_field: '', join_table_column: '' })
 }
 function removeMapping(side, idx) {
-  const list = form.mappings.filter(m => m.side === side)
+  const list = side === 'left' ? leftMappings.value : rightMappings.value
   const target = list[idx]
   if (target) form.mappings = form.mappings.filter(m => m !== target)
-  // 重新编号
+  // 重新编号本侧 seq (对端不受影响)
   let lSeq = 1, rSeq = 1
   form.mappings.forEach(m => {
     if (m.side === 'left') m.seq = lSeq++
@@ -397,12 +500,19 @@ function removeMapping(side, idx) {
   })
 }
 
-/* —— 类型类 —— */
-function addTypeClass() {
-  form.type_classes = [...(form.type_classes || []), { category: '', name: '', applicable_type: 'relation' }]
+/* 是否两侧行数不等 (用于提示用户保存前检查) */
+const mappingCountMismatch = computed(() => leftMappings.value.length !== rightMappings.value.length)
+
+/* —— 类型类 (按 side 分到左右两侧, 每个 entry 含 side: 'left'|'right') —— */
+const leftTypeClasses  = computed(() => (form.type_classes || []).filter(t => (t.side || 'left') === 'left'))
+const rightTypeClasses = computed(() => (form.type_classes || []).filter(t => t.side === 'right'))
+function addTypeClass(side) {
+  form.type_classes = [...(form.type_classes || []), { side, category: '', name: '', applicable_type: 'relation' }]
 }
-function removeTypeClass(i) {
-  form.type_classes.splice(i, 1)
+function removeTypeClass(side, idx) {
+  const list = side === 'left' ? leftTypeClasses.value : rightTypeClasses.value
+  const target = list[idx]
+  if (target) form.type_classes = form.type_classes.filter(t => t !== target)
 }
 
 /* —— 校验 —— */
@@ -500,6 +610,77 @@ const cardColor = computed(() => {
   const k = `${form.l_cardinality}:${form.r_cardinality}`
   return ({ 'one:one': '#1677ff', 'one:many': '#00B42A', 'many:one': '#FF7D00', 'many:many': '#722ED1' })[k] || '#1677ff'
 })
+
+/* —— 中间表选择面板 (单选) ——
+   数据源: 暂时用 mock, 后续可改为 datasourceApi.tables() 或 backend 提供的物理表清单接口 */
+const MOCK_TABLES = [
+  { physical_table: 't_hydrology_station', columns: ['station_code','station_name','river_id','region_id','longitude','latitude','altitude','status','created_at','updated_at','remark','owner'] },
+  { physical_table: 't_river',             columns: ['river_id','river_name','basin_id','length_km','source','mouth'] },
+  { physical_table: 't_water_quality',     columns: ['sample_id','station_id','ph','do_value','ammonia','tn','tp','sampled_at'] },
+  { physical_table: 't_reservoir',         columns: ['reservoir_id','reservoir_name','basin_id','capacity','height','built_year','status','region_id','remark'] },
+  { physical_table: 't_water_basin_info',  columns: ['basin_id','basin_name','area_km2','region_id','remark'] },
+  { physical_table: 't_water_level_monitor', columns: ['monitor_id','station_id','water_level','recorded_at','source','warning','remark'] },
+  { physical_table: 'aircraft_flight_rel', columns: ['aircraft_id','flight_no','flight_date','created_at'] },
+  { physical_table: 'employee_dept_rel',   columns: ['employee_id','dept_id','position'] },
+  { physical_table: 'crew_flight_rel',     columns: ['crew_id','flight_no','role','created_at'] }
+]
+/* 已选中间表的列清单 — 用于 is_data_source_rel=1 时的关联属性下拉 */
+const middleTableColumns = computed(() => {
+  const t = MOCK_TABLES.find(x => x.physical_table === form.rel_data_table)
+  return t ? t.columns : []
+})
+
+/* —— 对象类型属性缓存 (惰性加载, 同会话复用) —— */
+const propsCache = reactive({})  // { [classId]: [{api_name, display_name}, ...] }
+async function ensureProps(classId) {
+  if (!classId || propsCache[classId]) return
+  propsCache[classId] = []
+  try {
+    const list = await resourceApi.properties(classId)
+    propsCache[classId] = Array.isArray(list) ? list : (list?.data || list?.rows || [])
+  } catch { propsCache[classId] = [] }
+}
+watch(() => form.l_object_type_id, v => ensureProps(v))
+watch(() => form.r_object_type_id, v => ensureProps(v))
+
+function fieldOptionsOf(classId) {
+  const list = propsCache[classId] || []
+  return list.map(p => ({ value: p.api_name || p.prop_code, label: p.display_name || p.api_name || p.prop_code }))
+            .filter(o => o.value)
+}
+/* 对象属性下拉 — 当前侧自身的属性 */
+const leftObjectFields  = computed(() => fieldOptionsOf(form.l_object_type_id))
+const rightObjectFields = computed(() => fieldOptionsOf(form.r_object_type_id))
+/* 关联属性下拉 — 中间表模式取中间表列; 否则取对端对象的属性 (FK ↔ PK 形态) */
+const leftJoinOptions  = computed(() => form.is_data_source_rel
+  ? middleTableColumns.value.map(c => ({ value: c, label: c }))
+  : rightObjectFields.value)
+const rightJoinOptions = computed(() => form.is_data_source_rel
+  ? middleTableColumns.value.map(c => ({ value: c, label: c }))
+  : leftObjectFields.value)
+
+function joinPlaceholder(side) {
+  if (form.is_data_source_rel) return form.rel_data_table ? '— 关联属性 —' : '请先选择中间表'
+  const otherId = side === 'l' ? form.r_object_type_id : form.l_object_type_id
+  return otherId ? '— 关联属性 —' : (side === 'l' ? '请先选目标对象类型' : '请先选源对象类型')
+}
+
+const tablePickerOpen = ref(false)
+const tablePickerQ = ref('')
+function openTablePicker() {
+  if (!editMode.value) return
+  tablePickerQ.value = ''
+  tablePickerOpen.value = true
+}
+const tableOptions = computed(() => {
+  const k = tablePickerQ.value.trim().toLowerCase()
+  if (!k) return MOCK_TABLES
+  return MOCK_TABLES.filter(t => t.physical_table.toLowerCase().includes(k))
+})
+function pickTable(t) {
+  form.rel_data_table = t.physical_table
+  tablePickerOpen.value = false
+}
 </script>
 
 <style scoped>
@@ -541,6 +722,19 @@ const cardColor = computed(() => {
 .lke-hd-r { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; }
 .lke-divider { width: 1px; height: 18px; background: var(--bl-divider); margin: 0 6px; flex-shrink: 0; }
 
+/* 页签 (showTabs=true 时) */
+.lke-tabs { display: flex; padding: 0 16px; border-bottom: 1px solid var(--bl-divider); flex-shrink: 0; }
+.lke-tab {
+  padding: 10px 14px; font-size: 13px;
+  color: var(--bl-text-2); cursor: pointer;
+  background: transparent; border: 0; border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.lke-tab:hover { color: var(--bl-text-1); }
+.lke-tab.is-on { color: var(--bl-primary); border-color: var(--bl-primary); font-weight: 500; }
+
+.lke-graph-stub { display: flex; align-items: center; justify-content: center; padding: 60px 20px; text-align: center; color: var(--bl-text-3); }
+
 /* 编辑模式按钮 (图标 + 文字 胶囊): 默认灰, 启用蓝 */
 .lke-edit-btn {
   display: inline-flex; align-items: center;
@@ -556,16 +750,6 @@ const cardColor = computed(() => {
   font-weight: 500;
 }
 
-/* 页签 */
-.lke-tabs { display: flex; padding: 0 16px; border-bottom: 1px solid var(--bl-divider); flex-shrink: 0; }
-.lke-tab {
-  padding: 10px 14px; font-size: 13px;
-  color: var(--bl-text-2); cursor: pointer;
-  border-bottom: 2px solid transparent; margin-bottom: -1px;
-  background: transparent; border: 0; border-bottom: 2px solid transparent;
-}
-.lke-tab:hover { color: var(--bl-text-1); }
-.lke-tab.is-on { color: var(--bl-primary); border-color: var(--bl-primary); font-weight: 500; }
 
 /* 主体 */
 .lke-body { flex: 1; overflow: auto; padding: 14px 18px; }
@@ -574,39 +758,61 @@ const cardColor = computed(() => {
 .lke-body.is-readonly :deep(textarea):disabled,
 .lke-body.is-readonly :deep(button):disabled { background: var(--bl-bg-2); color: var(--bl-text-2); }
 
-/* 全局元数据 */
+/* 全局元数据: 状态 / ID / RID 一行三列 */
 .lke-meta-row {
-  display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
-  padding: 10px 12px; background: var(--bl-bg-2); border-radius: 6px;
-  margin-bottom: 16px;
-}
-.lke-meta-l { display: inline-flex; align-items: center; }
-.lke-status-sel { width: 110px; height: 28px; }
-.lke-meta-r { display: flex; flex-direction: column; gap: 6px; flex: 1; max-width: 480px; }
-.lke-id-row { display: flex; align-items: center; gap: 6px; }
-.lke-id-lbl { width: 36px; font-size: 12px; color: var(--bl-text-3); text-align: right; flex-shrink: 0; }
-.lke-id-row .bl-input { flex: 1; height: 28px; font-size: 12px; }
-
-/* 左右对称 */
-.lke-sym {
   display: grid;
-  grid-template-columns: 1fr 24px 1fr;
-  gap: 0;
-}
-.lke-bridge {
-  display: flex; align-items: center; justify-content: center;
-}
-.lke-bridge-line { width: 1px; height: 100%; background: var(--bl-divider); }
-.lke-col {
-  display: flex; flex-direction: column;
-  padding: 0 12px;
-}
-.lke-col-hd {
-  display: flex; align-items: center; gap: 8px;
-  padding-bottom: 12px;
-  border-bottom: 1px dashed var(--bl-divider);
+  grid-template-columns: 200px 1fr 1fr;
+  gap: 12px;
+  padding: 10px 12px; background: var(--bl-bg-2); border-radius: 6px;
   margin-bottom: 12px;
 }
+.lke-meta-cell { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.lke-meta-lbl {
+  width: 36px; flex-shrink: 0;
+  font-size: 12px; color: var(--bl-text-3);
+  text-align: right;
+}
+.lke-meta-cell .bl-input { flex: 1; min-width: 0; height: 28px; font-size: 12px; }
+.lke-status-sel { width: 100%; }
+
+/* 左右对称 — 2x2 网格, 用 grid-template-areas 钉位
+   同行的两张卡 stretch 到同一高度, 不会因为一侧映射多就把展示卡顶下去 */
+.lke-sym {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "data-l data-r"
+    "show-l show-r";
+  gap: 12px;
+}
+.lke-bridge { display: none; }
+
+/* 卡片基础样式: 两端染色由 .is-source / .is-target 控制 */
+.lke-card {
+  padding: 12px 14px;
+  background: var(--bl-bg-1);
+  border: 1px solid var(--bl-border);
+  border-radius: 6px;
+  min-width: 0;
+  display: flex; flex-direction: column;
+}
+.lke-card-data.is-source    { grid-area: data-l; }
+.lke-card-data.is-target    { grid-area: data-r; }
+.lke-card-display.is-source { grid-area: show-l; }
+.lke-card-display.is-target { grid-area: show-r; }
+
+.lke-card.is-source { border-color: rgba(22, 93, 255, .35); }
+.lke-card.is-target { border-color: rgba(255, 125, 0, .35); }
+
+.lke-col-hd {
+  display: flex; align-items: center; gap: 8px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--bl-divider);
+  margin-bottom: 10px;
+}
+.lke-card.is-source .lke-col-hd { border-bottom-color: var(--bl-primary); }
+.lke-card.is-target .lke-col-hd { border-bottom-color: #FF7D00; }
+
 .lke-col-tag {
   padding: 2px 8px; border-radius: 4px;
   background: var(--bl-primary-soft); color: var(--bl-primary);
@@ -622,6 +828,21 @@ const cardColor = computed(() => {
 .lke-enabled input:checked + .lke-en-track .lke-en-dot { left: 16px; }
 
 .lke-cell { padding: 8px 0; }
+/* 占位行 (cardinality=one 时的复数显示名称): 整体灰化, 保持高度占位 */
+.lke-cell.is-na { opacity: .55; }
+.lke-cell.is-na .bl-input { background: var(--bl-bg-2); cursor: not-allowed; }
+.lke-na-tip { font-size: 11px; margin-left: 4px; }
+
+/* 键映射列头 (仅 is_data_source_rel 时显示对象属性 / 关联属性 双列) */
+.lke-keys-hd {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 12px; color: var(--bl-text-3);
+  margin-bottom: 6px;
+  padding: 0 2px;
+}
+.lke-keys-hd > span:not(.lke-key-seq) {
+  flex: 1; min-width: 0;
+}
 .lke-cell-lbl { font-size: 12px; color: var(--bl-text-3); margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
 .lke-input-wrap { position: relative; display: flex; align-items: center; }
 .lke-input-wrap .bl-input { flex: 1; }
@@ -654,14 +875,27 @@ const cardColor = computed(() => {
   text-align: center; background: var(--bl-primary-soft); color: var(--bl-primary);
   font-size: 11px; font-weight: 600; border-radius: 50%; flex-shrink: 0;
 }
-.lke-key-row .bl-input { flex: 1; height: 28px; font-size: 12px; }
-.lke-add-key { align-self: flex-start; padding: 2px 4px; font-size: 12px; }
-.lke-key-tip { font-size: 11px; margin-top: 2px; }
+.lke-key-row .bl-input { flex: 1; height: 28px; font-size: 12px; min-width: 0; }
+.lke-key-row select.bl-input { padding-right: 22px; }
 
-/* 中间数据源 */
+/* 提示行: ⓘ 描述 · + 添加 (inline) — 对齐图 2 */
+.lke-key-tip {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 11px; color: var(--bl-text-3);
+  margin-top: 4px; padding: 0 2px;
+}
+.lke-key-tip > :first-child { display: inline-flex; }
+.lke-add-link {
+  display: inline-flex; align-items: center; gap: 2px;
+  color: var(--bl-primary); cursor: pointer; user-select: none;
+  margin-left: auto;
+}
+.lke-add-link:hover { text-decoration: underline; }
+
+/* 中间数据源 (位于元数据与对称配置之间, 决定下方"键"列的形态) */
 .lke-data-source {
-  margin: 18px 0 12px;
-  padding: 10px 12px;
+  margin: 0 0 12px;
+  padding: 8px 12px;
   background: #fffbf0;
   border: 1px dashed #FF7D00;
   border-radius: 6px;
@@ -670,6 +904,54 @@ const cardColor = computed(() => {
 .lke-ds-toggle {
   display: inline-flex; align-items: center; gap: 6px;
   cursor: pointer; font-size: 13px; color: var(--bl-text-1);
+}
+
+/* 中间表选择按钮 (代替原文本输入) */
+.lke-table-btn {
+  margin-left: 8px;
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 30px; padding: 0 12px;
+  background: #fff;
+  border: 1px solid var(--bl-border);
+  border-radius: 4px;
+  font-size: 13px; color: var(--bl-text-1);
+  cursor: pointer;
+  flex: 1; max-width: 320px;
+  transition: border-color .12s;
+}
+.lke-table-btn:hover:not(:disabled) { border-color: var(--bl-primary); }
+.lke-table-btn:disabled { cursor: not-allowed; background: var(--bl-bg-2); color: var(--bl-text-3); }
+.lke-table-btn.is-empty {
+  border-style: dashed;
+  color: var(--bl-text-3);
+  font-weight: 500;
+}
+.lke-table-btn.is-empty:hover:not(:disabled) {
+  color: var(--bl-primary); border-color: var(--bl-primary);
+  background: var(--bl-primary-soft);
+}
+.lke-table-chev { margin-left: auto; color: var(--bl-text-3); display: inline-flex; }
+
+/* 中间表选择面板 (与 NewObjectTypeWizard 选择主表同款样式) */
+.lke-table-mask { z-index: 1200; }
+.lke-table-modal { width: 520px; max-height: 78vh; display: flex; flex-direction: column; }
+.lke-table-body { display: flex; flex-direction: column; gap: 8px; overflow: hidden; padding: 12px 16px; }
+.lke-table-list { flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 4px; }
+.tbl-row {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 12px;
+  background: #fff;
+  border: 1px solid var(--bl-border);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color .12s, background-color .12s;
+}
+.tbl-row:hover { border-color: var(--bl-primary); background: var(--bl-primary-soft); }
+.tbl-row.is-on { border-color: var(--bl-primary); background: var(--bl-primary-soft); }
+.tbl-side {
+  width: 3px; height: 16px; border-radius: 2px;
+  background: var(--bl-primary);
+  flex-shrink: 0;
 }
 
 /* 章节 */
@@ -681,9 +963,16 @@ const cardColor = computed(() => {
   margin-bottom: 8px;
 }
 
-/* 类型类 */
+/* 类型类 (内嵌每侧展示卡末尾) */
+.lke-tc-cell { margin-top: 8px; padding-top: 12px; border-top: 1px dashed var(--bl-divider); }
+.lke-tc-hd { display: flex; align-items: center; justify-content: space-between; }
 .lke-tc-list { display: flex; flex-direction: column; gap: 4px; }
-.lke-tc-row { display: flex; align-items: center; gap: 6px; }
+.lke-tc-row {
+  display: flex; align-items: center; gap: 4px;
+  min-width: 0;
+}
+.lke-tc-row .bl-input { flex: 1; height: 28px; font-size: 12px; min-width: 0; }
+.lke-tc-empty { font-size: 11px; padding: 2px 0; }
 
 /* textarea */
 .bl-textarea {
@@ -703,5 +992,4 @@ const cardColor = computed(() => {
   flex-shrink: 0;
 }
 
-.lke-graph-stub { display: flex; align-items: center; justify-content: center; padding: 60px 20px; text-align: center; color: var(--bl-text-3); }
 </style>

@@ -218,6 +218,27 @@ PageHeader (标题 + 统计 + 筛选 + 搜索 + 新建按钮)
 
 ---
 
+## 权限白名单(.claude/settings.json)
+
+为减少授权弹窗,以下命令族已纳入白名单(`./.claude/settings.json`)。**新增条目原则**:
+
+- **可以加白名单**:只读 / 编译 / 测试 / 端口查询 / 杀本机 java 进程 / 项目本地数据库重置
+- **不要加白名单**:`git push *` / `git reset --hard *` / `rm -rf *` / `npm install *` / `mvn deploy *` / `Remove-Item -Recurse *`
+
+已放通的命令类(63 条):
+- 文件读取:`grep / awk / sed -n / find / ls / cat / head / tail / wc / echo / printf / test / until`
+- HTTP smoke test:`curl:*`
+- Node 一次性脚本:`node -e:*`
+- Git 只读:`git status / diff / log / show / branch / ls-files / rev-parse / config / remote -v`
+- Maven 构建:`mvn ... compile / clean compile / spring-boot:run / test`
+- 前端构建:`npx vite build / preview`
+- PowerShell 只读:`Get-Process / Get-ChildItem / Get-Content / Test-Path / Select-String / Get-Command / Get-NetTCPConnection`
+- 项目专用:`Stop-Process java*`,`Invoke-WebRequest *localhost*`
+
+**修改前先想**:这条命令的最坏后果是什么?会写入数据 / 修改远程 / 删除文件吗?是 → 不放白名单。否 → 安全放。
+
+---
+
 ## 禁忌(不要做)
 
 - ❌ 引入 Element/Antd/Tailwind 等 UI 库 — 项目坚持原生 CSS

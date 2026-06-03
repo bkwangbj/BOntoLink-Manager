@@ -232,6 +232,7 @@
             </div>
           </div>
           <div class="ot-drawer-hd-r">
+            <button class="bl-btn bl-btn-sm" @click="onCreateFromDrawer" title="关闭当前抽屉, 打开新建对象类型向导"><span v-html="BL.icon('plus', 12)"></span><span style="margin-left:4px">新建对象</span></button>
             <button class="bl-btn bl-btn-sm" @click="onAi"><span v-html="BL.icon('ai', 12)"></span><span style="margin-left:4px">AI 助手</span></button>
             <button class="bl-btn bl-btn-sm" @click="onViewInstances"><span v-html="BL.icon('database', 12)"></span><span style="margin-left:4px">查看实例</span></button>
             <button class="bl-btn bl-btn-sm bl-btn-primary" @click="onEdit"><span v-html="BL.icon('edit', 12, '#fff')"></span><span style="margin-left:4px">编辑</span></button>
@@ -273,61 +274,14 @@
               <TabProps :class-id="selected?.id" :class-name="selected?.display_name || selected?.api_name || ''" @navigate-tab="drawerTab = $event" />
             </div>
 
-            <!-- 关联表 -->
-            <div v-else-if="drawerTab === 'tables'" class="ot-tab-content">
-              <div class="ot-tab-toolbar">
-                <span class="bl-muted">主数据集 + 补充数据集</span>
-                <div class="bl-grow"></div>
-                <button class="bl-btn bl-btn-sm bl-btn-primary"><span v-html="BL.icon('plus', 12, '#fff')"></span><span style="margin-left:4px">关联数据表</span></button>
-              </div>
-              <table class="bl-table">
-                <thead>
-                  <tr><th>排序</th><th>关联类型</th><th>物理表</th><th>主键</th><th>JOIN</th><th>别名</th></tr>
-                </thead>
-                <tbody>
-                  <tr v-for="ds in (detail.datasources || [])" :key="ds.id">
-                    <td>—</td>
-                    <td><span class="bl-tag bl-tag-primary">主数据集</span></td>
-                    <td class="bl-mono">{{ ds.ds_code }}</td>
-                    <td>—</td>
-                    <td>LEFT</td>
-                    <td>main</td>
-                  </tr>
-                </tbody>
-              </table>
-              <div v-if="!(detail.datasources || []).length" class="bl-empty" style="padding:32px">暂未配置关联表</div>
-            </div>
-
-            <!-- 关系 -->
-            <div v-else-if="drawerTab === 'links'" class="ot-tab-content">
-              <div class="ot-tab-toolbar">
-                <span class="bl-muted">共 {{ (detail.links || []).length }} 条关系</span>
-              </div>
-              <table class="bl-table">
-                <thead><tr><th>关系</th><th>API</th><th>方向</th><th>基数</th></tr></thead>
-                <tbody>
-                  <tr v-for="l in (detail.links || [])" :key="l.id">
-                    <td>{{ l.display_name || l.rdfs_label || l.api_name }}</td>
-                    <td class="bl-mono">{{ l.api_name }}</td>
-                    <td>
-                      <span v-if="l.source_class_id === detail.id" class="bl-tag">出向</span>
-                      <span v-else class="bl-tag">入向</span>
-                    </td>
-                    <td><span class="bl-tag">{{ l.cardinality || 'many_to_many' }}</span></td>
-                  </tr>
-                </tbody>
-              </table>
-              <div v-if="!(detail.links || []).length" class="bl-empty" style="padding:32px">暂无关系</div>
-            </div>
-
-            <!-- 类层次 -->
-            <div v-else-if="drawerTab === 'hierarchy'" class="ot-tab-content">
-              <Placeholder icon="branch" label="类继承层次" desc="呈现父类 / 子类 / 兄弟类的树状结构,支持点击跳转" />
-            </div>
-
-            <!-- 对象图谱 (Canvas: 链接类型可视化) -->
+            <!-- 链接关系 (Canvas: 链接类型可视化) -->
             <div v-else-if="drawerTab === 'graph'" class="ot-tab-content ot-tab-canvas">
               <TabLinkGraph :class-id="selected?.id" />
+            </div>
+
+            <!-- 对象图谱 (七大维度全景, 见对象图谱需求文档) -->
+            <div v-else-if="drawerTab === 'objgraph'" class="ot-tab-content ot-tab-canvas">
+              <TabObjectGraph :class-id="selected?.id" />
             </div>
 
             <!-- 等价类 -->
@@ -464,6 +418,7 @@ import TabOverview from '@/views/resources/objecttype/TabOverview.vue'
 import TabProps from '@/views/resources/objecttype/TabProps.vue'
 import TabClassGroup from '@/views/resources/objecttype/TabClassGroup.vue'
 import TabLinkGraph from '@/views/resources/objecttype/TabLinkGraph.vue'
+import TabObjectGraph from '@/views/resources/objecttype/TabObjectGraph.vue'
 import TabDisjointUnion from '@/views/resources/objecttype/TabDisjointUnion.vue'
 import TabPropertyRelation from '@/views/resources/objecttype/TabPropertyRelation.vue'
 import NewObjectTypeWizard from '@/views/resources/objecttype/NewObjectTypeWizard.vue'
@@ -755,11 +710,9 @@ const tabGroups = [
     { key: 'overview', label: '概览' },
     { key: 'props', label: '属性' }
   ]},
-  { key: 'rel', label: '关联关系', icon: 'link', color: '#FF7D00', tabs: [
-    { key: 'tables', label: '关联表' },
-    { key: 'links', label: '关系' },
-    { key: 'hierarchy', label: '类层次' },
-    { key: 'graph', label: '对象图谱' }
+  { key: 'rel', label: '关系', icon: 'link', color: '#FF7D00', tabs: [
+    { key: 'graph', label: '链接关系' },
+    { key: 'objgraph', label: '对象图谱' }
   ]},
   { key: 'rule', label: '规则约束', icon: 'sliders', color: '#722ED1', tabs: [
     { key: 'equiv', label: '等价类' },
@@ -798,6 +751,11 @@ function clearFilters() { q.value = ''; filterDomain.value = ''; filterStatus.va
 /* —— 新建对象类型向导 —— */
 const wizardOpen = ref(false)
 function onCreate() { wizardOpen.value = true }
+/* 抽屉头部「新建对象」: 先关掉当前详情抽屉, 再打开向导 (避免抽屉 + 模态叠放) */
+function onCreateFromDrawer() {
+  closeDrawer()
+  wizardOpen.value = true
+}
 function onWizardNext(payload) {
   // 步骤 1 收集到的数据源绑定信息，正式联调后用于创建对象 + 数据集 + 属性
   console.log('[wizard] step-1 payload', payload)

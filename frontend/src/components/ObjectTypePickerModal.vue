@@ -264,8 +264,10 @@ const TreeRow = {
 
 <style scoped>
 .otp-mask {
+  /* z-index 必须高于:对象类型详情抽屉(1000) + 属性详情抽屉(1010) + 抽屉 resize 把手(1011),
+     与 ValueTypePicker / EnumPicker / SharedPropertyPicker / PropertyFormatModal 等大弹框对齐 */
   position: fixed; inset: 0; background: rgba(0,0,0,.40);
-  z-index: 999; display: flex; align-items: center; justify-content: center;
+  z-index: 1200; display: flex; align-items: center; justify-content: center;
 }
 .otp-modal {
   background: var(--bl-bg-1); border-radius: 12px;

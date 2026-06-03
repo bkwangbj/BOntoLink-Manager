@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown转换文档</title>
+  <style>
+    body { 
+      font-family: 'Microsoft YaHei', 'SimSun', sans-serif; 
+      margin: 0 auto; 
+      max-width: 960px; 
+      padding: 20px; 
+      line-height: 1.6;
+    }
+    pre { 
+      background-color: #f8f8f8; 
+      border: 1px solid #ddd; 
+      padding: 10px; 
+      border-radius: 3px; 
+      overflow: auto; 
+    }
+    code { 
+      font-family: Consolas, Monaco, monospace; 
+      background-color: #f8f8f8; 
+      padding: 2px 5px; 
+      border-radius: 3px; 
+    }
+    table { 
+      border-collapse: collapse; 
+      width: 100%; 
+      margin-bottom: 20px;
+    }
+    th, td { 
+      border: 1px solid #ddd; 
+      padding: 8px; 
+    }
+    th { 
+      background-color: #f2f2f2; 
+      text-align: left; 
+    }
+    tr:nth-child(even) { 
+      background-color: #f9f9f9; 
+    }
+    img { 
+      max-width: 100%; 
+      height: auto; 
+    }
+    .toc-placeholder { 
+      margin: 20px 0; 
+      padding: 10px; 
+      background-color: #f0f0f0; 
+      border: 1px dashed #ccc; 
+      text-align: center; 
+      color: #666; 
+    }
+  </style>
+</head>
+<body>
+  <h1>BOntoLink02 — 项目协作指南</h1>
+<blockquote>
+<p>动态本体管理系统(水利行业) · Vue 3 + Spring Boot + SQLite</p>
+<p><strong>Claude 进入本项目时自动读此文件。修改时保持精简(&lt;300 行),冗长内容放到独立文档并在这里引用。</strong></p>
+</blockquote>
+<hr />
+<h2>项目身份</h2>
+<ul>
+<li><strong>名称</strong>: BOntoLink02 / 动态本体管理系统</li>
+<li><strong>业务</strong>: 面向水利行业的本体(Ontology)建模与元数据管理</li>
+<li><strong>核心模块</strong>: 对象类型 / 链接类型 / 属性 / 值类型 / 枚举类型 / 共享属性 / 结构属性 / 接口 / 数据源 / 类型类</li>
+</ul>
+<hr />
+<h2>技术栈</h2>
+<h3>后端</h3>
+<ul>
+<li><strong>Java 21</strong> + <strong>Spring Boot</strong></li>
+<li><strong>MyBatis</strong> (注解式 SQL,<code>mapUnderscoreToCamelCase: true</code>)</li>
+<li><strong>SQLite</strong> (单机文件 <code>backend/bontolink.db</code>)</li>
+<li><strong>Maven</strong> 构建</li>
+<li><strong>响应包装</strong>: <code>R&lt;T&gt; = { code, msg, data }</code>,失败 <code>R.error(400, &quot;...&quot;)</code></li>
+</ul>
+<h3>前端</h3>
+<ul>
+<li><strong>Vue 3</strong> (<code>&lt;script setup&gt;</code> 风格)</li>
+<li><strong>Vite</strong> 5.x</li>
+<li><strong>原生 CSS</strong>(<strong>无</strong> Element / Antd / TailwindCSS,所有组件自研)</li>
+<li><strong>vue-router</strong> hash 模式</li>
+<li><strong>Pinia</strong> 状态(少用,大多在组件本地)</li>
+<li><strong>HTTP</strong> 自定义 <code>http</code> 拦截器(<code>baseURL: /api</code>,自动解包 <code>R&lt;T&gt;</code>)</li>
+</ul>
+<h3>环境</h3>
+<ul>
+<li><strong>Windows Server 2022</strong> + <strong>PowerShell 7</strong></li>
+<li>前端 dev: <code>localhost:5173</code> (vite),代理 <code>/api → localhost:8088/bontolink</code></li>
+<li>后端: <code>localhost:8088</code>,context-path <code>/bontolink</code></li>
+</ul>
+<hr />
+<h2>常用命令(直接复用)</h2>
+<h3>前端</h3>
+<pre><code class="language-powershell">cd c:\beiktech-jyx\BOntoLink02\frontend
+npx vite build              # 生产构建(每次大改后必跑验证)
+# dev server 由用户自己跑, Claude 不要 npm run dev
+</code></pre>
+<h3>后端</h3>
+<pre><code class="language-powershell">cd c:\beiktech-jyx\BOntoLink02\backend
+mvn -DskipTests clean compile           # 只编译, 验证 Java 代码
+mvn -q -DskipTests spring-boot:run      # 启动 (用 run_in_background)
+</code></pre>
+<h3>数据库重置(改 schema/data.sql 后必跑)</h3>
+<pre><code class="language-powershell">Get-Process java | Stop-Process -Force -ErrorAction SilentlyContinue
+Remove-Item c:\beiktech-jyx\BOntoLink02\backend\bontolink.db -Force
+# 再启动后端会自动重建表 + 注入 data.sql 种子数据
+</code></pre>
+<h3>等待后端就绪(smoke test 用)</h3>
+<pre><code class="language-bash">until curl -sf http://localhost:8088/bontolink/api/health &gt; /dev/null; do sleep 2; done
+curl -s http://localhost:8088/bontolink/api/xxx | head -c 600
+</code></pre>
+<hr />
+<h2>必读关键约定</h2>
+<h3>CSS 类名前缀(每模块独立 namespace)</h3>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>前缀</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>对象类型 ObjectTypes</td>
+<td><code>ot-</code></td>
+</tr>
+<tr>
+<td>链接 LinkTypes</td>
+<td><code>lk-</code> / <code>lke-</code>(编辑器)</td>
+</tr>
+<tr>
+<td>值类型 ValueTypes</td>
+<td><code>vt-</code></td>
+</tr>
+<tr>
+<td>枚举类型 EnumTypes</td>
+<td><code>et-</code></td>
+</tr>
+<tr>
+<td>共享属性 SharedProperties</td>
+<td><code>sp-</code></td>
+</tr>
+<tr>
+<td>接口 Interfaces</td>
+<td><code>if-</code></td>
+</tr>
+<tr>
+<td>数据源 Datasources</td>
+<td><code>ds-</code></td>
+</tr>
+<tr>
+<td>类型类 TypeClasses</td>
+<td><code>tc-</code></td>
+</tr>
+<tr>
+<td>行业分类 Category</td>
+<td><code>cat-</code></td>
+</tr>
+<tr>
+<td>选择器模态</td>
+<td><code>vtp-</code> / <code>spp-</code> / <code>ep-</code></td>
+</tr>
+</tbody>
+</table>
+<h3>数据库命名</h3>
+<ul>
+<li><strong>表名</strong>: <code>ont_xxx_yyy</code> (lowercase + underscore)</li>
+<li><strong>主键</strong>: <code>id TEXT PRIMARY KEY</code> 格式 <code>&quot;{prefix}-&quot; + UUID</code>(如 <code>class-...</code>,<code>link-types-...</code>,<code>shared-properties-...</code>)</li>
+<li><strong>字段</strong>: <code>snake_case</code> (<code>category_code</code>,<code>prop_type</code>,<code>created_at</code>)</li>
+<li><strong>时间戳</strong>: <code>TEXT NOT NULL DEFAULT (datetime('now','localtime'))</code></li>
+<li><strong>状态</strong>: <code>status INTEGER</code> (1=启用/0=禁用) 或 <code>'active'/'inactive'/'deprecated'</code>(EnumTypes / LinkTypes)</li>
+<li><strong>RID</strong>: <code>rid TEXT</code> 格式 <code>&quot;ri.ont.{module}.{code}&quot;</code></li>
+</ul>
+<h3>后端 Mapper / Controller 模板</h3>
+<pre><code class="language-java">// Mapper
+@Mapper
+public interface XxxMapper {
+    @Select(&quot;SELECT * FROM ont_xxx ORDER BY update_time DESC&quot;)
+    List&lt;Map&lt;String, Object&gt;&gt; listAll();
+    // 用 Map&lt;String, Object&gt;, 不写 Entity 类
+}
+
+// Controller
+@RestController
+@RequestMapping(&quot;/api/xxx&quot;)
+public class XxxController {
+    @Autowired private XxxMapper mapper;
+    @GetMapping public R&lt;List&lt;Map&lt;String, Object&gt;&gt;&gt; list() { return R.ok(mapper.listAll()); }
+    @PostMapping public R&lt;Map&lt;String, Object&gt;&gt; create(@RequestBody Map&lt;String, Object&gt; body) {
+        String id = &quot;xxx-&quot; + UUID.randomUUID();
+        body.put(&quot;id&quot;, id);
+        mapper.insert(body);
+        return R.ok(mapper.findById(id));
+    }
+    // ... standard CRUD + batch-delete
+}
+</code></pre>
+<h3>前端 API 命名</h3>
+<p><code>xxxApi</code> 在 <code>frontend/src/api/index.js</code>,标准 7 个方法:</p>
+<pre><code class="language-js">list / get(id) / create(data) / update(id, data) / remove(id) / batchRemove(ids) / [stats/refs/etc.]
+</code></pre>
+<h3>字段适配(Jackson 兼容)</h3>
+<p>后端字段命名怪规则:<strong><code>gName</code> / <code>gSort</code> 会被 Jackson 序列化为小写</strong> <code>gname</code> / <code>gsort</code>。前端始终用适配器:</p>
+<pre><code class="language-js">const label = g.gname || g.gName || g.g_name
+const code = r.category_code || r.categoryCode || ''
+</code></pre>
+<h3>图标 / Toast / Confirm</h3>
+<ul>
+<li>图标: <code>v-html=&quot;BL.icon('name', size, color?)&quot;</code>(从 <code>src/lib/bl.js</code> ICONS 表)</li>
+<li>反馈: <code>BL.success('...') / BL.warning / BL.error / BL.info</code></li>
+<li>确认: <code>const ok = await BL.confirm({ title, content, danger, okText })</code></li>
+<li>输入: <code>const v = await BL.prompt({ title, label, validate })</code></li>
+</ul>
+<hr />
+<h2>视觉 / 交互基线(摘要)</h2>
+<p>详见 <a href="UI%E8%A7%84%E8%8C%83.md">UI规范.md</a>。这里只列<strong>最关键</strong>几条:</p>
+<h3>三栏式资源页布局</h3>
+<pre><code>PageHeader (标题 + 统计 + 筛选 + 搜索 + 新建按钮)
+└── 主体: CategoryTreeFilter(左) + 列表(中) + 抽屉(右,fixed 浮层)
+</code></pre>
+<h3>批量操作栏(全局统一 outline 配色)</h3>
+<pre><code>[已选 N 项] [🗑️ 批量删除] [✓ 启用] [⏻ 禁用] [取消选择]
+</code></pre>
+<ul>
+<li>删除红:<code>background: #fff; border: 1px solid #f53f3f; color: #f53f3f</code></li>
+<li>启用绿:<code>#00b42a</code></li>
+<li>禁用灰:<code>#86909c</code></li>
+</ul>
+<h3>详情抽屉头部</h3>
+<pre><code>[36×36 大图标(按业务染色)] 标题 - 编码  [🔒/✏️ 只读/编辑] [□ 最大化] [× 关闭]
+</code></pre>
+<ul>
+<li>z-index: 详情抽屉 1010,大模态弹框 ≥ 1200(必须高于抽屉)</li>
+<li>不带蒙层(允许背景点击切换)</li>
+<li>左边缘 5px 拖拽手柄,localStorage 持久化宽度</li>
+</ul>
+<h3>章节标题</h3>
+<pre><code class="language-html">&lt;div class=&quot;sec&quot;&gt;基础信息&lt;/div&gt;  &lt;!-- 12px 灰色 + 3px 蓝色左边条 --&gt;
+</code></pre>
+<hr />
+<h2>已知模块清单</h2>
+<table>
+<thead>
+<tr>
+<th>路由</th>
+<th>主文件</th>
+<th>数据表</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/resources/object-types</code></td>
+<td><code>views/resources/ObjectTypes.vue</code></td>
+<td><code>ont_class + ont_class_property + ont_class_link</code></td>
+</tr>
+<tr>
+<td><code>/resources/link-types</code></td>
+<td><code>views/resources/LinkTypes.vue</code> + <code>linktype/LinkTypeEditor.vue</code></td>
+<td><code>ont_link_types + ont_link_mappings</code></td>
+</tr>
+<tr>
+<td><code>/resources/value-types</code></td>
+<td><code>views/config/ValueTypes.vue</code></td>
+<td><code>ont_value_types + ont_valuetypes_usage_config</code></td>
+</tr>
+<tr>
+<td><code>/resources/enum-types</code></td>
+<td><code>views/config/EnumTypes.vue</code></td>
+<td><code>ont_enum_types + ont_enum_items + ont_enum_level_code_rule</code></td>
+</tr>
+<tr>
+<td><code>/resources/shared-props</code></td>
+<td><code>views/resources/SharedProperties.vue</code> + <code>sharedproperty/*</code></td>
+<td><code>ont_shared_properties + ont_struct_types + ont_struct_items</code></td>
+</tr>
+<tr>
+<td><code>/resources/interfaces</code></td>
+<td><code>views/resources/Interfaces.vue</code></td>
+<td><code>ont_interface + ont_interface_property + ont_interface_class</code></td>
+</tr>
+<tr>
+<td><code>/resources/datasources</code></td>
+<td><code>views/resources/Datasources.vue</code></td>
+<td><code>sys_data_source</code></td>
+</tr>
+<tr>
+<td><code>/config/category</code></td>
+<td><code>views/config/Category.vue</code></td>
+<td><code>ont_biz_category + ont_biz_namespace</code></td>
+</tr>
+<tr>
+<td><code>/config/type-classes</code></td>
+<td><code>views/config/TypeClasses.vue</code></td>
+<td><code>ont_type_class</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>共享组件</strong>(必须复用,不要重写):</p>
+<ul>
+<li><code>CategoryTreeFilter</code> — 6 模块共用的行业分类树</li>
+<li><code>ValueTypePickerModal</code> / <code>EnumPickerModal</code> / <code>SharedPropertyPickerModal</code> — 三大资源选择面板</li>
+<li><code>PropertyFormatModal</code> — 属性格式化弹框(<code>src_type=1</code> 普通属性 / <code>2</code> 共享属性)</li>
+<li><code>useDraggableModal</code> + <code>DraggableHandles</code> — 大弹框拖动/最大化/缩放 composable</li>
+<li><code>PageHeader</code> / <code>FieldRow</code> / <code>LeftGroupTree</code>(legacy)</li>
+</ul>
+<hr />
+<h2>高频踩坑(避免重复)</h2>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>根因</th>
+<th>修复</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sticky 表格出现空白列</td>
+<td><code>table-layout: auto</code> 实际列宽 ≠ sticky <code>left:</code> 偏移</td>
+<td>用 <code>table-layout: fixed</code> 或移除 sticky</td>
+</tr>
+<tr>
+<td>sticky 表头横滚被覆盖</td>
+<td>角落 sticky 列 z-index 不够</td>
+<td>角落格 <code>z-index: 4</code>(普通 sticky 3)</td>
+</tr>
+<tr>
+<td>抽屉里弹模态被遮挡</td>
+<td>模态 z-index ≤ 抽屉(1010)</td>
+<td>大弹框 z-index ≥ 1200</td>
+</tr>
+<tr>
+<td>高度链 <code>height: 100%</code> 算 0</td>
+<td>父级用 <code>min-height: 100%</code></td>
+<td>父级 <code>display: flex</code> + <code>flex: 1</code></td>
+</tr>
+<tr>
+<td><code>watch immediate</code> 报 TDZ</td>
+<td>引用了下方 <code>const</code> 声明的 ref</td>
+<td>把 ref 提前到 watch 之前</td>
+</tr>
+<tr>
+<td><code>BL.icon('xxx')</code> 渲染六边形</td>
+<td>ICONS 表里没有该名 → fallback cube</td>
+<td>在 <code>bl.js</code> ICONS 表新增</td>
+</tr>
+<tr>
+<td>模板 <code>@event=&quot;(n) =&gt; ref = n&quot;</code> 不生效</td>
+<td>ref 是 const 不可在模板表达式重新指向</td>
+<td>改用 <code>function setX(n) { x.value = n }</code></td>
+</tr>
+<tr>
+<td><code>Datasources</code> 用 <code>r.categoryCode</code> 其他用 <code>r.category_code</code></td>
+<td>Jackson 配置不一致</td>
+<td>组件内适配 <code>r.category_code || r.categoryCode</code></td>
+</tr>
+<tr>
+<td>改 router 后页面空白</td>
+<td>HMR 缓存旧 lazy import</td>
+<td>浏览器硬刷新(Ctrl+Shift+R)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>禁忌(不要做)</h2>
+<ul>
+<li>❌ 引入 Element/Antd/Tailwind 等 UI 库 — 项目坚持原生 CSS</li>
+<li>❌ 用 <code>fetch</code> — 统一走 <code>http</code> 拦截器</li>
+<li>❌ 直接修改 <code>bl.js</code> 既有 icon path — 加新名即可</li>
+<li>❌ 一个 module 自己拍脑袋造新视觉风格 — 先查 UI规范 + 其他模块</li>
+<li>❌ 没读文件就 Edit — 必须先 Read</li>
+<li>❌ <code>git push --force</code> 主分支 — 默认拒绝,除非用户明确说</li>
+<li>❌ 跑 <code>npm run dev</code> / vite dev — dev server 由用户自己管</li>
+<li>❌ 批量&quot;美化代码&quot; / “重构” — 用户没要求不要做</li>
+<li>❌ 加注释解释代码做什么 — 只在 “为什么这么做不直观” 时加</li>
+</ul>
+<hr />
+<h2>协作偏好(用户风格)</h2>
+<ul>
+<li><strong>中文回复</strong>,简短直接,不要 disclaimer 式开场白</li>
+<li><strong>优先沟通</strong>:截图 + 一句话需求 → Claude 探查 + 改 + 验证</li>
+<li><strong>风格一致 &gt; 个性化</strong>:每个新模块对齐既有模块</li>
+<li><strong>build verify 是底线</strong>:大改后必 <code>vite build</code>,失败必修</li>
+<li><strong>不要过度澄清</strong>:能从代码看出来的别问</li>
+<li><strong>F12 console 报错</strong>:看到截图直接定位,不要猜</li>
+<li><strong>大任务先 plan</strong>:&gt;200 行 / 多文件改动,先给方案</li>
+</ul>
+<hr />
+<h2>相关文档</h2>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="UI%E8%A7%84%E8%8C%83.md">UI规范.md</a></td>
+<td>完整视觉/交互/组件规范(19 章)</td>
+</tr>
+<tr>
+<td><a href="ClaudeCode%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97.md">ClaudeCode使用指南.md</a></td>
+<td>通用 Claude Code 协作方法论</td>
+</tr>
+<tr>
+<td><a href="help.md">help.md</a></td>
+<td>个人协作复盘 + 业界经验 + 行动项</td>
+</tr>
+<tr>
+<td><code>frontend/src/api/index.js</code></td>
+<td>所有 API 客户端定义</td>
+</tr>
+<tr>
+<td><code>backend/src/main/resources/db/schema-sqlite.sql</code></td>
+<td>完整数据库 schema</td>
+</tr>
+<tr>
+<td><code>backend/src/main/resources/db/data.sql</code></td>
+<td>种子数据</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>新增模块快速 Checklist</h2>
+<ol>
+<li><strong>Schema</strong> (<code>schema-sqlite.sql</code>): 表 + 索引,种子数据写到 <code>data.sql</code></li>
+<li><strong>Mapper</strong> (<code>backend/.../mapper/XxxMapper.java</code>): <code>@Mapper interface</code>,SQL 注解式</li>
+<li><strong>Controller</strong> (<code>backend/.../controller/XxxController.java</code>): <code>/api/xxx</code> REST CRUD</li>
+<li><strong>API</strong> (<code>frontend/src/api/index.js</code>): <code>xxxApi</code> 标准 7 方法</li>
+<li><strong>页面</strong> (<code>frontend/src/views/xxx/Xxx.vue</code>): 三栏布局 + CategoryTreeFilter + 抽屉</li>
+<li><strong>路由</strong> (<code>frontend/src/router/index.js</code>): 加 path / name / meta.title</li>
+<li><strong>导航</strong> (<code>frontend/src/components/AppSidebar.vue</code>): 加 sidebar 项 + icon</li>
+<li><strong>验证</strong>: <code>mvn clean compile</code> + <code>npx vite build</code> + 删 DB 重启 + curl smoke</li>
+</ol>
+<hr />
+<h2>文档版本</h2>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>日期</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.0</td>
+<td>2026-06-01</td>
+<td>初版,基于 BOntoLink02 项目积累</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>

@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <header class="lg-topnav">
       <div class="lg-title-l">
-        <span class="lg-title">链接类型</span>
+        <span class="lg-title">链接关系</span>
         <span class="bl-muted lg-title-en">(Link Types)</span>
         <span class="lg-count-tag">共 {{ links.length }} 条 <span class="bl-muted">(Total: {{ links.length }})</span></span>
       </div>
@@ -113,77 +113,22 @@
       </div>
     </div>
 
-    <!-- 链接详情弹窗 -->
-    <div v-if="popupLink" class="bl-modal-mask" @click.self="popupLink = null">
-      <div class="bl-modal lg-popup">
-        <div class="bl-modal-hd">链接详情</div>
-        <div class="bl-modal-body">
-          <div class="lg-kv"><span class="lg-kv-l">名称</span><span class="lg-kv-r">{{ popupLink.display_name || popupLink.api_name }}</span></div>
-          <div class="lg-kv"><span class="lg-kv-l">API</span><span class="lg-kv-r bl-mono">{{ popupLink.api_name }}</span></div>
-          <div class="lg-kv"><span class="lg-kv-l">源对象</span><span class="lg-kv-r">{{ classLabel(popupLink.source_class_id) }}</span></div>
-          <div class="lg-kv"><span class="lg-kv-l">目标对象</span><span class="lg-kv-r">{{ classLabel(popupLink.target_class_id) }}</span></div>
-          <div class="lg-kv"><span class="lg-kv-l">基数</span>
-            <span class="bl-tag">{{ cardLabel(popupLink.cardinality) }}</span>
-          </div>
-        </div>
-        <div class="bl-modal-ft">
-          <button v-if="mode === 'select'" class="bl-btn bl-btn-danger" @click="onDeleteLink(popupLink)">
-            <span v-html="BL.icon('trash', 12)"></span><span style="margin-left:4px">删除</span>
-          </button>
-          <span style="flex:1"></span>
-          <button class="bl-btn" @click="popupLink = null">关闭</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 新建链接弹窗 -->
-    <div v-if="createOpen" class="bl-modal-mask" @click.self="createOpen = false">
-      <div class="bl-modal lg-create">
-        <div class="bl-modal-hd">新建链接</div>
-        <div class="bl-modal-body bl-col" style="gap:10px">
-          <FieldRow label="名称 *" inline>
-            <input class="bl-input" v-model="newLink.display_name" placeholder="例: 测站所属河流" />
-          </FieldRow>
-          <FieldRow label="API *" inline hint="snake_case · 全局唯一">
-            <input class="bl-input bl-mono" v-model="newLink.api_name" placeholder="例: locatedInRiver" />
-          </FieldRow>
-          <FieldRow label="" inline>
-            <div class="lg-source-target">
-              <select class="bl-input" v-model="newLink.source_class_id">
-                <option value="">— 源对象 —</option>
-                <option v-for="c in classOptions" :key="'s' + c.id" :value="c.id">{{ c.cn || c.api_name }}</option>
-              </select>
-              <button class="bl-btn bl-btn-text bl-btn-icon lg-swap" title="互换源/目标"
-                      @click="swapSourceTarget" v-html="BL.icon('refresh', 13)"></button>
-              <select class="bl-input" v-model="newLink.target_class_id">
-                <option value="">— 目标对象 —</option>
-                <option v-for="c in classOptions" :key="'t' + c.id" :value="c.id">{{ c.cn || c.api_name }}</option>
-              </select>
-            </div>
-          </FieldRow>
-          <FieldRow label="基数" inline>
-            <div class="radio-group">
-              <label class="radio-item"><input type="radio" value="one_to_one" v-model="newLink.cardinality" /> 1 : 1</label>
-              <label class="radio-item"><input type="radio" value="one_to_many" v-model="newLink.cardinality" /> 1 : *</label>
-              <label class="radio-item"><input type="radio" value="many_to_one" v-model="newLink.cardinality" /> * : 1</label>
-              <label class="radio-item"><input type="radio" value="many_to_many" v-model="newLink.cardinality" /> * : *</label>
-            </div>
-          </FieldRow>
-        </div>
-        <div class="bl-modal-ft">
-          <button class="bl-btn" @click="createOpen = false">取消</button>
-          <button class="bl-btn bl-btn-primary" :disabled="!canCreate" @click="onCreate">确定创建</button>
-        </div>
-      </div>
-    </div>
+    <!-- 链接关系编辑抽屉 (与 LinkTypes 主页同款, 但此处不要 tab) -->
+    <LinkTypeEditor
+      v-model:open="editorOpen"
+      :link-id="editorLinkId"
+      :all-classes="allClasses"
+      :show-tabs="false"
+      @saved="onEditorSaved"
+      @deleted="onEditorDeleted" />
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { BL } from '@/lib/bl.js'
-import { resourceApi } from '@/api'
-import FieldRow from '@/views/config/category/FieldRow.vue'
+import { resourceApi, linkTypeApi } from '@/api'
+import LinkTypeEditor from '@/views/resources/linktype/LinkTypeEditor.vue'
 
 const props = defineProps({
   classId: { type: String, default: '' }
@@ -225,25 +170,25 @@ const NODE_H = 44
 /* 节点位置存储 (id → {x,y}) */
 const nodePos = reactive({})
 
-/* 弹窗 */
+/* 弹窗 (popupNode 保留给中心节点 / 老式 popupLink 已不用) */
 const popupNode = ref(null)
-const popupLink = ref(null)
 const selectedLinkId = ref(null)
-const createOpen = ref(false)
-const newLink = reactive(defaultNewLink())
-function defaultNewLink() {
-  return { display_name: '', api_name: '', source_class_id: props.classId, target_class_id: '', cardinality: 'many_to_many' }
+
+/* 抽屉式编辑器 (替代原 createOpen 小弹框 + popupLink) */
+const editorOpen = ref(false)
+const editorLinkId = ref('')
+function openEditor(linkId = '') {
+  editorLinkId.value = linkId
+  editorOpen.value = true
 }
 
 /* —— 加载 —— */
 async function loadAll() {
-  const [classes, ls] = await Promise.all([
+  const [classes, lt] = await Promise.all([
     resourceApi.classes().catch(() => ({})),
-    resourceApi.links().catch(() => [])
+    linkTypeApi.list().catch(() => [])
   ])
-  // resourceApi.classes 可能返回 { data: [...] } 或 { rows: [...] } 视后端而定
   allClasses.value = Array.isArray(classes) ? classes : (classes?.rows || classes?.data || classes?.items || [])
-  // 字段标准化 (兼容 snake / camel)
   allClasses.value = allClasses.value.map(c => ({
     ...c,
     cn: c.display_name || c.displayName || c.rdfs_label || c.rdfsLabel || c.api_name,
@@ -251,7 +196,17 @@ async function loadAll() {
     color: c.color,
     icon: c.icon || 'box'
   }))
-  allLinks.value = ls || []
+  // ont_link_types → 图节点/边 字段适配 (id 与编辑器一致, 点击后能正确加载 detail)
+  allLinks.value = (Array.isArray(lt) ? lt : (lt?.rows || lt?.data || [])).map(l => ({
+    id: l.id,
+    rid: l.rid,
+    api_name: l.link_type_id,
+    source_class_id: l.l_object_type_id,
+    target_class_id: l.r_object_type_id,
+    cardinality: `${l.l_cardinality || 'many'}_to_${l.r_cardinality || 'many'}`,
+    display_name: l.rdfs_label || l.l_display_name || l.link_type_id,
+    status: l.status
+  }))
   relayout()
 }
 onMounted(loadAll)
@@ -429,76 +384,46 @@ function onNodeMouseDown(node, ev) {
   window.addEventListener('mouseup', up)
 }
 
-/* —— 点击交互 —— */
+/* —— 点击交互: 全部走 LinkTypeEditor 抽屉 —— */
 function onNodeClick(n) {
   if (mode.value === 'view') return
-  if (n.isVirtual) { openCreate(); return }
-  popupNode.value = n
+  if (n.isVirtual) { openEditor(''); return }            // 新建链接类型
+  if (n.isCenter) { popupNode.value = n; return }        // 中心节点: 还是用小弹窗显示自身详情
+  // 找到中心 ↔ 该节点的链接, 用抽屉编辑
+  const link = links.value.find(l =>
+    (l.source_class_id === props.classId && l.target_class_id === n.id) ||
+    (l.target_class_id === props.classId && l.source_class_id === n.id)
+  )
+  if (link) openEditor(link.id)
+  else popupNode.value = n   // 没找到对应链接 (理论上不会发生), 兜底显示节点信息
 }
 function onLinkClick(l) {
   if (mode.value === 'view') return
-  if (l.isVirtual) { openCreate(); return }
-  popupLink.value = l
+  if (l.isVirtual) { openEditor(''); return }
   selectedLinkId.value = l.id
+  openEditor(l.id)
 }
 
-/* —— 新建链接 —— */
+/* —— 顶栏「新建链接」按钮 —— */
 const classOptions = computed(() => allClasses.value
   .filter(c => c.id && c.id !== '__virtual_new_link__')
   .map(c => ({ id: c.id, cn: c.cn || c.display_name, api_name: c.api_name }))
 )
 function openCreate() {
   if (mode.value === 'view') return
-  Object.assign(newLink, defaultNewLink())
-  createOpen.value = true
-}
-function swapSourceTarget() {
-  const s = newLink.source_class_id
-  newLink.source_class_id = newLink.target_class_id
-  newLink.target_class_id = s
-}
-const canCreate = computed(() =>
-  newLink.display_name && newLink.api_name && newLink.source_class_id && newLink.target_class_id
-  && newLink.source_class_id !== newLink.target_class_id
-)
-async function onCreate() {
-  // TODO: 实际 POST 到后端;当前先在前端列表里插入 (后端 linkApi.create 待补充)
-  const newItem = {
-    id: 'cl-tmp-' + Date.now(),
-    rid: '',
-    api_name: newLink.api_name,
-    source_class_id: newLink.source_class_id,
-    target_class_id: newLink.target_class_id,
-    cardinality: newLink.cardinality,
-    display_name: newLink.display_name,
-    status: 1
-  }
-  allLinks.value = [...allLinks.value, newItem]
-  BL.success('已新建链接 (前端模拟,后端持久化待联调)')
-  createOpen.value = false
-  await nextTick()
-  relayout()
+  openEditor('')
 }
 
-/* —— 删除链接 —— */
-async function onDeleteLink(l) {
-  const ok = await BL.confirm({ title: '删除链接', content: `确定删除「${l.display_name || l.api_name}」?`, danger: true, okText: '删除' })
-  if (!ok) return
-  allLinks.value = allLinks.value.filter(x => x.id !== l.id)
-  popupLink.value = null
-  BL.success('已删除链接')
-  await nextTick()
-  relayout()
+/* —— 抽屉回调: 保存 / 删除 后都重新拉数据 + 重排版 —— */
+async function onEditorSaved() {
+  await loadAll()
+}
+async function onEditorDeleted() {
+  selectedLinkId.value = null
+  await loadAll()
 }
 
 /* —— 工具 —— */
-function classLabel(id) {
-  const c = allClasses.value.find(x => x.id === id)
-  return c ? (c.cn || c.api_name) : id
-}
-function cardLabel(c) {
-  return ({ one_to_one: '一对一 (1:1)', one_to_many: '一对多 (1:*)', many_to_one: '多对一 (*:1)', many_to_many: '多对多 (*:*)' })[c] || c
-}
 function cardSymbol(link, side) {
   // side === 'source': 显示源端基数; side === 'target': 显示目标端
   // cardinality 格式: one_to_many → 源=1, 目标=*
