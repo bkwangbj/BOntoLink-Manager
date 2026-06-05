@@ -1006,11 +1006,13 @@ onMounted(async () => {
   padding: 8px 12px; cursor: pointer;
   font-size: var(--bl-fs-12); font-weight: 700;
   color: var(--bl-text-1);
-  background: #eef2f7;
+  background: var(--bl-bg-hover);    /* 浅模式 #F7F8FA / 暗模式 #2A2D34 */
   letter-spacing: 0.3px;
   user-select: none;
 }
-.ot-tab-group-hd:hover { background: #e3eaf3; }
+.ot-tab-group-hd:hover {
+  background: color-mix(in srgb, var(--bl-text-3) 10%, var(--bl-bg-hover));
+}
 .ot-tab-group-chev {
   display: inline-flex; transition: transform .15s;
   color: var(--bl-text-3);
@@ -1032,13 +1034,13 @@ onMounted(async () => {
 }
 .ot-tab-label { flex: 1; min-width: 0; }
 .ot-tab-cnt {
-  font-size: 11px; color: #999;
-  background: var(--bl-bg-2); border-radius: 9px;
+  font-size: 11px; color: var(--bl-text-3);
+  background: var(--bl-bg-hover); border-radius: 9px;
   padding: 0 7px; min-width: 18px; text-align: center;
   flex-shrink: 0;
 }
 .ot-tab-item:hover { background: var(--bl-bg-1); color: var(--bl-text-1); }
-.ot-tab-item:hover .ot-tab-cnt { background: #fff; color: var(--bl-text-2); }
+.ot-tab-item:hover .ot-tab-cnt { background: var(--bl-bg-2); color: var(--bl-text-2); }
 .ot-tab-item.is-on { background: var(--bl-bg-1); color: var(--bl-primary); font-weight: 500; border-left-color: var(--bl-primary); }
 .ot-tab-item.is-on .ot-tab-cnt { background: var(--bl-primary-soft); color: var(--bl-primary); }
 

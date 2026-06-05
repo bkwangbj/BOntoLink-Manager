@@ -38,13 +38,13 @@ public interface OverviewMapper {
             "</script>"})
     int countDomains(@Param("codes") Collection<String> codes, @Param("activeOnly") boolean activeOnly);
 
+    /** 分组 ont_biz_group 无 status 字段, active == total (无禁用态) */
     @Select({"<script>",
             "SELECT COUNT(*) FROM ont_biz_group",
             "<where>",
             "  <if test='codes != null and codes.size() > 0'>",
             "    category_code IN <foreach collection='codes' item='c' open='(' separator=',' close=')'>#{c}</foreach>",
             "  </if>",
-            "  <if test='activeOnly'> AND status = 1</if>",
             "</where></script>"})
     int countGroups(@Param("codes") Collection<String> codes, @Param("activeOnly") boolean activeOnly);
 

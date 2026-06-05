@@ -84,6 +84,12 @@ export const resourceApi = {
   graph:       () => http.get('/resource/graph')
 }
 
+/* 图谱 — 双画布数据 (左: 行业层级, 右: 对象本体) */
+export const graphApi = {
+  industryTree: () => http.get('/graph/industry-tree'),
+  ontology:     () => http.get('/graph/ontology')
+}
+
 /* 对象类型补充元数据 (等价/不相交/互斥并集/等价属性/互斥属性 等) */
 export const classMetaApi = {
   candidates:        () => http.get('/class-meta/classes'),

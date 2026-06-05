@@ -1,11 +1,15 @@
 <template>
   <div class="ov-root">
-    <!-- 头部标题区 (高 60px, 图标 + 主标题 + 英文副标题) -->
-    <header class="ov-hd">
-      <span class="ov-hd-ic" v-html="BL.icon('chart', 22, '#3b82f6')"></span>
-      <span class="ov-hd-title">总览</span>
-      <span class="ov-hd-en">(Overview)</span>
+    <!-- 顶部头 (对齐项目其他页面 48px 紧凑式) -->
+    <header class="ov-topbar">
+      <div class="ov-title-wrap">
+        <span class="ov-title-ic" v-html="BL.icon('chart', 14, 'var(--bl-primary)')"></span>
+        <span class="ov-title">总览</span>
+        <span class="ov-subtitle">Overview · 全局资源统计概览</span>
+      </div>
     </header>
+
+    <div class="ov-body">
 
     <!-- 筛选导航区: 行业 / 领域 双行 + 右上角清空 -->
     <section class="ov-filter">
@@ -36,7 +40,7 @@
 
     <!-- 面包屑导航区: 当前统计范围 -->
     <nav class="ov-breadcrumb">
-      <span v-html="BL.icon('map', 13, '#6b7280')"></span>
+      <span v-html="BL.icon('map', 12)"></span>
       <span class="ov-bc-text">{{ breadcrumb }}</span>
     </nav>
 
@@ -45,9 +49,20 @@
       <div v-for="(group, gi) in STAT_GROUPS" :key="'g-'+gi"
            class="ov-stats-row" :style="{ '--cols': group.cols }">
         <div v-for="s in group.items" :key="s.key"
-             class="ov-card" @click="onCardClick(s)">
-          <div class="ov-card-name">{{ s.cn }}</div>
-          <div class="ov-card-en">{{ s.en }}</div>
+             class="ov-card" :style="{ '--sc': s.color }"
+             @click="onCardClick(s)">
+          <!-- 大图标水印 (右下角, 10% 透明度, 与 Category 总览同款) -->
+          <span class="ov-card-wm" v-html="BL.icon(s.icon, 76, s.color)"></span>
+          <!-- 头部: 图标徽章 + 中英名称 -->
+          <div class="ov-card-hd">
+            <span class="ov-card-ic" :style="{ color: s.color, background: s.color + '1f' }"
+                  v-html="BL.icon(s.icon, 18, s.color)"></span>
+            <div class="ov-card-names">
+              <span class="ov-card-name">{{ s.cn }}</span>
+              <span class="ov-card-en">{{ s.en }}</span>
+            </div>
+          </div>
+          <!-- 数字 (active | total) -->
           <div class="ov-card-num" :class="numScale(stats[s.key])">
             <span class="ov-card-active">{{ stats[s.key]?.active ?? 0 }}</span>
             <span class="ov-card-sep">|</span>
@@ -56,6 +71,8 @@
         </div>
       </div>
     </section>
+
+    </div>
   </div>
 </template>
 
@@ -67,31 +84,32 @@ import { resourceApi, categoryApi } from '@/api'
 
 const router = useRouter()
 
-/* —— 统计项配置 (3 行布局, 严格对照总览6.5.pdf 表格顺序) —— */
+/* —— 统计项配置 (3 行布局, 严格对照总览6.5.pdf 表格顺序)
+   每项带 icon + color (用作背景渐变 / 左侧色条 / 图标徽章 / 水印) */
 const STAT_GROUPS = [
-  // 第一行: 4 列 (大屏)
+  // 第一行: 4 列 — 结构资源 (行业/领域/分组/数据源)
   { cols: 4, items: [
-    { key: 'industry',        cn: '行业数',     en: 'Industry',        target: '/config/category' },
-    { key: 'domain',          cn: '领域数',     en: 'Domain',          target: '/config/category' },
-    { key: 'group',           cn: '分组数',     en: 'Group',           target: '/config/category' },
-    { key: 'datasource',      cn: '数据源数',   en: 'Datasources',     target: '/resources/datasources' }
+    { key: 'industry',   cn: '行业数',   en: 'Industry',   icon: 'industry', color: '#165DFF', target: '/config/category' },
+    { key: 'domain',     cn: '领域数',   en: 'Domain',     icon: 'folder',   color: '#00B42A', target: '/config/category' },
+    { key: 'group',      cn: '分组数',   en: 'Group',      icon: 'grid',     color: '#722ED1', target: '/config/category' },
+    { key: 'datasource', cn: '数据源数', en: 'Datasources',icon: 'database', color: '#FF7D00', target: '/resources/datasources' }
   ]},
-  // 第二行: 6 列
+  // 第二行: 6 列 — 本体资源
   { cols: 6, items: [
-    { key: 'objectType',      cn: '对象类型',   en: 'Object types',    target: '/resources/object-types' },
-    { key: 'linkType',        cn: '关系类型',   en: 'Link types',      target: '/resources/link-types' },
-    { key: 'actionType',      cn: '动作类型',   en: 'Action types',    target: '/resources/actions' },
-    { key: 'function',        cn: '函数',       en: 'Functions',       target: '/resources/functions' },
-    { key: 'typeClass',       cn: '类型类',     en: 'Type classes',    target: '/config/type-classes' },
-    { key: 'interface',       cn: '接口',       en: 'Interfaces',      target: '/resources/interfaces' }
+    { key: 'objectType', cn: '对象类型', en: 'Object types', icon: 'cube',         color: '#165DFF', target: '/resources/object-types' },
+    { key: 'linkType',   cn: '关系类型', en: 'Link types',   icon: 'link',         color: '#FF7D00', target: '/resources/link-types' },
+    { key: 'actionType', cn: '动作类型', en: 'Action types', icon: 'zap',          color: '#722ED1', target: '/resources/actions' },
+    { key: 'function',   cn: '函数',     en: 'Functions',    icon: 'fileCode',     color: '#14C9C9', target: '/resources/functions' },
+    { key: 'typeClass',  cn: '类型类',   en: 'Type classes', icon: 'tag',          color: '#EB2F96', target: '/config/type-classes' },
+    { key: 'interface',  cn: '接口',     en: 'Interfaces',   icon: 'externalLink', color: '#2F54EB', target: '/resources/interfaces' }
   ]},
-  // 第三行: 5 列
+  // 第三行: 5 列 — 属性 / 类型
   { cols: 5, items: [
-    { key: 'property',        cn: '属性数',     en: 'Properties',      target: '/resources/properties' },
-    { key: 'enumType',        cn: '枚举类型',   en: 'Enum types',      target: '/resources/enum-types' },
-    { key: 'valueType',       cn: '值类型',     en: 'Value types',     target: '/resources/value-types' },
-    { key: 'structProperty',  cn: '结构属性',   en: 'Structural properties', target: '/resources/shared-props' },
-    { key: 'sharedProperty',  cn: '共享属性',   en: 'Shared properties',     target: '/resources/shared-props' }
+    { key: 'property',       cn: '属性数',   en: 'Properties',     icon: 'fileText', color: '#00B42A', target: '/resources/properties' },
+    { key: 'enumType',       cn: '枚举类型', en: 'Enum types',     icon: 'list',     color: '#722ED1', target: '/resources/enum-types' },
+    { key: 'valueType',      cn: '值类型',   en: 'Value types',    icon: 'hash',     color: '#14C9C9', target: '/resources/value-types' },
+    { key: 'structProperty', cn: '结构属性', en: 'Structural properties', icon: 'sliders', color: '#165DFF', target: '/resources/shared-props' },
+    { key: 'sharedProperty', cn: '共享属性', en: 'Shared properties',     icon: 'share',   color: '#FA541C', target: '/resources/shared-props' }
   ]}
 ]
 
@@ -227,158 +245,213 @@ onMounted(async () => {
 <style scoped>
 .ov-root {
   display: flex; flex-direction: column;
-  min-height: 100%;
-  padding: 0 24px 24px;
-  background: #f9fafb;
-  font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
-  overflow: auto;
+  height: 100%;
+  background: var(--bl-bg-2);
+  overflow: hidden;
 }
 
-/* —— 头部标题区 (60px 高) —— */
-.ov-hd {
-  display: flex; align-items: center; gap: 10px;
-  height: 60px; flex-shrink: 0;
+/* —— 顶部头 (对齐 ObjectTypes / Category 等其他页, 48px 紧凑式) —— */
+.ov-topbar {
+  flex-shrink: 0;
+  display: flex; align-items: center;
+  padding: 10px 20px 12px;
+  border-bottom: 1px solid var(--bl-border);
+  background: var(--bl-bg-1);
 }
-.ov-hd-ic { display: inline-flex; }
-.ov-hd-title { font-size: 24px; font-weight: 700; color: #1f2937; }
-.ov-hd-en { font-size: 16px; font-weight: 400; color: #6b7280; }
+.ov-title-wrap {
+  display: flex; align-items: baseline; gap: 8px;
+  min-width: 0;
+}
+.ov-title-ic { display: inline-flex; align-self: center; }
+.ov-title {
+  font-size: 18px; font-weight: 600; line-height: 1.2;
+  color: var(--bl-text-1);
+  white-space: nowrap;
+}
+.ov-subtitle {
+  font-size: var(--bl-fs-12);
+  color: var(--bl-text-3);
+  margin-left: 4px;
+}
+
+/* —— 主体: 可滚 + 16px padding (与 ObjectTypes / Category 一致) —— */
+.ov-body {
+  flex: 1; min-height: 0;
+  overflow: auto;
+  padding: 16px 20px;
+  display: flex; flex-direction: column; gap: 12px;
+}
 
 /* —— 筛选导航区 —— */
 .ov-filter {
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  background: var(--bl-bg-1);
+  border: 1px solid var(--bl-border);
+  border-radius: var(--bl-radius-3, 6px);
   overflow: hidden;
 }
 .ov-filter-row {
-  display: flex; align-items: flex-start; gap: 12px;
-  padding: 20px;
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 14px;
   position: relative;
 }
-.ov-filter-industry { border-bottom: 1px solid #e5e7eb; }
+.ov-filter-industry { border-bottom: 1px solid var(--bl-divider); }
 
 .ov-chips-wrap {
-  display: flex; flex-wrap: wrap; gap: 12px;
+  display: flex; flex-wrap: wrap; gap: 8px;
   flex: 1; min-width: 0;
 }
 .ov-chip {
-  padding: 8px 16px;
-  border-radius: 8px;
-  border: 1px solid transparent;
-  background: linear-gradient(180deg, #f9fafb 0%, #f3f4f6 100%);
-  color: #374151;
-  font-size: 14px;
+  padding: 5px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--bl-border);
+  background: var(--bl-bg-1);
+  color: var(--bl-text-2);
+  font-size: 12.5px;
   font-weight: 400;
   cursor: pointer;
   transition: background .15s, color .15s, border-color .15s;
   white-space: nowrap;
+  line-height: 1.4;
 }
 .ov-chip:hover {
-  background: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%);
+  background: var(--bl-bg-hover, #f5f7fa);
+  color: var(--bl-text-1);
 }
 .ov-chip.is-on {
-  background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
-  border-color: rgba(59, 130, 246, 0.3);
-  color: #3b82f6;
+  background: var(--bl-primary-soft);
+  border-color: var(--bl-primary);
+  color: var(--bl-primary);
+  font-weight: 500;
 }
-/* "全部" chip 默认稍深蓝渐变, 固定在左侧不参与 wrap */
+/* "全部" chip 固定左侧 + 主题色稍深 */
 .ov-chip-all {
   flex-shrink: 0;
-  background: linear-gradient(180deg, #dbeafe 0%, #bfdbfe 100%);
-  color: #3b82f6;
+  background: var(--bl-primary-soft);
+  color: var(--bl-primary);
+  border-color: var(--bl-primary-soft);
   font-weight: 500;
 }
 .ov-chip-all.is-on {
-  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+  background: var(--bl-primary);
   color: #fff;
-  border-color: transparent;
+  border-color: var(--bl-primary);
 }
 
-/* 清空筛选按钮 —— 右上角 */
+/* 清空筛选按钮 (右上角) */
 .ov-clear-btn {
-  position: absolute; top: 12px; right: 12px;
-  width: 32px; height: 32px;
+  position: absolute; top: 8px; right: 8px;
+  width: 26px; height: 26px;
   border: 0; background: transparent;
-  border-radius: 50%;
+  border-radius: 4px;
   display: inline-flex; align-items: center; justify-content: center;
-  color: #9ca3af;
+  color: var(--bl-text-3);
   cursor: pointer;
   transition: background .15s, color .15s;
 }
 .ov-clear-btn:hover {
-  background: #f3f4f6;
-  color: #ef4444;
+  background: #fff1f0;
+  color: #f53f3f;
 }
 
-/* —— 面包屑导航区 (32px 高) —— */
+/* —— 面包屑导航区 —— */
 .ov-breadcrumb {
   display: flex; align-items: center; gap: 6px;
-  height: 32px; margin-top: 16px;
-  color: #6b7280; font-size: 14px;
+  padding: 4px 4px;
+  color: var(--bl-text-3); font-size: 12px;
 }
 
 /* —— 统计卡片矩阵区 —— */
 .ov-stats {
-  display: flex; flex-direction: column; gap: 24px;
-  margin-top: 8px;
+  display: flex; flex-direction: column; gap: 12px;
 }
 .ov-stats-row {
   display: grid;
   grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
-  gap: 24px;
+  gap: 12px;
 }
 .ov-card {
-  height: 120px;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  padding: 16px 20px;
+  --sc: var(--bl-primary);
+  position: relative;
+  /* 主题色渐变背景: 左上 12% 主题色 → 右下白底, 与 Category 总览统计卡同款 */
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--sc) 12%, var(--bl-bg-1)) 0%,
+    var(--bl-bg-1) 62%);
+  border: 1px solid var(--bl-border);
+  border-radius: var(--bl-radius-3, 6px);
+  padding: 16px 18px;
   cursor: pointer;
   display: flex; flex-direction: column;
   justify-content: space-between;
-  transition: transform .18s, box-shadow .18s;
+  gap: 14px;
+  min-height: 120px;
+  overflow: hidden;
+  transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+/* 左侧 3px 色条 */
+.ov-card::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: var(--sc);
+  opacity: .85;
 }
 .ov-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  border-color: color-mix(in srgb, var(--sc) 45%, var(--bl-border));
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--sc) 18%, transparent);
+  transform: translateY(-1px);
+}
+/* 大图标水印 (右下角倾斜, 8% 透明度) */
+.ov-card-wm {
+  position: absolute; right: -8px; bottom: -10px;
+  opacity: .10; pointer-events: none; line-height: 0;
+  transform: rotate(-8deg);
+}
+/* 头部: 图标徽章 + 名称 */
+.ov-card-hd {
+  display: flex; align-items: center; gap: 8px;
+  position: relative; z-index: 1;
+}
+.ov-card-ic {
+  width: 30px; height: 30px; border-radius: 6px;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.ov-card-names {
+  display: flex; flex-direction: column; line-height: 1.2;
+  min-width: 0;
 }
 .ov-card-name {
-  font-size: 18px;
-  font-weight: 700;
-  color: #1f2937;
+  font-size: 13px; font-weight: 600;
+  color: var(--bl-text-1);
 }
 .ov-card-en {
-  font-size: 12px;
-  font-weight: 400;
-  color: #6b7280;
-  margin-top: -4px;
+  font-size: 10.5px; font-weight: 400;
+  color: var(--bl-text-3);
+  margin-top: 1px;
 }
+/* 数字 — 缩进到与上方"中文名 / Domain"文字左侧对齐
+   缩进量 = 图标徽章宽度 (30px) + 头部 gap (8px) = 38px */
 .ov-card-num {
-  font-size: 30px;
+  font-size: 22px;
   font-weight: 700;
-  display: flex; align-items: baseline; gap: 8px;
+  display: flex; align-items: baseline; gap: 5px;
+  padding-left: 38px;
   font-family: "DIN", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  position: relative; z-index: 1;
+  font-feature-settings: "tnum";
 }
-.ov-card-num.is-small { font-size: 22px; }      /* 数字过长自适应缩字 */
-.ov-card-active { color: #10b981; }
-.ov-card-sep { color: #9ca3af; font-weight: 400; }
-.ov-card-total { color: #1f2937; }
+.ov-card-num.is-small { font-size: 16px; }
+.ov-card-active { color: #00B42A; }
+.ov-card-sep { color: var(--bl-text-3); font-weight: 400; font-size: 16px; }
+.ov-card-total { color: var(--bl-text-1); font-size: 18px; font-weight: 500; }
 
 /* —— 响应式断点 —— */
 @media (max-width: 1280px) {
-  .ov-stats-row {
-    /* 中屏: 第一行 2 列, 第二行 3 列, 第三行 3 列 */
-    grid-template-columns: repeat(min(var(--cols), 3), minmax(0, 1fr));
-  }
+  .ov-stats-row { grid-template-columns: repeat(min(var(--cols), 3), minmax(0, 1fr)); }
 }
 @media (max-width: 960px) {
-  .ov-stats-row {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  .ov-stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 640px) {
-  .ov-stats-row {
-    grid-template-columns: 1fr;
-  }
+  .ov-stats-row { grid-template-columns: 1fr; }
 }
 </style>

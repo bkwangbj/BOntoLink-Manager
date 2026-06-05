@@ -11,6 +11,18 @@ public interface OntologyMapper {
     @Select("SELECT id, rid, api_name, ns_code, category_code, display_name, rdfs_label, icon, color, status FROM ont_class ORDER BY create_time DESC")
     List<Map<String, Object>> listClasses();
 
+    /* 图谱用: 类含 parent_class_id (用于父子边)、category_code (跨画布联动) */
+    @Select("SELECT id, api_name, category_code, parent_class_id, display_name, rdfs_label, icon, color, status FROM ont_class")
+    List<Map<String, Object>> listClassesForGraph();
+
+    /* 等价 / 互斥 关系 (group_type = equivalent / disjoint) */
+    @Select("SELECT id, class_id, ref_class_id, group_type FROM ont_class_group WHERE status = 1")
+    List<Map<String, Object>> listClassGroups();
+
+    /* 并集关系 (parent_class_id ⇔ sub_class_id) */
+    @Select("SELECT id, parent_class_id, sub_class_id FROM ont_class_disjoint_union")
+    List<Map<String, Object>> listClassDisjointUnions();
+
     @Select("SELECT id, rid, api_name, source_class_id, target_class_id, cardinality, display_name, status FROM ont_class_link ORDER BY create_time DESC")
     List<Map<String, Object>> listLinks();
 
