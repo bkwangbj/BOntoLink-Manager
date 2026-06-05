@@ -72,6 +72,8 @@ export const groupRefApi = {
 
 export const resourceApi = {
   stats:       () => http.get('/resource/discover/stats'),
+  /* 总览综合统计 — industries / domains 为逗号分隔的 category_code, 不传或空 = 全部 */
+  overview:    (params) => http.get('/resource/discover/overview', { params }),
   classes:     (params) => http.get('/resource/classes', { params }),
   classDetail: (id) => http.get(`/resource/classes/${id}`),
   links:       () => http.get('/resource/links'),

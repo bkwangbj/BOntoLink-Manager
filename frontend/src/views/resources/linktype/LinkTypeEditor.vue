@@ -74,35 +74,33 @@
               </div>
             </div>
 
-            <!-- 中间数据源开关 (移到此处:位于元数据与对称配置之间, 决定下方"键"列的形态) -->
-            <div class="lke-data-source">
-              <label class="lke-ds-toggle">
-                <input type="checkbox" v-model="form.is_data_source_rel" :true-value="1" :false-value="0" :disabled="!editMode" />
-                <span>中间数据源 (依托物理中间表关联)</span>
-              </label>
-              <!-- 中间表选择: 与"新建对象类型 → 选择主表"同款弹框形式 -->
-              <button v-if="form.is_data_source_rel"
-                      :class="['lke-table-btn', !form.rel_data_table && 'is-empty']"
-                      :disabled="!editMode"
-                      @click="openTablePicker">
-                <span v-if="form.rel_data_table" class="bl-mono">{{ form.rel_data_table }}</span>
-                <span v-else>
-                  <span v-html="BL.icon('plus', 11)"></span>
-                  <span style="margin-left:4px">选择中间表 (物理表)</span>
-                </span>
-                <span v-if="form.rel_data_table" class="lke-table-chev" v-html="BL.icon('chevronDown', 10)"></span>
-              </button>
-              <button v-if="form.is_data_source_rel && form.rel_data_table && editMode"
-                      class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon"
-                      title="清除中间表"
-                      @click="form.rel_data_table = ''"
-                      v-html="BL.icon('x', 11)"></button>
-            </div>
-
-            <!-- 左右对称配置: 4 张卡用 grid-template-areas 钉位, 同行左右等高 -->
+            <!-- 左右对称配置: 数据卡(上/下) + 中间数据源横跨行 + 展示卡 -->
             <div class="lke-sym">
-              <!-- 卡 1 (数据·源): grid 区 data-l -->
-              <div class="lke-card lke-card-data is-source">
+              <!-- 中间数据源 (横跨两列, 位于基数与键之间) -->
+              <div class="lke-data-source">
+                <label class="lke-ds-toggle">
+                  <input type="checkbox" v-model="form.is_data_source_rel" :true-value="1" :false-value="0" :disabled="!editMode" />
+                  <span>中间数据源 (依托物理中间表关联)</span>
+                </label>
+                <button v-if="form.is_data_source_rel"
+                        :class="['lke-table-btn', !form.rel_data_table && 'is-empty']"
+                        :disabled="!editMode"
+                        @click="openTablePicker">
+                  <span v-if="form.rel_data_table" class="bl-mono">{{ form.rel_data_table }}</span>
+                  <span v-else>
+                    <span v-html="BL.icon('plus', 11)"></span>
+                    <span style="margin-left:4px">选择中间表 (物理表)</span>
+                  </span>
+                  <span v-if="form.rel_data_table" class="lke-table-chev" v-html="BL.icon('chevronDown', 10)"></span>
+                </button>
+                <button v-if="form.is_data_source_rel && form.rel_data_table && editMode"
+                        class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon"
+                        title="清除中间表"
+                        @click="form.rel_data_table = ''"
+                        v-html="BL.icon('x', 11)"></button>
+              </div>
+              <!-- 卡 1a (数据上半·源): 头部 + 基数 -->
+              <div class="lke-card lke-card-data-top is-source">
                   <div class="lke-col-hd">
                     <span class="lke-col-tag">源</span>
                     <select class="bl-input" v-model="form.l_object_type_id" :disabled="!editMode">
@@ -124,7 +122,10 @@
                               @click="setCard('l', 'many')" :disabled="!editMode">多个</button>
                     </div>
                   </div>
+              </div>
 
+              <!-- 卡 1b (数据下半·源): 键 -->
+              <div class="lke-card lke-card-data-bot is-source">
                   <div class="lke-cell">
                     <div class="lke-cell-lbl">{{ keyLabel('l') }} <span class="bl-muted" v-html="BL.icon('help', 11)" title="参与关联的字段"></span></div>
                     <div class="lke-keys-hd" :class="{ 'is-single': !form.is_data_source_rel }">
@@ -216,8 +217,8 @@
                   </div>
                 </div>
 
-              <!-- 卡 2 (数据·目标): grid 区 data-r -->
-              <div class="lke-card lke-card-data is-target">
+              <!-- 卡 2a (数据上半·目标): 头部 + 基数 -->
+              <div class="lke-card lke-card-data-top is-target">
                   <div class="lke-col-hd">
                     <span class="lke-col-tag lke-col-tag-r">目标</span>
                     <select class="bl-input" v-model="form.r_object_type_id" :disabled="!editMode">
@@ -239,7 +240,10 @@
                               @click="setCard('r', 'many')" :disabled="!editMode">多个</button>
                     </div>
                   </div>
+              </div>
 
+              <!-- 卡 2b (数据下半·目标): 键 -->
+              <div class="lke-card lke-card-data-bot is-target">
                   <div class="lke-cell">
                     <div class="lke-cell-lbl">{{ keyLabel('r') }}</div>
                     <div class="lke-keys-hd" :class="{ 'is-single': !form.is_data_source_rel }">
@@ -464,6 +468,8 @@ async function loadEditor() {
   editMode.value = true   // 不论新建 / 已有, 默认就是编辑模式
   if (form.l_object_type_id) ensureProps(form.l_object_type_id)
   if (form.r_object_type_id) ensureProps(form.r_object_type_id)
+  // 非中间表模式: 加载老数据若两侧不等, 自动补齐 (一次性修复历史数据)
+  syncMappingCountsIfPaired()
 }
 // open 0→1 加载;切换 linkId (抽屉常驻、连续点不同链接) 也要重新加载
 watch(() => props.open,  v => { if (v) loadEditor() })
@@ -484,15 +490,30 @@ function keyLabel(side) {
 
 /* —— 映射 (左右独立增删,视觉自动占位补齐) —— */
 function addMapping(side) {
-  const list = side === 'left' ? leftMappings.value : rightMappings.value
-  const seq = list.length + 1
-  form.mappings.push({ side, seq, object_field: '', join_table_column: '' })
+  form.mappings.push({ side, seq: 0, object_field: '', join_table_column: '' })
+  // 非中间表模式: 对端自动同步加一条, 保证 1:1 对应
+  if (!form.is_data_source_rel) {
+    const other = side === 'left' ? 'right' : 'left'
+    const thisLen  = form.mappings.filter(m => m.side === side).length
+    const otherLen = form.mappings.filter(m => m.side === other).length
+    if (otherLen < thisLen) form.mappings.push({ side: other, seq: 0, object_field: '', join_table_column: '' })
+  }
+  renumberMappings()
 }
 function removeMapping(side, idx) {
   const list = side === 'left' ? leftMappings.value : rightMappings.value
   const target = list[idx]
   if (target) form.mappings = form.mappings.filter(m => m !== target)
-  // 重新编号本侧 seq (对端不受影响)
+  // 非中间表模式: 对端同 idx 也一起删, 保持等长
+  if (!form.is_data_source_rel) {
+    const other = side === 'left' ? 'right' : 'left'
+    const otherList = form.mappings.filter(m => m.side === other)
+    const otherTarget = otherList[idx]
+    if (otherTarget) form.mappings = form.mappings.filter(m => m !== otherTarget)
+  }
+  renumberMappings()
+}
+function renumberMappings() {
   let lSeq = 1, rSeq = 1
   form.mappings.forEach(m => {
     if (m.side === 'left') m.seq = lSeq++
@@ -500,8 +521,22 @@ function removeMapping(side, idx) {
   })
 }
 
-/* 是否两侧行数不等 (用于提示用户保存前检查) */
-const mappingCountMismatch = computed(() => leftMappings.value.length !== rightMappings.value.length)
+/* 非中间表模式下补齐两侧, 保证 left.length === right.length
+   触发场景: ① 切到非中间表模式 ② 加载已有数据时 */
+function syncMappingCountsIfPaired() {
+  if (form.is_data_source_rel) return
+  const lLen = form.mappings.filter(m => m.side === 'left').length
+  const rLen = form.mappings.filter(m => m.side === 'right').length
+  if (lLen === rLen) return
+  if (lLen > rLen) {
+    for (let i = rLen; i < lLen; i++) form.mappings.push({ side: 'right', seq: 0, object_field: '', join_table_column: '' })
+  } else {
+    for (let i = lLen; i < rLen; i++) form.mappings.push({ side: 'left',  seq: 0, object_field: '', join_table_column: '' })
+  }
+  renumberMappings()
+}
+watch(() => form.is_data_source_rel, (v) => { if (!v) syncMappingCountsIfPaired() })
+
 
 /* —— 类型类 (按 side 分到左右两侧, 每个 entry 含 side: 'left'|'right') —— */
 const leftTypeClasses  = computed(() => (form.type_classes || []).filter(t => (t.side || 'left') === 'left'))
@@ -525,6 +560,7 @@ const canSave = computed(() =>
   && form.l_display_name && form.r_display_name
   && isValidApi(form.l_api_name) && isValidApi(form.r_api_name)
   && (!form.is_data_source_rel || form.rel_data_table)
+  // 非中间表模式下两侧数量由 addMapping/removeMapping 自动对齐, 此处不再校验
 )
 
 /* —— 保存 / 删除 —— */
@@ -775,15 +811,17 @@ function pickTable(t) {
 .lke-meta-cell .bl-input { flex: 1; min-width: 0; height: 28px; font-size: 12px; }
 .lke-status-sel { width: 100%; }
 
-/* 左右对称 — 2x2 网格, 用 grid-template-areas 钉位
-   同行的两张卡 stretch 到同一高度, 不会因为一侧映射多就把展示卡顶下去 */
+/* 左右对称 — 4 行网格: 数据上半 / 中间数据源横跨 / 数据下半 / 展示
+   每行的左右两张卡 stretch 到同行最高, 中间数据源横跨两列 */
 .lke-sym {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
-    "data-l data-r"
-    "show-l show-r";
-  gap: 12px;
+    "data-top-l  data-top-r"
+    "ds-row      ds-row"
+    "data-bot-l  data-bot-r"
+    "show-l      show-r";
+  gap: 8px 12px;
 }
 .lke-bridge { display: none; }
 
@@ -796,10 +834,13 @@ function pickTable(t) {
   min-width: 0;
   display: flex; flex-direction: column;
 }
-.lke-card-data.is-source    { grid-area: data-l; }
-.lke-card-data.is-target    { grid-area: data-r; }
-.lke-card-display.is-source { grid-area: show-l; }
-.lke-card-display.is-target { grid-area: show-r; }
+/* 数据卡上下半 → 视觉连续 (相同侧的 top/bot 边框颜色相同, 中间数据源横穿) */
+.lke-card-data-top.is-source { grid-area: data-top-l; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.lke-card-data-top.is-target { grid-area: data-top-r; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.lke-card-data-bot.is-source { grid-area: data-bot-l; border-top-left-radius: 0; border-top-right-radius: 0; border-top-style: dashed; }
+.lke-card-data-bot.is-target { grid-area: data-bot-r; border-top-left-radius: 0; border-top-right-radius: 0; border-top-style: dashed; }
+.lke-card-display.is-source  { grid-area: show-l; }
+.lke-card-display.is-target  { grid-area: show-r; }
 
 .lke-card.is-source { border-color: rgba(22, 93, 255, .35); }
 .lke-card.is-target { border-color: rgba(255, 125, 0, .35); }
@@ -892,14 +933,16 @@ function pickTable(t) {
 }
 .lke-add-link:hover { text-decoration: underline; }
 
-/* 中间数据源 (位于元数据与对称配置之间, 决定下方"键"列的形态) */
+
+/* 中间数据源 (现位于 lke-sym 网格的 ds-row 区, 横跨左右两列, 切在基数与键之间) */
 .lke-data-source {
-  margin: 0 0 12px;
+  grid-area: ds-row;
+  margin: 0;
   padding: 8px 12px;
   background: #fffbf0;
   border: 1px dashed #FF7D00;
   border-radius: 6px;
-  display: flex; align-items: center;
+  display: flex; align-items: center; gap: 10px;
 }
 .lke-ds-toggle {
   display: inline-flex; align-items: center; gap: 6px;

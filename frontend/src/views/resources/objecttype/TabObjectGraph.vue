@@ -36,16 +36,23 @@
       </defs>
       <g :transform="`translate(${pan.x},${pan.y}) scale(${zoom})`">
 
-        <!-- 连线 (放在节点下方) -->
-        <g v-for="e in visibleEdges" :key="'E-'+e.id">
+        <!-- 连线 (一条边 = 可见细线 + 透明粗线命中区, group hover 时高亮) -->
+        <g v-for="e in visibleEdges" :key="'E-'+e.id"
+           class="og-edge-group"
+           :class="{ 'is-hot': hoverEdgeId === e.id }"
+           @mouseenter="hoverEdgeId = e.id"
+           @mouseleave="hoverEdgeId = null"
+           @click.stop="onEdgeClick(e)">
+          <!-- 可视细线 (按规范配色 / 线型) -->
           <path :d="edgePath(e)"
                 :stroke="e.stroke"
                 :stroke-dasharray="e.dash"
                 :stroke-width="e.width"
                 fill="none"
                 :marker-end="e.arrow ? 'url(#og-arrow)' : ''"
-                class="og-edge"
-                @click.stop="onEdgeClick(e)" />
+                class="og-edge" />
+          <!-- 透明粗线 (扩大点击命中区域 ~14px) -->
+          <path :d="edgePath(e)" class="og-edge-hit" />
           <text v-if="e.label" :x="(e.x1 + e.x2) / 2" :y="(e.y1 + e.y2) / 2 - 4"
                 class="og-edge-lbl" text-anchor="middle">{{ e.label }}</text>
         </g>
@@ -176,12 +183,19 @@
       </div>
     </aside>
 
+    <!-- 链接关系编辑大抽屉 (复用 LinkTypeEditor, 不要 tab) -->
+    <LinkTypeEditor v-model:open="editorOpen"
+                    :link-id="editorLinkId"
+                    :all-classes="allClasses"
+                    :show-tabs="false" />
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { BL } from '@/lib/bl.js'
+import { resourceApi } from '@/api'
+import LinkTypeEditor from '@/views/resources/linktype/LinkTypeEditor.vue'
 
 const props = defineProps({
   classId: { type: String, default: '' }
@@ -557,20 +571,21 @@ function onNodeClick(n) {
   drawerNode.value = n
   selectedId.value = n.id
 }
-function onEdgeClick(e) {
-  BL.info(`关系: ${dimLabel(e.dim || classifyEdgeDim(e))} · ${e.label || ''}`)
-}
-function classifyEdgeDim(e) {
-  if (e.stroke === '#409EFF') return 'inherit'
-  if (e.stroke === '#E6A23C') return 'rule'
-  if (e.stroke === '#67C23A') return 'prop'
-  if (e.stroke === '#9C88FF') return 'biz'
-  if (e.stroke === '#29CCB1') return 'app'
-  if (e.stroke === '#F56C6C') return 'ds'
-  if (e.stroke === '#36CFC9') return 'ext'
-  return ''
+/* ============ 链接关系编辑抽屉 (复用 LinkTypeEditor) ============ */
+const editorOpen = ref(false)
+const editorLinkId = ref('')
+const hoverEdgeId = ref(null)
+const allClasses = ref([])
+
+async function loadClasses() {
+  const list = await resourceApi.classes().catch(() => [])
+  allClasses.value = Array.isArray(list) ? list : (list?.rows || list?.data || [])
 }
 
+function onEdgeClick(e) {
+  editorLinkId.value = e.linkId || ''   // mock 暂无真实 id, 进入创建模式; 联调后 ext 边带上 linkId 即可加载详情
+  editorOpen.value = true
+}
 /* ============ 全屏 / 导出 ============ */
 const rootRef = ref(null)
 const isFull = ref(false)
@@ -586,7 +601,7 @@ function toggleFull() {
   }
 }
 function onFsChange() { isFull.value = !!document.fullscreenElement }
-onMounted(() => { document.addEventListener('fullscreenchange', onFsChange); computeLayout() })
+onMounted(() => { document.addEventListener('fullscreenchange', onFsChange); computeLayout(); loadClasses() })
 onBeforeUnmount(() => document.removeEventListener('fullscreenchange', onFsChange))
 
 function onExport(fmt) { BL.info(`导出 ${fmt} 待联调 (后端 ${fmt === 'OWL' ? 'OWL/RDF 序列化' : '图像/JSON 快照'} 接口对接中)`) }
@@ -699,9 +714,24 @@ watch(() => props.classId, () => {
 }
 .og-prop-dot.is-key { background: #f56c6c; }
 
-/* —— 连线 —— */
-.og-edge { pointer-events: stroke; cursor: pointer; transition: stroke-width .15s; }
-.og-edge:hover { stroke-width: 2.5; }
+/* —— 连线 (group: 可见细线 + 透明粗线命中区) —— */
+.og-edge-group { cursor: pointer; }
+.og-edge {
+  pointer-events: none;        /* 命中由 .og-edge-hit 处理, 避免双重事件 */
+  transition: stroke-width .15s, filter .15s;
+}
+.og-edge-hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 14;             /* 命中区 14px, 比可见线粗 7-14 倍, 容易点中 */
+  pointer-events: stroke;
+}
+/* hover 时: 加粗可见线 + 微微发光 */
+.og-edge-group:hover .og-edge,
+.og-edge-group.is-hot .og-edge {
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 3px currentColor);
+}
 .og-edge-lbl {
   font-size: 10px; fill: #606266;
   background: rgba(255,255,255,.8);

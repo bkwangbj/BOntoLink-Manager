@@ -109,6 +109,28 @@
             </div>
           </section>
 
+          <!-- 2.5 渲染提示 (Rendering Hints) - 位于表映射与 OWL 之间 -->
+          <section ref="sec_hints" data-sec="hints" v-if="form.prop_type !== 'annotation'">
+            <div class="pd-sec">渲染提示 (Rendering Hints)</div>
+            <div class="pd-hints-grid">
+              <label v-for="h in RENDER_HINTS" :key="h.key" class="pd-hint-item"
+                     :class="{ 'is-disabled': isHintDisabled(h), 'is-locked': isHintLocked(h) }"
+                     :title="h.desc">
+                <input type="checkbox"
+                       :checked="!!form[h.field]"
+                       :disabled="isHintDisabled(h) || isHintLocked(h)"
+                       @change="onHintChange(h, $event)" />
+                <span class="pd-hint-lbl">{{ h.cn }}</span>
+                <span v-if="h.reindex && form[h.field]" class="pd-hint-tag">需要重新同步</span>
+                <span v-else-if="isHintLocked(h)" class="pd-hint-lock" title="由依赖项自动启用">已锁定</span>
+              </label>
+            </div>
+            <div class="pd-hint-tip bl-muted">
+              <span v-html="BL.icon('help', 11)"></span>
+              <span>勾选"需要重新同步"项保存后, 系统将自动触发后台重索引任务; 各项依赖与互斥关系由 UI 自动校正</span>
+            </div>
+          </section>
+
           <!-- 3. OWL 特性 -->
           <section ref="sec_owl" data-sec="owl" v-if="form.prop_type !== 'annotation'">
             <div class="pd-sec">OWL 特性</div>
@@ -255,9 +277,57 @@ const emit = defineEmits(['update:open', 'saved', 'navigateToTab'])
 
 const xsdTypes = ['xsd:string','xsd:decimal','xsd:integer','xsd:boolean','xsd:dateTime','xsd:date','xsd:anyURI']
 
+/* ===== 渲染提示 (Rendering Hints) =====
+   规范来源: 渲染提示文档 v6.5
+   依赖: Selectable/Sortable/Low cardinality 启用 → 强制启用 Searchable
+   级联: Searchable 关闭 → 三项依赖自动关闭
+   互斥: Identifier ⇄ Disable formatting (启用前者强制启用后者并锁定)
+         Long text ⇄ Sortable (启用其中一个则另一个禁用) */
+const RENDER_HINTS = [
+  { key: 'searchable',         field: 'hint_searchable',         cn: '可搜索',     reindex: true,  desc: '全文检索 (其他交互提示的基础)' },
+  { key: 'selectable',         field: 'hint_selectable',         cn: '可选择',     reindex: true,  desc: '精确筛选 + 聚合统计', requires: 'searchable' },
+  { key: 'sortable',           field: 'hint_sortable',           cn: '可排序',     reindex: true,  desc: '排序操作', requires: 'searchable' },
+  { key: 'low_cardinality',    field: 'hint_low_cardinality',    cn: '低基数',     reindex: true,  desc: '取值有限 (<100)', requires: 'searchable' },
+  { key: 'identifier',         field: 'hint_identifier',         cn: '标识符',     reindex: false, desc: '业务主键 / 外键' },
+  { key: 'disable_formatting', field: 'hint_disable_formatting', cn: '禁用格式化', reindex: false, desc: '关闭千分位 / 日期格式化' },
+  { key: 'keywords',           field: 'hint_keywords',           cn: '关键词',     reindex: false, desc: '对象视图高亮' },
+  { key: 'long_text',          field: 'hint_long_text',          cn: '长文本',     reindex: false, desc: '大文本折叠展示' }
+]
+function isHintLocked(h) {
+  // Identifier 开启 → Disable formatting 被锁定 (强制勾且不允许取消)
+  if (h.key === 'disable_formatting' && form.hint_identifier) return true
+  // Selectable/Sortable/Low cardinality 启用时, Searchable 被锁定 (依赖项不允许单独取消)
+  if (h.key === 'searchable' && (form.hint_selectable || form.hint_sortable || form.hint_low_cardinality)) return true
+  return false
+}
+function isHintDisabled(h) {
+  // Long text ⇄ Sortable 互斥: 一方启用, 另一方禁用 (灰化不可点)
+  if (h.key === 'sortable' && form.hint_long_text) return true
+  if (h.key === 'long_text' && form.hint_sortable) return true
+  return false
+}
+function onHintChange(h, ev) {
+  const on = ev.target.checked ? 1 : 0
+  form[h.field] = on
+  if (on) {
+    // 启用本项 → 自动启用依赖项
+    if (h.requires === 'searchable') form.hint_searchable = 1
+    // Identifier 启用 → 强制启用 Disable formatting
+    if (h.key === 'identifier') form.hint_disable_formatting = 1
+  } else {
+    // 禁用 Searchable → 级联禁用依赖它的三项
+    if (h.key === 'searchable') {
+      form.hint_selectable = 0
+      form.hint_sortable = 0
+      form.hint_low_cardinality = 0
+    }
+  }
+}
+
 const navItems = computed(() => [
   { k: 'basic',      label: '基础信息', icon: 'fileText' },
   ...((form.prop_type !== 'annotation' && !form.is_derived) ? [{ k: 'mapping', label: '表映射', icon: 'database' }] : []),
+  ...(form.prop_type !== 'annotation' ? [{ k: 'hints', label: '渲染提示', icon: 'filter' }] : []),
   ...(form.prop_type !== 'annotation' ? [{ k: 'owl',  label: 'OWL 特性', icon: 'link' }] : []),
   ...(form.prop_type !== 'annotation' ? [{ k: 'constraint', label: '属性约束', icon: 'sliders' }] : []),
   { k: 'equiv',    label: '等价属性', icon: 'check', badge: equivList.value.length },
@@ -279,6 +349,9 @@ const defaultForm = () => ({
   xsd_pattern: '', xsd_min_inclusive: '', xsd_max_inclusive: '',
   owl_functional: 0, owl_inverse_functional: 0, owl_transitive: 0,
   owl_symmetric: 0, owl_asymmetric: 0, owl_reflexive: 0, owl_irreflexive: 0,
+  /* —— 渲染提示 (Rendering Hints) —— 8 项布尔属性专属元数据 */
+  hint_searchable: 0, hint_selectable: 0, hint_sortable: 0, hint_low_cardinality: 0,
+  hint_identifier: 0, hint_disable_formatting: 0, hint_keywords: 0, hint_long_text: 0,
   status: 1,
   computeExpr: ''  // 派生字段表达式 (仅前端)
 })
@@ -528,6 +601,68 @@ function onCancel() { emit('update:open', false) }
 
 .pd-warn { padding: 8px 12px; background: #fff7e6; color: #fa8c16;
   border: 1px solid #ffd591; border-radius: 4px; font-size: 12px; margin-top: 8px; }
+
+/* ===== 渲染提示 (Rendering Hints) =====
+   严格按文档规范: 双列 / 复选框 + 标签 / 浅橙圆角"需要重新同步"标签 / 禁用与锁定状态 */
+.pd-hints-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+  margin-top: 2px;
+}
+.pd-hint-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--bl-text-1);
+  user-select: none;
+  transition: background-color .15s;
+}
+.pd-hint-item:hover { background: #f5f7fa; }
+.pd-hint-item.is-disabled,
+.pd-hint-item.is-locked {
+  cursor: not-allowed;
+}
+.pd-hint-item.is-disabled .pd-hint-lbl { color: #c0c4cc; text-decoration: line-through; }
+.pd-hint-item.is-disabled input,
+.pd-hint-item.is-locked input { cursor: not-allowed; }
+.pd-hint-item input[type="checkbox"] {
+  width: 14px; height: 14px;
+  accent-color: var(--bl-primary);
+  flex-shrink: 0;
+}
+.pd-hint-lbl { flex-shrink: 0; }
+.pd-hint-tag {
+  display: inline-block;
+  padding: 2px 8px;            /* 文档规定 4px 8px, 此处垂直微调 2px 与 14px 复选框对齐 */
+  border-radius: 10px;
+  background: #fff2e0;
+  color: #FF7D00;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.pd-hint-lock {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #f0f2f5;
+  color: #909399;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.pd-hint-tip {
+  margin-top: 8px;
+  padding: 6px 8px;
+  font-size: 11px;
+  background: #fafafa;
+  border-radius: 3px;
+  display: flex; align-items: center; gap: 4px;
+}
+.pd-hint-tip > :first-child { display: inline-flex; }
 
 .pd-mini-table { width: 100%; font-size: 12px; }
 .pd-mini-table th { background: #fafafa; padding: 6px 8px; font-weight: 600; text-align: left; }

@@ -21,9 +21,139 @@ public class ResourceController {
     @Autowired private OntologyMapper ontologyMapper;
     @Autowired private BizCategoryMapper categoryMapper;
     @Autowired private BizNamespaceMapper namespaceMapper;
+    @Autowired private com.beiktech.bontolink.mapper.OverviewMapper overviewMapper;
 
     private static final ObjectMapper JSON = new ObjectMapper();
 
+    /**
+     * 总览 (Overview) 综合统计 —— 严格按 总览6.5.pdf 规范返回 15 项资源 {active, total} 计数.
+     *
+     * 入参:
+     *   industries: 行业 category_code 列表 (逗号分隔), 空 = 全部行业
+     *   domains:    领域 / 子领域 category_code 列表 (逗号分隔), 空 = 全部领域
+     *
+     * 范围解析: 若行业被选中, 自动展开为其下所有领域/子领域 codes; 与 domains 取并集得到最终 scope.
+     * 行业本身的计数始终基于"行业选择"; 领域/分组/数据源等"结构资源"基于解析后的 scope.
+     */
+    @GetMapping("/discover/overview")
+    public R<Map<String, Object>> discoverOverview(
+            @RequestParam(value = "industries", required = false) String industries,
+            @RequestParam(value = "domains", required = false) String domains
+    ) {
+        Map<String, Object> resp = new LinkedHashMap<>();
+
+        // 1. 解析筛选 codes
+        Set<String> industrySet = parseCsv(industries);
+        Set<String> domainSet   = parseCsv(domains);
+
+        // 2. 展开行业 → 其下所有 domains (递归子分类)
+        List<com.beiktech.bontolink.entity.BizCategory> allCats = categoryMapper.listAll();
+        Map<String, com.beiktech.bontolink.entity.BizCategory> byCode = new HashMap<>();
+        Map<String, com.beiktech.bontolink.entity.BizCategory> byId = new HashMap<>();
+        allCats.forEach(c -> {
+            if (c.getCategoryCode() != null) byCode.put(c.getCategoryCode(), c);
+            if (c.getId() != null) byId.put(c.getId(), c);
+        });
+        // 子集索引: parent_id -> children
+        Map<String, List<com.beiktech.bontolink.entity.BizCategory>> childrenOf = new HashMap<>();
+        allCats.forEach(c -> childrenOf.computeIfAbsent(c.getParentId(), k -> new ArrayList<>()).add(c));
+
+        // 行业选中 → 展开其下全部 codes
+        Set<String> expandedFromIndustries = new LinkedHashSet<>();
+        for (String code : industrySet) {
+            com.beiktech.bontolink.entity.BizCategory cat = byCode.get(code);
+            if (cat != null) collectDescendantCodes(cat, childrenOf, expandedFromIndustries);
+        }
+
+        // 最终 scope = (展开后的行业 codes) ∪ (显式选中的 domain codes)
+        Set<String> scope = new LinkedHashSet<>();
+        scope.addAll(expandedFromIndustries);
+        scope.addAll(domainSet);
+        boolean hasFilter = !scope.isEmpty();
+        List<String> scopeList = hasFilter ? new ArrayList<>(scope) : null;
+
+        // 3. 计算 15 项统计 {active, total}
+        Map<String, Object> rows = new LinkedHashMap<>();
+        // 第一行: 行业 / 领域 / 分组 / 数据源
+        rows.put("industry",     pair(
+                overviewMapper.countIndustries(industrySet.isEmpty() ? null : new ArrayList<>(industrySet), true),
+                overviewMapper.countIndustries(industrySet.isEmpty() ? null : new ArrayList<>(industrySet), false)));
+        rows.put("domain",       pair(
+                overviewMapper.countDomains(scopeList, true),
+                overviewMapper.countDomains(scopeList, false)));
+        rows.put("group",        pair(
+                overviewMapper.countGroups(scopeList, true),
+                overviewMapper.countGroups(scopeList, false)));
+        rows.put("datasource",   pair(
+                overviewMapper.countDatasources(scopeList, true),
+                overviewMapper.countDatasources(scopeList, false)));
+        // 第二行: 对象 / 关系 / 动作 / 函数 / 类型类 / 接口
+        rows.put("objectType",   pair(
+                overviewMapper.countObjectTypes(scopeList, true),
+                overviewMapper.countObjectTypes(scopeList, false)));
+        rows.put("linkType",     pair(
+                overviewMapper.countLinkTypes(scopeList, true),
+                overviewMapper.countLinkTypes(scopeList, false)));
+        rows.put("actionType",   pair(
+                overviewMapper.countActionTypes(scopeList, true),
+                overviewMapper.countActionTypes(scopeList, false)));
+        rows.put("function",     pair(
+                overviewMapper.countFunctions(scopeList, true),
+                overviewMapper.countFunctions(scopeList, false)));
+        rows.put("typeClass",    pair(
+                overviewMapper.countTypeClasses(true),
+                overviewMapper.countTypeClasses(false)));
+        rows.put("interface",    pair(
+                overviewMapper.countInterfaces(scopeList, true),
+                overviewMapper.countInterfaces(scopeList, false)));
+        // 第三行: 属性 / 枚举 / 值类型 / 结构 / 共享
+        rows.put("property",        pair(
+                overviewMapper.countProperties(scopeList, true),
+                overviewMapper.countProperties(scopeList, false)));
+        rows.put("enumType",        pair(
+                overviewMapper.countEnumTypes(scopeList, true),
+                overviewMapper.countEnumTypes(scopeList, false)));
+        rows.put("valueType",       pair(
+                overviewMapper.countValueTypes(scopeList, true),
+                overviewMapper.countValueTypes(scopeList, false)));
+        rows.put("structProperty",  pair(
+                overviewMapper.countStructProperties(scopeList, true),
+                overviewMapper.countStructProperties(scopeList, false)));
+        rows.put("sharedProperty",  pair(
+                overviewMapper.countSharedProperties(scopeList, true),
+                overviewMapper.countSharedProperties(scopeList, false)));
+
+        resp.put("rows", rows);
+        resp.put("scope", new LinkedHashMap<String, Object>() {{
+            put("industries", new ArrayList<>(industrySet));
+            put("domains",    new ArrayList<>(domainSet));
+            put("hasFilter",  hasFilter);
+        }});
+        return R.ok(resp);
+    }
+
+    private static Set<String> parseCsv(String s) {
+        if (s == null || s.isEmpty()) return new LinkedHashSet<>();
+        return Arrays.stream(s.split(",")).map(String::trim).filter(x -> !x.isEmpty()).collect(java.util.stream.Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    private static void collectDescendantCodes(com.beiktech.bontolink.entity.BizCategory root,
+                                               Map<String, List<com.beiktech.bontolink.entity.BizCategory>> childrenOf,
+                                               Set<String> sink) {
+        if (root == null) return;
+        if (root.getCategoryCode() != null) sink.add(root.getCategoryCode());
+        List<com.beiktech.bontolink.entity.BizCategory> kids = childrenOf.get(root.getId());
+        if (kids != null) for (com.beiktech.bontolink.entity.BizCategory k : kids) collectDescendantCodes(k, childrenOf, sink);
+    }
+
+    private static Map<String, Object> pair(int active, int total) {
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("active", active);
+        m.put("total",  total);
+        return m;
+    }
+
+    /** 兼容旧端点 (sidebar 老页面仍在用) */
     @GetMapping("/discover/stats")
     public R<Map<String, Object>> discoverStats() {
         Map<String, Object> r = new LinkedHashMap<>();
