@@ -52,9 +52,35 @@
                   <div class="ds-panel-body">
                     <div v-if="form.main.physical_table" class="main-form">
                       <FieldRow label="物理表" inline><span class="bl-mono bl-tag">{{ form.main.physical_table }}</span></FieldRow>
-                      <FieldRow label="表名称" inline><input class="bl-input" v-model="form.main.alias_name" placeholder="给主表起一个名称" /></FieldRow>
+                      <FieldRow label="表名称" inline>
+                        <select class="bl-input" v-model="form.main.alias_name">
+                          <option v-for="o in subAliasOptions(form.main.physical_table)" :key="'main-alias-'+o.value" :value="o.value">{{ o.label }}</option>
+                        </select>
+                      </FieldRow>
                       <FieldRow label="主键字段" inline>
-                        <input class="bl-input bl-mono" v-model="form.main.pk_keys" placeholder="逗号分隔，复合主键按顺序" />
+                        <div class="pk-list">
+                          <div v-for="(k, i) in form.main.pk_keys" :key="'pk-'+i"
+                               class="pk-row"
+                               draggable="true"
+                               @dragstart="onPkDragStart(i, $event)"
+                               @dragover.prevent
+                               @drop="onPkDrop(i)"
+                               @dragend="pkDragIdx = null"
+                               :class="{ 'is-dragging': pkDragIdx === i }">
+                            <span class="pk-seq" :title="'拖拽 #'+ (i+1) +' 调整顺序'">{{ i + 1 }}</span>
+                            <select class="bl-input bl-input-sm bl-mono pk-select" v-model="form.main.pk_keys[i]">
+                              <option value="">— 主键字段 —</option>
+                              <option v-for="c in mainTableColumns" :key="'pk-opt-'+i+'-'+c.name" :value="c.name">{{ c.name }}</option>
+                            </select>
+                            <button v-if="form.main.pk_keys.length > 1" class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm"
+                                    title="移除该主键字段"
+                                    @click="form.main.pk_keys.splice(i, 1)" v-html="BL.icon('x', 11)"></button>
+                          </div>
+                          <button class="bl-btn bl-btn-text bl-btn-sm pk-add" @click="form.main.pk_keys.push('')"
+                                  title="添加主键字段 (复合主键)">
+                            <span v-html="BL.icon('plus', 11)"></span><span style="margin-left:4px">添加字段</span>
+                          </button>
+                        </div>
                       </FieldRow>
                       <div style="text-align:right;margin-top:6px">
                         <button class="bl-btn bl-btn-sm bl-btn-text" @click="resetMain">
@@ -88,8 +114,17 @@
                             @drop="dropSub(i)">
                           <td class="t-center bl-muted" style="cursor:grab" :title="`拖拽调整顺序 #${i+1}`">{{ i+1 }}</td>
                           <td><span class="bl-mono bl-tag">{{ s.physical_table }}</span></td>
-                          <td><input class="bl-input bl-input-xs" v-model="s.alias_name" /></td>
-                          <td><input class="bl-input bl-input-xs bl-mono" v-model="s.join_on_keys" placeholder="逗号分隔" /></td>
+                          <td>
+                            <select class="bl-input bl-input-xs" v-model="s.alias_name">
+                              <option v-for="o in subAliasOptions(s.physical_table)" :key="'alias-'+i+'-'+o.value" :value="o.value">{{ o.label }}</option>
+                            </select>
+                          </td>
+                          <td>
+                            <select class="bl-input bl-input-xs bl-mono" v-model="s.join_on_keys">
+                              <option value="">— 关联字段 —</option>
+                              <option v-for="c in subColumns(s.physical_table)" :key="'join-'+i+'-'+c.name" :value="c.name">{{ c.name }}</option>
+                            </select>
+                          </td>
                           <td>
                             <select class="bl-input bl-input-xs" v-model="s.join_type">
                               <option value="LEFT">LEFT</option>
@@ -132,6 +167,7 @@
                     <thead>
                       <!-- 行1: 分组横幅 (物理 / 属性 + 两端空位用配色填充) -->
                       <tr>
+                        <th class="th-corner-l" style="width:24px"></th>
                         <th class="th-corner-l" style="width:34px"></th>
                         <th colspan="2" class="th-group bg-l">物理</th>
                         <th colspan="7" class="th-group bg-c">属性</th>
@@ -139,6 +175,7 @@
                       </tr>
                       <!-- 行2: 列名 -->
                       <tr>
+                        <th class="th-col-l" title="拖拽手柄"></th>
                         <th class="th-col-l"><input type="checkbox" :checked="allPropsChecked" @change="togglePropAll" /></th>
                         <th class="bg-l">表</th><th class="bg-l">字段</th>
                         <th class="bg-c">代码</th><th class="bg-c">名称</th><th class="bg-c">数据类型</th>
@@ -148,7 +185,13 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="p in propsView" :key="p._key">
+                      <tr v-for="p in propsView" :key="p._key"
+                          draggable="true"
+                          @dragstart="onPropDragStart(p)" @dragover.prevent
+                          @drop="onPropDrop(p)"
+                          :class="{ 'is-dragging': propDragKey === p._key }">
+                        <td class="prop-grip t-center bl-muted" :title="`拖拽调整顺序`"
+                            v-html="BL.icon('move', 12, '#86909c')"></td>
                         <td @click.stop><input type="checkbox" :checked="propChecked.has(p._key)" @change="togglePropCheck(p._key)" /></td>
                         <td class="bl-mono bl-muted">{{ p.physical_table }}</td>
                         <td class="bl-mono bl-muted">{{ p.physical_column }}</td>
@@ -235,29 +278,29 @@ const emit = defineEmits(['update:open', 'next', 'cancel'])
 
 /* ---------- 内置 mock 物理表清单（无后端时演示用） ---------- */
 const MOCK_TABLES = [
-  { physical_table: 't_hydrology_station', column_count: 12, columns: [
+  { physical_table: 't_hydrology_station', display_name: '水文测站', column_count: 12, columns: [
     { name: 'station_code', type: 'string' }, { name: 'station_name', type: 'string' },
     { name: 'lng', type: 'decimal' }, { name: 'lat', type: 'decimal' },
     { name: 'altitude', type: 'decimal' }, { name: 'install_date', type: 'date' }
   ]},
-  { physical_table: 't_river', column_count: 6, columns: [
+  { physical_table: 't_river', display_name: '河流', column_count: 6, columns: [
     { name: 'river_code', type: 'string' }, { name: 'name', type: 'string' },
     { name: 'length_km', type: 'decimal' }, { name: 'basin_id', type: 'string' }
   ]},
-  { physical_table: 't_water_quality', column_count: 8, columns: [
+  { physical_table: 't_water_quality', display_name: '水质监测', column_count: 8, columns: [
     { name: 'sample_id', type: 'string' }, { name: 'sampled_at', type: 'dateTime' },
     { name: 'station_code', type: 'string' }, { name: 'cod', type: 'decimal' },
     { name: 'ph', type: 'decimal' }
   ]},
-  { physical_table: 't_reservoir', column_count: 9, columns: [
+  { physical_table: 't_reservoir', display_name: '水库', column_count: 9, columns: [
     { name: 'res_no', type: 'string' }, { name: 'res_name', type: 'string' },
     { name: 'basin_code', type: 'string' }, { name: 'capacity', type: 'decimal' }
   ]},
-  { physical_table: 't_water_basin_info', column_count: 5, columns: [
+  { physical_table: 't_water_basin_info', display_name: '流域信息', column_count: 5, columns: [
     { name: 'res_serial', type: 'string' }, { name: 'basin_id', type: 'string' },
     { name: 'basin_name', type: 'string' }
   ]},
-  { physical_table: 't_water_level_monitor', column_count: 7, columns: [
+  { physical_table: 't_water_level_monitor', display_name: '水位监测', column_count: 7, columns: [
     { name: 'reservoir_sn', type: 'string' }, { name: 'basin_mark', type: 'string' },
     { name: 'level', type: 'decimal' }, { name: 'observed_at', type: 'dateTime' }
   ]}
@@ -268,7 +311,7 @@ const xsdTypes = ['xsd:string','xsd:decimal','xsd:integer','xsd:boolean','xsd:da
 const step = ref(1)
 const form = reactive({
   mode: 'exist',
-  main: { physical_table: '', alias_name: '', pk_keys: '' },
+  main: { physical_table: '', alias_name: '', pk_keys: [''] },
   subs: [],
   props: []   // { _key, physical_table, physical_column, api_name, display_name, data_type, is_key, is_required, is_multi_valued_prop, is_range_constraint_prop }
 })
@@ -277,7 +320,7 @@ const form = reactive({
 function resetAll() {
   step.value = 1
   form.mode = 'exist'
-  form.main = { physical_table: '', alias_name: '', pk_keys: '' }
+  form.main = { physical_table: '', alias_name: '', pk_keys: [''] }
   form.subs = []
   form.props = []
   propChecked.value = new Set()
@@ -308,8 +351,8 @@ const tableOptions = computed(() => {
 function pickTable(t) {
   if (tablePickerMode.value === 'main') {
     form.main.physical_table = t.physical_table
-    form.main.alias_name = t.physical_table
-    form.main.pk_keys = (t.columns?.[0]?.name) || ''
+    form.main.alias_name = t.display_name || t.physical_table     // 优先用中文友好名
+    form.main.pk_keys = [(t.columns?.[0]?.name) || '']
     syncPropsFromTables()
     tablePickerOpen.value = false
   } else {
@@ -324,7 +367,8 @@ function confirmSubs() {
     if (used.has(tname)) continue
     const meta = MOCK_TABLES.find(t => t.physical_table === tname)
     form.subs.push({
-      physical_table: tname, alias_name: tname,
+      physical_table: tname,
+      alias_name: meta?.display_name || tname,    // 默认用中文友好名 (可下拉切回物理名)
       join_on_keys: (meta?.columns?.[0]?.name) || '',
       join_type: 'LEFT'
     })
@@ -333,7 +377,7 @@ function confirmSubs() {
   tablePickerOpen.value = false
 }
 function resetMain() {
-  form.main = { physical_table: '', alias_name: '', pk_keys: '' }
+  form.main = { physical_table: '', alias_name: '', pk_keys: [''] }
   form.subs = []
   form.props = []
 }
@@ -346,6 +390,58 @@ function dropSub(target) {
   dragIdx.value = null
 }
 const dragIdx = ref(null)
+
+/* 已选主表的列清单 — 主键字段下拉 / 关联字段提示用 */
+const mainTableColumns = computed(() => {
+  const t = MOCK_TABLES.find(x => x.physical_table === form.main.physical_table)
+  return t?.columns || []
+})
+
+/* 主键字段拖拽排序 */
+const pkDragIdx = ref(null)
+function onPkDragStart(i, ev) {
+  pkDragIdx.value = i
+  // 显式声明 move 效果, 让浏览器禁用 IO 形态 (避免拖到 select 上变成"禁止")
+  if (ev?.dataTransfer) ev.dataTransfer.effectAllowed = 'move'
+}
+function onPkDrop(targetIdx) {
+  const from = pkDragIdx.value
+  pkDragIdx.value = null
+  if (from == null || from === targetIdx) return
+  const arr = form.main.pk_keys
+  if (from < 0 || from >= arr.length || targetIdx < 0 || targetIdx >= arr.length) return
+  const [item] = arr.splice(from, 1)
+  arr.splice(targetIdx, 0, item)
+}
+
+/* 附表行的辅助查询 (基于 physical_table 拿元信息) */
+function subColumns(physTable) {
+  const t = MOCK_TABLES.find(x => x.physical_table === physTable)
+  return t?.columns || []
+}
+function subAliasOptions(physTable) {
+  const t = MOCK_TABLES.find(x => x.physical_table === physTable)
+  if (!t) return []
+  const opts = []
+  if (t.display_name) opts.push({ value: t.display_name, label: t.display_name + ' (友好名)' })
+  opts.push({ value: t.physical_table, label: t.physical_table + ' (物理名)' })
+  return opts
+}
+
+/* 属性映射: 行拖拽排序 (通过 _key 映射回 form.props, 兼容筛选视图) */
+const propDragKey = ref(null)
+function onPropDragStart(p) { propDragKey.value = p._key }
+function onPropDrop(targetP) {
+  const from = propDragKey.value
+  propDragKey.value = null
+  if (!from || !targetP || from === targetP._key) return
+  const arr = form.props
+  const fi = arr.findIndex(p => p._key === from)
+  const ti = arr.findIndex(p => p._key === targetP._key)
+  if (fi < 0 || ti < 0) return
+  const [item] = arr.splice(fi, 1)
+  arr.splice(ti, 0, item)
+}
 
 /* ---------- 属性映射 ---------- */
 const propFilterTable = ref('')
@@ -439,7 +535,14 @@ function goNext() {
 .wz-step.is-on .num { background: var(--bl-primary); color: #fff; }
 .wz-step-bar { flex: 0 0 80px; height: 2px; background: var(--bl-divider); }
 
-.wz-body { flex: 1; overflow: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+/* wz-body 改 flex: 1 + overflow: hidden, 让里面的 ds-area / map-area 各自 flex 控制高度;
+   不让 body 自己滚 — 否则上层会因 pk 字段变多把映射表挤到底部 */
+.wz-body {
+  flex: 1; min-height: 0;
+  overflow: hidden;
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 14px;
+}
 
 .mode-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .mode-card { display: flex; gap: 12px; padding: 14px; border: 1px solid var(--bl-border);
@@ -451,14 +554,50 @@ function goNext() {
 .mode-check { position: absolute; top: 10px; right: 10px; width: 18px; height: 18px;
   background: var(--bl-primary); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
 
-/* 数据源配置区 */
-.ds-area { display: grid; grid-template-columns: 320px 1fr; gap: 12px; }
-.ds-panel { background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 6px; overflow: hidden; }
-.ds-panel-hd { display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 12px; background: #fafafa; border-bottom: 1px solid var(--bl-divider); }
+/* 数据源配置区: 限高, 内部内容超出时各 panel 内部独立滚动 (不影响下方映射表空间) */
+.ds-area {
+  display: grid; grid-template-columns: 360px 1fr; gap: 12px;
+  flex: 0 0 auto;            /* 不参与剩余空间分配 */
+  max-height: 300px;         /* 配置区总高度上限, 主键字段加再多也不会撑高 */
+  min-height: 200px;
+}
+.ds-panel {
+  background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 6px;
+  overflow: hidden;
+  display: flex; flex-direction: column;     /* 让 body 区可 flex:1 接 panel 高度 */
+}
+.ds-panel-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; background: #fafafa; border-bottom: 1px solid var(--bl-divider);
+  flex-shrink: 0;
+}
 .ds-panel-title { font-size: 13px; font-weight: 600; }
-.ds-panel-body { padding: 10px; }
+.ds-panel-body {
+  padding: 10px;
+  flex: 1; min-height: 0; overflow-y: auto;   /* 内部独立滚动 */
+}
 .main-form { display: flex; flex-direction: column; gap: 4px; }
+
+/* 主键字段: 多条下拉 + 添加 + 拖拽排序 */
+.pk-list { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
+.pk-row {
+  display: flex; align-items: center; gap: 6px; min-width: 0;
+  padding: 2px 0;                                /* 留 hit-area 给 drag */
+  border-radius: 4px;
+  transition: background-color .15s, opacity .15s;
+}
+.pk-row.is-dragging { opacity: .45; background: var(--bl-primary-soft); }
+.pk-seq {
+  width: 20px; height: 20px; line-height: 20px;
+  text-align: center; background: var(--bl-primary-soft); color: var(--bl-primary);
+  font-size: 10px; font-weight: 600; border-radius: 50%; flex-shrink: 0;
+  cursor: grab;                                  /* 序号圈作为拖拽手柄 */
+  user-select: none;
+}
+.pk-seq:active { cursor: grabbing; }
+.pk-select { flex: 1; min-width: 0; height: 28px; font-size: 12px; }
+.pk-add { align-self: flex-start; padding: 2px 6px; font-size: 12px; }
+
 .main-pick-btn { width: 100%; padding: 14px; border: 1px dashed var(--bl-border-strong);
   background: var(--bl-bg-1); color: var(--bl-primary); border-radius: 6px; cursor: pointer; font-size: 13px;
   display: inline-flex; align-items: center; justify-content: center; }
@@ -469,17 +608,25 @@ function goNext() {
 .sub-table td { padding: 4px 6px; }
 .sub-table .bl-input.bl-input-xs { height: 26px; padding: 0 6px; font-size: 12px; }
 
-/* 映射区 */
-.map-area { background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 6px; overflow: hidden; }
-.map-hd { display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 12px; background: #fafafa; border-bottom: 1px solid var(--bl-divider); }
+/* 映射区: flex:1 自动占据上方配置区之外的所有剩余高度 */
+.map-area {
+  background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 6px;
+  overflow: hidden;
+  flex: 1; min-height: 0;                /* 关键: 拿到剩余高度且允许内部 scroll */
+  display: flex; flex-direction: column;
+}
+.map-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; background: #fafafa; border-bottom: 1px solid var(--bl-divider);
+  flex-shrink: 0;
+}
 .map-title { font-size: 13px; font-weight: 600; }
 .map-search { position: relative; display: inline-flex; align-items: center; gap: 6px; }
 .map-search .bl-input { width: 160px; height: 26px; padding: 0 6px; font-size: 12px; }
-/* 滚动区: 限制最大高度,让表格在自身区域内滚动而非随整个向导滚动 */
+/* 表体撑满映射卡内剩余空间, 内部独立滚动 */
 .map-table-wrap {
-  max-height: 240px;
-  overflow-y: scroll;   /* 始终显示纵向滚动条占位,避免行数恰好触底时的"跳动" */
+  flex: 1; min-height: 0;
+  overflow-y: auto;
   overflow-x: auto;
   border-top: 1px solid var(--bl-divider);
 }
@@ -529,7 +676,10 @@ function goNext() {
 .map-table tbody tr { background: #fff; }
 .map-table tbody tr:nth-child(even) { background: #fafbfc; }
 .map-table tbody tr:hover { background: #f5f7fa; }
+.map-table tbody tr.is-dragging { opacity: .45; background: var(--bl-primary-soft); }
 .map-table tbody td { border-bottom: 1px solid #f0f0f0; }
+.map-table .prop-grip { cursor: grab; user-select: none; padding: 4px; }
+.map-table .prop-grip:active { cursor: grabbing; }
 .map-table .bl-input.bl-input-xs { height: 26px; padding: 0 6px; font-size: 12px; }
 .t-center { text-align: center; }
 

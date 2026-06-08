@@ -594,12 +594,12 @@ function propTypeColor(p) {
 .sp-flag.is-fmt { background: var(--bl-primary); }
 
 /* 批量操作按钮 (删除红 / 启用绿 / 禁用灰 / 取消选择浅) */
-.sp-del-btn { background: #fff; border: 1px solid #f53f3f; color: #f53f3f; }
-.sp-del-btn:hover { background: #fff1f0; }
-.sp-ena-btn { background: #fff; border: 1px solid #00b42a; color: #00b42a; }
-.sp-ena-btn:hover { background: #e8fff4; }
-.sp-dis-btn { background: #fff; border: 1px solid #86909c; color: #4e5969; }
-.sp-dis-btn:hover { background: #f7f8fa; }
+.sp-del-btn { background: var(--bl-bg-1); border: 1px solid #f53f3f; color: #f53f3f; }
+.sp-del-btn:hover { background: color-mix(in srgb, #f53f3f 8%, var(--bl-bg-1)); }
+.sp-ena-btn { background: var(--bl-bg-1); border: 1px solid #00b42a; color: #00b42a; }
+.sp-ena-btn:hover { background: color-mix(in srgb, #00b42a 8%, var(--bl-bg-1)); }
+.sp-dis-btn { background: var(--bl-bg-1); border: 1px solid #86909c; color: var(--bl-text-2); }
+.sp-dis-btn:hover { background: var(--bl-bg-hover); }
 .sp-clear-btn { color: var(--bl-text-3); }
 .sp-clear-btn:hover { color: var(--bl-primary); }
 
@@ -628,6 +628,6 @@ function propTypeColor(p) {
 .sp-row.is-grouped td:first-child { padding-left: 24px; }
 
 /* 通用 tag-muted (灰色禁用 tag) */
-:deep(.bl-tag-muted) { background: #f2f3f5; color: #86909c; }
-:deep(.bl-tag-primary) { background: #e6f4ff; color: var(--bl-primary); }
+:deep(.bl-tag-muted) { background: var(--bl-bg-2); color: var(--bl-text-3); }
+:deep(.bl-tag-primary) { background: var(--bl-primary-soft); color: var(--bl-primary); }
 </style>

@@ -319,6 +319,6 @@ const CtfNode = {
   border-radius: 9px; padding: 0 7px; min-width: 20px;
   height: 17px; line-height: 17px; text-align: center;
 }
-.ctf-row.is-active .ctf-cnt { background: #fff; color: var(--bl-primary); }
+.ctf-row.is-active .ctf-cnt { background: var(--bl-bg-1); color: var(--bl-primary); }
 .ctf-children { margin-left: 18px; padding-left: 8px; }
 </style>

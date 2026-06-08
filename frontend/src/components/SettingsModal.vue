@@ -108,7 +108,7 @@ watch(() => app.locale,      v => locale.value = v)
 const themes = [
   { k: 'light',  label: '浅色' },
   { k: 'dark',   label: '深色' },
-  { k: 'system', label: '跟随系统' }
+  { k: 'system', label: '昼夜切换' }
 ]
 const accents = [
   { k: 'blue',   color: '#165DFF', label: '科技蓝' },

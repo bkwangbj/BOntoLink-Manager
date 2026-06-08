@@ -72,6 +72,8 @@ export const groupRefApi = {
 
 export const resourceApi = {
   stats:       () => http.get('/resource/discover/stats'),
+  /* 总览综合统计 — industries / domains 为逗号分隔的 category_code, 不传或空 = 全部 */
+  overview:    (params) => http.get('/resource/discover/overview', { params }),
   classes:     (params) => http.get('/resource/classes', { params }),
   classDetail: (id) => http.get(`/resource/classes/${id}`),
   links:       () => http.get('/resource/links'),
@@ -80,6 +82,12 @@ export const resourceApi = {
   interface:   (id) => http.get(`/resource/interfaces/${id}`),
   properties:  (id) => http.get(`/resource/classes/${id}/properties`),
   graph:       () => http.get('/resource/graph')
+}
+
+/* 图谱 — 双画布数据 (左: 行业层级, 右: 对象本体) */
+export const graphApi = {
+  industryTree: () => http.get('/graph/industry-tree'),
+  ontology:     () => http.get('/graph/ontology')
 }
 
 /* 对象类型补充元数据 (等价/不相交/互斥并集/等价属性/互斥属性 等) */

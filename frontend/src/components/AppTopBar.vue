@@ -77,8 +77,14 @@ onBeforeUnmount(() => {
 <style scoped>
 .topbar {
   height: var(--bl-topbar-h);
-  background: var(--bl-bg-1);
-  border-bottom: 1px solid var(--bl-border);
+  /* 主题色渐变背景 — 上→下 15%→3% 衰减, 头部与内容区分层更明显 */
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--bl-primary) 15%, var(--bl-bg-1)) 0%,
+      color-mix(in srgb, var(--bl-primary) 8%,  var(--bl-bg-1)) 60%,
+      color-mix(in srgb, var(--bl-primary) 3%,  var(--bl-bg-1)) 100%);
+  border-bottom: 1px solid color-mix(in srgb, var(--bl-primary) 25%, var(--bl-border));
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--bl-primary) 12%, transparent);
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
@@ -104,13 +110,27 @@ onBeforeUnmount(() => {
 
 .search { position: relative; width: 480px; max-width: 100%; }
 .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--bl-text-3); }
-.search-input { padding-left: 32px; padding-right: 60px; background: var(--bl-bg-2); border-color: transparent; }
-.search-input:focus { background: var(--bl-bg-1); }
+.search-input {
+  padding-left: 32px; padding-right: 60px;
+  /* 搜索框背景跟随头部主题色, 微透白让 placeholder 仍清晰 */
+  background: color-mix(in srgb, var(--bl-primary) 5%, var(--bl-bg-1));
+  border: 1px solid color-mix(in srgb, var(--bl-primary) 20%, var(--bl-border));
+  transition: background-color .15s, border-color .15s;
+}
+.search-input:hover {
+  background: color-mix(in srgb, var(--bl-primary) 8%, var(--bl-bg-1));
+  border-color: color-mix(in srgb, var(--bl-primary) 35%, var(--bl-border));
+}
+.search-input:focus {
+  background: var(--bl-bg-1);
+  border-color: var(--bl-primary);
+}
 .search-kbd {
   position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
   font-size: var(--bl-fs-11); color: var(--bl-text-3);
-  background: var(--bl-bg-1); padding: 2px 6px; border-radius: 4px;
-  border: 1px solid var(--bl-border);
+  background: color-mix(in srgb, var(--bl-primary) 3%, var(--bl-bg-1));
+  padding: 2px 6px; border-radius: 4px;
+  border: 1px solid color-mix(in srgb, var(--bl-primary) 15%, var(--bl-border));
 }
 
 /* 小屏自动让搜索框缩 */

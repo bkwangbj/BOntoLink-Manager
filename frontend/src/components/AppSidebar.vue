@@ -141,7 +141,7 @@ function toggleGroup(k) {
 
 const menus = [
   { key: 'workspace', title: '工作区', items: [
-    { path: '/workspace/discover',   icon: 'grid',     label: '总览',     en: 'Discover' },
+    { path: '/workspace/discover',   icon: 'grid',     label: '总览',     en: 'Overview' },
     { path: '/workspace/graph',      icon: 'network',  label: '图谱',     en: 'Graph' },
     { path: '/workspace/instances',  icon: 'database', label: '实例',     en: 'Object instances' }
   ]},
