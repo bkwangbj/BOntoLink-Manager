@@ -423,7 +423,9 @@
         <div class="bl-drawer-body bl-col" style="gap:12px">
           <FieldRow label="类型">
             <select class="bl-input" v-model="formData.categoryType" :disabled="formMode==='edit'">
-              <option v-for="t in allowedCategoryTypes" :key="t.value" :value="t.value">{{ t.label }}</option>
+              <option :value="1">行业 (Industry)</option>
+              <option :value="2">领域 (Domain)</option>
+              <option :value="3">分组 (Group)</option>
             </select>
           </FieldRow>
           <FieldRow label="父级"><input class="bl-input" :value="formParentLabel" disabled /></FieldRow>
@@ -1970,32 +1972,12 @@ const formData = reactive({ categoryType: 1, categoryCode: '', rdfsLabel: '', ns
 
 const formParentLabel = computed(() => formParent.value?.label || '（顶级）')
 
-const ALL_CATEGORY_TYPES = [
-  { value: 1, label: '行业 (Industry)' },
-  { value: 2, label: '领域 (Domain)' },
-  { value: 3, label: '分组 (Group)' }
-]
-const allowedCategoryTypes = computed(() => {
-  const pt = formParent.value?.categoryType
-  if (pt == null) return ALL_CATEGORY_TYPES.filter(t => t.value === 1)           // 顶级只能建行业
-  if (pt === 1) return ALL_CATEGORY_TYPES.filter(t => t.value >= 2)              // 行业下只能建领域/分组
-  if (pt === 2) return ALL_CATEGORY_TYPES.filter(t => t.value === 3)             // 领域下只能建分组
-  return ALL_CATEGORY_TYPES.filter(t => t.value === 3)                           // 分组下只能建分组(兜底)
-})
-
 function openCreate(kind, parent) {
   formMode.value = 'create'
   formParent.value = parent || selected.value
-  // 根据父节点类型限制可选子类型，默认取第一项
-  const allowed = ALL_CATEGORY_TYPES.filter(t => {
-    const pt = formParent.value?.categoryType
-    if (pt == null) return t.value === 1
-    if (pt === 1) return t.value >= 2
-    if (pt === 2) return t.value === 3
-    return t.value === 3
-  })
+  const type = parent ? parent.categoryType + 1 : (selected.value ? selected.value.categoryType + 1 : 1)
   Object.assign(formData, {
-    categoryType: allowed[0]?.value ?? 2,
+    categoryType: Math.min(type, 3),
     categoryCode: '',
     rdfsLabel: '',
     nsCode: selected.value?.nsCode || '',

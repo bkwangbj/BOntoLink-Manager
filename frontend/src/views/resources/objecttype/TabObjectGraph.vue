@@ -36,10 +36,10 @@
       </defs>
       <g :transform="`translate(${pan.x},${pan.y}) scale(${zoom})`">
 
-        <!-- 连线 (一条边 = 可见细线 + 透明粗线命中区, group hover 时高亮) -->
+        <!-- 连线 (一条边 = 可见细线 + 透明粗线命中区, group hover/选中时高亮) -->
         <g v-for="e in visibleEdges" :key="'E-'+e.id"
            class="og-edge-group"
-           :class="{ 'is-hot': hoverEdgeId === e.id }"
+           :class="{ 'is-hot': hoverEdgeId === e.id, 'is-selected': selectedEdgeId === e.id }"
            @mouseenter="hoverEdgeId = e.id"
            @mouseleave="hoverEdgeId = null"
            @click.stop="onEdgeClick(e)">
@@ -138,56 +138,16 @@
       <div class="og-legend-tip">实/虚线 = 关系类型;弃用节点统一灰色 #C0C4CC</div>
     </aside>
 
-    <!-- 右侧详情抽屉 -->
-    <aside class="og-drawer" :class="{ 'is-open': !!drawerNode }">
-      <div v-if="drawerNode" class="og-drawer-inner">
-        <header class="og-drawer-hd">
-          <span class="og-drawer-shape">
-            <svg width="20" height="14">
-              <path :d="shapePath(drawerNode.shape, 20, 14)" :fill="drawerNode.fill" :stroke="drawerNode.stroke" />
-            </svg>
-          </span>
-          <div class="og-drawer-title">
-            <div class="og-drawer-cn">{{ drawerNode.cn }}</div>
-            <div class="og-drawer-en bl-mono">{{ drawerNode.en }}</div>
-          </div>
-          <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm"
-                  @click="drawerNode = null" v-html="BL.icon('x', 14)"></button>
-        </header>
-        <div class="og-drawer-body">
-          <div class="og-kv"><span class="og-kv-l">维度</span><span class="og-kv-r">
-            <span class="bl-tag" :style="{ background: dimColor(drawerNode.dim) + '22', color: dimColor(drawerNode.dim) }">{{ dimLabel(drawerNode.dim) }}</span>
-          </span></div>
-          <div class="og-kv"><span class="og-kv-l">类别</span><span class="og-kv-r">{{ kindLabel(drawerNode) }}</span></div>
-          <div v-if="drawerNode.rid" class="og-kv"><span class="og-kv-l">RID</span><span class="og-kv-r bl-mono">{{ drawerNode.rid }}</span></div>
-          <div v-if="drawerNode.namespace" class="og-kv"><span class="og-kv-l">命名空间</span><span class="og-kv-r bl-mono">{{ drawerNode.namespace }}</span></div>
-          <div v-if="drawerNode.version" class="og-kv"><span class="og-kv-l">版本</span><span class="og-kv-r">{{ drawerNode.version }}</span></div>
-          <div v-if="drawerNode.deprecated" class="og-kv"><span class="og-kv-l">状态</span><span class="og-kv-r"><span class="bl-tag bl-tag-danger">已弃用</span></span></div>
-          <div v-else-if="drawerNode.status" class="og-kv"><span class="og-kv-l">状态</span><span class="og-kv-r"><span class="bl-tag bl-tag-success">{{ drawerNode.status }}</span></span></div>
-          <div v-if="drawerNode.cardinality" class="og-kv"><span class="og-kv-l">关联基数</span><span class="og-kv-r"><span class="bl-tag">{{ cardLabel(drawerNode.cardinality) }}</span></span></div>
-          <div v-if="drawerNode.desc" class="og-kv og-kv-block">
-            <div class="og-kv-l">说明</div>
-            <div class="og-kv-text bl-muted">{{ drawerNode.desc }}</div>
-          </div>
-          <div v-if="drawerNode.properties" class="og-kv og-kv-block">
-            <div class="og-kv-l">字段 ({{ drawerNode.properties.length }})</div>
-            <ul class="og-drawer-props">
-              <li v-for="p in drawerNode.properties" :key="p.code">
-                <span class="og-prop-tag" :class="'is-' + p.kind">{{ p.tag }}</span>
-                <span>{{ p.cn }}</span>
-                <span class="bl-mono bl-muted" style="margin-left:auto;font-size:11px">{{ p.code }}</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </aside>
+    <!-- 详情抽屉已移除: 点击节点直接通过 emit('open-object') 通知父组件,
+         由 ObjectTypes 在顶部 tab 栈打开/激活该对象的完整详情 (避免嵌套抽屉) -->
+
 
     <!-- 链接关系编辑大抽屉 (复用 LinkTypeEditor, 不要 tab) -->
     <LinkTypeEditor v-model:open="editorOpen"
                     :link-id="editorLinkId"
                     :all-classes="allClasses"
-                    :show-tabs="false" />
+                    :show-tabs="false"
+                    :fallback-title="editorTitle" />
   </div>
 </template>
 
@@ -564,15 +524,33 @@ function onNodeDragMove(ev) {
 }
 function onNodeDragUp() { nodeDrag = null; window.removeEventListener('mousemove', onNodeDragMove); window.removeEventListener('mouseup', onNodeDragUp) }
 
-/* ============ 详情抽屉 ============ */
-const drawerNode = ref(null)
+/* ============ 节点点击 — emit 给 ObjectTypes 由 tab 栈接管 ============ */
+const emit = defineEmits(['open-object', 'editor-open-change'])
 const selectedId = ref('')
 function onNodeClick(n) {
-  drawerNode.value = n
+  if (!n || n.id === 'center') return       // 中心节点(当前对象)不响应
   selectedId.value = n.id
+  // 只 emit class 类节点 (有真实 id 才能定位到 ont_class)
+  // mock 数据维度: inherit(继承实现) 才是 ont_class, 其他暂不支持
+  if (n.dim && n.dim !== 'inherit') {
+    BL.info(`「${n.cn || n.label}」(${dimLabel(n.dim)}) 暂不支持跳转到对象详情`)
+    return
+  }
+  emit('open-object', {
+    id: n.id,
+    api_name: n.en || n.api_name || '',
+    display_name: n.cn || n.label || '',
+    rdfs_label: n.cn || n.label || '',
+    color: n.fill || n.color || '#165DFF',
+    icon: 'cube',
+    status: n.deprecated ? 0 : 1,
+    kind: 'class'
+  })
 }
 /* ============ 链接关系编辑抽屉 (复用 LinkTypeEditor) ============ */
 const editorOpen = ref(false)
+const editorTitle = ref('')
+const selectedEdgeId = ref(null)
 const editorLinkId = ref('')
 const hoverEdgeId = ref(null)
 const allClasses = ref([])
@@ -583,9 +561,21 @@ async function loadClasses() {
 }
 
 function onEdgeClick(e) {
+  selectedEdgeId.value = e.id
   editorLinkId.value = e.linkId || ''   // mock 暂无真实 id, 进入创建模式; 联调后 ext 边带上 linkId 即可加载详情
+  // 标题用边的语义信息: 优先 label (如"归属"/"应用"), 否则用 关系的 source→target 双端中文
+  const srcNode = visibleNodes.value.find(n => n.id === e.source)
+  const tgtNode = visibleNodes.value.find(n => n.id === e.target)
+  const relLabel = e.label || ''
+  const endpoints = (srcNode?.cn || srcNode?.label || '') + ' → ' + (tgtNode?.cn || tgtNode?.label || '')
+  editorTitle.value = relLabel ? `${relLabel} · ${endpoints}` : endpoints
   editorOpen.value = true
 }
+/* 通知父组件链接编辑抽屉的开关状态, 让其同步主抽屉最大化 */
+watch(editorOpen, (v) => {
+  emit('editor-open-change', v)
+  if (!v) selectedEdgeId.value = null  // 关闭编辑器时清除边选中态
+})
 /* ============ 全屏 / 导出 ============ */
 const rootRef = ref(null)
 const isFull = ref(false)
@@ -646,11 +636,11 @@ watch(() => props.classId, () => {
   width: 100%;
   height: 100%;
   min-height: 600px;
-  background: #fafbfc;
+  background: var(--bl-bg-0);
   overflow: hidden;
   font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
 }
-.og-root.is-full { background: #fff; }
+.og-root.is-full { background: var(--bl-bg-1); }
 
 /* 画布 */
 .og-svg {
@@ -664,13 +654,13 @@ watch(() => props.classId, () => {
 .og-node-g { cursor: pointer; }
 .og-node-g.is-selected path:first-child { stroke-width: 2.5; filter: drop-shadow(0 2px 6px rgba(22, 93, 255, .35)); }
 .og-node-g.is-deprecated { opacity: .55; }
-.og-node-cn { font-size: 12px; font-weight: 500; fill: #303133; pointer-events: none; }
-.og-node-en { font-size: 10px; fill: #909399; font-family: "Consolas", "Monaco", monospace; pointer-events: none; }
+.og-node-cn { font-size: 12px; font-weight: 500; fill: var(--bl-text-1); pointer-events: none; }
+.og-node-en { font-size: 10px; fill: var(--bl-text-3); font-family: "Consolas", "Monaco", monospace; pointer-events: none; }
 
 /* —— 中心节点 (HTML via foreignObject) —— */
 .og-center {
   width: 100%; height: 100%;
-  background: #fff;
+  background: var(--bl-bg-1);
   border-radius: 8px;
   box-sizing: border-box;
   display: flex; flex-direction: column;
@@ -680,39 +670,39 @@ watch(() => props.classId, () => {
 .og-center-compact { justify-content: center; }
 .og-center-hd { display: flex; align-items: center; gap: 8px; padding-bottom: 6px; }
 .og-center-name { flex: 1; display: flex; align-items: baseline; gap: 4px; min-width: 0; }
-.og-center-cn { font-size: 14px; font-weight: 700; color: #303133; }
-.og-center-en { font-size: 11px; color: #909399; font-family: Consolas, Monaco, monospace; }
+.og-center-cn { font-size: 14px; font-weight: 700; color: var(--bl-text-1); }
+.og-center-en { font-size: 11px; color: var(--bl-text-3); font-family: Consolas, Monaco, monospace; }
 .og-center-tag {
   font-size: 10px; padding: 2px 6px; border-radius: 10px;
-  background: #ecf3ff; color: #409EFF; flex-shrink: 0;
+  background: var(--bl-primary-soft); color: var(--bl-primary); flex-shrink: 0;
 }
 
 /* 中心展开: 属性列表 */
 .og-prop-list { list-style: none; margin: 4px 0 0; padding: 0; overflow-y: auto; }
 .og-prop-list::-webkit-scrollbar { width: 4px; }
-.og-prop-list::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 2px; }
+.og-prop-list::-webkit-scrollbar-thumb { background: var(--bl-border); border-radius: 2px; }
 .og-prop-item {
   display: flex; align-items: center; gap: 6px;
   padding: 3px 4px; border-radius: 3px;
   font-size: 11px;
 }
-.og-prop-item:hover { background: #f5f7fa; }
+.og-prop-item:hover { background: var(--bl-bg-hover); }
 .og-prop-tag {
   width: 22px; height: 16px; line-height: 16px;
   text-align: center; border-radius: 3px;
   font-size: 9px; font-weight: 600;
   flex-shrink: 0;
 }
-.og-prop-tag.is-num { background: #e8f3ff; color: #409EFF; }
-.og-prop-tag.is-str { background: #fef0e6; color: #FF7D00; }
-.og-prop-cn { color: #303133; flex-shrink: 0; }
-.og-prop-en { color: #909399; font-family: Consolas, Monaco, monospace; }
+.og-prop-tag.is-num { background: var(--bl-primary-soft); color: var(--bl-primary); }
+.og-prop-tag.is-str { background: var(--bl-warning-soft); color: var(--bl-warning); }
+.og-prop-cn { color: var(--bl-text-1); flex-shrink: 0; }
+.og-prop-en { color: var(--bl-text-3); font-family: Consolas, Monaco, monospace; }
 .og-prop-dot {
   width: 6px; height: 6px; border-radius: 50%;
-  background: #c0c4cc;
+  background: var(--bl-text-4);
   margin-left: auto; flex-shrink: 0;
 }
-.og-prop-dot.is-key { background: #f56c6c; }
+.og-prop-dot.is-key { background: var(--bl-danger); }
 
 /* —— 连线 (group: 可见细线 + 透明粗线命中区) —— */
 .og-edge-group { cursor: pointer; }
@@ -732,29 +722,40 @@ watch(() => props.classId, () => {
   stroke-width: 2.5;
   filter: drop-shadow(0 0 3px currentColor);
 }
+/* 选中态 (编辑器打开期间该边持续高亮, 与 hover 区分: 主题色描边 + 更强光晕) */
+.og-edge-group.is-selected .og-edge {
+  stroke: var(--bl-primary) !important;
+  stroke-width: 3 !important;
+  filter: drop-shadow(0 0 5px var(--bl-primary));
+}
+.og-edge-group.is-selected .og-edge-lbl {
+  fill: var(--bl-primary);
+  font-weight: 600;
+}
 .og-edge-lbl {
-  font-size: 10px; fill: #606266;
-  background: rgba(255,255,255,.8);
+  font-size: 10px; fill: var(--bl-text-2);
   pointer-events: none;
+  paint-order: stroke;
+  stroke: var(--bl-bg-0); stroke-width: 3px; stroke-linejoin: round;
 }
 
 /* —— 工具栏 (左上) —— */
 .og-toolbar {
   position: absolute; top: 12px; left: 12px; z-index: 5;
   display: flex; flex-direction: column; gap: 2px;
-  background: #fff; border: 1px solid #e4e7ed; border-radius: 6px;
-  padding: 4px; box-shadow: 0 2px 6px rgba(0,0,0,.06);
+  background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 6px;
+  padding: 4px; box-shadow: var(--bl-shadow-1);
 }
 .og-tool {
   width: 30px; height: 30px;
   background: transparent; border: 0; border-radius: 4px;
   display: inline-flex; align-items: center; justify-content: center;
-  cursor: pointer; color: #606266;
+  cursor: pointer; color: var(--bl-text-2);
   transition: background-color .15s;
 }
-.og-tool:hover { background: #f0f4ff; color: #409EFF; }
-.og-tool.is-on { background: #409EFF; color: #fff; }
-.og-tool-div { height: 1px; background: #ebeef5; margin: 2px 0; }
+.og-tool:hover { background: var(--bl-primary-soft); color: var(--bl-primary); }
+.og-tool.is-on { background: var(--bl-primary); color: #fff; }
+.og-tool-div { height: 1px; background: var(--bl-divider); margin: 2px 0; }
 
 /* —— 导出 (右上) —— */
 .og-export {
@@ -765,17 +766,17 @@ watch(() => props.classId, () => {
 /* —— 图例 (左下) —— */
 .og-legend {
   position: absolute; bottom: 16px; left: 16px; z-index: 5;
-  background: #fff; border: 1px solid #e4e7ed; border-radius: 6px;
+  background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 6px;
   padding: 8px 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  box-shadow: var(--bl-shadow-2);
   min-width: 200px;
   font-size: 11px;
 }
 .og-legend-hd {
   display: flex; align-items: center; justify-content: space-between;
-  font-size: 12px; font-weight: 600; color: #303133;
+  font-size: 12px; font-weight: 600; color: var(--bl-text-1);
   padding-bottom: 6px;
-  border-bottom: 1px solid #ebeef5;
+  border-bottom: 1px solid var(--bl-divider);
   margin-bottom: 6px;
 }
 .og-legend-item {
@@ -784,27 +785,27 @@ watch(() => props.classId, () => {
   cursor: pointer; user-select: none;
   transition: background-color .15s;
 }
-.og-legend-item:hover { background: #f5f7fa; }
+.og-legend-item:hover { background: var(--bl-bg-hover); }
 .og-legend-item.is-off { opacity: .4; }
-.og-legend-item.is-off .og-legend-lbl { color: #909399; text-decoration: line-through; }
+.og-legend-item.is-off .og-legend-lbl { color: var(--bl-text-3); text-decoration: line-through; }
 .og-legend-ic { flex-shrink: 0; }
-.og-legend-lbl { flex: 1; color: #303133; }
+.og-legend-lbl { flex: 1; color: var(--bl-text-1); }
 .og-legend-cnt {
   font-size: 10px; padding: 1px 6px; border-radius: 8px;
-  background: #f0f2f5; color: #606266; min-width: 18px; text-align: center;
+  background: var(--bl-bg-2); color: var(--bl-text-2); min-width: 18px; text-align: center;
 }
 .og-legend-tip {
-  font-size: 10px; color: #909399;
-  padding-top: 6px; border-top: 1px dashed #ebeef5; margin-top: 4px;
+  font-size: 10px; color: var(--bl-text-3);
+  padding-top: 6px; border-top: 1px dashed var(--bl-divider); margin-top: 4px;
 }
 
 /* —— 右侧详情抽屉 —— */
 .og-drawer {
   position: absolute; top: 0; right: 0; bottom: 0;
   width: 360px;
-  background: #fff;
-  border-left: 1px solid #ebeef5;
-  box-shadow: -4px 0 12px rgba(0,0,0,.06);
+  background: var(--bl-bg-1);
+  border-left: 1px solid var(--bl-divider);
+  box-shadow: var(--bl-shadow-2);
   transform: translateX(100%);
   transition: transform .25s ease;
   z-index: 6;
@@ -815,31 +816,31 @@ watch(() => props.classId, () => {
 .og-drawer-hd {
   display: flex; align-items: flex-start; gap: 10px;
   padding: 16px 16px 12px;
-  border-bottom: 1px solid #ebeef5;
+  border-bottom: 1px solid var(--bl-divider);
 }
 .og-drawer-shape { flex-shrink: 0; padding-top: 4px; }
 .og-drawer-title { flex: 1; min-width: 0; }
-.og-drawer-cn { font-size: 14px; font-weight: 700; color: #303133; }
-.og-drawer-en { font-size: 11px; color: #909399; margin-top: 2px; }
+.og-drawer-cn { font-size: 14px; font-weight: 700; color: var(--bl-text-1); }
+.og-drawer-en { font-size: 11px; color: var(--bl-text-3); margin-top: 2px; }
 .og-drawer-body {
   flex: 1; overflow-y: auto;
   padding: 12px 16px 16px;
 }
 .og-kv {
   display: flex; padding: 6px 0;
-  border-bottom: 1px dashed #ebeef5;
+  border-bottom: 1px dashed var(--bl-divider);
   font-size: 12px;
 }
 .og-kv:last-child { border-bottom: 0; }
-.og-kv-l { width: 80px; color: #909399; flex-shrink: 0; }
-.og-kv-r { flex: 1; color: #303133; word-break: break-all; }
+.og-kv-l { width: 80px; color: var(--bl-text-3); flex-shrink: 0; }
+.og-kv-r { flex: 1; color: var(--bl-text-1); word-break: break-all; }
 .og-kv-block { display: block; }
 .og-kv-block .og-kv-l { width: auto; margin-bottom: 4px; font-weight: 500; }
 .og-kv-text { line-height: 1.55; }
 .og-drawer-props { list-style: none; margin: 4px 0 0; padding: 0; }
 .og-drawer-props li {
   display: flex; align-items: center; gap: 8px;
-  padding: 6px 0; border-bottom: 1px dashed #f0f2f5;
+  padding: 6px 0; border-bottom: 1px dashed var(--bl-divider);
   font-size: 12px;
 }
 

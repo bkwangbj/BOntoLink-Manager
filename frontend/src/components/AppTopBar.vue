@@ -9,14 +9,19 @@
       </a>
     </div>
 
-    <!-- 中：搜索，居中 -->
+    <!-- 中：搜索，居中 — 点击即打开全局搜索弹框 -->
     <div class="topbar-c">
-      <div class="search">
+      <div class="search" @click="openSearch" role="button" tabindex="0" @keydown.enter="openSearch">
         <span class="search-icon" v-html="BL.icon('search', 14)"></span>
-        <input class="bl-input search-input" placeholder="全局搜索（对象、关系、动作、数据源…）" @keydown.esc="$event.target.blur()" />
+        <div class="bl-input search-input search-input-fake">
+          <span class="search-placeholder">全局搜索（对象、关系、动作、数据源…）</span>
+        </div>
         <span class="search-kbd">⌘ K</span>
       </div>
     </div>
+
+    <!-- 全局搜索弹框 -->
+    <GlobalSearchModal v-model:open="searchOpen" />
 
     <!-- 右：通知 / 主题快切 / 全屏 -->
     <div class="topbar-r">
@@ -31,10 +36,13 @@
 import { onMounted, onBeforeUnmount, ref, computed } from 'vue'
 import { BL } from '@/lib/bl.js'
 import { useAppStore } from '@/stores/app.js'
+import GlobalSearchModal from '@/components/GlobalSearchModal.vue'
 
 const app = useAppStore()
 
 const fullscreen = ref(false)
+const searchOpen = ref(false)
+function openSearch() { searchOpen.value = true }
 const isDark = computed(() => {
   if (app.theme === 'dark') return true
   if (app.theme === 'light') return false
@@ -58,7 +66,7 @@ function onFsChange() { fullscreen.value = !!document.fullscreenElement }
 function onKeydown(e) {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
     e.preventDefault()
-    document.querySelector('.search-input')?.focus()
+    searchOpen.value = true
   } else if (e.key === '?' && document.activeElement?.tagName !== 'INPUT') {
     BL.info('快捷键：⌘K 搜索 · Esc 关闭弹层 · G+字母 跳模块 · Ctrl+S 保存')
   }
@@ -93,6 +101,18 @@ onBeforeUnmount(() => {
   flex-shrink: 0;
   gap: var(--bl-sp-4);
 }
+/* 深色下: 用 bg-2 为基底 + 更高的 primary 混色比, 让顶栏与主内容 (bg-0) 拉开明显层差 */
+:root[data-theme="dark"] .topbar {
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--bl-primary) 24%, var(--bl-bg-2)) 0%,
+      color-mix(in srgb, var(--bl-primary) 16%, var(--bl-bg-2)) 60%,
+      color-mix(in srgb, var(--bl-primary) 10%, var(--bl-bg-2)) 100%);
+  border-bottom-color: color-mix(in srgb, var(--bl-primary) 45%, var(--bl-border-strong));
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.45),
+    0 4px 16px color-mix(in srgb, var(--bl-primary) 18%, transparent);
+}
 .topbar-l { display: flex; align-items: center; }
 .topbar-c { display: flex; justify-content: center; }
 .topbar-r { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
@@ -108,14 +128,24 @@ onBeforeUnmount(() => {
   white-space: nowrap;
 }
 
-.search { position: relative; width: 480px; max-width: 100%; }
-.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--bl-text-3); }
+.search { position: relative; width: 480px; max-width: 100%; cursor: pointer; outline: none; }
+.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--bl-text-3); pointer-events: none; }
 .search-input {
   padding-left: 32px; padding-right: 60px;
   /* 搜索框背景跟随头部主题色, 微透白让 placeholder 仍清晰 */
   background: color-mix(in srgb, var(--bl-primary) 5%, var(--bl-bg-1));
   border: 1px solid color-mix(in srgb, var(--bl-primary) 20%, var(--bl-border));
   transition: background-color .15s, border-color .15s;
+}
+/* 仿 input 容器: 点击打开搜索弹框, 不接受键盘输入 */
+.search-input-fake {
+  display: flex; align-items: center;
+  cursor: pointer;
+}
+.search-placeholder {
+  color: var(--bl-text-3);
+  font-size: var(--bl-fs-13);
+  user-select: none;
 }
 .search-input:hover {
   background: color-mix(in srgb, var(--bl-primary) 8%, var(--bl-bg-1));
@@ -125,12 +155,30 @@ onBeforeUnmount(() => {
   background: var(--bl-bg-1);
   border-color: var(--bl-primary);
 }
+/* 深色下: 搜索框与顶栏渐变中段同基底, 视觉融合, focus 时凹入感更明显 */
+:root[data-theme="dark"] .search-input {
+  background: color-mix(in srgb, var(--bl-primary) 10%, var(--bl-bg-2));
+  border-color: color-mix(in srgb, var(--bl-primary) 30%, var(--bl-border-strong));
+}
+:root[data-theme="dark"] .search-input:hover {
+  background: color-mix(in srgb, var(--bl-primary) 16%, var(--bl-bg-2));
+  border-color: color-mix(in srgb, var(--bl-primary) 50%, var(--bl-border-strong));
+}
+:root[data-theme="dark"] .search-input:focus {
+  background: var(--bl-bg-1);
+  border-color: var(--bl-primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--bl-primary) 25%, transparent);
+}
 .search-kbd {
   position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
   font-size: var(--bl-fs-11); color: var(--bl-text-3);
   background: color-mix(in srgb, var(--bl-primary) 3%, var(--bl-bg-1));
   padding: 2px 6px; border-radius: 4px;
   border: 1px solid color-mix(in srgb, var(--bl-primary) 15%, var(--bl-border));
+}
+:root[data-theme="dark"] .search-kbd {
+  background: color-mix(in srgb, var(--bl-primary) 8%, var(--bl-bg-1));
+  border-color: color-mix(in srgb, var(--bl-primary) 25%, var(--bl-border-strong));
 }
 
 /* 小屏自动让搜索框缩 */

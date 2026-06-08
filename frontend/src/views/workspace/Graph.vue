@@ -61,7 +61,6 @@
           </div>
           <!-- 左画布左侧浮动工具栏 -->
           <aside class="gr-canvas-tools">
-            <button class="gr-tool-btn" title="重新布局" @click="relayoutSide('L')"><span v-html="BL.icon('grid', 14)"></span></button>
             <button class="gr-tool-btn" title="适配视图" @click="fitViewSide('L')"><span v-html="BL.icon('move', 14)"></span></button>
             <div class="gr-tool-div"></div>
             <button class="gr-tool-btn" title="放大" @click="zoomSide('L', 0.1)"><span v-html="BL.icon('zoomIn', 14)"></span></button>
@@ -159,7 +158,6 @@
           </div>
           <!-- 右画布左侧浮动工具栏 -->
           <aside class="gr-canvas-tools">
-            <button class="gr-tool-btn" title="重新布局" @click="relayoutSide('R')"><span v-html="BL.icon('grid', 14)"></span></button>
             <button class="gr-tool-btn" title="适配视图" @click="fitViewSide('R')"><span v-html="BL.icon('move', 14)"></span></button>
             <div class="gr-tool-div"></div>
             <button class="gr-tool-btn" title="放大" @click="zoomSide('R', 0.1)"><span v-html="BL.icon('zoomIn', 14)"></span></button>
@@ -1263,7 +1261,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeyDown))
 .gr-drawer-cn { font-size: 14px; font-weight: 700; color: var(--bl-text-1); }
 .gr-drawer-en { font-size: 11px; color: var(--bl-text-3); margin-top: 2px; }
 .gr-drawer-body { flex: 1; overflow-y: auto; padding: 12px 16px 16px; }
-.gr-kv { display: flex; padding: 6px 0; border-bottom: 1px dashed var(--bl-divider); font-size: 12px; }
+.gr-kv { display: flex; padding: 6px 0; border-bottom: 1px dashed var(--bl-border); font-size: 12px; }
 .gr-kv-l { width: 70px; color: var(--bl-text-3); flex-shrink: 0; }
 .gr-kv-r { flex: 1; color: var(--bl-text-1); }
 .gr-kv-block { display: block; }
@@ -1272,7 +1270,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeyDown))
 .gr-rels { list-style: none; margin: 4px 0 0; padding: 0; }
 .gr-rels li {
   display: flex; align-items: center; gap: 8px;
-  padding: 6px 0; border-bottom: 1px dashed #f0f2f5;
+  padding: 6px 0; border-bottom: 1px dashed var(--bl-border);
   font-size: 12px;
 }
 

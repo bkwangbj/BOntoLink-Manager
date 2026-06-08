@@ -11,8 +11,8 @@
             <span class="lke-ic lke-ic-lg" :style="{ background: cardColor }"
                   v-html="BL.icon('link', 18, '#fff')"></span>
             <div class="lke-title-wrap">
-              <div class="lke-title bl-truncate" :title="form.rdfs_label || form.link_type_id || '新建链接'">
-                {{ form.rdfs_label || form.link_type_id || '新建链接' }}
+              <div class="lke-title bl-truncate" :title="form.rdfs_label || form.link_type_id || props.fallbackTitle || '新建链接'">
+                {{ form.rdfs_label || form.link_type_id || props.fallbackTitle || '新建链接' }}
                 <span v-if="form.link_type_id" class="bl-mono bl-muted lke-code">- {{ form.link_type_id }}</span>
               </div>
               <div class="lke-meta" v-if="form.id">
@@ -404,7 +404,10 @@ const props = defineProps({
   allClasses: { type: Array, default: () => [] },
   /* 是否显示顶部 tab (基础信息 / 链接关系图)
      默认 true: 链接模块主页 LinkTypes.vue 用; 对象模块下 TabLinkGraph 传 false */
-  showTabs: { type: Boolean, default: true }
+  showTabs: { type: Boolean, default: true },
+  /* 新建模式时的默认标题 (e.g. 图谱里选中边的关系名).
+     有 form.rdfs_label / link_type_id 时仍以那个为准. */
+  fallbackTitle: { type: String, default: '' }
 })
 const emit = defineEmits(['update:open', 'saved', 'deleted'])
 
@@ -859,11 +862,11 @@ function pickTable(t) {
   background: var(--bl-primary-soft); color: var(--bl-primary);
   font-size: 11px; font-weight: 600; flex-shrink: 0;
 }
-.lke-col-tag-r { background: #fff2e0; color: #FF7D00; }
+.lke-col-tag-r { background: var(--bl-warning-soft); color: var(--bl-warning); }
 .lke-col-hd .bl-input { flex: 1; height: 30px; }
 .lke-enabled { display: inline-flex; align-items: center; cursor: pointer; flex-shrink: 0; }
 .lke-enabled input { display: none; }
-.lke-en-track { width: 28px; height: 14px; border-radius: 8px; background: #c9cdd4; position: relative; }
+.lke-en-track { width: 28px; height: 14px; border-radius: 8px; background: var(--bl-border-strong); position: relative; }
 .lke-enabled input:checked + .lke-en-track { background: var(--bl-success); }
 .lke-en-dot { position: absolute; left: 2px; top: 2px; width: 10px; height: 10px; border-radius: 50%; background: #fff; transition: left .15s; }
 .lke-enabled input:checked + .lke-en-track .lke-en-dot { left: 16px; }
@@ -889,7 +892,7 @@ function pickTable(t) {
 .lke-input-wrap .bl-input { flex: 1; }
 .lke-valid-tag {
   position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-  font-size: 10px; background: #e8fff4; color: #00b42a;
+  font-size: 10px; background: var(--bl-success-soft); color: var(--bl-success);
   padding: 1px 6px; border-radius: 3px;
 }
 
@@ -939,8 +942,8 @@ function pickTable(t) {
   grid-area: ds-row;
   margin: 0;
   padding: 8px 12px;
-  background: #fffbf0;
-  border: 1px dashed #FF7D00;
+  background: color-mix(in srgb, var(--bl-warning) 8%, var(--bl-bg-1));
+  border: 1px dashed var(--bl-warning);
   border-radius: 6px;
   display: flex; align-items: center; gap: 10px;
 }
@@ -954,7 +957,7 @@ function pickTable(t) {
   margin-left: 8px;
   display: inline-flex; align-items: center; gap: 4px;
   height: 30px; padding: 0 12px;
-  background: #fff;
+  background: var(--bl-bg-1);
   border: 1px solid var(--bl-border);
   border-radius: 4px;
   font-size: 13px; color: var(--bl-text-1);
@@ -983,7 +986,7 @@ function pickTable(t) {
 .tbl-row {
   display: flex; align-items: center; gap: 6px;
   padding: 8px 12px;
-  background: #fff;
+  background: var(--bl-bg-1);
   border: 1px solid var(--bl-border);
   border-radius: 4px;
   cursor: pointer;
@@ -1021,7 +1024,8 @@ function pickTable(t) {
 .bl-textarea {
   width: 100%; min-height: 70px; padding: 8px 10px;
   border: 1px solid var(--bl-border); border-radius: 4px;
-  background: #fff; font-family: inherit; font-size: 13px;
+  background: var(--bl-bg-1); color: var(--bl-text-1);
+  font-family: inherit; font-size: 13px;
   line-height: 1.55; resize: vertical;
 }
 .bl-textarea:focus { outline: none; border-color: var(--bl-primary); }

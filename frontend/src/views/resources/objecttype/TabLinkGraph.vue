@@ -472,9 +472,9 @@ onBeforeUnmount(() => window.removeEventListener('resize', onResize))
 .lg-canvas-wrap {
   flex: 1; position: relative;
   background:
-    linear-gradient(rgba(150,150,150,.08) 1px, transparent 1px) 0 0 / 20px 20px,
-    linear-gradient(90deg, rgba(150,150,150,.08) 1px, transparent 1px) 0 0 / 20px 20px,
-    #fafbfc;
+    linear-gradient(color-mix(in srgb, var(--bl-text-3) 18%, transparent) 1px, transparent 1px) 0 0 / 20px 20px,
+    linear-gradient(90deg, color-mix(in srgb, var(--bl-text-3) 18%, transparent) 1px, transparent 1px) 0 0 / 20px 20px,
+    var(--bl-bg-1);
   overflow: hidden;
   user-select: none;
 }
@@ -511,16 +511,16 @@ onBeforeUnmount(() => window.removeEventListener('resize', onResize))
 .lg-node-g { cursor: pointer; }
 .lg-node-g:active { cursor: grabbing; }
 .lg-node-bg {
-  fill: #fff;
+  fill: var(--bl-bg-2);
   stroke: var(--bl-border);
   stroke-width: 1;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,.08));
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.12));
 }
 .lg-node-g.is-center .lg-node-bg {
   stroke: var(--bl-primary); stroke-width: 2;
 }
 .lg-node-g.is-virtual .lg-node-bg {
-  fill: #fafbfc; stroke-dasharray: 4,3;
+  fill: transparent; stroke-dasharray: 4,3;
 }
 .lg-node-g:hover .lg-node-bg { stroke: var(--bl-primary); }
 .lg-node-cn {
@@ -536,14 +536,14 @@ onBeforeUnmount(() => window.removeEventListener('resize', onResize))
 /* 连线 */
 .lg-link {
   fill: none;
-  stroke: #86909c;
+  stroke: var(--bl-text-3);
   stroke-width: 1.5;
   cursor: pointer;
   transition: stroke .12s;
 }
 .lg-link:hover { stroke: var(--bl-primary); }
 .lg-link.is-selected { stroke: var(--bl-primary); stroke-width: 2.5; }
-.lg-link.is-virtual { stroke: #c9cdd4; }
+.lg-link.is-virtual { stroke: var(--bl-text-4); }
 .lg-link-hit {
   fill: none; stroke: transparent; stroke-width: 10;
   cursor: pointer;
