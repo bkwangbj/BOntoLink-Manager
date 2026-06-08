@@ -573,7 +573,7 @@ import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick, h
 import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
-import { enumTypeApi, groupApi, groupRefApi } from '@/api'
+import { enumTypeApi, groupApi, groupRefApi, datasourceApi } from '@/api'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 
 /* —— 数据 Tab 树节点 (递归) —— */
@@ -641,6 +641,7 @@ const syncForm = reactive({
   field_code: '', field_name: '', field_sort: '', field_status: '',
   filter_sql: '', sync_mode: 'level_diff', sync_strategy: 'once'
 })
+const datasourceOptions = ref([])
 const syncLogs = ref([])
 const syncLogsOpen = ref(false)
 const syncRunning = ref(false)
@@ -835,7 +836,7 @@ async function loadDetail(id) {
   levelRules.value = d.levelRules || []
 }
 
-onMounted(loadAll)
+onMounted(async () => { await loadAll(); datasourceOptions.value = (await datasourceApi.list().catch(() => [])).filter(d => d.status === 1) })
 
 function toggleExpand(id) {
   const s = new Set(expanded.value)
