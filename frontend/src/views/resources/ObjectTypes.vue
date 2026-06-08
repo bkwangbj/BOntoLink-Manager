@@ -15,8 +15,12 @@
           <span v-html="BL.icon('layers', 12)"></span>
           <span style="margin-left:4px">分组</span>
         </button>
-        <select class="bl-input ot-select" v-model="filterDomain" :title="'业务领域'">
-          <option value="">全部业务领域</option>
+        <select class="bl-input ot-select" v-model="filterIndustry" :title="'行业'">
+          <option value="">全部行业</option>
+          <option v-for="i in industryOpts" :key="i.code" :value="i.code">{{ i.label }}</option>
+        </select>
+        <select class="bl-input ot-select" v-model="filterDomain" :title="'业务领域 (受所选行业级联)'">
+          <option value="">{{ filterIndustry ? '全部领域' : '全部业务领域' }}</option>
           <option v-for="d in domainOpts" :key="d.code" :value="d.code">{{ d.label }}</option>
         </select>
         <select class="bl-input ot-select" v-model="filterStatus" :title="'状态'">
@@ -442,23 +446,55 @@ const tree = ref([])
 
 /* ===== 顶部筛选 ===== */
 const q = ref('')
-const filterDomain = ref('')
+const filterIndustry = ref('')   // 行业 code (level 1)
+const filterDomain = ref('')     // 领域 code (level 2+, 受 filterIndustry 级联约束)
 const filterStatus = ref('')
 
 const titleTip = computed(() => '对象类别 · 对象、属性、物理映射、规则')
 
-// 业务领域选项：仅显示"领域"(category_type=2)节点
+// 行业选项: 顶层 (category_type=1)
+const industryOpts = computed(() => {
+  return (tree.value || [])
+    .filter(n => n.categoryType === 1)
+    .map(n => ({ code: n.categoryCode, label: n.label || n.rdfsLabel || n.categoryCode }))
+})
+
+// 领域选项: 受行业级联约束 (filterIndustry 为空时显示所有领域)
 const domainOpts = computed(() => {
   const out = []
+  const indCode = filterIndustry.value
   const walk = (ns) => {
     for (const n of (ns || [])) {
       if (n.categoryType === 2) out.push({ code: n.categoryCode, label: n.label || n.rdfsLabel || n.categoryCode })
       if (n.children?.length) walk(n.children)
     }
   }
-  walk(tree.value)
+  if (indCode) {
+    // 找到选中的行业, 只遍历它的子树
+    const ind = (tree.value || []).find(n => n.categoryCode === indCode && n.categoryType === 1)
+    if (ind) walk(ind.children)
+  } else {
+    // 无行业筛选 → 列出全部领域
+    walk(tree.value)
+  }
   return out
 })
+
+// 行业切换 → 自动重置领域 (避免脏选)
+watch(filterIndustry, () => { filterDomain.value = '' })
+
+// 工具: 收集行业下所有后代 category_code (含自身)
+function descendantCodesOfIndustry(indCode) {
+  const set = new Set()
+  const ind = (tree.value || []).find(n => n.categoryCode === indCode && n.categoryType === 1)
+  if (!ind) return set
+  const walk = (n) => {
+    if (n.categoryCode) set.add(n.categoryCode)
+    ;(n.children || []).forEach(walk)
+  }
+  walk(ind)
+  return set
+}
 
 /* ===== 排序 ===== */
 const sortKey = ref('')
@@ -482,6 +518,11 @@ function onCategoryChange({ codes }) {
 const filtered = computed(() => {
   let list = rows.value
   if (selectedCategoryCodes.value) list = list.filter(r => selectedCategoryCodes.value.has(r.category_code))
+  // 行业过滤: 命中该行业下所有后代 codes
+  if (filterIndustry.value) {
+    const codes = descendantCodesOfIndustry(filterIndustry.value)
+    list = list.filter(r => codes.has(r.category_code))
+  }
   if (filterDomain.value) list = list.filter(r => r.category_code === filterDomain.value)
   if (filterStatus.value !== '') list = list.filter(r => String(r.status) === filterStatus.value)
   const k = q.value.trim().toLowerCase()
@@ -747,7 +788,7 @@ async function copyText(t) {
   try { await navigator.clipboard.writeText(String(t)); BL.success('已复制') }
   catch { BL.warning('复制失败,请手动选取') }
 }
-function clearFilters() { q.value = ''; filterDomain.value = ''; filterStatus.value = '' }
+function clearFilters() { q.value = ''; filterIndustry.value = ''; filterDomain.value = ''; filterStatus.value = '' }
 /* —— 新建对象类型向导 —— */
 const wizardOpen = ref(false)
 function onCreate() { wizardOpen.value = true }
@@ -787,9 +828,17 @@ async function batchSetStatus(status) {
 }
 
 /* ===== 生命周期 ===== */
+import { useRoute } from 'vue-router'
+const route = useRoute()
 onMounted(async () => {
   try { tree.value = await categoryApi.tree() } catch {}
   try { rows.value = await resourceApi.classes({ aggregate: true }) } catch { rows.value = [] }
+  // 支持来自图谱页跳转: ?openId=<class-id> 自动打开抽屉
+  const openId = route.query.openId
+  if (openId) {
+    const row = rows.value.find(r => r.id === openId)
+    if (row) openDrawer(row)
+  }
 })
 </script>
 

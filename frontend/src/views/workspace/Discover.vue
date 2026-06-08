@@ -53,7 +53,7 @@
              @click="onCardClick(s)">
           <!-- 大图标水印 (右下角, 10% 透明度, 与 Category 总览同款) -->
           <span class="ov-card-wm" v-html="BL.icon(s.icon, 76, s.color)"></span>
-          <!-- 头部: 图标徽章 + 中英名称 -->
+          <!-- Row 1: 图标徽章 + 中英名称 (中文上 / 英文下) -->
           <div class="ov-card-hd">
             <span class="ov-card-ic" :style="{ color: s.color, background: s.color + '1f' }"
                   v-html="BL.icon(s.icon, 18, s.color)"></span>
@@ -62,12 +62,14 @@
               <span class="ov-card-en">{{ s.en }}</span>
             </div>
           </div>
-          <!-- 数字 (active | total) -->
+          <!-- Row 2: 数字 (active | total) -->
           <div class="ov-card-num" :class="numScale(stats[s.key])">
             <span class="ov-card-active">{{ stats[s.key]?.active ?? 0 }}</span>
             <span class="ov-card-sep">|</span>
             <span class="ov-card-total">{{ stats[s.key]?.total ?? 0 }}</span>
           </div>
+          <!-- Row 3: 简要文字概述 -->
+          <div class="ov-card-brief" :title="s.brief">{{ s.brief }}</div>
         </div>
       </div>
     </section>
@@ -89,27 +91,27 @@ const router = useRouter()
 const STAT_GROUPS = [
   // 第一行: 4 列 — 结构资源 (行业/领域/分组/数据源)
   { cols: 4, items: [
-    { key: 'industry',   cn: '行业数',   en: 'Industry',   icon: 'industry', color: '#165DFF', target: '/config/category' },
-    { key: 'domain',     cn: '领域数',   en: 'Domain',     icon: 'folder',   color: '#00B42A', target: '/config/category' },
-    { key: 'group',      cn: '分组数',   en: 'Group',      icon: 'grid',     color: '#722ED1', target: '/config/category' },
-    { key: 'datasource', cn: '数据源数', en: 'Datasources',icon: 'database', color: '#FF7D00', target: '/resources/datasources' }
+    { key: 'industry',   cn: '行业数',   en: 'Industry',   icon: 'industry', color: '#165DFF', target: '/config/category',          brief: '系统中已创建的行业总数' },
+    { key: 'domain',     cn: '领域数',   en: 'Domain',     icon: 'folder',   color: '#00B42A', target: '/config/category',          brief: '行业下细分的业务领域数量' },
+    { key: 'group',      cn: '分组数',   en: 'Group',      icon: 'grid',     color: '#722ED1', target: '/config/category',          brief: '领域内按主题划分的分组' },
+    { key: 'datasource', cn: '数据源数', en: 'Datasources',icon: 'database', color: '#FF7D00', target: '/resources/datasources',    brief: '系统接入的物理数据源' }
   ]},
   // 第二行: 6 列 — 本体资源
   { cols: 6, items: [
-    { key: 'objectType', cn: '对象类型', en: 'Object types', icon: 'cube',         color: '#165DFF', target: '/resources/object-types' },
-    { key: 'linkType',   cn: '关系类型', en: 'Link types',   icon: 'link',         color: '#FF7D00', target: '/resources/link-types' },
-    { key: 'actionType', cn: '动作类型', en: 'Action types', icon: 'zap',          color: '#722ED1', target: '/resources/actions' },
-    { key: 'function',   cn: '函数',     en: 'Functions',    icon: 'fileCode',     color: '#14C9C9', target: '/resources/functions' },
-    { key: 'typeClass',  cn: '类型类',   en: 'Type classes', icon: 'tag',          color: '#EB2F96', target: '/config/type-classes' },
-    { key: 'interface',  cn: '接口',     en: 'Interfaces',   icon: 'externalLink', color: '#2F54EB', target: '/resources/interfaces' }
+    { key: 'objectType', cn: '对象类型', en: 'Object types', icon: 'cube',         color: '#165DFF', target: '/resources/object-types', brief: '本体中定义的实体类型' },
+    { key: 'linkType',   cn: '关系类型', en: 'Link types',   icon: 'link',         color: '#FF7D00', target: '/resources/link-types',   brief: '对象之间的关联关系' },
+    { key: 'actionType', cn: '动作类型', en: 'Action types', icon: 'zap',          color: '#722ED1', target: '/resources/actions',      brief: '本体上可触发的操作' },
+    { key: 'function',   cn: '函数',     en: 'Functions',    icon: 'fileCode',     color: '#14C9C9', target: '/resources/functions',    brief: '派生 / 计算逻辑' },
+    { key: 'typeClass',  cn: '类型类',   en: 'Type classes', icon: 'tag',          color: '#EB2F96', target: '/config/type-classes',    brief: '抽象接口与规则约束类' },
+    { key: 'interface',  cn: '接口',     en: 'Interfaces',   icon: 'externalLink', color: '#2F54EB', target: '/resources/interfaces',   brief: '对外暴露的 API 接口' }
   ]},
   // 第三行: 5 列 — 属性 / 类型
   { cols: 5, items: [
-    { key: 'property',       cn: '属性数',   en: 'Properties',     icon: 'fileText', color: '#00B42A', target: '/resources/properties' },
-    { key: 'enumType',       cn: '枚举类型', en: 'Enum types',     icon: 'list',     color: '#722ED1', target: '/resources/enum-types' },
-    { key: 'valueType',      cn: '值类型',   en: 'Value types',    icon: 'hash',     color: '#14C9C9', target: '/resources/value-types' },
-    { key: 'structProperty', cn: '结构属性', en: 'Structural properties', icon: 'sliders', color: '#165DFF', target: '/resources/shared-props' },
-    { key: 'sharedProperty', cn: '共享属性', en: 'Shared properties',     icon: 'share',   color: '#FA541C', target: '/resources/shared-props' }
+    { key: 'property',       cn: '属性数',   en: 'Properties',     icon: 'fileText', color: '#00B42A', target: '/resources/properties',  brief: '对象上定义的全部属性' },
+    { key: 'enumType',       cn: '枚举类型', en: 'Enum types',     icon: 'list',     color: '#722ED1', target: '/resources/enum-types',  brief: '取值有限的枚举字典' },
+    { key: 'valueType',      cn: '值类型',   en: 'Value types',    icon: 'hash',     color: '#14C9C9', target: '/resources/value-types', brief: '基础数据类型定义' },
+    { key: 'structProperty', cn: '结构属性', en: 'Structural properties', icon: 'sliders', color: '#165DFF', target: '/resources/shared-props', brief: '复合 / 嵌套结构属性' },
+    { key: 'sharedProperty', cn: '共享属性', en: 'Shared properties',     icon: 'share',   color: '#FA541C', target: '/resources/shared-props', brief: '跨对象复用的属性' }
   ]}
 ]
 
@@ -405,7 +407,7 @@ onMounted(async () => {
   opacity: .10; pointer-events: none; line-height: 0;
   transform: rotate(-8deg);
 }
-/* 头部: 图标徽章 + 名称 */
+/* Row 1: 图标徽章 + 中英名称 (中文上 / 英文下) */
 .ov-card-hd {
   display: flex; align-items: center; gap: 8px;
   position: relative; z-index: 1;
@@ -422,14 +424,15 @@ onMounted(async () => {
 .ov-card-name {
   font-size: 13px; font-weight: 600;
   color: var(--bl-text-1);
+  white-space: nowrap;
 }
 .ov-card-en {
   font-size: 10.5px; font-weight: 400;
   color: var(--bl-text-3);
-  margin-top: 1px;
+  margin-top: 2px;
+  white-space: nowrap;
 }
-/* 数字 — 缩进到与上方"中文名 / Domain"文字左侧对齐
-   缩进量 = 图标徽章宽度 (30px) + 头部 gap (8px) = 38px */
+/* Row 2: 数字 (active | total) — 缩进 38px 与上方文字对齐 */
 .ov-card-num {
   font-size: 22px;
   font-weight: 700;
@@ -443,6 +446,16 @@ onMounted(async () => {
 .ov-card-active { color: #00B42A; }
 .ov-card-sep { color: var(--bl-text-3); font-weight: 400; font-size: 16px; }
 .ov-card-total { color: var(--bl-text-1); font-size: 18px; font-weight: 500; }
+/* Row 3: 简要文字概述 — 与数字同样缩进对齐 */
+.ov-card-brief {
+  font-size: 11.5px; color: var(--bl-text-3);
+  padding-left: 38px;
+  position: relative; z-index: 1;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 /* —— 响应式断点 —— */
 @media (max-width: 1280px) {

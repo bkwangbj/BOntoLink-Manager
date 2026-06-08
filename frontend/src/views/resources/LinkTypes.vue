@@ -293,8 +293,8 @@ function statusTagCls(s) {
   font-size: 12px; display: flex; justify-content: space-between; align-items: center;
 }
 .lk-pager-l { display: inline-flex; align-items: center; }
-.lk-del-btn { background: #fff; border: 1px solid #f53f3f; color: #f53f3f; }
-.lk-del-btn:hover { background: #fff1f0; }
+.lk-del-btn { background: var(--bl-bg-1); border: 1px solid #f53f3f; color: #f53f3f; }
+.lk-del-btn:hover { background: color-mix(in srgb, #f53f3f 8%, var(--bl-bg-1)); }
 
 /* 表格 */
 .lk-table { width: 100%; min-width: 1300px; }
@@ -303,11 +303,11 @@ function statusTagCls(s) {
   background: var(--bl-bg-2);
   box-shadow: inset 0 -1px 0 var(--bl-divider);
   font-weight: 600; font-size: 12px; height: 34px; padding: 0 8px;
-  color: #333; white-space: nowrap;
+  color: var(--bl-text-1); white-space: nowrap;
 }
 .lk-table thead th.t-left { text-align: left; }
-.lk-table tbody tr { background: #fff; cursor: pointer; }
-.lk-table tbody tr:hover { background: #f5f7fa; }
+.lk-table tbody tr { background: var(--bl-bg-1); cursor: pointer; }
+.lk-table tbody tr:hover { background: var(--bl-bg-hover); }
 .lk-table tbody tr.is-active { background: var(--bl-primary-soft); }
 .lk-table td { padding: 0 8px; font-size: 12px; height: 44px; vertical-align: middle; }
 .lk-table td.t-center { text-align: center; }
@@ -329,7 +329,7 @@ function statusTagCls(s) {
 <style>
 .mini-sw {
   display: inline-block; width: 26px; height: 14px;
-  border-radius: 8px; background: #c9cdd4;
+  border-radius: 8px; background: var(--bl-bg-3, #c9cdd4);
   position: relative; cursor: pointer;
   transition: background-color .15s;
   vertical-align: middle;
@@ -339,8 +339,8 @@ function statusTagCls(s) {
 .mini-sw-dot {
   position: absolute; left: 2px; top: 2px;
   width: 10px; height: 10px; border-radius: 50%;
-  background: #fff; transition: left .15s;
-  box-shadow: 0 1px 2px rgba(0,0,0,.2);
+  background: var(--bl-bg-1); transition: left .15s;
+  box-shadow: 0 1px 2px rgba(0,0,0,.3);
 }
 .mini-sw.is-on .mini-sw-dot { left: 14px; }
 </style>

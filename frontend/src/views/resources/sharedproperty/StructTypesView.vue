@@ -595,7 +595,7 @@ function truncate(s, n) {
   width: 2px; height: 24px;
   background: var(--bl-divider); border-radius: 2px;
 }
-.stv-handle:hover::before { background: #fff; }
+.stv-handle:hover::before { background: var(--bl-bg-1); }
 
 /* 工具栏 */
 .stv-tb {
@@ -607,8 +607,8 @@ function truncate(s, n) {
 }
 .stv-tb-l { font-weight: 500; color: var(--bl-text-1); display: inline-flex; align-items: center; }
 .stv-tb-r { display: inline-flex; gap: 6px; }
-.stv-del-btn { background: #fff; border: 1px solid #f53f3f; color: #f53f3f; }
-.stv-del-btn:hover { background: #fff1f0; }
+.stv-del-btn { background: var(--bl-bg-1); border: 1px solid #f53f3f; color: #f53f3f; }
+.stv-del-btn:hover { background: color-mix(in srgb, #f53f3f 8%, var(--bl-bg-1)); }
 
 /* 列表 */
 .stv-list-scroll { flex: 1; overflow: auto; min-height: 0; }
@@ -621,12 +621,12 @@ function truncate(s, n) {
   background: var(--bl-bg-2);
   box-shadow: inset 0 -1px 0 var(--bl-divider);
   font-weight: 600; padding: 0 8px;
-  font-size: 12px; height: 34px; color: #333;
+  font-size: 12px; height: 34px; color: var(--bl-text-1);
   white-space: nowrap;
 }
 .stv-table thead th.t-left { text-align: left; }
-.stv-table tbody tr { background: #fff; cursor: pointer; }
-.stv-table tbody tr:hover { background: #f5f7fa; }
+.stv-table tbody tr { background: var(--bl-bg-1); cursor: pointer; }
+.stv-table tbody tr:hover { background: var(--bl-bg-hover); }
 .stv-table tbody tr.is-active { background: var(--bl-primary-soft); }
 .stv-table td { padding: 0 8px; font-size: 12px; height: 36px; vertical-align: middle; }
 .stv-table td.t-left { text-align: left; }
@@ -684,7 +684,8 @@ function truncate(s, n) {
 .bl-textarea {
   width: 100%; min-height: 70px; padding: 8px 10px;
   border: 1px solid var(--bl-border); border-radius: 4px;
-  background: #fff; font-family: inherit; font-size: 13px;
+  background: var(--bl-bg-1); color: var(--bl-text-1);
+  font-family: inherit; font-size: 13px;
   line-height: 1.55; resize: vertical;
 }
 .bl-textarea:focus { outline: none; border-color: var(--bl-primary); }
@@ -694,7 +695,7 @@ function truncate(s, n) {
 <style>
 .mini-sw {
   display: inline-block; width: 26px; height: 14px;
-  border-radius: 8px; background: #c9cdd4;
+  border-radius: 8px; background: var(--bl-border-strong, #c9cdd4);
   position: relative; cursor: pointer;
   transition: background-color .15s;
   vertical-align: middle;
@@ -704,8 +705,8 @@ function truncate(s, n) {
 .mini-sw-dot {
   position: absolute; left: 2px; top: 2px;
   width: 10px; height: 10px; border-radius: 50%;
-  background: #fff; transition: left .15s;
-  box-shadow: 0 1px 2px rgba(0,0,0,.2);
+  background: var(--bl-bg-1); transition: left .15s;
+  box-shadow: 0 1px 2px rgba(0,0,0,.3);
 }
 .mini-sw.is-on .mini-sw-dot { left: 14px; }
 </style>

@@ -85,14 +85,21 @@ public class GraphController {
             String gid = g.getId();
             String parentCatId = g.getParentId();
             String catCode = g.getCategoryCode();
+            // boundClassIds 双重来源合并: ① category_code 反查 ② ont_biz_group_class 关联表
+            java.util.LinkedHashSet<String> bound = new java.util.LinkedHashSet<>();
+            if (catCode != null) bound.addAll(classIdsByCode.getOrDefault(catCode, Collections.emptyList()));
+            // 关联表里通过 group_id 找绑定的 class
+            for (Map<String, Object> cls : bizGroupMapper.listGroupClasses(gid)) {
+                Object idObj = cls.get("id");
+                if (idObj != null) bound.add(idObj.toString());
+            }
             Map<String, Object> n = new LinkedHashMap<>();
             n.put("id", gid);
             n.put("label", g.getGName());
             n.put("kind", "group");
             n.put("categoryCode", catCode);
             n.put("parentId", parentCatId);
-            n.put("boundClassIds", catCode == null ? Collections.emptyList()
-                    : classIdsByCode.getOrDefault(catCode, Collections.emptyList()));
+            n.put("boundClassIds", new ArrayList<>(bound));
             nodes.add(n);
             if (parentCatId != null && byId.containsKey(parentCatId)) {
                 edges.add(edge(parentCatId, gid, "hierarchy"));
@@ -174,20 +181,61 @@ public class GraphController {
         return R.ok(graph);
     }
 
-    /* —— mock 关系兜底: 仅当 eq/dis/union 完全缺失时, 用前 4 个类节点编织演示边 —— */
+    /* —— mock 关系生成: 编织 5 类边覆盖所有节点, 确保多层连通 (探索时可达 3+ 层放射网) —— */
     private void ensureMockRelations(List<Map<String, Object>> nodes, List<Map<String, Object>> edges) {
-        boolean hasEq = edges.stream().anyMatch(e -> "eq".equals(e.get("kind")));
-        boolean hasDis = edges.stream().anyMatch(e -> "dis".equals(e.get("kind")));
-        boolean hasUnion = edges.stream().anyMatch(e -> "union".equals(e.get("kind")));
-        if (hasEq && hasDis && hasUnion) return;
         if (nodes.size() < 4) return;
-        String a = (String) nodes.get(0).get("id");
-        String b = (String) nodes.get(1).get("id");
-        String c = (String) nodes.get(2).get("id");
-        String d = (String) nodes.get(3).get("id");
-        if (!hasEq)    edges.add(edge(a, b, "eq"));
-        if (!hasDis)   edges.add(edge(c, d, "dis"));
-        if (!hasUnion) edges.add(edge(b, c, "union"));
+        // 已存在的 (src,tgt) 集合, 避免重复
+        java.util.Set<String> existing = new java.util.HashSet<>();
+        for (Map<String, Object> e : edges) {
+            existing.add(e.get("source") + "|" + e.get("target"));
+            existing.add(e.get("target") + "|" + e.get("source"));
+        }
+        String[] kinds = { "sub", "eq", "dis", "union", "link" };
+        java.util.Random rnd = new java.util.Random(42);   // 固定 seed 让每次 mock 一致
+
+        // 目标: 每个节点至少 2 条边, 整图至少 60 条边 (足够形成 3+ 层 BFS)
+        int targetEdges = Math.max(60, nodes.size() * 3 / 2);
+
+        // 每个节点保证至少 2 个邻居
+        for (int i = 0; i < nodes.size(); i++) {
+            String src = (String) nodes.get(i).get("id");
+            int deg = countDegree(src, edges);
+            while (deg < 2) {
+                int j = rnd.nextInt(nodes.size());
+                if (j == i) continue;
+                String tgt = (String) nodes.get(j).get("id");
+                String key = src + "|" + tgt;
+                if (existing.contains(key)) continue;
+                String kind = kinds[rnd.nextInt(kinds.length)];
+                edges.add(edge(src, tgt, kind));
+                existing.add(key);
+                existing.add(tgt + "|" + src);
+                deg++;
+            }
+        }
+        // 再补到总边数目标 (随机选两个节点连边, 5 类轮流)
+        int kindIdx = 0;
+        while (edges.size() < targetEdges) {
+            int a = rnd.nextInt(nodes.size());
+            int b = rnd.nextInt(nodes.size());
+            if (a == b) continue;
+            String src = (String) nodes.get(a).get("id");
+            String tgt = (String) nodes.get(b).get("id");
+            String key = src + "|" + tgt;
+            if (existing.contains(key)) continue;
+            edges.add(edge(src, tgt, kinds[kindIdx % kinds.length]));
+            existing.add(key);
+            existing.add(tgt + "|" + src);
+            kindIdx++;
+        }
+    }
+
+    private int countDegree(String nodeId, List<Map<String, Object>> edges) {
+        int d = 0;
+        for (Map<String, Object> e : edges) {
+            if (nodeId.equals(e.get("source")) || nodeId.equals(e.get("target"))) d++;
+        }
+        return d;
     }
 
     private static Map<String, Object> edge(String source, String target, String kind) {
