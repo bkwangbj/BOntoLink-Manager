@@ -272,16 +272,83 @@ button { font-family: inherit; }
 /* ---------- 模态确认 ---------- */
 .bl-modal-mask {
   position: fixed; inset: 0;
-  background: rgba(0,0,0,0.36);
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   z-index: 1300;
   display: flex; align-items: center; justify-content: center;
 }
 .bl-modal {
   background: var(--bl-bg-1);
+  border: 1px solid var(--bl-border);
   border-radius: var(--bl-radius-3);
-  box-shadow: var(--bl-shadow-3);
+  /* 双层阴影: 远阴影 + 1px 内侧高光描边 (在深色下让弹框"浮"起来) */
+  box-shadow:
+    0 24px 56px rgba(0,0,0,0.55),
+    0 2px 8px rgba(0,0,0,0.3);
   min-width: 360px; max-width: 90vw;
   overflow: hidden;
+}
+/* 深色模式下: 边框加强 + 顶部 1px 高光描边模拟"立体浮起" */
+:root[data-theme="dark"] .bl-modal-mask {
+  background: rgba(0,0,0,0.6);
+}
+:root[data-theme="dark"] .bl-modal {
+  border-color: var(--bl-border-strong);
+  box-shadow:
+    0 24px 60px rgba(0,0,0,0.75),
+    0 4px 12px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+/* 全局: 项目里所有自定义遮罩 (wz-mask/pf-mask/vtp-mask/spp-mask/ep-mask/otp-mask/nsp-mask/dom-mask/settings-mask/lke-table-mask 等)
+   在深色模式下统一加深背景 + 加微弱模糊, 让弹框焦点更明显. !important 用于穿透组件 scoped specificity. */
+:root[data-theme="dark"] [class*="-mask"] {
+  background: rgba(0,0,0,0.6) !important;
+  backdrop-filter: blur(3px) !important;
+  -webkit-backdrop-filter: blur(3px) !important;
+}
+
+/* 全局: 项目里所有右侧资源抽屉在深色模式下统一加深阴影 + 边框 + 左侧 1px 高光,
+   让抽屉与主区有明显立体感.
+   覆盖 9 个 -drawer 类 + 2 个用 -detail 命名的容器 (Interfaces/SharedProperties). */
+:root[data-theme="dark"] .ot-drawer,
+:root[data-theme="dark"] .vt-drawer,
+:root[data-theme="dark"] .et-drawer,
+:root[data-theme="dark"] .ds-drawer,
+:root[data-theme="dark"] .tc-drawer,
+:root[data-theme="dark"] .og-drawer,
+:root[data-theme="dark"] .gr-drawer,
+:root[data-theme="dark"] .pd-drawer,
+:root[data-theme="dark"] .lke-drawer,
+:root[data-theme="dark"] .if-detail,
+:root[data-theme="dark"] .sp-detail {
+  border-left: 1px solid var(--bl-border-strong) !important;
+  box-shadow:
+    -16px 0 48px rgba(0,0,0,0.65),
+    -2px 0 8px rgba(0,0,0,0.5),
+    inset 1px 0 0 rgba(255,255,255,0.05) !important;
+}
+
+/* 所有抽屉头部 (各模块命名不一: -drawer-hd / -hd / detail-hd / pd-hd / lke-hd / tc-d-hd)
+   在深色下用 bg-2 底色, 与抽屉体形成层次, 增强分区感. */
+:root[data-theme="dark"] .ot-drawer-hd,
+:root[data-theme="dark"] .et-drawer-hd,
+:root[data-theme="dark"] .ds-drawer-hd,
+:root[data-theme="dark"] .og-drawer-hd,
+:root[data-theme="dark"] .gr-drawer-hd,
+:root[data-theme="dark"] .vt-hd,
+:root[data-theme="dark"] .tc-d-hd,
+:root[data-theme="dark"] .pd-hd,
+:root[data-theme="dark"] .lke-hd,
+:root[data-theme="dark"] .detail-hd {
+  background: var(--bl-bg-2) !important;
+  border-bottom: 1px solid var(--bl-border) !important;
+}
+
+/* 所有抽屉内部的 Tab 侧边栏 (xx-tab-side) 在深色下右边线 + 1px 高光分割. */
+:root[data-theme="dark"] [class*="-tab-side"] {
+  border-right: 1px solid var(--bl-border) !important;
+  box-shadow: inset -1px 0 0 rgba(255,255,255,0.03) !important;
 }
 .bl-modal-hd { padding: 16px 20px 8px; font-weight: 600; }
 .bl-modal-body { padding: 0 20px 16px; color: var(--bl-text-2); font-size: var(--bl-fs-13); }
@@ -350,6 +417,62 @@ button { font-family: inherit; }
 .bl-flex-end { display: flex; justify-content: flex-end; }
 .bl-sep { flex: 1; }
 .bl-hidden { display: none !important; }
+
+/* ---------- 项目通用表格行分隔线 ---------- */
+/* 项目里各 namespace 自研表格 (ot-/lk-/vt-/et-/sp-/if-/ds-/tc-/og-)
+   原本无 td 下边线, 深色下行间无视觉分隔, 整体显糊.
+   统一加一条 1px divider, 让行边界明确. */
+.ot-table tbody td,
+.lk-table tbody td,
+.vt-table tbody td,
+.et-table tbody td,
+.sp-table tbody td,
+.if-table tbody td,
+.ds-table tbody td,
+.tc-table tbody td,
+.og-table tbody td,
+.cat-table tbody td {
+  border-bottom: 1px solid var(--bl-divider);
+}
+/* 同时强化表头与表体的分界 */
+.ot-table thead th,
+.lk-table thead th,
+.vt-table thead th,
+.et-table thead th,
+.sp-table thead th,
+.if-table thead th,
+.ds-table thead th,
+.tc-table thead th,
+.og-table thead th,
+.cat-table thead th {
+  border-bottom: 1px solid var(--bl-border);
+}
+
+/* ---------- 表单原生控件全局主题适配 ---------- */
+/* checkbox / radio 用 accent-color 跟随主题色, 默认浅模式 OK
+   深色模式: 加暗框 + 加深 accent, 避免白底过亮割裂 */
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--bl-primary);
+}
+:root[data-theme="dark"] input[type="checkbox"]:not(:checked),
+:root[data-theme="dark"] input[type="radio"]:not(:checked) {
+  /* 未勾选: 用 color-scheme 让浏览器渲染暗色复选框 */
+  color-scheme: dark;
+}
+:root[data-theme="dark"] input[type="checkbox"],
+:root[data-theme="dark"] input[type="radio"] {
+  color-scheme: dark;
+  filter: brightness(0.95);
+}
+/* select / input 在暗模式下底色统一 */
+:root[data-theme="dark"] input[type="text"],
+:root[data-theme="dark"] input[type="search"],
+:root[data-theme="dark"] input[type="number"],
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] select {
+  color-scheme: dark;
+}
 
 /* ---------- 减少动效偏好 ---------- */
 @media (prefers-reduced-motion: reduce) {

@@ -285,7 +285,9 @@
 
             <!-- 对象图谱 (七大维度全景, 见对象图谱需求文档) -->
             <div v-else-if="drawerTab === 'objgraph'" class="ot-tab-content ot-tab-canvas">
-              <TabObjectGraph :class-id="selected?.id" />
+              <TabObjectGraph :class-id="selected?.id"
+                              @open-object="onGraphOpenObject"
+                              @editor-open-change="onLinkEditorOpenChange" />
             </div>
 
             <!-- 等价类 -->
@@ -400,6 +402,80 @@
             <!-- 使用情况 -->
             <div v-else-if="drawerTab === 'usage'" class="ot-tab-content">
               <Placeholder icon="activity" label="使用情况" desc="呈现引用本对象的接口/页面/实例数量、最近调用时间、热度趋势" />
+            </div>
+          </section>
+        </div>
+      </aside>
+      </transition>
+
+      <!-- 嵌套抽屉 (第二层): 从对象图谱钻取查看其他对象, 顶部 tab 栈管理多对象 -->
+      <transition name="ot-drawer">
+      <aside v-if="nestedDrawerOpen && nestedSelected" class="ot-drawer ot-drawer-nested"
+             :style="{ width: nestedDrawerWidth + 'px' }">
+        <!-- 左边缘拖拽手柄 — 调整第二层宽度, 范围 [400, 主抽屉宽-200] -->
+        <div class="ot-drag-handle"
+             @mousedown="onNestedDragStart"
+             :class="nestedResizing && 'is-resizing'"></div>
+
+        <!-- tab 栈条 (无图标版本) -->
+        <div class="ot-tab-bar">
+          <div v-for="(t, i) in nestedTabs" :key="t.id"
+               :class="['ot-tab-bar-item', i === nestedActiveTabIdx && 'is-active']"
+               :title="nestedTabTooltip(i)"
+               @click="activateNestedTab(i)">
+            <span class="ot-tab-bar-lbl bl-truncate">{{ tabLabel(t) }}</span>
+            <button class="ot-tab-bar-close" @click.stop="closeNestedTab(i)"
+                    :title="'关闭 ' + tabLabel(t)"
+                    v-html="BL.icon('x', 12)"></button>
+          </div>
+        </div>
+
+        <!-- 头部 (同主抽屉) -->
+        <div class="ot-drawer-hd">
+          <div class="ot-drawer-hd-l">
+            <div class="ot-ic ot-ic-lg" :style="{ background: nestedSelected?.color || '#165DFF' }"
+                 v-html="BL.icon(nestedSelected?.icon || 'cube', 18, '#fff')"></div>
+            <div class="bl-grow" style="min-width:0">
+              <div class="ot-drawer-title">
+                <span class="bl-truncate">{{ tabLabel(nestedSelected) }}</span>
+                <span class="bl-mono bl-muted" style="font-size:12px">({{ nestedSelected?.api_name }})</span>
+                <span :class="['bl-tag', nestedSelected?.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']">{{ nestedSelected?.status === 1 ? '启用' : '禁用' }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="ot-drawer-hd-r">
+            <button class="bl-btn bl-btn-text bl-btn-icon" title="关闭" @click="closeNestedDrawer"
+                    v-html="BL.icon('x', 14)"></button>
+          </div>
+        </div>
+
+        <!-- 主体 (左导航 + 右内容); 嵌套抽屉简化为 概览 / 属性 / 链接关系 / 对象图谱 4 个 tab -->
+        <div class="ot-drawer-body">
+          <nav class="ot-tab-side">
+            <div class="ot-tab-group">
+              <div class="ot-tab-group-body">
+                <button v-for="t in nestedSubTabs" :key="t.key"
+                        :class="['ot-tab-item', nestedDrawerTab === t.key && 'is-on']"
+                        @click="nestedDrawerTab = t.key">
+                  <span class="ot-tab-label">{{ t.label }}</span>
+                </button>
+              </div>
+            </div>
+          </nav>
+          <section class="ot-tab-pane">
+            <div v-if="nestedDrawerTab === 'overview'" class="ot-tab-content">
+              <TabOverview :detail="nestedDetail" @saved="() => loadNestedDetail(nestedSelected.id)" />
+            </div>
+            <div v-else-if="nestedDrawerTab === 'props'" class="ot-tab-content">
+              <TabProps :class-id="nestedSelected?.id" :class-name="tabLabel(nestedSelected)" @navigate-tab="nestedDrawerTab = $event" />
+            </div>
+            <div v-else-if="nestedDrawerTab === 'graph'" class="ot-tab-content ot-tab-canvas">
+              <TabLinkGraph :class-id="nestedSelected?.id" />
+            </div>
+            <div v-else-if="nestedDrawerTab === 'objgraph'" class="ot-tab-content ot-tab-canvas">
+              <TabObjectGraph :class-id="nestedSelected?.id"
+                              @open-object="onGraphOpenObject"
+                              @editor-open-change="onLinkEditorOpenChange" />
             </div>
           </section>
         </div>
@@ -652,6 +728,189 @@ function openDrawer(r, tab = 'overview') {
 function closeDrawer() {
   drawerOpen.value = false
   selected.value = null
+  closeNestedDrawer()
+}
+
+/* ===== 嵌套抽屉 (双层钻取层) =====
+   场景: 用户在主抽屉对象图谱里点击其他对象时, 不嵌套小子抽屉,
+        而是: 主抽屉自动最大化, 上层弹出第二层抽屉, 第二层抽屉里以 tab 栈形式管理多个钻取对象.
+   - 入口对象 (主抽屉的 selected) 始终不变, 不参与 tab 栈
+   - nestedTabs[i]: 钻取的对象, 含 sourceId 用于关闭后切回来源 tab
+   - 第二层关闭时, 主抽屉根据 preNestedMainMaxed 还原 (如果之前不是最大化)
+   - 第二层抽屉宽度可拖拽; 默认 520, 范围 [400, 主抽屉宽 - 100], 保证主抽屉图谱仍露出 */
+const TAB_MAX = 8
+const NESTED_DRAWER_MIN = 400
+const NESTED_DRAWER_DEFAULT = 520
+const nestedDrawerOpen = ref(false)
+const nestedDrawerWidth = ref(NESTED_DRAWER_DEFAULT)
+const nestedResizing = ref(false)
+const nestedTabs = ref([])
+const nestedActiveTabIdx = ref(-1)
+const nestedSelected = ref(null)
+const nestedDetail = ref({})
+const nestedDrawerTab = ref('overview')
+const nestedTabCounts = ref({})
+let preNestedMainMaxed = null
+
+function nestedDrawerMaxPx() {
+  // 不能盖住主抽屉, 至少给主抽屉留 200px
+  return Math.max(NESTED_DRAWER_MIN, drawerWidth.value - 200)
+}
+
+/* 第二层抽屉左边缘拖拽 — 改宽度 */
+let nestedDragStartX = 0
+let nestedDragStartW = 0
+function onNestedDragStart(e) {
+  nestedResizing.value = true
+  nestedDragStartX = e.clientX
+  nestedDragStartW = nestedDrawerWidth.value
+  document.body.style.cursor = 'col-resize'
+  document.body.style.userSelect = 'none'
+  window.addEventListener('mousemove', onNestedDragMove)
+  window.addEventListener('mouseup', onNestedDragEnd)
+}
+function onNestedDragMove(e) {
+  const dx = nestedDragStartX - e.clientX
+  const next = Math.min(nestedDrawerMaxPx(),
+                        Math.max(NESTED_DRAWER_MIN, nestedDragStartW + dx))
+  nestedDrawerWidth.value = next
+}
+function onNestedDragEnd() {
+  nestedResizing.value = false
+  document.body.style.cursor = ''
+  document.body.style.userSelect = ''
+  window.removeEventListener('mousemove', onNestedDragMove)
+  window.removeEventListener('mouseup', onNestedDragEnd)
+}
+
+function tabLabel(t) {
+  return t?.rdfs_label || t?.display_name || t?.api_name || '—'
+}
+function nestedTabTooltip(i) {
+  const chain = []
+  const seen = new Set()
+  let cur = i
+  while (cur >= 0 && cur < nestedTabs.value.length && !seen.has(cur)) {
+    seen.add(cur)
+    chain.push(tabLabel(nestedTabs.value[cur]))
+    const srcId = nestedTabs.value[cur].sourceId
+    if (!srcId) break
+    cur = nestedTabs.value.findIndex(t => t.id === srcId)
+  }
+  // 入口对象作为最起点
+  if (selected.value) chain.push(tabLabel(selected.value))
+  return chain.reverse().join('  ›  ')
+}
+
+async function loadNestedDetail(id) {
+  try { nestedDetail.value = await resourceApi.classDetail(id) }
+  catch { nestedDetail.value = {} }
+}
+
+function activateNestedTab(idx) {
+  if (idx < 0 || idx >= nestedTabs.value.length) return
+  nestedActiveTabIdx.value = idx
+  const t = nestedTabs.value[idx]
+  nestedSelected.value = t
+  nestedDrawerTab.value = 'overview'
+  loadNestedDetail(t.id)
+}
+
+function pushNestedTab(record, sourceId = null) {
+  if (!record || !record.id) return
+  const existIdx = nestedTabs.value.findIndex(t => t.id === record.id)
+  if (existIdx >= 0) { activateNestedTab(existIdx); return }
+  if (nestedTabs.value.length >= TAB_MAX) {
+    let removeIdx = -1
+    for (let i = 0; i < nestedTabs.value.length; i++) {
+      if (i !== nestedActiveTabIdx.value) { removeIdx = i; break }
+    }
+    if (removeIdx >= 0) {
+      nestedTabs.value.splice(removeIdx, 1)
+      if (nestedActiveTabIdx.value > removeIdx) nestedActiveTabIdx.value--
+    }
+  }
+  nestedTabs.value.push({ ...record, sourceId })
+  activateNestedTab(nestedTabs.value.length - 1)
+}
+
+function closeNestedTab(idx) {
+  if (idx < 0 || idx >= nestedTabs.value.length) return
+  const closed = nestedTabs.value[idx]
+  nestedTabs.value.splice(idx, 1)
+  if (nestedTabs.value.length === 0) { closeNestedDrawer(); return }
+  if (idx === nestedActiveTabIdx.value) {
+    let next = closed.sourceId
+      ? nestedTabs.value.findIndex(t => t.id === closed.sourceId)
+      : -1
+    if (next < 0) next = Math.max(0, idx - 1)
+    activateNestedTab(next)
+  } else if (idx < nestedActiveTabIdx.value) {
+    nestedActiveTabIdx.value--
+  }
+}
+
+function closeNestedDrawer() {
+  nestedDrawerOpen.value = false
+  nestedTabs.value = []
+  nestedActiveTabIdx.value = -1
+  nestedSelected.value = null
+  nestedDetail.value = {}
+  nestedDrawerWidth.value = NESTED_DRAWER_DEFAULT
+  // 主抽屉如果在打开嵌套抽屉之前不是最大化, 还原回去
+  if (preNestedMainMaxed === false) {
+    drawerWidth.value = defaultDrawerWidth()
+    drawerMaxed.value = false
+  }
+  preNestedMainMaxed = null
+}
+
+/* 链接编辑抽屉 (LinkTypeEditor) 在图谱里打开时, 主抽屉同步最大化;
+   关闭时按记录还原. 若第二层钻取抽屉已开, 主抽屉的最大化由它管, 这里跳过. */
+let preLinkEditorMainMaxed = null
+function onLinkEditorOpenChange(open) {
+  if (nestedDrawerOpen.value) return
+  if (open) {
+    preLinkEditorMainMaxed = drawerMaxed.value
+    if (!drawerMaxed.value) {
+      drawerWidth.value = drawerMaxPx()
+      drawerMaxed.value = true
+      drawerMined.value = false
+    }
+  } else {
+    if (preLinkEditorMainMaxed === false) {
+      drawerWidth.value = defaultDrawerWidth()
+      drawerMaxed.value = false
+    }
+    preLinkEditorMainMaxed = null
+  }
+}
+
+/* 图谱节点点击 → 主抽屉自动最大化 + 上层抽屉打开 + push tab */
+function onGraphOpenObject(payload) {
+  if (!payload || !payload.id) {
+    BL.info('该节点无对应对象详情')
+    return
+  }
+  if (!nestedDrawerOpen.value) {
+    preNestedMainMaxed = drawerMaxed.value
+    if (!drawerMaxed.value) {
+      drawerWidth.value = drawerMaxPx()
+      drawerMaxed.value = true
+      drawerMined.value = false
+    }
+    nestedDrawerOpen.value = true
+  }
+  const sourceId = nestedSelected.value?.id || selected.value?.id || null
+  pushNestedTab({
+    id: payload.id,
+    api_name:     payload.api_name     || payload.en  || '',
+    display_name: payload.display_name || payload.cn  || payload.label || '',
+    rdfs_label:   payload.rdfs_label   || payload.label || payload.cn || '',
+    color:        payload.color || '#165DFF',
+    icon:         payload.icon  || 'cube',
+    status:       payload.status ?? 1
+  }, sourceId)
 }
 function toggleMax() {
   if (drawerMaxed.value) { drawerWidth.value = defaultDrawerWidth(); drawerMaxed.value = false }
@@ -746,6 +1005,14 @@ async function onClassSaved(id) {
 }
 
 /* ===== TAB 分组结构（与对象类型设计文档严格一致） ===== */
+/* 嵌套抽屉的精简 tab 列表 (避免再嵌套图谱钻取叠加更深) */
+const nestedSubTabs = [
+  { key: 'overview', label: '概览' },
+  { key: 'props',    label: '属性' },
+  { key: 'graph',    label: '链接关系' },
+  { key: 'objgraph', label: '对象图谱' }
+]
+
 const tabGroups = [
   { key: 'basic', label: '基础信息', icon: 'fileText', color: '#1677ff', tabs: [
     { key: 'overview', label: '概览' },
@@ -1018,11 +1285,21 @@ onMounted(async () => {
 .ot-drawer {
   position: fixed; top: 0; right: 0; bottom: 0;
   background: var(--bl-bg-1);
-  border-left: 1px solid var(--bl-border);
-  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.10);
+  border-left: 1px solid var(--bl-border-strong);
+  /* 双层阴影 + 顶部 1px 高光描边, 让抽屉立体浮起 */
+  box-shadow:
+    -12px 0 32px rgba(0,0,0,0.22),
+    -2px 0 6px rgba(0,0,0,0.12);
   display: flex; flex-direction: column;
   z-index: 1000;
   min-width: 450px;
+}
+/* 深色下: 加深阴影 + 左侧 1px 高光描边模拟"光源从上方" */
+:root[data-theme="dark"] .ot-drawer {
+  box-shadow:
+    -16px 0 48px rgba(0,0,0,0.65),
+    -2px 0 8px rgba(0,0,0,0.5),
+    inset 1px 0 0 rgba(255,255,255,0.05);
 }
 .ot-drag-handle {
   position: absolute; left: -2px; top: 0; bottom: 0; width: 5px;
@@ -1031,11 +1308,101 @@ onMounted(async () => {
 }
 .ot-drag-handle:hover, .ot-drag-handle.is-resizing { background: var(--bl-primary); }
 
+/* ===== 第二层嵌套抽屉 (从对象图谱钻取查看其他对象时浮起在主抽屉之上) =====
+   宽度由 inline style 控制 (可拖拽), 默认 520px. 左边缘 5px 拖拽手柄.
+   左侧导航较窄 (102px) 节省空间, 简化 tab 集只有 4 项不需要太宽. */
+.ot-drawer-nested {
+  z-index: 1010;
+  /* 强化阴影让"浮起"层次感更明显 */
+  box-shadow:
+    -20px 0 40px rgba(0,0,0,0.28),
+    -4px 0 12px rgba(0,0,0,0.15);
+}
+.ot-drawer-nested .ot-drawer-body { grid-template-columns: 102px 1fr; }
+.ot-drawer-nested .ot-tab-item { padding: 7px 8px 7px 12px; }
+:root[data-theme="dark"] .ot-drawer-nested {
+  box-shadow:
+    -24px 0 56px rgba(0,0,0,0.7),
+    -4px 0 12px rgba(0,0,0,0.5),
+    inset 1px 0 0 rgba(255,255,255,0.06) !important;
+}
+
+/* ===== 多对象 tab 栈条 (用于嵌套抽屉的顶部) ===== */
+.ot-tab-bar {
+  flex-shrink: 0;
+  display: flex; gap: 4px;
+  padding: 6px 8px 0;
+  background: var(--bl-bg-2);
+  border-bottom: 1px solid var(--bl-border);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+}
+.ot-tab-bar::-webkit-scrollbar { height: 4px; }
+.ot-tab-bar::-webkit-scrollbar-thumb { background: var(--bl-border-strong); border-radius: 2px; }
+.ot-tab-bar-item {
+  flex-shrink: 0;
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 30px; padding: 0 8px 0 6px;
+  background: var(--bl-bg-1);
+  border: 1px solid var(--bl-border);
+  border-bottom: 0;
+  border-radius: 6px 6px 0 0;
+  font-size: 12.5px; color: var(--bl-text-2);
+  cursor: pointer;
+  max-width: 220px;
+  transition: background-color .12s, color .12s;
+  position: relative;
+  top: 1px;
+}
+.ot-tab-bar-item:hover { background: var(--bl-bg-hover); color: var(--bl-text-1); }
+.ot-tab-bar-item.is-active {
+  background: var(--bl-bg-1);
+  color: var(--bl-primary);
+  font-weight: 500;
+  border-color: var(--bl-border);
+  border-bottom: 1px solid var(--bl-bg-1);   /* 与抽屉头融合 */
+  z-index: 2;
+}
+.ot-tab-bar-ic {
+  width: 18px; height: 18px; border-radius: 4px;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.ot-tab-bar-lbl {
+  flex: 1; min-width: 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+/* 关闭按钮: 默认不占位 (width:0 overflow:hidden), hover/active 时才展开显示 */
+.ot-tab-bar-close {
+  flex-shrink: 0;
+  height: 18px;
+  width: 0;
+  margin-left: 0;
+  padding: 0;
+  border: 0; background: transparent; cursor: pointer;
+  color: var(--bl-text-3);
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 3px;
+  opacity: 0;
+  overflow: hidden;
+  transition: width .12s, margin-left .12s, opacity .12s, background-color .12s, color .12s;
+}
+.ot-tab-bar-item:hover .ot-tab-bar-close,
+.ot-tab-bar-item.is-active .ot-tab-bar-close {
+  width: 18px;
+  margin-left: 4px;
+  opacity: 1;
+}
+.ot-tab-bar-close:hover { background: var(--bl-bg-hover); color: var(--bl-danger); }
+
 .ot-drawer-hd {
   flex-shrink: 0;
   display: flex; align-items: center; justify-content: space-between;
   padding: 10px 10px;
-  border-bottom: 1px solid var(--bl-divider); gap: 8px;
+  background: var(--bl-bg-2);
+  border-bottom: 1px solid var(--bl-border);
+  gap: 8px;
 }
 .ot-drawer-hd-l { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
 .ot-drawer-hd-r { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
@@ -1044,8 +1411,12 @@ onMounted(async () => {
 
 .ot-drawer-body { flex: 1; display: grid; grid-template-columns: 160px 1fr; overflow: hidden; min-height: 0; }
 .ot-tab-side {
-  background: var(--bl-bg-2); border-right: 1px solid var(--bl-divider);
+  background: var(--bl-bg-2); border-right: 1px solid var(--bl-border);
   overflow: auto; padding: 6px 0;
+}
+/* 深色: 侧边栏与内容区分界更明显 */
+:root[data-theme="dark"] .ot-tab-side {
+  box-shadow: inset -1px 0 0 rgba(255,255,255,0.03);
 }
 .ot-tab-group { padding: 0; }
 /* 分组之间用顶部分隔线区分 (无左侧竖条) */

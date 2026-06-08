@@ -257,4 +257,9 @@ export const datasourceApi = {
   monitor:  (id) => http.get(`/datasource/${id}/monitor`)
 }
 
+/* 全局搜索 — 头部 ⌘K 弹框驱动. type: all / object / link / prop / ds / other */
+export const searchApi = {
+  global: (q, type = 'all') => http.get('/search/global', { params: { q, type } })
+}
+
 export default http

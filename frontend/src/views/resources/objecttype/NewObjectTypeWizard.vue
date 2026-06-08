@@ -511,16 +511,36 @@ function goNext() {
 </script>
 
 <style scoped>
-.wz-mask { position: fixed; inset: 0; background: rgba(0,0,0,.40); z-index: 998;
-  display: flex; align-items: center; justify-content: center; }
+.wz-mask {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 998;
+  display: flex; align-items: center; justify-content: center;
+}
 .wz-modal {
-  background: var(--bl-bg-1); border-radius: 12px;
+  background: var(--bl-bg-1);
+  border: 1px solid var(--bl-border);
+  border-radius: 12px;
   width: 1100px; max-width: 96vw;
   /* 固定高度：视口高度 - 112px；切换模式或字段映射条数变化时，弹框尺寸保持不变 */
   height: calc(100vh - 112px);
   min-height: 480px;
   display: flex; flex-direction: column; overflow: hidden;
-  box-shadow: 0 12px 40px rgba(0,0,0,.20);
+  /* 双层阴影 + 内侧高光, 让弹框在深色下有明显立体感 */
+  box-shadow:
+    0 24px 56px rgba(0,0,0,0.55),
+    0 4px 12px rgba(0,0,0,0.3);
+}
+/* 深色下: 边框加强 + 顶部 1px 高光描边模拟立体浮起 */
+:root[data-theme="dark"] .wz-mask { background: rgba(0,0,0,.65); }
+:root[data-theme="dark"] .wz-modal {
+  border-color: var(--bl-border-strong);
+  box-shadow:
+    0 24px 60px rgba(0,0,0,0.75),
+    0 6px 16px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.06);
 }
 .wz-hd { display: flex; justify-content: space-between; align-items: center;
   padding: 12px 16px; border-bottom: 1px solid var(--bl-divider); }
@@ -568,7 +588,7 @@ function goNext() {
 }
 .ds-panel-hd {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 12px; background: #fafafa; border-bottom: 1px solid var(--bl-divider);
+  padding: 8px 12px; background: var(--bl-bg-2); border-bottom: 1px solid var(--bl-divider);
   flex-shrink: 0;
 }
 .ds-panel-title { font-size: 13px; font-weight: 600; }
@@ -604,7 +624,7 @@ function goNext() {
 .main-pick-btn:hover { background: var(--bl-primary-soft); border-color: var(--bl-primary); }
 
 .sub-table { width: 100%; font-size: 12px; }
-.sub-table th { background: #fafafa; padding: 6px 8px; }
+.sub-table th { background: var(--bl-bg-2); padding: 6px 8px; }
 .sub-table td { padding: 4px 6px; }
 .sub-table .bl-input.bl-input-xs { height: 26px; padding: 0 6px; font-size: 12px; }
 
@@ -617,7 +637,7 @@ function goNext() {
 }
 .map-hd {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 12px; background: #fafafa; border-bottom: 1px solid var(--bl-divider);
+  padding: 8px 12px; background: var(--bl-bg-2); border-bottom: 1px solid var(--bl-divider);
   flex-shrink: 0;
 }
 .map-title { font-size: 13px; font-weight: 600; }
@@ -643,10 +663,10 @@ function goNext() {
 /* —— 表头两层结构 (无 rowspan,所有 th 高度严格对齐,sticky 表现一致) —— */
 /* 行1: 分组横幅 */
 .map-table thead tr:first-child th {
-  border-bottom: 1px solid rgba(0,0,0,0.08);
+  border-bottom: 1px solid var(--bl-divider);
 }
-.map-table thead tr:first-child th.th-corner-l { background: #f0f7ff; }
-.map-table thead tr:first-child th.th-corner-r { background: #fff8ef; }
+.map-table thead tr:first-child th.th-corner-l { background: color-mix(in srgb, var(--bl-primary) 12%, var(--bl-bg-1)); }
+.map-table thead tr:first-child th.th-corner-r { background: color-mix(in srgb, var(--bl-warning) 12%, var(--bl-bg-1)); }
 
 /* 行2: 列名 + 统一颜色下划线 */
 .map-table thead tr:last-child th {
@@ -654,30 +674,30 @@ function goNext() {
   border-bottom: 2px solid var(--bl-divider);
 }
 .map-table thead tr:last-child th.bg-l {
-  background: #e8f4ff;
-  border-bottom-color: #b6dafa;
+  background: color-mix(in srgb, var(--bl-primary) 8%, var(--bl-bg-1));
+  border-bottom-color: var(--bl-primary-border);
 }
 .map-table thead tr:last-child th.bg-c {
-  background: #fff4e8;
-  border-bottom-color: #fad9b8;
+  background: color-mix(in srgb, var(--bl-warning) 8%, var(--bl-bg-1));
+  border-bottom-color: color-mix(in srgb, var(--bl-warning) 32%, var(--bl-border));
 }
 /* 列名行: ☐ / 操作 两端的下划线分别匹配相邻分组色,使整行下划线连续 */
 .map-table thead tr:last-child th.th-col-l {
-  background: #f0f7ff;
-  border-bottom-color: #b6dafa;
+  background: color-mix(in srgb, var(--bl-primary) 12%, var(--bl-bg-1));
+  border-bottom-color: var(--bl-primary-border);
 }
 .map-table thead tr:last-child th.th-col-r {
-  background: #fff8ef;
-  border-bottom-color: #fad9b8;
+  background: color-mix(in srgb, var(--bl-warning) 12%, var(--bl-bg-1));
+  border-bottom-color: color-mix(in srgb, var(--bl-warning) 32%, var(--bl-border));
 }
 .th-group { font-weight: 700; text-align: center; font-size: 12.5px; letter-spacing: 0.5px; }
-.bg-l { background: #e8f4ff; }
-.bg-c { background: #fff4e8; }
-.map-table tbody tr { background: #fff; }
-.map-table tbody tr:nth-child(even) { background: #fafbfc; }
-.map-table tbody tr:hover { background: #f5f7fa; }
+.bg-l { background: color-mix(in srgb, var(--bl-primary) 8%, var(--bl-bg-1)); }
+.bg-c { background: color-mix(in srgb, var(--bl-warning) 8%, var(--bl-bg-1)); }
+.map-table tbody tr { background: var(--bl-bg-1); }
+.map-table tbody tr:nth-child(even) { background: var(--bl-bg-2); }
+.map-table tbody tr:hover { background: var(--bl-bg-hover); }
 .map-table tbody tr.is-dragging { opacity: .45; background: var(--bl-primary-soft); }
-.map-table tbody td { border-bottom: 1px solid #f0f0f0; }
+.map-table tbody td { border-bottom: 1px solid var(--bl-divider); }
 .map-table .prop-grip { cursor: grab; user-select: none; padding: 4px; }
 .map-table .prop-grip:active { cursor: grabbing; }
 .map-table .bl-input.bl-input-xs { height: 26px; padding: 0 6px; font-size: 12px; }

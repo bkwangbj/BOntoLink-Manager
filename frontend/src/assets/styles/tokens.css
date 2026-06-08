@@ -84,21 +84,24 @@
 }
 
 /* —— 暗色模式 —— */
+/* 调色思路: 拉开三层底色差 (页面/卡片/软底) + 边框上提一档,
+   让"区域感"明显. 老板反馈"整体不是看的很清楚" — 之前 bg-0/1/2
+   只差 5-6 个色阶, 卡片与页面糊在一起. 现按 ~10 色阶递进. */
 :root[data-theme="dark"] {
-  --bl-text-1: #E8E8E8;
+  --bl-text-1: #ffffff;     /* 主文字提到 F2 提高清晰度 */
   --bl-text-2: #C9CDD4;
-  --bl-text-3: #86909C;
+  --bl-text-3: #bfc4c9;
   --bl-text-4: #4E5969;
-  --bl-bg-0: #16181C;
-  --bl-bg-1: #1F2126;
-  --bl-bg-2: #25272D;
-  --bl-bg-hover: #2A2D34;
-  --bl-border: #2E3138;
-  --bl-border-strong: #3D4148;
-  --bl-divider: #25272D;
-  --bl-shadow-1: 0 1px 2px rgba(0,0,0,0.32);
-  --bl-shadow-2: 0 4px 12px rgba(0,0,0,0.5);
-  --bl-shadow-3: 0 12px 32px rgba(0,0,0,0.72);
+  --bl-bg-0: #0E1015;       /* 页面 — 更深, 让卡片浮起来 */
+  --bl-bg-1: #1A1D24;       /* 卡片 — 中等 */
+  --bl-bg-2: #242832;       /* 软底 / 表头 / 选中分组 */
+  --bl-bg-hover: #2E323D;   /* 行 hover — 与表行明显区分 */
+  --bl-border: #363B47;     /* 主边框 — 加亮一档保证可见 */
+  --bl-border-strong: #4A5060;
+  --bl-divider: #2A2E37;
+  --bl-shadow-1: 0 1px 2px rgba(0,0,0,0.5);
+  --bl-shadow-2: 0 4px 12px rgba(0,0,0,0.6);
+  --bl-shadow-3: 0 12px 32px rgba(0,0,0,0.8);
 }
 
 /* —— 主题色变量（强调色）切换 —— */
