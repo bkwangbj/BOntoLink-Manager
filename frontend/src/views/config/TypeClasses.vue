@@ -456,7 +456,7 @@ function onHandleDown(ev) {
   padding: 0 7px; min-width: 20px; height: 17px;
   line-height: 17px; text-align: center;
 }
-.tc-grp.is-active .tc-grp-cnt { background: #fff; color: var(--bl-primary); }
+.tc-grp.is-active .tc-grp-cnt { background: var(--bl-bg-1); color: var(--bl-primary); }
 .tc-grp-sub { padding-left: 22px; }
 .tc-grp-spacer { width: 18px; }
 
@@ -474,10 +474,10 @@ function onHandleDown(ev) {
   display: flex; justify-content: space-between; align-items: center; font-size: 12px;
 }
 .tc-pager-l { display: inline-flex; align-items: center; }
-.tc-del-btn { background: #fff; border: 1px solid #f53f3f; color: #f53f3f; }
-.tc-del-btn:hover { background: #fff1f0; }
-.tc-arc-btn { background: #fff; border: 1px solid #86909c; color: #4e5969; }
-.tc-arc-btn:hover { background: #f7f8fa; }
+.tc-del-btn { background: var(--bl-bg-1); border: 1px solid #f53f3f; color: #f53f3f; }
+.tc-del-btn:hover { background: color-mix(in srgb, #f53f3f 8%, var(--bl-bg-1)); }
+.tc-arc-btn { background: var(--bl-bg-1); border: 1px solid #86909c; color: var(--bl-text-2); }
+.tc-arc-btn:hover { background: var(--bl-bg-hover); }
 
 .tc-table { width: 100%; }
 .tc-table thead th {
@@ -485,12 +485,12 @@ function onHandleDown(ev) {
   background: var(--bl-bg-2);
   box-shadow: inset 0 -1px 0 var(--bl-divider);
   font-weight: 600; font-size: 12px; height: 34px; padding: 0 8px;
-  color: #333; white-space: nowrap;
+  color: var(--bl-text-1); white-space: nowrap;
 }
 .tc-table thead th.t-left { text-align: left; }
-.tc-table tbody tr { background: #fff; cursor: pointer; }
-.tc-table tbody tr:hover { background: #f5f7fa; }
-.tc-table tbody tr.is-deprecated { background: #fafafa; opacity: 0.7; }
+.tc-table tbody tr { background: var(--bl-bg-1); cursor: pointer; }
+.tc-table tbody tr:hover { background: var(--bl-bg-hover); }
+.tc-table tbody tr.is-deprecated { background: var(--bl-bg-2); opacity: 0.7; }
 .tc-table td { padding: 6px 8px; font-size: 12px; vertical-align: middle; }
 .tc-table td.t-left { text-align: left; }
 .tc-table td.t-center { text-align: center; }
@@ -507,7 +507,8 @@ function onHandleDown(ev) {
 .bl-textarea {
   width: 100%; min-height: 80px; padding: 8px 10px;
   border: 1px solid var(--bl-border); border-radius: 4px;
-  background: #fff; font-family: inherit; font-size: 13px;
+  background: var(--bl-bg-1); color: var(--bl-text-1);
+  font-family: inherit; font-size: 13px;
   resize: vertical;
 }
 .bl-textarea:focus { outline: none; border-color: var(--bl-primary); }
