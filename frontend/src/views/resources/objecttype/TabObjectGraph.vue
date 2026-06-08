@@ -36,10 +36,10 @@
       </defs>
       <g :transform="`translate(${pan.x},${pan.y}) scale(${zoom})`">
 
-        <!-- 连线 (一条边 = 可见细线 + 透明粗线命中区, group hover 时高亮) -->
+        <!-- 连线 (一条边 = 可见细线 + 透明粗线命中区, group hover/选中时高亮) -->
         <g v-for="e in visibleEdges" :key="'E-'+e.id"
            class="og-edge-group"
-           :class="{ 'is-hot': hoverEdgeId === e.id }"
+           :class="{ 'is-hot': hoverEdgeId === e.id, 'is-selected': selectedEdgeId === e.id }"
            @mouseenter="hoverEdgeId = e.id"
            @mouseleave="hoverEdgeId = null"
            @click.stop="onEdgeClick(e)">
@@ -146,7 +146,8 @@
     <LinkTypeEditor v-model:open="editorOpen"
                     :link-id="editorLinkId"
                     :all-classes="allClasses"
-                    :show-tabs="false" />
+                    :show-tabs="false"
+                    :fallback-title="editorTitle" />
   </div>
 </template>
 
@@ -548,6 +549,8 @@ function onNodeClick(n) {
 }
 /* ============ 链接关系编辑抽屉 (复用 LinkTypeEditor) ============ */
 const editorOpen = ref(false)
+const editorTitle = ref('')
+const selectedEdgeId = ref(null)
 const editorLinkId = ref('')
 const hoverEdgeId = ref(null)
 const allClasses = ref([])
@@ -558,11 +561,21 @@ async function loadClasses() {
 }
 
 function onEdgeClick(e) {
+  selectedEdgeId.value = e.id
   editorLinkId.value = e.linkId || ''   // mock 暂无真实 id, 进入创建模式; 联调后 ext 边带上 linkId 即可加载详情
+  // 标题用边的语义信息: 优先 label (如"归属"/"应用"), 否则用 关系的 source→target 双端中文
+  const srcNode = visibleNodes.value.find(n => n.id === e.source)
+  const tgtNode = visibleNodes.value.find(n => n.id === e.target)
+  const relLabel = e.label || ''
+  const endpoints = (srcNode?.cn || srcNode?.label || '') + ' → ' + (tgtNode?.cn || tgtNode?.label || '')
+  editorTitle.value = relLabel ? `${relLabel} · ${endpoints}` : endpoints
   editorOpen.value = true
 }
 /* 通知父组件链接编辑抽屉的开关状态, 让其同步主抽屉最大化 */
-watch(editorOpen, (v) => emit('editor-open-change', v))
+watch(editorOpen, (v) => {
+  emit('editor-open-change', v)
+  if (!v) selectedEdgeId.value = null  // 关闭编辑器时清除边选中态
+})
 /* ============ 全屏 / 导出 ============ */
 const rootRef = ref(null)
 const isFull = ref(false)
@@ -708,6 +721,16 @@ watch(() => props.classId, () => {
 .og-edge-group.is-hot .og-edge {
   stroke-width: 2.5;
   filter: drop-shadow(0 0 3px currentColor);
+}
+/* 选中态 (编辑器打开期间该边持续高亮, 与 hover 区分: 主题色描边 + 更强光晕) */
+.og-edge-group.is-selected .og-edge {
+  stroke: var(--bl-primary) !important;
+  stroke-width: 3 !important;
+  filter: drop-shadow(0 0 5px var(--bl-primary));
+}
+.og-edge-group.is-selected .og-edge-lbl {
+  fill: var(--bl-primary);
+  font-weight: 600;
 }
 .og-edge-lbl {
   font-size: 10px; fill: var(--bl-text-2);

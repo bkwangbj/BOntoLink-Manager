@@ -11,8 +11,8 @@
             <span class="lke-ic lke-ic-lg" :style="{ background: cardColor }"
                   v-html="BL.icon('link', 18, '#fff')"></span>
             <div class="lke-title-wrap">
-              <div class="lke-title bl-truncate" :title="form.rdfs_label || form.link_type_id || '新建链接'">
-                {{ form.rdfs_label || form.link_type_id || '新建链接' }}
+              <div class="lke-title bl-truncate" :title="form.rdfs_label || form.link_type_id || props.fallbackTitle || '新建链接'">
+                {{ form.rdfs_label || form.link_type_id || props.fallbackTitle || '新建链接' }}
                 <span v-if="form.link_type_id" class="bl-mono bl-muted lke-code">- {{ form.link_type_id }}</span>
               </div>
               <div class="lke-meta" v-if="form.id">
@@ -404,7 +404,10 @@ const props = defineProps({
   allClasses: { type: Array, default: () => [] },
   /* 是否显示顶部 tab (基础信息 / 链接关系图)
      默认 true: 链接模块主页 LinkTypes.vue 用; 对象模块下 TabLinkGraph 传 false */
-  showTabs: { type: Boolean, default: true }
+  showTabs: { type: Boolean, default: true },
+  /* 新建模式时的默认标题 (e.g. 图谱里选中边的关系名).
+     有 form.rdfs_label / link_type_id 时仍以那个为准. */
+  fallbackTitle: { type: String, default: '' }
 })
 const emit = defineEmits(['update:open', 'saved', 'deleted'])
 
