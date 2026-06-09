@@ -54,11 +54,16 @@ mvn -DskipTests clean compile           # 只编译, 验证 Java 代码
 mvn -q -DskipTests spring-boot:run      # 启动 (用 run_in_background)
 ```
 
-### 数据库重置(改 schema/data.sql 后必跑)
+### 数据库迁移(Flyway)/ 重置
+- **schema/种子已迁到 Flyway**:`backend/src/main/resources/db/migration/`
+  - `sqlite/V1__baseline_schema.sql`、`postgresql/V1__baseline_schema.sql`、`common/V2__baseline_seed.sql`(两方言共用种子)
+- **增量改动 = 新建 `V3__说明.sql`**(方言相关放 `sqlite/`/`postgresql/`,通用放 `common/`),启动自动只跑未执行过的,记录在 `flyway_schema_history` 表。**不要改已发布的 Vn 文件**。
+- **`bontolink.db` 不入库**(已 gitignore),由 Flyway 从迁移脚本重建。
+- **重置**:
 ```powershell
 Get-Process java | Stop-Process -Force -ErrorAction SilentlyContinue
-Remove-Item c:\beiktech-jyx\BOntoLink02\backend\bontolink.db -Force
-# 再启动后端会自动重建表 + 注入 data.sql 种子数据
+Remove-Item c:\beiktech-jyx\BOntoLink02\backend\bontolink.db* -Force
+# 再启动后端,Flyway 自动建表 + 灌种子(日志: "Successfully applied N migrations")
 ```
 
 ### 等待后端就绪(smoke test 用)
@@ -273,14 +278,14 @@ PageHeader (标题 + 统计 + 筛选 + 搜索 + 新建按钮)
 | [ClaudeCode使用指南.md](ClaudeCode使用指南.md) | 通用 Claude Code 协作方法论 |
 | [help.md](help.md) | 个人协作复盘 + 业界经验 + 行动项 |
 | `frontend/src/api/index.js` | 所有 API 客户端定义 |
-| `backend/src/main/resources/db/schema-sqlite.sql` | 完整数据库 schema |
-| `backend/src/main/resources/db/data.sql` | 种子数据 |
+| `backend/src/main/resources/db/migration/sqlite/V1__baseline_schema.sql` | SQLite 表结构(Flyway baseline) |
+| `backend/src/main/resources/db/migration/common/V2__baseline_seed.sql` | 种子数据(两方言共用) |
 
 ---
 
 ## 新增模块快速 Checklist
 
-1. **Schema** (`schema-sqlite.sql`): 表 + 索引,种子数据写到 `data.sql`
+1. **Schema/种子** (Flyway 迁移 `db/migration/`): 表/索引改 `sqlite/V1`(或新建 `V3__*.sql`),种子写 `common/V2`(或新 `Vn`)
 2. **Mapper** (`backend/.../mapper/XxxMapper.java`): `@Mapper interface`,SQL 注解式
 3. **Controller** (`backend/.../controller/XxxController.java`): `/api/xxx` REST CRUD
 4. **API** (`frontend/src/api/index.js`): `xxxApi` 标准 7 方法

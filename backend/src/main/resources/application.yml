@@ -8,6 +8,13 @@ spring:
     name: bontolink-backend
   profiles:
     active: sqlite
+  flyway:
+    enabled: true
+    # common = 两方言共用的种子数据; {vendor} 自动解析为 sqlite / postgresql
+    locations: classpath:db/migration/common,classpath:db/migration/{vendor}
+    # 已有旧库(无 flyway 历史表)时,以当前为基线开始记录,不重复执行 baseline
+    baseline-on-migrate: true
+    baseline-version: 0
   jackson:
     default-property-inclusion: non_null
     date-format: yyyy-MM-dd HH:mm:ss
@@ -27,3 +34,4 @@ logging:
     root: INFO
     com.beiktech.bontolink: DEBUG
     org.springframework.jdbc.core: INFO
+    org.flywaydb: INFO

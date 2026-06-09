@@ -24,3 +24,10 @@ target/
 package-lock.json
 app/frontend/package-lock.json
 .history/
+
+# SQLite 运行时数据库(由 Flyway 迁移从 db/migration 重建,不入库)
+backend/bontolink.db
+backend/bontolink.db-shm
+backend/bontolink.db-wal
+backend/db-backup/
+backend/flyway-run.log

@@ -10,9 +10,3 @@ spring:
       pool-name: BontoLinkSQLitePool
       connection-test-query: SELECT 1
       connection-timeout: 30000
-
-bontolink:
-  db:
-    dialect: sqlite
-    schema-init: classpath:db/schema-sqlite.sql
-    data-init: classpath:db/data.sql

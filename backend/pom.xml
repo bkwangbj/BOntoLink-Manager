@@ -22,6 +22,8 @@
         <mybatis-spring-boot.version>3.0.3</mybatis-spring-boot.version>
         <sqlite-jdbc.version>3.45.3.0</sqlite-jdbc.version>
         <postgresql.version>42.7.4</postgresql.version>
+        <!-- 与 Spring Boot 3.3.5 BOM 管理的 flyway-core 版本保持一致 -->
+        <flyway.version>10.10.0</flyway.version>
     </properties>
 
     <dependencies>
@@ -52,6 +54,17 @@
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
             <scope>runtime</scope>
+        </dependency>
+        <!-- Flyway 数据库迁移: flyway-core 自带 SQLite 支持;
+             PostgreSQL 在 Flyway 10 中拆为独立模块(社区版,不在 BOM 内,需显式版本) -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+            <version>${flyway.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
