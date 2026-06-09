@@ -29,7 +29,7 @@
     <!-- 右键菜单 -->
     <transition name="fade">
       <div v-if="ctxOpen" class="bl-popover" :style="ctxStyle" @click.stop>
-        <div v-if="node.categoryType < 3" class="bl-menu-item" @click="emit('ctx', node, 'addChild'); ctxOpen=false">
+        <div class="bl-menu-item" @click="emit('ctx', node, 'addChild'); ctxOpen=false">
           <span v-html="BL.icon('plus', 12)"></span> 新建下级
         </div>
         <div class="bl-menu-item" @click="emit('ctx', node, 'edit'); ctxOpen=false">

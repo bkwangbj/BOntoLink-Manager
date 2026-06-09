@@ -97,12 +97,7 @@
               <FieldRow label="数据源" inline>
                 <select class="bl-input" v-model="form.class_ds_id">
                   <option value="">— 无 —</option>
-                  <optgroup v-if="classDsOptions.length" label="已绑定数据集 (class_ds)">
-                    <option v-for="d in classDsOptions" :key="d.id" :value="d.id">{{ d.alias }} · {{ d.physical_table }}</option>
-                  </optgroup>
-                  <optgroup v-if="categoryDsOptions.length" label="同领域数据源 (sys_data_source)">
-                    <option v-for="d in categoryDsOptions" :key="d.id" :value="d.id">{{ d.ds_code }} · {{ d.ds_name }} ({{ d.ds_type }})</option>
-                  </optgroup>
+                  <option v-for="d in datasources" :key="d.id" :value="d.id">{{ d.alias }} · {{ d.physical_table }}</option>
                 </select>
               </FieldRow>
               <FieldRow label="物理表" inline>
@@ -363,10 +358,6 @@ const defaultForm = () => ({
 const form = reactive(defaultForm())
 
 const valueTypeOptions = ref([])
-
-/* 数据源下拉拆分为两类 */
-const classDsOptions = computed(() => props.datasources.filter(d => d._kind === 'classDs'))
-const categoryDsOptions = computed(() => props.datasources.filter(d => d._kind === 'categoryDs'))
 const classCandidates = ref([])
 const equivList = ref([])
 const disjointList = ref([])
