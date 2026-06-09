@@ -275,10 +275,16 @@ async function load() {
   checked.value = new Set()
   await loadValueTypeOptions()
   await loadPropFormats()
-  // 加载该类挂接的数据集 (供详情抽屉 表映射 panel 使用)
+  // 加载该类挂接的数据集 + 同领域全部数据源 (供详情抽屉 表映射 panel 下拉使用)
   try {
     const detail = await resourceApi.classDetail(props.classId)
-    datasources.value = detail?.classDatasources || []
+    const classDs = (detail?.classDatasources || []).map(d => ({ ...d, _kind: 'classDs' }))
+    const catDs = (detail?.datasources || []).map(d => ({
+      id: d.id, alias: d.ds_code, physical_table: '',
+      ds_code: d.ds_code, ds_name: d.ds_name, ds_type: d.ds_type,
+      _kind: 'categoryDs'
+    }))
+    datasources.value = [...classDs, ...catDs]
   } catch { datasources.value = [] }
 }
 
