@@ -23,3 +23,4 @@ target/
 *.sublime-workspace 
 package-lock.json
 app/frontend/package-lock.json
+.history/
