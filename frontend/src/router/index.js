@@ -3,8 +3,8 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 const routes = [
   { path: '/', redirect: '/workspace/discover' },
   { path: '/workspace/discover', name: 'discover', component: () => import('@/views/workspace/Discover.vue'),  meta: { title: '总览' } },
-  { path: '/workspace/graph',    name: 'graph',    component: () => import('@/views/workspace/Graph.vue'),     meta: { title: '图谱' } },
-  { path: '/workspace/instances',name: 'instances',component: () => import('@/views/workspace/Instances.vue'), meta: { title: '实例' } },
+  { path: '/workspace/graph',    name: 'graph',    component: () => import('@/views/workspace/GraphG6.vue'),   meta: { title: '图谱' } },
+  { path: '/workspace/instances',name: 'instances',component: () => import('@/views/workspace/Instances.vue'), meta: { title: '实例探索' } },
 
   { path: '/resources/object-types', name: 'objectTypes', component: () => import('@/views/resources/ObjectTypes.vue'), meta: { title: '对象类型' } },
   { path: '/resources/link-types',   name: 'linkTypes',   component: () => import('@/views/resources/LinkTypes.vue'),   meta: { title: '链接' } },

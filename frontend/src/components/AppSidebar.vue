@@ -143,7 +143,7 @@ const menus = [
   { key: 'workspace', title: '工作区', items: [
     { path: '/workspace/discover',   icon: 'grid',     label: '总览',     en: 'Overview' },
     { path: '/workspace/graph',      icon: 'network',  label: '图谱',     en: 'Graph' },
-    { path: '/workspace/instances',  icon: 'database', label: '实例',     en: 'Object instances' }
+    { path: '/workspace/instances',  icon: 'database', label: '实例探索', en: 'Individual discover' }
   ]},
   { key: 'resources', title: '资源', items: [
     { path: '/resources/object-types', icon: 'cube',    label: '对象类型', en: 'Object types' },

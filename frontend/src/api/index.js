@@ -262,4 +262,23 @@ export const searchApi = {
   global: (q, type = 'all') => http.get('/search/global', { params: { q, type } })
 }
 
+/* 实例探索 (Individual Discover) — 内存模拟实例数据
+   object-types: 对象类型 + 实例计数 + 行业/领域标签 (概览卡片/侧边导航)
+   list: 分页 + 关键词 q + 多条件 filter(JSON) + 排序
+   detail: 单实例 + 列定义 + 关联对象类型
+   aggregate: 分组聚合(图表/统计)
+   search: 全局搜索(对象类型 + 实例样本) */
+export const instanceApi = {
+  objectTypes: () => http.get('/instance/object-types'),
+  list: (params) => http.get('/instance/list', { params }),
+  columns: (classId) => http.get('/instance/columns', { params: { classId } }),
+  detail: (classId, id) => http.get('/instance/detail', { params: { classId, id } }),
+  links: (classId, id) => http.get('/instance/links', { params: { classId, id } }),
+  aggregate: (params) => http.get('/instance/aggregate', { params }),
+  stat: (params) => http.get('/instance/stat', { params }),
+  matrix: (params) => http.get('/instance/matrix', { params }),
+  search: (q, perType = 8) => http.get('/instance/search', { params: { q, perType } }),
+  searchResults: (q, sampleN = 4) => http.get('/instance/search-results', { params: { q, sampleN } })
+}
+
 export default http
