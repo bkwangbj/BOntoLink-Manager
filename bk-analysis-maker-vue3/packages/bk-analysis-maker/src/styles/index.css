@@ -1,0 +1,371 @@
+.chart-cfg-wrap {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: #f8f9fa;
+  border: 1px solid #e0e5ee;
+  border-top: none;
+  border-bottom: none;
+}
+
+.chart-cfg-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px !important;
+  padding: 12px 10px !important;
+  border-bottom: 1px solid #e8eaec;
+}
+
+.chart-cfg-footer {
+  height: 40px !important;
+  padding-top: 5px;
+  text-align: center;
+  border-top: 1px solid #e8eaec;
+}
+
+.chart-cfg-main {
+  flex: 1;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.custom-group > .el-form-item__content {
+  margin-left: 0 !important;
+}
+
+.data-source-group > .el-form-item__content {
+  margin-left: 0 !important;
+}
+
+.series-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.del-seris-btn {
+  color: #f56c6c;
+}
+
+.del-seris-btn :hover {
+  color: #f78989;
+}
+
+.group-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.analysis-modal-footer {
+  position: relative;
+  height: auto;
+  padding: 6px 0;
+  text-align: center;
+  border-top: 1px solid #e8eaec;
+}
+
+.analysis-modal-close-button {
+  position: absolute;
+  right: 10px;
+  bottom: 6px;
+}
+
+:deep(.analysis-maker-wrapper .vxe-modal--content) {
+  padding: 0 !important;
+}
+
+:deep(.analysis-maker-wrapper .el-main) {
+  padding: 0 !important;
+}
+
+.chary-config-title {
+  font-weight: bold;
+}
+
+.axis-item-title {
+  display: inline-block;
+  width: 60px;
+}
+
+:deep(.analysis-maker-wrapper .no-radius .vgl-item) {
+  border-radius: none;
+}
+
+:deep(.analysis-maker-wrapper .no-radius .chart-content-panel),
+:deep(.analysis-maker-wrapper .no-radius .chart-content) {
+  overflow: hidden;
+}
+
+:deep(.analysis-maker-wrapper .radius-8 .vgl-item) {
+  border-radius: 8px;
+}
+
+:deep(.analysis-maker-wrapper .radius-8 .chart-content-panel),
+:deep(.analysis-maker-wrapper .radius-8 .chart-content) {
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+:deep(.analysis-maker-wrapper .radius-20 .vgl-item) {
+  border-radius: 20px;
+}
+
+:deep(.analysis-maker-wrapper .radius-20 .chart-content-panel),
+:deep(.analysis-maker-wrapper .radius-20 .chart-content) {
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+:deep(.analysis-maker-wrapper ::-webkit-scrollbar) {
+  width: 8px;
+  height: 8px;
+}
+
+:deep(.analysis-maker-wrapper ::-webkit-scrollbar-track),
+:deep(.analysis-maker-wrapper ::-webkit-scrollbar-corner) {
+  background-color: transparent;
+}
+
+:deep(.analysis-maker-wrapper ::-webkit-scrollbar-thumb) {
+  background-color: transparent;
+  background-clip: padding-box;
+  border: 1px solid transparent;
+  border-radius: 100px;
+}
+
+:deep(.analysis-maker-wrapper ::-webkit-scrollbar-thumb),
+:deep(.analysis-maker-wrapper ::-webkit-scrollbar-track) {
+  background-color: transparent;
+}
+
+:deep(.analysis-maker-wrapper :hover::-webkit-scrollbar-thumb:hover) {
+  background: rgb(0 0 0 / 45%);
+}
+
+:deep(.analysis-maker-wrapper :hover::-webkit-scrollbar-thumb) {
+  background-color: rgb(0 0 0 / 15%);
+}
+
+:deep(.analysis-maker-wrapper .el-button--primary:not(.is-plain, .is-text)) {
+  background: #2168f6;
+}
+
+:deep(.analysis-maker-wrapper .el-button--info) {
+  color: #1a1a1a;
+  background: #ededed;
+  border-color: #ededed;
+}
+
+:deep(.analysis-maker-wrapper .el-button--info:hover) {
+  background: rgb(0 0 0 / 20%);
+}
+
+:deep(.analysis-maker-wrapper .el-button--small) {
+  padding: 4px 8px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+:deep(.analysis-maker-wrapper .el-button--small img) {
+  position: relative;
+  top: 1px;
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+}
+
+:deep(.analysis-maker-wrapper .el-button--small span) {
+  position: relative;
+  bottom: 0.5px;
+}
+
+:deep(.analysis-maker-wrapper .el-switch) {
+  margin-right: 5px;
+}
+
+:deep(.analysis-maker-wrapper .el-switch .el-switch__core) {
+  width: 16px !important;
+  height: 10px;
+  border-radius: 2px;
+}
+
+:deep(.analysis-maker-wrapper .el-switch .el-switch__core::after) {
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+}
+
+:deep(.analysis-maker-wrapper .el-switch.is-checked .el-switch__core) {
+  background: #1f6aff;
+}
+
+:deep(.analysis-maker-wrapper .el-switch.is-checked .el-switch__core::after) {
+  margin-left: -7px;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .el-switch) {
+  height: 28px;
+  margin-right: 5px;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .common-color-input .el-input__prefix ) {
+  top: 4px;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .common-color-input .el-input__prefix .el-color-picker--small .el-color-picker__trigger) {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .el-collapse) {
+  border: 0;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .el-collapse .el-collapse-item__header) {
+  border: 0;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .el-collapse .el-collapse-item__content) {
+  padding-bottom: 0;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .el-input-number--small) {
+  width: 100%;
+  max-width: 130px;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .ef-form-wrapper.button-fixed .el-form) {
+  padding: 0;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .el-form-item__label) {
+  display: inline-block;
+  min-height: 28px;
+  padding-left: 24px;
+  font-size: 12px;
+  line-height: 28px;
+  color: #1a1a1a;
+  text-align: left !important;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .chart-config-title) {
+  font-size: 12px;
+  color: #1a1a1a;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .plane-inner-bg) {
+  padding-top: 10px;
+  background: #f7f7f7;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .plane-inner-bg .el-form-item__label) {
+  color: #7a7a7a;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .extra-bottom-text) {
+  font-size: 12px;
+  color: #a3a3a3;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .custom-group ) {
+  border-top: 1px solid #ededed;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .custom-group .el-card__body) {
+  padding: 0 !important;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .custom-group .el-form) {
+  overflow: hidden;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .custom-group .el-form-item) {
+  margin-bottom: 10px;
+}
+
+/* :deep(.analysis-maker-wrapper .chart-cfg-wrap .custom-group .el-form-item--small.el-form-item), */
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .custom-group .el-form-item--small.el-form-item) {
+  margin-bottom: 0;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .custom-group .el-row > .el-col) {
+  padding-right: 10px;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .custom-group .el-row > .el-col:last-child) {
+  padding-right: 0;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .custom-group .el-row > .el-col .el-form-item) {
+  margin: 0;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .el-radio-button__inner) {
+  padding: 7px 10px;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .chart-sidebar) {
+  width: 36px;
+  background: #f7f7f7;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .chart-sidebar .menu-item ) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 76px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #a3a3a3;
+  cursor: pointer;
+  writing-mode: vertical-lr;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .chart-sidebar .menu-item.active) {
+  color: #1a1a1a;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .chart-align-item) {
+  width: 26px;
+  height: 26px;
+  margin-right: 10px;
+  font-size: 12px;
+  line-height: 14px;
+  cursor: pointer;
+  background: #ededed;
+  border-radius: 4px;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .chart-align-item:last-child) {
+  margin-right: 0;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .chart-align-item.active) {
+  background-color: #1f6aff;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .xAix-cofig) {
+  overflow: hidden;
+}
+
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .bar-basic-config) {
+  padding: 10px;
+}
+
+.tip_popper {
+  background-color: #fff;
+  border: 1px solid #d4dbeb !important;
+  box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+}
+
+.el-tooltip__popper.is-light.tip_popper[x-placement^="right"] .popper__arrow {
+  border-right-color: #d4dbeb;
+}
+
+.vxe-context-menu--link .vxe-context-menu--link-prefix {
+  top: 0;
+}

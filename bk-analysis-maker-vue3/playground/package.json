@@ -1,0 +1,12 @@
+{
+  "name": "@bk-frontend/bk-analysis-maker-vue3-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@iconify-json/el": "^1.1.9"
+  }
+}

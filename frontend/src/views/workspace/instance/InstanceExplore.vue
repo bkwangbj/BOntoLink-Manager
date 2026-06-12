@@ -75,6 +75,8 @@
         <FilterDrawer v-if="filterField" :field="filterField" :options="filterOptions" :model="filterModel" :anchor="filterAnchor"
                       @confirm="onFilterConfirm" @cancel="filterField=null" />
       </div>
+      <!-- 保存整合实例探索(查询条件 + 显示形式 + 表格) -->
+      <button v-if="classId" class="ixe-save" @click="onSave" v-html="iconText('save','保存')"></button>
     </div>
 
     <!-- 子头:布局名 + 结果数 + 筛选 pills + 视图切换/清空 -->
@@ -103,7 +105,6 @@
         <button :class="viewMode==='charts'&&'is-on'" title="图表看板" @click="viewMode='charts'"><span v-html="BL.icon('barChart',13)"></span>看板</button>
         <button :class="viewMode==='list'&&'is-on'" title="结果列表" @click="viewMode='list'"><span v-html="BL.icon('list',13)"></span>列表</button>
       </div>
-      <button class="ixe-save ixe-save-sm" @click="onSave" v-html="iconText('save','保存')"></button>
     </div>
 
     <!-- 主体:图表看板 + 右结果列 -->
@@ -111,7 +112,7 @@
       <!-- 看板模式:图表看板(中) + 结果列(右) -->
       <template v-if="viewMode==='charts'">
         <InstanceCharts ref="chartsRef" class="ixe-dash" :class-id="classId" :type-name="curType?.display_name"
-                        :columns="columns" :filter-params="filterParams" />
+                        :columns="columns" :filter-params="filterParams" @save-layout="onSave" />
         <aside class="ixe-results">
           <div class="ixe-results-hd">
             <span class="ixe-results-title">结果</span>
@@ -134,37 +135,86 @@
         </aside>
       </template>
 
-      <!-- 列表模式:全量结果表 -->
-      <section v-else class="ixe-right">
-        <div class="ixe-table-wrap" v-if="rows.length">
-          <table class="bl-table ixe-table">
-            <thead>
-              <tr>
-                <th class="ixe-sticky-col">名称</th>
-                <th class="ixe-code-col">编码</th>
-                <th v-for="c in columns" :key="c.field" @click="sortBy(c.field)">
-                  {{ c.label }}<span v-if="sort===c.field" style="color:var(--bl-primary);font-size:10px">{{ order==='desc'?' ▼':' ▲' }}</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="r in rows" :key="r.id" @click="$emit('open-instance', { classId, row: r })">
-                <td class="ixe-sticky-col"><span class="bl-truncate" style="font-weight:500">{{ r.title }}</span></td>
-                <td class="ixe-code-col bl-mono bl-muted">{{ r.code }}</td>
-                <td v-for="c in columns" :key="c.field">{{ fmt(r[c.field], c.dataType) }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div v-else class="bl-empty" style="padding:48px">无匹配实例</div>
-        <div class="ixe-pager">
-          <button class="bl-btn bl-btn-sm" :disabled="page<=1" @click="go(page-1)" v-html="BL.icon('chevronLeft',13)"></button>
-          <span class="bl-muted" style="font-size:12px">{{ (page-1)*size+1 }}–{{ Math.min(page*size,total) }} / {{ total.toLocaleString() }}</span>
-          <button class="bl-btn bl-btn-sm" :disabled="page>=totalPages" @click="go(page+1)" v-html="BL.icon('chevronRight',13)"></button>
-        </div>
-      </section>
+      <!-- 列表模式:列表探索(滚动加载 + 预览/多实例/比较) -->
+      <InstanceListView v-else class="ixe-listview" :class-id="classId" :type-name="curType?.display_name"
+                        :columns="columns" :filter-params="filterParams"
+                        @open-instance="(p)=>$emit('open-instance', p)"
+                        @selection-change="(ids)=>listSelectedIds=ids" />
     </div>
     <div v-else class="ixe-pick bl-empty">从左上角下拉选择一个对象类型开始探索</div>
+
+    <!-- 保存为探索设计 弹框 -->
+    <div v-if="saveModal" class="ixe-save-mask" @click.self="saveModal=false">
+      <div class="ixe-save-modal">
+        <div class="ixe-save-hd">
+          <span>保存查询或列表</span>
+          <button class="ixe-save-x" @click="saveModal=false" v-html="BL.icon('x', 16)"></button>
+        </div>
+        <div class="ixe-save-body">
+          <div class="ixe-save-field">
+            <span class="ixe-save-label">保存对象为</span>
+            <div class="ixe-save-vis">
+              <button :class="['ixe-vis-card', sdKind==='query' && 'is-on']" @click="sdKind='query'">
+                <span class="ixe-vis-ic" v-html="BL.icon('barChart', 15, 'var(--bl-primary)')"></span>
+                <span class="bl-grow" style="text-align:left">查询</span>
+                <span v-if="sdKind==='query'" v-html="BL.icon('check', 14, 'var(--bl-primary)')"></span>
+              </button>
+              <button :class="['ixe-vis-card', sdKind==='list' && 'is-on']" @click="sdKind='list'">
+                <span class="ixe-vis-ic" v-html="BL.icon('list', 15, 'var(--bl-text-2)')"></span>
+                <span class="bl-grow" style="text-align:left">列表</span>
+                <span v-if="sdKind==='list'" v-html="BL.icon('check', 14, 'var(--bl-primary)')"></span>
+              </button>
+            </div>
+            <span class="ixe-save-hint">{{ sdKind==='query' ? '将筛选条件保存为动态查询,新数据结果会自动更新' : '将当前结果保存为静态列表' }}</span>
+          </div>
+          <label class="ixe-save-field">
+            <span class="ixe-save-label">{{ sdKind==='query' ? '查询名称' : '列表名称' }}</span>
+            <input class="bl-input" v-model="sdName" placeholder="如「洪水位高级筛选」"
+                   @input="sdErr=''" @keyup.enter="confirmSave" autofocus />
+            <span v-if="sdErr" class="ixe-save-err">{{ sdErr }}</span>
+          </label>
+          <div v-if="sdKind==='list' && listSelectedIds.length" class="ixe-save-field">
+            <span class="ixe-save-label">保存范围</span>
+            <div class="ixe-save-vis">
+              <button :class="['ixe-vis-card', sdScope==='all' && 'is-on']" @click="sdScope='all'">
+                <span class="ixe-vis-ic" v-html="BL.icon('list', 15, 'var(--bl-text-2)')"></span>
+                <span class="bl-grow" style="text-align:left">全部 {{ total.toLocaleString() }} 条</span>
+                <span v-if="sdScope==='all'" v-html="BL.icon('check', 14, 'var(--bl-primary)')"></span>
+              </button>
+              <button :class="['ixe-vis-card', sdScope==='selected' && 'is-on']" @click="sdScope='selected'">
+                <span class="ixe-vis-ic" v-html="BL.icon('check', 15, 'var(--bl-primary)')"></span>
+                <span class="bl-grow" style="text-align:left">已选 {{ listSelectedIds.length }} 条</span>
+                <span v-if="sdScope==='selected'" v-html="BL.icon('check', 14, 'var(--bl-primary)')"></span>
+              </button>
+            </div>
+          </div>
+          <label class="ixe-save-field">
+            <span class="ixe-save-label">描述(选填)</span>
+            <input class="bl-input" v-model="sdDesc" placeholder="自定义说明" />
+          </label>
+          <div class="ixe-save-vis">
+            <button :class="['ixe-vis-card', sdVisibility==='private' && 'is-on']" @click="sdVisibility='private'">
+              <span class="ixe-vis-ic" v-html="BL.icon('lock', 15, '#ff7d00')"></span>
+              <span class="bl-grow" style="text-align:left">私有</span>
+              <span v-if="sdVisibility==='private'" v-html="BL.icon('check', 14, 'var(--bl-primary)')"></span>
+            </button>
+            <button :class="['ixe-vis-card', sdVisibility==='public' && 'is-on']" @click="sdVisibility='public'">
+              <span class="ixe-vis-ic" v-html="BL.icon('users', 15, 'var(--bl-primary)')"></span>
+              <span class="bl-grow" style="text-align:left">公开</span>
+              <span v-if="sdVisibility==='public'" v-html="BL.icon('check', 14, 'var(--bl-primary)')"></span>
+            </button>
+          </div>
+          <button v-if="sdVisibility==='public'" class="ixe-save-proj"
+                  @click="BL.info('演示:公共项目选择规划中')">
+            {{ sdProject || '选择要保存到的公共项目' }}
+          </button>
+        </div>
+        <div class="ixe-save-ft">
+          <button class="bl-btn" @click="saveModal=false">取消</button>
+          <button class="bl-btn bl-btn-primary" @click="confirmSave">保存</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -174,6 +224,7 @@ import { BL } from '@/lib/bl.js'
 import { instanceApi } from '@/api'
 import FilterDrawer from './FilterDrawer.vue'
 import InstanceCharts from './InstanceCharts.vue'
+import InstanceListView from './InstanceListView.vue'
 import { useDesigns } from './designs.js'
 
 const props = defineProps({
@@ -198,18 +249,41 @@ const { listFor, save: saveDesign, remove: removeDesignStore } = useDesigns()
 const currentDesignId = ref(null)
 const designsForType = computed(() => listFor(classId.value))
 
-async function onSave() {
+/* 列表模式下勾选的实例 id */
+const listSelectedIds = ref([])
+
+/* 保存弹框表单 */
+const saveModal = ref(false)
+const sdKind = ref('query')           // query(动态查询) | list(静态列表)
+const sdScope = ref('all')            // all(全部) | selected(已选)
+const sdName = ref('')
+const sdDesc = ref('')
+const sdVisibility = ref('private')   // private | public
+const sdProject = ref('')
+const sdErr = ref('')
+
+function onSave() {
   layoutMenu.value = false
-  const name = await BL.prompt({
-    title: '保存为探索设计',
-    label: '设计名称',
-    defaultValue: designName.value === '默认探索布局' ? '' : designName.value,
-    placeholder: `如「${curType.value?.display_name || ''}高级筛选」`,
-    validate: (v) => (v && v.trim() ? true : '请输入名称')
-  })
-  if (!name) return
+  sdKind.value = viewMode.value === 'list' ? 'list' : 'query'
+  sdScope.value = listSelectedIds.value.length ? 'selected' : 'all'
+  sdName.value = designName.value === '默认探索布局' ? '' : designName.value
+  sdDesc.value = ''
+  sdVisibility.value = 'private'
+  sdProject.value = ''
+  sdErr.value = ''
+  saveModal.value = true
+}
+function confirmSave() {
+  const name = sdName.value.trim()
+  if (!name) { sdErr.value = '请输入名称'; return }
+  const useSel = sdKind.value === 'list' && sdScope.value === 'selected' && listSelectedIds.value.length
   const d = saveDesign({
-    name: name.trim(),
+    name,
+    kind: sdKind.value,
+    instanceIds: useSel ? [...listSelectedIds.value] : [],
+    desc: sdDesc.value.trim(),
+    visibility: sdVisibility.value,
+    project: sdVisibility.value === 'public' ? sdProject.value.trim() : '',
     classId: classId.value,
     className: curType.value?.display_name || '',
     icon: curType.value?.icon || 'search',
@@ -223,6 +297,7 @@ async function onSave() {
   })
   currentDesignId.value = d.id
   designName.value = d.name
+  saveModal.value = false
   BL.success(`已保存设计「${d.name}」`)
 }
 function applyDesign(d) {
@@ -465,6 +540,29 @@ onMounted(() => { if (classId.value) loadMeta() })
 .ixe-save:hover { background: var(--bl-primary-hover, #0e42d2); }
 .ixe-save-sm { height: 28px; box-sizing: border-box; padding: 0 14px; font-size: 12.5px; }
 
+/* 保存为探索设计 弹框 */
+.ixe-save-mask { position: fixed; inset: 0; z-index: 1300; background: rgba(0,0,0,.32); display: flex; align-items: center; justify-content: center; }
+.ixe-save-modal { width: 440px; max-width: 92vw; background: var(--bl-bg-1); border-radius: 10px; box-shadow: 0 16px 48px rgba(0,0,0,.24); overflow: hidden; animation: ixe-pop .16s ease; }
+@keyframes ixe-pop { from { transform: translateY(8px); opacity: .6 } to { transform: none; opacity: 1 } }
+.ixe-save-hd { display: flex; align-items: center; padding: 16px 18px 4px; font-size: 16px; font-weight: 600; color: var(--bl-text-1); }
+.ixe-save-hd span { flex: 1; }
+.ixe-save-x { width: 28px; height: 28px; border: 0; background: transparent; border-radius: 6px; color: var(--bl-text-3); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.ixe-save-x:hover { background: var(--bl-bg-hover); color: var(--bl-text-1); }
+.ixe-save-body { padding: 12px 18px 4px; display: flex; flex-direction: column; gap: 14px; }
+.ixe-save-field { display: flex; flex-direction: column; gap: 6px; }
+.ixe-save-label { font-size: 12.5px; color: var(--bl-text-2); }
+.ixe-save-field .bl-input { width: 100%; box-sizing: border-box; }
+.ixe-save-err { font-size: 11.5px; color: #f53f3f; }
+.ixe-save-hint { font-size: 11.5px; color: var(--bl-text-3); }
+.ixe-save-vis { display: flex; gap: 12px; }
+.ixe-vis-card { flex: 1; display: flex; align-items: center; gap: 8px; padding: 12px 14px; border: 1px solid var(--bl-border); border-radius: 8px; background: var(--bl-bg-1); cursor: pointer; font-size: 13px; color: var(--bl-text-1); }
+.ixe-vis-card:hover { border-color: var(--bl-primary-border); }
+.ixe-vis-card.is-on { border-color: var(--bl-primary); box-shadow: 0 0 0 2px var(--bl-primary-soft); }
+.ixe-vis-ic { display: inline-flex; }
+.ixe-save-proj { width: 100%; padding: 10px 12px; border: 1px dashed var(--bl-border); border-radius: 8px; background: var(--bl-bg-2); color: var(--bl-primary); cursor: pointer; font-size: 12.5px; text-align: left; }
+.ixe-save-proj:hover { border-color: var(--bl-primary); }
+.ixe-save-ft { display: flex; justify-content: flex-end; gap: 10px; padding: 14px 18px; margin-top: 8px; background: var(--bl-bg-2); border-top: 1px solid var(--bl-divider); }
+
 /* —— 子头:布局名 + 结果数 + pills —— */
 .ixe-subhead { flex-shrink: 0; display: flex; align-items: center; gap: 10px; padding: 6px 16px; background: var(--bl-bg-1); border-bottom: 1px solid var(--bl-border); }
 .ixe-layout-sel { position: relative; display: flex; align-items: center; gap: 4px; height: 28px; box-sizing: border-box; padding: 0 10px; border: 1px solid var(--bl-border); border-radius: 6px; cursor: pointer; font-size: 13px; flex-shrink: 0; max-width: 200px; }
@@ -587,6 +685,7 @@ onMounted(() => { if (classId.value) loadMeta() })
 .ixe-link-cnt { font-size: 11px; color: var(--bl-text-3); background: var(--bl-bg-3,#f0f2f5); border-radius: 8px; padding: 0 6px; }
 
 .ixe-right { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.ixe-listview { flex: 1; min-width: 0; }
 .ixe-result-hd { display: flex; align-items: center; padding: 8px 14px; border-bottom: 1px solid var(--bl-divider); font-size: 13px; }
 .ixe-table-wrap { flex: 1; overflow: auto; background: var(--bl-bg-1); }
 .ixe-table { font-size: 12.5px; border-collapse: separate; border-spacing: 0; width: 100%; }

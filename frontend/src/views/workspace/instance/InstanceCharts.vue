@@ -11,6 +11,9 @@
       </div>
       <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="!charts.length" @click="clearAll"
               v-html="iconText('trash','清空')"></button>
+      <span class="ixc-tb-sep"></span>
+      <button class="bl-btn bl-btn-sm bl-btn-primary" @click="$emit('save-layout')"
+              v-html="iconText2('save','保存布局')"></button>
     </div>
 
     <!-- 画布 -->
@@ -143,8 +146,10 @@ const props = defineProps({
   columns: { type: Array, default: () => [] },     // [{field,label,dataType}]
   filterParams: { type: Object, default: () => ({}) }  // { q, filter }
 })
+defineEmits(['save-layout'])
 
 function iconText(ic, t) { return `${BL.icon(ic, 12)}<span style="margin-left:4px">${t}</span>` }
+function iconText2(ic, t) { return `${BL.icon(ic, 12, '#fff')}<span style="margin-left:4px">${t}</span>` }
 
 const CHART_TYPES = [
   { type: 'listogram', label: '列表直方图', icon: 'barChart' },
@@ -279,6 +284,7 @@ defineExpose({ getConfig, setConfig })
 <style scoped>
 .ixc-root { flex: 1; display: flex; flex-direction: column; min-height: 0; background: var(--bl-bg-2); }
 .ixc-toolbar { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-bottom: 1px solid var(--bl-divider); background: var(--bl-bg-1); }
+.ixc-tb-sep { width: 1px; height: 18px; background: var(--bl-divider); margin: 0 2px; }
 .ixc-add-group { display: flex; gap: 4px; }
 .ixc-add {
   display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; font-size: 12px;

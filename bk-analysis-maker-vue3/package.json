@@ -1,0 +1,90 @@
+{
+  "name": "@bk-frontend/bk-analysis-maker-vue3-monorepo",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">= 18"
+  },
+  "scripts": {
+    "dev": "pnpm -C playground dev",
+    "build": "pnpm -C packages/bk-analysis-maker build"
+  },
+  "dependencies": {
+    "analysis-maker-vue3": "workspace:*",
+    "d3-format": "^3.1.0",
+    "ejs": "^3.1.9",
+    "grid-layout-plus": "^1.0.5",
+    "mitt": "^3.0.1",
+    "uuid": "^9.0.0",
+    "vue3-sketch-ruler": "^2.1.0"
+  },
+  "peerDependencies": {
+    "vuedraggable": "^4.1.0",
+    "efficient-suite": "^1.0.12",
+    "echarts": "^5.5.0",
+    "echarts-gl": "^2.0.9",
+    "element-plus": "^2.7.2",
+    "monaco-editor": "^0.33.0",
+    "monaco-editor-vue3": "^0.1.10",
+    "sortablejs": "^1.15.2",
+    "tdesign-vue-next": "^1.9.9",
+    "vue": "^3.4.27",
+    "vxe-table": "^4.6.11",
+    "xe-utils": "^3.5.26",
+    "html2canvas": "^1.4.1"
+  },
+  "devDependencies": {
+    "@element-plus/icons-vue": "^2.1.0",
+    "@iconify-json/ri": "^1.1.12",
+    "@imengyu/vue3-context-menu": "^1.4.1",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue-jsx": "^3.0.2",
+    "@vueuse/core": "^10.5.0",
+    "axios": "^1.5.1",
+    "efficient-suite": "^1.0.12",
+    "echarts": "^5.5.0",
+    "echarts-gl": "^2.0.9",
+    "element-plus": "^2.7.2",
+    "eslint": "^8.50.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-vue": "^9.17.0",
+    "monaco-editor": "^0.33.0",
+    "monaco-editor-vue3": "^0.1.10",
+    "pinia": "^2.1.7",
+    "postcss": "^8.4.30",
+    "postcss-html": "^1.5.0",
+    "postcss-scss": "^4.0.8",
+    "sass": "^1.68.0",
+    "sortablejs": "^1.15.2",
+    "stylelint": "^14.9.1",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-recess-order": "^3.0.0",
+    "stylelint-config-standard": "^26.0.0",
+    "stylelint-order": "^5.0.0",
+    "stylelint-scss": "^4.2.0",
+    "tdesign-vue-next": "^1.9.9",
+    "throttle-debounce": "^5.0.0",
+    "unocss": "^0.62.2",
+    "unplugin-auto-import": "^0.16.6",
+    "unplugin-element-plus": "^0.8.0",
+    "unplugin-icons": "^0.17.0",
+    "unplugin-vue-components": "^0.25.2",
+    "vite": "^5.4.1",
+    "vite-plugin-eslint": "^1.8.1",
+    "vite-plugin-vue-setup-extend": "^0.4.0",
+    "vue": "^3.4.27",
+    "vue-echarts": "^6.7.2",
+    "vue-router": "^4.2.5",
+    "vxe-table": "4.6.11",
+    "xe-utils": "^3.5.26"
+  },
+  "packageManager": "pnpm@8.8.0",
+  "overrides": {
+    "vite": {
+      "rollup": "npm:@rollup/wasm-node"
+    }
+  }
+}

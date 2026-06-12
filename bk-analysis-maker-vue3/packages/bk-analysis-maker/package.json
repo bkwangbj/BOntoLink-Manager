@@ -1,0 +1,35 @@
+{
+  "name": "analysis-maker-vue3",
+  "version": "0.0.13",
+  "type": "module",
+  "license": "MIT",
+  "author": "liyongjun",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/analysis-maker.umd.cjs",
+  "module": "./dist/analysis-maker.js",
+  "exports": {
+    ".": {
+      "import": "./dist/analysis-maker.js",
+      "require": "./dist/analysis-maker.umd.cjs"
+    },
+    "./dist/style.css": {
+      "import": "./dist/style.css",
+      "require": "./dist/style.css"
+    }
+  },
+  "engines": {
+    "node": ">= 18"
+  },
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "grid-layout-plus": "^1.0.5"
+  },
+  "devDependencies": {
+    "rollup-plugin-visualizer": "^5.9.2",
+    "unplugin-element-plus": "^0.8.0"
+  }
+}
