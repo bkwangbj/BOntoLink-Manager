@@ -422,20 +422,25 @@
         </div>
         <div class="bl-drawer-body bl-col" style="gap:12px">
           <FieldRow label="类型">
-            <select class="bl-input" v-model="formData.categoryType" :disabled="formMode==='edit'">
-              <option :value="1">行业 (Industry)</option>
-              <option :value="2">领域 (Domain)</option>
-              <option :value="3">分组 (Group)</option>
+            <select class="bl-input" v-model="formData.categoryType"
+                    :disabled="formMode==='edit' || formParent?.categoryType !== 1">
+              <option v-if="formMode==='create' && !formParent" :value="1">行业 (Industry)</option>
+              <option v-if="formMode==='edit' || formParent" :value="2">领域 (Domain)</option>
+              <option v-if="formMode==='edit' || formParent" :value="3">分组 (Group)</option>
             </select>
           </FieldRow>
           <FieldRow label="父级"><input class="bl-input" :value="formParentLabel" disabled /></FieldRow>
           <FieldRow label="编码 *"><input class="bl-input bl-mono" v-model="formData.categoryCode" placeholder="小写+下划线" /></FieldRow>
           <FieldRow label="中文名 (rdfs:label) *"><input class="bl-input" v-model="formData.rdfsLabel" /></FieldRow>
-          <FieldRow label="命名空间编码">
+          <FieldRow label="命名空间编码" v-if="!(formMode==='create' && formData.categoryType===2)">
             <select class="bl-input" v-model="formData.nsCode" :disabled="formMode==='edit' && formData.categoryType===2">
               <option value="">— 无 —</option>
               <option v-for="ns in nsList" :key="ns.nsCode" :value="ns.nsCode">{{ ns.nsCode }} · {{ ns.nsName }}</option>
             </select>
+          </FieldRow>
+          <FieldRow v-else label="命名空间编码">
+            <input class="bl-input bl-mono" :value="formData.categoryCode" disabled />
+            <span class="bl-muted" style="font-size:11px">自动创建</span>
           </FieldRow>
           <FieldRow label="图标">
             <IconPickerField v-model="formData.icon" label="图标" :suggest-name="formData.rdfsLabel" :preset-count="32" />
@@ -2080,9 +2085,19 @@ async function submitForm() {
     BL.warning('编码、中文名为必填')
     return
   }
+  const parentId = formParent.value?.id || '0'
+  // 行业只能是第一级
+  if (formData.categoryType === 1 && parentId !== '0') {
+    BL.warning('行业只能是第一级分类')
+    return
+  }
+  // 创建领域时自动创建命名空间，nsCode = categoryCode
+  if (formMode.value === 'create' && formData.categoryType === 2) {
+    formData.nsCode = formData.categoryCode
+  }
   const payload = {
     ...formData,
-    parentId: formParent.value?.id || '0',
+    parentId,
     status: 1
   }
   if (formMode.value === 'create') {

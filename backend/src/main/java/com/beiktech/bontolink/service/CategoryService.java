@@ -1,7 +1,9 @@
 package com.beiktech.bontolink.service;
 
 import com.beiktech.bontolink.entity.BizCategory;
+import com.beiktech.bontolink.entity.BizNamespace;
 import com.beiktech.bontolink.mapper.BizCategoryMapper;
+import com.beiktech.bontolink.mapper.BizNamespaceMapper;
 import com.beiktech.bontolink.mapper.OntologyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ public class CategoryService {
 
     @Autowired private BizCategoryMapper categoryMapper;
     @Autowired private OntologyMapper ontologyMapper;
+    @Autowired private BizNamespaceMapper namespaceMapper;
 
     public List<Map<String, Object>> tree() {
         List<BizCategory> all = categoryMapper.listAll();
@@ -68,6 +71,11 @@ public class CategoryService {
     public BizCategory get(String id) { return categoryMapper.findById(id); }
 
     public BizCategory create(BizCategory c) {
+        // 行业只能是第一级
+        if (c.getCategoryType() != null && c.getCategoryType() == 1
+                && c.getParentId() != null && !"0".equals(c.getParentId())) {
+            throw new IllegalArgumentException("行业只能是第一级分类");
+        }
         if (c.getId() == null || c.getId().isEmpty()) {
             c.setId("category-" + UUID.randomUUID());
         }
@@ -78,6 +86,27 @@ public class CategoryService {
         if (c.getSort() == null) c.setSort(0);
         if (c.getParentId() == null) c.setParentId("0");
         categoryMapper.insert(c);
+
+        // 创建领域时自动创建命名空间（nsCode = categoryCode）
+        if (c.getCategoryType() != null && c.getCategoryType() == 2) {
+            String code = c.getCategoryCode();
+            BizNamespace existing = namespaceMapper.findByCode(code);
+            if (existing == null) {
+                BizNamespace ns = new BizNamespace();
+                ns.setId("namespace-" + UUID.randomUUID());
+                ns.setNsCode(code);
+                ns.setNsName(c.getRdfsLabel() != null ? c.getRdfsLabel() : code);
+                ns.setNsUri("http://ont.beiktech.com/ns/" + code);
+                ns.setHierarchyPath(code);
+                ns.setCurrVersion("1.0");
+                ns.setStatus(1);
+                namespaceMapper.insert(ns);
+            }
+            // 领域绑定到该命名空间
+            c.setNsCode(code);
+            categoryMapper.update(c);
+        }
+
         return c;
     }
 

@@ -50,8 +50,12 @@ npx vite build              # 生产构建(每次大改后必跑验证)
 ### 后端
 ```powershell
 cd c:\beiktech-jyx\BOntoLink02\backend
-mvn -DskipTests clean compile           # 只编译, 验证 Java 代码
-mvn -q -DskipTests spring-boot:run      # 启动 (用 run_in_background)
+# 本机 JDK 17 / JDK 21 共存,项目要求 JDK 21
+# 方案 A: 用 mvnw 包装脚本(自动设 JAVA_HOME)
+mvnw -DskipTests clean compile           # 只编译, 验证 Java 代码
+mvnw -q -DskipTests spring-boot:run      # 启动 (用 run_in_background)
+# 方案 B: 直接前缀指定
+# JAVA_HOME="D:/soft/Java/jdk-21.0.8+9" mvn -DskipTests clean compile
 ```
 
 ### 数据库迁移(Flyway)/ 重置

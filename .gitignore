@@ -31,3 +31,5 @@ backend/bontolink.db-shm
 backend/bontolink.db-wal
 backend/db-backup/
 backend/flyway-run.log
+*.cmd
+backend/mvnw
