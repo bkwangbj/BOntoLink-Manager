@@ -39,12 +39,12 @@
             </template>
             <!-- 介于：双输入 -->
             <template v-else-if="c.op==='between'">
-              <input class="bl-input bl-input-sm" :type="htmlType" v-model="c.value" :placeholder="ph" />
+              <input class="bl-input bl-input-sm" :type="htmlType" v-bind="inputAttrs" v-model="c.value" :placeholder="ph" />
               <span class="ixf-tilde">~</span>
-              <input class="bl-input bl-input-sm" :type="htmlType" v-model="c.value2" :placeholder="ph" />
+              <input class="bl-input bl-input-sm" :type="htmlType" v-bind="inputAttrs" v-model="c.value2" :placeholder="ph" />
             </template>
             <!-- 单输入 -->
-            <input v-else class="bl-input bl-input-sm" :type="htmlType" v-model="c.value" :placeholder="ph" />
+            <input v-else class="bl-input bl-input-sm" :type="htmlType" v-bind="inputAttrs" v-model="c.value" :placeholder="ph" />
           </template>
           <span v-else class="ixf-noval">—</span>
         </div>
@@ -100,9 +100,34 @@ const OPS = {
   datetime:[['eq','等于'],['ne','不等于'],['after','在之后'],['before','在之前'],['between','介于'],['empty','为空'],['notEmpty','不为空']],
   time:   [['eq','等于'],['ne','不等于'],['after','晚于'],['before','早于'],['between','介于'],['empty','为空'],['notEmpty','不为空']],
 }
-const operators = computed(() => (OPS[dataType.value] || OPS.string).map(([v, t]) => ({ v, t })))
+/* —— 日期粒度识别:按字段语义判断要 年 / 年月 / 年月日 / 年月日时分,通用处理 —— */
+const dateKind = computed(() => {
+  const f = props.field || {}
+  const s = ((f.label || '') + ' ' + (f.field || '')).toLowerCase()
+  if (f.dataType === 'datetime') return 'datetime'
+  if (f.dataType === 'date') return 'date'
+  // int/string 存储但语义是时间的字段
+  if (/年月|月份/.test(s) || /\bmonth\b/.test(s)) return 'month'
+  if (/年份|年度/.test(s) || /year/.test(s) || (f.dataType === 'int' && /年/.test(s))) return 'year'
+  return null
+})
+// 算子取值类型:年→数值算子;年月/年月日→日期算子
+const opType = computed(() => {
+  const k = dateKind.value
+  if (k === 'year') return 'int'
+  if (k === 'month' || k === 'date') return 'date'
+  if (k === 'datetime') return 'datetime'
+  return dataType.value
+})
+const operators = computed(() => (OPS[opType.value] || OPS.string).map(([v, t]) => ({ v, t })))
 
 const htmlType = computed(() => {
+  switch (dateKind.value) {
+    case 'year': return 'number'
+    case 'month': return 'month'
+    case 'date': return 'date'
+    case 'datetime': return 'datetime-local'
+  }
   switch (dataType.value) {
     case 'int': case 'decimal': return 'number'
     case 'date': return 'date'
@@ -111,11 +136,17 @@ const htmlType = computed(() => {
     default: return 'text'
   }
 })
+// 年份用数值框时限制为 4 位年范围
+const inputAttrs = computed(() => dateKind.value === 'year' ? { min: 1000, max: 9999, step: 1 } : {})
 const ph = computed(() => {
-  switch (dataType.value) {
-    case 'int': case 'decimal': return '请输入数值'
+  switch (dateKind.value) {
+    case 'year': return 'YYYY'
+    case 'month': return 'YYYY-MM'
     case 'date': return 'YYYY-MM-DD'
     case 'datetime': return 'YYYY-MM-DD HH:mm'
+  }
+  switch (dataType.value) {
+    case 'int': case 'decimal': return '请输入数值'
     case 'time': return 'HH:mm:ss'
     default: return '请输入关键词'
   }

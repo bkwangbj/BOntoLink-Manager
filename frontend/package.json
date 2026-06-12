@@ -12,13 +12,29 @@
   "dependencies": {
     "@ant-design/icons-svg": "^4.4.2",
     "@antv/g6": "^4.8.25",
+    "@element-plus/icons-vue": "2.3.2",
+    "@imengyu/vue3-context-menu": "1.5.4",
+    "analysis-maker-vue3": "file:../bk-analysis-maker-vue3/packages/bk-analysis-maker",
     "axios": "^1.7.7",
-    "pinia": "^2.2.4",
-    "vue": "^3.5.12",
-    "vue-router": "^4.4.5"
+    "echarts": "5.6.0",
+    "echarts-gl": "2.1.0",
+    "efficient-suite": "1.0.14",
+    "element-plus": "2.14.2",
+    "monaco-editor": "0.33.0",
+    "pinia": "2.3.1",
+    "sortablejs": "1.15.7",
+    "tdesign-vue-next": "1.20.1",
+    "throttle-debounce": "5.0.2",
+    "vue": "3.5.38",
+    "vue-echarts": "6.7.3",
+    "vue-router": "4.6.4",
+    "vuedraggable": "4.1.0",
+    "vxe-table": "4.6.11",
+    "xe-utils": "3.9.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.4",
+    "unocss": "^0.62.4",
     "vite": "^5.4.10"
   }
 }

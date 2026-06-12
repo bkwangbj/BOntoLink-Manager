@@ -79,8 +79,17 @@
       <button v-if="classId" class="ixe-save" @click="onSave" v-html="iconText('save','保存')"></button>
     </div>
 
-    <!-- 子头:布局名 + 结果数 + 筛选 pills + 视图切换/清空 -->
+    <!-- 子头:视图页签(前) + 布局名 + 结果数 -->
     <div class="ixe-subhead" v-if="classId">
+      <div class="ixe-vtabs">
+        <button :class="['ixe-vtab', viewMode==='list' && 'is-on']" @click="viewMode='list'">
+          <span v-html="BL.icon('list', 14)"></span>列表
+        </button>
+        <button :class="['ixe-vtab', viewMode==='charts' && 'is-on']" @click="viewMode='charts'">
+          <span v-html="BL.icon('barChart', 14)"></span>看板
+        </button>
+      </div>
+      <span class="bl-grow"></span>
       <div class="ixe-layout-sel" @click.stop="layoutMenu=!layoutMenu" v-click-outside="()=>layoutMenu=false">
         <span class="bl-truncate">{{ designName }}</span>
         <span v-html="BL.icon('chevronDown', 11)"></span>
@@ -100,40 +109,13 @@
         </div>
       </div>
       <span class="ixe-result-badge">{{ total.toLocaleString() }} 条结果</span>
-      <span class="bl-grow"></span>
-      <div class="ixe-seg">
-        <button :class="viewMode==='charts'&&'is-on'" title="图表看板" @click="viewMode='charts'"><span v-html="BL.icon('barChart',13)"></span>看板</button>
-        <button :class="viewMode==='list'&&'is-on'" title="结果列表" @click="viewMode='list'"><span v-html="BL.icon('list',13)"></span>列表</button>
-      </div>
     </div>
 
     <!-- 主体:图表看板 + 右结果列 -->
     <div class="ixe-main" v-if="classId">
-      <!-- 看板模式:图表看板(中) + 结果列(右) -->
-      <template v-if="viewMode==='charts'">
-        <InstanceCharts ref="chartsRef" class="ixe-dash" :class-id="classId" :type-name="curType?.display_name"
-                        :columns="columns" :filter-params="filterParams" @save-layout="onSave" />
-        <aside class="ixe-results">
-          <div class="ixe-results-hd">
-            <span class="ixe-results-title">结果</span>
-            <span class="ixe-results-cnt">{{ total.toLocaleString() }}</span>
-            <span class="bl-grow"></span>
-            <span class="ixe-results-sort">排序方式 <span v-html="BL.icon('chevronDown', 11)"></span></span>
-          </div>
-          <div class="ixe-results-list">
-            <div v-for="r in rows" :key="r.id" class="ixe-results-item" @click="$emit('open-instance', { classId, row: r })">
-              <span class="ixe-results-ic" :style="{ background:(r.color||'#165DFF')+'1f', color:r.color||'#165DFF' }"
-                    v-html="BL.icon(r.icon||'cube', 12, r.color||'#165DFF')"></span>
-              <div class="bl-grow" style="min-width:0">
-                <div class="bl-truncate" style="font-size:12.5px">{{ r.title }}</div>
-                <div class="bl-truncate bl-mono" style="font-size:10.5px;color:var(--bl-text-3)">{{ r.code }}</div>
-              </div>
-            </div>
-            <div v-if="!rows.length" class="bl-empty" style="padding:24px">无匹配实例</div>
-          </div>
-          <div class="ixe-results-more" @click="viewMode='list'">查看全部结果 →</div>
-        </aside>
-      </template>
+      <!-- 看板模式:内嵌数据可视化设计器(按数据特征自动出图,可增删改) -->
+      <MakerEmbed v-if="viewMode==='charts'" class="ixe-dash" :class-id="classId"
+                  :columns="columns" :filter-params="filterParams" />
 
       <!-- 列表模式:列表探索(滚动加载 + 预览/多实例/比较) -->
       <InstanceListView v-else class="ixe-listview" :class-id="classId" :type-name="curType?.display_name"
@@ -220,10 +202,11 @@
 
 <script setup>
 import { ref, computed, watch, onMounted, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
 import { BL } from '@/lib/bl.js'
 import { instanceApi } from '@/api'
 import FilterDrawer from './FilterDrawer.vue'
-import InstanceCharts from './InstanceCharts.vue'
+import MakerEmbed from '../MakerEmbed.vue'
 import InstanceListView from './InstanceListView.vue'
 import { useDesigns } from './designs.js'
 
@@ -234,7 +217,7 @@ const props = defineProps({
 })
 defineEmits(['open-instance'])
 
-const viewMode = ref('charts')   // charts(看板) | list(全量表)
+const viewMode = ref('list')   // list(列表,默认) | charts(看板/可视化设计器)
 const searchPanelOpen = ref(false)
 const propKw = ref('')
 const layoutMenu = ref(false)
@@ -243,6 +226,15 @@ const chartsRef = ref(null)
 function iconText(ic, t) { return `${BL.icon(ic, 13, '#fff')}<span style="margin-left:5px">${t}</span>` }
 function iconText2(ic, t) { return `${BL.icon(ic, 12)}<span style="margin-left:5px">${t}</span>` }
 function iconText3(ic, t) { return `${BL.icon(ic, 12, 'var(--bl-text-3)')}<span style="margin-left:3px">${t}</span>` }
+
+/* 跳转到可视化制作(大屏),带上当前对象类型 + 筛选 */
+const router = useRouter()
+function openMaker() {
+  const query = { classId: classId.value }
+  if (kw.value.trim()) query.q = kw.value.trim()
+  if (filterParams.value.filter) query.filter = filterParams.value.filter
+  router.push({ path: '/workspace/maker', query })
+}
 
 /* —— 保存设计 / 模版(localStorage) —— */
 const { listFor, save: saveDesign, remove: removeDesignStore } = useDesigns()
@@ -536,6 +528,8 @@ onMounted(() => { if (classId.value) loadMeta() })
 .ixe-hs-ic { display: inline-flex; flex-shrink: 0; }
 .ixe-hs-input { flex: 1; border: 0; outline: none; background: transparent; font-size: 13px; }
 .ixe-fixed-title { display: flex; align-items: center; gap: 6px; flex-shrink: 0; font-size: 14px; color: var(--bl-text-1); padding: 4px 2px; }
+.ixe-maker { flex-shrink: 0; height: 34px; padding: 0 14px; border: 1px solid var(--bl-primary); border-radius: 6px; background: var(--bl-bg-1); color: var(--bl-primary); font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; }
+.ixe-maker:hover { background: var(--bl-primary-soft); }
 .ixe-save { flex-shrink: 0; height: 34px; padding: 0 16px; border: 0; border-radius: 6px; background: var(--bl-primary); color: #fff; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; }
 .ixe-save:hover { background: var(--bl-primary-hover, #0e42d2); }
 .ixe-save-sm { height: 28px; box-sizing: border-box; padding: 0 14px; font-size: 12.5px; }
@@ -648,6 +642,13 @@ onMounted(() => { if (classId.value) loadMeta() })
   border-radius: 6px; color: var(--bl-text-3); cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
 }
 .ixe-icon-btn:hover { background: var(--bl-bg-hover); color: var(--bl-primary); border-color: var(--bl-primary-border); }
+/* 视图页签(下划线 tab 形式) */
+.ixe-vtabs { display: inline-flex; align-items: center; gap: 22px; height: 28px; flex-shrink: 0; margin-right: 6px; }
+.ixe-vtab { display: inline-flex; align-items: center; gap: 5px; height: 100%; border: 0; background: transparent; color: var(--bl-text-2); font-size: 13.5px; cursor: pointer; padding: 0; position: relative; }
+.ixe-vtab:hover:not(.is-on) { color: var(--bl-text-1); }
+.ixe-vtab.is-on { color: var(--bl-primary); font-weight: 600; }
+.ixe-vtab.is-on::after { content: ''; position: absolute; left: 0; right: 0; bottom: -5px; height: 2px; background: var(--bl-primary); border-radius: 2px; }
+
 .ixe-seg { display: inline-flex; border: 1px solid var(--bl-border); border-radius: 6px; overflow: hidden; flex-shrink: 0; }
 .ixe-seg button {
   display: inline-flex; align-items: center; gap: 4px; height: 28px; box-sizing: border-box; padding: 0 12px; font-size: 12.5px;

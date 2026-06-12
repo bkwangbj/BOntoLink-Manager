@@ -129,6 +129,35 @@ public class InstanceController {
         return R.ok(mock.aggregate(rows, groupBy, metric, agg, limit));
     }
 
+    /* ============ 可视化制作(analysis-maker)图表数据:返回 [{name, value}] ============ */
+    @GetMapping("/chart-data")
+    public R<List<Map<String, Object>>> chartData(
+            @RequestParam String classId,
+            @RequestParam String groupBy,
+            @RequestParam(required = false) String metric,
+            @RequestParam(required = false, defaultValue = "count") String agg,
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false) String filter,
+            @RequestParam(defaultValue = "12") int limit) {
+        List<Map<String, Object>> rows = mock.query(classId, q, parseFilter(filter));
+        List<Map<String, Object>> aggd = mock.aggregate(rows, groupBy, metric, agg, limit);
+        List<Map<String, Object>> out = new ArrayList<>();
+        for (Map<String, Object> g : aggd) {
+            Object key = g.get("key");
+            Object v = "count".equals(agg) ? g.get("count") : g.get(agg);
+            if (v == null) v = g.get("count");
+            Map<String, Object> o = new LinkedHashMap<>();
+            // 多字段兼容:饼图用 name/value;柱/折线用 x/y(+colorField 单系列)
+            o.put("name", key);
+            o.put("value", v);
+            o.put("x", key);
+            o.put("y", v);
+            o.put("colorField", "数量");
+            out.add(o);
+        }
+        return R.ok(out);
+    }
+
     /* ============ 单一统计(整组单值聚合) ============ */
     @GetMapping("/stat")
     public R<Map<String, Object>> stat(
