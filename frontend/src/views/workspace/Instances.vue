@@ -6,7 +6,7 @@
         <div v-for="t in tabs" :key="t.id" :class="['ix-tab', t.id===activeId && 'is-active']" @click="activeId=t.id">
           <span class="ix-tab-ic" v-html="BL.icon(t.icon, 13, t.id===activeId ? (t.color||'var(--bl-primary)') : 'var(--bl-text-3)')"></span>
           <span class="ix-tab-title bl-truncate">{{ t.title }}</span>
-          <button v-if="tabs.length>1" class="ix-tab-x" @click.stop="closeTab(t.id)" v-html="BL.icon('x', 14)"></button>
+          <button v-if="tabs.length>1" class="ix-tab-x" @click.stop="closeTab(t.id)" v-html="BL.icon('x', 17)"></button>
         </div>
         <button class="ix-tab-add" title="新建探索" @click="addTab()" v-html="BL.icon('plus', 14)"></button>
       </div>
@@ -20,6 +20,10 @@
     <InstanceExplore v-if="activeTab.kind==='explore'" :key="activeTab.id" :types="types"
                      :initial-class-id="activeTab.classId" :fixed-title="activeTab.fixedTitle" @open-instance="onOpenInstance" />
 
+    <template v-else>
+    <!-- 对象类型关系图(占据整个 home 区域:搜索栏 + 页签 + 内容) -->
+    <InstanceTypeGraph v-if="graphView" class="ix-graphview" :title="graphView.title" :type-ids="graphView.typeIds"
+                       @back="graphView=null" @explore="onGraphExplore" />
     <template v-else>
     <!-- 全局搜索行(独占一行，固定不变，不随二级标签切换) -->
     <div class="ix-toolbar-row">
@@ -113,6 +117,7 @@
       </div>
     </template>
     </template>
+    </template>
 
     <!-- 详情抽屉 -->
     <InstanceDetailDrawer v-if="detail" :mode="detail.mode" :type="detail.type" :row="detail.row"
@@ -126,6 +131,7 @@ import { useRouter } from 'vue-router'
 import { BL } from '@/lib/bl.js'
 import { instanceApi, categoryApi } from '@/api'
 import InstanceOverview from './instance/InstanceOverview.vue'
+import InstanceTypeGraph from './instance/InstanceTypeGraph.vue'
 import InstanceObjectTypes from './instance/InstanceObjectTypes.vue'
 import InstanceExplore from './instance/InstanceExplore.vue'
 import InstanceDetailDrawer from './instance/InstanceDetailDrawer.vue'
@@ -265,7 +271,15 @@ function openInstance(r) {
 const detail = ref(null)
 
 /* —— 其它 —— */
-function goGraph() { router.push('/workspace/graph') }
+/* 概览分组「图谱」→ 内嵌对象类型关系图(占据整个 home 区域) */
+const graphView = ref(null)   // { title, typeIds }
+function goGraph(g) {
+  graphView.value = { title: (g && g.key) || '全部', typeIds: (g && g.items ? g.items.map(t => t.id) : []) }
+}
+function onGraphExplore(id) {
+  const t = types.value.find(x => x.id === id)
+  if (t) openExplore(t)
+}
 
 /* —— click-outside —— */
 const vClickOutside = {
@@ -311,7 +325,7 @@ onBeforeUnmount(() => document.removeEventListener('fullscreenchange', onFsChang
 .ix-tab-ic { display: inline-flex; flex-shrink: 0; }
 .ix-tab-title { min-width: 0; }
 /* 关闭按钮:不占位,hover 当前页签才显示 */
-.ix-tab-x { width: 18px; height: 18px; border: 0; background: transparent; color: var(--bl-text-3); border-radius: 4px; cursor: pointer; display: none; align-items: center; justify-content: center; flex-shrink: 0; }
+.ix-tab-x { width: 22px; height: 22px; border: 0; background: transparent; color: var(--bl-text-2); border-radius: 5px; cursor: pointer; display: none; align-items: center; justify-content: center; flex-shrink: 0; }
 .ix-tab:hover .ix-tab-x, .ix-tab.is-active .ix-tab-x { display: inline-flex; }
 .ix-tab-x:hover { background: var(--bl-bg-3,#e5e6eb); color: var(--bl-text-1); }
 .ix-tab-add { width: 24px; height: 24px; border: 0; background: transparent; color: var(--bl-text-3); border-radius: 5px; cursor: pointer; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
@@ -363,4 +377,6 @@ onBeforeUnmount(() => document.removeEventListener('fullscreenchange', onFsChang
 
 /* 内容区 */
 .ix-content { flex: 1; display: flex; min-height: 0; overflow: hidden; }
+/* 概览图谱:占据整个 home 区域 */
+.ix-graphview { flex: 1; min-height: 0; }
 </style>

@@ -36,37 +36,61 @@
                @keyup.enter="reload" @focus="searchPanelOpen=true" />
         <button v-if="pills.length || kw.trim()" class="ixe-hs-clear" @click.stop="clearAll"
                 v-html="iconText3('x','清空')"></button>
-        <!-- 搜索菜单面板:左 关联对象类型 + 右 属性列表 -->
+        <!-- 搜索菜单面板:左 主对象/关联对象类型 + 右 属性列表(按 ② 顶部搜索过滤、统计) -->
         <div v-if="searchPanelOpen && classId" class="ixe-sp" @click.stop>
           <aside class="ixe-sp-left">
-            <div class="ixe-sp-cur">
-              <span class="ixe-type-ic" :style="{ background:(curType?.color||'#165DFF')+'1f', color:curType?.color||'#165DFF' }"
-                    v-html="BL.icon(curType?.icon||'cube', 13, curType?.color||'#165DFF')"></span>
-              <span class="bl-truncate bl-grow" style="font-weight:600">{{ curType?.display_name }}</span>
-            </div>
-            <div class="ixe-sp-hd">关联对象类型 <span class="ixe-sp-n">{{ links.length }}</span></div>
             <div class="ixe-sp-scroll">
+              <!-- ③ 主对象 -->
+              <div class="ixe-sp-ent" :class="panelSel==='__main__' && 'is-on'" @click="panelSel='__main__'">
+                <span class="ixe-link-ic" :style="{ background:(curType?.color||'#165DFF')+'1f', color:curType?.color||'#165DFF' }"
+                      v-html="BL.icon(curType?.icon||'cube', 13, curType?.color||'#165DFF')"></span>
+                <span class="bl-grow bl-truncate" style="font-weight:600">{{ curType?.display_name }}</span>
+                <span class="ixe-ent-n">{{ matchCount(columns) }}</span>
+                <span v-if="panelSel==='__main__'" class="ixe-ent-arrow" v-html="BL.icon('chevronsRight',14,'var(--bl-primary)')"></span>
+              </div>
+              <!-- ④ 关联对象类型(前缀“链接类型”) -->
+              <div class="ixe-sp-subhd">关联对象类型 <span class="ixe-sp-n">{{ links.length }}</span></div>
               <div v-if="!links.length" class="ixe-sp-empty">暂无关联</div>
-              <div v-for="l in links" :key="l.linkId+l.targetClassId" class="ixe-sp-link"
-                   :title="l.linkLabel" @click="selectTypeFromPanel(l.targetClassId)">
+              <div v-for="l in links" :key="l.linkId+l.targetClassId" class="ixe-sp-ent ixe-sp-ent-link"
+                   :class="panelSel===l.targetClassId && 'is-on'" :title="l.linkLabel" @click="selectLinkEntity(l)">
                 <span class="ixe-link-ic" :style="{ background:(l.targetColor||'#86909c')+'1f', color:l.targetColor||'#86909c' }"
                       v-html="BL.icon(l.targetIcon||'cube', 12, l.targetColor||'#86909c')"></span>
-                <span class="bl-grow bl-truncate">{{ l.targetClassName }}</span>
-                <span class="ixe-link-cnt">{{ l.count }}</span>
+                <div class="bl-grow" style="min-width:0">
+                  <div class="ixe-link-tag bl-truncate"><span class="ixe-link-kind">链接类型</span>{{ l.linkLabel }}</div>
+                  <div class="bl-truncate" style="font-size:12.5px;font-weight:500">{{ l.targetClassName }}</div>
+                </div>
+                <span class="ixe-ent-n">{{ matchCount(linkColsCache[l.targetClassId]) }}</span>
+                <span v-if="panelSel===l.targetClassId" class="ixe-ent-arrow" v-html="BL.icon('chevronsRight',14,'var(--bl-primary)')"></span>
               </div>
             </div>
           </aside>
           <div class="ixe-sp-right">
-            <div class="ixe-sp-hd">属性列表 (Properties) <span class="ixe-sp-n">{{ filteredCols.length }}</span></div>
-            <input class="ixe-sp-search" v-model="propKw" placeholder="搜索属性以添加图表或筛选…" />
+            <div class="ixe-sp-hd">
+              <span class="ixe-sp-hd-ic" :style="{ color: selEntity.color }" v-html="BL.icon(selEntity.icon, 13, selEntity.color)"></span>
+              <span class="bl-grow bl-truncate">{{ selEntity.name }} · 属性列表</span>
+              <span class="ixe-sp-n">{{ rightCols.length }}</span>
+            </div>
             <div class="ixe-sp-scroll">
-              <div v-for="c in filteredCols" :key="c.field" class="ixe-sp-prop" :class="hasPill(c.field)&&'is-filtered'"
-                   @click="openFilterFromPanel(c, $event)">
-                <span class="ixe-sp-prop-ic" v-html="BL.icon(typeIcon(c.dataType), 13, 'var(--bl-primary)')"></span>
-                <span class="bl-grow bl-truncate">{{ c.label }}</span>
-                <span v-if="hasPill(c.field)" v-html="BL.icon('filter', 11, 'var(--bl-primary)')"></span>
-              </div>
-              <div v-if="!filteredCols.length" class="ixe-sp-empty">无匹配属性</div>
+              <div v-if="panelSel!=='__main__'" class="ixe-sp-tip">关联对象属性 · 仅供查看</div>
+              <template v-if="rightNormal.length">
+                <div class="ixe-sp-grp">普通属性 <span class="ixe-sp-gn">{{ rightNormal.length }}</span></div>
+                <div v-for="c in rightNormal" :key="c.field" class="ixe-sp-prop"
+                     :class="[panelSel!=='__main__' && 'ixe-sp-prop-static', panelSel==='__main__' && hasPill(c.field) && 'is-filtered']" @click="onPropClick(c, $event)">
+                  <span class="ixe-sp-prop-ic" v-html="BL.icon(typeIcon(c.dataType), 13, 'var(--bl-primary)')"></span>
+                  <span class="bl-grow bl-truncate">{{ c.label }}</span>
+                  <span v-if="panelSel==='__main__' && hasPill(c.field)" v-html="BL.icon('filter', 11, 'var(--bl-primary)')"></span>
+                </div>
+              </template>
+              <template v-if="rightObject.length">
+                <div class="ixe-sp-grp">对象属性 <span class="ixe-sp-gn">{{ rightObject.length }}</span></div>
+                <div v-for="c in rightObject" :key="c.field" class="ixe-sp-prop ixe-sp-prop-obj"
+                     :class="panelSel==='__main__' && hasPill(c.field) && 'is-filtered'" @click="onPropClick(c, $event)">
+                  <span class="ixe-sp-prop-ic" v-html="BL.icon('link', 13, '#8b5cf6')"></span>
+                  <span class="bl-grow bl-truncate">{{ c.label }}</span>
+                  <span class="ixe-sp-obj-tag">对象</span>
+                </div>
+              </template>
+              <div v-if="!rightCols.length" class="ixe-sp-empty">无匹配属性</div>
             </div>
           </div>
         </div>
@@ -172,7 +196,7 @@
           </div>
           <label class="ixe-save-field">
             <span class="ixe-save-label">描述(选填)</span>
-            <input class="bl-input" v-model="sdDesc" placeholder="自定义说明" />
+            <textarea class="bl-input ixe-save-textarea" v-model="sdDesc" rows="2" placeholder="自定义说明"></textarea>
           </label>
           <div class="ixe-save-vis">
             <button :class="['ixe-vis-card', sdVisibility==='private' && 'is-on']" @click="sdVisibility='private'">
@@ -201,7 +225,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, nextTick } from 'vue'
+import { ref, reactive, computed, watch, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { BL } from '@/lib/bl.js'
 import { instanceApi } from '@/api'
@@ -219,7 +243,6 @@ defineEmits(['open-instance'])
 
 const viewMode = ref('list')   // list(列表,默认) | charts(看板/可视化设计器)
 const searchPanelOpen = ref(false)
-const propKw = ref('')
 const layoutMenu = ref(false)
 const designName = ref('默认探索布局')
 const chartsRef = ref(null)
@@ -344,14 +367,41 @@ const typeOptions = computed(() => {
   const q = typeKw.value.trim().toLowerCase()
   return props.types.filter(t => !q || (t.display_name || '').toLowerCase().includes(q) || (t.api_name || '').toLowerCase().includes(q))
 })
-/* 搜索菜单面板:属性列表(按关键词过滤) */
-const filteredCols = computed(() => {
-  const q = propKw.value.trim().toLowerCase()
-  if (!q) return columns.value
-  return columns.value.filter(c => (c.label || '').toLowerCase().includes(q) || (c.field || '').toLowerCase().includes(q))
+/* —— 搜索面板:主对象/关联对象的属性列表(由 ② 顶部搜索 kw 统一过滤+统计) —— */
+const panelSel = ref('__main__')                 // '__main__'=主对象 | targetClassId=某关联对象
+const linkColsCache = reactive({})               // targetClassId -> columns[]
+function kwFilter(list) {
+  const q = kw.value.trim().toLowerCase()
+  const arr = list || []
+  if (!q) return arr
+  return arr.filter(c => (c.label || '').toLowerCase().includes(q) || (c.field || '').toLowerCase().includes(q))
+}
+function matchCount(list) { return kwFilter(list).length }
+async function ensureLinkCols(cid) {
+  if (linkColsCache[cid]) return linkColsCache[cid]
+  try { linkColsCache[cid] = (await instanceApi.columns(cid)) || [] } catch { linkColsCache[cid] = [] }
+  return linkColsCache[cid]
+}
+function selectLinkEntity(l) { panelSel.value = l.targetClassId; ensureLinkCols(l.targetClassId) }
+const selEntity = computed(() => {
+  if (panelSel.value === '__main__')
+    return { name: curType.value?.display_name || '主对象', icon: curType.value?.icon || 'cube', color: curType.value?.color || '#165DFF' }
+  const l = links.value.find(x => x.targetClassId === panelSel.value)
+  return { name: l?.targetClassName || '关联对象', icon: l?.targetIcon || 'cube', color: l?.targetColor || '#86909c' }
 })
-function selectTypeFromPanel(id) { selectType(id); propKw.value = '' }
-function openFilterFromPanel(c, e) { editingPillId.value = null; openFilter(c, e) }   // 新增独立条件块,保持面板展开
+const selEntityCols = computed(() => panelSel.value === '__main__' ? columns.value : (linkColsCache[panelSel.value] || []))
+const rightCols = computed(() => kwFilter(selEntityCols.value))
+const rightNormal = computed(() => rightCols.value.filter(c => c.propType !== 'object'))
+const rightObject = computed(() => rightCols.value.filter(c => c.propType === 'object'))
+function onPropClick(c, e) {
+  // 仅主对象属性可点筛选;关联对象属性为展示专用(跨对象筛选需联表,mock 不支持)
+  if (panelSel.value !== '__main__') return
+  editingPillId.value = null
+  openFilter(c, e)
+}
+/* 打开面板/切换类型时预取关联对象列(供数量统计 + 右侧展示) */
+watch(searchPanelOpen, (v) => { if (v) { panelSel.value = '__main__'; links.value.forEach(l => ensureLinkCols(l.targetClassId)) } })
+watch(links, (ls) => { ls.forEach(l => ensureLinkCols(l.targetClassId)) })
 
 /* —— 筛选抽屉 —— */
 const filterField = ref(null)
@@ -370,6 +420,8 @@ function selectType(id) {
   kw.value = ''
   sort.value = ''
   page.value = 1
+  panelSel.value = '__main__'
+  Object.keys(linkColsCache).forEach(k => delete linkColsCache[k])
   currentDesignId.value = null
   designName.value = '默认探索布局'
   if (chartsRef.value) chartsRef.value.setConfig([])
@@ -546,6 +598,7 @@ onMounted(() => { if (classId.value) loadMeta() })
 .ixe-save-field { display: flex; flex-direction: column; gap: 6px; }
 .ixe-save-label { font-size: 12.5px; color: var(--bl-text-2); }
 .ixe-save-field .bl-input { width: 100%; box-sizing: border-box; }
+.ixe-save-textarea { resize: vertical; min-height: 52px; font-family: inherit; line-height: 1.5; padding: 7px 10px; }
 .ixe-save-err { font-size: 11.5px; color: #f53f3f; }
 .ixe-save-hint { font-size: 11.5px; color: var(--bl-text-3); }
 .ixe-save-vis { display: flex; gap: 12px; }
@@ -588,24 +641,41 @@ onMounted(() => { if (classId.value) loadMeta() })
 .ixe-results-more { padding: 10px 14px; font-size: 12.5px; color: var(--bl-primary); text-align: center; cursor: pointer; border-top: 1px solid var(--bl-divider); }
 .ixe-results-more:hover { background: var(--bl-primary-soft); }
 
-/* 搜索菜单面板:左 关联对象类型(280px) + 右 属性列表(图4) */
+/* 搜索菜单面板:左 主对象+关联对象(宽) + 右 属性列表(宽度减半) */
 .ixe-sp {
-  position: absolute; top: calc(100% + 8px); left: 0; width: 720px; max-width: 92vw; height: 360px;
+  position: absolute; top: calc(100% + 8px); left: 0; width: 640px; max-width: 92vw; height: 380px;
   display: flex; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 10px;
   box-shadow: 0 16px 48px rgba(0,0,0,.16); z-index: 60; overflow: hidden;
 }
-.ixe-sp-left { width: 280px; flex-shrink: 0; border-right: 1px solid var(--bl-border); display: flex; flex-direction: column; }
+.ixe-sp-left { width: 360px; flex-shrink: 0; border-right: 1px solid var(--bl-border); display: flex; flex-direction: column; }
 .ixe-sp-right { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-.ixe-sp-cur { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--bl-primary-soft); font-size: 13px; }
-.ixe-sp-hd { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--bl-text-2); font-weight: 500; padding: 10px 12px 6px; }
+.ixe-sp-hd { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--bl-text-2); font-weight: 600; padding: 10px 12px 6px; border-bottom: 1px solid var(--bl-divider); }
+.ixe-sp-hd-ic { display: inline-flex; flex-shrink: 0; }
+.ixe-sp-subhd { font-size: 11px; color: var(--bl-text-3); font-weight: 500; padding: 12px 10px 4px; letter-spacing: .3px; display: flex; align-items: center; gap: 6px; }
 .ixe-sp-n { font-size: 11px; color: var(--bl-text-3); background: var(--bl-bg-2); border-radius: 9px; padding: 0 6px; }
-.ixe-sp-search { margin: 0 12px 6px; height: 28px; border: 1px solid var(--bl-border); border-radius: 6px; padding: 0 8px; font-size: 12.5px; outline: none; }
-.ixe-sp-search:focus { border-color: var(--bl-primary); }
-.ixe-sp-scroll { flex: 1; overflow: auto; padding: 0 6px 8px; }
+.ixe-sp-scroll { flex: 1; overflow: auto; padding: 6px; }
 .ixe-sp-empty { font-size: 12px; color: var(--bl-text-3); padding: 16px; text-align: center; }
-.ixe-sp-link, .ixe-sp-prop { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 6px; cursor: pointer; font-size: 12.5px; color: var(--bl-text-1); }
-.ixe-sp-link:hover, .ixe-sp-prop:hover { background: var(--bl-bg-hover); }
+/* 左:实体行(主对象 / 关联对象) */
+.ixe-sp-ent { display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 8px; cursor: pointer; font-size: 12.5px; color: var(--bl-text-1); border: 1px solid transparent; }
+.ixe-sp-ent:hover { background: var(--bl-bg-hover); }
+.ixe-sp-ent.is-on { background: var(--bl-primary-soft); border-color: var(--bl-primary-border); }
+.ixe-sp-ent-link { align-items: center; }
+.ixe-ent-n { font-size: 11px; color: var(--bl-text-3); background: var(--bl-bg-3,#f0f2f5); border-radius: 9px; padding: 0 7px; flex-shrink: 0; }
+.ixe-sp-ent.is-on .ixe-ent-n { background: #fff; color: var(--bl-primary); }
+.ixe-ent-arrow { display: inline-flex; flex-shrink: 0; }
+.ixe-link-tag { font-size: 10.5px; color: var(--bl-text-3); display: flex; align-items: center; gap: 4px; }
+.ixe-link-kind { font-size: 10px; color: var(--bl-primary); background: var(--bl-primary-soft); border-radius: 3px; padding: 0 4px; flex-shrink: 0; }
+/* 右:属性分组 + 属性行 */
+.ixe-sp-grp { font-size: 11px; color: var(--bl-text-3); font-weight: 600; padding: 8px 8px 4px; display: flex; align-items: center; gap: 6px; }
+.ixe-sp-gn { font-size: 10px; color: var(--bl-text-3); background: var(--bl-bg-2); border-radius: 8px; padding: 0 6px; }
+.ixe-sp-prop { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 6px; cursor: pointer; font-size: 12.5px; color: var(--bl-text-1); }
+.ixe-sp-prop:hover { background: var(--bl-bg-hover); }
 .ixe-sp-prop.is-filtered { background: var(--bl-primary-soft); color: var(--bl-primary); }
+.ixe-sp-prop-obj { cursor: default; }
+.ixe-sp-prop-static { cursor: default; }
+.ixe-sp-prop-static:hover { background: transparent; }
+.ixe-sp-tip { font-size: 11px; color: var(--bl-text-3); background: var(--bl-bg-2); border-radius: 5px; padding: 5px 8px; margin: 4px 4px 2px; }
+.ixe-sp-obj-tag { font-size: 10px; color: #8b5cf6; background: rgba(139,92,246,.1); border-radius: 3px; padding: 0 5px; flex-shrink: 0; }
 .ixe-sp-prop-ic { display: inline-flex; flex-shrink: 0; }
 .ixe-type {
   position: relative; display: flex; align-items: center; gap: 6px;

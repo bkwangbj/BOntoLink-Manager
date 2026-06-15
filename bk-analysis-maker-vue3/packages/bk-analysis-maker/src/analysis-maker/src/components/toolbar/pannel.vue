@@ -348,12 +348,21 @@ export default {
         }))]
       }
 
-      // 图表
-
-      // 柱状图
+      // 折线图(折线类 branchType)
+      const LINE_TYPES = ['lineChart', 'smoothLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap']
+      const lineMenu = this.menus.find(c => c.key === 'line')
+      if (lineMenu) {
+        lineMenu.children = this.chartData.filter(item => LINE_TYPES.indexOf(item.branchType) !== -1).map(item => ({
+          name: item.title,
+          img: item.img ? imgObject[item.img] : '',
+          payload: item,
+          pKey: lineMenu.key
+        }))
+      }
+      // 柱状图(其余 BKBarChart / 极坐标,排除折线类)
       const barMenu = this.menus.find(c => c.key === 'chart')
       if (barMenu) {
-        barMenu.children = this.chartData.filter(item => { return item.type === 'BKBarChart' || item.type === 'BKPolarChart' }).map(item => ({
+        barMenu.children = this.chartData.filter(item => (item.type === 'BKBarChart' || item.type === 'BKPolarChart') && LINE_TYPES.indexOf(item.branchType) === -1).map(item => ({
           name: item.title,
           img: item.img ? imgObject[item.img] : '',
           payload: item,
@@ -639,17 +648,17 @@ export default {
       }
 
       .group-content {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
-        padding-right: 0;
+        padding-right: 10px;
         padding-left: 10px;
 
         .menu-item {
           display: flex;
           flex-direction: column;
           align-items: center;
-          width: 70px;
+          width: 100%;
           height: 60px;
           cursor: pointer;
           background: #fff;

@@ -130,6 +130,13 @@ export default {
       } else {
         return
       }
+      // 原始 echarts option 直通(双坐标/多 grid 等特殊结构):跳过单坐标系的 series/轴重建
+      if (option.rawEChart) {
+        this.option = option
+        await this.$nextTick()
+        if (this.$refs.chart && this.$refs.chart.setOption) this.$refs.chart.setOption(option, true)
+        return
+      }
       // 配置特殊处理
       if (option.legend.alignPosition) {
         const alignList = {

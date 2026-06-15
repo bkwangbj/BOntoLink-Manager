@@ -1,7 +1,7 @@
 <template>
-  <!-- 燕尾角抽屉：触发框下方悬浮 -->
+  <!-- 燕尾角抽屉：触发框下方悬浮(燕尾指向左/中/右随窗口自适应,避免遮挡) -->
   <div class="ixf-root" :style="floatStyle" v-click-outside="onCancel">
-    <span class="ixf-beak"></span>
+    <span class="ixf-beak" :style="{ left: beakLeft + 'px' }"></span>
 
     <!-- 顶部标题栏 -->
     <div class="ixf-hd">
@@ -27,14 +27,9 @@
                 <option value="" disabled>请选择</option>
                 <option v-for="op in options" :key="op" :value="op">{{ op }}</option>
               </select>
-              <div v-else class="ixf-multi" @click.stop="openMulti=openMulti===idx?-1:idx">
+              <div v-else class="ixf-multi" @click.stop="toggleMulti(idx, $event)">
                 <span class="bl-truncate">{{ multiText(c) || '请选择' }}</span>
                 <span v-html="BL.icon('chevronDown', 12)"></span>
-                <div v-if="openMulti===idx" class="ixf-multi-pop" @click.stop>
-                  <label v-for="op in options" :key="op" class="ixf-multi-item">
-                    <input type="checkbox" :value="op" v-model="c.values" /> {{ op }}
-                  </label>
-                </div>
               </div>
             </template>
             <!-- 介于：双输入 -->
@@ -60,8 +55,11 @@
         <button class="ixf-del" :disabled="rows.length<=1" @click.stop="removeRow(idx)" v-html="BL.icon('x', 13)"></button>
       </div>
 
-      <!-- 新增条件 -->
-      <button class="ixf-add" @click="addRow"><span v-html="BL.icon('plus', 13)"></span> 新增条件</button>
+      <!-- 新增条件(改为“+”) -->
+      <button class="ixf-add" title="新增条件" @click="addRow"><span v-html="BL.icon('plus', 15)"></span></button>
+
+      <!-- 括号不匹配提示 -->
+      <div v-if="bracketErr" class="ixf-err"><span v-html="BL.icon('alert', 13, '#f53f3f')"></span>{{ bracketErr }}</div>
     </div>
 
     <!-- 底部操作栏 -->
@@ -71,6 +69,13 @@
         <button class="bl-btn bl-btn-sm" @click="onCancel">取消</button>
         <button class="bl-btn bl-btn-sm bl-btn-primary" @click="onConfirm">确定</button>
       </div>
+    </div>
+
+    <!-- 多选下拉(固定定位,避免被滚动区裁切遮挡) -->
+    <div v-if="openMulti >= 0 && rows[openMulti]" class="ixf-multi-pop" :style="multiPopStyle" @click.stop>
+      <label v-for="op in options" :key="op" class="ixf-multi-item">
+        <input type="checkbox" :value="op" v-model="rows[openMulti].values" /> {{ op }}
+      </label>
     </div>
   </div>
 </template>
@@ -163,6 +168,17 @@ const rows = ref([])
 const groupLogic = ref('AND')
 const rowActive = ref(0)
 const openMulti = ref(-1)
+const multiPopStyle = ref({})
+const bracketErr = ref('')
+function toggleMulti(idx, e) {
+  if (openMulti.value === idx) { openMulti.value = -1; return }
+  openMulti.value = idx
+  const r = e.currentTarget.getBoundingClientRect()
+  const popH = Math.min(220, options.value.length * 30 + 12)
+  const below = r.bottom + 4
+  const top = (below + popH > window.innerHeight - 8) ? (r.top - popH - 4) : below
+  multiPopStyle.value = { left: r.left + 'px', top: Math.max(8, top) + 'px', width: Math.max(160, r.width) + 'px' }
+}
 
 function initFromModel() {
   if (props.model && Array.isArray(props.model.conditions) && props.model.conditions.length) {
@@ -182,17 +198,40 @@ function initFromModel() {
 initFromModel()
 watch(() => props.field, initFromModel)
 
-function addRow() { rows.value.push(blankRow()) }
-function removeRow(i) { if (rows.value.length > 1) rows.value.splice(i, 1) }
-function clearAll() { rows.value = [blankRow()]; groupLogic.value = 'AND' }
+function addRow() { rows.value.push(blankRow()); bracketErr.value = '' }
+function removeRow(i) { if (rows.value.length > 1) rows.value.splice(i, 1); bracketErr.value = '' }
+function clearAll() { rows.value = [blankRow()]; groupLogic.value = 'AND'; bracketErr.value = '' }
 
 function multiText(c) { return (c.values || []).join('、') }
 
-/* —— 浮层定位(跟随触发框) —— */
-const floatStyle = computed(() => {
-  if (!props.anchor) return {}
-  return { left: props.anchor.left + 'px', top: props.anchor.top + 'px' }
+/* —— 浮层定位(跟随触发框,左/右溢出时整体回收,燕尾指向触发点) —— */
+const PANEL_W = 560
+const floatPos = computed(() => {
+  const a = props.anchor
+  if (!a) return { left: 0, top: 0 }
+  const vw = typeof window !== 'undefined' ? window.innerWidth : 1280
+  const left = Math.max(8, Math.min(a.left, vw - PANEL_W - 8))
+  return { left, top: a.top }
 })
+const floatStyle = computed(() => ({ left: floatPos.value.left + 'px', top: floatPos.value.top + 'px' }))
+// 燕尾相对面板左缘的偏移:指向触发点中心,夹在面板内
+const beakLeft = computed(() => {
+  const a = props.anchor
+  if (!a) return 40
+  const center = a.left + 16
+  return Math.max(14, Math.min(center - floatPos.value.left, PANEL_W - 28))
+})
+/* —— 括号匹配校验(确定前) —— */
+function checkBrackets() {
+  let depth = 0
+  for (const r of rows.value) {
+    if (r.lb) depth++
+    if (r.rb) depth--
+    if (depth < 0) return '括号不匹配:出现多余的“)”'
+  }
+  if (depth !== 0) return '括号不匹配:“(”与“)”数量不一致'
+  return ''
+}
 
 /* —— 输出：构造后端筛选组 { field, logic, conditions:[{field,op,value,value2}] } —— */
 function buildGroup() {
@@ -218,6 +257,10 @@ function buildGroup() {
 }
 
 function onConfirm() {
+  // 括号完整性校验
+  const be = checkBrackets()
+  if (be) { bracketErr.value = be; return }
+  bracketErr.value = ''
   // 过滤掉完全空的条件(需要值却没填)
   const g = buildGroup()
   g.conditions = g.conditions.filter(c => !needsValue(c.op) || c.value !== '' && c.value != null || (Array.isArray(c.value) && c.value.length))
@@ -298,20 +341,24 @@ const vClickOutside = {
   border: 1px solid var(--bl-border); border-radius: 4px;
   background: var(--bl-bg-1); cursor: pointer; font-size: 12px;
 }
+.ixf-multi span:first-child { flex: 1; min-width: 0; }
+/* 固定定位:脱离滚动区,避免被裁切/遮挡 */
 .ixf-multi-pop {
-  position: absolute; top: 100%; left: 0; right: 0; margin-top: 4px;
+  position: fixed;
   background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 6px;
-  box-shadow: 0 6px 20px rgba(0,0,0,.12); z-index: 5; padding: 6px; max-height: 200px; overflow: auto;
+  box-shadow: 0 8px 24px rgba(0,0,0,.16); z-index: 1400; padding: 6px; max-height: 220px; overflow: auto;
 }
 .ixf-multi-item { display: flex; align-items: center; gap: 6px; padding: 5px 6px; font-size: 12px; cursor: pointer; border-radius: 4px; }
 .ixf-multi-item:hover { background: var(--bl-bg-hover); }
 
+/* “+” 新增条件 */
 .ixf-add {
-  width: 100%; padding: 7px; border: 1px dashed var(--bl-border);
+  width: 100%; padding: 6px; border: 1px dashed var(--bl-border);
   background: transparent; border-radius: 6px; color: var(--bl-text-2);
-  cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 4px; font-size: 12px;
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 12px;
 }
 .ixf-add:hover { border-color: var(--bl-primary); color: var(--bl-primary); }
+.ixf-err { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: #f53f3f; padding: 2px 2px 0; }
 
 .ixf-ft {
   display: flex; align-items: center; justify-content: space-between;

@@ -39,6 +39,10 @@ export default defineConfig({
     })
   ],
   build: {
+    // esnext + 不压缩:跳过 vite 的 esbuild-transpile/minify 阶段
+    // (该阶段会在系统 TEMP 写临时文件,被 Windows Defender 锁导致 Access denied)
+    target: 'esnext',
+    minify: false,
     lib: {
       entry: resolve(__dirname, 'src/index.js'),
       name: 'AnalysisMaker',

@@ -54,6 +54,60 @@ const chartComponents = [
       { label: '颜色映射', field: 'colorField', value: 'colorField' }
     ]
   }, {
+    title: '平滑折线图',
+    type: 'BKBarChart',
+    branchType: 'smoothLineChart',
+    img: 'smooth-line.png',
+    chartComId: '31',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
+    items: [{ label: 'x', field: 'x', value: 'x' }, { label: 'y', field: 'y', value: 'y' }, { label: '颜色映射', field: 'colorField', value: 'colorField' }]
+  }, {
+    title: '面积图',
+    type: 'BKBarChart',
+    branchType: 'areaChart',
+    img: 'area.png',
+    chartComId: '32',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
+    items: [{ label: 'x', field: 'x', value: 'x' }, { label: 'y', field: 'y', value: 'y' }, { label: '颜色映射', field: 'colorField', value: 'colorField' }]
+  }, {
+    title: '堆叠面积图',
+    type: 'BKBarChart',
+    branchType: 'stackAreaChart',
+    img: 'stack-area.png',
+    chartComId: '33',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
+    items: [{ label: 'x', field: 'x', value: 'x' }, { label: 'y', field: 'y', value: 'y' }, { label: '颜色映射', field: 'colorField', value: 'colorField' }]
+  }, {
+    title: '阶梯折线图',
+    type: 'BKBarChart',
+    branchType: 'stepLineChart',
+    img: 'step-line.png',
+    chartComId: '34',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
+    items: [{ label: 'x', field: 'x', value: 'x' }, { label: 'y', field: 'y', value: 'y' }, { label: '颜色映射', field: 'colorField', value: 'colorField' }]
+  }, {
+    title: '横向条形图',
+    type: 'BKBarChart',
+    branchType: 'barHorizontalChart',
+    img: 'bar-horizontal.png',
+    chartComId: '35',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
+    items: [{ label: 'x', field: 'x', value: 'x' }, { label: 'y', field: 'y', value: 'y' }, { label: '颜色映射', field: 'colorField', value: 'colorField' }]
+  }, {
+    title: '雨量蒸发量关系图',
+    type: 'BKBarChart',
+    branchType: 'rainfallEvap',
+    img: 'yuliang.png',
+    chartComId: '36',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [],
+    items: [{ label: 'x', field: 'x', value: 'x' }, { label: 'y', field: 'y', value: 'y' }, { label: '颜色映射', field: 'colorField', value: 'colorField' }]
+  }, {
     title: '圆角柱状图',
     type: 'BKBarChart',
     branchType: 'barRadiusChart',

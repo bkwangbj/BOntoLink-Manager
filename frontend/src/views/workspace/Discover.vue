@@ -11,27 +11,17 @@
 
     <div class="ov-body">
 
-    <!-- 筛选导航区: 行业 / 领域 双行 + 右上角清空 -->
+    <!-- 筛选导航区: 行业(单行横滚) / 领域(两行可展开) + 右上角清空 -->
     <section class="ov-filter">
-      <!-- 行业选择 -->
-      <div class="ov-filter-row ov-filter-industry">
-        <button :class="['ov-chip', 'ov-chip-all', industriesSel.length === 0 && 'is-on']"
-                @click="setAllIndustries">全部行业</button>
-        <div class="ov-chips-wrap">
-          <button v-for="ind in industries" :key="ind.category_code"
-                  :class="['ov-chip', industriesSel.includes(ind.category_code) && 'is-on']"
-                  @click="toggleIndustry(ind.category_code)">{{ ind.cn || ind.category_code }}</button>
-        </div>
+      <!-- 行业:单行,溢出横滚 -->
+      <div class="ov-filter-row">
+        <ChipFilterBar all-label="全部行业" :items="industryItems" :selected="industriesSel" :rows="1"
+                       @select-all="setAllIndustries" @toggle="toggleIndustry" />
       </div>
-      <!-- 领域选择 + 清空按钮 (右上) -->
-      <div class="ov-filter-row ov-filter-domain">
-        <button :class="['ov-chip', 'ov-chip-all', domainsSel.length === 0 && 'is-on']"
-                @click="setAllDomains">全部领域</button>
-        <div class="ov-chips-wrap">
-          <button v-for="dom in availableDomains" :key="dom.category_code"
-                  :class="['ov-chip', domainsSel.includes(dom.category_code) && 'is-on']"
-                  @click="toggleDomain(dom.category_code)">{{ dom.cn || dom.category_code }}</button>
-        </div>
+      <!-- 领域:最多两行,可展开;右上角清空 -->
+      <div class="ov-filter-row">
+        <ChipFilterBar all-label="全部领域" :items="domainItems" :selected="domainsSel" :rows="2"
+                       @select-all="setAllDomains" @toggle="toggleDomain" />
         <button class="ov-clear-btn" title="清空筛选条件" @click="clearFilter">
           <span v-html="BL.icon('x', 18)"></span>
         </button>
@@ -49,7 +39,7 @@
       <div v-for="(group, gi) in STAT_GROUPS" :key="'g-'+gi"
            class="ov-stats-row" :style="{ '--cols': group.cols }">
         <div v-for="s in group.items" :key="s.key"
-             class="ov-card" :style="{ '--sc': s.color }"
+             :class="['ov-card', s.noClick && 'is-noclick']" :style="{ '--sc': s.color }"
              @click="onCardClick(s)">
           <!-- 大图标水印 (右下角, 10% 透明度, 与 Category 总览同款) -->
           <span class="ov-card-wm" v-html="BL.icon(s.icon, 76, s.color)"></span>
@@ -83,6 +73,7 @@ import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { BL } from '@/lib/bl.js'
 import { resourceApi, categoryApi } from '@/api'
+import ChipFilterBar from './ChipFilterBar.vue'
 
 const router = useRouter()
 
@@ -107,7 +98,7 @@ const STAT_GROUPS = [
   ]},
   // 第三行: 5 列 — 属性 / 类型
   { cols: 5, items: [
-    { key: 'property',       cn: '属性数',   en: 'Properties',     icon: 'fileText', color: '#00B42A', target: '/resources/properties',  brief: '对象上定义的全部属性' },
+    { key: 'property',       cn: '属性数',   en: 'Properties',     icon: 'fileText', color: '#00B42A', target: '',  noClick: true, brief: '对象上定义的全部属性' },
     { key: 'enumType',       cn: '枚举类型', en: 'Enum types',     icon: 'list',     color: '#722ED1', target: '/resources/enum-types',  brief: '取值有限的枚举字典' },
     { key: 'valueType',      cn: '值类型',   en: 'Value types',    icon: 'hash',     color: '#14C9C9', target: '/resources/value-types', brief: '基础数据类型定义' },
     { key: 'structProperty', cn: '结构属性', en: 'Structural properties', icon: 'sliders', color: '#165DFF', target: '/resources/shared-props', brief: '复合 / 嵌套结构属性' },
@@ -124,6 +115,10 @@ const industryByCode = computed(() => {
 })
 const industriesSel = ref([])       // 选中的行业 codes (空 = 全部)
 const domainsSel = ref([])          // 选中的领域 codes (空 = 全部)
+
+/* —— 适配 ChipFilterBar 的 {code, name} —— */
+const industryItems = computed(() => industries.value.map(i => ({ code: i.category_code, name: i.cn || i.category_code })))
+const domainItems = computed(() => availableDomains.value.map(d => ({ code: d.category_code, name: d.cn || d.category_code })))
 const stats = reactive({})          // { industry: {active, total}, ... }
 
 /* 当前可选领域 = 选中行业下的所有领域+子领域 (不分层级平铺) */
@@ -220,6 +215,7 @@ function namesOf(codes, dict) {
 
 /* —— 卡片跳转 (带筛选 query) —— */
 function onCardClick(s) {
+  if (s.noClick) return            // 无专用页面,不可点
   if (!s.target) { BL.info(`${s.cn} 模块跳转待联调`); return }
   const query = {}
   if (industriesSel.value.length) query.industries = industriesSel.value.join(',')
@@ -296,7 +292,7 @@ onMounted(async () => {
   padding: 12px 14px;
   position: relative;
 }
-.ov-filter-industry { border-bottom: 1px solid var(--bl-divider); }
+.ov-filter-row:not(:last-child) { border-bottom: 1px solid var(--bl-divider); }
 
 .ov-chips-wrap {
   display: flex; flex-wrap: wrap; gap: 8px;
@@ -401,6 +397,9 @@ onMounted(async () => {
   box-shadow: 0 4px 14px color-mix(in srgb, var(--sc) 18%, transparent);
   transform: translateY(-1px);
 }
+/* 不可点(如属性数:无专用页面) */
+.ov-card.is-noclick { cursor: default; }
+.ov-card.is-noclick:hover { border-color: var(--bl-border); box-shadow: none; transform: none; }
 /* 大图标水印 (右下角倾斜, 8% 透明度) */
 .ov-card-wm {
   position: absolute; right: -8px; bottom: -10px;

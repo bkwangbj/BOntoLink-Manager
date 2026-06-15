@@ -22,14 +22,14 @@
                   :draggable="!seg.col.system"
                   @dragstart="onColDragStart(seg.col, $event)" @dragover.prevent="onColDragOver(seg.col)" @drop="onColDrop(seg.col)" @dragend="dragKey=null">
                 <span class="ilv-th-in">
-                  <span v-if="!seg.col.system" class="ilv-th-grip" title="拖动排序列" v-html="BL.icon('grip', 12, 'var(--bl-text-3)')"></span>
+                  <span v-if="!seg.col.system" class="ilv-th-grip" title="拖动排序列" v-html="BL.icon('grip', 13, 'var(--bl-text-2)')"></span>
                   <span class="ilv-th-label bl-truncate" @click="quickSort(seg.col.key)">{{ seg.col.label }}</span>
                   <span v-if="sortOf(seg.col.key)" class="ilv-th-sort">
-                    <span v-html="BL.icon(sortOf(seg.col.key).order==='desc' ? 'arrowDown' : 'arrowUp', 11, 'var(--bl-primary)')"></span>
+                    <span v-html="BL.icon(sortOf(seg.col.key).order==='desc' ? 'arrowDown' : 'arrowUp', 14, 'var(--bl-primary)')"></span>
                     <span v-if="sorts.length>1" class="ilv-th-prio">{{ sortOf(seg.col.key).idx + 1 }}</span>
                   </span>
                   <button class="ilv-th-menu" :class="headerMenu===seg.col.key && 'is-on'" title="列操作"
-                          @click.stop="toggleHeaderMenu(seg.col.key, $event)" v-html="BL.icon('chevronDown', 12)"></button>
+                          @click.stop="toggleHeaderMenu(seg.col.key, $event)" v-html="BL.icon('chevronDown', 15, 'currentColor')"></button>
                 </span>
                 <span class="ilv-th-resizer" @mousedown.stop.prevent="startResize(seg.col, $event)" @click.stop></span>
               </th>
@@ -43,14 +43,14 @@
                 :draggable="true"
                 @dragstart="onColDragStart(b.col, $event)" @dragover.prevent="onColDragOver(b.col)" @drop="onColDrop(b.col)" @dragend="dragKey=null">
               <span class="ilv-th-in">
-                <span class="ilv-th-grip" title="拖动排序列" v-html="BL.icon('grip', 12, 'var(--bl-text-3)')"></span>
+                <span class="ilv-th-grip" title="拖动排序列" v-html="BL.icon('grip', 13, 'var(--bl-text-2)')"></span>
                 <span class="ilv-th-label bl-truncate" @click="quickSort(b.col.key)">{{ b.col.label }}</span>
                 <span v-if="sortOf(b.col.key)" class="ilv-th-sort">
-                  <span v-html="BL.icon(sortOf(b.col.key).order==='desc' ? 'arrowDown' : 'arrowUp', 11, 'var(--bl-primary)')"></span>
+                  <span v-html="BL.icon(sortOf(b.col.key).order==='desc' ? 'arrowDown' : 'arrowUp', 14, 'var(--bl-primary)')"></span>
                   <span v-if="sorts.length>1" class="ilv-th-prio">{{ sortOf(b.col.key).idx + 1 }}</span>
                 </span>
                 <button class="ilv-th-menu" :class="headerMenu===b.col.key && 'is-on'" title="列操作"
-                        @click.stop="toggleHeaderMenu(b.col.key, $event)" v-html="BL.icon('chevronDown', 12)"></button>
+                        @click.stop="toggleHeaderMenu(b.col.key, $event)" v-html="BL.icon('chevronDown', 15, 'currentColor')"></button>
               </span>
               <span class="ilv-th-resizer" @mousedown.stop.prevent="startResize(b.col, $event)" @click.stop></span>
             </th>
@@ -100,41 +100,74 @@
       </div>
     </div>
 
-    <!-- 拖拽分隔条 -->
+    <!-- 拖拽分隔条(浮层,贴整个探索区右侧) -->
     <div v-if="previewOpen && (focusRow_ || selectedRows.length)"
-         class="ilv-divider" :class="dragging && 'is-active'" @mousedown="onDragStart"></div>
+         class="ilv-divider" :class="dragging && 'is-active'"
+         :style="{ top: drawerTop + 'px', right: previewWidth + 'px' }" @mousedown="onDragStart"></div>
 
-    <!-- 预览 / 多实例 / 比较 面板 -->
+    <!-- 预览 / 多实例 / 比较 面板(浮层:横跨整个探索区高度) -->
     <aside v-if="previewOpen && (focusRow_ || selectedRows.length)" class="ilv-preview"
-           :style="{ width: previewWidth + 'px' }">
+           :style="{ width: previewWidth + 'px', top: drawerTop + 'px' }">
       <header class="ilv-pv-hd">
-        <span class="ilv-pv-title">{{ mode==='compare' ? '比较' : (selectedRows.length>1 ? `已选 ${selectedRows.length} 项` : '预览') }}</span>
+        <span class="ilv-pv-title">{{ (mode==='compare' || selectedRows.length>1) ? `已选 ${selectedRows.length} 项` : '预览' }}</span>
         <span class="bl-grow"></span>
-        <div class="ilv-pv-seg">
-          <button :class="mode==='preview' && 'is-on'" @click="setMode('preview')">预览</button>
-          <button :class="mode==='compare' && 'is-on'" @click="setMode('compare')">比较</button>
+        <!-- 预览 | 对比 下拉 -->
+        <div class="ilv-pv-mode" @click.stop="modeMenu=!modeMenu" v-click-outside="()=>modeMenu=false">
+          <span v-html="BL.icon(mode==='compare'?'columns':'eye', 13, 'var(--bl-text-2)')"></span>
+          <span>{{ mode==='compare' ? '对比' : '预览' }}</span>
+          <span v-html="BL.icon('chevronDown', 11, 'var(--bl-text-3)')"></span>
+          <div v-if="modeMenu" class="ilv-pv-modemenu" @click.stop>
+            <div class="ilv-pv-modeitem" :class="mode==='preview' && 'is-on'" @click="setMode('preview'); modeMenu=false">
+              <span v-html="BL.icon('eye', 13)"></span>预览
+            </div>
+            <div class="ilv-pv-modeitem" :class="mode==='compare' && 'is-on'" @click="setMode('compare'); modeMenu=false">
+              <span v-html="BL.icon('columns', 13)"></span>对比
+            </div>
+          </div>
         </div>
+        <button class="ilv-pv-collapse" :title="pvMax ? '还原' : '最大化'" @click="toggleMax"
+                v-html="BL.icon(pvMax ? 'minimize' : 'maximize', 15)"></button>
         <button class="ilv-pv-collapse" title="关闭面板" @click="previewOpen=false" v-html="BL.icon('x', 16)"></button>
       </header>
 
-      <div v-if="mode==='compare'" class="ilv-compare">
-        <div v-for="r in compareRows" :key="r.id" class="ilv-cmp-card">
-          <div class="ilv-cmp-hd">
-            <span class="ilv-row-ic" :style="{ background:(r.color||'#165DFF')+'1f', color:r.color||'#165DFF' }"
-                  v-html="BL.icon(r.icon||'cube', 13, r.color||'#165DFF')"></span>
-            <div class="bl-grow" style="min-width:0">
-              <div class="bl-truncate" style="font-weight:600;font-size:13px">{{ r.title }}</div>
-              <div class="bl-truncate bl-mono bl-muted" style="font-size:11px">{{ r.code }}</div>
+      <div v-if="mode==='compare'" class="ilv-compare2">
+        <!-- ②③ 左右两列:各自有一组备选项 chips + 详情 -->
+        <div class="ilv-cmp-cols">
+          <div v-for="side in cmpSides" :key="side.key" class="ilv-cmp-col">
+            <!-- 该列备选项 chips(两行,点选切换该列实例) -->
+            <div class="ilv-cmp-chips">
+              <span v-for="r in selectedRows" :key="r.id" class="ilv-cmp-chip"
+                    :class="side.id===r.id && 'is-on'" @click="setCmpSide(side.key, r.id)" :title="r.title">
+                <span class="ilv-row-ic" :style="{ background:(r.color||'#165DFF')+'1f', color:r.color||'#165DFF' }"
+                      v-html="BL.icon(r.icon||'cube', 12, r.color||'#165DFF')"></span>
+                <span class="bl-truncate">{{ r.title }}</span>
+                <button class="ilv-cmp-chip-x" title="移除" @click.stop="toggleOne(r.id)" v-html="BL.icon('x', 11)"></button>
+              </span>
+              <span v-if="!selectedRows.length" class="bl-muted" style="font-size:12px;padding:4px">勾选多个实例后可对比</span>
             </div>
-          </div>
-          <div class="ilv-kv-list">
-            <div v-for="c in businessCols" :key="c.key" class="ilv-kv">
-              <span class="ilv-kv-l">{{ c.label }}</span>
-              <span class="ilv-kv-r">{{ fmt(r[c.key], c.dataType) }}</span>
+            <!-- 详情头 -->
+            <div v-if="side.row" class="ilv-cmp-colhd">
+              <span class="ilv-row-ic ilv-cmp-hdic" :style="{ background:(side.row.color||'#165DFF')+'1f', color:side.row.color||'#165DFF' }"
+                    v-html="BL.icon(side.row.icon||'cube', 16, side.row.color||'#165DFF')"></span>
+              <div class="bl-grow" style="min-width:0">
+                <div class="bl-truncate" style="font-weight:600;font-size:13px">{{ side.row.title }}</div>
+                <div class="bl-truncate bl-mono bl-muted" style="font-size:10.5px">{{ typeName }} · {{ side.row.code }}</div>
+              </div>
+              <button class="bl-btn bl-btn-sm ilv-cmp-detail" title="详情"
+                      @click="$emit('open-instance', { classId, row: side.row })" v-html="iconText('externalLink','详情')"></button>
             </div>
+            <!-- 关键信息 kv(两列字段对齐,值不同高亮) -->
+            <div v-if="side.row" class="ilv-kv-list">
+              <div class="ilv-cmp-sec">关键信息</div>
+              <div class="ilv-kv"><span class="ilv-kv-l">编码</span><span class="ilv-kv-r bl-mono">{{ side.row.code }}</span></div>
+              <div v-for="c in businessCols" :key="c.key" class="ilv-kv" :class="cmpDiff(c.key) && 'is-diff'">
+                <span class="ilv-kv-l">{{ c.label }}</span>
+                <span class="ilv-kv-r">{{ fmt(side.row[c.key], c.dataType) }}</span>
+              </div>
+            </div>
+            <div v-else class="bl-empty" style="padding:24px;font-size:12px">从上方备选项选择实例</div>
           </div>
         </div>
-        <div v-if="!compareRows.length" class="bl-empty" style="padding:24px">勾选多个实例后可比较</div>
       </div>
 
       <template v-else>
@@ -272,7 +305,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { BL } from '@/lib/bl.js'
 import { instanceApi } from '@/api'
 
@@ -545,8 +578,49 @@ const sel = ref(new Set())
 const focusId = ref(null)
 const previewOpen = ref(false)
 const mode = ref('preview')
+const modeMenu = ref(false)
 const previewWidth = ref(480)
+const pvMax = ref(false)
+let pvPrevWidth = 480
+function toggleMax() {
+  if (pvMax.value) { previewWidth.value = pvPrevWidth; pvMax.value = false }
+  else { pvPrevWidth = previewWidth.value; previewWidth.value = Math.max(480, (typeof window !== 'undefined' ? window.innerWidth : 1280) - 80); pvMax.value = true }
+}
+/* —— 对比:左右两列各自独立选择 —— */
+const cmpLeftId = ref(null)
+const cmpRightId = ref(null)
+const cmpPick = ref(null)   // 'L' | 'R' | null
+const cmpLeftRow = computed(() => rows.value.find(r => r.id === cmpLeftId.value) || null)
+const cmpRightRow = computed(() => rows.value.find(r => r.id === cmpRightId.value) || null)
+const cmpSides = computed(() => [
+  { key: 'L', id: cmpLeftId.value, row: cmpLeftRow.value },
+  { key: 'R', id: cmpRightId.value, row: cmpRightRow.value }
+])
+function setCmpSide(key, id) { if (key === 'L') cmpLeftId.value = id; else cmpRightId.value = id; cmpPick.value = null }
+function initCompare() {
+  const s = selectedRows.value.length ? selectedRows.value : (focusRow_.value ? [focusRow_.value] : [])
+  if (!cmpLeftId.value || !s.some(r => r.id === cmpLeftId.value)) cmpLeftId.value = s[0] ? s[0].id : null
+  if (!cmpRightId.value || !s.some(r => r.id === cmpRightId.value)) cmpRightId.value = s[1] ? s[1].id : (s[0] ? s[0].id : null)
+}
+// 左右值不同的字段高亮
+function cmpDiff(key) {
+  const a = cmpLeftRow.value, b = cmpRightRow.value
+  if (!a || !b) return false
+  return String(a[key] ?? '') !== String(b[key] ?? '')
+}
 const dragging = ref(false)
+/* 抽屉浮层顶部:对齐整个探索区(.ixe-root)顶部,使其铺满黄色区域高度 */
+const drawerTop = ref(0)
+function measureDrawer() {
+  const el = rootRef.value
+  if (!el) return
+  // 顶部对齐到"探索实例"整块容器(含页签行),抽屉位于其右侧、横跨全高
+  const host = el.closest('.ix-root') || el.closest('.ixe-root') || el
+  drawerTop.value = Math.max(0, Math.round(host.getBoundingClientRect().top))
+}
+watch(previewOpen, (v) => { if (v) nextTick(measureDrawer) })
+onMounted(() => { measureDrawer(); window.addEventListener('resize', measureDrawer) })
+onUnmounted(() => window.removeEventListener('resize', measureDrawer))
 function onDragStart(e) {
   dragging.value = true
   const move = (ev) => { const rect = rootRef.value.getBoundingClientRect(); previewWidth.value = Math.max(300, Math.min(rect.right - ev.clientX, rect.width - 320)) }
@@ -572,7 +646,10 @@ function toggleAll() {
   else { pageIds.value.forEach(id => s.add(id)); previewOpen.value = true }
   sel.value = s
 }
-function setMode(m) { mode.value = m; if (m === 'compare') { previewOpen.value = true; if (previewWidth.value < 640) previewWidth.value = 720 } }
+function setMode(m) {
+  mode.value = m
+  if (m === 'compare') { previewOpen.value = true; if (previewWidth.value < 680) previewWidth.value = 760; initCompare() }
+}
 
 /* —— 关联对象类型 —— */
 const linksCache = reactive({})
@@ -628,26 +705,26 @@ const vFocus = { mounted(el) { setTimeout(() => el.focus && el.focus(), 0) } }
 .ilv-table thead th {
   position: sticky; top: 0; z-index: 3; background: var(--bl-bg-2);
   text-align: center; padding: 0; font-weight: 600; color: var(--bl-text-2);
-  border-bottom: 1px solid var(--bl-border); border-right: 1px solid var(--bl-divider);
+  border-bottom: 1px solid var(--bl-border); border-right: 1px solid var(--bl-border);
   height: 38px; box-sizing: border-box; white-space: nowrap;
 }
 .ilv-th { position: relative; }
 .ilv-th-in { display: flex; align-items: center; gap: 4px; padding: 0 8px; height: 100%; }
-.ilv-th-grip { cursor: grab; display: inline-flex; opacity: .5; }
+.ilv-th-grip { cursor: grab; display: inline-flex; opacity: .9; }
+.ilv-th-grip:hover { opacity: 1; }
 .ilv-th-grip:active { cursor: grabbing; }
 .ilv-th-label { flex: 1; min-width: 0; text-align: center; cursor: pointer; }
-.ilv-th-sort { display: inline-flex; align-items: center; gap: 1px; flex-shrink: 0; }
-.ilv-th-prio { font-size: 9px; color: var(--bl-primary); font-weight: 700; }
-.ilv-th-menu { width: 18px; height: 18px; border: 0; background: transparent; color: var(--bl-text-3); border-radius: 4px; cursor: pointer; display: none; align-items: center; justify-content: center; flex-shrink: 0; }
-.ilv-th:hover .ilv-th-menu, .ilv-th-menu.is-on { display: inline-flex; }
-.ilv-th-menu:hover, .ilv-th-menu.is-on { background: var(--bl-bg-hover); color: var(--bl-primary); }
+.ilv-th-sort { display: inline-flex; align-items: center; gap: 2px; flex-shrink: 0; padding: 1px 4px; background: var(--bl-primary-soft); border-radius: 4px; }
+.ilv-th-prio { font-size: 10px; color: var(--bl-primary); font-weight: 700; }
+.ilv-th-menu { width: 22px; height: 22px; border: 0; background: transparent; color: var(--bl-text-1); border-radius: 5px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; opacity: 1; transition: background .12s, color .12s; }
+.ilv-th-menu:hover, .ilv-th-menu.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); }
 .ilv-th-resizer { position: absolute; top: 0; right: -3px; width: 6px; height: 100%; cursor: col-resize; z-index: 4; }
 .ilv-th-resizer:hover { background: var(--bl-primary); }
 .ilv-th.is-dragging { opacity: .5; }
 /* 一级分组表头(仅视觉,不可交互) */
-.ilv-group-th { text-align: center; font-weight: 600; color: var(--bl-text-2); background: var(--bl-bg-3, #f0f2f5) !important; border-right: 1px solid var(--bl-divider); }
+.ilv-group-th { text-align: center; font-weight: 600; color: var(--bl-text-2); background: var(--bl-bg-3, #f0f2f5) !important; border-right: 1px solid var(--bl-border); }
 
-.ilv-table tbody td { padding: 0 10px; height: 36px; border-bottom: 1px solid var(--bl-divider); border-right: 1px solid var(--bl-divider); color: var(--bl-text-1); background: var(--bl-bg-1); text-align: center; }
+.ilv-table tbody td { padding: 0 10px; height: 36px; border-bottom: 1px solid var(--bl-divider); border-right: 1px solid var(--bl-border); color: var(--bl-text-1); background: var(--bl-bg-1); text-align: center; }
 .ilv-name-td { text-align: left !important; }
 .ilv-cell { display: inline-block; max-width: 100%; vertical-align: middle; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ilv-table.is-nowrap-off .ilv-cell { white-space: normal; overflow: visible; }
@@ -680,13 +757,13 @@ thead .ilv-frozen { z-index: 5 !important; }
 .ilv-hm-num { width: 44px; height: 24px; border: 1px solid var(--bl-border); border-radius: 5px; text-align: center; font-size: 12px; }
 .ilv-hm-ok { width: 24px; height: 24px; border: 0; background: var(--bl-primary); border-radius: 5px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; margin-left: auto; }
 
-/* 拖拽分隔条 */
-.ilv-divider { width: 5px; flex-shrink: 0; background: var(--bl-border); cursor: col-resize; position: relative; }
+/* 拖拽分隔条(浮层) */
+.ilv-divider { position: fixed; bottom: 0; width: 5px; background: var(--bl-border); cursor: col-resize; z-index: 1011; }
 .ilv-divider:hover, .ilv-divider.is-active { background: var(--bl-primary); }
 .ilv-divider::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 2px; height: 26px; background: rgba(255,255,255,.7); border-radius: 2px; }
 
-/* 预览面板 */
-.ilv-preview { flex-shrink: 0; border-left: 1px solid var(--bl-border); background: var(--bl-bg-1); display: flex; flex-direction: column; overflow: hidden; }
+/* 预览面板(浮层:贴整个探索区右侧、横跨全高) */
+.ilv-preview { position: fixed; right: 0; bottom: 0; border-left: 1px solid var(--bl-border); background: var(--bl-bg-1); display: flex; flex-direction: column; overflow: hidden; z-index: 1010; box-shadow: -6px 0 20px rgba(0,0,0,.08); }
 .ilv-pv-hd { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--bl-divider); flex-shrink: 0; }
 .ilv-pv-collapse { width: 26px; height: 26px; border: 0; background: transparent; border-radius: 6px; color: var(--bl-text-3); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
 .ilv-pv-collapse:hover { background: var(--bl-bg-hover); color: var(--bl-text-1); }
@@ -720,10 +797,36 @@ thead .ilv-frozen { z-index: 5 !important; }
 .ilv-link-ic { width: 24px; height: 24px; border-radius: 6px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
 .ilv-link-cnt { font-size: 11px; color: var(--bl-text-3); background: var(--bl-bg-3,#f0f2f5); border-radius: 8px; padding: 1px 7px; }
 
-.ilv-compare { flex: 1; overflow: auto; display: flex; gap: 12px; padding: 12px; }
-.ilv-cmp-card { flex: 0 0 240px; border: 1px solid var(--bl-border); border-radius: 8px; overflow: hidden; }
-.ilv-cmp-hd { display: flex; align-items: center; gap: 8px; padding: 10px; background: var(--bl-bg-2); border-bottom: 1px solid var(--bl-divider); }
-.ilv-cmp-card .ilv-kv-list { padding: 0 10px 8px; }
+/* 预览|对比 下拉 */
+.ilv-pv-mode { position: relative; display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 8px; border: 1px solid var(--bl-border); border-radius: 6px; cursor: pointer; font-size: 12px; color: var(--bl-text-1); flex-shrink: 0; }
+.ilv-pv-mode:hover { border-color: var(--bl-primary-border); }
+.ilv-pv-modemenu { position: absolute; top: 100%; right: 0; margin-top: 4px; width: 120px; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.16); padding: 4px; z-index: 20; }
+.ilv-pv-modeitem { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 6px; font-size: 12.5px; cursor: pointer; color: var(--bl-text-1); }
+.ilv-pv-modeitem:hover { background: var(--bl-bg-hover); }
+.ilv-pv-modeitem.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); }
+
+/* 对比视图:左右两列,各列各自有一组备选 chips + 详情 */
+.ilv-compare2 { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+.ilv-cmp-cols { flex: 1; min-height: 0; display: flex; gap: 0; overflow: hidden; }
+.ilv-cmp-col { flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: auto; }
+.ilv-cmp-col + .ilv-cmp-col { border-left: 1px solid var(--bl-border); }
+/* 该列备选项 chips:两行,点选切换该列实例 */
+.ilv-cmp-chips { flex-shrink: 0; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 8px; padding: 10px; max-height: 86px; overflow: hidden; border-bottom: 1px solid var(--bl-divider); background: var(--bl-bg-2); }
+.ilv-cmp-chip { flex: 1 1 calc(33.333% - 6px); min-width: 96px; max-width: 100%; box-sizing: border-box; display: inline-flex; align-items: center; gap: 6px; padding: 4px 7px; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 6px; font-size: 12px; cursor: pointer; }
+.ilv-cmp-chip:hover { border-color: var(--bl-primary-border); }
+.ilv-cmp-chip.is-on { border-color: var(--bl-primary); background: var(--bl-primary-soft); color: var(--bl-primary); box-shadow: 0 0 0 1px var(--bl-primary-soft); }
+.ilv-cmp-chip .bl-truncate { flex: 1; min-width: 0; }
+.ilv-cmp-chip .ilv-row-ic { width: 20px; height: 20px; margin: 0; }
+.ilv-cmp-chip-x { border: 0; background: transparent; color: var(--bl-text-3); cursor: pointer; padding: 0; display: inline-flex; flex-shrink: 0; }
+.ilv-cmp-chip-x:hover { color: #f53f3f; }
+/* 详情头 */
+.ilv-cmp-colhd { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: 9px; padding: 10px 12px; background: var(--bl-bg-1); border-bottom: 1px solid var(--bl-divider); }
+.ilv-cmp-hdic { width: 32px; height: 32px; margin: 0; border-radius: 8px; }
+.ilv-cmp-detail { flex-shrink: 0; }
+.ilv-cmp-sec { font-size: 12px; color: var(--bl-text-3); font-weight: 500; padding-left: 8px; border-left: 3px solid var(--bl-primary); margin: 4px 0 6px; }
+.ilv-cmp-col .ilv-kv-list { padding: 4px 12px 12px; }
+.ilv-cmp-col .ilv-kv.is-diff { background: rgba(245,63,63,.06); border-radius: 4px; }
+.ilv-cmp-col .ilv-kv.is-diff .ilv-kv-r { color: #f53f3f; font-weight: 500; }
 
 /* 配置列弹窗 */
 .ilv-cfg-mask { position: fixed; inset: 0; z-index: 1300; background: rgba(0,0,0,.32); display: flex; align-items: center; justify-content: center; }

@@ -132,6 +132,15 @@
             <i-ri-save-fill />
             <span>保存</span>
           </el-button>
+          <el-button
+            size="small"
+            :title="isShowfull ? '退出全屏' : '全屏'"
+            @click="toChangeFull"
+          >
+            <i-ri-fullscreen-exit-line v-if="isShowfull" />
+            <i-ri-fullscreen-line v-else />
+            <span>{{ isShowfull ? '退出全屏' : '全屏' }}</span>
+          </el-button>
         </div>
       </div>
     </div>
@@ -503,6 +512,10 @@ export default {
       type: Array,
       default: () => ['addItem']
     },
+    defaultThemeKey: {
+      type: String,
+      default: ''
+    },
     defaultParams: {
       type: Array,
       default: () => []
@@ -847,7 +860,7 @@ export default {
     },
     getDefaultTheme (isAll = false) {
       const list = this.getThemeList()
-      let defaultTheme = list.find(c => c.isDefault === '1')
+      let defaultTheme = (this.defaultThemeKey && list.find(c => c.key === this.defaultThemeKey)) || list.find(c => c.isDefault === '1')
       if (!defaultTheme) {
         defaultTheme = list[0]
       }

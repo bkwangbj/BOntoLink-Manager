@@ -22,12 +22,13 @@ function dataSource (classId, field, baseQuery) {
 }
 
 // 构造图表「tab」配置(扁平,保留模板的 chartComId/type/configOption/chartTheme)
-function makeTab (tpl, classId, dim, baseQuery, kind) {
+function makeTab (tpl, classId, dim, baseQuery, kind, titlePrefix) {
   const c = clone(tpl)
   const id = uid()
   c.id = id
   c.chartId = uid()
-  c.title = kind === 'pie' ? `${dim.label} 占比` : `${dim.label} 分布`
+  const base = titlePrefix ? `${titlePrefix} · ${dim.label}` : dim.label
+  c.title = kind === 'pie' ? `${base} 占比` : `${base} 分布`
   c.isShowTitle = '1'
   c.varListener = []
   c.eventConfig = []
@@ -58,25 +59,50 @@ function gridItem (tab, x, y, w, h) {
   return { isChart: true, x, y, w: w || 6, h: h || 9, i: tab.id, id: tab.id, moved: false, tabList: [tab] }
 }
 
-/** 按列特征自动生成多图表的初始大屏布局 */
-export function buildPageConfig (classId, columns, baseQuery = {}) {
-  if (!classId || !BAR_TPL) return null
-  const dims = (columns || []).filter(c =>
-    ['string', 'enum', 'boolean'].includes(c.dataType) &&
-    !/编码|名称|code|name|编号/i.test((c.label || '') + ' ' + (c.field || ''))
-  )
-  const useDims = dims.length ? dims.slice(0, 4) : (columns || []).slice(0, 1)
-  if (!useDims.length || !useDims[0].field) return null
+const DIM_RE = /编码|名称|code|name|编号/i
+// 可作分类维度的列(枚举/字符串/布尔,排除编码名称)
+function pickDims (columns) {
+  return (columns || []).filter(c =>
+    ['string', 'enum', 'boolean'].includes(c.dataType) && !DIM_RE.test((c.label || '') + ' ' + (c.field || '')))
+}
+// 按数据特征选图表类型:枚举/布尔 → 饼图(看占比);其它分类 → 柱图(看分布)
+function kindFor (col) {
+  return (col.dataType === 'boolean' || col.dataType === 'enum') ? 'pie' : 'bar'
+}
 
-  const layout = []
-  // 首维:柱图 + 饼图 并排
-  layout.push(gridItem(makeTab(BAR_TPL, classId, useDims[0], baseQuery, 'bar'), 0, 0))
-  if (PIE_TPL) layout.push(gridItem(makeTab(PIE_TPL, classId, useDims[0], baseQuery, 'pie'), 6, 0))
-  // 其余维度:每个一个柱图,两列网格往下排
-  for (let i = 1; i < useDims.length; i++) {
-    const col = (i - 1) % 2 === 0 ? 0 : 6
-    const row = 9 + Math.floor((i - 1) / 2) * 9
-    layout.push(gridItem(makeTab(BAR_TPL, classId, useDims[i], baseQuery, 'bar'), col, row))
+/**
+ * 按列特征自动生成多图表的初始大屏布局。
+ * 同时分析:主对象类型 + 链接对象类型 的属性/枚举,自动选图表类型。
+ * @param {Array} linkGroups [{ classId, name, columns }] 链接对象类型及其列
+ */
+export function buildPageConfig (classId, columns, baseQuery = {}, linkGroups = []) {
+  if (!classId || !BAR_TPL) return null
+  const mainDims = pickDims(columns)
+  const useMain = mainDims.length ? mainDims.slice(0, 4) : (columns || []).slice(0, 1)
+  if (!useMain.length || !useMain[0].field) return null
+
+  // 收集图表规格(specs):主对象 + 链接对象
+  const specs = []
+  // 主对象首维:柱图 + 饼图 并排(便于同时看分布与占比)
+  specs.push({ classId, dim: useMain[0], kind: 'bar', main: true })
+  if (PIE_TPL) specs.push({ classId, dim: useMain[0], kind: 'pie', main: true })
+  // 主对象其余维度:按类型选图
+  for (let i = 1; i < useMain.length; i++) specs.push({ classId, dim: useMain[i], kind: kindFor(useMain[i]), main: true })
+  // 链接对象:每个关联类型取前 2 个可视维度,标题带关联对象名
+  for (const g of (linkGroups || []).slice(0, 3)) {
+    if (!g || !g.classId) continue
+    const dims = pickDims(g.columns).slice(0, 2)
+    for (const d of dims) specs.push({ classId: g.classId, dim: d, kind: kindFor(d), prefix: g.name })
   }
+
+  // 两列网格依次排布(每图 6 列宽 × 9 行高)
+  const layout = specs.map((s, idx) => {
+    const x = idx % 2 === 0 ? 0 : 6
+    const y = Math.floor(idx / 2) * 9
+    const tpl = (s.kind === 'pie' && PIE_TPL) ? PIE_TPL : BAR_TPL
+    // 链接对象的聚合用其自身实例(mock 无联表),不套主对象筛选
+    const q = s.main ? baseQuery : {}
+    return gridItem(makeTab(tpl, s.classId, s.dim, q, s.kind, s.prefix), x, y)
+  })
   return { layout, decorateLayout: [], colNum: 12, rowHeight: 30, autoRowHeight: 30, maxRows: Infinity }
 }

@@ -45,8 +45,8 @@ const menuList = [
     children: []
   },
   {
-    name: '图表',
-    key: 'chart',
+    name: '折线图',
+    key: 'line',
     draggable: true,
     children: []
   },
@@ -54,7 +54,6 @@ const menuList = [
     name: '柱状图',
     key: 'chart',
     draggable: true,
-    hasParent: true,
     children: []
   },
   {

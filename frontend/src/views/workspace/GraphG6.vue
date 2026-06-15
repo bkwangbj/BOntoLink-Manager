@@ -16,9 +16,9 @@
             <input v-model="qLeft" placeholder="搜索行业 / 领域 / 子领域 / 分组" @input="searchSide('L')" />
             <button v-if="qLeft" class="gx-search-x" @click="qLeft=''; searchSide('L')" v-html="BL.icon('x', 10)"></button>
           </div>
-          <button class="bl-btn bl-btn-sm" @click="fitSide('L')" v-html="iconText('refresh','重置')"></button>
+          <button class="bl-btn bl-btn-sm gx-tb-ic" title="重置" @click="fitSide('L')" v-html="BL.icon('refresh', 15)"></button>
           <span class="bl-grow"></span>
-          <button class="bl-btn bl-btn-sm" @click="exportSide('L')" v-html="iconText('download','导出')"></button>
+          <button class="bl-btn bl-btn-sm gx-tb-ic" title="导出图片" @click="exportSide('L')" v-html="BL.icon('share', 15)"></button>
         </div>
         <div class="gx-canvas-wrap">
           <div class="gx-canvas" ref="leftCanvas"></div>
@@ -44,9 +44,16 @@
             </button>
           </div>
           <div class="gx-legend">
-            <span v-for="k in ['industry','domain','subdomain','group']" :key="k" class="gx-leg">
-              <span class="gx-dot" :style="{ background: LEFT_STYLE[k].fill, border:'2px solid '+LEFT_STYLE[k].stroke }"></span>{{ KIND_CN[k] }}
-            </span>
+            <button v-if="!legendOpen" class="gx-legend-toggle" @click="legendOpen=true">
+              图例 <span v-html="BL.icon('chevronRight', 12)"></span>
+            </button>
+            <template v-else>
+              <span v-for="k in ['industry','domain','subdomain','group']" :key="k" class="gx-leg">
+                <span class="gx-dot" :style="{ background: LEFT_STYLE[k].fill, border:'2px solid '+LEFT_STYLE[k].stroke }"></span>{{ KIND_CN[k] }}
+              </span>
+              <button class="gx-legend-toggle gx-legend-collapse" title="收起图例" @click="legendOpen=false"
+                      v-html="BL.icon('chevronLeft', 12)"></button>
+            </template>
           </div>
         </div>
       </section>
@@ -63,29 +70,24 @@
       <!-- 右画布：对象本体关系图 -->
       <section class="gx-pane" ref="rightPaneRef" style="flex:1 1 auto">
         <div class="gx-toolbar">
-          <div class="gx-search">
+          <div class="gx-search gx-search-wide">
             <span class="gx-search-ic" v-html="BL.icon('search', 12, 'var(--bl-text-3)')"></span>
             <input v-model="qRight" placeholder="搜索本体对象" @input="searchSide('R')" />
             <button v-if="qRight" class="gx-search-x" @click="qRight=''; searchSide('R')" v-html="BL.icon('x', 10)"></button>
           </div>
-          <button class="bl-btn bl-btn-sm" @click="fitSide('R')" v-html="iconText('refresh','重置')"></button>
-          <div class="gx-rel">
-            <template v-for="r in RELATIONS" :key="r.key">
-              <span v-if="r.key==='link'" class="gx-rel-leg" title="普通链接(始终展示)">
-                <span class="gx-rel-mark" :style="{ background:r.color }"></span>{{ r.cn }}
-              </span>
-              <label v-else class="gx-rel-chk">
-                <input type="checkbox" v-model="relOn[r.key]" @change="applyRelFilter" />
-                <span class="gx-rel-mark" :style="{ background:r.color }"></span>{{ r.cn }}
-              </label>
-            </template>
-          </div>
+          <button class="bl-btn bl-btn-sm gx-tb-ic" title="重置" @click="fitSide('R')" v-html="BL.icon('refresh', 15)"></button>
           <span class="bl-grow"></span>
-          <div class="gx-layout-seg">
-            <button v-for="l in GRAPH_LAYOUTS" :key="l.key" :class="['gx-layout-btn', curGraph===l.key && 'is-on']"
-                    @click="applyGraph(l.key)">{{ l.label }}</button>
+          <!-- 布局:只显示当前,其余下拉选择 -->
+          <div class="gx-layout-dd" v-click-outside="()=>graphMenu=false">
+            <button class="gx-layout-dd-btn" @click.stop="graphMenu=!graphMenu">
+              <span>{{ curGraphLabel }}</span><span v-html="BL.icon('chevronDown', 11)"></span>
+            </button>
+            <div v-if="graphMenu" class="gx-layout-dd-menu" @click.stop>
+              <div v-for="l in GRAPH_LAYOUTS" :key="l.key" :class="['gx-layout-dd-item', curGraph===l.key && 'is-on']"
+                   @click="applyGraph(l.key); graphMenu=false">{{ l.label }}</div>
+            </div>
           </div>
-          <button class="bl-btn bl-btn-sm" @click="exportSide('R')" v-html="iconText('download','导出')"></button>
+          <button class="bl-btn bl-btn-sm gx-tb-ic" title="导出图片" @click="exportSide('R')" v-html="BL.icon('share', 15)"></button>
         </div>
         <div class="gx-canvas-wrap">
           <div class="gx-canvas" ref="rightCanvas"></div>
@@ -98,6 +100,25 @@
             <div class="gx-cv-div"></div>
             <button class="gx-cv-btn" title="全屏(右画布)" @click="toggleFullSide('R')" v-html="BL.icon('maximize', 14)"></button>
           </aside>
+          <!-- 关系图例(左下角竖排,带筛选勾选) -->
+          <div class="gx-rel-legend" :class="relLegendOpen && 'is-open'">
+            <button v-if="!relLegendOpen" class="gx-rel-legend-toggle" @click="relLegendOpen=true">图例 <span v-html="BL.icon('chevronRight', 12)"></span></button>
+            <template v-else>
+              <div class="gx-rel-legend-hd">
+                <span>关系类型</span>
+                <button class="gx-rel-legend-x" title="收起" @click="relLegendOpen=false" v-html="BL.icon('chevronDown', 12)"></button>
+              </div>
+              <template v-for="r in RELATIONS" :key="r.key">
+                <span v-if="r.key==='link'" class="gx-rel-leg" title="普通链接(始终展示)">
+                  <span class="gx-rel-mark" :style="{ background:r.color }"></span>{{ r.cn }}
+                </span>
+                <label v-else class="gx-rel-chk">
+                  <input type="checkbox" v-model="relOn[r.key]" @change="applyRelFilter" />
+                  <span class="gx-rel-mark" :style="{ background:r.color }"></span>{{ r.cn }}
+                </label>
+              </template>
+            </template>
+          </div>
           <!-- 节点详情抽屉 -->
           <aside class="gr-drawer" :class="{ 'is-open': !!drawerNode }">
             <div v-if="drawerNode" class="gr-drawer-inner">
@@ -144,9 +165,40 @@
                     <li v-if="!nodeRelations(drawerNode.id).length" class="bl-muted">无关联</li>
                   </ul>
                 </div>
-                <button class="bl-btn bl-btn-primary gr-goto-btn" @click="gotoObjectTypePage">
-                  <span v-html="BL.icon('externalLink', 12, '#fff')"></span><span style="margin-left:6px">在对象类型管理中编辑</span>
+                <button class="bl-btn bl-btn-text gr-edit-btn" @click="gotoObjectTypePage">
+                  <span v-html="BL.icon('externalLink', 12)"></span><span style="margin-left:6px">在对象类型管理中编辑</span>
                 </button>
+              </div>
+              <!-- 底部:开始探索 -->
+              <div class="gr-drawer-ft">
+                <button class="bl-btn bl-btn-primary gr-explore-btn" @click="startExplore">
+                  <span v-html="BL.icon('search', 13, '#fff')"></span><span style="margin-left:6px">开始探索</span>
+                </button>
+              </div>
+            </div>
+          </aside>
+          <!-- 链接信息抽屉(对象类型—链接—对象类型) -->
+          <aside class="gr-drawer" :class="{ 'is-open': !!linkDrawer }">
+            <div v-if="linkDrawer" class="gr-drawer-inner">
+              <header class="gr-drawer-hd">
+                <div class="gr-drawer-title">
+                  <div class="gr-drawer-cn">{{ linkDrawer.title }}
+                    <span class="bl-tag" style="margin-left:8px;font-size:11px">{{ linkDrawer.links.length }} 条链接</span>
+                  </div>
+                  <div class="gr-drawer-en bl-mono">普通链接</div>
+                </div>
+                <button class="gr-drawer-close" title="关闭" @click="closeLinkDrawer"><span v-html="BL.icon('x', 16)"></span></button>
+              </header>
+              <div class="gr-drawer-body">
+                <div v-for="(l, i) in linkDrawer.links" :key="i" class="gr-link-item">
+                  <span class="gr-link-node" :title="l.src">{{ l.src }}</span>
+                  <span class="gr-link-rel">
+                    <span class="gr-link-line"></span>
+                    <span class="gr-link-name">{{ l.name }}</span>
+                    <span v-html="BL.icon('chevronRight', 12, 'var(--bl-text-3)')"></span>
+                  </span>
+                  <span class="gr-link-node" :title="l.tgt">{{ l.tgt }}</span>
+                </div>
               </div>
             </div>
           </aside>
@@ -203,7 +255,18 @@ const qRight = ref('')
 const curTree = ref('compactBox')
 const curGraph = ref('force')
 const treeMenu = ref(false)
+const legendOpen = ref(false)   // 左画布图例默认收起
+const graphMenu = ref(false)    // 右画布布局下拉
+const relLegendOpen = ref(false)  // 右画布关系图例默认收起
 const curTreeLabel = computed(() => (TREE_LAYOUTS.find(l => l.key === curTree.value) || TREE_LAYOUTS[0]).label)
+const curGraphLabel = computed(() => (GRAPH_LAYOUTS.find(l => l.key === curGraph.value) || GRAPH_LAYOUTS[0]).label)
+
+/* BL.icon 的 SVG 转 data URI 图片(G6 canvas 用,必须补 xmlns 才能渲染) */
+function iconDataUri(name, size, color) {
+  let svg = BL.icon(name, size, color) || ''
+  if (svg.indexOf('xmlns') < 0) svg = svg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ')
+  return 'data:image/svg+xml,' + encodeURIComponent(svg)
+}
 
 /* —— 视觉规范 —— */
 const LEFT_STYLE = {
@@ -275,19 +338,33 @@ function ensureNode() {
       const color = cfg._color || '#165DFF'
       const cn = cfg.label || ''
       const en = cfg.apiName || ''
-      const w = Math.max(cn.length * 13 + 22, en.length * 6 + 18, 72)
-      const h = 38
+      const ICON = 20, PAD = 10, GAP = 8
+      const textW = Math.max(cn.length * 13, en.length * 6.5, 56)
+      const w = PAD + ICON + GAP + textW + PAD
+      const h = 40
       const rect = group.addShape('rect', {
-        attrs: { x: -w / 2, y: -h / 2, width: w, height: h, radius: 6, fill: '#fff', stroke: color, lineWidth: 1.6,
+        attrs: { x: -w / 2, y: -h / 2, width: w, height: h, radius: 6, fill: cfg._agg ? color + '1f' : '#fff',
+          stroke: color, lineWidth: cfg._agg ? 1.6 : 1.6, lineDash: cfg._agg ? [4, 3] : null,
           cursor: 'pointer', shadowColor: 'rgba(0,0,0,0.08)', shadowBlur: 4, shadowOffsetY: 1 },
         name: 'card-rect', draggable: true
       })
+      // 左侧图标徽标(按对象类型颜色)
+      const bx = -w / 2 + PAD
+      group.addShape('rect', {
+        attrs: { x: bx, y: -ICON / 2, width: ICON, height: ICON, radius: 5, fill: color + '22', cursor: 'pointer' },
+        name: 'card-ic-bg'
+      })
+      group.addShape('image', {
+        attrs: { x: bx + 3.5, y: -6.5, width: 13, height: 13, img: iconDataUri(cfg._icon || 'cube', 13, color), cursor: 'pointer' },
+        name: 'card-ic'
+      })
+      const tx = bx + ICON + GAP
       group.addShape('text', {
-        attrs: { x: 0, y: en ? -6 : 0, text: cn, fontSize: 12, fontWeight: 600, fill: '#1d2129', textAlign: 'center', textBaseline: 'middle', cursor: 'pointer' },
+        attrs: { x: tx, y: en ? -6 : 0, text: cn, fontSize: 12, fontWeight: 600, fill: '#1d2129', textAlign: 'left', textBaseline: 'middle', cursor: 'pointer' },
         name: 'card-cn'
       })
       if (en) group.addShape('text', {
-        attrs: { x: 0, y: 9, text: en, fontSize: 9, fill: '#86909c', textAlign: 'center', textBaseline: 'middle', cursor: 'pointer' },
+        attrs: { x: tx, y: 9, text: en, fontSize: 9, fill: '#86909c', textAlign: 'left', textBaseline: 'middle', cursor: 'pointer' },
         name: 'card-en'
       })
       return rect
@@ -308,7 +385,48 @@ ensureNode()
 
 const selectedLeftId = ref(null)
 const coveredMap = new Map()     // categoryCode → 其覆盖的全部 code(含自身/后代)
+const catPath = new Map()        // code → [祖先codes...自身] (从行业到自身)
+const catInfo = new Map()        // code → { name, kind, color }
+let currentScopeCode = null      // 当前左侧选中范围 code(null=全部)
 let ontData = { nodes: [], edges: [] }   // 右侧对象本体原始数据
+
+/* 按选中范围裁剪 + 跨范围聚合成方图 */
+function scopedGraph(code) {
+  const inScope = coveredMap.get(code) || new Set([code])
+  const selPath = catPath.get(code) || [code]
+  const realNodes = []
+  const aggOf = new Map()         // 范围外 typeId → 聚合方图 code
+  ontData.nodes.forEach(n => {
+    if (inScope.has(n.categoryCode)) { realNodes.push(n); return }
+    const q = catPath.get(n.categoryCode) || [n.categoryCode]
+    let k = 0; while (k < selPath.length && k < q.length && selPath[k] === q[k]) k++  // 公共前缀长度=首个分叉层级
+    aggOf.set(n.id, q[Math.min(k, q.length - 1)])
+  })
+  const realIds = new Set(realNodes.map(n => n.id))
+  const edges = []
+  const aggUsed = new Set()
+  const seen = new Set()
+  ontData.edges.forEach(e => {
+    const sIn = realIds.has(e.source), tIn = realIds.has(e.target)
+    if (sIn && tIn) { edges.push(e); return }                 // 范围内—范围内:原样
+    if (sIn && !tIn) {
+      const a = aggOf.get(e.target); if (!a) return
+      aggUsed.add(a); const key = e.source + '>agg:' + a
+      if (!seen.has(key)) { seen.add(key); edges.push({ source: e.source, target: 'agg:' + a, kind: 'link', label: '' }) }
+    } else if (!sIn && tIn) {
+      const a = aggOf.get(e.source); if (!a) return
+      aggUsed.add(a); const key = 'agg:' + a + '>' + e.target
+      if (!seen.has(key)) { seen.add(key); edges.push({ source: 'agg:' + a, target: e.target, kind: 'link', label: '' }) }
+    }
+    // 范围外—范围外:丢弃
+  })
+  const aggNodes = [...aggUsed].map(a => {
+    const info = catInfo.get(a) || { name: a, color: '#86909c', kind: 'group', icon: 'folder' }
+    return { id: 'agg:' + a, label: info.name, apiName: KIND_CN[info.kind] || '', categoryCode: a, color: info.color, icon: info.icon, _agg: true }
+  })
+  return { nodes: [...realNodes, ...aggNodes], edges }
+}
+function rightData() { return currentScopeCode ? scopedGraph(currentScopeCode) : ontData }
 let leftTreeData = null                  // 左侧树原始数据(用于"回到初始布局"重建)
 const drawerNode = ref(null)             // 右侧节点详情抽屉
 const drawerClassDetail = ref(null)      // 异步加载的对象类型完整详情
@@ -377,7 +495,7 @@ function bindLeftEvents(g) {
     if (tname === 'collapse-marker') toggleCollapse(item)   // 仅 +/- 标识负责收展
     else selectLeftAndLink(item)                            // 点节点其它任意处 = 选中+联动
   })
-  g.on('canvas:click', () => { clearLeftSel(); resetRight() })
+  g.on('canvas:click', () => { clearLeftSel(); showFullRight() })
 }
 function toggleCollapse(item) {
   const g = leftG.value; const m = item.getModel()
@@ -391,13 +509,20 @@ function selectLeftAndLink(item) {
   const g = leftG.value
   selectedLeftId.value = item.getModel().id
   g.getNodes().forEach(n => g.setItemState(n, 'selected', n.getModel().id === selectedLeftId.value))
-  rightLink(item.getModel().id)
+  applyScope(item.getModel().id)
 }
 function clearLeftSel() {
   const g = leftG.value; if (!g) return
   selectedLeftId.value = null
   g.getNodes().forEach(n => g.setItemState(n, 'selected', false))
 }
+/* 按范围重建右画布(裁剪+聚合);code=null 恢复全部 */
+function applyScope(code) {
+  currentScopeCode = code || null
+  closeDrawer(); closeLinkDrawer()
+  initRight()
+}
+function showFullRight() { if (currentScopeCode !== null) applyScope(null) }
 
 /* —— 右画布高亮/联动(力导向关系图,持久实例) —— */
 function edgeOn(kind) { return kind === 'link' ? true : !!relOn[kind] }
@@ -432,10 +557,12 @@ function rightLink(code) {
   const rg = rightG.value; if (!rg) return
   const codes = coveredMap.get(code) || new Set([code])
   const matched = new Set(rg.getNodes().filter(n => codes.has(n.getModel().categoryCode)).map(n => n.getModel().id))
-  if (!matched.size) { clearStates(rg); return }   // 无绑定:仅取消高亮,不清空图谱
+  if (!matched.size) { clearStates(rg); lastRightMatched = null; return }   // 无绑定:仅取消高亮,不清空图谱
   applyHighlight(rg, matched)
+  lastRightMatched = matched         // 记忆,供全屏切换后重算缩放(保证放大模式与正常一致)
   fitToNodes(rg, matched)   // 命中子集缩放铺满视区、居中
 }
+let lastRightMatched = null
 
 /* 把一组节点缩放居中、铺满视区(用于左→右联动 / 搜索聚焦) */
 function fitToNodes(g, ids, padding = 90) {
@@ -463,7 +590,7 @@ function fitToNodes(g, ids, padding = 90) {
   g.translate(vw / 2 - c0.x, vh / 2 - c0.y)
   g.zoomTo(ratio, { x: vw / 2, y: vh / 2 }, true, { duration: 300 })
 }
-function resetRight() { clearStates(rightG.value) }
+function resetRight() { clearStates(rightG.value); lastRightMatched = null }
 
 /* 隐藏虚拟根节点及其连出的边 */
 function hideRoot(g) {
@@ -479,7 +606,7 @@ function bindFit(g, padding = 30) {
   setTimeout(() => { if (g && !g.get('destroyed')) g.fitView(padding) }, 300)
 }
 
-function cardNode(n) { return { id: n.id, label: n.label, apiName: n.apiName, categoryCode: n.categoryCode, _color: n.color || '#165DFF', size: [124, 40] } }
+function cardNode(n) { return { id: n.id, label: n.label, apiName: n.apiName, categoryCode: n.categoryCode, _color: n.color || '#165DFF', _icon: n.icon || 'cube', _agg: !!n._agg, size: [124, 40] } }
 function edgeStyleOf(kind) {
   const r = RELATION_MAP[kind] || RELATION_MAP.link
   return { stroke: r.color, lineWidth: r.width, lineDash: r.dash, endArrow: kind === 'sub' }
@@ -498,13 +625,27 @@ function initRight() {
     edgeStateStyles: { dim: { opacity: 0.07 }, highlight: { lineWidth: 3.4, opacity: 1 } },
     layout: graphCfg2(curGraph.value)
   })
-  const edges = ontData.edges.map((e, i) => {
-    const lbl = e.kind === 'link' ? (e.label || '') : ''
+  const data = rightData()   // 全部 或 当前范围裁剪+聚合后的图
+  // 节点名 + 普通链接按"对象类型对"分组(用于线上计数标注 + 点击查看链接列表)
+  nodeNameStore = {}; data.nodes.forEach(n => { nodeNameStore[n.id] = n.label || n.apiName || n.id })
+  linkGroupsStore = {}
+  data.edges.forEach(e => {
+    if (e.kind !== 'link') return
+    const k = [e.source, e.target].slice().sort().join('|')
+    ;(linkGroupsStore[k] = linkGroupsStore[k] || []).push(e)
+  })
+  const countShown = new Set()
+  const edges = data.edges.map((e, i) => {
+    let lbl = ''; let pairKey = null
+    if (e.kind === 'link') {
+      pairKey = [e.source, e.target].slice().sort().join('|')
+      if (!countShown.has(pairKey)) { countShown.add(pairKey); lbl = String(linkGroupsStore[pairKey].length) }  // 数字=链接数量
+    }
     return {
-      id: 'e' + i, source: e.source, target: e.target, kind: e.kind, label: lbl, style: edgeStyleOf(e.kind),
+      id: 'e' + i, source: e.source, target: e.target, kind: e.kind, pairKey, label: lbl, style: edgeStyleOf(e.kind),
       labelCfg: lbl ? { refY: 0, autoRotate: false, style: {
-        fontSize: 10, fill: '#86909c',
-        background: { fill: 'rgba(255,255,255,0.95)', stroke: '#e5e6eb', lineWidth: 1, padding: [3, 6, 3, 6], radius: 4 }
+        fontSize: 11, fontWeight: 600, fill: '#165DFF', cursor: 'pointer',
+        background: { fill: '#fff', stroke: RELATION_MAP.link.color, lineWidth: 1, padding: [3, 7, 3, 7], radius: 10 }
       } } : undefined
     }
   })
@@ -512,16 +653,22 @@ function initRight() {
   if (G6.Util && G6.Util.processParallelEdges) {
     G6.Util.processParallelEdges(edges, 20, 'quadratic', 'cubic-horizontal', 'loop')
   }
-  g.data({ nodes: ontData.nodes.map(cardNode), edges })
+  g.data({ nodes: data.nodes.map(cardNode), edges })
   g.render(); bindFit(g, 50)
-  g.on('node:click', (evt) => openRightDrawer(evt.item.getModel()))
-  g.on('canvas:click', () => closeDrawer())
+  g.on('node:click', (evt) => {
+    const m = evt.item.getModel()
+    if (m._agg) applyScope(m.categoryCode)     // 点聚合方图 → 下钻到该范围
+    else openRightDrawer(m)
+  })
+  g.on('edge:click', (evt) => { const m = evt.item.getModel(); if (m.kind === 'link') openLinkDrawer(m.pairKey, evt.item) })
+  g.on('canvas:click', () => { closeDrawer(); closeLinkDrawer() })
   rightG.value = g
   nextTick(applyRelFilter)
 }
 
 /* —— 右节点详情抽屉 —— */
 function openRightDrawer(m) {
+  linkDrawer.value = null
   drawerNode.value = { id: m.id, label: m.label, apiName: m.apiName, categoryCode: m.categoryCode }
   drawerClassDetail.value = null
   applyHighlight(rightG.value, new Set([m.id]))   // 单击节点:高亮其一阶邻居
@@ -530,6 +677,32 @@ function openRightDrawer(m) {
   fetchClassDetail(m.id)
 }
 function closeDrawer() { drawerNode.value = null; drawerClassDetail.value = null; resetRight() }
+
+/* —— 链接信息抽屉(点普通链接标注:对象类型—链接—对象类型 列表) —— */
+let linkGroupsStore = {}
+let nodeNameStore = {}
+const linkDrawer = ref(null)
+function openLinkDrawer(pairKey, edgeItem) {
+  const group = linkGroupsStore[pairKey] || []
+  if (!group.length) return
+  drawerNode.value = null; drawerClassDetail.value = null
+  linkDrawer.value = {
+    title: '链接信息',
+    links: group.map(l => ({
+      src: nodeNameStore[l.source] || l.source,
+      srcId: l.source,
+      name: l.label || '链接',
+      tgt: nodeNameStore[l.target] || l.target,
+      tgtId: l.target
+    }))
+  }
+  // 高亮这条链接两端
+  if (edgeItem && rightG.value) {
+    const m = edgeItem.getModel()
+    applyHighlight(rightG.value, new Set([m.source, m.target]))
+  }
+}
+function closeLinkDrawer() { linkDrawer.value = null }
 async function fetchClassDetail(id) {
   if (!id) return
   try { const res = await resourceApi.classDetail(id); if (drawerNode.value && drawerNode.value.id === id) drawerClassDetail.value = res }
@@ -545,6 +718,10 @@ function gotoObjectTypePage() {
   if (!drawerNode.value || !drawerNode.value.id) return
   router.push({ path: '/resources/object-types', query: { openId: drawerNode.value.id } })
 }
+function startExplore() {
+  if (!drawerNode.value || !drawerNode.value.id) return
+  router.push({ path: '/workspace/instances', query: { classId: drawerNode.value.id } })
+}
 
 /* —— 数据加载 —— */
 async function load() {
@@ -553,7 +730,7 @@ async function load() {
     graphApi.ontology().catch(() => ({ nodes: [], edges: [] }))
   ])
   // 分类覆盖映射(code → 自身+后代 codes),用于左→右联动
-  coveredMap.clear()
+  coveredMap.clear(); catPath.clear(); catInfo.clear()
   const cover = (node) => {
     const c = node.categoryCode || node.category_code || node.id
     const set = new Set([c])
@@ -562,6 +739,17 @@ async function load() {
     return set
   }
   ;(Array.isArray(cat) ? cat : []).forEach(cover)
+  // 路径 + 层级信息(用于聚合)
+  const indexCat = (node, path, depth) => {
+    const c = node.categoryCode || node.category_code || node.id
+    const p = [...path, c]
+    catPath.set(c, p)
+    const kind = KIND_BY_DEPTH[depth] || 'group'
+    const st = LEFT_STYLE[kind] || LEFT_STYLE.group
+    catInfo.set(c, { name: node.rdfsLabel || node.cn || node.label || node.name || c, kind, color: node.color || st.stroke, icon: node.icon || 'folder' })
+    ;(node.children || []).forEach(ch => indexCat(ch, p, depth + 1))
+  }
+  ;(Array.isArray(cat) ? cat : []).forEach(n => indexCat(n, [], 0))
 
   ontData = { nodes: ot.nodes || [], edges: ot.edges || [] }
 
@@ -639,7 +827,15 @@ function toggleFullSide(side) {
   if (!document.fullscreenElement) el.requestFullscreen?.().catch(() => {})
   else document.exitFullscreen?.()
 }
-function onFsChange() { nextTick(resizeAll) }
+function onFsChange() {
+  nextTick(() => {
+    resizeAll()
+    // 全屏进/出后右画布尺寸变化 → 若有左→右联动选中,按新尺寸重算缩放,保证放大模式与正常一致
+    if (lastRightMatched && lastRightMatched.size && rightG.value && !rightG.value.get('destroyed')) {
+      nextTick(() => fitToNodes(rightG.value, lastRightMatched))
+    }
+  })
+}
 
 let ro = null
 function resizeAll() {
@@ -682,10 +878,13 @@ const vClickOutside = {
 .gx-pane { display: flex; flex-direction: column; min-width: 0; position: relative; background: var(--bl-bg-1); }
 .gx-pane + .gx-pane, .gx-divider + .gx-pane { border-left: 0; }
 
-.gx-toolbar { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--bl-border); flex-wrap: wrap; min-height: 46px; }
-.gx-search { position: relative; display: flex; align-items: center; }
+.gx-toolbar { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--bl-border); flex-wrap: nowrap; min-height: 46px; position: relative; z-index: 6; }
+.gx-search { position: relative; display: flex; align-items: center; flex-shrink: 0; }
 .gx-search-ic { position: absolute; left: 8px; display: inline-flex; }
-.gx-search input { width: 180px; height: 30px; box-sizing: border-box; padding: 0 22px 0 26px; border: 1px solid var(--bl-border); border-radius: 6px; font-size: 12.5px; outline: none; }
+.gx-search input { width: 90px; height: 30px; box-sizing: border-box; padding: 0 22px 0 26px; border: 1px solid var(--bl-border); border-radius: 6px; font-size: 12.5px; outline: none; }
+.gx-search-wide input { width: 240px; }
+/* 工具条纯图标按钮 */
+.gx-tb-ic { flex-shrink: 0; padding: 0 !important; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; }
 .gx-search input:focus { border-color: var(--bl-primary); }
 .gx-search-x { position: absolute; right: 6px; width: 16px; height: 16px; border: 0; background: transparent; color: var(--bl-text-3); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
 
@@ -720,6 +919,37 @@ const vClickOutside = {
 .gx-layout-btn:hover:not(.is-on) { background: var(--bl-bg-hover); }
 .gx-layout-btn.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); font-weight: 500; }
 
+/* 布局下拉(只显示当前) */
+.gx-layout-dd { position: relative; flex-shrink: 0; }
+.gx-layout-dd-btn { display: inline-flex; align-items: center; gap: 4px; height: 30px; padding: 0 10px; border: 1px solid var(--bl-border); border-radius: 6px; background: var(--bl-bg-1); color: var(--bl-text-2); cursor: pointer; font-size: 12.5px; }
+.gx-layout-dd-btn:hover { border-color: var(--bl-primary-border); }
+.gx-layout-dd-menu { position: absolute; top: 100%; right: 0; margin-top: 4px; min-width: 96px; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 8px; box-shadow: 0 6px 18px rgba(0,0,0,.14); padding: 4px; z-index: 20; }
+.gx-layout-dd-item { padding: 6px 10px; border-radius: 6px; font-size: 12.5px; color: var(--bl-text-2); cursor: pointer; white-space: nowrap; }
+.gx-layout-dd-item:hover:not(.is-on) { background: var(--bl-bg-hover); }
+.gx-layout-dd-item.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); font-weight: 500; }
+
+/* 右画布关系图例(左下角竖排) */
+.gx-rel-legend { position: absolute; bottom: 12px; left: 12px; display: flex; flex-direction: column; gap: 7px; background: rgba(255,255,255,.9); border: 1px solid var(--bl-border); border-radius: 8px; padding: 8px 10px; backdrop-filter: blur(2px); z-index: 5; }
+.gx-rel-legend-toggle { display: inline-flex; align-items: center; gap: 4px; border: 0; background: transparent; color: var(--bl-text-2); font-size: 12px; cursor: pointer; padding: 0; }
+.gx-rel-legend-toggle:hover { color: var(--bl-primary); }
+.gx-rel-legend-hd { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--bl-text-3); margin-bottom: 1px; }
+.gx-rel-legend-x { border: 0; background: transparent; color: var(--bl-text-3); cursor: pointer; padding: 0; display: inline-flex; }
+.gx-rel-legend-x:hover { color: var(--bl-primary); }
+.gx-rel-legend .gx-rel-leg, .gx-rel-legend .gx-rel-chk { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--bl-text-2); }
+.gx-rel-legend .gx-rel-chk { cursor: pointer; }
+
+/* 抽屉底部:开始探索 */
+.gr-drawer-ft { flex-shrink: 0; padding: 12px 16px; border-top: 1px solid var(--bl-divider); }
+.gr-explore-btn { width: 100%; justify-content: center; }
+.gr-edit-btn { width: 100%; margin-top: 14px; justify-content: center; }
+
+/* 链接信息列表(源—链接—目标) */
+.gr-link-item { display: flex; align-items: center; gap: 8px; padding: 10px 4px; border-bottom: 1px solid var(--bl-divider); font-size: 12.5px; }
+.gr-link-node { flex: 1; min-width: 0; padding: 5px 8px; background: var(--bl-bg-2); border: 1px solid var(--bl-border); border-radius: 6px; text-align: center; font-weight: 500; color: var(--bl-text-1); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gr-link-rel { flex-shrink: 0; display: inline-flex; flex-direction: column; align-items: center; gap: 1px; min-width: 64px; }
+.gr-link-line { width: 100%; height: 2px; background: var(--bl-primary); border-radius: 2px; opacity: .5; }
+.gr-link-name { font-size: 11px; color: var(--bl-primary); white-space: nowrap; }
+
 .gx-divider { width: 6px; flex-shrink: 0; background: var(--bl-border); position: relative; cursor: col-resize; }
 .gx-divider:hover, .gx-divider.is-active { background: var(--bl-primary); }
 .gx-divider.is-collapsed { cursor: default; }
@@ -728,8 +958,11 @@ const vClickOutside = {
 .gx-collapse { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 18px; height: 36px; border: 1px solid var(--bl-border); background: var(--bl-bg-1); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: var(--bl-text-3); z-index: 3; }
 .gx-collapse:hover { color: var(--bl-primary); border-color: var(--bl-primary); }
 
-.gx-legend { position: absolute; bottom: 12px; left: 12px; display: flex; gap: 12px; background: rgba(255,255,255,.85); border: 1px solid var(--bl-border); border-radius: 8px; padding: 6px 10px; backdrop-filter: blur(2px); }
+.gx-legend { position: absolute; bottom: 12px; left: 12px; display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,.85); border: 1px solid var(--bl-border); border-radius: 8px; padding: 6px 10px; backdrop-filter: blur(2px); }
 .gx-leg { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--bl-text-2); }
+.gx-legend-toggle { display: inline-flex; align-items: center; gap: 4px; border: 0; background: transparent; color: var(--bl-text-2); font-size: 12px; cursor: pointer; padding: 0; }
+.gx-legend-toggle:hover { color: var(--bl-primary); }
+.gx-legend-collapse { margin-left: 2px; color: var(--bl-text-3); }
 .gx-dot { width: 11px; height: 11px; border-radius: 50%; }
 .gx-legend-rel { flex-direction: column; gap: 5px; align-items: flex-start; }
 .gx-rel-line { width: 18px; height: 3px; border-radius: 2px; display: inline-block; }

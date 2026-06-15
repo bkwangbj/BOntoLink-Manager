@@ -105,6 +105,44 @@ export const chartDefaultConfig = new Map([
     }
     ]
   }],
+  ['smoothLineChart', { ..._lineBaseOption(), series: _lineSeries({ smooth: true }) }],
+  ['areaChart', { ..._lineBaseOption(), series: _lineSeries({ areaStyle: {}, smooth: true }) }],
+  ['stackAreaChart', { ..._lineBaseOption(), series: _lineSeries({ areaStyle: {}, stack: 'total', smooth: false }) }],
+  ['stepLineChart', { ..._lineBaseOption(), series: _lineSeries({ step: 'end', showSymbol: true }) }],
+  ['barHorizontalChart', {
+    showBorderRadius: false,
+    tooltip: { trigger: 'axis' },
+    legend: { show: true, alignPosition: 'topCenter' },
+    grid: { top: 50, left: 70, right: 50, bottom: 20, containLabel: true },
+    xAxis: { show: true, type: 'value', axisLabel: { show: true }, axisLine: { show: true, lineStyle: { color: '#999' } }, splitLine: { show: true, lineStyle: { width: 1, type: 'dashed', color: '#DDD' } } },
+    yAxis: { show: true, type: 'category', axisLabel: { show: true }, axisLine: { show: true, lineStyle: { color: '#999' } }, axisTick: { show: true, lineStyle: { width: 1, color: '#DDD' } } },
+    series: [{ type: 'bar', itemStyle: { color: null }, backgroundStyle: {} }, { type: 'bar', itemStyle: { color: null }, backgroundStyle: {} }]
+  }],
+  ['rainfallEvap', {
+    rawEChart: true,
+    color: ['#008FFF', '#FFC72F', '#00E4BF'],
+    tooltip: { trigger: 'axis', axisPointer: { type: 'cross' } },
+    legend: { data: ['降雨量', '蒸发量', '降水量'], top: 6 },
+    axisPointer: { link: [{ xAxisIndex: 'all' }] },
+    dataZoom: [{ show: true, realtime: true, type: 'slider', bottom: 6, height: 14, start: 0, end: 100, xAxisIndex: [0, 1] }],
+    grid: [
+      { left: 56, right: 30, top: 50, height: '33%' },
+      { left: 56, right: 30, top: '56%', height: '30%' }
+    ],
+    xAxis: [
+      { type: 'category', boundaryGap: true, axisLine: { onZero: true }, data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'] },
+      { gridIndex: 1, type: 'category', boundaryGap: true, axisLine: { onZero: true }, position: 'top', data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'] }
+    ],
+    yAxis: [
+      { name: '雨量/蒸发(mm)', type: 'value', splitLine: { lineStyle: { type: 'dashed', color: '#DDD' } } },
+      { gridIndex: 1, name: '降水量(mm)', type: 'value', inverse: true, splitLine: { lineStyle: { type: 'dashed', color: '#DDD' } } }
+    ],
+    series: [
+      { name: '降雨量', type: 'bar', barMaxWidth: 24, data: [42, 38, 65, 88, 120, 175, 210, 198, 142, 96, 58, 40] },
+      { name: '蒸发量', type: 'line', smooth: true, symbolSize: 5, data: [30, 45, 70, 96, 135, 162, 188, 176, 130, 88, 52, 34] },
+      { name: '降水量', type: 'line', xAxisIndex: 1, yAxisIndex: 1, smooth: true, areaStyle: {}, symbolSize: 5, data: [48, 40, 72, 95, 128, 180, 220, 205, 150, 100, 62, 44] }
+    ]
+  }],
   ['barChart', {
     showBorderRadius: false,
     tooltip: {
@@ -1668,4 +1706,20 @@ export function getParametricEquation (startRatio, endRatio, isSelected, isHover
       return Math.sin(v) > 0 ? 1 * height : -1
     }
   }
+}
+
+/* —— 折线类变体默认 option 的基础(每次返回独立对象,避免共享引用) —— */
+function _lineBaseOption () {
+  return {
+    tooltip: { trigger: 'axis' },
+    legend: { show: true, alignPosition: 'topCenter' },
+    grid: { top: 50, left: 50, right: 50, bottom: 20, containLabel: true },
+    xAxis: { show: true, type: 'category', axisLabel: { show: true }, axisLine: { show: true, lineStyle: { color: '#999' } }, axisTick: { show: true, lineStyle: { width: 1, color: '#DDD' } } },
+    yAxis: { show: true, type: 'value', alignTicks: true, splitLine: { show: true, lineStyle: { width: 1, type: 'dashed', color: '#DDD' } }, axisTick: { show: false, lineStyle: { width: 1, color: '#DDD' } }, axisLabel: { show: true }, axisLine: { show: false, lineStyle: { color: '#333' } }, nameTextStyle: { color: '#999' }, splitArea: { show: false } }
+  }
+}
+function _lineSeries (extra) {
+  const base = Object.assign({ type: 'line', color: null, showSymbol: true, symbolSize: 4, symbol: 'emptyCircle', lineStyle: { width: 2, color: null }, itemStyle: { color: null }, smooth: false }, extra || {})
+  const one = JSON.stringify(base)
+  return [JSON.parse(one), JSON.parse(one)]
 }

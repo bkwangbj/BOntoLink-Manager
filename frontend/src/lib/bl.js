@@ -38,6 +38,7 @@ const ICONS = {
   chevronLeft:  'M15 6l-6 6 6 6',
   chevronUp:    'M6 15l6-6 6 6',
   chevronDown:  'M6 9l6 6 6-6',
+  chevronsRight: 'M7 6l6 6-6 6 M13 6l6 6-6 6',
   arrowUp:    'M12 19V5 M5 12l7-7 7 7',
   arrowDown:  'M12 5v14 M5 12l7 7 7-7',
   arrowLeft:  'M19 12H5 M12 19l-7-7 7-7',

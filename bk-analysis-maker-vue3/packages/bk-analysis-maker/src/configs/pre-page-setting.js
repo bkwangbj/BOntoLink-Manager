@@ -491,7 +491,7 @@ import XEUtils from 'xe-utils'
 export const defaultThemeList = [
   {
     key: 'default',
-    name: '默认',
+    name: '浅色系',
     isDefault: '1',
     flag: '0',
     config: {
@@ -1528,7 +1528,7 @@ export const defaultThemeList = [
   },
   {
     key: 'blue',
-    name: '默认2',
+    name: '深色系',
     isDefault: '0',
     flag: '0',
     config: {
