@@ -905,7 +905,7 @@ const vClickOutside = {
 
 /* 图形(树布局)下拉选择器:左画布右下角 */
 .gx-cv-sel { position: absolute; right: 12px; bottom: 12px; z-index: 5; width: 96px; }
-.gx-cv-sel-btn { width: 100%; height: 28px; display: flex; align-items: center; gap: 4px; padding: 0 8px; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,.08); color: var(--bl-text-2); cursor: pointer; font-size: 12px; }
+.gx-cv-sel-btn { width: 100%; height: 30px; display: flex; align-items: center; gap: 4px; padding: 0 8px; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,.08); color: var(--bl-text-2); cursor: pointer; font-size: 12px; }
 .gx-cv-sel-btn:hover { border-color: var(--bl-primary-border); }
 .gx-cv-sel-menu { position: absolute; left: 0; right: 0; bottom: calc(100% + 4px); background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.14); padding: 4px; }
 .gx-cv-sel-item { padding: 6px 8px; border-radius: 6px; cursor: pointer; font-size: 12px; color: var(--bl-text-2); }
@@ -929,7 +929,7 @@ const vClickOutside = {
 .gx-layout-dd-item.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); font-weight: 500; }
 
 /* 右画布关系图例(左下角竖排) */
-.gx-rel-legend { position: absolute; bottom: 12px; left: 12px; display: flex; flex-direction: column; gap: 7px; background: rgba(255,255,255,.9); border: 1px solid var(--bl-border); border-radius: 8px; padding: 8px 10px; backdrop-filter: blur(2px); z-index: 5; }
+.gx-rel-legend { position: absolute; bottom: 12px; left: 12px; display: flex; flex-direction: column; gap: 7px; background: rgba(255,255,255,.9); border: 1px solid var(--bl-border); border-radius: 8px; padding: 6px 10px; backdrop-filter: blur(2px); z-index: 5; }
 .gx-rel-legend-toggle { display: inline-flex; align-items: center; gap: 4px; border: 0; background: transparent; color: var(--bl-text-2); font-size: 12px; cursor: pointer; padding: 0; }
 .gx-rel-legend-toggle:hover { color: var(--bl-primary); }
 .gx-rel-legend-hd { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--bl-text-3); margin-bottom: 1px; }

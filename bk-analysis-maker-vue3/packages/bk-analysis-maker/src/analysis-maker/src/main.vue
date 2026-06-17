@@ -1886,7 +1886,7 @@ export default {
     flex: 1;
     overflow: auto;
     pointer-events: auto !important;
-    background: url("./images/bg.png");
+    background: url("./images/bg.png") repeat;
 
     &.no-background {
       background: #fff;

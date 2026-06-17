@@ -208,6 +208,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { BL } from '@/lib/bl.js'
 import { sharedPropertyApi, categoryApi, structTypeApi } from '@/api'
 import PageHeader from '@/components/PageHeader.vue'
@@ -265,7 +266,19 @@ async function loadStructCount() {
   const list = await structTypeApi.list().catch(() => [])
   structCount.value = Array.isArray(list) ? list.length : 0
 }
-onMounted(() => { load(); loadCategoryMap(); loadStructCount() })
+const route = useRoute()
+const router = useRouter()
+// URL 带 ?openId=<id> 时打开详情;消费后清 query,避免刷新自动弹、并支持同页再次点击
+function applyOpenId(id) {
+  if (!id) return
+  const row = rows.value.find(r => r.id === id)
+  if (row) { onRowClick(row); router.replace({ query: {} }) }
+}
+onMounted(async () => {
+  await load(); loadCategoryMap(); loadStructCount()
+  applyOpenId(route.query.openId)
+})
+watch(() => route.query.openId, applyOpenId)
 
 /* —— 行业分类筛选 (左树) —— */
 function onCategoryChange({ codes }) { selectedCategoryCodes.value = codes || null }

@@ -1095,18 +1095,21 @@ async function batchSetStatus(status) {
 }
 
 /* ===== 生命周期 ===== */
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
+const router = useRouter()
+// URL 带 ?openId=<id> 时打开抽屉;消费后清 query,避免刷新自动弹、并支持同页再次点击
+function applyOpenId(id) {
+  if (!id) return
+  const row = rows.value.find(r => r.id === id)
+  if (row) { openDrawer(row); router.replace({ query: {} }) }
+}
 onMounted(async () => {
   try { tree.value = await categoryApi.tree() } catch {}
   try { rows.value = await resourceApi.classes({ aggregate: true }) } catch { rows.value = [] }
-  // 支持来自图谱页跳转: ?openId=<class-id> 自动打开抽屉
-  const openId = route.query.openId
-  if (openId) {
-    const row = rows.value.find(r => r.id === openId)
-    if (row) openDrawer(row)
-  }
+  applyOpenId(route.query.openId)
 })
+watch(() => route.query.openId, applyOpenId)
 </script>
 
 <style scoped>

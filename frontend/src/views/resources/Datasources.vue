@@ -350,12 +350,15 @@
 
 <script setup>
 import { ref, computed, onMounted, reactive, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
 import { datasourceApi, namespaceApi, categoryApi } from '@/api'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 
+const route = useRoute()
+const router = useRouter()
 const rows = ref([])
 const overview = ref({})
 const q = ref('')
@@ -786,10 +789,20 @@ async function batchSetStatus(targetStatus) {
 // 切换筛选 / 搜索 / 分组时清空选择
 watch([q, filterIndustry, filterStatus], () => { checked.value = new Set() })
 
+// URL 带 ?openId=<id> 时打开详情;消费后清 query,避免刷新自动弹、并支持同页再次点击
+function applyOpenId(id) {
+  if (!id) return
+  const row = rows.value.find(r => r.id === id)
+  if (row) { openEdit(row); router.replace({ query: {} }) }
+}
+
 onMounted(async () => {
   await loadAll()
   // 进入页面不自动选中也不自动打开抽屉 — 由用户主动点击行或"新建"打开
+  // URL 带 ?openId=<id> 时自动打开对应行的详情抽屉
+  applyOpenId(route.query.openId)
 })
+watch(() => route.query.openId, applyOpenId)
 watch(() => selected.value?.id, () => { monTab.value = 'basic' })
 </script>
 

@@ -21,8 +21,28 @@ function dataSource (classId, field, baseQuery) {
   }
 }
 
+// 深色看板:把图表文字(图例/坐标轴/标签)改为浅色,坐标轴/网格线压深
+function applyDarkText (c) {
+  const COL = '#C9D6EC'
+  if (c.chartTheme) { c.chartTheme.textColor = COL; if ('axisLineColor' in c.chartTheme) c.chartTheme.axisLineColor = '#2A3A5E'; if ('splitLineColor' in c.chartTheme) c.chartTheme.splitLineColor = '#22304F' }
+  const o = c.configOption
+  if (!o) return
+  if (o.legend) o.legend.textStyle = { ...(o.legend.textStyle || {}), color: COL }
+  const axes = []
+  if (o.xAxis) axes.push(...(Array.isArray(o.xAxis) ? o.xAxis : [o.xAxis]))
+  if (o.yAxis) axes.push(...(Array.isArray(o.yAxis) ? o.yAxis : [o.yAxis]))
+  axes.forEach(a => {
+    if (!a) return
+    a.axisLabel = { ...(a.axisLabel || {}), color: COL }
+    a.nameTextStyle = { ...(a.nameTextStyle || {}), color: COL }
+    if (a.splitLine && a.splitLine.lineStyle) a.splitLine.lineStyle.color = '#22304F'
+    if (a.axisLine && a.axisLine.lineStyle) a.axisLine.lineStyle.color = '#2A3A5E'
+  })
+  if (Array.isArray(o.series)) o.series.forEach(s => { if (s && s.label) s.label = { ...s.label, color: COL } })
+}
+
 // 构造图表「tab」配置(扁平,保留模板的 chartComId/type/configOption/chartTheme)
-function makeTab (tpl, classId, dim, baseQuery, kind, titlePrefix) {
+function makeTab (tpl, classId, dim, baseQuery, kind, titlePrefix, isDark) {
   const c = clone(tpl)
   const id = uid()
   c.id = id
@@ -51,6 +71,7 @@ function makeTab (tpl, classId, dim, baseQuery, kind, titlePrefix) {
     ]
     if (c.configOption) c.configOption.autoSeries = true
   }
+  if (isDark) applyDarkText(c)
   return c
 }
 
@@ -75,7 +96,7 @@ function kindFor (col) {
  * 同时分析:主对象类型 + 链接对象类型 的属性/枚举,自动选图表类型。
  * @param {Array} linkGroups [{ classId, name, columns }] 链接对象类型及其列
  */
-export function buildPageConfig (classId, columns, baseQuery = {}, linkGroups = []) {
+export function buildPageConfig (classId, columns, baseQuery = {}, linkGroups = [], isDark = false) {
   if (!classId || !BAR_TPL) return null
   const mainDims = pickDims(columns)
   const useMain = mainDims.length ? mainDims.slice(0, 4) : (columns || []).slice(0, 1)
@@ -102,7 +123,7 @@ export function buildPageConfig (classId, columns, baseQuery = {}, linkGroups = 
     const tpl = (s.kind === 'pie' && PIE_TPL) ? PIE_TPL : BAR_TPL
     // 链接对象的聚合用其自身实例(mock 无联表),不套主对象筛选
     const q = s.main ? baseQuery : {}
-    return gridItem(makeTab(tpl, s.classId, s.dim, q, s.kind, s.prefix), x, y)
+    return gridItem(makeTab(tpl, s.classId, s.dim, q, s.kind, s.prefix, isDark), x, y)
   })
-  return { layout, decorateLayout: [], colNum: 12, rowHeight: 30, autoRowHeight: 30, maxRows: Infinity }
+  return { layout, decorateLayout: [], colNum: 12, rowHeight: 30, autoRowHeight: 30, maxRows: Infinity, varConfig: [], margin: [10, 10] }
 }

@@ -11,17 +11,19 @@
 
     <!-- 中：搜索，居中 — 点击即打开全局搜索弹框 -->
     <div class="topbar-c">
-      <div class="search" @click="openSearch" role="button" tabindex="0" @keydown.enter="openSearch">
-        <span class="search-icon" v-html="BL.icon('search', 14)"></span>
-        <div class="bl-input search-input search-input-fake">
-          <span class="search-placeholder">全局搜索（对象、关系、动作、数据源…）</span>
+      <div class="search" v-click-outside="closeSearch">
+        <div class="search-trigger">
+          <span class="search-icon" v-html="BL.icon('search', 14)"></span>
+          <input ref="gInput" v-model="gquery" class="bl-input search-input"
+                 placeholder="全局搜索（对象、关系、动作、数据源…）"
+                 @focus="openSearch" @input="openSearch" @keydown.esc="closeSearch" />
+          <button v-if="gquery" class="search-clear" title="清空" @click="clearSearch" v-html="BL.icon('x', 13)"></button>
+          <span class="search-kbd">⌘ K</span>
         </div>
-        <span class="search-kbd">⌘ K</span>
+        <!-- 全局搜索:搜索框下方燕尾下拉(非弹框),用上方输入框的关键词 -->
+        <GlobalSearchModal v-model:open="searchOpen" inline :external-query="gquery" />
       </div>
     </div>
-
-    <!-- 全局搜索弹框 -->
-    <GlobalSearchModal v-model:open="searchOpen" />
 
     <!-- 右：通知 / 主题快切 / 全屏 -->
     <div class="topbar-r">
@@ -42,7 +44,17 @@ const app = useAppStore()
 
 const fullscreen = ref(false)
 const searchOpen = ref(false)
+const gquery = ref('')
+const gInput = ref(null)
 function openSearch() { searchOpen.value = true }
+function closeSearch() { searchOpen.value = false }
+function clearSearch() { gquery.value = ''; gInput.value?.focus() }
+
+/* click-outside 局部指令 */
+const vClickOutside = {
+  mounted(el, binding) { el.__h = (e) => { if (!el.contains(e.target)) binding.value(e) }; setTimeout(() => document.addEventListener('mousedown', el.__h), 0) },
+  unmounted(el) { document.removeEventListener('mousedown', el.__h) }
+}
 const isDark = computed(() => {
   if (app.theme === 'dark') return true
   if (app.theme === 'light') return false
@@ -128,10 +140,12 @@ onBeforeUnmount(() => {
   white-space: nowrap;
 }
 
-.search { position: relative; width: 480px; max-width: 100%; cursor: pointer; outline: none; }
+.search { position: relative; width: 480px; max-width: 100%; }
+.search-trigger { position: relative; width: 100%; }
+.search-trigger .search-input { width: 100%; box-sizing: border-box; }
 .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--bl-text-3); pointer-events: none; }
 .search-input {
-  padding-left: 32px; padding-right: 60px;
+  padding-left: 32px; padding-right: 84px;
   /* 搜索框背景跟随头部主题色, 微透白让 placeholder 仍清晰 */
   background: color-mix(in srgb, var(--bl-primary) 5%, var(--bl-bg-1));
   border: 1px solid color-mix(in srgb, var(--bl-primary) 20%, var(--bl-border));
@@ -169,6 +183,13 @@ onBeforeUnmount(() => {
   border-color: var(--bl-primary);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--bl-primary) 25%, transparent);
 }
+.search-clear {
+  position: absolute; right: 44px; top: 50%; transform: translateY(-50%);
+  width: 18px; height: 18px; border: 0; padding: 0; border-radius: 50%;
+  background: var(--bl-fill-2, rgba(0,0,0,.06)); color: var(--bl-text-3);
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+}
+.search-clear:hover { background: color-mix(in srgb, #f53f3f 14%, var(--bl-bg-1)); color: #f53f3f; }
 .search-kbd {
   position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
   font-size: var(--bl-fs-11); color: var(--bl-text-3);

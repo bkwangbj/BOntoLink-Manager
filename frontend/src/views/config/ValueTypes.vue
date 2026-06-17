@@ -359,9 +359,10 @@ import { BL } from '@/lib/bl.js'
 import { valueTypeApi, enumTypeApi, categoryApi } from '@/api'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 import EnumPickerModal from '@/components/EnumPickerModal.vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 
 const baseTypes = ['String', 'Integer', 'Decimal', 'Boolean', 'DateTime']
 const constraintTypes = [
@@ -517,7 +518,17 @@ async function load() {
     domainOpts.value = list
   }
 }
-onMounted(load)
+// URL 带 ?openId=<id> 时打开详情;消费后清 query,避免刷新自动弹、并支持同页再次点击
+function applyOpenId(id) {
+  if (!id) return
+  const row = rows.value.find(r => r.id === id)
+  if (row) { openEdit(row); router.replace({ query: {} }) }
+}
+onMounted(async () => {
+  await load()
+  applyOpenId(route.query.openId)
+})
+watch(() => route.query.openId, applyOpenId)
 
 function deriveApi(label) {
   if (!label) return ''

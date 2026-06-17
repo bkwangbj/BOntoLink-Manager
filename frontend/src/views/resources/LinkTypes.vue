@@ -147,7 +147,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, h } from 'vue'
+import { ref, computed, onMounted, watch, h } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { BL } from '@/lib/bl.js'
 import { linkTypeApi, resourceApi } from '@/api'
 import PageHeader from '@/components/PageHeader.vue'
@@ -181,6 +182,9 @@ function onCategoryChange({ codes }) { selectedCategoryCodes.value = codes || nu
 const editorOpen = ref(false)
 const editorLinkId = ref('')
 
+const route = useRoute()
+const router = useRouter()
+
 async function load() {
   rows.value = await linkTypeApi.list().catch(() => [])
 }
@@ -188,7 +192,18 @@ async function loadClasses() {
   const list = await resourceApi.classes().catch(() => [])
   allClasses.value = Array.isArray(list) ? list : (list?.data || list?.rows || [])
 }
-onMounted(() => { load(); loadClasses() })
+// URL 带 ?openId=<id> 时打开对应行详情;消费后清掉 query,避免刷新自动弹、并支持同页再次点击
+function applyOpenId(id) {
+  if (!id) return
+  const row = rows.value.find(r => r.id === id)
+  if (row) { onRowClick(row); router.replace({ query: {} }) }
+}
+onMounted(async () => {
+  await load()
+  loadClasses()
+  applyOpenId(route.query.openId)
+})
+watch(() => route.query.openId, applyOpenId)
 
 /* 统计 */
 const activeCount = computed(() => rows.value.filter(r => r.status === 'active').length)

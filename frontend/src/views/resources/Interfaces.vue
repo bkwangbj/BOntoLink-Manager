@@ -381,6 +381,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, reactive } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import IconPickerField from '@/components/IconPickerField.vue'
@@ -390,6 +391,8 @@ import { interfaceApi, resourceApi, categoryApi, valueTypeApi, propertyFormatApi
 import PropertyFormatModal from '@/components/PropertyFormatModal.vue'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 
+const route = useRoute()
+const router = useRouter()
 const rows = ref([])
 const statusFilter = ref('all')
 const domainFilter = ref('')
@@ -894,7 +897,16 @@ onMounted(async () => {
   walk(tree, [])
   domainOpts.value = list
   catInfoByCode.value = info
+  applyOpenId(route.query.openId)
 })
+
+// URL 带 ?openId=<id> 时打开详情;消费后清 query,避免刷新自动弹、并支持同页再次点击
+function applyOpenId(id) {
+  if (!id) return
+  const row = rows.value.find(r => r.id === id)
+  if (row) { openDetail(row); router.replace({ query: {} }) }
+}
+watch(() => route.query.openId, applyOpenId)
 </script>
 
 <style scoped>

@@ -572,6 +572,7 @@
 
 <script setup>
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick, h } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
@@ -601,6 +602,9 @@ const ItemTreeNode = {
     }
   }
 }
+
+const route = useRoute()
+const router = useRouter()
 
 const groups = ref([])
 const enumTypes = ref([])
@@ -837,7 +841,18 @@ async function loadDetail(id) {
   levelRules.value = d.levelRules || []
 }
 
-onMounted(loadAll)
+// URL 带 ?openId=<id> 时打开详情;消费后清 query,避免刷新自动弹、并支持同页再次点击
+function applyOpenId(id) {
+  if (!id) return
+  const row = enumTypes.value.find(e => e.id === id)
+  if (row) { selectEnum(row); router.replace({ query: {} }) }
+}
+
+onMounted(async () => {
+  await loadAll()
+  applyOpenId(route.query.openId)
+})
+watch(() => route.query.openId, applyOpenId)
 
 function toggleExpand(id) {
   const s = new Set(expanded.value)

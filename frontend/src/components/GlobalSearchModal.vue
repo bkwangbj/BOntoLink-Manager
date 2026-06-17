@@ -3,11 +3,12 @@
   设计参考截图风格: 顶部 input + tab 切换 + 分组卡片结果 + 键盘导航.
 -->
 <template>
-  <Teleport to="body">
-    <div v-if="open" class="gs-mask" @click.self="close">
-      <div class="gs-modal" @click.stop>
-        <!-- 搜索输入 -->
-        <header class="gs-hd">
+  <Teleport to="body" :disabled="inline">
+    <div v-if="open" :class="inline ? 'gs-inline' : 'gs-mask'" @click.self="onMaskClick">
+      <div :class="['gs-modal', inline && 'gs-modal-inline']" @click.stop>
+        <span v-if="inline" class="gs-beak"></span>
+        <!-- 搜索输入(仅弹框模式;内联模式用顶栏输入框) -->
+        <header v-if="!inline" class="gs-hd">
           <div class="gs-search-box">
             <span class="gs-hd-ic" v-html="BL.icon('search', 16)"></span>
             <input ref="inputRef" v-model="query" class="gs-input"
@@ -103,7 +104,7 @@ import { useRouter } from 'vue-router'
 import { searchApi } from '@/api'
 import { BL } from '@/lib/bl.js'
 
-const props = defineProps({ open: Boolean })
+const props = defineProps({ open: Boolean, inline: Boolean, externalQuery: { type: String, default: '' } })
 const emit = defineEmits(['update:open'])
 const router = useRouter()
 
@@ -190,7 +191,8 @@ function itemKey(kind, i) { return kind + '-' + i }
 
 /* —— debounced 搜索 —— */
 let debounceTimer = null
-watch([query, tab], () => {
+// 只在关键词变化时请求(始终 type=all 拉全量),切 tab 仅前端过滤,不重新请求
+watch(query, () => {
   if (debounceTimer) clearTimeout(debounceTimer)
   if (!query.value.trim()) {
     result.value = {}
@@ -200,10 +202,15 @@ watch([query, tab], () => {
   debounceTimer = setTimeout(doSearch, 250)
 }, { flush: 'post' })
 
+// 切 tab 只重置选中项到当前 tab 的第一条
+watch(tab, () => {
+  nextTick(() => { activeKey.value = flatItems.value[0]?.key || ''; if (bodyRef.value) bodyRef.value.scrollTop = 0 })
+})
+
 async function doSearch() {
   loading.value = true
   try {
-    const data = await searchApi.global(query.value.trim(), tab.value)
+    const data = await searchApi.global(query.value.trim(), 'all')
     result.value = data || {}
     // 默认选中第一条
     nextTick(() => {
@@ -247,6 +254,7 @@ function scrollActiveIntoView() {
 /* —— 跳转 —— */
 function goTo(item) {
   if (!item || !item.route) return
+  // 跳到对应资源页,route 带 ?openId=xxx 让目标页自动打开完整详情抽屉
   router.push(item.route)
   close()
 }
@@ -254,19 +262,23 @@ function goTo(item) {
 function close() {
   emit('update:open', false)
 }
+function onMaskClick() { if (!props.inline) close() }
 
 /* 打开时聚焦 input + 重置状态 */
 watch(() => props.open, (v) => {
   if (v) {
-    nextTick(() => inputRef.value?.focus())
-  } else {
-    // 关闭时清空,下次打开干净状态 (体验上更接近 cmd+k)
+    if (!props.inline) nextTick(() => inputRef.value?.focus())
+  } else if (!props.inline) {
+    // 弹框模式关闭时清空,下次打开干净状态;内联模式由顶栏输入框控制,不重置
     query.value = ''
     tab.value = 'all'
     result.value = {}
     activeKey.value = ''
   }
 })
+
+// 内联模式:用顶栏输入框的 query 驱动搜索
+watch(() => props.externalQuery, (v) => { if (props.inline) query.value = v || '' })
 
 onUnmounted(() => { if (debounceTimer) clearTimeout(debounceTimer) })
 </script>
@@ -503,4 +515,14 @@ onUnmounted(() => { if (debounceTimer) clearTimeout(debounceTimer) })
 }
 .gs-ft-spacer { flex: 1; }
 .gs-ft-total { color: var(--bl-text-2); }
+
+/* —— 内联下拉模式:顶栏搜索框下方,带燕尾,不遮罩 —— */
+.gs-inline { position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%); z-index: 60; }
+.gs-modal-inline { position: relative; width: 620px; max-width: 92vw; height: auto; max-height: 64vh; }
+.gs-beak {
+  position: absolute; top: -6px; left: 50%; transform: translateX(-50%) rotate(45deg);
+  width: 12px; height: 12px; background: var(--bl-bg-1);
+  border-left: 1px solid var(--bl-border); border-top: 1px solid var(--bl-border);
+}
+:root[data-theme="dark"] .gs-beak { background: var(--bl-bg-1); border-color: var(--bl-border-strong); }
 </style>
