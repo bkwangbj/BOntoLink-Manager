@@ -30,7 +30,7 @@
             <button class="gx-cv-btn" title="缩小" @click="zoomSide('L', 0.8)" v-html="BL.icon('zoomOut', 14)"></button>
             <button class="gx-cv-btn" title="回到初始布局(复位拖动)" @click="resetLayoutSide('L')" v-html="BL.icon('refresh', 14)"></button>
             <div class="gx-cv-div"></div>
-            <button class="gx-cv-btn" title="全屏(左画布)" @click="toggleFullSide('L')" v-html="BL.icon('maximize', 14)"></button>
+            <button class="gx-cv-btn" :title="fsSide==='L' ? '退出全屏(左画布)' : '全屏(左画布)'" @click="toggleFullSide('L')" v-html="BL.icon(fsSide==='L' ? 'minimize' : 'maximize', 14)"></button>
           </aside>
           <!-- 图形(树布局)选择器:右下角下拉 -->
           <div class="gx-cv-sel" v-click-outside="()=>treeMenu=false">
@@ -98,7 +98,7 @@
             <button class="gx-cv-btn" title="缩小" @click="zoomSide('R', 0.8)" v-html="BL.icon('zoomOut', 14)"></button>
             <button class="gx-cv-btn" title="回到初始布局(复位拖动)" @click="resetLayoutSide('R')" v-html="BL.icon('refresh', 14)"></button>
             <div class="gx-cv-div"></div>
-            <button class="gx-cv-btn" title="全屏(右画布)" @click="toggleFullSide('R')" v-html="BL.icon('maximize', 14)"></button>
+            <button class="gx-cv-btn" :title="fsSide==='R' ? '退出全屏(右画布)' : '全屏(右画布)'" @click="toggleFullSide('R')" v-html="BL.icon(fsSide==='R' ? 'minimize' : 'maximize', 14)"></button>
           </aside>
           <!-- 关系图例(左下角竖排,带筛选勾选) -->
           <div class="gx-rel-legend" :class="relLegendOpen && 'is-open'">
@@ -214,6 +214,7 @@ import G6 from '@antv/g6'
 import { useRouter } from 'vue-router'
 import { BL } from '@/lib/bl.js'
 import { graphApi, categoryApi, resourceApi } from '@/api'
+import { nodeProfile } from '@/lib/domain.js'
 
 const router = useRouter()
 
@@ -277,6 +278,8 @@ const LEFT_STYLE = {
   group:     { fill: '#f3e8ff', stroke: '#8b5cf6', r: 13 }
 }
 const KIND_CN = { industry: '行业', domain: '领域', subdomain: '子领域', group: '分组' }
+// 各层级圆圈内的图标(颜色用对应图例色 = LEFT_STYLE[kind].stroke)
+const KIND_ICON = { industry: 'industry', domain: 'layers', subdomain: 'grid', group: 'folder' }
 const RELATIONS = [
   { key: 'link',  cn: '普通链接',   color: '#6b7280', dash: [0],    width: 1.8, on: true },
   { key: 'sub',   cn: '父子类',     color: '#3b82f6', dash: [0],    width: 2,   on: true },
@@ -300,6 +303,16 @@ function ensureNode() {
         attrs: { x: 0, y: 0, r, fill: st.fill || '#5b8ff9', stroke: st.stroke || '#fff', lineWidth: st.lineWidth == null ? 2 : st.lineWidth, cursor: 'pointer' },
         name: 'node-circle', draggable: true
       })
+      // 圆心图标:优先分类自身图标(同分类树),回退层级图标;颜色用图例色
+      const ik = cfg.icon || KIND_ICON[cfg.kind]
+      if (ik) {
+        const isz = Math.max(11, Math.round(r * 1.08))
+        group.addShape('image', {
+          attrs: { x: -isz / 2, y: -isz / 2, width: isz, height: isz,
+            img: iconDataUri(ik, isz, st.stroke || LEFT_STYLE[cfg.kind]?.stroke || '#3b82f6'), cursor: 'pointer' },
+          name: 'node-icon'
+        })
+      }
       const hasCh = !!(cfg.children && cfg.children.length)
       let lx = r + 8
       if (hasCh) {
@@ -455,6 +468,7 @@ function convCat(n, depth) {
   const code = n.categoryCode || n.category_code || n.id
   return {
     id: code, label: n.rdfsLabel || n.label || n.cn || code, kind, size: (st.r || 14) * 2,
+    icon: nodeProfile(n).icon,   // 用分类自身图标(与「行业分类管理」树一致)
     style: { fill: st.fill, stroke: st.stroke, lineWidth: 2 },
     labelCfg: { position: 'right', offset: 6, style: { fontSize: 11, fill: '#4e5969' } },
     children: (n.children || []).map(c => convCat(c, depth + 1))
@@ -820,6 +834,8 @@ function toggleLeft() {
   else { lastLeftPct.value = leftPct.value; leftCollapsed.value = true }
   nextTick(resizeAll)
 }
+/* 当前处于全屏的画布('L'/'R'/null),用于切换全屏/退出全屏图标 */
+const fsSide = ref(null)
 /* 各画布独立全屏:对所在 pane 请求全屏 */
 function toggleFullSide(side) {
   const el = side === 'L' ? leftPaneRef.value : rightPaneRef.value
@@ -828,6 +844,8 @@ function toggleFullSide(side) {
   else document.exitFullscreen?.()
 }
 function onFsChange() {
+  const fe = document.fullscreenElement
+  fsSide.value = fe === leftPaneRef.value ? 'L' : (fe === rightPaneRef.value ? 'R' : null)
   nextTick(() => {
     resizeAll()
     // 全屏进/出后右画布尺寸变化 → 若有左→右联动选中,按新尺寸重算缩放,保证放大模式与正常一致

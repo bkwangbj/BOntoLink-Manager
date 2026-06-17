@@ -22,7 +22,7 @@
         </div>
         <span>{{ configNode.label }}</span>
         <el-switch
-          v-if="setMode"
+          v-if="setMode && designMode"
           v-model="autoSave"
           :active-text="activeText"
           inactive-text="手动保存"
@@ -35,7 +35,20 @@
         v-if="!isModal"
         class="right"
       >
+        <!-- 模式切换:默认预览,点击进入设计模式 -->
+        <div
+          v-if="setMode"
+          class="text-button mode-toggle"
+          :class="designMode ? 'is-design' : ''"
+          :title="designMode ? '切换到预览模式' : '切换到设计模式'"
+          @click="toggleDesignMode"
+        >
+          <i-ri-pencil-ruler-2-fill v-if="!designMode" />
+          <i-ri-slideshow-2-fill v-else />
+          <span>{{ designMode ? '预览' : '设计' }}</span>
+        </div>
         <Toolbar
+          v-if="designMode"
           v-bind="$props"
           ref="toolBar"
           :custom-chart="customChart"
@@ -49,7 +62,7 @@
           @show-left-panel="showLeftPanel"
           @show-grid-setting="showGridSetting"
         />
-        <template v-if="!isBasicMode">
+        <template v-if="!isBasicMode && designMode">
           <div
             class="text-button"
             @click="showVarConfigVisible"
@@ -111,6 +124,16 @@
           class="buttons"
         >
           <el-button
+            v-if="designMode"
+            size="small"
+            title="增加图层"
+            @click="addLayout(true)"
+          >
+            <i-ri-add-line />
+            <span>增加图层</span>
+          </el-button>
+          <el-button
+            v-if="designMode"
             size="small"
             type="info"
             @click="previewPage"
@@ -123,7 +146,7 @@
             <span style="position: relative;">预览</span>
           </el-button>
           <el-button
-            v-if="setMode"
+            v-if="setMode && designMode"
             type="primary"
             size="small"
             @click="savePageConfig(false)"
@@ -167,7 +190,7 @@
             @clear-config="clearConfig"
           />
         </div>
-        <div style="display: flex;flex: 1; overflow: hidden;">
+        <div style="display: flex;flex: 1; overflow: hidden; position: relative;">
           <ToolbarPannel
             v-if="showBodyPannel && !isModal"
             ref="pannel"
@@ -563,6 +586,7 @@ export default {
       showBodyPannel: false,
       expand: false,
       showGridLine: false,
+      designMode: false, // 设计/预览模式,默认预览;仅设计模式显示编辑类按钮
       rightTab: 'base',
       dataMappingVisible: false,
       autoSave: false,
@@ -1281,6 +1305,9 @@ export default {
     toChangeFull () {
       this.isShowfull = !this.isShowfull
     },
+    toggleDesignMode () {
+      this.designMode = !this.designMode
+    },
     openPageSetting () {
       emitter.emit('chartClick', { configs: {}, expand: true })
       // this.setRightExpand(true)
@@ -1917,7 +1944,14 @@ export default {
   }
 
   .right-setting-container {
-    position: relative;
+    /* 浮在画布之上(不再占据布局宽度,画布占满) */
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 20;
+    background: #fff;
+    box-shadow: -6px 0 20px rgba(0, 0, 0, 0.12);
     display: flex;
     flex-direction: column;
     border-left: 1px solid #ededed;

@@ -33,3 +33,6 @@ backend/db-backup/
 backend/flyway-run.log
 *.cmd
 backend/mvnw
+
+# 规格文档(不入库)
+maker统计平台移植改造.pdf

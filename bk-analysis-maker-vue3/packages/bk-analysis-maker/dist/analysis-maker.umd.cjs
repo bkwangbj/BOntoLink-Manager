@@ -23,6 +23,24 @@
 
   const T__namespace = /*#__PURE__*/_interopNamespaceDefault(T$2);
 
+  const _hoisted_1$2f = {
+    viewBox: "0 0 24 24",
+    width: "1.2em",
+    height: "1.2em"
+  };
+
+  function render$t(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2f, [...(_cache[0] || (_cache[0] = [
+      vue.createElementVNode("path", {
+        fill: "currentColor",
+        d: "M8 3v2H4v4H2V3zM2 21v-6h2v4h4v2zm20 0h-6v-2h4v-4h2zm0-12h-2V5h-4V3h6z"
+      }, null, -1)
+    ]))]))
+  }
+
+  const __unplugin_components_9 = { name: 'ri-fullscreen-line', render: render$t };
+  /* vite-plugin-components disabled */
+
   const _hoisted_1$2e = {
     viewBox: "0 0 24 24",
     width: "1.2em",
@@ -33,12 +51,12 @@
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2e, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
-        d: "M8 3v2H4v4H2V3zM2 21v-6h2v4h4v2zm20 0h-6v-2h4v-4h2zm0-12h-2V5h-4V3h6z"
+        d: "M18 7h4v2h-6V3h2zM8 9H2V7h4V3h2zm10 8v4h-2v-6h6v2zM8 15v6H6v-4H2v-2z"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_7$1 = { name: 'ri-fullscreen-line', render: render$s };
+  const __unplugin_components_8 = { name: 'ri-fullscreen-exit-line', render: render$s };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$2d = {
@@ -51,12 +69,12 @@
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2d, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
-        d: "M18 7h4v2h-6V3h2zM8 9H2V7h4V3h2zm10 8v4h-2v-6h6v2zM8 15v6H6v-4H2v-2z"
+        d: "M18 21v-8H6v8H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h13l4 4v13a1 1 0 0 1-1 1zm-2 0H8v-6h8z"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_6$1 = { name: 'ri-fullscreen-exit-line', render: render$r };
+  const __unplugin_components_7$1 = { name: 'ri-save-fill', render: render$r };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$2c = {
@@ -69,12 +87,12 @@
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2c, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
-        d: "M18 21v-8H6v8H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h13l4 4v13a1 1 0 0 1-1 1zm-2 0H8v-6h8z"
+        d: "M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_5$1 = { name: 'ri-save-fill', render: render$q };
+  const __unplugin_components_6$1 = { name: 'ri-add-line', render: render$q };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$2b = {
@@ -87,12 +105,12 @@
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2b, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
-        d: "M13 17v3h5v2H6v-2h5v-3H4a1 1 0 0 1-1-1V4H2V2h20v2h-1v12a1 1 0 0 1-1 1zM10 6v7l5-3.5z"
+        d: "M6.17 18a3.001 3.001 0 0 1 5.66 0H22v2H11.83a3.001 3.001 0 0 1-5.66 0H2v-2zm6-7a3.001 3.001 0 0 1 5.66 0H22v2h-4.17a3.001 3.001 0 0 1-5.66 0H2v-2zm-6-7a3.001 3.001 0 0 1 5.66 0H22v2H11.83a3.001 3.001 0 0 1-5.66 0H2V4z"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_4$1 = { name: 'ri-slideshow2-fill', render: render$p };
+  const __unplugin_components_5$1 = { name: 'ri-equalizer-fill', render: render$p };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$2a = {
@@ -105,12 +123,12 @@
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2a, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
-        d: "M6.17 18a3.001 3.001 0 0 1 5.66 0H22v2H11.83a3.001 3.001 0 0 1-5.66 0H2v-2zm6-7a3.001 3.001 0 0 1 5.66 0H22v2h-4.17a3.001 3.001 0 0 1-5.66 0H2v-2zm-6-7a3.001 3.001 0 0 1 5.66 0H22v2H11.83a3.001 3.001 0 0 1-5.66 0H2V4z"
+        d: "M2.131 13.63a10 10 0 0 1 .001-3.26c1.101.026 2.092-.502 2.477-1.431c.385-.93.058-2.003-.74-2.763a10 10 0 0 1 2.306-2.307c.76.798 1.834 1.125 2.763.74c.93-.385 1.458-1.376 1.431-2.477a10 10 0 0 1 3.261 0c-.026 1.102.502 2.092 1.431 2.477c.93.385 2.003.058 2.763-.74a10 10 0 0 1 2.307 2.306c-.798.76-1.125 1.834-.74 2.764s1.376 1.458 2.477 1.43a10 10 0 0 1 0 3.262c-1.102-.027-2.092.501-2.477 1.43c-.385.93-.058 2.004.74 2.764a10 10 0 0 1-2.306 2.306c-.76-.798-1.834-1.125-2.764-.74s-1.458 1.376-1.43 2.478a10 10 0 0 1-3.262-.001c.027-1.101-.502-2.092-1.43-2.477c-.93-.385-2.004-.058-2.764.74a10 10 0 0 1-2.306-2.306c.798-.76 1.125-1.834.74-2.763c-.385-.93-1.376-1.458-2.478-1.431M12 15a3 3 0 1 0 0-6a3 3 0 0 0 0 6"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_3$1 = { name: 'ri-equalizer-fill', render: render$o };
+  const __unplugin_components_4$1 = { name: 'ri-settings5-fill', render: render$o };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$29 = {
@@ -123,12 +141,12 @@
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$29, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
-        d: "M2.131 13.63a10 10 0 0 1 .001-3.26c1.101.026 2.092-.502 2.477-1.431c.385-.93.058-2.003-.74-2.763a10 10 0 0 1 2.306-2.307c.76.798 1.834 1.125 2.763.74c.93-.385 1.458-1.376 1.431-2.477a10 10 0 0 1 3.261 0c-.026 1.102.502 2.092 1.431 2.477c.93.385 2.003.058 2.763-.74a10 10 0 0 1 2.307 2.306c-.798.76-1.125 1.834-.74 2.764s1.376 1.458 2.477 1.43a10 10 0 0 1 0 3.262c-1.102-.027-2.092.501-2.477 1.43c-.385.93-.058 2.004.74 2.764a10 10 0 0 1-2.306 2.306c-.76-.798-1.834-1.125-2.764-.74s-1.458 1.376-1.43 2.478a10 10 0 0 1-3.262-.001c.027-1.101-.502-2.092-1.43-2.477c-.93-.385-2.004-.058-2.764.74a10 10 0 0 1-2.306-2.306c.798-.76 1.125-1.834.74-2.763c-.385-.93-1.376-1.458-2.478-1.431M12 15a3 3 0 1 0 0-6a3 3 0 0 0 0 6"
+        d: "m16 2l5 5v14.008a.993.993 0 0 1-.993.992H3.993A1 1 0 0 1 3 21.008V2.992C3 2.444 3.445 2 3.993 2zM8.595 12.812l-.992.572l1 1.732l.992-.573c.393.372.873.654 1.405.812V16.5h2v-1.145a3.5 3.5 0 0 0 1.405-.812l.992.573l1-1.732l-.991-.573a3.5 3.5 0 0 0 0-1.623l.991-.572l-1-1.732l-.992.573A3.5 3.5 0 0 0 13 8.645V7.5h-2v1.145a3.5 3.5 0 0 0-1.405.812l-.992-.573l-1 1.732l.992.573a3.5 3.5 0 0 0 0 1.623M12 13.5a1.5 1.5 0 1 1 0-3a1.5 1.5 0 0 1 0 3"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_2$2 = { name: 'ri-settings5-fill', render: render$n };
+  const __unplugin_components_3$1 = { name: 'ri-file-settings-fill', render: render$n };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$28 = {
@@ -141,12 +159,12 @@
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$28, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
-        d: "m16 2l5 5v14.008a.993.993 0 0 1-.993.992H3.993A1 1 0 0 1 3 21.008V2.992C3 2.444 3.445 2 3.993 2zM8.595 12.812l-.992.572l1 1.732l.992-.573c.393.372.873.654 1.405.812V16.5h2v-1.145a3.5 3.5 0 0 0 1.405-.812l.992.573l1-1.732l-.991-.573a3.5 3.5 0 0 0 0-1.623l.991-.572l-1-1.732l-.992.573A3.5 3.5 0 0 0 13 8.645V7.5h-2v1.145a3.5 3.5 0 0 0-1.405.812l-.992-.573l-1 1.732l.992.573a3.5 3.5 0 0 0 0 1.623M12 13.5a1.5 1.5 0 1 1 0-3a1.5 1.5 0 0 1 0 3"
+        d: "M13 17v3h5v2H6v-2h5v-3H4a1 1 0 0 1-1-1V4H2V2h20v2h-1v12a1 1 0 0 1-1 1zM10 6v7l5-3.5z"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_1$5 = { name: 'ri-file-settings-fill', render: render$m };
+  const __unplugin_components_2$2 = { name: 'ri-slideshow2-fill', render: render$m };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$27 = {
@@ -159,12 +177,30 @@
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$27, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
+        d: "m5.636 12.707l1.829 1.829l1.414-1.415l-1.829-1.828l1.415-1.414l1.828 1.828l1.414-1.414L9.88 8.464l1.414-1.414l1.828 1.829l1.415-1.415l-1.829-1.828l2.829-2.828a1 1 0 0 1 1.414 0l4.243 4.242a1 1 0 0 1 0 1.414L8.465 21.192a1 1 0 0 1-1.415 0L2.808 16.95a1 1 0 0 1 0-1.414zm8.485 5.656l4.243-4.242L21 16.756V21h-4.242zM5.636 9.878L2.808 7.05a1 1 0 0 1 0-1.415l2.828-2.828a1 1 0 0 1 1.414 0l2.83 2.828z"
+      }, null, -1)
+    ]))]))
+  }
+
+  const __unplugin_components_1$5 = { name: 'ri-pencil-ruler2-fill', render: render$l };
+  /* vite-plugin-components disabled */
+
+  const _hoisted_1$26 = {
+    viewBox: "0 0 24 24",
+    width: "1.2em",
+    height: "1.2em"
+  };
+
+  function render$k(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$26, [...(_cache[0] || (_cache[0] = [
+      vue.createElementVNode("path", {
+        fill: "currentColor",
         d: "m16 2l5 5v14.008a.993.993 0 0 1-.993.992H3.993A1 1 0 0 1 3 21.008V2.992C3 2.444 3.445 2 3.993 2zm-5 5v10h2V7zm4 4v6h2v-6zm-8 2v4h2v-4z"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_0$9 = { name: 'ri-file-chart-fill', render: render$l };
+  const __unplugin_components_0$8 = { name: 'ri-file-chart-fill', render: render$k };
   /* vite-plugin-components disabled */
 
   function mitt(n){return {all:n=n||new Map,on:function(t,e){var i=n.get(t);i?i.push(e):n.set(t,[e]);},off:function(t,e){var i=n.get(t);i&&(e?i.splice(i.indexOf(e)>>>0,1):n.set(t,[]));},emit:function(t,e){var i=n.get(t);i&&i.slice().map(function(n){n(e);}),(i=n.get("*"))&&i.slice().map(function(n){n(t,e);});}}}
@@ -12694,7 +12730,7 @@
     return target;
   };
 
-  const _hoisted_1$26 = { class: "query-content" };
+  const _hoisted_1$25 = { class: "query-content" };
   const _hoisted_2$1v = { class: "query-panel" };
   const _hoisted_3$1f = { class: "analysis-modal-footer" };
 
@@ -12713,7 +12749,7 @@
       onClose: _cache[2] || (_cache[2] = $event => (_ctx.$emit('close')))
     }, {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$26, [
+        vue.createElementVNode("div", _hoisted_1$25, [
           vue.createElementVNode("div", _hoisted_2$1v, [
             vue.createVNode(_component_EfForm, {
               ref: "form",
@@ -13154,7 +13190,7 @@
 
   /* unplugin-vue-components disabled */
 
-  const _hoisted_1$25 = { class: "var-content" };
+  const _hoisted_1$24 = { class: "var-content" };
   const _hoisted_2$1u = { class: "var-panel" };
   const _hoisted_3$1e = { style: {"position":"relative"} };
   const _hoisted_4$13 = {
@@ -13185,7 +13221,7 @@
       onClose: $options.close
     }, {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$25, [
+        vue.createElementVNode("div", _hoisted_1$24, [
           vue.createElementVNode("div", _hoisted_2$1u, [
             vue.createElementVNode("div", _hoisted_3$1e, [
               vue.createVNode(_component_EfTabs, {
@@ -22613,12 +22649,12 @@
     }
   };
 
-  const _hoisted_1$24 = { class: "padding-box-wrapper" };
+  const _hoisted_1$23 = { class: "padding-box-wrapper" };
 
   function _sfc_render$1S(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_EfInput = vue.resolveComponent("EfInput");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$24, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$23, [
       _cache[12] || (_cache[12] = vue.createElementVNode("div", { class: "inner-box" }, null, -1)),
       vue.createElementVNode("div", {
         class: "value-top value-container-h",
@@ -22874,7 +22910,7 @@
     }
   };
 
-  const _hoisted_1$23 = { class: "padding-config" };
+  const _hoisted_1$22 = { class: "padding-config" };
 
   function _sfc_render$1R(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_PaddingBox = vue.resolveComponent("PaddingBox");
@@ -22891,7 +22927,7 @@
       onChange: _cache[2] || (_cache[2] = $event => (_ctx.$emit('chartChange')))
     }, {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$23, [
+        vue.createElementVNode("div", _hoisted_1$22, [
           vue.createVNode(_component_el_form, {
             size: "small",
             "label-width": "80px",
@@ -23006,7 +23042,7 @@
     }
   };
 
-  const _hoisted_1$22 = { class: "d-flex-c" };
+  const _hoisted_1$21 = { class: "d-flex-c" };
   const _hoisted_2$1t = { class: "d-flex-c" };
   const _hoisted_3$1d = { class: "d-flex-c" };
 
@@ -23039,7 +23075,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, { label: "" }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$22, [
+                    vue.createElementVNode("div", _hoisted_1$21, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.width,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.width) = $event)),
@@ -23176,7 +23212,7 @@
     }
   };
 
-  const _hoisted_1$21 = { class: "d-flex-c" };
+  const _hoisted_1$20 = { class: "d-flex-c" };
   const _hoisted_2$1s = { class: "d-flex-c" };
   const _hoisted_3$1c = { class: "d-flex-c" };
   const _hoisted_4$12 = { class: "d-flex-c" };
@@ -23211,7 +23247,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, { label: "" }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$21, [
+                    vue.createElementVNode("div", _hoisted_1$20, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.fontSize,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.fontSize) = $event)),
@@ -23477,7 +23513,7 @@
     }
   };
 
-  const _hoisted_1$20 = { class: "d-flex-c" };
+  const _hoisted_1$1$ = { class: "d-flex-c" };
   const _hoisted_2$1r = { class: "d-flex-c" };
   const _hoisted_3$1b = { class: "d-flex-c" };
   const _hoisted_4$11 = { class: "d-flex-c" };
@@ -23489,7 +23525,7 @@
   const _hoisted_10$h = { class: "d-flex-c" };
   const _hoisted_11$d = { class: "d-flex-c" };
   const _hoisted_12$a = { class: "d-flex-c" };
-  const _hoisted_13$9 = { class: "d-flex-c" };
+  const _hoisted_13$a = { class: "d-flex-c" };
   const _hoisted_14$6 = { class: "d-flex-c" };
   const _hoisted_15$6 = { class: "d-flex-c" };
   const _hoisted_16$6 = { class: "d-flex-c" };
@@ -23531,7 +23567,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 24 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$20, [
+                    vue.createElementVNode("div", _hoisted_1$1$, [
                       vue.createVNode(_component_EfRadio, {
                         modelValue: $data.form.type,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.type) = $event)),
@@ -23797,7 +23833,7 @@
                     }),
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_13$9, [
+                        vue.createElementVNode("div", _hoisted_13$a, [
                           vue.createVNode(_component_CommonColorPicker, {
                             modelValue: $data.form.blockStyle.backgroundColor,
                             "onUpdate:modelValue": _cache[12] || (_cache[12] = $event => (($data.form.blockStyle.backgroundColor) = $event)),
@@ -24059,7 +24095,7 @@
     }
   };
 
-  const _hoisted_1$1$ = { class: "d-flex-c" };
+  const _hoisted_1$1_ = { class: "d-flex-c" };
   const _hoisted_2$1q = { class: "d-flex-c" };
   const _hoisted_3$1a = { class: "d-flex-c" };
   const _hoisted_4$10 = {
@@ -24104,7 +24140,7 @@
                   class: "radio-item"
                 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1$, [
+                    vue.createElementVNode("div", _hoisted_1$1_, [
                       vue.createVNode(_component_EfRadio, {
                         modelValue: $data.form.mergeChildChart,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.mergeChildChart) = $event)),
@@ -24338,7 +24374,7 @@
     }
   };
 
-  const _hoisted_1$1_ = { class: "d-flex-c" };
+  const _hoisted_1$1Z = { class: "d-flex-c" };
   const _hoisted_2$1p = { class: "d-flex ai-c" };
   const _hoisted_3$19 = { style: {"margin-left":"10px"} };
   const _hoisted_4$$ = { class: "d-flex-c" };
@@ -24372,7 +24408,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1_, [
+                    vue.createElementVNode("div", _hoisted_1$1Z, [
                       vue.createElementVNode("div", _hoisted_2$1p, [
                         vue.createVNode(_component_el_input, {
                           modelValue: $data.form.backgroundImage,
@@ -24509,7 +24545,7 @@
     }
   };
 
-  const _hoisted_1$1Z = { class: "d-flex-c" };
+  const _hoisted_1$1Y = { class: "d-flex-c" };
   const _hoisted_2$1o = { class: "d-flex-c" };
   const _hoisted_3$18 = { class: "d-flex-c" };
   const _hoisted_4$_ = { class: "d-flex-c" };
@@ -24544,7 +24580,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1Z, [
+                    vue.createElementVNode("div", _hoisted_1$1Y, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.backgroundColor,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.backgroundColor) = $event)),
@@ -24681,24 +24717,6 @@
   }
   const QueryStyle = /*#__PURE__*/_export_sfc(_sfc_main$1M, [['render',_sfc_render$1L]]);
 
-  const _hoisted_1$1Y = {
-    viewBox: "0 0 24 24",
-    width: "1.2em",
-    height: "1.2em"
-  };
-
-  function render$k(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1Y, [...(_cache[0] || (_cache[0] = [
-      vue.createElementVNode("path", {
-        fill: "currentColor",
-        d: "m22.313 10.175l-1.415 1.414l-.707-.707l-4.242 4.243l-.707 3.536l-1.415 1.414l-4.242-4.243l-4.95 4.95l-1.414-1.414l4.95-4.95l-4.243-4.243l1.414-1.414l3.536-.707l4.242-4.243l-.707-.707l1.414-1.414z"
-      }, null, -1)
-    ]))]))
-  }
-
-  const __unplugin_components_0$8 = { name: 'ri-pushpin-fill', render: render$k };
-  /* vite-plugin-components disabled */
-
   const _hoisted_1$1X = {
     viewBox: "0 0 24 24",
     width: "1.2em",
@@ -24709,12 +24727,30 @@
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1X, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
+        d: "m22.313 10.175l-1.415 1.414l-.707-.707l-4.242 4.243l-.707 3.536l-1.415 1.414l-4.242-4.243l-4.95 4.95l-1.414-1.414l4.95-4.95l-4.243-4.243l1.414-1.414l3.536-.707l4.242-4.243l-.707-.707l1.414-1.414z"
+      }, null, -1)
+    ]))]))
+  }
+
+  const __unplugin_components_0$7 = { name: 'ri-pushpin-fill', render: render$j };
+  /* vite-plugin-components disabled */
+
+  const _hoisted_1$1W = {
+    viewBox: "0 0 24 24",
+    width: "1.2em",
+    height: "1.2em"
+  };
+
+  function render$i(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1W, [...(_cache[0] || (_cache[0] = [
+      vue.createElementVNode("path", {
+        fill: "currentColor",
         d: "M12 2c5.522 0 10 3.978 10 8.889a5.56 5.56 0 0 1-5.556 5.555h-1.966c-.922 0-1.667.745-1.667 1.667c0 .422.167.811.422 1.1c.267.3.434.689.434 1.122C13.667 21.256 12.9 22 12 22C6.478 22 2 17.522 2 12S6.478 2 12 2m-1.189 16.111a3.664 3.664 0 0 1 3.667-3.667h1.966A3.56 3.56 0 0 0 20 10.89C20 7.139 16.468 4 12 4a8 8 0 0 0-.676 15.972a3.65 3.65 0 0 1-.513-1.86M7.5 12a1.5 1.5 0 1 1 0-3a1.5 1.5 0 0 1 0 3m9 0a1.5 1.5 0 1 1 0-3a1.5 1.5 0 0 1 0 3M12 9a1.5 1.5 0 1 1 0-3a1.5 1.5 0 0 1 0 3"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_0$7 = { name: 'ri-palette-line', render: render$j };
+  const __unplugin_components_0$6 = { name: 'ri-palette-line', render: render$i };
   /* vite-plugin-components disabled */
 
   /* unplugin-vue-components disabled */
@@ -24922,7 +24958,7 @@
     }
   };
 
-  const _hoisted_1$1W = {
+  const _hoisted_1$1V = {
     style: {"width":"100%"},
     class: "d-flex-c"
   };
@@ -24946,16 +24982,16 @@
   function _sfc_render$1J(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_option = vue.resolveComponent("el-option");
     const _component_el_select = vue.resolveComponent("el-select");
-    const _component_i_ri_palette_line = __unplugin_components_0$7;
+    const _component_i_ri_palette_line = __unplugin_components_0$6;
     const _component_el_button = vue.resolveComponent("el-button");
-    const _component_i_ri_pushpin_fill = __unplugin_components_0$8;
+    const _component_i_ri_pushpin_fill = __unplugin_components_0$7;
     const _component_CommonColorPicker = vue.resolveComponent("CommonColorPicker");
     const _component_Plus = vue.resolveComponent("Plus");
     const _component_el_icon = vue.resolveComponent("el-icon");
     const _component_Minus = vue.resolveComponent("Minus");
     const _component_Sort = vue.resolveComponent("Sort");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1W, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1V, [
       vue.createElementVNode("div", _hoisted_2$1n, [
         vue.withDirectives(vue.createElementVNode("div", {
           style: {"box-sizing":"border-box","width":"80px","padding-right":"8px","padding-left":"20px"},
@@ -25201,7 +25237,7 @@
     }
   };
 
-  const _hoisted_1$1V = { class: "d-flex-c" };
+  const _hoisted_1$1U = { class: "d-flex-c" };
   const _hoisted_2$1m = { class: "d-flex-c" };
   const _hoisted_3$16 = { class: "d-flex-c" };
   const _hoisted_4$Y = { class: "d-flex-c" };
@@ -25227,7 +25263,7 @@
       default: vue.withCtx(() => [
         vue.createVNode(_component_el_form_item, { label: "" }, {
           default: vue.withCtx(() => [
-            vue.createElementVNode("div", _hoisted_1$1V, [
+            vue.createElementVNode("div", _hoisted_1$1U, [
               vue.createVNode(_component_el_switch, {
                 modelValue: $data.form.show,
                 "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.show) = $event)),
@@ -25382,7 +25418,7 @@
     }
   };
 
-  const _hoisted_1$1U = { class: "d-flex-c" };
+  const _hoisted_1$1T = { class: "d-flex-c" };
   const _hoisted_2$1l = { class: "d-flex-c" };
   const _hoisted_3$15 = { class: "d-flex-c" };
   const _hoisted_4$X = { class: "d-flex-c" };
@@ -25412,7 +25448,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1U, [
+                    vue.createElementVNode("div", _hoisted_1$1T, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.borderRadius[0],
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.borderRadius[0]) = $event)),
@@ -25581,7 +25617,7 @@
     }
   };
 
-  const _hoisted_1$1T = { class: "d-flex-c" };
+  const _hoisted_1$1S = { class: "d-flex-c" };
   const _hoisted_2$1k = { class: "d-flex-c" };
   const _hoisted_3$14 = { class: "d-flex-c" };
   const _hoisted_4$W = { class: "d-flex-c" };
@@ -25619,7 +25655,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1T, [
+                    vue.createElementVNode("div", _hoisted_1$1S, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.lineStyle.width,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.lineStyle.width) = $event)),
@@ -25869,7 +25905,7 @@
     }
   };
 
-  const _hoisted_1$1S = { class: "d-flex-c" };
+  const _hoisted_1$1R = { class: "d-flex-c" };
   const _hoisted_2$1j = { class: "d-flex-c" };
   const _hoisted_3$13 = { class: "d-flex-c" };
 
@@ -25899,7 +25935,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1S, [
+                    vue.createElementVNode("div", _hoisted_1$1R, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.show,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.show) = $event)),
@@ -26021,7 +26057,7 @@
     }
   };
 
-  const _hoisted_1$1R = { class: "d-flex-c" };
+  const _hoisted_1$1Q = { class: "d-flex-c" };
   const _hoisted_2$1i = { class: "d-flex-c" };
   const _hoisted_3$12 = { class: "d-flex-c" };
   const _hoisted_4$V = { class: "d-flex" };
@@ -26053,7 +26089,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1R, [
+                    vue.createElementVNode("div", _hoisted_1$1Q, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.show,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.show) = $event)),
@@ -26186,7 +26222,7 @@
     }
   };
 
-  const _hoisted_1$1Q = { class: "d-flex-c" };
+  const _hoisted_1$1P = { class: "d-flex-c" };
 
   function _sfc_render$1D(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
@@ -26212,7 +26248,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1Q, [
+                    vue.createElementVNode("div", _hoisted_1$1P, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.show,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.show) = $event)),
@@ -26292,7 +26328,7 @@
     }
   };
 
-  const _hoisted_1$1P = { class: "d-flex-c" };
+  const _hoisted_1$1O = { class: "d-flex-c" };
   const _hoisted_2$1h = { class: "d-flex-c" };
 
   function _sfc_render$1C(_ctx, _cache, $props, $setup, $data, $options) {
@@ -26311,7 +26347,7 @@
       default: vue.withCtx(() => [
         vue.createVNode(_component_el_form_item, { label: "" }, {
           default: vue.withCtx(() => [
-            vue.createElementVNode("div", _hoisted_1$1P, [
+            vue.createElementVNode("div", _hoisted_1$1O, [
               vue.createVNode(_component_el_input_number, {
                 modelValue: $data.form.nameGap,
                 "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.nameGap) = $event)),
@@ -26402,7 +26438,7 @@
     }
   };
 
-  const _hoisted_1$1O = { class: "d-flex-c" };
+  const _hoisted_1$1N = { class: "d-flex-c" };
   const _hoisted_2$1g = { class: "d-flex-c" };
   const _hoisted_3$11 = { class: "d-flex-c" };
   const _hoisted_4$U = { class: "d-flex-c" };
@@ -26432,7 +26468,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1O, [
+                    vue.createElementVNode("div", _hoisted_1$1N, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.show,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.show) = $event)),
@@ -26600,7 +26636,7 @@
     }
   };
 
-  const _hoisted_1$1N = { class: "d-flex-c" };
+  const _hoisted_1$1M = { class: "d-flex-c" };
   const _hoisted_2$1f = { class: "d-flex-c" };
   const _hoisted_3$10 = { class: "d-flex-c" };
   const _hoisted_4$T = { class: "d-flex-c" };
@@ -26640,7 +26676,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1N, [
+                    vue.createElementVNode("div", _hoisted_1$1M, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.hasSeq,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.hasSeq) = $event)),
@@ -26968,7 +27004,7 @@
     }
   };
 
-  const _hoisted_1$1M = { class: "d-flex-c" };
+  const _hoisted_1$1L = { class: "d-flex-c" };
   const _hoisted_2$1e = { class: "d-flex-c" };
   const _hoisted_3$$ = { class: "d-flex-c" };
   const _hoisted_4$S = { class: "d-flex-c" };
@@ -27001,7 +27037,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1M, [
+                    vue.createElementVNode("div", _hoisted_1$1L, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.showHeader,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.showHeader) = $event)),
@@ -27156,7 +27192,7 @@
     }
   };
 
-  const _hoisted_1$1L = { class: "d-flex-c" };
+  const _hoisted_1$1K = { class: "d-flex-c" };
   const _hoisted_2$1d = { class: "d-flex-c" };
   const _hoisted_3$_ = { class: "d-flex-c" };
   const _hoisted_4$R = { class: "d-flex-c" };
@@ -27190,7 +27226,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1L, [
+                    vue.createElementVNode("div", _hoisted_1$1K, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.itemStyle.areaColor,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.itemStyle.areaColor) = $event)),
@@ -27336,7 +27372,7 @@
     }
   };
 
-  const _hoisted_1$1K = { class: "d-flex-c" };
+  const _hoisted_1$1J = { class: "d-flex-c" };
   const _hoisted_2$1c = { class: "d-flex-c" };
   const _hoisted_3$Z = { class: "d-flex" };
   const _hoisted_4$Q = ["onClick"];
@@ -27371,7 +27407,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1K, [
+                    vue.createElementVNode("div", _hoisted_1$1J, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.label.show,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.label.show) = $event)),
@@ -29070,7 +29106,7 @@
 
   /* unplugin-vue-components disabled */
 
-  const _hoisted_1$1J = { class: "page-setting-wrapper" };
+  const _hoisted_1$1I = { class: "page-setting-wrapper" };
   const _hoisted_2$1b = { class: "title" };
   const _hoisted_3$Y = ["onClick"];
   const _hoisted_4$P = { class: "collapse-item" };
@@ -29082,7 +29118,7 @@
   const _hoisted_10$e = { class: "collapse-item" };
   const _hoisted_11$a = { style: {"height":"300px"} };
   const _hoisted_12$9 = { style: {"height":"300px"} };
-  const _hoisted_13$8 = {
+  const _hoisted_13$9 = {
     key: 0,
     class: "page-setting-footer"
   };
@@ -29102,7 +29138,7 @@
     const _component_BKCodeCom = vue.resolveComponent("BKCodeCom");
     const _component_el_collapse = vue.resolveComponent("el-collapse");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1J, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1I, [
       vue.createElementVNode("div", _hoisted_2$1b, [
         _cache[6] || (_cache[6] = vue.createElementVNode("span", { style: {"margin-right":"10px"} }, "页面设置", -1)),
         vue.createVNode(_component_el_button, {
@@ -29363,7 +29399,7 @@
         _: 1
       }, 8, ["modelValue"]),
       ($options.hasSaveAsPermission)
-        ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_13$8, [
+        ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_13$9, [
             vue.createVNode(_component_el_button, {
               size: "small",
               type: "primary",
@@ -29689,7 +29725,7 @@
 
   /* unplugin-vue-components disabled */
 
-  const _hoisted_1$1I = { class: "card-setting-wrapper" };
+  const _hoisted_1$1H = { class: "card-setting-wrapper" };
   const _hoisted_2$1a = { class: "title" };
   const _hoisted_3$X = { class: "d-flex ai-c" };
   const _hoisted_4$O = { class: "collapse-item" };
@@ -29704,7 +29740,7 @@
     const _component_el_collapse_item = vue.resolveComponent("el-collapse-item");
     const _component_el_collapse = vue.resolveComponent("el-collapse");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1I, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1H, [
       vue.createElementVNode("div", _hoisted_2$1a, [
         _cache[2] || (_cache[2] = vue.createElementVNode("span", { style: {"margin-right":"10px"} }, "卡片设置", -1)),
         vue.createVNode(_component_el_button, {
@@ -30005,24 +30041,6 @@
     }
   };
 
-  const _hoisted_1$1H = {
-    viewBox: "0 0 24 24",
-    width: "1.2em",
-    height: "1.2em"
-  };
-
-  function render$i(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1H, [...(_cache[0] || (_cache[0] = [
-      vue.createElementVNode("path", {
-        fill: "currentColor",
-        d: "M7 6V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6zm6.414 8l1.768-1.768l-1.414-1.414L12 12.586l-1.768-1.768l-1.414 1.414L10.586 14l-1.768 1.768l1.414 1.414L12 15.414l1.768 1.768l1.414-1.414zM9 4v2h6V4z"
-      }, null, -1)
-    ]))]))
-  }
-
-  const __unplugin_components_2$1 = { name: 'ri-delete-bin2-fill', render: render$i };
-  /* vite-plugin-components disabled */
-
   const _hoisted_1$1G = {
     viewBox: "0 0 24 24",
     width: "1.2em",
@@ -30033,12 +30051,12 @@
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1G, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
-        d: "M15 21H9V10h6zm2 0V10h5v10a1 1 0 0 1-1 1zM7 21H3a1 1 0 0 1-1-1V10h5zM22 8H2V4a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1z"
+        d: "M7 6V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6zm6.414 8l1.768-1.768l-1.414-1.414L12 12.586l-1.768-1.768l-1.414 1.414L10.586 14l-1.768 1.768l1.414 1.414L12 15.414l1.768 1.768l1.414-1.414zM9 4v2h6V4z"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_1$4 = { name: 'ri-table-fill', render: render$h };
+  const __unplugin_components_2$1 = { name: 'ri-delete-bin2-fill', render: render$h };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$1F = {
@@ -30051,12 +30069,12 @@
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1F, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
-        d: "m5.636 12.707l1.829 1.829l1.414-1.415l-1.829-1.828l1.415-1.414l1.828 1.828l1.414-1.414L9.88 8.464l1.414-1.414l1.828 1.829l1.415-1.415l-1.829-1.828l2.829-2.828a1 1 0 0 1 1.414 0l4.243 4.242a1 1 0 0 1 0 1.414L8.465 21.192a1 1 0 0 1-1.415 0L2.808 16.95a1 1 0 0 1 0-1.414zm8.485 5.656l4.243-4.242L21 16.756V21h-4.242zM5.636 9.878L2.808 7.05a1 1 0 0 1 0-1.415l2.828-2.828a1 1 0 0 1 1.414 0l2.83 2.828z"
+        d: "M15 21H9V10h6zm2 0V10h5v10a1 1 0 0 1-1 1zM7 21H3a1 1 0 0 1-1-1V10h5zM22 8H2V4a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1z"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_0$6 = { name: 'ri-pencil-ruler2-fill', render: render$g };
+  const __unplugin_components_1$4 = { name: 'ri-table-fill', render: render$g };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$1E = {
@@ -30591,7 +30609,7 @@
     class: "menu-item-img d-flex ai-c jc-c",
     style: {"height":"100%"}
   };
-  const _hoisted_13$7 = ["src", "title"];
+  const _hoisted_13$8 = ["src", "title"];
   const _hoisted_14$5 = {
     key: 2,
     class: "menu-card-name"
@@ -30706,7 +30724,7 @@
                                       src: item.img,
                                       title: item.name,
                                       class: "menu-item-img"
-                                    }, null, 8, _hoisted_13$7)),
+                                    }, null, 8, _hoisted_13$8)),
                                 (!item.isDecorate)
                                   ? (vue.openBlock(), vue.createElementBlock("span", _hoisted_14$5, vue.toDisplayString(item.name), 1))
                                   : vue.createCommentVNode("", true)
@@ -30928,7 +30946,7 @@
   const _hoisted_6$x = { style: {"margin-right":"6px"} };
 
   function _sfc_render$1s(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_i_ri_pencil_ruler_2_fill = __unplugin_components_0$6;
+    const _component_i_ri_pencil_ruler_2_fill = __unplugin_components_1$5;
     const _component_i_ri_table_fill = __unplugin_components_1$4;
     const _component_i_ri_delete_bin_2_fill = __unplugin_components_2$1;
     const _component_ToolbarPannel = vue.resolveComponent("ToolbarPannel");
@@ -34609,6 +34627,7 @@
         showBodyPannel: false,
         expand: false,
         showGridLine: false,
+        designMode: false, // 设计/预览模式,默认预览;仅设计模式显示编辑类按钮
         rightTab: 'base',
         dataMappingVisible: false,
         autoSave: false,
@@ -35327,6 +35346,9 @@
       toChangeFull () {
         this.isShowfull = !this.isShowfull;
       },
+      toggleDesignMode () {
+        this.designMode = !this.designMode;
+      },
       openPageSetting () {
         emitter.emit('chartClick', { configs: {}, expand: true });
         // this.setRightExpand(true)
@@ -35700,43 +35722,46 @@
     key: 1,
     class: "right"
   };
-  const _hoisted_4$J = { class: "buttons" };
-  const _hoisted_5$B = { style: {"display":"flex","flex":"1","overflow":"hidden"} };
-  const _hoisted_6$w = {
+  const _hoisted_4$J = ["title"];
+  const _hoisted_5$B = { class: "buttons" };
+  const _hoisted_6$w = { style: {"display":"flex","flex":"1","overflow":"hidden"} };
+  const _hoisted_7$q = {
     style: {"position":"relative","display":"flex","flex":"1","flex-direction":"column","height":"100%","overflow":"hidden"},
     direction: "vertical"
   };
-  const _hoisted_7$q = {
+  const _hoisted_8$k = {
     key: 0,
     style: {"padding":"0"}
   };
-  const _hoisted_8$k = { style: {"display":"flex","flex":"1","overflow":"hidden"} };
-  const _hoisted_9$h = { class: "decorate-container" };
-  const _hoisted_10$c = {
+  const _hoisted_9$h = { style: {"display":"flex","flex":"1","overflow":"hidden","position":"relative"} };
+  const _hoisted_10$c = { class: "decorate-container" };
+  const _hoisted_11$8 = {
     ref: "gridLineContainer",
     class: "grid-line-container"
   };
-  const _hoisted_11$8 = {
+  const _hoisted_12$7 = {
     key: 0,
     style: {"display":"flex","height":"100%","overflow":"auto"}
   };
-  const _hoisted_12$7 = {
+  const _hoisted_13$7 = {
     key: 1,
     style: {"display":"flex","flex-direction":"column","align-items":"center","align-self":"center","justify-content":"center","width":"100%","overflow":"hidden"}
   };
 
   function _sfc_render$1o(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_i_ri_file_chart_fill = __unplugin_components_0$9;
+    const _component_i_ri_file_chart_fill = __unplugin_components_0$8;
     const _component_el_switch = vue.resolveComponent("el-switch");
+    const _component_i_ri_pencil_ruler_2_fill = __unplugin_components_1$5;
+    const _component_i_ri_slideshow_2_fill = __unplugin_components_2$2;
     const _component_Toolbar = vue.resolveComponent("Toolbar");
-    const _component_i_ri_file_settings_fill = __unplugin_components_1$5;
-    const _component_i_ri_settings_5_fill = __unplugin_components_2$2;
-    const _component_i_ri_equalizer_fill = __unplugin_components_3$1;
-    const _component_i_ri_slideshow_2_fill = __unplugin_components_4$1;
+    const _component_i_ri_file_settings_fill = __unplugin_components_3$1;
+    const _component_i_ri_settings_5_fill = __unplugin_components_4$1;
+    const _component_i_ri_equalizer_fill = __unplugin_components_5$1;
+    const _component_i_ri_add_line = __unplugin_components_6$1;
     const _component_el_button = vue.resolveComponent("el-button");
-    const _component_i_ri_save_fill = __unplugin_components_5$1;
-    const _component_i_ri_fullscreen_exit_line = __unplugin_components_6$1;
-    const _component_i_ri_fullscreen_line = __unplugin_components_7$1;
+    const _component_i_ri_save_fill = __unplugin_components_7$1;
+    const _component_i_ri_fullscreen_exit_line = __unplugin_components_8;
+    const _component_i_ri_fullscreen_line = __unplugin_components_9;
     const _component_ToolbarPannel = vue.resolveComponent("ToolbarPannel");
     const _component_BKGridLayoutContent = vue.resolveComponent("BKGridLayoutContent");
     const _component_BKGridLayoutDecorate = vue.resolveComponent("BKGridLayoutDecorate");
@@ -35764,7 +35789,7 @@
                     vue.createVNode(_component_i_ri_file_chart_fill)
                   ]),
                   vue.createElementVNode("span", null, vue.toDisplayString($props.configNode.label), 1),
-                  ($props.setMode)
+                  ($props.setMode && $data.designMode)
                     ? (vue.openBlock(), vue.createBlock(_component_el_switch, {
                         key: 0,
                         modelValue: $data.autoSave,
@@ -35780,45 +35805,60 @@
               : vue.createCommentVNode("", true),
             (!$props.isModal)
               ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_3$R, [
-                  vue.createVNode(_component_Toolbar, vue.mergeProps(_ctx.$props, {
-                    ref: "toolBar",
-                    "custom-chart": $props.customChart,
-                    disabled: !$props.setMode,
-                    "is-app": $options.isApp,
-                    "layout-config": $data.layoutConfig,
-                    position: "top",
-                    onToggleEvent: $options.toggleEvent,
-                    onUpdateGridSetting: $options.updateGridSetting,
-                    onClearConfig: $options.clearConfig,
-                    onShowLeftPanel: $options.showLeftPanel,
-                    onShowGridSetting: $options.showGridSetting
-                  }), null, 16, ["custom-chart", "disabled", "is-app", "layout-config", "onToggleEvent", "onUpdateGridSetting", "onClearConfig", "onShowLeftPanel", "onShowGridSetting"]),
-                  (!$props.isBasicMode)
-                    ? (vue.openBlock(), vue.createElementBlock(vue.Fragment, { key: 0 }, [
+                  ($props.setMode)
+                    ? (vue.openBlock(), vue.createElementBlock("div", {
+                        key: 0,
+                        class: vue.normalizeClass(["text-button mode-toggle", $data.designMode ? 'is-design' : '']),
+                        title: $data.designMode ? '切换到预览模式' : '切换到设计模式',
+                        onClick: _cache[1] || (_cache[1] = (...args) => ($options.toggleDesignMode && $options.toggleDesignMode(...args)))
+                      }, [
+                        (!$data.designMode)
+                          ? (vue.openBlock(), vue.createBlock(_component_i_ri_pencil_ruler_2_fill, { key: 0 }))
+                          : (vue.openBlock(), vue.createBlock(_component_i_ri_slideshow_2_fill, { key: 1 })),
+                        vue.createElementVNode("span", null, vue.toDisplayString($data.designMode ? '预览' : '设计'), 1)
+                      ], 10, _hoisted_4$J))
+                    : vue.createCommentVNode("", true),
+                  ($data.designMode)
+                    ? (vue.openBlock(), vue.createBlock(_component_Toolbar, vue.mergeProps({ key: 1 }, _ctx.$props, {
+                        ref: "toolBar",
+                        "custom-chart": $props.customChart,
+                        disabled: !$props.setMode,
+                        "is-app": $options.isApp,
+                        "layout-config": $data.layoutConfig,
+                        position: "top",
+                        onToggleEvent: $options.toggleEvent,
+                        onUpdateGridSetting: $options.updateGridSetting,
+                        onClearConfig: $options.clearConfig,
+                        onShowLeftPanel: $options.showLeftPanel,
+                        onShowGridSetting: $options.showGridSetting
+                      }), null, 16, ["custom-chart", "disabled", "is-app", "layout-config", "onToggleEvent", "onUpdateGridSetting", "onClearConfig", "onShowLeftPanel", "onShowGridSetting"]))
+                    : vue.createCommentVNode("", true),
+                  (!$props.isBasicMode && $data.designMode)
+                    ? (vue.openBlock(), vue.createElementBlock(vue.Fragment, { key: 2 }, [
                         vue.createElementVNode("div", {
                           class: "text-button",
-                          onClick: _cache[1] || (_cache[1] = (...args) => ($options.showVarConfigVisible && $options.showVarConfigVisible(...args)))
+                          onClick: _cache[2] || (_cache[2] = (...args) => ($options.showVarConfigVisible && $options.showVarConfigVisible(...args)))
                         }, [
                           vue.createVNode(_component_i_ri_file_settings_fill),
-                          _cache[18] || (_cache[18] = vue.createElementVNode("span", null, "全局参数", -1))
+                          _cache[20] || (_cache[20] = vue.createElementVNode("span", null, "全局参数", -1))
                         ]),
                         vue.createElementVNode("div", {
                           type: "text",
                           class: "text-button",
-                          onClick: _cache[2] || (_cache[2] = (...args) => ($options.openPageSetting && $options.openPageSetting(...args)))
+                          onClick: _cache[3] || (_cache[3] = (...args) => ($options.openPageSetting && $options.openPageSetting(...args)))
                         }, [
                           vue.createVNode(_component_i_ri_settings_5_fill),
-                          _cache[19] || (_cache[19] = vue.createElementVNode("span", null, "页面设置", -1))
+                          _cache[21] || (_cache[21] = vue.createElementVNode("span", null, "页面设置", -1))
                         ]),
                         ($options.hasThemeConfigPermission)
                           ? (vue.openBlock(), vue.createElementBlock("div", {
                               key: 0,
                               type: "text",
                               class: "text-button",
-                              onClick: _cache[3] || (_cache[3] = $event => ($data.themeConfigVisible=true))
+                              onClick: _cache[4] || (_cache[4] = $event => ($data.themeConfigVisible=true))
                             }, [
                               vue.createVNode(_component_i_ri_equalizer_fill),
-                              _cache[20] || (_cache[20] = vue.createElementVNode("span", null, "主题设置", -1))
+                              _cache[22] || (_cache[22] = vue.createElementVNode("span", null, "主题设置", -1))
                             ]))
                           : vue.createCommentVNode("", true),
                         ($options.hasCardConfigPermission)
@@ -35826,17 +35866,17 @@
                               key: 1,
                               type: "text",
                               class: "text-button",
-                              onClick: _cache[4] || (_cache[4] = $event => ($data.cardConfigVisible=true))
+                              onClick: _cache[5] || (_cache[5] = $event => ($data.cardConfigVisible=true))
                             }, [
                               vue.createVNode(_component_i_ri_equalizer_fill),
-                              _cache[21] || (_cache[21] = vue.createElementVNode("span", null, "卡片设置", -1))
+                              _cache[23] || (_cache[23] = vue.createElementVNode("span", null, "卡片设置", -1))
                             ]))
                           : vue.createCommentVNode("", true),
                         vue.createElementVNode("div", {
                           class: vue.normalizeClass(['fold-icon', $data.expand ? 'active' : '']),
                           title: "配置面板",
-                          onClick: _cache[5] || (_cache[5] = $event => ($options.setRightExpand()))
-                        }, [...(_cache[22] || (_cache[22] = [
+                          onClick: _cache[6] || (_cache[6] = $event => ($options.setRightExpand()))
+                        }, [...(_cache[24] || (_cache[24] = [
                           vue.createElementVNode("i", {
                             style: {"font-size":"13px"},
                             class: "am-iconfont icon-youceyincang"
@@ -35844,28 +35884,45 @@
                         ]))], 2)
                       ], 64))
                     : vue.createCommentVNode("", true),
-                  vue.createElementVNode("div", _hoisted_4$J, [
-                    vue.createVNode(_component_el_button, {
-                      size: "small",
-                      type: "info",
-                      onClick: $options.previewPage
-                    }, {
-                      default: vue.withCtx(() => [
-                        vue.createVNode(_component_i_ri_slideshow_2_fill),
-                        _cache[23] || (_cache[23] = vue.createElementVNode("span", { style: {"position":"relative"} }, "预览", -1))
-                      ]),
-                      _: 1
-                    }, 8, ["onClick"]),
-                    ($props.setMode)
+                  vue.createElementVNode("div", _hoisted_5$B, [
+                    ($data.designMode)
                       ? (vue.openBlock(), vue.createBlock(_component_el_button, {
                           key: 0,
+                          size: "small",
+                          title: "增加图层",
+                          onClick: _cache[7] || (_cache[7] = $event => ($options.addLayout(true)))
+                        }, {
+                          default: vue.withCtx(() => [
+                            vue.createVNode(_component_i_ri_add_line),
+                            _cache[25] || (_cache[25] = vue.createElementVNode("span", null, "增加图层", -1))
+                          ]),
+                          _: 1
+                        }))
+                      : vue.createCommentVNode("", true),
+                    ($data.designMode)
+                      ? (vue.openBlock(), vue.createBlock(_component_el_button, {
+                          key: 1,
+                          size: "small",
+                          type: "info",
+                          onClick: $options.previewPage
+                        }, {
+                          default: vue.withCtx(() => [
+                            vue.createVNode(_component_i_ri_slideshow_2_fill),
+                            _cache[26] || (_cache[26] = vue.createElementVNode("span", { style: {"position":"relative"} }, "预览", -1))
+                          ]),
+                          _: 1
+                        }, 8, ["onClick"]))
+                      : vue.createCommentVNode("", true),
+                    ($props.setMode && $data.designMode)
+                      ? (vue.openBlock(), vue.createBlock(_component_el_button, {
+                          key: 2,
                           type: "primary",
                           size: "small",
-                          onClick: _cache[6] || (_cache[6] = $event => ($options.savePageConfig(false)))
+                          onClick: _cache[8] || (_cache[8] = $event => ($options.savePageConfig(false)))
                         }, {
                           default: vue.withCtx(() => [
                             vue.createVNode(_component_i_ri_save_fill),
-                            _cache[24] || (_cache[24] = vue.createElementVNode("span", null, "保存", -1))
+                            _cache[27] || (_cache[27] = vue.createElementVNode("span", null, "保存", -1))
                           ]),
                           _: 1
                         }))
@@ -35888,10 +35945,10 @@
               : vue.createCommentVNode("", true)
           ], 2))
         : vue.createCommentVNode("", true),
-      vue.createElementVNode("div", _hoisted_5$B, [
-        vue.createElementVNode("div", _hoisted_6$w, [
+      vue.createElementVNode("div", _hoisted_6$w, [
+        vue.createElementVNode("div", _hoisted_7$q, [
           (!$props.isModal)
-            ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_7$q, [
+            ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_8$k, [
                 vue.createVNode(_component_Toolbar, vue.mergeProps(_ctx.$props, {
                   ref: "leftToolBar",
                   "custom-chart": $props.customChart,
@@ -35904,7 +35961,7 @@
                 }), null, 16, ["custom-chart", "disabled", "is-app", "layout-config", "onToggleEvent", "onUpdateGridSetting", "onClearConfig"])
               ]))
             : vue.createCommentVNode("", true),
-          vue.createElementVNode("div", _hoisted_8$k, [
+          vue.createElementVNode("div", _hoisted_9$h, [
             ($data.showBodyPannel && !$props.isModal)
               ? (vue.openBlock(), vue.createBlock(_component_ToolbarPannel, vue.mergeProps({
                   key: 0,
@@ -35915,14 +35972,14 @@
                   "append-to-body": "",
                   "is-app": $options.isApp,
                   onClickItem: $options.toggleEvent,
-                  onHidden: _cache[7] || (_cache[7] = $event => ($data.showBodyPannel = false))
+                  onHidden: _cache[9] || (_cache[9] = $event => ($data.showBodyPannel = false))
                 }), null, 16, ["custom-chart", "disabled", "is-app", "onClickItem"]))
               : vue.createCommentVNode("", true),
             vue.createElementVNode("div", {
               ref: "workingContainer",
               class: vue.normalizeClass(['working-container', $props.isModal ? 'no-background' : '']),
               style: vue.normalizeStyle(`padding: ${$props.isModal ? '0' : '30px 40px'}; height:  ${!$data.layoutConfig.layout.length ? '100%' : 'auto'};${$data.styleText}`),
-              onScroll: _cache[8] || (_cache[8] = (...args) => ($options.handleScroll && $options.handleScroll(...args)))
+              onScroll: _cache[10] || (_cache[10] = (...args) => ($options.handleScroll && $options.handleScroll(...args)))
             }, [
               vue.withDirectives(vue.createElementVNode("div", {
                 ref: "layoutWrapper",
@@ -35948,7 +36005,7 @@
                       }), null, 16, ["configs", "set-mode", "page-config", "custom-card-style-props", "selected-card-item", "onRemoveItem", "onCancelSetCard"]))
                     : vue.createCommentVNode("", true)
                 ], 4),
-                vue.createElementVNode("div", _hoisted_9$h, [
+                vue.createElementVNode("div", _hoisted_10$c, [
                   (!$data.isThemeChange && $data.showContent)
                     ? (vue.openBlock(), vue.createBlock(_component_BKGridLayoutDecorate, vue.mergeProps({ key: 0 }, _ctx.$props, {
                         ref: "gridLayoutDecorate",
@@ -35959,7 +36016,7 @@
                       }), null, 16, ["configs", "set-mode", "page-config", "decorate-config"]))
                     : vue.createCommentVNode("", true)
                 ]),
-                vue.withDirectives(vue.createElementVNode("div", _hoisted_10$c, [
+                vue.withDirectives(vue.createElementVNode("div", _hoisted_11$8, [
                   (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.layoutConfig.colNum, (num) => {
                     return (vue.openBlock(), vue.createElementBlock("div", { key: num }))
                   }), 128))
@@ -35979,7 +36036,7 @@
               style: vue.normalizeStyle({width: $data.expand ? ((!$data.pageSettingVisible && !$data.cardSettingVisible && $data.rightTab !== 'base') ? ($data.dataMappingVisible && $data.rightTab === 'data' ? '745px' : '500px') : '330px') : '0' })
             }, [
               (!$data.pageSettingVisible && !$data.cardSettingVisible)
-                ? vue.withDirectives((vue.openBlock(), vue.createElementBlock("div", _hoisted_11$8, [
+                ? vue.withDirectives((vue.openBlock(), vue.createElementBlock("div", _hoisted_12$7, [
                     ($data.configs && $data.configs.type)
                       ? (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent($options.getConfigName($data.configs)), vue.mergeProps({ key: 0 }, _ctx.$props, {
                           key: $data.configs.chartId,
@@ -35988,11 +36045,11 @@
                           "save-able": $props.setMode,
                           style: {"overflow":"hidden"},
                           onSaveChartCfg: $options.saveChartCfg,
-                          onSetExpand: _cache[9] || (_cache[9] = $event => ($options.setRightExpand(false))),
-                          onChangeTab: _cache[10] || (_cache[10] = $event => ($data.rightTab = $event)),
-                          onChangeDataMappingVisible: _cache[11] || (_cache[11] = $event => ($data.dataMappingVisible = $event))
+                          onSetExpand: _cache[11] || (_cache[11] = $event => ($options.setRightExpand(false))),
+                          onChangeTab: _cache[12] || (_cache[12] = $event => ($data.rightTab = $event)),
+                          onChangeDataMappingVisible: _cache[13] || (_cache[13] = $event => ($data.dataMappingVisible = $event))
                         }), null, 16, ["configs", "page-config", "save-able", "onSaveChartCfg"]))
-                      : (vue.openBlock(), vue.createElementBlock("div", _hoisted_12$7, [...(_cache[25] || (_cache[25] = [
+                      : (vue.openBlock(), vue.createElementBlock("div", _hoisted_13$7, [...(_cache[28] || (_cache[28] = [
                           vue.createElementVNode("img", {
                             src: _imports_0$2,
                             alt: ""
@@ -36026,7 +36083,7 @@
                       onPublicChangeMethod: _ctx.publicChangeMethod,
                       onCustomScriptBlur: _ctx.customScriptBlur,
                       onCustomStyleBlur: _ctx.customStyleBlur,
-                      onOpenSaveAs: _cache[12] || (_cache[12] = $event => ($data.themeEditVisible=true))
+                      onOpenSaveAs: _cache[14] || (_cache[14] = $event => ($data.themeEditVisible=true))
                     }, null, 8, ["oper-permission", "theme", "disabled", "is-app", "onSetTheme", "onChangeCardRadius", "onChangeSpaceMode", "onChangeSpace", "onChangePageWidth", "onChangePagePadding", "onChangeCardPadding", "onInnerPaddingRefChange", "onChangePreTheme", "onChangePageHeightMode", "onChangePageMinHeight", "onChangePageMinWidth", "onChartStyleChange", "onPublicChangeMethod", "onCustomScriptBlur", "onCustomStyleBlur"])), [
                       [vue.vShow, $data.expand]
                     ])
@@ -36051,7 +36108,7 @@
             visible: $data.varConfigVisible,
             "set-mode": $props.setMode,
             configs: $data.layoutConfig,
-            onClose: _cache[13] || (_cache[13] = $event => ($data.varConfigVisible=false)),
+            onClose: _cache[15] || (_cache[15] = $event => ($data.varConfigVisible=false)),
             onSave: $options.saveVarConfig
           }, null, 8, ["visible", "set-mode", "configs", "onSave"]))
         : vue.createCommentVNode("", true),
@@ -36077,14 +36134,14 @@
             "map-path": $props.mapPath,
             "is-basic-mode": $props.isBasicMode,
             "is-app": $options.isApp,
-            onPreviewClose: _cache[14] || (_cache[14] = $event => ($data.previewVisible=false))
+            onPreviewClose: _cache[16] || (_cache[16] = $event => ($data.previewVisible=false))
           }), null, 16, ["visible", "configs", "map-source", "tjb-u-r-l", "map-path", "is-basic-mode", "is-app"]))
         : vue.createCommentVNode("", true),
       ($data.cardConfigVisible)
         ? (vue.openBlock(), vue.createBlock(_component_CardConfig, {
             key: 4,
             visible: $data.cardConfigVisible,
-            onClose: _cache[15] || (_cache[15] = $event => ($data.cardConfigVisible=false)),
+            onClose: _cache[17] || (_cache[17] = $event => ($data.cardConfigVisible=false)),
             onSave: $options.saveCardConfig,
             onRefresh: $options.refreshCardConfig
           }, null, 8, ["visible", "onSave", "onRefresh"]))
@@ -36093,7 +36150,7 @@
         ? (vue.openBlock(), vue.createBlock(_component_ThemeConfig, {
             key: 5,
             visible: $data.themeConfigVisible,
-            onClose: _cache[16] || (_cache[16] = $event => ($data.themeConfigVisible=false)),
+            onClose: _cache[18] || (_cache[18] = $event => ($data.themeConfigVisible=false)),
             onSave: $options.saveThemeConfig,
             onRefresh: $options.refreshThemeConfig
           }, null, 8, ["visible", "onSave", "onRefresh"]))
@@ -36104,14 +36161,14 @@
             visible: $data.themeEditVisible,
             "pre-theme": $data.layoutConfig.themeConfigs,
             "oper-permission": $props.operPermission,
-            onClose: _cache[17] || (_cache[17] = $event => ($data.themeEditVisible=false)),
+            onClose: _cache[19] || (_cache[19] = $event => ($data.themeEditVisible=false)),
             onSave: $options.saveThemeConfig,
             onRefresh: $options.refreshThemeConfig
           }, null, 8, ["visible", "pre-theme", "oper-permission", "onSave", "onRefresh"]))
         : vue.createCommentVNode("", true)
     ], 2))
   }
-  const AnalysisMaker = /*#__PURE__*/_export_sfc(_sfc_main$1p, [['render',_sfc_render$1o],['__scopeId',"data-v-6f34069b"]]);
+  const AnalysisMaker = /*#__PURE__*/_export_sfc(_sfc_main$1p, [['render',_sfc_render$1o],['__scopeId',"data-v-af452114"]]);
 
   AnalysisMaker.install = function (Vue) {
     Vue.component(AnalysisMaker.name, AnalysisMaker);
@@ -81337,7 +81394,7 @@
     const _component_QueryArea = vue.resolveComponent("QueryArea");
     const _component_BKTabLayout = vue.resolveComponent("BKTabLayout");
     const _component_BKGridLayoutContent = vue.resolveComponent("BKGridLayoutContent");
-    const _component_i_ri_pushpin_fill = __unplugin_components_0$8;
+    const _component_i_ri_pushpin_fill = __unplugin_components_0$7;
     const _component_Plus = vue.resolveComponent("Plus");
     const _component_el_icon = vue.resolveComponent("el-icon");
     const _component_el_dropdown_item = vue.resolveComponent("el-dropdown-item");

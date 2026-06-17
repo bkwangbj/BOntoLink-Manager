@@ -3,11 +3,14 @@
     <!-- 工具栏 -->
     <div class="er-toolbar">
       <div class="er-tools">
-        <button v-for="m in modes" :key="m.k"
-                :class="['er-tbtn', mode===m.k && 'is-on']"
-                :title="`${m.label} (${m.key})`" @click="mode = m.k">
-          <span v-html="BL.icon(m.icon, 14)"></span>
-        </button>
+        <!-- 模式连体按钮组 -->
+        <div class="er-seg">
+          <button v-for="m in modes" :key="m.k"
+                  :class="['er-seg-btn', mode===m.k && 'is-on']"
+                  :title="`${m.label} (${m.key})`" @click="mode = m.k">
+            <span v-html="BL.icon(m.icon, 14)"></span>
+          </button>
+        </div>
         <div class="er-tdiv"></div>
         <!-- 添加辅助表 (在画布中插入一个辅助表卡片) -->
         <button class="er-tbtn" title="添加辅助表" @click="onAddSupplement"><span v-html="BL.icon('folderPlus', 14)"></span></button>
@@ -16,14 +19,14 @@
         <!-- 重置布局 -->
         <button class="er-tbtn" title="重置布局 (R)" @click="onResetLayout"><span v-html="BL.icon('refresh', 14)"></span></button>
         <div class="er-tdiv"></div>
-        <button class="er-tbtn" title="缩小 (Ctrl+-)" @click="zoomBy(-0.1)"><span style="font-weight:600">−</span></button>
-        <button class="er-tbtn er-tbtn-wide" :title="`缩放: ${Math.round(zoom*100)}%`">{{ Math.round(zoom*100) }}%</button>
-        <button class="er-tbtn" title="放大 (Ctrl++)" @click="zoomBy(0.1)"><span style="font-weight:600">+</span></button>
-        <button class="er-tbtn" title="重置缩放 (Ctrl+0)" @click="zoom = 1"><span v-html="BL.icon('search', 13)"></span></button>
+        <!-- 缩放连体组:[−][百分比(点击恢复100%)][+] -->
+        <div class="er-zoom">
+          <button class="er-zoom-btn" title="缩小 (Ctrl+-)" :disabled="zoom <= 0.5" @click="zoomBy(-0.1)">−</button>
+          <button class="er-zoom-val" :title="`缩放 ${Math.round(zoom*100)}% · 点击恢复 100% (Ctrl+0)`" @click="zoom = 1">{{ Math.round(zoom*100) }}%</button>
+          <button class="er-zoom-btn" title="放大 (Ctrl++)" :disabled="zoom >= 2" @click="zoomBy(0.1)">+</button>
+        </div>
         <div class="er-tdiv"></div>
         <button class="er-tbtn" :class="showGrid && 'is-on'" title="显示网格" @click="showGrid = !showGrid"><span v-html="BL.icon('grid', 14)"></span></button>
-        <!-- 下载图片: 下载 (向下箭头) -->
-        <button class="er-tbtn" title="下载图片 (PNG)" @click="onExport"><span v-html="BL.icon('arrowDown', 14)"></span></button>
         <div class="er-tdiv"></div>
         <!-- 新增物理表: 文本标签按钮 +物理表 (spec §5 item 13) -->
         <button class="er-tbtn er-tbtn-text" title="新增物理表 (创建新表 + 字段映射,不设置属性关联)" @click="onNewPhysicalTable">
@@ -35,6 +38,11 @@
         <span class="er-mode-label">当前模式: <b>{{ currentModeLabel }}</b></span>
         <span class="bl-muted" style="margin-left:14px">已映射: <b style="color:var(--bl-primary)">{{ mappedCount }} / {{ totalProps }}</b> 个属性</span>
       </div>
+      <!-- 右侧:导出 + 全屏 -->
+      <div class="er-tools-right">
+        <button class="er-tbtn" title="导出图片 (PNG)" @click="onExport"><span v-html="BL.icon('share', 14)"></span></button>
+        <button class="er-tbtn" :title="isFull ? '退出全屏' : '全屏'" @click="toggleFull"><span v-html="BL.icon(isFull ? 'minimize' : 'maximize', 14)"></span></button>
+      </div>
     </div>
 
     <!-- 画布 -->
@@ -43,7 +51,7 @@
          @click.self="onCanvasClick"
          @mousedown="onCanvasMouseDown">
       <div class="er-stage" :style="{ transform: `scale(${zoom})`, transformOrigin: 'top left' }">
-        <!-- SVG 连线层 (放在卡片下方,通过 z-index 控制) -->
+        <!-- SVG 连线层 (提到卡片上层,端点不被卡片遮挡;见 .er-svg z-index) -->
         <svg class="er-svg" :width="stageW" :height="stageH">
           <!-- 字段映射连线 (直线) -->
           <g v-for="ln in mappingLines" :key="ln.key">
@@ -219,6 +227,18 @@ watch(() => props.classId, loadDetail)
 
 /* 布局: 自适应宽度,对象类左,物理表右垂直排布 */
 const wrapRef = ref(null)
+/* 整块关系图全屏 */
+const isFull = ref(false)
+function toggleFull() {
+  const el = wrapRef.value
+  if (!el) return
+  if (!document.fullscreenElement) el.requestFullscreen?.().catch(() => {})
+  else document.exitFullscreen?.()
+}
+function onFsChange() {
+  isFull.value = document.fullscreenElement === wrapRef.value
+  nextTick(() => recomputeLines())
+}
 const canvasRef = ref(null)
 const propListRef = ref(null)
 const objCardRef = ref(null)
@@ -384,10 +404,12 @@ onMounted(() => {
     resizeObs.observe(canvasRef.value)
   }
   window.addEventListener('keydown', onKey)
+  document.addEventListener('fullscreenchange', onFsChange)
 })
 onBeforeUnmount(() => {
   if (resizeObs) resizeObs.disconnect()
   window.removeEventListener('keydown', onKey)
+  document.removeEventListener('fullscreenchange', onFsChange)
 })
 
 function onKey(e) {
@@ -746,6 +768,24 @@ const highlightFields = computed(() => {
   flex-shrink: 0;
 }
 .er-tools { display: inline-flex; align-items: center; gap: 2px; }
+.er-tools-right { display: inline-flex; align-items: center; gap: 2px; margin-left: 16px; }
+/* 全屏时铺满屏幕,补背景避免透出黑底 */
+.er-wrap:fullscreen { background: var(--bl-bg-1); height: 100vh; }
+
+/* 模式连体按钮组 */
+.er-seg {
+  display: inline-flex; align-items: center; height: 28px;
+  border: 1px solid var(--bl-border); border-radius: 6px; overflow: hidden; background: var(--bl-bg-1);
+}
+.er-seg-btn {
+  width: 30px; height: 100%; border: 0; border-left: 1px solid var(--bl-border);
+  background: transparent; cursor: pointer; color: var(--bl-text-2);
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background-color .12s, color .12s;
+}
+.er-seg-btn:first-child { border-left: 0; }
+.er-seg-btn:hover { background: var(--bl-bg-2); color: var(--bl-primary); }
+.er-seg-btn.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); }
 .er-tbtn {
   width: 30px; height: 30px; border: 1px solid transparent;
   background: transparent; border-radius: 4px; cursor: pointer;
@@ -761,7 +801,26 @@ const highlightFields = computed(() => {
 .er-tbtn:hover { background: var(--bl-bg-1); color: var(--bl-primary); border-color: var(--bl-border); }
 .er-tbtn.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); border-color: var(--bl-primary); }
 .er-tdiv { width: 1px; height: 18px; background: var(--bl-divider); margin: 0 6px; }
-.er-status { font-size: 12px; color: var(--bl-text-2); }
+
+/* 缩放连体组 */
+.er-zoom {
+  display: inline-flex; align-items: center; height: 28px;
+  border: 1px solid var(--bl-border); border-radius: 6px; overflow: hidden;
+  background: var(--bl-bg-1);
+}
+.er-zoom-btn, .er-zoom-val {
+  height: 100%; border: 0; background: transparent; cursor: pointer;
+  color: var(--bl-text-2); display: inline-flex; align-items: center; justify-content: center;
+  transition: background-color .12s, color .12s;
+}
+.er-zoom-btn { width: 26px; font-weight: 600; font-size: 15px; line-height: 1; }
+.er-zoom-val {
+  min-width: 52px; padding: 0 6px; font-size: 12px; font-variant-numeric: tabular-nums;
+  color: var(--bl-text-1); border-left: 1px solid var(--bl-border); border-right: 1px solid var(--bl-border);
+}
+.er-zoom-btn:hover:not(:disabled), .er-zoom-val:hover { background: var(--bl-primary-soft); color: var(--bl-primary); }
+.er-zoom-btn:disabled { opacity: .35; cursor: not-allowed; }
+.er-status { font-size: 12px; color: var(--bl-text-2); margin-left: auto; }
 .er-mode-label b { color: var(--bl-primary); margin-left: 4px; }
 
 /* 画布 */
@@ -777,7 +836,8 @@ const highlightFields = computed(() => {
   background-size: 20px 20px;
 }
 .er-stage { position: relative; }
-.er-svg { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 1; }
+/* 连线层提到卡片之上(z-index > .er-card 的 2),避免端点被卡片遮挡;整体 pointer-events:none 不影响卡片交互 */
+.er-svg { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 6; }
 .er-svg .er-line { pointer-events: auto; cursor: pointer; }
 .er-svg .er-line:hover { filter: brightness(1.1); }
 

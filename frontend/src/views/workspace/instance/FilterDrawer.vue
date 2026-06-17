@@ -34,12 +34,12 @@
             </template>
             <!-- 介于：双输入 -->
             <template v-else-if="c.op==='between'">
-              <input class="bl-input bl-input-sm" :type="htmlType" v-bind="inputAttrs" v-model="c.value" :placeholder="ph" />
+              <input class="bl-input bl-input-sm" :type="htmlType" v-bind="inputAttrs" v-model="c.value" :placeholder="ph" @focus="openYearPicker(idx, 'value', $event)" @blur="onYearBlur" />
               <span class="ixf-tilde">~</span>
-              <input class="bl-input bl-input-sm" :type="htmlType" v-bind="inputAttrs" v-model="c.value2" :placeholder="ph" />
+              <input class="bl-input bl-input-sm" :type="htmlType" v-bind="inputAttrs" v-model="c.value2" :placeholder="ph" @focus="openYearPicker(idx, 'value2', $event)" @blur="onYearBlur" />
             </template>
             <!-- 单输入 -->
-            <input v-else class="bl-input bl-input-sm" :type="htmlType" v-bind="inputAttrs" v-model="c.value" :placeholder="ph" />
+            <input v-else class="bl-input bl-input-sm" :type="htmlType" v-bind="inputAttrs" v-model="c.value" :placeholder="ph" @focus="openYearPicker(idx, 'value', $event)" @blur="onYearBlur" />
           </template>
           <span v-else class="ixf-noval">—</span>
         </div>
@@ -76,6 +76,18 @@
       <label v-for="op in options" :key="op" class="ixf-multi-item">
         <input type="checkbox" :value="op" v-model="rows[openMulti].values" /> {{ op }}
       </label>
+    </div>
+
+    <!-- 年份选择面板(年份输入框聚焦时弹出,固定定位) -->
+    <div v-if="yearPicker.open" class="ixf-year-pop" :style="yearPicker.style" @mousedown.prevent @click.stop>
+      <div class="ixf-year-hd">
+        <button class="ixf-year-nav" title="上一组" @click="yearBase -= 12" v-html="BL.icon('chevronLeft', 14)"></button>
+        <span class="ixf-year-range">{{ yearBase }} - {{ yearBase + 11 }}</span>
+        <button class="ixf-year-nav" title="下一组" @click="yearBase += 12" v-html="BL.icon('chevronRight', 14)"></button>
+      </div>
+      <div class="ixf-year-grid">
+        <button v-for="y in yearCells" :key="y" class="ixf-year-cell" :class="{ 'is-on': String(y) === String(curYearVal) }" @click="pickYear(y)">{{ y }}</button>
+      </div>
     </div>
   </div>
 </template>
@@ -179,6 +191,34 @@ function toggleMulti(idx, e) {
   const top = (below + popH > window.innerHeight - 8) ? (r.top - popH - 4) : below
   multiPopStyle.value = { left: r.left + 'px', top: Math.max(8, top) + 'px', width: Math.max(160, r.width) + 'px' }
 }
+
+/* —— 年份选择面板(年份输入框聚焦弹出,12 年一页) —— */
+const yearPicker = ref({ open: false, idx: -1, key: 'value', style: {} })
+const yearBase = ref(2020)
+const yearCells = computed(() => Array.from({ length: 12 }, (_, i) => yearBase.value + i))
+const curYearVal = computed(() => {
+  const r = rows.value[yearPicker.value.idx]
+  return r ? r[yearPicker.value.key] : ''
+})
+function openYearPicker(idx, key, e) {
+  if (dateKind.value !== 'year') return
+  const v = parseInt(rows.value[idx]?.[key], 10) || new Date().getFullYear()
+  yearBase.value = Math.floor(v / 12) * 12
+  const r = e.target.getBoundingClientRect()
+  const popH = 232, popW = 232
+  const below = r.bottom + 4
+  const top = (below + popH > window.innerHeight - 8) ? (r.top - popH - 4) : below
+  let left = r.left
+  if (left + popW > window.innerWidth - 8) left = window.innerWidth - popW - 8
+  yearPicker.value = { open: true, idx, key, style: { left: Math.max(8, left) + 'px', top: Math.max(8, top) + 'px', width: popW + 'px' } }
+}
+function pickYear(y) {
+  const r = rows.value[yearPicker.value.idx]
+  if (r) r[yearPicker.value.key] = String(y)
+  yearPicker.value.open = false
+}
+// 点面板内已 mousedown.prevent 保持输入框焦点,blur 只在真正离开时触发 → 关闭面板
+function onYearBlur() { yearPicker.value.open = false }
 
 function initFromModel() {
   if (props.model && Array.isArray(props.model.conditions) && props.model.conditions.length) {
@@ -365,4 +405,29 @@ const vClickOutside = {
   padding: 10px 14px; border-top: 1px solid var(--bl-divider);
 }
 .ixf-clear { color: #f53f3f; }
+
+/* 年份选择面板 */
+.ixf-year-pop {
+  position: fixed; z-index: 1400;
+  background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.16); padding: 8px;
+}
+.ixf-year-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 2px 4px 8px; border-bottom: 1px solid var(--bl-divider); margin-bottom: 6px;
+}
+.ixf-year-range { font-size: 12.5px; font-weight: 600; color: var(--bl-text-1); }
+.ixf-year-nav {
+  width: 24px; height: 24px; border: 0; background: transparent; border-radius: 5px;
+  color: var(--bl-text-3); cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+}
+.ixf-year-nav:hover { background: var(--bl-bg-hover); color: var(--bl-primary); }
+.ixf-year-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.ixf-year-cell {
+  height: 32px; border: 1px solid transparent; background: var(--bl-bg-2);
+  border-radius: 6px; font-size: 12.5px; color: var(--bl-text-1); cursor: pointer;
+  transition: background-color .12s, color .12s, border-color .12s;
+}
+.ixf-year-cell:hover { background: var(--bl-primary-soft); color: var(--bl-primary); }
+.ixf-year-cell.is-on { background: var(--bl-primary); color: #fff; border-color: var(--bl-primary); }
 </style>
