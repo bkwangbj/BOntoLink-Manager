@@ -138,16 +138,75 @@ public class InstanceController {
             @RequestParam(required = false, defaultValue = "count") String agg,
             @RequestParam(required = false) String q,
             @RequestParam(required = false) String filter,
+            // 数据源面板配置(P5):指标 / 分组与筛选 / 排序(JSON 字符串)
+            @RequestParam(required = false) String metrics,
+            @RequestParam(required = false) String grouping,
+            @RequestParam(required = false) String sorts,
             @RequestParam(defaultValue = "12") int limit) {
+        // 1) 解析面板配置(缺省时回退到 groupBy/metric/agg 旧行为)
+        String gb = groupBy, mField = metric, mAgg = agg, sortAgg = agg;
+        boolean sortDesc = true, includeOther = false;
+        String groupMode = "include";
+        Set<String> selected = null;
+        // 指标:单系列图取第一项 field + 第一个聚合
+        List<Map<String, Object>> metricList = parseList(metrics);
+        if (!metricList.isEmpty()) {
+            Map<String, Object> m0 = metricList.get(0);
+            Object f = m0.get("field");
+            if (f != null && !String.valueOf(f).isBlank()) mField = String.valueOf(f);
+            Object aggs = m0.get("aggs");
+            if (aggs instanceof List && !((List<?>) aggs).isEmpty()) mAgg = String.valueOf(((List<?>) aggs).get(0));
+            sortAgg = mAgg;
+        }
+        // 分组与筛选
+        Map<String, Object> gp = parseFilter(grouping);
+        if (gp != null) {
+            Object f = gp.get("field");
+            if (f != null && !String.valueOf(f).isBlank()) gb = String.valueOf(f);
+            if (gp.get("mode") != null) groupMode = String.valueOf(gp.get("mode"));
+            includeOther = Boolean.TRUE.equals(gp.get("includeOther"));
+            if (gp.get("selected") instanceof List) {
+                selected = new HashSet<>();
+                for (Object s : (List<?>) gp.get("selected")) selected.add(String.valueOf(s));
+            }
+        }
+        // 排序:取第一项
+        List<Map<String, Object>> sortList = parseList(sorts);
+        if (!sortList.isEmpty()) {
+            Map<String, Object> s0 = sortList.get(0);
+            if (s0.get("agg") != null && !String.valueOf(s0.get("agg")).isBlank()) sortAgg = String.valueOf(s0.get("agg"));
+            sortDesc = !Boolean.FALSE.equals(s0.get("desc"));
+        }
+
+        // 2) 全量聚合(limit=0),再做筛选 / 归其他 / 排序 / 截断
         List<Map<String, Object>> rows = mock.query(classId, q, parseFilter(filter));
-        List<Map<String, Object>> aggd = mock.aggregate(rows, groupBy, metric, agg, limit);
+        List<Map<String, Object>> aggd = new ArrayList<>(mock.aggregate(rows, gb, mField, sortAgg, 0));
+
+        if (selected != null && !selected.isEmpty()) {
+            boolean exclude = "exclude".equals(groupMode);
+            List<Map<String, Object>> kept = new ArrayList<>(), rest = new ArrayList<>();
+            for (Map<String, Object> row : aggd) {
+                boolean hit = selected.contains(String.valueOf(row.get("key")));
+                (((exclude) ? !hit : hit) ? kept : rest).add(row);
+            }
+            if (includeOther && !rest.isEmpty()) kept.add(mergeOther(rest, sortAgg));
+            aggd = kept;
+        }
+
+        final boolean desc = sortDesc;
+        aggd.sort((x, y) -> {
+            int c = Double.compare(toD(x.get("value")), toD(y.get("value")));
+            return desc ? -c : c;
+        });
+        if (limit > 0 && aggd.size() > limit) aggd = new ArrayList<>(aggd.subList(0, limit));
+
+        // 3) 输出([{name,value,x,y,colorField}]),value 取指标聚合
         List<Map<String, Object>> out = new ArrayList<>();
         for (Map<String, Object> g : aggd) {
             Object key = g.get("key");
-            Object v = "count".equals(agg) ? g.get("count") : g.get(agg);
+            Object v = "count".equals(mAgg) ? g.get("count") : g.get(mAgg);
             if (v == null) v = g.get("count");
             Map<String, Object> o = new LinkedHashMap<>();
-            // 多字段兼容:饼图用 name/value;柱/折线用 x/y(+colorField 单系列)
             o.put("name", key);
             o.put("value", v);
             o.put("x", key);
@@ -156,6 +215,48 @@ public class InstanceController {
             out.add(o);
         }
         return R.ok(out);
+    }
+
+    /** 把多个分组合并为「其他」一条(count/sum 累加,min/max 取极值,avg=sum/count)。 */
+    private Map<String, Object> mergeOther(List<Map<String, Object>> rest, String sortAgg) {
+        double count = 0, sum = 0, min = Double.MAX_VALUE, max = -Double.MAX_VALUE;
+        for (Map<String, Object> r : rest) {
+            count += toD(r.get("count"));
+            sum += toD(r.get("sum"));
+            min = Math.min(min, toD(r.get("min")));
+            max = Math.max(max, toD(r.get("max")));
+        }
+        double avg = count > 0 ? sum / count : 0;
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("key", "其他");
+        m.put("count", (int) count);
+        m.put("sum", round2(sum));
+        m.put("avg", round2(avg));
+        m.put("min", min == Double.MAX_VALUE ? 0 : round2(min));
+        m.put("max", max == -Double.MAX_VALUE ? 0 : round2(max));
+        double v = switch (sortAgg == null ? "count" : sortAgg) {
+            case "sum" -> sum; case "avg" -> avg; case "min" -> min; case "max" -> max; default -> count;
+        };
+        m.put("value", round2(v));
+        return m;
+    }
+
+    private List<Map<String, Object>> parseList(String json) {
+        if (json == null || json.isBlank()) return Collections.emptyList();
+        try {
+            return JSON.readValue(json, new TypeReference<List<Map<String, Object>>>() {});
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
+    }
+
+    private static double toD(Object o) {
+        if (o instanceof Number n) return n.doubleValue();
+        try { return Double.parseDouble(String.valueOf(o)); } catch (Exception e) { return 0; }
+    }
+
+    private static double round2(double v) {
+        return Math.round(v * 100.0) / 100.0;
     }
 
     /* ============ 单一统计(整组单值聚合) ============ */

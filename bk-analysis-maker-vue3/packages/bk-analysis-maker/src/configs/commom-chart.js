@@ -383,6 +383,13 @@ export const mixins = {
       if (this.configs.type === 'BKTableChart' && this.configs.configOption?.props?.hasPager && !this.configs.configOption?.props?.isStatic) {
         params = { ...params, ...this.pageParam }
       }
+      // 数据源面板配置(指标/分组筛选/排序)透传给接口,由后端解析生效
+      const ds = this.configs.dataSourceConfig
+      if (ds) {
+        if (Array.isArray(ds.metrics) && ds.metrics.length) params = { ...params, metrics: JSON.stringify(ds.metrics) }
+        if (ds.grouping && ds.grouping.field) params = { ...params, grouping: JSON.stringify(ds.grouping) }
+        if (Array.isArray(ds.sorts) && ds.sorts.length) params = { ...params, sorts: JSON.stringify(ds.sorts) }
+      }
       return params
     },
     handleData (res) {

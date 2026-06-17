@@ -4,6 +4,28 @@
       class="left-container"
       :style="{flex: dataMappingVisible ? '0 0 500px' : '1'}"
     >
+      <MetricSetting
+        v-if="!dataMappingVisible"
+        :metrics="metrics"
+        :field-options="metricFieldOptions"
+        :set-mode="saveAble"
+        @update:metrics="onMetricsChange"
+      />
+      <GroupFilter
+        v-if="!dataMappingVisible"
+        :grouping="grouping"
+        :dimension-options="metricFieldOptions"
+        :group-values="groupValues"
+        :set-mode="saveAble"
+        @update:grouping="onGroupingChange"
+      />
+      <SortSetting
+        v-if="!dataMappingVisible"
+        :sorts="sorts"
+        :field-options="metricFieldOptions"
+        :set-mode="saveAble"
+        @update:sorts="onSortsChange"
+      />
       <div class="data-source-title">
         ① 设置数据源
       </div>
@@ -196,6 +218,9 @@
 import DataMapping from './components/data-mapping.vue'
 import InterfaceFilterConfig from './components/interface-filter-config.vue'
 import WatfConfig from './components/watf-config.vue'
+import MetricSetting from './components/metric-setting.vue'
+import GroupFilter from './components/group-filter.vue'
+import SortSetting from './components/sort-setting.vue'
 import emitter from '../../configs/emitter'
 import { getTjbMapping, getInitValue } from '../../configs/common-func'
 import { utils } from 'efficient-suite'
@@ -206,7 +231,10 @@ export default {
   components: {
     DataMapping,
     InterfaceFilterConfig,
-    WatfConfig
+    WatfConfig,
+    MetricSetting,
+    GroupFilter,
+    SortSetting
   },
   inheritAttrs: false,
 
@@ -255,8 +283,11 @@ export default {
       changeTjb: false,
       watfConfigVisible: false,
       paramHandler: '',
-      paramHandlerVisible: false
-
+      paramHandlerVisible: false,
+      metrics: [],
+      grouping: { field: '', mode: 'include', includeOther: true, selected: [] },
+      groupValues: [], // 分组取值列表(P5 由数据源返回填充)
+      sorts: []
     }
   },
   computed: {
@@ -278,6 +309,16 @@ export default {
     },
     showSelectData () {
       return this.dataSourceType === 'tjb' || this.dataSourceType === 'watf'
+    },
+    // 指标可选字段:取图表数据字段(finalItems),允许 allow-create 自定义
+    metricFieldOptions () {
+      const seen = new Set()
+      const opts = []
+      ;(this.finalItems || []).forEach(c => {
+        const v = c.field || c.value
+        if (v && !seen.has(v)) { seen.add(v); opts.push({ label: c.label || v, value: v }) }
+      })
+      return opts
     }
   },
   watch: {
@@ -750,13 +791,40 @@ export default {
           this.dataMapping = configs.dataSourceConfig.dataMapping || {}
           this.beforeInterfaceFilter = this.interfaceFilter
           this.beforeInterfaceTempParams = this.interfaceTempParams
+          this.metrics = configs.dataSourceConfig.metrics ? utils.deepClone(configs.dataSourceConfig.metrics) : []
+          this.grouping = configs.dataSourceConfig.grouping ? utils.deepClone(configs.dataSourceConfig.grouping) : { field: '', mode: 'include', includeOther: true, selected: [] }
+          this.sorts = configs.dataSourceConfig.sorts ? utils.deepClone(configs.dataSourceConfig.sorts) : []
         } else {
           this.clearData()
+          this.metrics = []
+          this.grouping = { field: '', mode: 'include', includeOther: true, selected: [] }
+          this.sorts = []
         }
         this.finalItems = (configs && configs.items) ? utils.deepClone(configs.items) : []
       } else {
         this.clearData()
+        this.metrics = []
+        this.grouping = { field: '', mode: 'include', includeOther: true, selected: [] }
+        this.sorts = []
       }
+    },
+    // 指标变化:写回图表配置 configs.dataSourceConfig.metrics(随页面保存持久化)
+    onMetricsChange (list) {
+      this.metrics = list
+      if (!this.configs.dataSourceConfig) this.configs.dataSourceConfig = {}
+      this.configs.dataSourceConfig.metrics = utils.deepClone(list)
+    },
+    // 分组与筛选变化:写回 configs.dataSourceConfig.grouping
+    onGroupingChange (g) {
+      this.grouping = g
+      if (!this.configs.dataSourceConfig) this.configs.dataSourceConfig = {}
+      this.configs.dataSourceConfig.grouping = utils.deepClone(g)
+    },
+    // 排序条件变化:写回 configs.dataSourceConfig.sorts
+    onSortsChange (list) {
+      this.sorts = list
+      if (!this.configs.dataSourceConfig) this.configs.dataSourceConfig = {}
+      this.configs.dataSourceConfig.sorts = utils.deepClone(list)
     },
     openNext (type) {
       if (type === '1') {

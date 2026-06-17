@@ -23,14 +23,14 @@
 
   const T__namespace = /*#__PURE__*/_interopNamespaceDefault(T$2);
 
-  const _hoisted_1$2f = {
+  const _hoisted_1$2k = {
     viewBox: "0 0 24 24",
     width: "1.2em",
     height: "1.2em"
   };
 
-  function render$t(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2f, [...(_cache[0] || (_cache[0] = [
+  function render$v(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2k, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
         d: "M8 3v2H4v4H2V3zM2 21v-6h2v4h4v2zm20 0h-6v-2h4v-4h2zm0-12h-2V5h-4V3h6z"
@@ -38,7 +38,97 @@
     ]))]))
   }
 
-  const __unplugin_components_9 = { name: 'ri-fullscreen-line', render: render$t };
+  const __unplugin_components_9 = { name: 'ri-fullscreen-line', render: render$v };
+  /* vite-plugin-components disabled */
+
+  const _hoisted_1$2j = {
+    viewBox: "0 0 24 24",
+    width: "1.2em",
+    height: "1.2em"
+  };
+
+  function render$u(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2j, [...(_cache[0] || (_cache[0] = [
+      vue.createElementVNode("path", {
+        fill: "currentColor",
+        d: "M18 7h4v2h-6V3h2zM8 9H2V7h4V3h2zm10 8v4h-2v-6h6v2zM8 15v6H6v-4H2v-2z"
+      }, null, -1)
+    ]))]))
+  }
+
+  const __unplugin_components_8 = { name: 'ri-fullscreen-exit-line', render: render$u };
+  /* vite-plugin-components disabled */
+
+  const _hoisted_1$2i = {
+    viewBox: "0 0 24 24",
+    width: "1.2em",
+    height: "1.2em"
+  };
+
+  function render$t(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2i, [...(_cache[0] || (_cache[0] = [
+      vue.createElementVNode("path", {
+        fill: "currentColor",
+        d: "M18 21v-8H6v8H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h13l4 4v13a1 1 0 0 1-1 1zm-2 0H8v-6h8z"
+      }, null, -1)
+    ]))]))
+  }
+
+  const __unplugin_components_7$1 = { name: 'ri-save-fill', render: render$t };
+  /* vite-plugin-components disabled */
+
+  const _hoisted_1$2h = {
+    viewBox: "0 0 24 24",
+    width: "1.2em",
+    height: "1.2em"
+  };
+
+  function render$s(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2h, [...(_cache[0] || (_cache[0] = [
+      vue.createElementVNode("path", {
+        fill: "currentColor",
+        d: "M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"
+      }, null, -1)
+    ]))]))
+  }
+
+  const __unplugin_components_0$9 = { name: 'ri-add-line', render: render$s };
+  /* vite-plugin-components disabled */
+
+  const _hoisted_1$2g = {
+    viewBox: "0 0 24 24",
+    width: "1.2em",
+    height: "1.2em"
+  };
+
+  function render$r(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2g, [...(_cache[0] || (_cache[0] = [
+      vue.createElementVNode("path", {
+        fill: "currentColor",
+        d: "M6.17 18a3.001 3.001 0 0 1 5.66 0H22v2H11.83a3.001 3.001 0 0 1-5.66 0H2v-2zm6-7a3.001 3.001 0 0 1 5.66 0H22v2h-4.17a3.001 3.001 0 0 1-5.66 0H2v-2zm-6-7a3.001 3.001 0 0 1 5.66 0H22v2H11.83a3.001 3.001 0 0 1-5.66 0H2V4z"
+      }, null, -1)
+    ]))]))
+  }
+
+  const __unplugin_components_5$1 = { name: 'ri-equalizer-fill', render: render$r };
+  /* vite-plugin-components disabled */
+
+  const _hoisted_1$2f = {
+    viewBox: "0 0 24 24",
+    width: "1.2em",
+    height: "1.2em"
+  };
+
+  function render$q(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2f, [...(_cache[0] || (_cache[0] = [
+      vue.createElementVNode("path", {
+        fill: "currentColor",
+        d: "M2.131 13.63a10 10 0 0 1 .001-3.26c1.101.026 2.092-.502 2.477-1.431c.385-.93.058-2.003-.74-2.763a10 10 0 0 1 2.306-2.307c.76.798 1.834 1.125 2.763.74c.93-.385 1.458-1.376 1.431-2.477a10 10 0 0 1 3.261 0c-.026 1.102.502 2.092 1.431 2.477c.93.385 2.003.058 2.763-.74a10 10 0 0 1 2.307 2.306c-.798.76-1.125 1.834-.74 2.764s1.376 1.458 2.477 1.43a10 10 0 0 1 0 3.262c-1.102-.027-2.092.501-2.477 1.43c-.385.93-.058 2.004.74 2.764a10 10 0 0 1-2.306 2.306c-.76-.798-1.834-1.125-2.764-.74s-1.458 1.376-1.43 2.478a10 10 0 0 1-3.262-.001c.027-1.101-.502-2.092-1.43-2.477c-.93-.385-2.004-.058-2.764.74a10 10 0 0 1-2.306-2.306c.798-.76 1.125-1.834.74-2.763c-.385-.93-1.376-1.458-2.478-1.431M12 15a3 3 0 1 0 0-6a3 3 0 0 0 0 6"
+      }, null, -1)
+    ]))]))
+  }
+
+  const __unplugin_components_4$1 = { name: 'ri-settings5-fill', render: render$q };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$2e = {
@@ -47,16 +137,16 @@
     height: "1.2em"
   };
 
-  function render$s(_ctx, _cache) {
+  function render$p(_ctx, _cache) {
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2e, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
-        d: "M18 7h4v2h-6V3h2zM8 9H2V7h4V3h2zm10 8v4h-2v-6h6v2zM8 15v6H6v-4H2v-2z"
+        d: "m16 2l5 5v14.008a.993.993 0 0 1-.993.992H3.993A1 1 0 0 1 3 21.008V2.992C3 2.444 3.445 2 3.993 2zM8.595 12.812l-.992.572l1 1.732l.992-.573c.393.372.873.654 1.405.812V16.5h2v-1.145a3.5 3.5 0 0 0 1.405-.812l.992.573l1-1.732l-.991-.573a3.5 3.5 0 0 0 0-1.623l.991-.572l-1-1.732l-.992.573A3.5 3.5 0 0 0 13 8.645V7.5h-2v1.145a3.5 3.5 0 0 0-1.405.812l-.992-.573l-1 1.732l.992.573a3.5 3.5 0 0 0 0 1.623M12 13.5a1.5 1.5 0 1 1 0-3a1.5 1.5 0 0 1 0 3"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_8 = { name: 'ri-fullscreen-exit-line', render: render$s };
+  const __unplugin_components_3$1 = { name: 'ri-file-settings-fill', render: render$p };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$2d = {
@@ -65,16 +155,16 @@
     height: "1.2em"
   };
 
-  function render$r(_ctx, _cache) {
+  function render$o(_ctx, _cache) {
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2d, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
-        d: "M18 21v-8H6v8H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h13l4 4v13a1 1 0 0 1-1 1zm-2 0H8v-6h8z"
+        d: "M13 17v3h5v2H6v-2h5v-3H4a1 1 0 0 1-1-1V4H2V2h20v2h-1v12a1 1 0 0 1-1 1zM10 6v7l5-3.5z"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_7$1 = { name: 'ri-save-fill', render: render$r };
+  const __unplugin_components_2$3 = { name: 'ri-slideshow2-fill', render: render$o };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$2c = {
@@ -83,16 +173,16 @@
     height: "1.2em"
   };
 
-  function render$q(_ctx, _cache) {
+  function render$n(_ctx, _cache) {
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2c, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
-        d: "M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"
+        d: "m5.636 12.707l1.829 1.829l1.414-1.415l-1.829-1.828l1.415-1.414l1.828 1.828l1.414-1.414L9.88 8.464l1.414-1.414l1.828 1.829l1.415-1.415l-1.829-1.828l2.829-2.828a1 1 0 0 1 1.414 0l4.243 4.242a1 1 0 0 1 0 1.414L8.465 21.192a1 1 0 0 1-1.415 0L2.808 16.95a1 1 0 0 1 0-1.414zm8.485 5.656l4.243-4.242L21 16.756V21h-4.242zM5.636 9.878L2.808 7.05a1 1 0 0 1 0-1.415l2.828-2.828a1 1 0 0 1 1.414 0l2.83 2.828z"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_6$1 = { name: 'ri-add-line', render: render$q };
+  const __unplugin_components_1$6 = { name: 'ri-pencil-ruler2-fill', render: render$n };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$2b = {
@@ -101,98 +191,8 @@
     height: "1.2em"
   };
 
-  function render$p(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2b, [...(_cache[0] || (_cache[0] = [
-      vue.createElementVNode("path", {
-        fill: "currentColor",
-        d: "M6.17 18a3.001 3.001 0 0 1 5.66 0H22v2H11.83a3.001 3.001 0 0 1-5.66 0H2v-2zm6-7a3.001 3.001 0 0 1 5.66 0H22v2h-4.17a3.001 3.001 0 0 1-5.66 0H2v-2zm-6-7a3.001 3.001 0 0 1 5.66 0H22v2H11.83a3.001 3.001 0 0 1-5.66 0H2V4z"
-      }, null, -1)
-    ]))]))
-  }
-
-  const __unplugin_components_5$1 = { name: 'ri-equalizer-fill', render: render$p };
-  /* vite-plugin-components disabled */
-
-  const _hoisted_1$2a = {
-    viewBox: "0 0 24 24",
-    width: "1.2em",
-    height: "1.2em"
-  };
-
-  function render$o(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2a, [...(_cache[0] || (_cache[0] = [
-      vue.createElementVNode("path", {
-        fill: "currentColor",
-        d: "M2.131 13.63a10 10 0 0 1 .001-3.26c1.101.026 2.092-.502 2.477-1.431c.385-.93.058-2.003-.74-2.763a10 10 0 0 1 2.306-2.307c.76.798 1.834 1.125 2.763.74c.93-.385 1.458-1.376 1.431-2.477a10 10 0 0 1 3.261 0c-.026 1.102.502 2.092 1.431 2.477c.93.385 2.003.058 2.763-.74a10 10 0 0 1 2.307 2.306c-.798.76-1.125 1.834-.74 2.764s1.376 1.458 2.477 1.43a10 10 0 0 1 0 3.262c-1.102-.027-2.092.501-2.477 1.43c-.385.93-.058 2.004.74 2.764a10 10 0 0 1-2.306 2.306c-.76-.798-1.834-1.125-2.764-.74s-1.458 1.376-1.43 2.478a10 10 0 0 1-3.262-.001c.027-1.101-.502-2.092-1.43-2.477c-.93-.385-2.004-.058-2.764.74a10 10 0 0 1-2.306-2.306c.798-.76 1.125-1.834.74-2.763c-.385-.93-1.376-1.458-2.478-1.431M12 15a3 3 0 1 0 0-6a3 3 0 0 0 0 6"
-      }, null, -1)
-    ]))]))
-  }
-
-  const __unplugin_components_4$1 = { name: 'ri-settings5-fill', render: render$o };
-  /* vite-plugin-components disabled */
-
-  const _hoisted_1$29 = {
-    viewBox: "0 0 24 24",
-    width: "1.2em",
-    height: "1.2em"
-  };
-
-  function render$n(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$29, [...(_cache[0] || (_cache[0] = [
-      vue.createElementVNode("path", {
-        fill: "currentColor",
-        d: "m16 2l5 5v14.008a.993.993 0 0 1-.993.992H3.993A1 1 0 0 1 3 21.008V2.992C3 2.444 3.445 2 3.993 2zM8.595 12.812l-.992.572l1 1.732l.992-.573c.393.372.873.654 1.405.812V16.5h2v-1.145a3.5 3.5 0 0 0 1.405-.812l.992.573l1-1.732l-.991-.573a3.5 3.5 0 0 0 0-1.623l.991-.572l-1-1.732l-.992.573A3.5 3.5 0 0 0 13 8.645V7.5h-2v1.145a3.5 3.5 0 0 0-1.405.812l-.992-.573l-1 1.732l.992.573a3.5 3.5 0 0 0 0 1.623M12 13.5a1.5 1.5 0 1 1 0-3a1.5 1.5 0 0 1 0 3"
-      }, null, -1)
-    ]))]))
-  }
-
-  const __unplugin_components_3$1 = { name: 'ri-file-settings-fill', render: render$n };
-  /* vite-plugin-components disabled */
-
-  const _hoisted_1$28 = {
-    viewBox: "0 0 24 24",
-    width: "1.2em",
-    height: "1.2em"
-  };
-
   function render$m(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$28, [...(_cache[0] || (_cache[0] = [
-      vue.createElementVNode("path", {
-        fill: "currentColor",
-        d: "M13 17v3h5v2H6v-2h5v-3H4a1 1 0 0 1-1-1V4H2V2h20v2h-1v12a1 1 0 0 1-1 1zM10 6v7l5-3.5z"
-      }, null, -1)
-    ]))]))
-  }
-
-  const __unplugin_components_2$2 = { name: 'ri-slideshow2-fill', render: render$m };
-  /* vite-plugin-components disabled */
-
-  const _hoisted_1$27 = {
-    viewBox: "0 0 24 24",
-    width: "1.2em",
-    height: "1.2em"
-  };
-
-  function render$l(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$27, [...(_cache[0] || (_cache[0] = [
-      vue.createElementVNode("path", {
-        fill: "currentColor",
-        d: "m5.636 12.707l1.829 1.829l1.414-1.415l-1.829-1.828l1.415-1.414l1.828 1.828l1.414-1.414L9.88 8.464l1.414-1.414l1.828 1.829l1.415-1.415l-1.829-1.828l2.829-2.828a1 1 0 0 1 1.414 0l4.243 4.242a1 1 0 0 1 0 1.414L8.465 21.192a1 1 0 0 1-1.415 0L2.808 16.95a1 1 0 0 1 0-1.414zm8.485 5.656l4.243-4.242L21 16.756V21h-4.242zM5.636 9.878L2.808 7.05a1 1 0 0 1 0-1.415l2.828-2.828a1 1 0 0 1 1.414 0l2.83 2.828z"
-      }, null, -1)
-    ]))]))
-  }
-
-  const __unplugin_components_1$5 = { name: 'ri-pencil-ruler2-fill', render: render$l };
-  /* vite-plugin-components disabled */
-
-  const _hoisted_1$26 = {
-    viewBox: "0 0 24 24",
-    width: "1.2em",
-    height: "1.2em"
-  };
-
-  function render$k(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$26, [...(_cache[0] || (_cache[0] = [
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2b, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
         d: "m16 2l5 5v14.008a.993.993 0 0 1-.993.992H3.993A1 1 0 0 1 3 21.008V2.992C3 2.444 3.445 2 3.993 2zm-5 5v10h2V7zm4 4v6h2v-6zm-8 2v4h2v-4z"
@@ -200,7 +200,7 @@
     ]))]))
   }
 
-  const __unplugin_components_0$8 = { name: 'ri-file-chart-fill', render: render$k };
+  const __unplugin_components_0$8 = { name: 'ri-file-chart-fill', render: render$m };
   /* vite-plugin-components disabled */
 
   function mitt(n){return {all:n=n||new Map,on:function(t,e){var i=n.get(t);i?i.push(e):n.set(t,[e]);},off:function(t,e){var i=n.get(t);i&&(e?i.splice(i.indexOf(e)>>>0,1):n.set(t,[]));},emit:function(t,e){var i=n.get(t);i&&i.slice().map(function(n){n(e);}),(i=n.get("*"))&&i.slice().map(function(n){n(t,e);});}}}
@@ -12435,7 +12435,7 @@
     label: '接口',
     value: 'interface'
   }];
-  const _sfc_main$1X = {
+  const _sfc_main$1_ = {
     props: {
       visible: {
         type: Boolean,
@@ -12730,11 +12730,11 @@
     return target;
   };
 
-  const _hoisted_1$25 = { class: "query-content" };
-  const _hoisted_2$1v = { class: "query-panel" };
-  const _hoisted_3$1f = { class: "analysis-modal-footer" };
+  const _hoisted_1$2a = { class: "query-content" };
+  const _hoisted_2$1y = { class: "query-panel" };
+  const _hoisted_3$1i = { class: "analysis-modal-footer" };
 
-  function _sfc_render$1W(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1Z(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_EfForm = vue.resolveComponent("EfForm");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_EfModal = vue.resolveComponent("EfModal");
@@ -12749,8 +12749,8 @@
       onClose: _cache[2] || (_cache[2] = $event => (_ctx.$emit('close')))
     }, {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$25, [
-          vue.createElementVNode("div", _hoisted_2$1v, [
+        vue.createElementVNode("div", _hoisted_1$2a, [
+          vue.createElementVNode("div", _hoisted_2$1y, [
             vue.createVNode(_component_EfForm, {
               ref: "form",
               "label-width": "100px",
@@ -12761,7 +12761,7 @@
               disabled: !$props.setMode
             }, null, 8, ["rules", "items", "disabled"])
           ]),
-          vue.createElementVNode("div", _hoisted_3$1f, [
+          vue.createElementVNode("div", _hoisted_3$1i, [
             vue.createVNode(_component_el_button, {
               type: "primary",
               disabled: !$props.setMode,
@@ -12787,7 +12787,7 @@
       _: 1
     }, 8, ["modelValue"]))
   }
-  const QueryConfig = /*#__PURE__*/_export_sfc(_sfc_main$1X, [['render',_sfc_render$1W],['__scopeId',"data-v-3126716c"]]);
+  const QueryConfig = /*#__PURE__*/_export_sfc(_sfc_main$1_, [['render',_sfc_render$1Z],['__scopeId',"data-v-3126716c"]]);
 
   const changeTypeData = [{
     value: 'refreshData',
@@ -12803,7 +12803,7 @@
     value: '1',
     label: '是'
   }];
-  const _sfc_main$1W = {
+  const _sfc_main$1Z = {
     name: 'VarConfig',
     components: {
       QueryConfig
@@ -13190,17 +13190,17 @@
 
   /* unplugin-vue-components disabled */
 
-  const _hoisted_1$24 = { class: "var-content" };
-  const _hoisted_2$1u = { class: "var-panel" };
-  const _hoisted_3$1e = { style: {"position":"relative"} };
-  const _hoisted_4$13 = {
+  const _hoisted_1$29 = { class: "var-content" };
+  const _hoisted_2$1x = { class: "var-panel" };
+  const _hoisted_3$1h = { style: {"position":"relative"} };
+  const _hoisted_4$16 = {
     key: 0,
     class: "var-tools"
   };
-  const _hoisted_5$Q = { class: "var-table" };
-  const _hoisted_6$H = { class: "analysis-modal-footer" };
+  const _hoisted_5$T = { class: "var-table" };
+  const _hoisted_6$K = { class: "analysis-modal-footer" };
 
-  function _sfc_render$1V(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1Y(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_EfTabs = vue.resolveComponent("EfTabs");
     const _component_CirclePlus = vue.resolveComponent("CirclePlus");
     const _component_el_icon = vue.resolveComponent("el-icon");
@@ -13221,9 +13221,9 @@
       onClose: $options.close
     }, {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$24, [
-          vue.createElementVNode("div", _hoisted_2$1u, [
-            vue.createElementVNode("div", _hoisted_3$1e, [
+        vue.createElementVNode("div", _hoisted_1$29, [
+          vue.createElementVNode("div", _hoisted_2$1x, [
+            vue.createElementVNode("div", _hoisted_3$1h, [
               vue.createVNode(_component_EfTabs, {
                 modelValue: $data.currentTab,
                 "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.currentTab) = $event)),
@@ -13232,7 +13232,7 @@
                 class: "tabs_box"
               }, null, 8, ["modelValue", "data"]),
               ($props.setMode)
-                ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_4$13, [
+                ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_4$16, [
                     vue.createVNode(_component_el_button, {
                       type: "primary",
                       size: "small",
@@ -13270,7 +13270,7 @@
                   ]))
                 : vue.createCommentVNode("", true)
             ]),
-            vue.createElementVNode("div", _hoisted_5$Q, [
+            vue.createElementVNode("div", _hoisted_5$T, [
               vue.createVNode(_component_EfTable, {
                 ref: "grid",
                 columns: $data.columns,
@@ -13291,7 +13291,7 @@
               }, null, 8, ["columns", "data", "has-checkbox", "edit-config"])
             ])
           ]),
-          vue.createElementVNode("div", _hoisted_6$H, [
+          vue.createElementVNode("div", _hoisted_6$K, [
             vue.createVNode(_component_el_button, {
               type: "primary",
               disabled: !$props.setMode,
@@ -13327,7 +13327,7 @@
       _: 1
     }, 8, ["modelValue", "before-hide-method", "onClose"]))
   }
-  const VarConfig = /*#__PURE__*/_export_sfc(_sfc_main$1W, [['render',_sfc_render$1V],['__scopeId',"data-v-3880ef9d"]]);
+  const VarConfig = /*#__PURE__*/_export_sfc(_sfc_main$1Z, [['render',_sfc_render$1Y],['__scopeId',"data-v-3880ef9d"]]);
 
   function formatDecimal(x) {
     return Math.abs(x = Math.round(x)) >= 1e21
@@ -14453,7 +14453,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1V = {
+  const _sfc_main$1Y = {
     name: 'OpenPageModal',
     props: {
       visible: {
@@ -14537,7 +14537,7 @@
     }
   };
 
-  function _sfc_render$1U(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1X(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_AnalysisMaker = vue.resolveComponent("AnalysisMaker");
     const _component_EfModal = vue.resolveComponent("EfModal");
 
@@ -14567,7 +14567,7 @@
       _: 1
     }, 8, ["modelValue", "title"]))
   }
-  const OpenPageModal = /*#__PURE__*/_export_sfc(_sfc_main$1V, [['render',_sfc_render$1U],['__scopeId',"data-v-73455c0d"]]);
+  const OpenPageModal = /*#__PURE__*/_export_sfc(_sfc_main$1Y, [['render',_sfc_render$1X],['__scopeId',"data-v-73455c0d"]]);
 
   /*!
    * html2canvas 1.4.1 <https://html2canvas.hertzen.com>
@@ -22393,7 +22393,7 @@
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$1U = {
+  const _sfc_main$1X = {
     name: 'OpenPageModal',
     props: {
       visible: {
@@ -22498,7 +22498,7 @@
     }
   };
 
-  function _sfc_render$1T(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1W(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_Download = vue.resolveComponent("Download");
     const _component_el_icon = vue.resolveComponent("el-icon");
     const _component_el_button = vue.resolveComponent("el-button");
@@ -22551,12 +22551,12 @@
       _: 1
     }, 8, ["modelValue", "width", "title"]))
   }
-  const PreviewPageModal = /*#__PURE__*/_export_sfc(_sfc_main$1U, [['render',_sfc_render$1T],['__scopeId',"data-v-68316b38"]]);
+  const PreviewPageModal = /*#__PURE__*/_export_sfc(_sfc_main$1X, [['render',_sfc_render$1W],['__scopeId',"data-v-68316b38"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1T = {
+  const _sfc_main$1W = {
     name: 'PaddingBox',
     props: {
       disabled: {
@@ -22649,12 +22649,12 @@
     }
   };
 
-  const _hoisted_1$23 = { class: "padding-box-wrapper" };
+  const _hoisted_1$28 = { class: "padding-box-wrapper" };
 
-  function _sfc_render$1S(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1V(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_EfInput = vue.resolveComponent("EfInput");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$23, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$28, [
       _cache[12] || (_cache[12] = vue.createElementVNode("div", { class: "inner-box" }, null, -1)),
       vue.createElementVNode("div", {
         class: "value-top value-container-h",
@@ -22754,7 +22754,7 @@
       ], 4)
     ]))
   }
-  const PaddingBox = /*#__PURE__*/_export_sfc(_sfc_main$1T, [['render',_sfc_render$1S],['__scopeId',"data-v-c0e4d614"]]);
+  const PaddingBox = /*#__PURE__*/_export_sfc(_sfc_main$1W, [['render',_sfc_render$1V],['__scopeId',"data-v-c0e4d614"]]);
 
   const cardRadiusList = [
     { label: '无', value: 'none', class: 'no-radius' },
@@ -22855,7 +22855,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1S = {
+  const _sfc_main$1V = {
 
     name: 'CardPaddingConfig',
     components: {
@@ -22910,9 +22910,9 @@
     }
   };
 
-  const _hoisted_1$22 = { class: "padding-config" };
+  const _hoisted_1$27 = { class: "padding-config" };
 
-  function _sfc_render$1R(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1U(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_PaddingBox = vue.resolveComponent("PaddingBox");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_row = vue.resolveComponent("el-row");
@@ -22927,7 +22927,7 @@
       onChange: _cache[2] || (_cache[2] = $event => (_ctx.$emit('chartChange')))
     }, {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$22, [
+        vue.createElementVNode("div", _hoisted_1$27, [
           vue.createVNode(_component_el_form, {
             size: "small",
             "label-width": "80px",
@@ -22963,7 +22963,7 @@
       _: 1
     }, 8, ["modelValue"]))
   }
-  const CardPaddingConfig = /*#__PURE__*/_export_sfc(_sfc_main$1S, [['render',_sfc_render$1R],['__scopeId',"data-v-062c3504"]]);
+  const CardPaddingConfig = /*#__PURE__*/_export_sfc(_sfc_main$1V, [['render',_sfc_render$1U],['__scopeId',"data-v-062c3504"]]);
 
   const colorList$2 = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'];
   const fontWeightOptions = [{ label: 'normal', value: 'normal' }, { label: 'bold', value: 'bold' }, { label: 'bolder', value: 'bolder' }, { label: 'lighter', value: 'lighter' }];
@@ -22983,7 +22983,7 @@
   ];
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1R = {
+  const _sfc_main$1U = {
     name: 'LineStyle',
     inject: ['getSaveAble'],
     props: {
@@ -23042,11 +23042,11 @@
     }
   };
 
-  const _hoisted_1$21 = { class: "d-flex-c" };
-  const _hoisted_2$1t = { class: "d-flex-c" };
-  const _hoisted_3$1d = { class: "d-flex-c" };
+  const _hoisted_1$26 = { class: "d-flex-c" };
+  const _hoisted_2$1w = { class: "d-flex-c" };
+  const _hoisted_3$1g = { class: "d-flex-c" };
 
-  function _sfc_render$1Q(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1T(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_el_col = vue.resolveComponent("el-col");
@@ -23075,7 +23075,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, { label: "" }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$21, [
+                    vue.createElementVNode("div", _hoisted_1$26, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.width,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.width) = $event)),
@@ -23097,7 +23097,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$1t, [
+                    vue.createElementVNode("div", _hoisted_2$1w, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.color,
                         "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($data.form.color) = $event)),
@@ -23126,7 +23126,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_3$1d, [
+                    vue.createElementVNode("div", _hoisted_3$1g, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.form.type,
                         "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.type) = $event)),
@@ -23161,10 +23161,10 @@
       _: 1
     }, 8, ["model", "disabled"]))
   }
-  const LineStyle = /*#__PURE__*/_export_sfc(_sfc_main$1R, [['render',_sfc_render$1Q]]);
+  const LineStyle = /*#__PURE__*/_export_sfc(_sfc_main$1U, [['render',_sfc_render$1T]]);
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1Q = {
+  const _sfc_main$1T = {
     inject: ['getSaveAble'],
     props: {
       editAble: {
@@ -23212,13 +23212,13 @@
     }
   };
 
-  const _hoisted_1$20 = { class: "d-flex-c" };
-  const _hoisted_2$1s = { class: "d-flex-c" };
-  const _hoisted_3$1c = { class: "d-flex-c" };
-  const _hoisted_4$12 = { class: "d-flex-c" };
-  const _hoisted_5$P = { class: "d-flex-c" };
+  const _hoisted_1$25 = { class: "d-flex-c" };
+  const _hoisted_2$1v = { class: "d-flex-c" };
+  const _hoisted_3$1f = { class: "d-flex-c" };
+  const _hoisted_4$15 = { class: "d-flex-c" };
+  const _hoisted_5$S = { class: "d-flex-c" };
 
-  function _sfc_render$1P(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1S(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_el_col = vue.resolveComponent("el-col");
@@ -23247,7 +23247,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, { label: "" }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$20, [
+                    vue.createElementVNode("div", _hoisted_1$25, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.fontSize,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.fontSize) = $event)),
@@ -23269,7 +23269,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$1s, [
+                    vue.createElementVNode("div", _hoisted_2$1v, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.color,
                         "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($data.form.color) = $event)),
@@ -23297,7 +23297,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_3$1c, [
+                    vue.createElementVNode("div", _hoisted_3$1f, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.backgroundColor,
                         "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.backgroundColor) = $event)),
@@ -23317,7 +23317,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, { label: "" }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$12, [
+                    vue.createElementVNode("div", _hoisted_4$15, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.height,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.height) = $event)),
@@ -23347,7 +23347,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$P, [
+                    vue.createElementVNode("div", _hoisted_5$S, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.form.fontWeight,
                         "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.fontWeight) = $event)),
@@ -23381,7 +23381,7 @@
       _: 1
     }, 8, ["model", "disabled"]))
   }
-  const TabCommonStyle = /*#__PURE__*/_export_sfc(_sfc_main$1Q, [['render',_sfc_render$1P]]);
+  const TabCommonStyle = /*#__PURE__*/_export_sfc(_sfc_main$1T, [['render',_sfc_render$1S]]);
 
   /*! Element Plus Icons Vue v2.3.2 */
 
@@ -23434,7 +23434,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1P = {
+  const _sfc_main$1S = {
     inject: ['getSaveAble'],
     props: {
       editAble: {
@@ -23513,13 +23513,13 @@
     }
   };
 
-  const _hoisted_1$1$ = { class: "d-flex-c" };
-  const _hoisted_2$1r = { class: "d-flex-c" };
-  const _hoisted_3$1b = { class: "d-flex-c" };
-  const _hoisted_4$11 = { class: "d-flex-c" };
-  const _hoisted_5$O = { class: "d-flex-c" };
-  const _hoisted_6$G = { class: "d-flex-c" };
-  const _hoisted_7$y = { class: "d-flex-c" };
+  const _hoisted_1$24 = { class: "d-flex-c" };
+  const _hoisted_2$1u = { class: "d-flex-c" };
+  const _hoisted_3$1e = { class: "d-flex-c" };
+  const _hoisted_4$14 = { class: "d-flex-c" };
+  const _hoisted_5$R = { class: "d-flex-c" };
+  const _hoisted_6$J = { class: "d-flex-c" };
+  const _hoisted_7$z = { class: "d-flex-c" };
   const _hoisted_8$r = { class: "d-flex-c" };
   const _hoisted_9$m = { class: "d-flex-c" };
   const _hoisted_10$h = { class: "d-flex-c" };
@@ -23534,7 +23534,7 @@
   const _hoisted_19$4 = { style: {"margin-left":"10px"} };
   const _hoisted_20$3 = { class: "d-flex-c" };
 
-  function _sfc_render$1O(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1R(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_EfRadio = vue.resolveComponent("EfRadio");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_row = vue.resolveComponent("el-row");
@@ -23567,7 +23567,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 24 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1$, [
+                    vue.createElementVNode("div", _hoisted_1$24, [
                       vue.createVNode(_component_EfRadio, {
                         modelValue: $data.form.type,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.type) = $event)),
@@ -23601,7 +23601,7 @@
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_2$1r, [
+                        vue.createElementVNode("div", _hoisted_2$1u, [
                           vue.createVNode(_component_CommonColorPicker, {
                             modelValue: $data.form.underlineStyle.lineColor,
                             "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($data.form.underlineStyle.lineColor) = $event)),
@@ -23615,7 +23615,7 @@
                     }),
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_3$1b, [
+                        vue.createElementVNode("div", _hoisted_3$1e, [
                           vue.createVNode(_component_el_input_number, {
                             modelValue: $data.form.underlineStyle.lineWidth,
                             "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.underlineStyle.lineWidth) = $event)),
@@ -23640,7 +23640,7 @@
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_4$11, [
+                        vue.createElementVNode("div", _hoisted_4$14, [
                           vue.createVNode(_component_CommonColorPicker, {
                             modelValue: $data.form.underlineStyle.textColor,
                             "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.underlineStyle.textColor) = $event)),
@@ -23672,7 +23672,7 @@
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_5$O, [
+                        vue.createElementVNode("div", _hoisted_5$R, [
                           vue.createVNode(_component_CommonColorPicker, {
                             modelValue: $data.form.splitlineStyle.lineColor,
                             "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.splitlineStyle.lineColor) = $event)),
@@ -23686,7 +23686,7 @@
                     }),
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_6$G, [
+                        vue.createElementVNode("div", _hoisted_6$J, [
                           vue.createVNode(_component_el_input_number, {
                             modelValue: $data.form.splitlineStyle.lineWidth,
                             "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.splitlineStyle.lineWidth) = $event)),
@@ -23711,7 +23711,7 @@
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_7$y, [
+                        vue.createElementVNode("div", _hoisted_7$z, [
                           vue.createVNode(_component_CommonColorPicker, {
                             modelValue: $data.form.splitlineStyle.textColor,
                             "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.splitlineStyle.textColor) = $event)),
@@ -24029,10 +24029,10 @@
       _: 1
     }, 8, ["model", "disabled"]))
   }
-  const TabStyle = /*#__PURE__*/_export_sfc(_sfc_main$1P, [['render',_sfc_render$1O],['__scopeId',"data-v-dd3158cd"]]);
+  const TabStyle = /*#__PURE__*/_export_sfc(_sfc_main$1S, [['render',_sfc_render$1R],['__scopeId',"data-v-dd3158cd"]]);
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1O = {
+  const _sfc_main$1R = {
     inject: ['getSaveAble'],
     props: {
       editAble: {
@@ -24095,21 +24095,21 @@
     }
   };
 
-  const _hoisted_1$1_ = { class: "d-flex-c" };
-  const _hoisted_2$1q = { class: "d-flex-c" };
-  const _hoisted_3$1a = { class: "d-flex-c" };
-  const _hoisted_4$10 = {
+  const _hoisted_1$23 = { class: "d-flex-c" };
+  const _hoisted_2$1t = { class: "d-flex-c" };
+  const _hoisted_3$1d = { class: "d-flex-c" };
+  const _hoisted_4$13 = {
     key: 0,
     class: "d-flex-c"
   };
-  const _hoisted_5$N = {
+  const _hoisted_5$Q = {
     key: 1,
     class: "d-flex-c"
   };
-  const _hoisted_6$F = { class: "d-flex-c" };
-  const _hoisted_7$x = { class: "d-flex-c" };
+  const _hoisted_6$I = { class: "d-flex-c" };
+  const _hoisted_7$y = { class: "d-flex-c" };
 
-  function _sfc_render$1N(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1Q(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_EfRadio = vue.resolveComponent("EfRadio");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_el_col = vue.resolveComponent("el-col");
@@ -24140,7 +24140,7 @@
                   class: "radio-item"
                 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1_, [
+                    vue.createElementVNode("div", _hoisted_1$23, [
                       vue.createVNode(_component_EfRadio, {
                         modelValue: $data.form.mergeChildChart,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.mergeChildChart) = $event)),
@@ -24175,7 +24175,7 @@
                   class: "radio-item"
                 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$1q, [
+                    vue.createElementVNode("div", _hoisted_2$1t, [
                       vue.createVNode(_component_EfRadio, {
                         modelValue: $data.form.cardMode,
                         "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($data.form.cardMode) = $event)),
@@ -24206,7 +24206,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_3$1a, [
+                    vue.createElementVNode("div", _hoisted_3$1d, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.colNum,
                         "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.colNum) = $event)),
@@ -24229,7 +24229,7 @@
                 vue.createVNode(_component_el_form_item, { label: "" }, {
                   default: vue.withCtx(() => [
                     ($data.form.cardMode == 'adaptive')
-                      ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_4$10, [
+                      ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_4$13, [
                           vue.createVNode(_component_el_input_number, {
                             modelValue: $data.form.maxRows,
                             "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.maxRows) = $event)),
@@ -24241,7 +24241,7 @@
                           _cache[13] || (_cache[13] = vue.createTextVNode()),
                           _cache[14] || (_cache[14] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 最大行数", -1))
                         ]))
-                      : (vue.openBlock(), vue.createElementBlock("div", _hoisted_5$N, [
+                      : (vue.openBlock(), vue.createElementBlock("div", _hoisted_5$Q, [
                           vue.createVNode(_component_el_input_number, {
                             modelValue: $data.form.rowHeight,
                             "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.rowHeight) = $event)),
@@ -24271,7 +24271,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_6$F, [
+                    vue.createElementVNode("div", _hoisted_6$I, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.rowMargin,
                         "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.rowMargin) = $event)),
@@ -24293,7 +24293,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, { label: "" }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_7$x, [
+                    vue.createElementVNode("div", _hoisted_7$y, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.colMargin,
                         "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.colMargin) = $event)),
@@ -24318,10 +24318,10 @@
       _: 1
     }, 8, ["model", "disabled"]))
   }
-  const ChildStyle = /*#__PURE__*/_export_sfc(_sfc_main$1O, [['render',_sfc_render$1N]]);
+  const ChildStyle = /*#__PURE__*/_export_sfc(_sfc_main$1R, [['render',_sfc_render$1Q]]);
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1N = {
+  const _sfc_main$1Q = {
     inject: ['getSaveAble'],
     props: {
       editAble: {
@@ -24374,12 +24374,12 @@
     }
   };
 
-  const _hoisted_1$1Z = { class: "d-flex-c" };
-  const _hoisted_2$1p = { class: "d-flex ai-c" };
-  const _hoisted_3$19 = { style: {"margin-left":"10px"} };
-  const _hoisted_4$$ = { class: "d-flex-c" };
+  const _hoisted_1$22 = { class: "d-flex-c" };
+  const _hoisted_2$1s = { class: "d-flex ai-c" };
+  const _hoisted_3$1c = { style: {"margin-left":"10px"} };
+  const _hoisted_4$12 = { class: "d-flex-c" };
 
-  function _sfc_render$1M(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1P(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input = vue.resolveComponent("el-input");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_EfUpload = vue.resolveComponent("EfUpload");
@@ -24408,8 +24408,8 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1Z, [
-                      vue.createElementVNode("div", _hoisted_2$1p, [
+                    vue.createElementVNode("div", _hoisted_1$22, [
+                      vue.createElementVNode("div", _hoisted_2$1s, [
                         vue.createVNode(_component_el_input, {
                           modelValue: $data.form.backgroundImage,
                           "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.backgroundImage) = $event)),
@@ -24427,7 +24427,7 @@
                           data: { branchPath: 'am-image', isRename: '1' }
                         }, {
                           default: vue.withCtx(() => [
-                            vue.createElementVNode("div", _hoisted_3$19, [
+                            vue.createElementVNode("div", _hoisted_3$1c, [
                               vue.createVNode(_component_el_button, {
                                 size: "small",
                                 plain: "",
@@ -24468,7 +24468,7 @@
                   class: "radio-item"
                 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$$, [
+                    vue.createElementVNode("div", _hoisted_4$12, [
                       vue.createVNode(_component_EfRadio, {
                         modelValue: $data.form.backgroundRepeat,
                         "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($data.form.backgroundRepeat) = $event)),
@@ -24494,10 +24494,10 @@
       _: 1
     }, 8, ["model", "disabled"]))
   }
-  const BackgroundStyle = /*#__PURE__*/_export_sfc(_sfc_main$1N, [['render',_sfc_render$1M]]);
+  const BackgroundStyle = /*#__PURE__*/_export_sfc(_sfc_main$1Q, [['render',_sfc_render$1P]]);
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1M = {
+  const _sfc_main$1P = {
     inject: ['getSaveAble'],
     props: {
       editAble: {
@@ -24545,13 +24545,13 @@
     }
   };
 
-  const _hoisted_1$1Y = { class: "d-flex-c" };
-  const _hoisted_2$1o = { class: "d-flex-c" };
-  const _hoisted_3$18 = { class: "d-flex-c" };
-  const _hoisted_4$_ = { class: "d-flex-c" };
-  const _hoisted_5$M = { class: "d-flex-c" };
+  const _hoisted_1$21 = { class: "d-flex-c" };
+  const _hoisted_2$1r = { class: "d-flex-c" };
+  const _hoisted_3$1b = { class: "d-flex-c" };
+  const _hoisted_4$11 = { class: "d-flex-c" };
+  const _hoisted_5$P = { class: "d-flex-c" };
 
-  function _sfc_render$1L(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1O(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_CommonColorPicker = vue.resolveComponent("CommonColorPicker");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_el_col = vue.resolveComponent("el-col");
@@ -24580,7 +24580,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1Y, [
+                    vue.createElementVNode("div", _hoisted_1$21, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.backgroundColor,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.backgroundColor) = $event)),
@@ -24600,7 +24600,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, { label: "" }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$1o, [
+                    vue.createElementVNode("div", _hoisted_2$1r, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.radius,
                         "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($data.form.radius) = $event)),
@@ -24630,7 +24630,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, { label: "" }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_3$18, [
+                    vue.createElementVNode("div", _hoisted_3$1b, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.width,
                         "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.width) = $event)),
@@ -24652,7 +24652,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$_, [
+                    vue.createElementVNode("div", _hoisted_4$11, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.color,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.color) = $event)),
@@ -24680,7 +24680,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$M, [
+                    vue.createElementVNode("div", _hoisted_5$P, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.form.type,
                         "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.type) = $event)),
@@ -24715,16 +24715,16 @@
       _: 1
     }, 8, ["model", "disabled"]))
   }
-  const QueryStyle = /*#__PURE__*/_export_sfc(_sfc_main$1M, [['render',_sfc_render$1L]]);
+  const QueryStyle = /*#__PURE__*/_export_sfc(_sfc_main$1P, [['render',_sfc_render$1O]]);
 
-  const _hoisted_1$1X = {
+  const _hoisted_1$20 = {
     viewBox: "0 0 24 24",
     width: "1.2em",
     height: "1.2em"
   };
 
-  function render$j(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1X, [...(_cache[0] || (_cache[0] = [
+  function render$l(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$20, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
         d: "m22.313 10.175l-1.415 1.414l-.707-.707l-4.242 4.243l-.707 3.536l-1.415 1.414l-4.242-4.243l-4.95 4.95l-1.414-1.414l4.95-4.95l-4.243-4.243l1.414-1.414l3.536-.707l4.242-4.243l-.707-.707l1.414-1.414z"
@@ -24732,17 +24732,17 @@
     ]))]))
   }
 
-  const __unplugin_components_0$7 = { name: 'ri-pushpin-fill', render: render$j };
+  const __unplugin_components_0$7 = { name: 'ri-pushpin-fill', render: render$l };
   /* vite-plugin-components disabled */
 
-  const _hoisted_1$1W = {
+  const _hoisted_1$1$ = {
     viewBox: "0 0 24 24",
     width: "1.2em",
     height: "1.2em"
   };
 
-  function render$i(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1W, [...(_cache[0] || (_cache[0] = [
+  function render$k(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1$, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
         d: "M12 2c5.522 0 10 3.978 10 8.889a5.56 5.56 0 0 1-5.556 5.555h-1.966c-.922 0-1.667.745-1.667 1.667c0 .422.167.811.422 1.1c.267.3.434.689.434 1.122C13.667 21.256 12.9 22 12 22C6.478 22 2 17.522 2 12S6.478 2 12 2m-1.189 16.111a3.664 3.664 0 0 1 3.667-3.667h1.966A3.56 3.56 0 0 0 20 10.89C20 7.139 16.468 4 12 4a8 8 0 0 0-.676 15.972a3.65 3.65 0 0 1-.513-1.86M7.5 12a1.5 1.5 0 1 1 0-3a1.5 1.5 0 0 1 0 3m9 0a1.5 1.5 0 1 1 0-3a1.5 1.5 0 0 1 0 3M12 9a1.5 1.5 0 1 1 0-3a1.5 1.5 0 0 1 0 3"
@@ -24750,13 +24750,13 @@
     ]))]))
   }
 
-  const __unplugin_components_0$6 = { name: 'ri-palette-line', render: render$i };
+  const __unplugin_components_0$6 = { name: 'ri-palette-line', render: render$k };
   /* vite-plugin-components disabled */
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1L = {
+  const _sfc_main$1O = {
     name: 'CommonColorPicker',
     inject: ['getSaveAble'],
     props: {
@@ -24803,7 +24803,7 @@
     }
   };
 
-  function _sfc_render$1K(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1N(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_t_color_picker = vue.resolveComponent("t-color-picker");
 
     return (vue.openBlock(), vue.createBlock(_component_t_color_picker, vue.mergeProps(_ctx.$attrs, {
@@ -24820,11 +24820,11 @@
       onChange:  $options.colorChange
     }), null, 16, ["modelValue", "color-modes", "disabled", "onChange"]))
   }
-  const CommonColorPicker = /*#__PURE__*/_export_sfc(_sfc_main$1L, [['render',_sfc_render$1K],['__scopeId',"data-v-11734a55"]]);
+  const CommonColorPicker = /*#__PURE__*/_export_sfc(_sfc_main$1O, [['render',_sfc_render$1N],['__scopeId',"data-v-11734a55"]]);
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$1K = {
+  const _sfc_main$1N = {
     name: 'ColorsPicker',
     components: {
       CommonColorPicker
@@ -24958,19 +24958,19 @@
     }
   };
 
-  const _hoisted_1$1V = {
+  const _hoisted_1$1_ = {
     style: {"width":"100%"},
     class: "d-flex-c"
   };
-  const _hoisted_2$1n = { style: {"display":"flex","justify-content":"center","width":"100%"} };
-  const _hoisted_3$17 = {
+  const _hoisted_2$1q = { style: {"display":"flex","justify-content":"center","width":"100%"} };
+  const _hoisted_3$1a = {
     class: "d-flex",
     style: {"flex":"1","align-items":"center","overflow":"hidden"}
   };
-  const _hoisted_4$Z = { class: "color-view" };
-  const _hoisted_5$L = { class: "color-view-dropdown" };
-  const _hoisted_6$E = { style: {"position":"relative","width":"100%","padding":"30px 10px 10px 20px","border-bottom":"1px solid #e8eaec"} };
-  const _hoisted_7$w = {
+  const _hoisted_4$10 = { class: "color-view" };
+  const _hoisted_5$O = { class: "color-view-dropdown" };
+  const _hoisted_6$H = { style: {"position":"relative","width":"100%","padding":"30px 10px 10px 20px","border-bottom":"1px solid #e8eaec"} };
+  const _hoisted_7$x = {
     class: "down-color-item",
     style: {"margin":"2px 0"}
   };
@@ -24979,7 +24979,7 @@
   const _hoisted_10$g = ["value"];
   const _hoisted_11$c = { class: "d-flex-c colors-number-suffix" };
 
-  function _sfc_render$1J(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1M(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_option = vue.resolveComponent("el-option");
     const _component_el_select = vue.resolveComponent("el-select");
     const _component_i_ri_palette_line = __unplugin_components_0$6;
@@ -24991,15 +24991,15 @@
     const _component_Minus = vue.resolveComponent("Minus");
     const _component_Sort = vue.resolveComponent("Sort");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1V, [
-      vue.createElementVNode("div", _hoisted_2$1n, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1_, [
+      vue.createElementVNode("div", _hoisted_2$1q, [
         vue.withDirectives(vue.createElementVNode("div", {
           style: {"box-sizing":"border-box","width":"80px","padding-right":"8px","padding-left":"20px"},
           class: "chart-config-title"
         }, vue.toDisplayString($props.name), 513), [
           [vue.vShow, $props.name]
         ]),
-        vue.createElementVNode("div", _hoisted_3$17, [
+        vue.createElementVNode("div", _hoisted_3$1a, [
           vue.createVNode(_component_el_select, {
             modelValue: $data.value,
             "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.value) = $event)),
@@ -25009,7 +25009,7 @@
             onChange: $options.colorChange
           }, {
             prefix: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_4$Z, [
+              vue.createElementVNode("div", _hoisted_4$10, [
                 (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.value.split('@'), (color, index) => {
                   return (vue.openBlock(), vue.createElementBlock("div", {
                     key: index,
@@ -25026,7 +25026,7 @@
                   value: colors
                 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$L, [
+                    vue.createElementVNode("div", _hoisted_5$O, [
                       (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(colors.split('@'), (color, key) => {
                         return (vue.openBlock(), vue.createElementBlock("div", {
                           key: key,
@@ -25060,7 +25060,7 @@
         class: "d-flex-c plane-inner-bg",
         style: vue.normalizeStyle( `margin: 10px 10px 0 ${$props.name?40:0}px;padding: 0;width:auto;`)
       }, [
-        vue.createElementVNode("div", _hoisted_6$E, [
+        vue.createElementVNode("div", _hoisted_6$H, [
           vue.createVNode(_component_el_button, {
             circle: "",
             text: "",
@@ -25084,7 +25084,7 @@
                 class: "color-example",
                 style: vue.normalizeStyle(`background:${$data.conversionColorList[index].color};`)
               }, null, 4),
-              vue.createElementVNode("div", _hoisted_7$w, [
+              vue.createElementVNode("div", _hoisted_7$x, [
                 vue.createVNode(_component_CommonColorPicker, {
                   modelValue: $data.conversionColorList[index].color,
                   "onUpdate:modelValue": $event => (($data.conversionColorList[index].color) = $event),
@@ -25184,12 +25184,12 @@
       ])
     ]))
   }
-  const ColorsPicker = /*#__PURE__*/_export_sfc(_sfc_main$1K, [['render',_sfc_render$1J],['__scopeId',"data-v-ec825c8f"]]);
+  const ColorsPicker = /*#__PURE__*/_export_sfc(_sfc_main$1N, [['render',_sfc_render$1M],['__scopeId',"data-v-ec825c8f"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1J = {
+  const _sfc_main$1M = {
     name: 'TooltipConfig',
     inject: ['getSaveAble'],
     props: {
@@ -25237,13 +25237,13 @@
     }
   };
 
-  const _hoisted_1$1U = { class: "d-flex-c" };
-  const _hoisted_2$1m = { class: "d-flex-c" };
-  const _hoisted_3$16 = { class: "d-flex-c" };
-  const _hoisted_4$Y = { class: "d-flex-c" };
-  const _hoisted_5$K = { class: "d-flex-c" };
+  const _hoisted_1$1Z = { class: "d-flex-c" };
+  const _hoisted_2$1p = { class: "d-flex-c" };
+  const _hoisted_3$19 = { class: "d-flex-c" };
+  const _hoisted_4$$ = { class: "d-flex-c" };
+  const _hoisted_5$N = { class: "d-flex-c" };
 
-  function _sfc_render$1I(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1L(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_TextStyle = vue.resolveComponent("TextStyle");
@@ -25263,7 +25263,7 @@
       default: vue.withCtx(() => [
         vue.createVNode(_component_el_form_item, { label: "" }, {
           default: vue.withCtx(() => [
-            vue.createElementVNode("div", _hoisted_1$1U, [
+            vue.createElementVNode("div", _hoisted_1$1Z, [
               vue.createVNode(_component_el_switch, {
                 modelValue: $data.form.show,
                 "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.show) = $event)),
@@ -25297,7 +25297,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$1m, [
+                    vue.createElementVNode("div", _hoisted_2$1p, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.backgroundColor,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.backgroundColor) = $event)),
@@ -25312,7 +25312,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_3$16, [
+                    vue.createElementVNode("div", _hoisted_3$19, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.padding,
                         "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.padding) = $event)),
@@ -25341,7 +25341,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$Y, [
+                    vue.createElementVNode("div", _hoisted_4$$, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.borderWidth,
                         "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.borderWidth) = $event)),
@@ -25357,7 +25357,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$K, [
+                    vue.createElementVNode("div", _hoisted_5$N, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.borderColor,
                         "onUpdate:modelValue": _cache[9] || (_cache[9] = $event => (($data.form.borderColor) = $event)),
@@ -25379,12 +25379,12 @@
       _: 1
     }, 8, ["disabled"]))
   }
-  const TooltipConfig = /*#__PURE__*/_export_sfc(_sfc_main$1J, [['render',_sfc_render$1I],['__scopeId',"data-v-30ce8119"]]);
+  const TooltipConfig = /*#__PURE__*/_export_sfc(_sfc_main$1M, [['render',_sfc_render$1L],['__scopeId',"data-v-30ce8119"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1I = {
+  const _sfc_main$1L = {
     name: 'BarThemeConfig',
     inject: ['getSaveAble'],
     props: {
@@ -25418,13 +25418,13 @@
     }
   };
 
-  const _hoisted_1$1T = { class: "d-flex-c" };
-  const _hoisted_2$1l = { class: "d-flex-c" };
-  const _hoisted_3$15 = { class: "d-flex-c" };
-  const _hoisted_4$X = { class: "d-flex-c" };
-  const _hoisted_5$J = { class: "d-flex-c" };
+  const _hoisted_1$1Y = { class: "d-flex-c" };
+  const _hoisted_2$1o = { class: "d-flex-c" };
+  const _hoisted_3$18 = { class: "d-flex-c" };
+  const _hoisted_4$_ = { class: "d-flex-c" };
+  const _hoisted_5$M = { class: "d-flex-c" };
 
-  function _sfc_render$1H(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1K(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_row = vue.resolveComponent("el-row");
@@ -25448,7 +25448,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1T, [
+                    vue.createElementVNode("div", _hoisted_1$1Y, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.borderRadius[0],
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.borderRadius[0]) = $event)),
@@ -25464,7 +25464,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$1l, [
+                    vue.createElementVNode("div", _hoisted_2$1o, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.borderRadius[1],
                         "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.borderRadius[1]) = $event)),
@@ -25488,7 +25488,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_3$15, [
+                    vue.createElementVNode("div", _hoisted_3$18, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.borderRadius[2],
                         "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.borderRadius[2]) = $event)),
@@ -25504,7 +25504,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$X, [
+                    vue.createElementVNode("div", _hoisted_4$_, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.borderRadius[3],
                         "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.borderRadius[3]) = $event)),
@@ -25533,7 +25533,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$J, [
+                    vue.createElementVNode("div", _hoisted_5$M, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.barWidth,
                         "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form.barWidth) = $event)),
@@ -25557,12 +25557,12 @@
       _: 1
     }, 8, ["disabled"]))
   }
-  const BarThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1I, [['render',_sfc_render$1H],['__scopeId',"data-v-7693ceb3"]]);
+  const BarThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1L, [['render',_sfc_render$1K],['__scopeId',"data-v-7693ceb3"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1H = {
+  const _sfc_main$1K = {
     name: 'TooltipConfig',
     inject: ['getSaveAble'],
     props: {
@@ -25617,16 +25617,16 @@
     }
   };
 
-  const _hoisted_1$1S = { class: "d-flex-c" };
-  const _hoisted_2$1k = { class: "d-flex-c" };
-  const _hoisted_3$14 = { class: "d-flex-c" };
-  const _hoisted_4$W = { class: "d-flex-c" };
-  const _hoisted_5$I = { class: "d-flex-c" };
-  const _hoisted_6$D = { class: "d-flex-c" };
-  const _hoisted_7$v = { class: "d-flex-c" };
+  const _hoisted_1$1X = { class: "d-flex-c" };
+  const _hoisted_2$1n = { class: "d-flex-c" };
+  const _hoisted_3$17 = { class: "d-flex-c" };
+  const _hoisted_4$Z = { class: "d-flex-c" };
+  const _hoisted_5$L = { class: "d-flex-c" };
+  const _hoisted_6$G = { class: "d-flex-c" };
+  const _hoisted_7$w = { class: "d-flex-c" };
   const _hoisted_8$p = { class: "d-flex-c" };
 
-  function _sfc_render$1G(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1J(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_option = vue.resolveComponent("el-option");
@@ -25655,7 +25655,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1S, [
+                    vue.createElementVNode("div", _hoisted_1$1X, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.lineStyle.width,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.lineStyle.width) = $event)),
@@ -25671,7 +25671,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$1k, [
+                    vue.createElementVNode("div", _hoisted_2$1n, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.form.lineStyle.type,
                         "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($data.form.lineStyle.type) = $event)),
@@ -25705,7 +25705,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 24 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_3$14, [
+                    vue.createElementVNode("div", _hoisted_3$17, [
                       vue.createVNode(_component_EfRadio, {
                         modelValue: $data.form.smooth,
                         "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.smooth) = $event)),
@@ -25735,7 +25735,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$W, [
+                    vue.createElementVNode("div", _hoisted_4$Z, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.showSymbol,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.showSymbol) = $event)),
@@ -25752,7 +25752,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$I, [
+                    vue.createElementVNode("div", _hoisted_5$L, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.symbolSize,
                         "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.symbolSize) = $event)),
@@ -25776,7 +25776,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_6$D, [
+                    vue.createElementVNode("div", _hoisted_6$G, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.form.symbol,
                         "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.symbol) = $event)),
@@ -25815,7 +25815,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_7$v, [
+                    vue.createElementVNode("div", _hoisted_7$w, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.label.show,
                         "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.label.show) = $event)),
@@ -25866,12 +25866,12 @@
       _: 1
     }, 8, ["disabled"]))
   }
-  const LineThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1H, [['render',_sfc_render$1G],['__scopeId',"data-v-61a450ab"]]);
+  const LineThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1K, [['render',_sfc_render$1J],['__scopeId',"data-v-61a450ab"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1G = {
+  const _sfc_main$1J = {
     name: 'TooltipConfig',
     inject: ['getSaveAble'],
     props: {
@@ -25905,11 +25905,11 @@
     }
   };
 
-  const _hoisted_1$1R = { class: "d-flex-c" };
-  const _hoisted_2$1j = { class: "d-flex-c" };
-  const _hoisted_3$13 = { class: "d-flex-c" };
+  const _hoisted_1$1W = { class: "d-flex-c" };
+  const _hoisted_2$1m = { class: "d-flex-c" };
+  const _hoisted_3$16 = { class: "d-flex-c" };
 
-  function _sfc_render$1F(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1I(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_input_number = vue.resolveComponent("el-input-number");
@@ -25935,7 +25935,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1R, [
+                    vue.createElementVNode("div", _hoisted_1$1W, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.show,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.show) = $event)),
@@ -25951,7 +25951,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$1j, [
+                    vue.createElementVNode("div", _hoisted_2$1m, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.length,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.length) = $event)),
@@ -25973,7 +25973,7 @@
         }),
         vue.createVNode(_component_el_form_item, { label: "" }, {
           default: vue.withCtx(() => [
-            vue.createElementVNode("div", _hoisted_3$13, [
+            vue.createElementVNode("div", _hoisted_3$16, [
               vue.createVNode(_component_EfRadio, {
                 modelValue: $data.form.inside,
                 "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.inside) = $event)),
@@ -26001,12 +26001,12 @@
       _: 1
     }, 8, ["disabled"]))
   }
-  const AxisTickThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1G, [['render',_sfc_render$1F],['__scopeId',"data-v-e68c8e10"]]);
+  const AxisTickThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1J, [['render',_sfc_render$1I],['__scopeId',"data-v-e68c8e10"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1F = {
+  const _sfc_main$1I = {
     name: 'AxisLabelConfig',
     inject: ['getSaveAble'],
     props: {
@@ -26057,14 +26057,14 @@
     }
   };
 
-  const _hoisted_1$1Q = { class: "d-flex-c" };
-  const _hoisted_2$1i = { class: "d-flex-c" };
-  const _hoisted_3$12 = { class: "d-flex-c" };
-  const _hoisted_4$V = { class: "d-flex" };
-  const _hoisted_5$H = ["onClick"];
-  const _hoisted_6$C = { class: "d-flex-c" };
+  const _hoisted_1$1V = { class: "d-flex-c" };
+  const _hoisted_2$1l = { class: "d-flex-c" };
+  const _hoisted_3$15 = { class: "d-flex-c" };
+  const _hoisted_4$Y = { class: "d-flex" };
+  const _hoisted_5$K = ["onClick"];
+  const _hoisted_6$F = { class: "d-flex-c" };
 
-  function _sfc_render$1E(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1H(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_input_number = vue.resolveComponent("el-input-number");
@@ -26089,7 +26089,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1Q, [
+                    vue.createElementVNode("div", _hoisted_1$1V, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.show,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.show) = $event)),
@@ -26105,7 +26105,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$1i, [
+                    vue.createElementVNode("div", _hoisted_2$1l, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.margin,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.margin) = $event)),
@@ -26129,8 +26129,8 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_3$12, [
-                      vue.createElementVNode("div", _hoisted_4$V, [
+                    vue.createElementVNode("div", _hoisted_3$15, [
+                      vue.createElementVNode("div", _hoisted_4$Y, [
                         (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.alignOption, (ele) => {
                           return (vue.openBlock(), vue.createElementBlock("div", {
                             key: ele.value,
@@ -26140,7 +26140,7 @@
                             vue.createElementVNode("i", {
                               class: vue.normalizeClass(['icon am-iconfont align-icon', ele.icon])
                             }, null, 2)
-                          ], 10, _hoisted_5$H))
+                          ], 10, _hoisted_5$K))
                         }), 128))
                       ]),
                       _cache[8] || (_cache[8] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 轴标签角度", -1))
@@ -26150,7 +26150,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_6$C, [
+                    vue.createElementVNode("div", _hoisted_6$F, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.alignActive,
                         "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.alignActive) = $event)),
@@ -26184,12 +26184,12 @@
       _: 1
     }, 8, ["disabled"]))
   }
-  const AxisLabelThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1F, [['render',_sfc_render$1E],['__scopeId',"data-v-546235b2"]]);
+  const AxisLabelThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1I, [['render',_sfc_render$1H],['__scopeId',"data-v-546235b2"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1E = {
+  const _sfc_main$1H = {
     name: 'TooltipConfig',
     inject: ['getSaveAble'],
     props: {
@@ -26222,9 +26222,9 @@
     }
   };
 
-  const _hoisted_1$1P = { class: "d-flex-c" };
+  const _hoisted_1$1U = { class: "d-flex-c" };
 
-  function _sfc_render$1D(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1G(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_row = vue.resolveComponent("el-row");
@@ -26248,7 +26248,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1P, [
+                    vue.createElementVNode("div", _hoisted_1$1U, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.show,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.show) = $event)),
@@ -26282,12 +26282,12 @@
       _: 1
     }, 8, ["disabled"]))
   }
-  const AxisLineThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1E, [['render',_sfc_render$1D],['__scopeId',"data-v-d45ad77b"]]);
+  const AxisLineThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1H, [['render',_sfc_render$1G],['__scopeId',"data-v-d45ad77b"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1D = {
+  const _sfc_main$1G = {
     name: 'TooltipConfig',
     inject: ['getSaveAble'],
     props: {
@@ -26328,10 +26328,10 @@
     }
   };
 
-  const _hoisted_1$1O = { class: "d-flex-c" };
-  const _hoisted_2$1h = { class: "d-flex-c" };
+  const _hoisted_1$1T = { class: "d-flex-c" };
+  const _hoisted_2$1k = { class: "d-flex-c" };
 
-  function _sfc_render$1C(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1F(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_EfRadio = vue.resolveComponent("EfRadio");
@@ -26347,7 +26347,7 @@
       default: vue.withCtx(() => [
         vue.createVNode(_component_el_form_item, { label: "" }, {
           default: vue.withCtx(() => [
-            vue.createElementVNode("div", _hoisted_1$1O, [
+            vue.createElementVNode("div", _hoisted_1$1T, [
               vue.createVNode(_component_el_input_number, {
                 modelValue: $data.form.nameGap,
                 "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.nameGap) = $event)),
@@ -26363,7 +26363,7 @@
         }),
         vue.createVNode(_component_el_form_item, { label: "" }, {
           default: vue.withCtx(() => [
-            vue.createElementVNode("div", _hoisted_2$1h, [
+            vue.createElementVNode("div", _hoisted_2$1k, [
               vue.createVNode(_component_EfRadio, {
                 modelValue: $data.form.nameLocation,
                 "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.nameLocation) = $event)),
@@ -26391,12 +26391,12 @@
       _: 1
     }, 8, ["disabled"]))
   }
-  const NameThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1D, [['render',_sfc_render$1C],['__scopeId',"data-v-a6b335e5"]]);
+  const NameThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1G, [['render',_sfc_render$1F],['__scopeId',"data-v-a6b335e5"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1C = {
+  const _sfc_main$1F = {
     name: 'LegendConfig',
     inject: ['getSaveAble'],
     props: {
@@ -26438,12 +26438,12 @@
     }
   };
 
-  const _hoisted_1$1N = { class: "d-flex-c" };
-  const _hoisted_2$1g = { class: "d-flex-c" };
-  const _hoisted_3$11 = { class: "d-flex-c" };
-  const _hoisted_4$U = { class: "d-flex-c" };
+  const _hoisted_1$1S = { class: "d-flex-c" };
+  const _hoisted_2$1j = { class: "d-flex-c" };
+  const _hoisted_3$14 = { class: "d-flex-c" };
+  const _hoisted_4$X = { class: "d-flex-c" };
 
-  function _sfc_render$1B(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1E(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_input_number = vue.resolveComponent("el-input-number");
@@ -26468,7 +26468,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1N, [
+                    vue.createElementVNode("div", _hoisted_1$1S, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.show,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.show) = $event)),
@@ -26485,7 +26485,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$1g, [
+                    vue.createElementVNode("div", _hoisted_2$1j, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.itemGap,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.itemGap) = $event)),
@@ -26514,7 +26514,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_3$11, [
+                    vue.createElementVNode("div", _hoisted_3$14, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.itemWidth,
                         "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.itemWidth) = $event)),
@@ -26530,7 +26530,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$U, [
+                    vue.createElementVNode("div", _hoisted_4$X, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.itemHeight,
                         "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.itemHeight) = $event)),
@@ -26564,12 +26564,12 @@
       _: 1
     }, 8, ["disabled"]))
   }
-  const LegendThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1C, [['render',_sfc_render$1B],['__scopeId',"data-v-80a15f07"]]);
+  const LegendThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1F, [['render',_sfc_render$1E],['__scopeId',"data-v-80a15f07"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1B = {
+  const _sfc_main$1E = {
     name: 'TooltipConfig',
     inject: ['getSaveAble'],
     props: {
@@ -26636,19 +26636,19 @@
     }
   };
 
-  const _hoisted_1$1M = { class: "d-flex-c" };
-  const _hoisted_2$1f = { class: "d-flex-c" };
-  const _hoisted_3$10 = { class: "d-flex-c" };
-  const _hoisted_4$T = { class: "d-flex-c" };
-  const _hoisted_5$G = { class: "d-flex-c" };
-  const _hoisted_6$B = { class: "d-flex-c" };
-  const _hoisted_7$u = { class: "d-flex-c" };
+  const _hoisted_1$1R = { class: "d-flex-c" };
+  const _hoisted_2$1i = { class: "d-flex-c" };
+  const _hoisted_3$13 = { class: "d-flex-c" };
+  const _hoisted_4$W = { class: "d-flex-c" };
+  const _hoisted_5$J = { class: "d-flex-c" };
+  const _hoisted_6$E = { class: "d-flex-c" };
+  const _hoisted_7$v = { class: "d-flex-c" };
   const _hoisted_8$o = { class: "d-flex-c" };
   const _hoisted_9$k = { class: "d-flex-c" };
   const _hoisted_10$f = { class: "d-flex-c" };
   const _hoisted_11$b = { class: "d-flex-c" };
 
-  function _sfc_render$1A(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1D(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_input_number = vue.resolveComponent("el-input-number");
@@ -26676,7 +26676,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1M, [
+                    vue.createElementVNode("div", _hoisted_1$1R, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.hasSeq,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.hasSeq) = $event)),
@@ -26693,7 +26693,7 @@
                 _cache[28] || (_cache[28] = vue.createTextVNode()),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$1f, [
+                    vue.createElementVNode("div", _hoisted_2$1i, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.seqWidth,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.seqWidth) = $event)),
@@ -26722,7 +26722,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_3$10, [
+                    vue.createElementVNode("div", _hoisted_3$13, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.highlightCurrentRow,
                         "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.highlightCurrentRow) = $event)),
@@ -26741,7 +26741,7 @@
                   style: {"padding-right":"10px"}
                 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$T, [
+                    vue.createElementVNode("div", _hoisted_4$W, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.styles['--rowCurrentColor'],
                         "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.styles['--rowCurrentColor']) = $event)),
@@ -26768,7 +26768,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$G, [
+                    vue.createElementVNode("div", _hoisted_5$J, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.form.border,
                         "onUpdate:modelValue": _cache[10] || (_cache[10] = $event => (($data.form.border) = $event)),
@@ -26794,7 +26794,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_6$B, [
+                    vue.createElementVNode("div", _hoisted_6$E, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.styles['--borderColor'],
                         "onUpdate:modelValue": _cache[12] || (_cache[12] = $event => (($data.styles['--borderColor']) = $event)),
@@ -26821,7 +26821,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_7$u, [
+                    vue.createElementVNode("div", _hoisted_7$v, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.styles['--tablecellheight'],
                         "onUpdate:modelValue": _cache[14] || (_cache[14] = $event => (($data.styles['--tablecellheight']) = $event)),
@@ -26942,12 +26942,12 @@
       _: 1
     }, 8, ["disabled"]))
   }
-  const TableThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1B, [['render',_sfc_render$1A],['__scopeId',"data-v-af41f42b"]]);
+  const TableThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1E, [['render',_sfc_render$1D],['__scopeId',"data-v-af41f42b"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1A = {
+  const _sfc_main$1D = {
     name: 'TooltipConfig',
     inject: ['getSaveAble'],
     props: {
@@ -27004,12 +27004,12 @@
     }
   };
 
-  const _hoisted_1$1L = { class: "d-flex-c" };
-  const _hoisted_2$1e = { class: "d-flex-c" };
-  const _hoisted_3$$ = { class: "d-flex-c" };
-  const _hoisted_4$S = { class: "d-flex-c" };
+  const _hoisted_1$1Q = { class: "d-flex-c" };
+  const _hoisted_2$1h = { class: "d-flex-c" };
+  const _hoisted_3$12 = { class: "d-flex-c" };
+  const _hoisted_4$V = { class: "d-flex-c" };
 
-  function _sfc_render$1z(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1C(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_input_number = vue.resolveComponent("el-input-number");
@@ -27037,7 +27037,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1L, [
+                    vue.createElementVNode("div", _hoisted_1$1Q, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.showHeader,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.showHeader) = $event)),
@@ -27054,7 +27054,7 @@
                 _cache[12] || (_cache[12] = vue.createTextVNode()),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$1e, [
+                    vue.createElementVNode("div", _hoisted_2$1h, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.styles['--headercellheight'],
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.styles['--headercellheight']) = $event)),
@@ -27083,7 +27083,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_3$$, [
+                    vue.createElementVNode("div", _hoisted_3$12, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.form.headerAlign,
                         "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.headerAlign) = $event)),
@@ -27109,7 +27109,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$S, [
+                    vue.createElementVNode("div", _hoisted_4$V, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.styles['--headerBg'],
                         "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.styles['--headerBg']) = $event)),
@@ -27142,12 +27142,12 @@
       _: 1
     }, 8, ["disabled"]))
   }
-  const TableHeaderConfig = /*#__PURE__*/_export_sfc(_sfc_main$1A, [['render',_sfc_render$1z],['__scopeId',"data-v-b852fe1a"]]);
+  const TableHeaderConfig = /*#__PURE__*/_export_sfc(_sfc_main$1D, [['render',_sfc_render$1C],['__scopeId',"data-v-b852fe1a"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1z = {
+  const _sfc_main$1C = {
     name: 'TooltipConfig',
     inject: ['getSaveAble'],
     props: {
@@ -27192,12 +27192,12 @@
     }
   };
 
-  const _hoisted_1$1K = { class: "d-flex-c" };
-  const _hoisted_2$1d = { class: "d-flex-c" };
-  const _hoisted_3$_ = { class: "d-flex-c" };
-  const _hoisted_4$R = { class: "d-flex-c" };
+  const _hoisted_1$1P = { class: "d-flex-c" };
+  const _hoisted_2$1g = { class: "d-flex-c" };
+  const _hoisted_3$11 = { class: "d-flex-c" };
+  const _hoisted_4$U = { class: "d-flex-c" };
 
-  function _sfc_render$1y(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1B(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_CommonColorPicker = vue.resolveComponent("CommonColorPicker");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_row = vue.resolveComponent("el-row");
@@ -27226,7 +27226,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1K, [
+                    vue.createElementVNode("div", _hoisted_1$1P, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.itemStyle.areaColor,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.itemStyle.areaColor) = $event)),
@@ -27248,7 +27248,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$1d, [
+                    vue.createElementVNode("div", _hoisted_2$1g, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.itemStyle.borderWidth,
                         "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.itemStyle.borderWidth) = $event)),
@@ -27264,7 +27264,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_3$_, [
+                    vue.createElementVNode("div", _hoisted_3$11, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.itemStyle.borderColor,
                         "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.itemStyle.borderColor) = $event)),
@@ -27294,7 +27294,7 @@
         }),
         vue.createVNode(_component_el_form_item, null, {
           default: vue.withCtx(() => [
-            vue.createElementVNode("div", _hoisted_4$R, [
+            vue.createElementVNode("div", _hoisted_4$U, [
               vue.createVNode(_component_el_switch, {
                 modelValue: $data.form.label.show,
                 "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.label.show) = $event)),
@@ -27322,10 +27322,10 @@
       _: 1
     }, 8, ["disabled"]))
   }
-  const MapThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1z, [['render',_sfc_render$1y],['__scopeId',"data-v-d5b87afc"]]);
+  const MapThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1C, [['render',_sfc_render$1B],['__scopeId',"data-v-d5b87afc"]]);
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1y = {
+  const _sfc_main$1B = {
     name: 'TooltipConfig',
     inject: ['getSaveAble'],
     props: {
@@ -27372,16 +27372,16 @@
     }
   };
 
-  const _hoisted_1$1J = { class: "d-flex-c" };
-  const _hoisted_2$1c = { class: "d-flex-c" };
-  const _hoisted_3$Z = { class: "d-flex" };
-  const _hoisted_4$Q = ["onClick"];
-  const _hoisted_5$F = { class: "d-flex-c" };
-  const _hoisted_6$A = { class: "d-flex-c" };
-  const _hoisted_7$t = { class: "d-flex-c" };
+  const _hoisted_1$1O = { class: "d-flex-c" };
+  const _hoisted_2$1f = { class: "d-flex-c" };
+  const _hoisted_3$10 = { class: "d-flex" };
+  const _hoisted_4$T = ["onClick"];
+  const _hoisted_5$I = { class: "d-flex-c" };
+  const _hoisted_6$D = { class: "d-flex-c" };
+  const _hoisted_7$u = { class: "d-flex-c" };
   const _hoisted_8$n = { class: "d-flex-c" };
 
-  function _sfc_render$1x(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1A(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_row = vue.resolveComponent("el-row");
@@ -27407,7 +27407,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1J, [
+                    vue.createElementVNode("div", _hoisted_1$1O, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.label.show,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.label.show) = $event)),
@@ -27423,8 +27423,8 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$1c, [
-                      vue.createElementVNode("div", _hoisted_3$Z, [
+                    vue.createElementVNode("div", _hoisted_2$1f, [
+                      vue.createElementVNode("div", _hoisted_3$10, [
                         (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.alignOption, (ele) => {
                           return (vue.openBlock(), vue.createElementBlock("div", {
                             key: ele.value,
@@ -27434,7 +27434,7 @@
                             vue.createElementVNode("i", {
                               class: vue.normalizeClass(['icon am-iconfont align-icon', ele.icon])
                             }, null, 2)
-                          ], 10, _hoisted_4$Q))
+                          ], 10, _hoisted_4$T))
                         }), 128))
                       ]),
                       _cache[9] || (_cache[9] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 标签位置", -1))
@@ -27452,7 +27452,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$F, [
+                    vue.createElementVNode("div", _hoisted_5$I, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.labelLine.show,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.labelLine.show) = $event)),
@@ -27468,7 +27468,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_6$A, [
+                    vue.createElementVNode("div", _hoisted_6$D, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.labelLine.lineStyle.width,
                         "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.labelLine.lineStyle.width) = $event)),
@@ -27492,7 +27492,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_7$t, [
+                    vue.createElementVNode("div", _hoisted_7$u, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.labelLine.length,
                         "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.labelLine.length) = $event)),
@@ -27537,9 +27537,9 @@
       _: 1
     }, 8, ["disabled"]))
   }
-  const PieThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1y, [['render',_sfc_render$1x]]);
+  const PieThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1B, [['render',_sfc_render$1A]]);
 
-  const _sfc_main$1x = {
+  const _sfc_main$1A = {
     inject: ['getPreThemeList', 'getThemeConfig'],
     props: {
       theme: {
@@ -28052,7 +28052,7 @@
 
   /* unplugin-vue-components disabled */
 
-  function _sfc_render$1w(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1z(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_EfForm = vue.resolveComponent("EfForm");
     const _component_el_collapse_item = vue.resolveComponent("el-collapse-item");
     const _component_el_collapse = vue.resolveComponent("el-collapse");
@@ -28166,9 +28166,9 @@
       _: 1
     }))
   }
-  const chartThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1x, [['render',_sfc_render$1w],['__scopeId',"data-v-e40e84e1"]]);
+  const chartThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1A, [['render',_sfc_render$1z],['__scopeId',"data-v-e40e84e1"]]);
 
-  const _sfc_main$1w = {
+  const _sfc_main$1z = {
     name: 'PageSetting',
     components: {
       CardPaddingConfig,
@@ -29106,13 +29106,13 @@
 
   /* unplugin-vue-components disabled */
 
-  const _hoisted_1$1I = { class: "page-setting-wrapper" };
-  const _hoisted_2$1b = { class: "title" };
-  const _hoisted_3$Y = ["onClick"];
-  const _hoisted_4$P = { class: "collapse-item" };
-  const _hoisted_5$E = { class: "collapse-item" };
-  const _hoisted_6$z = { class: "input-number-box" };
-  const _hoisted_7$s = { class: "input-number-box" };
+  const _hoisted_1$1N = { class: "page-setting-wrapper" };
+  const _hoisted_2$1e = { class: "title" };
+  const _hoisted_3$$ = ["onClick"];
+  const _hoisted_4$S = { class: "collapse-item" };
+  const _hoisted_5$H = { class: "collapse-item" };
+  const _hoisted_6$C = { class: "input-number-box" };
+  const _hoisted_7$t = { class: "input-number-box" };
   const _hoisted_8$m = { class: "collapse-item" };
   const _hoisted_9$j = { class: "collapse-item layout-collapse-item" };
   const _hoisted_10$e = { class: "collapse-item" };
@@ -29123,7 +29123,7 @@
     class: "page-setting-footer"
   };
 
-  function _sfc_render$1v(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1y(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_CopyDocument = vue.resolveComponent("CopyDocument");
     const _component_el_icon = vue.resolveComponent("el-icon");
     const _component_el_button = vue.resolveComponent("el-button");
@@ -29138,8 +29138,8 @@
     const _component_BKCodeCom = vue.resolveComponent("BKCodeCom");
     const _component_el_collapse = vue.resolveComponent("el-collapse");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1I, [
-      vue.createElementVNode("div", _hoisted_2$1b, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1N, [
+      vue.createElementVNode("div", _hoisted_2$1e, [
         _cache[6] || (_cache[6] = vue.createElementVNode("span", { style: {"margin-right":"10px"} }, "页面设置", -1)),
         vue.createVNode(_component_el_button, {
           text: "",
@@ -29203,7 +29203,7 @@
                     onClick: $event => ($options.changePreTheme(t))
                   }, [
                     vue.createElementVNode("span", null, vue.toDisplayString(t.name), 1)
-                  ], 14, _hoisted_3$Y))
+                  ], 14, _hoisted_3$$))
                 }), 128))
               ], 2)
             ]),
@@ -29214,7 +29214,7 @@
               vue.createTextVNode(" 全局样式 ", -1)
             ]))]),
             default: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_4$P, [
+              vue.createElementVNode("div", _hoisted_4$S, [
                 vue.createVNode(_component_EfForm, {
                   ref: "globalCssForm",
                   items: $data.globalCssItems,
@@ -29233,7 +29233,7 @@
               vue.createTextVNode(" 卡片样式 ", -1)
             ]))]),
             default: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_5$E, [
+              vue.createElementVNode("div", _hoisted_5$H, [
                 vue.createVNode(_component_EfForm, {
                   ref: "cardForm",
                   items: $data.cardItems,
@@ -29246,7 +29246,7 @@
                 vue.withDirectives(vue.createVNode(_component_el_row, { class: "space-custom" }, {
                   default: vue.withCtx(() => [
                     _cache[12] || (_cache[12] = vue.createElementVNode("span", { class: "label" }, "卡片间距", -1)),
-                    vue.createElementVNode("div", _hoisted_6$z, [
+                    vue.createElementVNode("div", _hoisted_6$C, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.rowSpace,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.rowSpace) = $event)),
@@ -29259,7 +29259,7 @@
                       }, null, 8, ["modelValue", "disabled"]),
                       _cache[10] || (_cache[10] = vue.createElementVNode("span", { class: "input-label" }, "行间距", -1))
                     ]),
-                    vue.createElementVNode("div", _hoisted_7$s, [
+                    vue.createElementVNode("div", _hoisted_7$t, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.colSpace,
                         "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.colSpace) = $event)),
@@ -29414,9 +29414,9 @@
         : vue.createCommentVNode("", true)
     ]))
   }
-  const PageSetting = /*#__PURE__*/_export_sfc(_sfc_main$1w, [['render',_sfc_render$1v],['__scopeId',"data-v-860e3f13"]]);
+  const PageSetting = /*#__PURE__*/_export_sfc(_sfc_main$1z, [['render',_sfc_render$1y],['__scopeId',"data-v-860e3f13"]]);
 
-  const _sfc_main$1v = {
+  const _sfc_main$1y = {
     name: 'CardSetting',
     components: {
       // eslint-disable-next-line
@@ -29725,12 +29725,12 @@
 
   /* unplugin-vue-components disabled */
 
-  const _hoisted_1$1H = { class: "card-setting-wrapper" };
-  const _hoisted_2$1a = { class: "title" };
-  const _hoisted_3$X = { class: "d-flex ai-c" };
-  const _hoisted_4$O = { class: "collapse-item" };
+  const _hoisted_1$1M = { class: "card-setting-wrapper" };
+  const _hoisted_2$1d = { class: "title" };
+  const _hoisted_3$_ = { class: "d-flex ai-c" };
+  const _hoisted_4$R = { class: "collapse-item" };
 
-  function _sfc_render$1u(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1x(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_CopyDocument = vue.resolveComponent("CopyDocument");
     const _component_el_icon = vue.resolveComponent("el-icon");
     const _component_el_button = vue.resolveComponent("el-button");
@@ -29740,8 +29740,8 @@
     const _component_el_collapse_item = vue.resolveComponent("el-collapse-item");
     const _component_el_collapse = vue.resolveComponent("el-collapse");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1H, [
-      vue.createElementVNode("div", _hoisted_2$1a, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1M, [
+      vue.createElementVNode("div", _hoisted_2$1d, [
         _cache[2] || (_cache[2] = vue.createElementVNode("span", { style: {"margin-right":"10px"} }, "卡片设置", -1)),
         vue.createVNode(_component_el_button, {
           text: "",
@@ -29792,7 +29792,7 @@
             name: "1"
           }, {
             title: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_3$X, [
+              vue.createElementVNode("div", _hoisted_3$_, [
                 vue.createVNode(_component_el_switch, {
                   modelValue: $props.cardItem.cardStyle.isCustom,
                   "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($props.cardItem.cardStyle.isCustom) = $event)),
@@ -29805,7 +29805,7 @@
               ])
             ]),
             default: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_4$O, [
+              vue.createElementVNode("div", _hoisted_4$R, [
                 vue.createVNode(_component_EfForm, {
                   ref: "cardForm",
                   items: $data.cardItems,
@@ -29824,7 +29824,7 @@
       }, 8, ["modelValue"])
     ]))
   }
-  const CardSetting = /*#__PURE__*/_export_sfc(_sfc_main$1v, [['render',_sfc_render$1u],['__scopeId',"data-v-872064e2"]]);
+  const CardSetting = /*#__PURE__*/_export_sfc(_sfc_main$1y, [['render',_sfc_render$1x],['__scopeId',"data-v-872064e2"]]);
 
   // import XEUtils from 'xe-utils'
   const ThemeEvents = {
@@ -30041,14 +30041,14 @@
     }
   };
 
-  const _hoisted_1$1G = {
+  const _hoisted_1$1L = {
     viewBox: "0 0 24 24",
     width: "1.2em",
     height: "1.2em"
   };
 
-  function render$h(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1G, [...(_cache[0] || (_cache[0] = [
+  function render$j(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1L, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
         d: "M7 6V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6zm6.414 8l1.768-1.768l-1.414-1.414L12 12.586l-1.768-1.768l-1.414 1.414L10.586 14l-1.768 1.768l1.414 1.414L12 15.414l1.768 1.768l1.414-1.414zM9 4v2h6V4z"
@@ -30056,17 +30056,17 @@
     ]))]))
   }
 
-  const __unplugin_components_2$1 = { name: 'ri-delete-bin2-fill', render: render$h };
+  const __unplugin_components_2$2 = { name: 'ri-delete-bin2-fill', render: render$j };
   /* vite-plugin-components disabled */
 
-  const _hoisted_1$1F = {
+  const _hoisted_1$1K = {
     viewBox: "0 0 24 24",
     width: "1.2em",
     height: "1.2em"
   };
 
-  function render$g(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1F, [...(_cache[0] || (_cache[0] = [
+  function render$i(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1K, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
         d: "M15 21H9V10h6zm2 0V10h5v10a1 1 0 0 1-1 1zM7 21H3a1 1 0 0 1-1-1V10h5zM22 8H2V4a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1z"
@@ -30074,17 +30074,17 @@
     ]))]))
   }
 
-  const __unplugin_components_1$4 = { name: 'ri-table-fill', render: render$g };
+  const __unplugin_components_1$5 = { name: 'ri-table-fill', render: render$i };
   /* vite-plugin-components disabled */
 
-  const _hoisted_1$1E = {
+  const _hoisted_1$1J = {
     viewBox: "0 0 24 24",
     width: "1.2em",
     height: "1.2em"
   };
 
-  function render$f(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1E, [...(_cache[0] || (_cache[0] = [
+  function render$h(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1J, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
         d: "M11 2c4.968 0 9 4.032 9 9s-4.032 9-9 9s-9-4.032-9-9s4.032-9 9-9m0 16c3.867 0 7-3.133 7-7s-3.133-7-7-7s-7 3.133-7 7s3.133 7 7 7m8.485.071l2.829 2.828l-1.415 1.415l-2.828-2.829z"
@@ -30092,7 +30092,7 @@
     ]))]))
   }
 
-  const __unplugin_components_0$5 = { name: 'ri-search2-line', render: render$f };
+  const __unplugin_components_0$5 = { name: 'ri-search2-line', render: render$h };
   /* vite-plugin-components disabled */
 
   const configs = [
@@ -30227,7 +30227,7 @@
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$1u = {
+  const _sfc_main$1x = {
     name: 'ToorbarPannel',
     components: {
       draggable
@@ -30584,16 +30584,16 @@
     }
   };
 
-  const _hoisted_1$1D = { class: "toolbar-pannel-wrapper" };
-  const _hoisted_2$19 = { class: "title" };
-  const _hoisted_3$W = { class: "icons" };
-  const _hoisted_4$N = { class: "group-name" };
-  const _hoisted_5$D = {
+  const _hoisted_1$1I = { class: "toolbar-pannel-wrapper" };
+  const _hoisted_2$1c = { class: "title" };
+  const _hoisted_3$Z = { class: "icons" };
+  const _hoisted_4$Q = { class: "group-name" };
+  const _hoisted_5$G = {
     key: 0,
     class: "group-content"
   };
-  const _hoisted_6$y = ["onClick"];
-  const _hoisted_7$r = { class: "menu-item-tip" };
+  const _hoisted_6$B = ["onClick"];
+  const _hoisted_7$s = { class: "menu-item-tip" };
   const _hoisted_8$l = {
     key: 0,
     class: "decorate-tip d-flex ai-c jc-c"
@@ -30625,7 +30625,7 @@
   const _hoisted_20$2 = ["src", "title"];
   const _hoisted_21$2 = { class: "menu-card-name" };
 
-  function _sfc_render$1t(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1w(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_i_ri_search_2_line = __unplugin_components_0$5;
     const _component_el_input = vue.resolveComponent("el-input");
     const _component_BKDecorateChart = vue.resolveComponent("BKDecorateChart");
@@ -30634,12 +30634,12 @@
     const _component_el_collapse_item = vue.resolveComponent("el-collapse-item");
     const _component_el_collapse = vue.resolveComponent("el-collapse");
 
-    return vue.withDirectives((vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1D, [
-      vue.createElementVNode("div", _hoisted_2$19, [
+    return vue.withDirectives((vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1I, [
+      vue.createElementVNode("div", _hoisted_2$1c, [
         vue.withDirectives(vue.createElementVNode("span", null, "工具面板", 512), [
           [vue.vShow, !$data.showSearch]
         ]),
-        vue.withDirectives(vue.createElementVNode("div", _hoisted_3$W, [
+        vue.withDirectives(vue.createElementVNode("div", _hoisted_3$Z, [
           vue.createVNode(_component_i_ri_search_2_line, {
             style: {"color":"#1a1a1a"},
             onClick: $options.focusSearchInput
@@ -30676,11 +30676,11 @@
               name: m.key
             }, {
               title: vue.withCtx(() => [
-                vue.createElementVNode("div", _hoisted_4$N, vue.toDisplayString(m.name), 1)
+                vue.createElementVNode("div", _hoisted_4$Q, vue.toDisplayString(m.name), 1)
               ]),
               default: vue.withCtx(() => [
                 (!m.draggable)
-                  ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_5$D, [
+                  ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_5$G, [
                       (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(m.children, (item, index) => {
                         return (vue.openBlock(), vue.createElementBlock("div", {
                           key: index,
@@ -30694,7 +30694,7 @@
                             class: vue.normalizeClass(item.isDecorate ? 'menu-item-decorate' : '')
                           }, {
                             content: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_7$r, [
+                              vue.createElementVNode("div", _hoisted_7$s, [
                                 (item.isDecorate)
                                   ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_8$l, [
                                       vue.createVNode(_component_BKDecorateChart, {
@@ -30732,7 +30732,7 @@
                             ]),
                             _: 2
                           }, 1032, ["class"])
-                        ], 8, _hoisted_6$y))
+                        ], 8, _hoisted_6$B))
                       }), 128))
                     ]))
                   : (vue.openBlock(), vue.createBlock(_component_draggable, {
@@ -30789,11 +30789,11 @@
       [vue.vShow, $props.appendToBody || $data.show]
     ])
   }
-  const ToolbarPannel = /*#__PURE__*/_export_sfc(_sfc_main$1u, [['render',_sfc_render$1t],['__scopeId',"data-v-85d46781"]]);
+  const ToolbarPannel = /*#__PURE__*/_export_sfc(_sfc_main$1x, [['render',_sfc_render$1w],['__scopeId',"data-v-85d46781"]]);
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$1t = {
+  const _sfc_main$1w = {
     name: 'Toolbar',
     components: {
       ToolbarPannel
@@ -30932,32 +30932,32 @@
     }
   };
 
-  const _hoisted_1$1C = { class: "toolbar-wrapper" };
-  const _hoisted_2$18 = {
+  const _hoisted_1$1H = { class: "toolbar-wrapper" };
+  const _hoisted_2$1b = {
     key: 0,
     class: "right-container"
   };
-  const _hoisted_3$V = {
+  const _hoisted_3$Y = {
     key: 1,
     class: "pannel-container"
   };
-  const _hoisted_4$M = { class: "grid-setting-bar" };
-  const _hoisted_5$C = { style: {"display":"flex","align-items":"center","font-size":"12px","white-space":"nowrap"} };
-  const _hoisted_6$x = { style: {"margin-right":"6px"} };
+  const _hoisted_4$P = { class: "grid-setting-bar" };
+  const _hoisted_5$F = { style: {"display":"flex","align-items":"center","font-size":"12px","white-space":"nowrap"} };
+  const _hoisted_6$A = { style: {"margin-right":"6px"} };
 
-  function _sfc_render$1s(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_i_ri_pencil_ruler_2_fill = __unplugin_components_1$5;
-    const _component_i_ri_table_fill = __unplugin_components_1$4;
-    const _component_i_ri_delete_bin_2_fill = __unplugin_components_2$1;
+  function _sfc_render$1v(_ctx, _cache, $props, $setup, $data, $options) {
+    const _component_i_ri_pencil_ruler_2_fill = __unplugin_components_1$6;
+    const _component_i_ri_table_fill = __unplugin_components_1$5;
+    const _component_i_ri_delete_bin_2_fill = __unplugin_components_2$2;
     const _component_ToolbarPannel = vue.resolveComponent("ToolbarPannel");
     const _component_EfSelect = vue.resolveComponent("EfSelect");
     const _component_el_input_number = vue.resolveComponent("el-input-number");
     const _component_el_button = vue.resolveComponent("el-button");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1C, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1H, [
       _cache[11] || (_cache[11] = vue.createElementVNode("div", { class: "left-container" }, null, -1)),
       ($props.position !== 'left')
-        ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_2$18, [
+        ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_2$1b, [
             vue.createElementVNode("div", {
               style: {"display":"flex","align-items":"center"},
               class: "text-button",
@@ -30984,7 +30984,7 @@
           ]))
         : vue.createCommentVNode("", true),
       ($props.position === 'left')
-        ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_3$V, [
+        ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_3$Y, [
             vue.createVNode(_component_ToolbarPannel, vue.mergeProps({..._ctx.$props,..._ctx.$attrs}, {
               ref: "pannel",
               disabled: $props.disabled,
@@ -30992,9 +30992,9 @@
             }), null, 16, ["disabled", "onClickItem"])
           ]))
         : vue.createCommentVNode("", true),
-      vue.withDirectives(vue.createElementVNode("div", _hoisted_4$M, [
+      vue.withDirectives(vue.createElementVNode("div", _hoisted_4$P, [
         _cache[10] || (_cache[10] = vue.createElementVNode("span", { style: {"font-size":"14px"} }, "页面栅格设置", -1)),
-        vue.createElementVNode("div", _hoisted_5$C, [
+        vue.createElementVNode("div", _hoisted_5$F, [
           _cache[8] || (_cache[8] = vue.createElementVNode("span", { style: {"margin-right":"6px"} }, "栅格列数", -1)),
           vue.createVNode(_component_EfSelect, {
             modelValue: $data.columnNum,
@@ -31006,7 +31006,7 @@
             clearable: false,
             onChange: $options.changeColNum
           }, null, 8, ["modelValue", "mock", "disabled", "onChange"]),
-          vue.withDirectives(vue.createElementVNode("span", _hoisted_6$x, "每行高度", 512), [
+          vue.withDirectives(vue.createElementVNode("span", _hoisted_6$A, "每行高度", 512), [
             [vue.vShow, $options.showRowHeight]
           ]),
           vue.withDirectives(vue.createVNode(_component_el_input_number, {
@@ -31036,13 +31036,13 @@
       ])
     ]))
   }
-  const Toolbar = /*#__PURE__*/_export_sfc(_sfc_main$1t, [['render',_sfc_render$1s],['__scopeId',"data-v-42129917"]]);
+  const Toolbar = /*#__PURE__*/_export_sfc(_sfc_main$1w, [['render',_sfc_render$1v],['__scopeId',"data-v-42129917"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$1s = {
+  const _sfc_main$1v = {
     inject: ['getPreThemeList'],
     props: {
       visible: {
@@ -31107,12 +31107,12 @@
     }
   };
 
-  const _hoisted_1$1B = { class: "script-panel" };
-  const _hoisted_2$17 = { class: "script-content" };
-  const _hoisted_3$U = { class: "code-content" };
-  const _hoisted_4$L = { class: "analysis-modal-footer" };
+  const _hoisted_1$1G = { class: "script-panel" };
+  const _hoisted_2$1a = { class: "script-content" };
+  const _hoisted_3$X = { class: "code-content" };
+  const _hoisted_4$O = { class: "analysis-modal-footer" };
 
-  function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1u(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BKCodeCom = vue.resolveComponent("BKCodeCom");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_EfModal = vue.resolveComponent("EfModal");
@@ -31126,9 +31126,9 @@
       onClose: _cache[3] || (_cache[3] = $event => (_ctx.$emit('close')))
     }, {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$1B, [
-          vue.createElementVNode("div", _hoisted_2$17, [
-            vue.createElementVNode("div", _hoisted_3$U, [
+        vue.createElementVNode("div", _hoisted_1$1G, [
+          vue.createElementVNode("div", _hoisted_2$1a, [
+            vue.createElementVNode("div", _hoisted_3$X, [
               vue.createVNode(_component_BKCodeCom, {
                 ref: "editor",
                 modelValue: $data.scriptContent,
@@ -31137,7 +31137,7 @@
               }, null, 8, ["modelValue"])
             ])
           ]),
-          vue.createElementVNode("div", _hoisted_4$L, [
+          vue.createElementVNode("div", _hoisted_4$O, [
             vue.createVNode(_component_el_button, {
               type: "primary",
               size: "small",
@@ -31165,7 +31165,7 @@
       _: 1
     }, 8, ["modelValue"]))
   }
-  const ThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1s, [['render',_sfc_render$1r],['__scopeId',"data-v-39f4e3a9"]]);
+  const ThemeConfig = /*#__PURE__*/_export_sfc(_sfc_main$1v, [['render',_sfc_render$1u],['__scopeId',"data-v-39f4e3a9"]]);
 
   function _isSlot$1(s) {
     return typeof s === 'function' || Object.prototype.toString.call(s) === '[object Object]' && !vue.isVNode(s);
@@ -31177,7 +31177,7 @@
     value: '1',
     label: '是'
   }];
-  const _sfc_main$1r = {
+  const _sfc_main$1u = {
     inject: ['getPreThemeList'],
     props: {
       visible: {
@@ -31624,11 +31624,11 @@
 
   /* unplugin-vue-components disabled */
 
-  const _hoisted_1$1A = { class: "query-content" };
-  const _hoisted_2$16 = { class: "query-panel" };
-  const _hoisted_3$T = { class: "analysis-modal-footer" };
+  const _hoisted_1$1F = { class: "query-content" };
+  const _hoisted_2$19 = { class: "query-panel" };
+  const _hoisted_3$W = { class: "analysis-modal-footer" };
 
-  function _sfc_render$1q(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1t(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_EfForm = vue.resolveComponent("EfForm");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_EfModal = vue.resolveComponent("EfModal");
@@ -31642,8 +31642,8 @@
       onClose: _cache[2] || (_cache[2] = $event => (_ctx.$emit('close')))
     }, {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$1A, [
-          vue.createElementVNode("div", _hoisted_2$16, [
+        vue.createElementVNode("div", _hoisted_1$1F, [
+          vue.createElementVNode("div", _hoisted_2$19, [
             vue.createVNode(_component_EfForm, {
               ref: "form",
               size: "small",
@@ -31654,7 +31654,7 @@
               "has-submit": false
             }, null, 8, ["rules", "items"])
           ]),
-          vue.createElementVNode("div", _hoisted_3$T, [
+          vue.createElementVNode("div", _hoisted_3$W, [
             vue.createVNode(_component_el_button, {
               type: "primary",
               size: "small",
@@ -31682,13 +31682,13 @@
       _: 1
     }, 8, ["modelValue"]))
   }
-  const ThemeEdit = /*#__PURE__*/_export_sfc(_sfc_main$1r, [['render',_sfc_render$1q],['__scopeId',"data-v-91e13ccc"]]);
+  const ThemeEdit = /*#__PURE__*/_export_sfc(_sfc_main$1u, [['render',_sfc_render$1t],['__scopeId',"data-v-91e13ccc"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$1q = {
+  const _sfc_main$1t = {
     props: {
       visible: {
         type: Boolean,
@@ -31753,12 +31753,12 @@
     }
   };
 
-  const _hoisted_1$1z = { class: "script-panel" };
-  const _hoisted_2$15 = { class: "script-content" };
-  const _hoisted_3$S = { class: "code-content" };
-  const _hoisted_4$K = { class: "analysis-modal-footer" };
+  const _hoisted_1$1E = { class: "script-panel" };
+  const _hoisted_2$18 = { class: "script-content" };
+  const _hoisted_3$V = { class: "code-content" };
+  const _hoisted_4$N = { class: "analysis-modal-footer" };
 
-  function _sfc_render$1p(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1s(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BKCodeCom = vue.resolveComponent("BKCodeCom");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_EfModal = vue.resolveComponent("EfModal");
@@ -31772,9 +31772,9 @@
       onClose: _cache[3] || (_cache[3] = $event => (_ctx.$emit('close')))
     }, {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$1z, [
-          vue.createElementVNode("div", _hoisted_2$15, [
-            vue.createElementVNode("div", _hoisted_3$S, [
+        vue.createElementVNode("div", _hoisted_1$1E, [
+          vue.createElementVNode("div", _hoisted_2$18, [
+            vue.createElementVNode("div", _hoisted_3$V, [
               vue.createVNode(_component_BKCodeCom, {
                 ref: "editor",
                 modelValue: $data.scriptContent,
@@ -31783,7 +31783,7 @@
               }, null, 8, ["modelValue"])
             ])
           ]),
-          vue.createElementVNode("div", _hoisted_4$K, [
+          vue.createElementVNode("div", _hoisted_4$N, [
             vue.createVNode(_component_el_button, {
               type: "primary",
               size: "small",
@@ -31811,7 +31811,7 @@
       _: 1
     }, 8, ["modelValue"]))
   }
-  const CardConfig = /*#__PURE__*/_export_sfc(_sfc_main$1q, [['render',_sfc_render$1p],['__scopeId',"data-v-7cf716ef"]]);
+  const CardConfig = /*#__PURE__*/_export_sfc(_sfc_main$1t, [['render',_sfc_render$1s],['__scopeId',"data-v-7cf716ef"]]);
 
   const ze$1 = (e) => e <= 0.25 ? 40 : e <= 0.5 ? 20 : e <= 1 ? 10 : e <= 2 ? 5 : e <= 4 ? 2 : 1;
   function Ue$1(e, n, t, a, c, i) {
@@ -34488,7 +34488,7 @@
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$1p = {
+  const _sfc_main$1s = {
     name: 'AnalysisMaker',
     components: {
       draggable,
@@ -35712,20 +35712,20 @@
   };
 
 
-  const _hoisted_1$1y = {
+  const _hoisted_1$1D = {
     key: 0,
     class: "left",
     style: {"display":"flex","align-items":"center"}
   };
-  const _hoisted_2$14 = { class: "page-icon" };
-  const _hoisted_3$R = {
+  const _hoisted_2$17 = { class: "page-icon" };
+  const _hoisted_3$U = {
     key: 1,
     class: "right"
   };
-  const _hoisted_4$J = ["title"];
-  const _hoisted_5$B = { class: "buttons" };
-  const _hoisted_6$w = { style: {"display":"flex","flex":"1","overflow":"hidden"} };
-  const _hoisted_7$q = {
+  const _hoisted_4$M = ["title"];
+  const _hoisted_5$E = { class: "buttons" };
+  const _hoisted_6$z = { style: {"display":"flex","flex":"1","overflow":"hidden"} };
+  const _hoisted_7$r = {
     style: {"position":"relative","display":"flex","flex":"1","flex-direction":"column","height":"100%","overflow":"hidden"},
     direction: "vertical"
   };
@@ -35748,16 +35748,16 @@
     style: {"display":"flex","flex-direction":"column","align-items":"center","align-self":"center","justify-content":"center","width":"100%","overflow":"hidden"}
   };
 
-  function _sfc_render$1o(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_i_ri_file_chart_fill = __unplugin_components_0$8;
     const _component_el_switch = vue.resolveComponent("el-switch");
-    const _component_i_ri_pencil_ruler_2_fill = __unplugin_components_1$5;
-    const _component_i_ri_slideshow_2_fill = __unplugin_components_2$2;
+    const _component_i_ri_pencil_ruler_2_fill = __unplugin_components_1$6;
+    const _component_i_ri_slideshow_2_fill = __unplugin_components_2$3;
     const _component_Toolbar = vue.resolveComponent("Toolbar");
     const _component_i_ri_file_settings_fill = __unplugin_components_3$1;
     const _component_i_ri_settings_5_fill = __unplugin_components_4$1;
     const _component_i_ri_equalizer_fill = __unplugin_components_5$1;
-    const _component_i_ri_add_line = __unplugin_components_6$1;
+    const _component_i_ri_add_line = __unplugin_components_0$9;
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_i_ri_save_fill = __unplugin_components_7$1;
     const _component_i_ri_fullscreen_exit_line = __unplugin_components_8;
@@ -35784,8 +35784,8 @@
             class: vue.normalizeClass(["top-header", $props.isModal ? 'query-header':''])
           }, [
             (!$props.isModal)
-              ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1y, [
-                  vue.createElementVNode("div", _hoisted_2$14, [
+              ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1D, [
+                  vue.createElementVNode("div", _hoisted_2$17, [
                     vue.createVNode(_component_i_ri_file_chart_fill)
                   ]),
                   vue.createElementVNode("span", null, vue.toDisplayString($props.configNode.label), 1),
@@ -35804,7 +35804,7 @@
                 ]))
               : vue.createCommentVNode("", true),
             (!$props.isModal)
-              ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_3$R, [
+              ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_3$U, [
                   ($props.setMode)
                     ? (vue.openBlock(), vue.createElementBlock("div", {
                         key: 0,
@@ -35816,7 +35816,7 @@
                           ? (vue.openBlock(), vue.createBlock(_component_i_ri_pencil_ruler_2_fill, { key: 0 }))
                           : (vue.openBlock(), vue.createBlock(_component_i_ri_slideshow_2_fill, { key: 1 })),
                         vue.createElementVNode("span", null, vue.toDisplayString($data.designMode ? '预览' : '设计'), 1)
-                      ], 10, _hoisted_4$J))
+                      ], 10, _hoisted_4$M))
                     : vue.createCommentVNode("", true),
                   ($data.designMode)
                     ? (vue.openBlock(), vue.createBlock(_component_Toolbar, vue.mergeProps({ key: 1 }, _ctx.$props, {
@@ -35884,7 +35884,7 @@
                         ]))], 2)
                       ], 64))
                     : vue.createCommentVNode("", true),
-                  vue.createElementVNode("div", _hoisted_5$B, [
+                  vue.createElementVNode("div", _hoisted_5$E, [
                     ($data.designMode)
                       ? (vue.openBlock(), vue.createBlock(_component_el_button, {
                           key: 0,
@@ -35945,8 +35945,8 @@
               : vue.createCommentVNode("", true)
           ], 2))
         : vue.createCommentVNode("", true),
-      vue.createElementVNode("div", _hoisted_6$w, [
-        vue.createElementVNode("div", _hoisted_7$q, [
+      vue.createElementVNode("div", _hoisted_6$z, [
+        vue.createElementVNode("div", _hoisted_7$r, [
           (!$props.isModal)
             ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_8$k, [
                 vue.createVNode(_component_Toolbar, vue.mergeProps(_ctx.$props, {
@@ -36168,7 +36168,7 @@
         : vue.createCommentVNode("", true)
     ], 2))
   }
-  const AnalysisMaker = /*#__PURE__*/_export_sfc(_sfc_main$1p, [['render',_sfc_render$1o],['__scopeId',"data-v-af452114"]]);
+  const AnalysisMaker = /*#__PURE__*/_export_sfc(_sfc_main$1s, [['render',_sfc_render$1r],['__scopeId',"data-v-af452114"]]);
 
   AnalysisMaker.install = function (Vue) {
     Vue.component(AnalysisMaker.name, AnalysisMaker);
@@ -36178,7 +36178,7 @@
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$1o = {
+  const _sfc_main$1r = {
     name: 'ChartContent',
 
     components: {
@@ -36361,9 +36361,9 @@
     }
   };
 
-  const _hoisted_1$1x = ["label", "onClick"];
+  const _hoisted_1$1C = ["label", "onClick"];
 
-  function _sfc_render$1n(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1q(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_Close = vue.resolveComponent("Close");
     const _component_el_icon = vue.resolveComponent("el-icon");
     const _component_el_button = vue.resolveComponent("el-button");
@@ -36420,7 +36420,7 @@
                               ]),
                               _: 1
                             }, 8, ["onClick"])
-                          ], 10, _hoisted_1$1x))
+                          ], 10, _hoisted_1$1C))
                         }), 128))
                       ]),
                       _: 1
@@ -36493,10 +36493,10 @@
       _: 1
     }, 16, ["onClick"]))
   }
-  const ChartContent$1 = /*#__PURE__*/_export_sfc(_sfc_main$1o, [['render',_sfc_render$1n],['__scopeId',"data-v-e599c298"]]);
+  const ChartContent$1 = /*#__PURE__*/_export_sfc(_sfc_main$1r, [['render',_sfc_render$1q],['__scopeId',"data-v-e599c298"]]);
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1n = {
+  const _sfc_main$1q = {
     name: 'SubContent',
     components: {
       ChartContent: ChartContent$1
@@ -36524,7 +36524,7 @@
     }
   };
 
-  function _sfc_render$1m(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1p(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_SubContent = vue.resolveComponent("SubContent", true);
     const _component_ChartContent = vue.resolveComponent("ChartContent");
     const _component_EfFlexBox = vue.resolveComponent("EfFlexBox");
@@ -36564,12 +36564,12 @@
           "set-mode": $props.setMode
         }, null, 8, ["configs", "set-mode"]))
   }
-  const SubContent = /*#__PURE__*/_export_sfc(_sfc_main$1n, [['render',_sfc_render$1m]]);
+  const SubContent = /*#__PURE__*/_export_sfc(_sfc_main$1q, [['render',_sfc_render$1p]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1m = {
+  const _sfc_main$1p = {
     name: 'PageLayout',
     components: {
       SubContent,
@@ -36603,14 +36603,14 @@
     }
   };
 
-  function _sfc_render$1l(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1o(_ctx, _cache, $props, $setup, $data, $options) {
     return (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent($data.componentName), {
       ref: 'chart' + $props.configs.id,
       configs: $props.configs,
       "set-mode": $props.setMode
     }, null, 8, ["configs", "set-mode"]))
   }
-  const PageLayout = /*#__PURE__*/_export_sfc(_sfc_main$1m, [['render',_sfc_render$1l],['__scopeId',"data-v-f6968da4"]]);
+  const PageLayout = /*#__PURE__*/_export_sfc(_sfc_main$1p, [['render',_sfc_render$1o],['__scopeId',"data-v-f6968da4"]]);
 
   PageLayout.install = function (Vue) {
     Vue.component(libPrefix + PageLayout.name, PageLayout);
@@ -37323,6 +37323,13 @@
         if (this.configs.type === 'BKTableChart' && this.configs.configOption?.props?.hasPager && !this.configs.configOption?.props?.isStatic) {
           params = { ...params, ...this.pageParam };
         }
+        // 数据源面板配置(指标/分组筛选/排序)透传给接口,由后端解析生效
+        const ds = this.configs.dataSourceConfig;
+        if (ds) {
+          if (Array.isArray(ds.metrics) && ds.metrics.length) params = { ...params, metrics: JSON.stringify(ds.metrics) };
+          if (ds.grouping && ds.grouping.field) params = { ...params, grouping: JSON.stringify(ds.grouping) };
+          if (Array.isArray(ds.sorts) && ds.sorts.length) params = { ...params, sorts: JSON.stringify(ds.sorts) };
+        }
         return params
       },
       handleData (res) {
@@ -37490,7 +37497,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1l = {
+  const _sfc_main$1o = {
     name: 'RankList',
     props: {
       type: {
@@ -37524,17 +37531,17 @@
     }
   };
 
-  const _hoisted_1$1w = { style: {"display":"flex","justify-content":"space-between"} };
-  const _hoisted_2$13 = ["onClick"];
-  const _hoisted_3$Q = { class: "rank-image" };
-  const _hoisted_4$I = { class: "f-14 title" };
-  const _hoisted_5$A = { class: "f-16 f-w ff-wf num" };
-  const _hoisted_6$v = {
+  const _hoisted_1$1B = { style: {"display":"flex","justify-content":"space-between"} };
+  const _hoisted_2$16 = ["onClick"];
+  const _hoisted_3$T = { class: "rank-image" };
+  const _hoisted_4$L = { class: "f-14 title" };
+  const _hoisted_5$D = { class: "f-16 f-w ff-wf num" };
+  const _hoisted_6$y = {
     key: 1,
     style: {"display":"flex","align-items":"center","justify-content":"center","width":"100%","height":"100%"}
   };
 
-  function _sfc_render$1k(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1n(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_slider = vue.resolveComponent("el-slider");
     const _component_el_empty = vue.resolveComponent("el-empty");
 
@@ -37548,15 +37555,15 @@
               key: i,
               class: vue.normalizeClass(["rank-item", i===0?'first-bg':i===1?'second-bg':i===2?'third-bg':'other-bg'])
             }, [
-              vue.createElementVNode("div", _hoisted_1$1w, [
+              vue.createElementVNode("div", _hoisted_1$1B, [
                 vue.createElementVNode("div", {
                   style: {"display":"flex","align-items":"center"},
                   onClick: $event => ($options.itemClick(item))
                 }, [
-                  vue.createElementVNode("span", _hoisted_3$Q, vue.toDisplayString(i + 1), 1),
-                  vue.createElementVNode("span", _hoisted_4$I, vue.toDisplayString(item.name), 1)
-                ], 8, _hoisted_2$13),
-                vue.createElementVNode("div", _hoisted_5$A, vue.toDisplayString(item.number), 1)
+                  vue.createElementVNode("span", _hoisted_3$T, vue.toDisplayString(i + 1), 1),
+                  vue.createElementVNode("span", _hoisted_4$L, vue.toDisplayString(item.name), 1)
+                ], 8, _hoisted_2$16),
+                vue.createElementVNode("div", _hoisted_5$D, vue.toDisplayString(item.number), 1)
               ]),
               vue.createVNode(_component_el_slider, {
                 modelValue: item.number,
@@ -37568,17 +37575,17 @@
             ], 2))
           }), 128))
         ], 2))
-      : (vue.openBlock(), vue.createElementBlock("div", _hoisted_6$v, [
+      : (vue.openBlock(), vue.createElementBlock("div", _hoisted_6$y, [
           vue.createVNode(_component_el_empty, { description: "暂无数据" })
         ]))
   }
-  const AmRankList = /*#__PURE__*/_export_sfc(_sfc_main$1l, [['render',_sfc_render$1k],['__scopeId',"data-v-60d1c696"]]);
+  const AmRankList = /*#__PURE__*/_export_sfc(_sfc_main$1o, [['render',_sfc_render$1n],['__scopeId',"data-v-60d1c696"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
   // import { colorList } from '../../configs/chart-cfg'
-  const _sfc_main$1k = {
+  const _sfc_main$1n = {
     name: 'RankChart',
     components: {
       AmRankList
@@ -37642,16 +37649,16 @@
     }
   };
 
-  const _hoisted_1$1v = {
+  const _hoisted_1$1A = {
     ref: "rootRef",
     class: "full-box",
     style: {"position":"relative"}
   };
 
-  function _sfc_render$1j(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1m(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_AmRankList = vue.resolveComponent("AmRankList");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1v, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1A, [
       vue.renderSlot(_ctx.$slots, "content", {}, () => [
         (_ctx.contentConfig && _ctx.contentConfig.component)
           ? (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(_ctx.contentConfig.component), vue.normalizeProps(vue.mergeProps({ key: 0 }, _ctx.contentConfig.props || {})), null, 16))
@@ -37665,7 +37672,7 @@
       }), null, 16, ["style", "data", "max", "onItemClick"])
     ], 512))
   }
-  const RankChart = /*#__PURE__*/_export_sfc(_sfc_main$1k, [['render',_sfc_render$1j]]);
+  const RankChart = /*#__PURE__*/_export_sfc(_sfc_main$1n, [['render',_sfc_render$1m]]);
 
   RankChart.install = function (Vue) {
     Vue.component(libPrefix + RankChart.name, RankChart);
@@ -37674,7 +37681,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1j = {
+  const _sfc_main$1m = {
     name: 'DataFormatSelect',
     inject: ['getSaveAble'],
     props: {
@@ -37806,20 +37813,20 @@
     }
   };
 
-  const _hoisted_1$1u = { style: {"width":"100%","margin-bottom":"10px"} };
-  const _hoisted_2$12 = {
+  const _hoisted_1$1z = { style: {"width":"100%","margin-bottom":"10px"} };
+  const _hoisted_2$15 = {
     class: "label-title",
     size: "small"
   };
 
-  function _sfc_render$1i(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1l(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_popover = vue.resolveComponent("el-popover");
     const _component_el_option = vue.resolveComponent("el-option");
     const _component_el_select = vue.resolveComponent("el-select");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_el_form = vue.resolveComponent("el-form");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1u, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1z, [
       vue.createVNode(_component_el_form, {
         ref: "form",
         size: "small",
@@ -37838,7 +37845,7 @@
                 trigger: "click"
               }, {
                 reference: vue.withCtx(() => [
-                  vue.createElementVNode("span", _hoisted_2$12, vue.toDisplayString($props.name), 1)
+                  vue.createElementVNode("span", _hoisted_2$15, vue.toDisplayString($props.name), 1)
                 ]),
                 default: vue.withCtx(() => [
                   vue.withDirectives(vue.createElementVNode("div", null, [...(_cache[1] || (_cache[1] = [
@@ -37897,7 +37904,7 @@
       }, 8, ["disabled"])
     ]))
   }
-  const DataFormatSelect = /*#__PURE__*/_export_sfc(_sfc_main$1j, [['render',_sfc_render$1i],['__scopeId',"data-v-c0594a98"]]);
+  const DataFormatSelect = /*#__PURE__*/_export_sfc(_sfc_main$1m, [['render',_sfc_render$1l],['__scopeId',"data-v-c0594a98"]]);
 
   const stateDic = [{ label: '是', value: '1' }, { label: '否', value: '0' }];
   const commonItems = [
@@ -38044,7 +38051,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1i = {
+  const _sfc_main$1l = {
     name: 'RankChartConfig',
     components: { dataFormatSelect: DataFormatSelect },
     mixins: [Copy],
@@ -38123,16 +38130,16 @@
     }
   };
 
-  const _hoisted_1$1t = { class: "copy-button-box" };
-  const _hoisted_2$11 = { class: "d-flex-c" };
-  const _hoisted_3$P = { class: "d-flex-c" };
-  const _hoisted_4$H = { class: "d-flex-c" };
-  const _hoisted_5$z = { class: "d-flex-c" };
-  const _hoisted_6$u = { class: "d-flex-c" };
-  const _hoisted_7$p = { class: "d-flex-c" };
+  const _hoisted_1$1y = { class: "copy-button-box" };
+  const _hoisted_2$14 = { class: "d-flex-c" };
+  const _hoisted_3$S = { class: "d-flex-c" };
+  const _hoisted_4$K = { class: "d-flex-c" };
+  const _hoisted_5$C = { class: "d-flex-c" };
+  const _hoisted_6$x = { class: "d-flex-c" };
+  const _hoisted_7$q = { class: "d-flex-c" };
   const _hoisted_8$j = { class: "d-flex-c" };
 
-  function _sfc_render$1h(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1k(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_el_radio_button = vue.resolveComponent("el-radio-button");
     const _component_el_radio_group = vue.resolveComponent("el-radio-group");
@@ -38169,7 +38176,7 @@
           style: {"padding-right":"10px","margin-top":"10px"}
         }, {
           default: vue.withCtx(() => [
-            vue.createElementVNode("div", _hoisted_1$1t, [
+            vue.createElementVNode("div", _hoisted_1$1y, [
               vue.createVNode(_component_el_button, {
                 type: "primary",
                 size: "small",
@@ -38221,7 +38228,7 @@
             }),
             vue.createVNode(_component_el_form_item, { label: "进度条" }, {
               default: vue.withCtx(() => [
-                vue.createElementVNode("div", _hoisted_2$11, [
+                vue.createElementVNode("div", _hoisted_2$14, [
                   vue.createVNode(_component_CommonColorPicker, {
                     modelValue: $data.form['--progressBgColor'],
                     "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form['--progressBgColor']) = $event)),
@@ -38244,7 +38251,7 @@
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_3$P, [
+                        vue.createElementVNode("div", _hoisted_3$S, [
                           vue.createVNode(_component_el_input_number, {
                             modelValue: $data.form['--titlefontSize'],
                             "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form['--titlefontSize']) = $event)),
@@ -38260,7 +38267,7 @@
                     }),
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_4$H, [
+                        vue.createElementVNode("div", _hoisted_4$K, [
                           vue.createVNode(_component_el_select, {
                             modelValue: $data.form['--titlefontWeight'],
                             "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form['--titlefontWeight']) = $event)),
@@ -38294,7 +38301,7 @@
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_5$z, [
+                        vue.createElementVNode("div", _hoisted_5$C, [
                           vue.createVNode(_component_CommonColorPicker, {
                             modelValue: $data.form['--titlecolor'],
                             "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form['--titlecolor']) = $event)),
@@ -38326,7 +38333,7 @@
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_6$u, [
+                        vue.createElementVNode("div", _hoisted_6$x, [
                           vue.createVNode(_component_el_input_number, {
                             modelValue: $data.form['--numfontSize'],
                             "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form['--numfontSize']) = $event)),
@@ -38342,7 +38349,7 @@
                     }),
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_7$p, [
+                        vue.createElementVNode("div", _hoisted_7$q, [
                           vue.createVNode(_component_el_select, {
                             modelValue: $data.form['--numfontWeight'],
                             "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form['--numfontWeight']) = $event)),
@@ -38410,7 +38417,7 @@
       _: 1
     }, 16, ["configs", "page-config", "save-able", "rules", "items", "tjb-u-r-l", "onConfigOptionInit", "onSaveChartConfig"]))
   }
-  const RankChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$1i, [['render',_sfc_render$1h],['__scopeId',"data-v-6fbc4c94"]]);
+  const RankChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$1l, [['render',_sfc_render$1k],['__scopeId',"data-v-6fbc4c94"]]);
 
   RankChartConfig.install = function (Vue) {
     Vue.component(libPrefix + RankChartConfig.name, RankChartConfig);
@@ -38418,7 +38425,7 @@
 
   /* unplugin-vue-components disabled */
   // import originList from '../../map-chart-config/src/config/default-data'
-  const _sfc_main$1h = {
+  const _sfc_main$1k = {
     name: 'RadarChart',
     components: {
 
@@ -38512,21 +38519,21 @@
     }
   };
 
-  const _hoisted_1$1s = {
+  const _hoisted_1$1x = {
     ref: "rootRef",
     class: "full-box",
     style: {"position":"relative"}
   };
-  const _hoisted_2$10 = {
+  const _hoisted_2$13 = {
     ref: "downLoadPic",
     href: "#",
     style: {"display":"none"}
   };
 
-  function _sfc_render$1g(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1j(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BKChart = vue.resolveComponent("BKChart");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1s, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1x, [
       vue.renderSlot(_ctx.$slots, "content", {}, () => [
         (_ctx.contentConfig && _ctx.contentConfig.component)
           ? (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(_ctx.contentConfig.component), vue.normalizeProps(vue.mergeProps({ key: 0 }, _ctx.contentConfig.props || {})), null, 16))
@@ -38537,17 +38544,17 @@
         option: $data.option,
         onClick: $options.itemClick
       }, null, 8, ["option", "onClick"]),
-      vue.createElementVNode("a", _hoisted_2$10, null, 512)
+      vue.createElementVNode("a", _hoisted_2$13, null, 512)
     ], 512))
   }
-  const RadarChart = /*#__PURE__*/_export_sfc(_sfc_main$1h, [['render',_sfc_render$1g]]);
+  const RadarChart = /*#__PURE__*/_export_sfc(_sfc_main$1k, [['render',_sfc_render$1j]]);
 
   RadarChart.install = function (Vue) {
     Vue.component(libPrefix + RadarChart.name, RadarChart);
   };
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1g = {
+  const _sfc_main$1j = {
     props: {
       menu: {
         type: Array,
@@ -38581,11 +38588,11 @@
 
   };
 
-  const _hoisted_1$1r = { class: "chart-sidebar" };
-  const _hoisted_2$$ = ["onClick"];
+  const _hoisted_1$1w = { class: "chart-sidebar" };
+  const _hoisted_2$12 = ["onClick"];
 
-  function _sfc_render$1f(_ctx, _cache, $props, $setup, $data, $options) {
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1r, [
+  function _sfc_render$1i(_ctx, _cache, $props, $setup, $data, $options) {
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1w, [
       (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($props.menu, (m) => {
         return (vue.openBlock(), vue.createElementBlock("div", {
           key: m.key,
@@ -38596,11 +38603,11 @@
             class: vue.normalizeClass(['icon am-iconfont sidebar-icon', m.icon])
           }, null, 2),
           vue.createElementVNode("span", null, vue.toDisplayString(m.name), 1)
-        ], 10, _hoisted_2$$))
+        ], 10, _hoisted_2$12))
       }), 128))
     ]))
   }
-  const SidebarTabs = /*#__PURE__*/_export_sfc(_sfc_main$1g, [['render',_sfc_render$1f]]);
+  const SidebarTabs = /*#__PURE__*/_export_sfc(_sfc_main$1j, [['render',_sfc_render$1i]]);
 
   const itemsConfig$4 = {
     basicConfig: {
@@ -38613,7 +38620,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1f = {
+  const _sfc_main$1i = {
     name: 'TextStyle',
     inject: ['getSaveAble', 'getThemeFont'],
     props: {
@@ -38724,14 +38731,14 @@
     }
   };
 
-  const _hoisted_1$1q = { class: "d-flex-c" };
-  const _hoisted_2$_ = { class: "d-flex-c" };
-  const _hoisted_3$O = { class: "d-flex-c" };
-  const _hoisted_4$G = { class: "d-flex-c" };
-  const _hoisted_5$y = { class: "d-flex-c" };
-  const _hoisted_6$t = { class: "d-flex-c" };
+  const _hoisted_1$1v = { class: "d-flex-c" };
+  const _hoisted_2$11 = { class: "d-flex-c" };
+  const _hoisted_3$R = { class: "d-flex-c" };
+  const _hoisted_4$J = { class: "d-flex-c" };
+  const _hoisted_5$B = { class: "d-flex-c" };
+  const _hoisted_6$w = { class: "d-flex-c" };
 
-  function _sfc_render$1e(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1h(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_option = vue.resolveComponent("el-option");
     const _component_el_select = vue.resolveComponent("el-select");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
@@ -38760,7 +38767,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$1q, [
+                    vue.createElementVNode("div", _hoisted_1$1v, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.form.fontWeight,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.fontWeight) = $event)),
@@ -38791,7 +38798,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$_, [
+                    vue.createElementVNode("div", _hoisted_2$11, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.form.fontFamily,
                         "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($data.form.fontFamily) = $event)),
@@ -38830,7 +38837,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_3$O, [
+                    vue.createElementVNode("div", _hoisted_3$R, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.fontSize,
                         "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.fontSize) = $event)),
@@ -38851,7 +38858,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$G, [
+                    vue.createElementVNode("div", _hoisted_4$J, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.color,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.color) = $event)),
@@ -38881,7 +38888,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$y, [
+                    vue.createElementVNode("div", _hoisted_5$B, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.extra.fontStyle,
                         "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.extra.fontStyle) = $event)),
@@ -38912,7 +38919,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_6$t, [
+                    vue.createElementVNode("div", _hoisted_6$w, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.extra.textDecoration,
                         "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.extra.textDecoration) = $event)),
@@ -38948,12 +38955,12 @@
       _: 1
     }, 8, ["model", "disabled"]))
   }
-  const TextStyle = /*#__PURE__*/_export_sfc(_sfc_main$1f, [['render',_sfc_render$1e],['__scopeId',"data-v-8776f1fd"]]);
+  const TextStyle = /*#__PURE__*/_export_sfc(_sfc_main$1i, [['render',_sfc_render$1h],['__scopeId',"data-v-8776f1fd"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$1e = {
+  const _sfc_main$1h = {
     components: {
       lineStyle: LineStyle,
       TextStyle
@@ -39044,18 +39051,18 @@
     }
   };
 
-  const _hoisted_1$1p = { class: "xAix-cofig" };
-  const _hoisted_2$Z = {
+  const _hoisted_1$1u = { class: "xAix-cofig" };
+  const _hoisted_2$10 = {
     class: "plane-inner-bg",
     style: {"margin-bottom":"10px"}
   };
-  const _hoisted_3$N = { class: "d-flex-c" };
-  const _hoisted_4$F = { class: "d-flex" };
-  const _hoisted_5$x = ["onClick"];
-  const _hoisted_6$s = { class: "d-flex-c" };
-  const _hoisted_7$o = { class: "d-flex-c" };
+  const _hoisted_3$Q = { class: "d-flex-c" };
+  const _hoisted_4$I = { class: "d-flex" };
+  const _hoisted_5$A = ["onClick"];
+  const _hoisted_6$v = { class: "d-flex-c" };
+  const _hoisted_7$p = { class: "d-flex-c" };
 
-  function _sfc_render$1d(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1g(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_el_radio_button = vue.resolveComponent("el-radio-button");
@@ -39072,7 +39079,7 @@
     const _component_lineStyle = vue.resolveComponent("lineStyle");
     const _component_el_form = vue.resolveComponent("el-form");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1p, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1u, [
       vue.createVNode(_component_el_form, {
         ref: 'form-xAix',
         model: $data.basic,
@@ -39140,7 +39147,7 @@
                   ], -1)
                 ]))]),
                 default: vue.withCtx(() => [
-                  vue.createElementVNode("div", _hoisted_2$Z, [
+                  vue.createElementVNode("div", _hoisted_2$10, [
                     vue.createVNode(_component_el_form_item, { label: "偏移量" }, {
                       default: vue.withCtx(() => [
                         vue.createVNode(_component_el_input_number, {
@@ -39285,8 +39292,8 @@
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_3$N, [
-                                vue.createElementVNode("div", _hoisted_4$F, [
+                              vue.createElementVNode("div", _hoisted_3$Q, [
+                                vue.createElementVNode("div", _hoisted_4$I, [
                                   (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.alignOption, (ele) => {
                                     return (vue.openBlock(), vue.createElementBlock("div", {
                                       key: ele.value,
@@ -39296,7 +39303,7 @@
                                       vue.createElementVNode("i", {
                                         class: vue.normalizeClass(['icon am-iconfont align-icon', ele.icon])
                                       }, null, 2)
-                                    ], 10, _hoisted_5$x))
+                                    ], 10, _hoisted_5$A))
                                   }), 128))
                                 ]),
                                 _cache[44] || (_cache[44] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 角度", -1))
@@ -39306,7 +39313,517 @@
                           }),
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_6$s, [
+                              vue.createElementVNode("div", _hoisted_6$v, [
+                                vue.createVNode(_component_el_input_number, {
+                                  modelValue: $data.alignActive,
+                                  "onUpdate:modelValue": _cache[17] || (_cache[17] = $event => (($data.alignActive) = $event)),
+                                  size: "small",
+                                  class: "input-number-box-angle",
+                                  "controls-position": "right",
+                                  onChange: $options.alignChange
+                                }, null, 8, ["modelValue", "onChange"])
+                              ])
+                            ]),
+                            _: 1
+                          })
+                        ]),
+                        _: 1
+                      }),
+                      vue.createVNode(_component_el_row, {
+                        gutter: 10,
+                        type: "flex"
+                      }, {
+                        default: vue.withCtx(() => [
+                          vue.createVNode(_component_el_col, { span: 12 }, {
+                            default: vue.withCtx(() => [
+                              vue.createElementVNode("div", _hoisted_7$p, [
+                                vue.createVNode(_component_el_input_number, {
+                                  modelValue: $data.form.axisLabel.margin,
+                                  "onUpdate:modelValue": _cache[18] || (_cache[18] = $event => (($data.form.axisLabel.margin) = $event)),
+                                  class: "input-number-box-px",
+                                  size: "small",
+                                  "controls-position": "right",
+                                  onChange: _cache[19] || (_cache[19] = $event => (_ctx.$emit('axisChange')))
+                                }, null, 8, ["modelValue"]),
+                                _cache[45] || (_cache[45] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 偏移量", -1))
+                              ])
+                            ]),
+                            _: 1
+                          })
+                        ]),
+                        _: 1
+                      })
+                    ]),
+                    _: 1
+                  })
+                ]),
+                _: 1
+              }, 8, ["modelValue"]),
+              vue.createVNode(_component_CollapseItem, {
+                modelValue: $data.form.axisLine.show,
+                "onUpdate:modelValue": _cache[23] || (_cache[23] = $event => (($data.form.axisLine.show) = $event)),
+                name: "轴线",
+                onChange: _cache[24] || (_cache[24] = $event => (_ctx.$emit('axisChange')))
+              }, {
+                default: vue.withCtx(() => [
+                  vue.createVNode(_component_el_form_item, { label: "样式" }, {
+                    default: vue.withCtx(() => [
+                      vue.createVNode(_component_lineStyle, {
+                        ref: "axisLineForm",
+                        onLineStyleChange: _cache[22] || (_cache[22] = $event => ($options.lineStyleChange($event,'axisLine')))
+                      }, null, 512)
+                    ]),
+                    _: 1
+                  })
+                ]),
+                _: 1
+              }, 8, ["modelValue"]),
+              vue.createVNode(_component_CollapseItem, {
+                modelValue: $data.form.splitLine.show,
+                "onUpdate:modelValue": _cache[26] || (_cache[26] = $event => (($data.form.splitLine.show) = $event)),
+                name: "网格线",
+                onChange: _cache[27] || (_cache[27] = $event => (_ctx.$emit('axisChange')))
+              }, {
+                default: vue.withCtx(() => [
+                  vue.createVNode(_component_el_form_item, { label: "样式" }, {
+                    default: vue.withCtx(() => [
+                      vue.createVNode(_component_lineStyle, {
+                        ref: "splitLineForm",
+                        onLineStyleChange: _cache[25] || (_cache[25] = $event => ($options.lineStyleChange($event,'splitLine')))
+                      }, null, 512)
+                    ]),
+                    _: 1
+                  })
+                ]),
+                _: 1
+              }, 8, ["modelValue"]),
+              vue.createVNode(_component_CollapseItem, {
+                modelValue: $data.form.axisTick.show,
+                "onUpdate:modelValue": _cache[33] || (_cache[33] = $event => (($data.form.axisTick.show) = $event)),
+                name: "刻度线",
+                onChange: _cache[34] || (_cache[34] = $event => (_ctx.$emit('axisChange')))
+              }, {
+                default: vue.withCtx(() => [
+                  vue.createVNode(_component_el_form_item, { label: "长度" }, {
+                    default: vue.withCtx(() => [
+                      vue.createVNode(_component_el_input_number, {
+                        modelValue: $data.form.axisTick.length,
+                        "onUpdate:modelValue": _cache[28] || (_cache[28] = $event => (($data.form.axisTick.length) = $event)),
+                        size: "small",
+                        class: "input-number-box-px",
+                        "controls-position": "right",
+                        onChange: _cache[29] || (_cache[29] = $event => (_ctx.$emit('axisChange')))
+                      }, null, 8, ["modelValue"])
+                    ]),
+                    _: 1
+                  }),
+                  vue.createVNode(_component_el_form_item, { label: "朝向" }, {
+                    default: vue.withCtx(() => [
+                      vue.createVNode(_component_el_radio_group, {
+                        modelValue: $data.form.axisTick.inside,
+                        "onUpdate:modelValue": _cache[30] || (_cache[30] = $event => (($data.form.axisTick.inside) = $event)),
+                        size: "small",
+                        onChange: _cache[31] || (_cache[31] = $event => (_ctx.$emit('axisChange')))
+                      }, {
+                        default: vue.withCtx(() => [
+                          vue.createVNode(_component_el_radio_button, { value: 0 }, {
+                            default: vue.withCtx(() => [...(_cache[46] || (_cache[46] = [
+                              vue.createTextVNode(" 朝外 ", -1)
+                            ]))]),
+                            _: 1
+                          }),
+                          vue.createVNode(_component_el_radio_button, { value: 1 }, {
+                            default: vue.withCtx(() => [...(_cache[47] || (_cache[47] = [
+                              vue.createTextVNode(" 朝内 ", -1)
+                            ]))]),
+                            _: 1
+                          })
+                        ]),
+                        _: 1
+                      }, 8, ["modelValue"])
+                    ]),
+                    _: 1
+                  }),
+                  vue.createVNode(_component_el_form_item, { label: "样式" }, {
+                    default: vue.withCtx(() => [
+                      vue.createVNode(_component_lineStyle, {
+                        ref: "axisTickForm",
+                        onLineStyleChange: _cache[32] || (_cache[32] = $event => ($options.lineStyleChange($event,'axisTick')))
+                      }, null, 512)
+                    ]),
+                    _: 1
+                  })
+                ]),
+                _: 1
+              }, 8, ["modelValue"])
+            ]),
+            _: 1
+          })
+        ]),
+        _: 1
+      }, 8, ["model", "disabled"])
+    ]))
+  }
+  const XaxisConfig$1 = /*#__PURE__*/_export_sfc(_sfc_main$1h, [['render',_sfc_render$1g],['__scopeId',"data-v-ec4d736c"]]);
+
+  /* unplugin-vue-components disabled */
+
+  /* unplugin-vue-components disabled */
+  const _sfc_main$1g = {
+    components: {
+      lineStyle: LineStyle,
+      TextStyle
+    },
+    inject: ['getSaveAble'],
+    emits: ['axisChange'],
+    data () {
+      return {
+        form: {
+          axisLabel: { show: false, margin: 8, rotate: 0, dataType: '' },
+          axisLine: { show: false },
+          splitLine: { show: false },
+          axisTick: { show: false, inside: 0, length: 5 },
+          nameTextStyle: {}
+        },
+        basic: { show: false, name: '', type: 'value', alignTicks: true, nameGap: 15, nameLocation: 'end', scale: false, position: 'left' },
+        alignActive: 0,
+        alignOption: [{ label: '水平', value: 0, icon: 'icon-jiaodu-shuiping' }, { label: '斜角', value: 45, icon: 'icon-jiaodu-xiejiao' }, { label: '垂直', value: -90, icon: 'icon-jiaodu-chuizhi' }]
+      }
+    },
+    computed: {
+      saveAble () {
+        return this.getSaveAble()
+      }
+    },
+
+    methods: {
+      setFormData (form) {
+        Object.assign(this.$data, this.$options.data());
+
+        Object.keys(this.form).forEach(key => {
+          if (form[key]) {
+            this.form[key] = Object.assign(this.form[key], form[key]);
+          }
+        });
+        Object.keys(this.basic).forEach(key => {
+          if (form[key]) {
+            this.basic[key] = form[key];
+          }
+        });
+        Object.keys(this.form).forEach(name => {
+          if (['axisLabel', 'axisLine', 'splitLine', 'nameTextStyle', 'axisTick'].includes(name)) {
+            if (this.$refs[name + 'Form'].type === 'text') {
+              this.$refs[name + 'Form'].setFormData(form[name] || {});
+            }
+            if (this.$refs[name + 'Form'].type === 'line') {
+              this.$refs[name + 'Form'].setFormData(form[name]?.lineStyle || {});
+            }
+          }
+        }
+        );
+
+        this.alignActive = this.form.axisLabel.rotate ? this.form.axisLabel.rotate : 0;
+      },
+      lineStyleChange (lineStyle, type) {
+        this.form[type].lineStyle = { ...lineStyle };
+        this.$emit('axisChange');
+      },
+      textStyleChange (textStyle, type) {
+        this.form[type] = { ...this.form[type], ...textStyle };
+        this.$emit('axisChange');
+      },
+      saveFormData () {
+        const formData = { ...this.basic };
+        Object.keys(this.form).forEach(name => {
+          if (['axisLabel', 'axisLine', 'splitLine', 'nameTextStyle', 'axisTick'].includes(name)) {
+            formData[name] = { ...this.form[name] };
+            if (this.form[name].show) {
+              if (this.$refs[name + 'Form'].type === 'text') {
+                formData[name] = { ...formData[name], ...this.$refs[name + 'Form'].getFormData() };
+              }
+              if (this.$refs[name + 'Form'].type === 'line') {
+                formData[name].lineStyle = this.$refs[name + 'Form'].getFormData();
+              }
+            }
+          }
+        });
+        return formData
+      },
+      typeChange () {
+        this.form.axisLabel.dataType = '';
+        this.$emit('axisChange');
+      },
+      alignChange (e) {
+        this.alignActive = e;
+        this.form.axisLabel.rotate = Number(e);
+        this.$emit('axisChange');
+      }
+    }
+  };
+
+  const _hoisted_1$1t = { class: "yAix-cofig" };
+  const _hoisted_2$$ = {
+    class: "plane-inner-bg",
+    style: {"margin-bottom":"10px"}
+  };
+  const _hoisted_3$P = { class: "d-flex-c" };
+  const _hoisted_4$H = { class: "d-flex" };
+  const _hoisted_5$z = ["onClick"];
+  const _hoisted_6$u = { class: "d-flex-c" };
+  const _hoisted_7$o = { class: "d-flex-c" };
+
+  function _sfc_render$1f(_ctx, _cache, $props, $setup, $data, $options) {
+    const _component_el_switch = vue.resolveComponent("el-switch");
+    const _component_el_form_item = vue.resolveComponent("el-form-item");
+    const _component_el_radio_button = vue.resolveComponent("el-radio-button");
+    const _component_el_radio_group = vue.resolveComponent("el-radio-group");
+    const _component_el_input = vue.resolveComponent("el-input");
+    const _component_el_input_number = vue.resolveComponent("el-input-number");
+    const _component_text_style = vue.resolveComponent("text-style");
+    const _component_el_collapse_item = vue.resolveComponent("el-collapse-item");
+    const _component_el_collapse = vue.resolveComponent("el-collapse");
+    const _component_DataFormatSelect = vue.resolveComponent("DataFormatSelect");
+    const _component_el_col = vue.resolveComponent("el-col");
+    const _component_el_row = vue.resolveComponent("el-row");
+    const _component_CollapseItem = vue.resolveComponent("CollapseItem");
+    const _component_lineStyle = vue.resolveComponent("lineStyle");
+    const _component_el_form = vue.resolveComponent("el-form");
+
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1t, [
+      vue.createVNode(_component_el_form, {
+        ref: 'form-yAix',
+        size: "small",
+        model: $data.basic,
+        disabled: !$options.saveAble,
+        "label-width": "80px"
+      }, {
+        default: vue.withCtx(() => [
+          vue.createVNode(_component_el_form_item, { label: "y轴可见" }, {
+            default: vue.withCtx(() => [
+              vue.createVNode(_component_el_switch, {
+                modelValue: $data.basic.show,
+                "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.basic.show) = $event)),
+                class: "am-switch active-switch",
+                size: "small",
+                onChange: _cache[1] || (_cache[1] = $event => (_ctx.$emit('axisChange')))
+              }, null, 8, ["modelValue"])
+            ]),
+            _: 1
+          }),
+          vue.createVNode(_component_el_form_item, { label: "位置" }, {
+            default: vue.withCtx(() => [
+              vue.createVNode(_component_el_radio_group, {
+                modelValue: $data.basic.position,
+                "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.basic.position) = $event)),
+                size: "small",
+                onChange: _cache[3] || (_cache[3] = $event => (_ctx.$emit('axisChange')))
+              }, {
+                default: vue.withCtx(() => [
+                  vue.createVNode(_component_el_radio_button, { value: "left" }, {
+                    default: vue.withCtx(() => [...(_cache[35] || (_cache[35] = [
+                      vue.createTextVNode(" 左 ", -1)
+                    ]))]),
+                    _: 1
+                  }),
+                  vue.createVNode(_component_el_radio_button, { value: "right" }, {
+                    default: vue.withCtx(() => [...(_cache[36] || (_cache[36] = [
+                      vue.createTextVNode(" 右 ", -1)
+                    ]))]),
+                    _: 1
+                  })
+                ]),
+                _: 1
+              }, 8, ["modelValue"])
+            ]),
+            _: 1
+          }),
+          vue.createVNode(_component_el_form_item, { label: "轴单位" }, {
+            default: vue.withCtx(() => [
+              vue.createVNode(_component_el_input, {
+                modelValue: $data.basic.name,
+                "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.basic.name) = $event)),
+                size: "small",
+                onChange: _cache[5] || (_cache[5] = $event => (_ctx.$emit('axisChange')))
+              }, null, 8, ["modelValue"])
+            ]),
+            _: 1
+          }),
+          vue.createVNode(_component_el_collapse, null, {
+            default: vue.withCtx(() => [
+              vue.createVNode(_component_el_collapse_item, null, {
+                title: vue.withCtx(() => [...(_cache[37] || (_cache[37] = [
+                  vue.createElementVNode("div", null, [
+                    vue.createElementVNode("span", { class: "collapse-title-common" }, " 轴单位样式 ")
+                  ], -1)
+                ]))]),
+                default: vue.withCtx(() => [
+                  vue.createElementVNode("div", _hoisted_2$$, [
+                    vue.createVNode(_component_el_form_item, { label: "偏移量" }, {
+                      default: vue.withCtx(() => [
+                        vue.createVNode(_component_el_input_number, {
+                          modelValue: $data.basic.nameGap,
+                          "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.basic.nameGap) = $event)),
+                          size: "small",
+                          class: "input-number-box-px",
+                          "controls-position": "right",
+                          onChange: _cache[7] || (_cache[7] = $event => (_ctx.$emit('axisChange')))
+                        }, null, 8, ["modelValue"])
+                      ]),
+                      _: 1
+                    }),
+                    vue.createVNode(_component_el_form_item, { label: "位置" }, {
+                      default: vue.withCtx(() => [
+                        vue.createVNode(_component_el_radio_group, {
+                          modelValue: $data.basic.nameLocation,
+                          "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.basic.nameLocation) = $event)),
+                          size: "small",
+                          onChange: _cache[9] || (_cache[9] = $event => (_ctx.$emit('axisChange')))
+                        }, {
+                          default: vue.withCtx(() => [
+                            vue.createVNode(_component_el_radio_button, { value: "start" }, {
+                              default: vue.withCtx(() => [...(_cache[38] || (_cache[38] = [
+                                vue.createTextVNode(" 起始 ", -1)
+                              ]))]),
+                              _: 1
+                            }),
+                            vue.createVNode(_component_el_radio_button, { value: "middle" }, {
+                              default: vue.withCtx(() => [...(_cache[39] || (_cache[39] = [
+                                vue.createTextVNode(" 中部 ", -1)
+                              ]))]),
+                              _: 1
+                            }),
+                            vue.createVNode(_component_el_radio_button, { value: "end" }, {
+                              default: vue.withCtx(() => [...(_cache[40] || (_cache[40] = [
+                                vue.createTextVNode(" 末尾 ", -1)
+                              ]))]),
+                              _: 1
+                            })
+                          ]),
+                          _: 1
+                        }, 8, ["modelValue"])
+                      ]),
+                      _: 1
+                    }),
+                    vue.createVNode(_component_el_form_item, { label: "文本样式" }, {
+                      default: vue.withCtx(() => [
+                        vue.createVNode(_component_text_style, {
+                          ref: "nameTextStyleForm",
+                          onTextStyleChange: _cache[10] || (_cache[10] = $event => ($options.textStyleChange($event,'nameTextStyle')))
+                        }, null, 512)
+                      ]),
+                      _: 1
+                    })
+                  ])
+                ]),
+                _: 1
+              })
+            ]),
+            _: 1
+          }),
+          vue.createVNode(_component_el_form_item, { label: "数据类型" }, {
+            default: vue.withCtx(() => [
+              vue.createVNode(_component_el_radio_group, {
+                modelValue: $data.basic.type,
+                "onUpdate:modelValue": _cache[11] || (_cache[11] = $event => (($data.basic.type) = $event)),
+                size: "small",
+                onChange: $options.typeChange
+              }, {
+                default: vue.withCtx(() => [
+                  vue.createVNode(_component_el_radio_button, { value: "category" }, {
+                    default: vue.withCtx(() => [...(_cache[41] || (_cache[41] = [
+                      vue.createTextVNode(" 类目轴 ", -1)
+                    ]))]),
+                    _: 1
+                  }),
+                  vue.createVNode(_component_el_radio_button, { value: "value" }, {
+                    default: vue.withCtx(() => [...(_cache[42] || (_cache[42] = [
+                      vue.createTextVNode(" 数值轴 ", -1)
+                    ]))]),
+                    _: 1
+                  }),
+                  vue.createVNode(_component_el_radio_button, { value: "time" }, {
+                    default: vue.withCtx(() => [...(_cache[43] || (_cache[43] = [
+                      vue.createTextVNode(" 时间轴 ", -1)
+                    ]))]),
+                    _: 1
+                  })
+                ]),
+                _: 1
+              }, 8, ["modelValue", "onChange"])
+            ]),
+            _: 1
+          }),
+          vue.withDirectives(vue.createVNode(_component_el_form_item, { label: "数据缩放" }, {
+            default: vue.withCtx(() => [
+              vue.createVNode(_component_el_switch, {
+                modelValue: $data.basic.scale,
+                "onUpdate:modelValue": _cache[12] || (_cache[12] = $event => (($data.basic.scale) = $event)),
+                class: "am-switch active-switch",
+                size: "small",
+                onChange: _cache[13] || (_cache[13] = $event => (_ctx.$emit('axisChange')))
+              }, null, 8, ["modelValue"])
+            ]),
+            _: 1
+          }, 512), [
+            [vue.vShow, $data.basic.type==='value']
+          ]),
+          vue.createVNode(_component_el_collapse, null, {
+            default: vue.withCtx(() => [
+              vue.createVNode(_component_CollapseItem, {
+                modelValue: $data.form.axisLabel.show,
+                "onUpdate:modelValue": _cache[20] || (_cache[20] = $event => (($data.form.axisLabel.show) = $event)),
+                name: "轴标签",
+                onChange: _cache[21] || (_cache[21] = $event => (_ctx.$emit('axisChange')))
+              }, {
+                default: vue.withCtx(() => [
+                  vue.withDirectives(vue.createVNode(_component_DataFormatSelect, {
+                    modelValue: $data.form.axisLabel.dataType,
+                    "onUpdate:modelValue": _cache[14] || (_cache[14] = $event => (($data.form.axisLabel.dataType) = $event)),
+                    type: $data.basic.type,
+                    onDataTypeChange: _cache[15] || (_cache[15] = $event => (_ctx.$emit('axisChange')))
+                  }, null, 8, ["modelValue", "type"]), [
+                    [vue.vShow, $data.basic.type==='value'||$data.basic.type==='time']
+                  ]),
+                  vue.createVNode(_component_el_form_item, { label: "文本" }, {
+                    default: vue.withCtx(() => [
+                      vue.createVNode(_component_text_style, {
+                        ref: "axisLabelForm",
+                        onTextStyleChange: _cache[16] || (_cache[16] = $event => ($options.textStyleChange($event,'axisLabel')))
+                      }, null, 512)
+                    ]),
+                    _: 1
+                  }),
+                  vue.createVNode(_component_el_form_item, { label: "轴标签" }, {
+                    default: vue.withCtx(() => [
+                      vue.createVNode(_component_el_row, {
+                        gutter: 10,
+                        type: "flex"
+                      }, {
+                        default: vue.withCtx(() => [
+                          vue.createVNode(_component_el_col, { span: 12 }, {
+                            default: vue.withCtx(() => [
+                              vue.createElementVNode("div", _hoisted_3$P, [
+                                vue.createElementVNode("div", _hoisted_4$H, [
+                                  (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.alignOption, (ele) => {
+                                    return (vue.openBlock(), vue.createElementBlock("div", {
+                                      key: ele.value,
+                                      class: vue.normalizeClass(["chart-align-item", {'active':$data.alignActive===ele.value,'is-disabled':!$options.saveAble}]),
+                                      onClick: $event => ($options.alignChange(ele.value))
+                                    }, [
+                                      vue.createElementVNode("i", {
+                                        class: vue.normalizeClass(['icon am-iconfont align-icon', ele.icon])
+                                      }, null, 2)
+                                    ], 10, _hoisted_5$z))
+                                  }), 128))
+                                ]),
+                                _cache[44] || (_cache[44] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 角度", -1))
+                              ])
+                            ]),
+                            _: 1
+                          }),
+                          vue.createVNode(_component_el_col, { span: 12 }, {
+                            default: vue.withCtx(() => [
+                              vue.createElementVNode("div", _hoisted_6$u, [
                                 vue.createVNode(_component_el_input_number, {
                                   modelValue: $data.alignActive,
                                   "onUpdate:modelValue": _cache[17] || (_cache[17] = $event => (($data.alignActive) = $event)),
@@ -39457,523 +39974,13 @@
       }, 8, ["model", "disabled"])
     ]))
   }
-  const XaxisConfig$1 = /*#__PURE__*/_export_sfc(_sfc_main$1e, [['render',_sfc_render$1d],['__scopeId',"data-v-ec4d736c"]]);
-
-  /* unplugin-vue-components disabled */
-
-  /* unplugin-vue-components disabled */
-  const _sfc_main$1d = {
-    components: {
-      lineStyle: LineStyle,
-      TextStyle
-    },
-    inject: ['getSaveAble'],
-    emits: ['axisChange'],
-    data () {
-      return {
-        form: {
-          axisLabel: { show: false, margin: 8, rotate: 0, dataType: '' },
-          axisLine: { show: false },
-          splitLine: { show: false },
-          axisTick: { show: false, inside: 0, length: 5 },
-          nameTextStyle: {}
-        },
-        basic: { show: false, name: '', type: 'value', alignTicks: true, nameGap: 15, nameLocation: 'end', scale: false, position: 'left' },
-        alignActive: 0,
-        alignOption: [{ label: '水平', value: 0, icon: 'icon-jiaodu-shuiping' }, { label: '斜角', value: 45, icon: 'icon-jiaodu-xiejiao' }, { label: '垂直', value: -90, icon: 'icon-jiaodu-chuizhi' }]
-      }
-    },
-    computed: {
-      saveAble () {
-        return this.getSaveAble()
-      }
-    },
-
-    methods: {
-      setFormData (form) {
-        Object.assign(this.$data, this.$options.data());
-
-        Object.keys(this.form).forEach(key => {
-          if (form[key]) {
-            this.form[key] = Object.assign(this.form[key], form[key]);
-          }
-        });
-        Object.keys(this.basic).forEach(key => {
-          if (form[key]) {
-            this.basic[key] = form[key];
-          }
-        });
-        Object.keys(this.form).forEach(name => {
-          if (['axisLabel', 'axisLine', 'splitLine', 'nameTextStyle', 'axisTick'].includes(name)) {
-            if (this.$refs[name + 'Form'].type === 'text') {
-              this.$refs[name + 'Form'].setFormData(form[name] || {});
-            }
-            if (this.$refs[name + 'Form'].type === 'line') {
-              this.$refs[name + 'Form'].setFormData(form[name]?.lineStyle || {});
-            }
-          }
-        }
-        );
-
-        this.alignActive = this.form.axisLabel.rotate ? this.form.axisLabel.rotate : 0;
-      },
-      lineStyleChange (lineStyle, type) {
-        this.form[type].lineStyle = { ...lineStyle };
-        this.$emit('axisChange');
-      },
-      textStyleChange (textStyle, type) {
-        this.form[type] = { ...this.form[type], ...textStyle };
-        this.$emit('axisChange');
-      },
-      saveFormData () {
-        const formData = { ...this.basic };
-        Object.keys(this.form).forEach(name => {
-          if (['axisLabel', 'axisLine', 'splitLine', 'nameTextStyle', 'axisTick'].includes(name)) {
-            formData[name] = { ...this.form[name] };
-            if (this.form[name].show) {
-              if (this.$refs[name + 'Form'].type === 'text') {
-                formData[name] = { ...formData[name], ...this.$refs[name + 'Form'].getFormData() };
-              }
-              if (this.$refs[name + 'Form'].type === 'line') {
-                formData[name].lineStyle = this.$refs[name + 'Form'].getFormData();
-              }
-            }
-          }
-        });
-        return formData
-      },
-      typeChange () {
-        this.form.axisLabel.dataType = '';
-        this.$emit('axisChange');
-      },
-      alignChange (e) {
-        this.alignActive = e;
-        this.form.axisLabel.rotate = Number(e);
-        this.$emit('axisChange');
-      }
-    }
-  };
-
-  const _hoisted_1$1o = { class: "yAix-cofig" };
-  const _hoisted_2$Y = {
-    class: "plane-inner-bg",
-    style: {"margin-bottom":"10px"}
-  };
-  const _hoisted_3$M = { class: "d-flex-c" };
-  const _hoisted_4$E = { class: "d-flex" };
-  const _hoisted_5$w = ["onClick"];
-  const _hoisted_6$r = { class: "d-flex-c" };
-  const _hoisted_7$n = { class: "d-flex-c" };
-
-  function _sfc_render$1c(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_el_switch = vue.resolveComponent("el-switch");
-    const _component_el_form_item = vue.resolveComponent("el-form-item");
-    const _component_el_radio_button = vue.resolveComponent("el-radio-button");
-    const _component_el_radio_group = vue.resolveComponent("el-radio-group");
-    const _component_el_input = vue.resolveComponent("el-input");
-    const _component_el_input_number = vue.resolveComponent("el-input-number");
-    const _component_text_style = vue.resolveComponent("text-style");
-    const _component_el_collapse_item = vue.resolveComponent("el-collapse-item");
-    const _component_el_collapse = vue.resolveComponent("el-collapse");
-    const _component_DataFormatSelect = vue.resolveComponent("DataFormatSelect");
-    const _component_el_col = vue.resolveComponent("el-col");
-    const _component_el_row = vue.resolveComponent("el-row");
-    const _component_CollapseItem = vue.resolveComponent("CollapseItem");
-    const _component_lineStyle = vue.resolveComponent("lineStyle");
-    const _component_el_form = vue.resolveComponent("el-form");
-
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1o, [
-      vue.createVNode(_component_el_form, {
-        ref: 'form-yAix',
-        size: "small",
-        model: $data.basic,
-        disabled: !$options.saveAble,
-        "label-width": "80px"
-      }, {
-        default: vue.withCtx(() => [
-          vue.createVNode(_component_el_form_item, { label: "y轴可见" }, {
-            default: vue.withCtx(() => [
-              vue.createVNode(_component_el_switch, {
-                modelValue: $data.basic.show,
-                "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.basic.show) = $event)),
-                class: "am-switch active-switch",
-                size: "small",
-                onChange: _cache[1] || (_cache[1] = $event => (_ctx.$emit('axisChange')))
-              }, null, 8, ["modelValue"])
-            ]),
-            _: 1
-          }),
-          vue.createVNode(_component_el_form_item, { label: "位置" }, {
-            default: vue.withCtx(() => [
-              vue.createVNode(_component_el_radio_group, {
-                modelValue: $data.basic.position,
-                "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.basic.position) = $event)),
-                size: "small",
-                onChange: _cache[3] || (_cache[3] = $event => (_ctx.$emit('axisChange')))
-              }, {
-                default: vue.withCtx(() => [
-                  vue.createVNode(_component_el_radio_button, { value: "left" }, {
-                    default: vue.withCtx(() => [...(_cache[35] || (_cache[35] = [
-                      vue.createTextVNode(" 左 ", -1)
-                    ]))]),
-                    _: 1
-                  }),
-                  vue.createVNode(_component_el_radio_button, { value: "right" }, {
-                    default: vue.withCtx(() => [...(_cache[36] || (_cache[36] = [
-                      vue.createTextVNode(" 右 ", -1)
-                    ]))]),
-                    _: 1
-                  })
-                ]),
-                _: 1
-              }, 8, ["modelValue"])
-            ]),
-            _: 1
-          }),
-          vue.createVNode(_component_el_form_item, { label: "轴单位" }, {
-            default: vue.withCtx(() => [
-              vue.createVNode(_component_el_input, {
-                modelValue: $data.basic.name,
-                "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.basic.name) = $event)),
-                size: "small",
-                onChange: _cache[5] || (_cache[5] = $event => (_ctx.$emit('axisChange')))
-              }, null, 8, ["modelValue"])
-            ]),
-            _: 1
-          }),
-          vue.createVNode(_component_el_collapse, null, {
-            default: vue.withCtx(() => [
-              vue.createVNode(_component_el_collapse_item, null, {
-                title: vue.withCtx(() => [...(_cache[37] || (_cache[37] = [
-                  vue.createElementVNode("div", null, [
-                    vue.createElementVNode("span", { class: "collapse-title-common" }, " 轴单位样式 ")
-                  ], -1)
-                ]))]),
-                default: vue.withCtx(() => [
-                  vue.createElementVNode("div", _hoisted_2$Y, [
-                    vue.createVNode(_component_el_form_item, { label: "偏移量" }, {
-                      default: vue.withCtx(() => [
-                        vue.createVNode(_component_el_input_number, {
-                          modelValue: $data.basic.nameGap,
-                          "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.basic.nameGap) = $event)),
-                          size: "small",
-                          class: "input-number-box-px",
-                          "controls-position": "right",
-                          onChange: _cache[7] || (_cache[7] = $event => (_ctx.$emit('axisChange')))
-                        }, null, 8, ["modelValue"])
-                      ]),
-                      _: 1
-                    }),
-                    vue.createVNode(_component_el_form_item, { label: "位置" }, {
-                      default: vue.withCtx(() => [
-                        vue.createVNode(_component_el_radio_group, {
-                          modelValue: $data.basic.nameLocation,
-                          "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.basic.nameLocation) = $event)),
-                          size: "small",
-                          onChange: _cache[9] || (_cache[9] = $event => (_ctx.$emit('axisChange')))
-                        }, {
-                          default: vue.withCtx(() => [
-                            vue.createVNode(_component_el_radio_button, { value: "start" }, {
-                              default: vue.withCtx(() => [...(_cache[38] || (_cache[38] = [
-                                vue.createTextVNode(" 起始 ", -1)
-                              ]))]),
-                              _: 1
-                            }),
-                            vue.createVNode(_component_el_radio_button, { value: "middle" }, {
-                              default: vue.withCtx(() => [...(_cache[39] || (_cache[39] = [
-                                vue.createTextVNode(" 中部 ", -1)
-                              ]))]),
-                              _: 1
-                            }),
-                            vue.createVNode(_component_el_radio_button, { value: "end" }, {
-                              default: vue.withCtx(() => [...(_cache[40] || (_cache[40] = [
-                                vue.createTextVNode(" 末尾 ", -1)
-                              ]))]),
-                              _: 1
-                            })
-                          ]),
-                          _: 1
-                        }, 8, ["modelValue"])
-                      ]),
-                      _: 1
-                    }),
-                    vue.createVNode(_component_el_form_item, { label: "文本样式" }, {
-                      default: vue.withCtx(() => [
-                        vue.createVNode(_component_text_style, {
-                          ref: "nameTextStyleForm",
-                          onTextStyleChange: _cache[10] || (_cache[10] = $event => ($options.textStyleChange($event,'nameTextStyle')))
-                        }, null, 512)
-                      ]),
-                      _: 1
-                    })
-                  ])
-                ]),
-                _: 1
-              })
-            ]),
-            _: 1
-          }),
-          vue.createVNode(_component_el_form_item, { label: "数据类型" }, {
-            default: vue.withCtx(() => [
-              vue.createVNode(_component_el_radio_group, {
-                modelValue: $data.basic.type,
-                "onUpdate:modelValue": _cache[11] || (_cache[11] = $event => (($data.basic.type) = $event)),
-                size: "small",
-                onChange: $options.typeChange
-              }, {
-                default: vue.withCtx(() => [
-                  vue.createVNode(_component_el_radio_button, { value: "category" }, {
-                    default: vue.withCtx(() => [...(_cache[41] || (_cache[41] = [
-                      vue.createTextVNode(" 类目轴 ", -1)
-                    ]))]),
-                    _: 1
-                  }),
-                  vue.createVNode(_component_el_radio_button, { value: "value" }, {
-                    default: vue.withCtx(() => [...(_cache[42] || (_cache[42] = [
-                      vue.createTextVNode(" 数值轴 ", -1)
-                    ]))]),
-                    _: 1
-                  }),
-                  vue.createVNode(_component_el_radio_button, { value: "time" }, {
-                    default: vue.withCtx(() => [...(_cache[43] || (_cache[43] = [
-                      vue.createTextVNode(" 时间轴 ", -1)
-                    ]))]),
-                    _: 1
-                  })
-                ]),
-                _: 1
-              }, 8, ["modelValue", "onChange"])
-            ]),
-            _: 1
-          }),
-          vue.withDirectives(vue.createVNode(_component_el_form_item, { label: "数据缩放" }, {
-            default: vue.withCtx(() => [
-              vue.createVNode(_component_el_switch, {
-                modelValue: $data.basic.scale,
-                "onUpdate:modelValue": _cache[12] || (_cache[12] = $event => (($data.basic.scale) = $event)),
-                class: "am-switch active-switch",
-                size: "small",
-                onChange: _cache[13] || (_cache[13] = $event => (_ctx.$emit('axisChange')))
-              }, null, 8, ["modelValue"])
-            ]),
-            _: 1
-          }, 512), [
-            [vue.vShow, $data.basic.type==='value']
-          ]),
-          vue.createVNode(_component_el_collapse, null, {
-            default: vue.withCtx(() => [
-              vue.createVNode(_component_CollapseItem, {
-                modelValue: $data.form.axisLabel.show,
-                "onUpdate:modelValue": _cache[20] || (_cache[20] = $event => (($data.form.axisLabel.show) = $event)),
-                name: "轴标签",
-                onChange: _cache[21] || (_cache[21] = $event => (_ctx.$emit('axisChange')))
-              }, {
-                default: vue.withCtx(() => [
-                  vue.withDirectives(vue.createVNode(_component_DataFormatSelect, {
-                    modelValue: $data.form.axisLabel.dataType,
-                    "onUpdate:modelValue": _cache[14] || (_cache[14] = $event => (($data.form.axisLabel.dataType) = $event)),
-                    type: $data.basic.type,
-                    onDataTypeChange: _cache[15] || (_cache[15] = $event => (_ctx.$emit('axisChange')))
-                  }, null, 8, ["modelValue", "type"]), [
-                    [vue.vShow, $data.basic.type==='value'||$data.basic.type==='time']
-                  ]),
-                  vue.createVNode(_component_el_form_item, { label: "文本" }, {
-                    default: vue.withCtx(() => [
-                      vue.createVNode(_component_text_style, {
-                        ref: "axisLabelForm",
-                        onTextStyleChange: _cache[16] || (_cache[16] = $event => ($options.textStyleChange($event,'axisLabel')))
-                      }, null, 512)
-                    ]),
-                    _: 1
-                  }),
-                  vue.createVNode(_component_el_form_item, { label: "轴标签" }, {
-                    default: vue.withCtx(() => [
-                      vue.createVNode(_component_el_row, {
-                        gutter: 10,
-                        type: "flex"
-                      }, {
-                        default: vue.withCtx(() => [
-                          vue.createVNode(_component_el_col, { span: 12 }, {
-                            default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_3$M, [
-                                vue.createElementVNode("div", _hoisted_4$E, [
-                                  (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.alignOption, (ele) => {
-                                    return (vue.openBlock(), vue.createElementBlock("div", {
-                                      key: ele.value,
-                                      class: vue.normalizeClass(["chart-align-item", {'active':$data.alignActive===ele.value,'is-disabled':!$options.saveAble}]),
-                                      onClick: $event => ($options.alignChange(ele.value))
-                                    }, [
-                                      vue.createElementVNode("i", {
-                                        class: vue.normalizeClass(['icon am-iconfont align-icon', ele.icon])
-                                      }, null, 2)
-                                    ], 10, _hoisted_5$w))
-                                  }), 128))
-                                ]),
-                                _cache[44] || (_cache[44] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 角度", -1))
-                              ])
-                            ]),
-                            _: 1
-                          }),
-                          vue.createVNode(_component_el_col, { span: 12 }, {
-                            default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_6$r, [
-                                vue.createVNode(_component_el_input_number, {
-                                  modelValue: $data.alignActive,
-                                  "onUpdate:modelValue": _cache[17] || (_cache[17] = $event => (($data.alignActive) = $event)),
-                                  size: "small",
-                                  class: "input-number-box-angle",
-                                  "controls-position": "right",
-                                  onChange: $options.alignChange
-                                }, null, 8, ["modelValue", "onChange"])
-                              ])
-                            ]),
-                            _: 1
-                          })
-                        ]),
-                        _: 1
-                      }),
-                      vue.createVNode(_component_el_row, {
-                        gutter: 10,
-                        type: "flex"
-                      }, {
-                        default: vue.withCtx(() => [
-                          vue.createVNode(_component_el_col, { span: 12 }, {
-                            default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_7$n, [
-                                vue.createVNode(_component_el_input_number, {
-                                  modelValue: $data.form.axisLabel.margin,
-                                  "onUpdate:modelValue": _cache[18] || (_cache[18] = $event => (($data.form.axisLabel.margin) = $event)),
-                                  class: "input-number-box-px",
-                                  size: "small",
-                                  "controls-position": "right",
-                                  onChange: _cache[19] || (_cache[19] = $event => (_ctx.$emit('axisChange')))
-                                }, null, 8, ["modelValue"]),
-                                _cache[45] || (_cache[45] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 偏移量", -1))
-                              ])
-                            ]),
-                            _: 1
-                          })
-                        ]),
-                        _: 1
-                      })
-                    ]),
-                    _: 1
-                  })
-                ]),
-                _: 1
-              }, 8, ["modelValue"]),
-              vue.createVNode(_component_CollapseItem, {
-                modelValue: $data.form.axisLine.show,
-                "onUpdate:modelValue": _cache[23] || (_cache[23] = $event => (($data.form.axisLine.show) = $event)),
-                name: "轴线",
-                onChange: _cache[24] || (_cache[24] = $event => (_ctx.$emit('axisChange')))
-              }, {
-                default: vue.withCtx(() => [
-                  vue.createVNode(_component_el_form_item, { label: "样式" }, {
-                    default: vue.withCtx(() => [
-                      vue.createVNode(_component_lineStyle, {
-                        ref: "axisLineForm",
-                        onLineStyleChange: _cache[22] || (_cache[22] = $event => ($options.lineStyleChange($event,'axisLine')))
-                      }, null, 512)
-                    ]),
-                    _: 1
-                  })
-                ]),
-                _: 1
-              }, 8, ["modelValue"]),
-              vue.createVNode(_component_CollapseItem, {
-                modelValue: $data.form.splitLine.show,
-                "onUpdate:modelValue": _cache[26] || (_cache[26] = $event => (($data.form.splitLine.show) = $event)),
-                name: "网格线",
-                onChange: _cache[27] || (_cache[27] = $event => (_ctx.$emit('axisChange')))
-              }, {
-                default: vue.withCtx(() => [
-                  vue.createVNode(_component_el_form_item, { label: "样式" }, {
-                    default: vue.withCtx(() => [
-                      vue.createVNode(_component_lineStyle, {
-                        ref: "splitLineForm",
-                        onLineStyleChange: _cache[25] || (_cache[25] = $event => ($options.lineStyleChange($event,'splitLine')))
-                      }, null, 512)
-                    ]),
-                    _: 1
-                  })
-                ]),
-                _: 1
-              }, 8, ["modelValue"]),
-              vue.createVNode(_component_CollapseItem, {
-                modelValue: $data.form.axisTick.show,
-                "onUpdate:modelValue": _cache[33] || (_cache[33] = $event => (($data.form.axisTick.show) = $event)),
-                name: "刻度线",
-                onChange: _cache[34] || (_cache[34] = $event => (_ctx.$emit('axisChange')))
-              }, {
-                default: vue.withCtx(() => [
-                  vue.createVNode(_component_el_form_item, { label: "长度" }, {
-                    default: vue.withCtx(() => [
-                      vue.createVNode(_component_el_input_number, {
-                        modelValue: $data.form.axisTick.length,
-                        "onUpdate:modelValue": _cache[28] || (_cache[28] = $event => (($data.form.axisTick.length) = $event)),
-                        size: "small",
-                        class: "input-number-box-px",
-                        "controls-position": "right",
-                        onChange: _cache[29] || (_cache[29] = $event => (_ctx.$emit('axisChange')))
-                      }, null, 8, ["modelValue"])
-                    ]),
-                    _: 1
-                  }),
-                  vue.createVNode(_component_el_form_item, { label: "朝向" }, {
-                    default: vue.withCtx(() => [
-                      vue.createVNode(_component_el_radio_group, {
-                        modelValue: $data.form.axisTick.inside,
-                        "onUpdate:modelValue": _cache[30] || (_cache[30] = $event => (($data.form.axisTick.inside) = $event)),
-                        size: "small",
-                        onChange: _cache[31] || (_cache[31] = $event => (_ctx.$emit('axisChange')))
-                      }, {
-                        default: vue.withCtx(() => [
-                          vue.createVNode(_component_el_radio_button, { value: 0 }, {
-                            default: vue.withCtx(() => [...(_cache[46] || (_cache[46] = [
-                              vue.createTextVNode(" 朝外 ", -1)
-                            ]))]),
-                            _: 1
-                          }),
-                          vue.createVNode(_component_el_radio_button, { value: 1 }, {
-                            default: vue.withCtx(() => [...(_cache[47] || (_cache[47] = [
-                              vue.createTextVNode(" 朝内 ", -1)
-                            ]))]),
-                            _: 1
-                          })
-                        ]),
-                        _: 1
-                      }, 8, ["modelValue"])
-                    ]),
-                    _: 1
-                  }),
-                  vue.createVNode(_component_el_form_item, { label: "样式" }, {
-                    default: vue.withCtx(() => [
-                      vue.createVNode(_component_lineStyle, {
-                        ref: "axisTickForm",
-                        onLineStyleChange: _cache[32] || (_cache[32] = $event => ($options.lineStyleChange($event,'axisTick')))
-                      }, null, 512)
-                    ]),
-                    _: 1
-                  })
-                ]),
-                _: 1
-              }, 8, ["modelValue"])
-            ]),
-            _: 1
-          })
-        ]),
-        _: 1
-      }, 8, ["model", "disabled"])
-    ]))
-  }
-  const YaxisConfig$1 = /*#__PURE__*/_export_sfc(_sfc_main$1d, [['render',_sfc_render$1c],['__scopeId',"data-v-e937a5f7"]]);
+  const YaxisConfig$1 = /*#__PURE__*/_export_sfc(_sfc_main$1g, [['render',_sfc_render$1f],['__scopeId',"data-v-e937a5f7"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
   /* stylelint-disable-next-line CssSyntaxError */
-  const _sfc_main$1c = {
+  const _sfc_main$1f = {
     name: 'AxisConfig',
     components: {
       XaxisConfig: XaxisConfig$1,
@@ -40026,19 +40033,19 @@
     }
   };
 
-  const _hoisted_1$1n = { class: "axis-config-view" };
-  const _hoisted_2$X = { style: {"width":"100px"} };
-  const _hoisted_3$L = { class: "axis-header" };
+  const _hoisted_1$1s = { class: "axis-config-view" };
+  const _hoisted_2$_ = { style: {"width":"100px"} };
+  const _hoisted_3$O = { class: "axis-header" };
 
-  function _sfc_render$1b(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1e(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_el_tab_pane = vue.resolveComponent("el-tab-pane");
     const _component_el_tabs = vue.resolveComponent("el-tabs");
     const _component_YaxisConfig = vue.resolveComponent("YaxisConfig");
     const _component_XaxisConfig = vue.resolveComponent("XaxisConfig");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1n, [
-      vue.createElementVNode("div", _hoisted_2$X, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1s, [
+      vue.createElementVNode("div", _hoisted_2$_, [
         vue.createVNode(_component_el_switch, {
           modelValue: $data.isTransposition,
           "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.isTransposition) = $event)),
@@ -40050,7 +40057,7 @@
         }, null, 8, ["modelValue", "disabled"]),
         _cache[7] || (_cache[7] = vue.createElementVNode("span", { class: "chart-config-title" }, " 坐标轴转置 ", -1))
       ]),
-      vue.createElementVNode("div", _hoisted_3$L, [
+      vue.createElementVNode("div", _hoisted_3$O, [
         vue.createVNode(_component_el_tabs, {
           modelValue: $data.axisActive,
           "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.axisActive) = $event)),
@@ -40096,7 +40103,7 @@
       ])
     ]))
   }
-  const axisConfig = /*#__PURE__*/_export_sfc(_sfc_main$1c, [['render',_sfc_render$1b],['__scopeId',"data-v-a6e69ae3"]]);
+  const axisConfig = /*#__PURE__*/_export_sfc(_sfc_main$1f, [['render',_sfc_render$1e],['__scopeId',"data-v-a6e69ae3"]]);
 
   const __vite_glob_0_0 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
@@ -40107,7 +40114,7 @@
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$1b = {
+  const _sfc_main$1e = {
     name: 'GridConfig',
     components: {
       PaddingBox
@@ -40158,18 +40165,18 @@
     }
   };
 
-  const _hoisted_1$1m = { class: "grid-config" };
-  const _hoisted_2$W = { style: {"width":"80px"} };
+  const _hoisted_1$1r = { class: "grid-config" };
+  const _hoisted_2$Z = { style: {"width":"80px"} };
 
-  function _sfc_render$1a(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1d(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_PaddingBox = vue.resolveComponent("PaddingBox");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_row = vue.resolveComponent("el-row");
     const _component_el_form = vue.resolveComponent("el-form");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1m, [
-      vue.createElementVNode("div", _hoisted_2$W, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1r, [
+      vue.createElementVNode("div", _hoisted_2$Z, [
         vue.createVNode(_component_el_switch, {
           modelValue: $data.form.show,
           "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.show) = $event)),
@@ -40208,14 +40215,14 @@
       })
     ]))
   }
-  const gridConfig = /*#__PURE__*/_export_sfc(_sfc_main$1b, [['render',_sfc_render$1a],['__scopeId',"data-v-62694979"]]);
+  const gridConfig = /*#__PURE__*/_export_sfc(_sfc_main$1e, [['render',_sfc_render$1d],['__scopeId',"data-v-62694979"]]);
 
   const __vite_glob_0_1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: gridConfig
   }, Symbol.toStringTag, { value: 'Module' }));
 
-  const _sfc_main$1a = {
+  const _sfc_main$1d = {
     name: 'LegendConfig',
     components: {
       // eslint-disable-next-line
@@ -40594,13 +40601,13 @@
 
   /* unplugin-vue-components disabled */
 
-  const _hoisted_1$1l = { class: "legend-config" };
+  const _hoisted_1$1q = { class: "legend-config" };
 
-  function _sfc_render$19(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1c(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_EfForm = vue.resolveComponent("EfForm");
     const _component_CollapseItem = vue.resolveComponent("CollapseItem");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1l, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1q, [
       vue.createVNode(_component_CollapseItem, {
         modelValue: $data.form.show,
         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.show) = $event)),
@@ -40621,7 +40628,7 @@
       }, 8, ["modelValue", "is-expand", "onChange"])
     ]))
   }
-  const legendConfig = /*#__PURE__*/_export_sfc(_sfc_main$1a, [['render',_sfc_render$19],['__scopeId',"data-v-b133b3a6"]]);
+  const legendConfig = /*#__PURE__*/_export_sfc(_sfc_main$1d, [['render',_sfc_render$1c],['__scopeId',"data-v-b133b3a6"]]);
 
   const __vite_glob_0_2 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
@@ -40631,7 +40638,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$19 = {
+  const _sfc_main$1c = {
     components: {
       lineStyle: LineStyle,
       TextStyle
@@ -40721,11 +40728,11 @@
     }
   };
 
-  const _hoisted_1$1k = { class: "xAix-cofig" };
-  const _hoisted_2$V = { class: "d-flex-c" };
-  const _hoisted_3$K = { class: "d-flex-c" };
+  const _hoisted_1$1p = { class: "xAix-cofig" };
+  const _hoisted_2$Y = { class: "d-flex-c" };
+  const _hoisted_3$N = { class: "d-flex-c" };
 
-  function _sfc_render$18(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1b(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_el_input_number = vue.resolveComponent("el-input-number");
@@ -40740,7 +40747,7 @@
     const _component_el_collapse = vue.resolveComponent("el-collapse");
     const _component_el_form = vue.resolveComponent("el-form");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1k, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1p, [
       vue.createVNode(_component_el_form, {
         ref: 'form-xAix',
         model: $data.basic,
@@ -40770,7 +40777,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_2$V, [
+                      vue.createElementVNode("div", _hoisted_2$Y, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.basic.startAngle,
                           "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.basic.startAngle) = $event)),
@@ -40872,7 +40879,7 @@
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_3$K, [
+                              vue.createElementVNode("div", _hoisted_3$N, [
                                 vue.createVNode(_component_el_input_number, {
                                   modelValue: $data.form.axisLabel.margin,
                                   "onUpdate:modelValue": _cache[10] || (_cache[10] = $event => (($data.form.axisLabel.margin) = $event)),
@@ -41000,12 +41007,12 @@
       }, 8, ["model", "disabled"])
     ]))
   }
-  const XaxisConfig = /*#__PURE__*/_export_sfc(_sfc_main$19, [['render',_sfc_render$18],['__scopeId',"data-v-f36e33f9"]]);
+  const XaxisConfig = /*#__PURE__*/_export_sfc(_sfc_main$1c, [['render',_sfc_render$1b],['__scopeId',"data-v-f36e33f9"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$18 = {
+  const _sfc_main$1b = {
     components: {
       lineStyle: LineStyle,
       TextStyle
@@ -41097,18 +41104,18 @@
     }
   };
 
-  const _hoisted_1$1j = { class: "yAix-cofig" };
-  const _hoisted_2$U = {
+  const _hoisted_1$1o = { class: "yAix-cofig" };
+  const _hoisted_2$X = {
     class: "plane-inner-bg",
     style: {"margin-bottom":"10px"}
   };
-  const _hoisted_3$J = { class: "d-flex-c" };
-  const _hoisted_4$D = { class: "d-flex" };
-  const _hoisted_5$v = ["onClick"];
-  const _hoisted_6$q = { class: "d-flex-c" };
-  const _hoisted_7$m = { class: "d-flex-c" };
+  const _hoisted_3$M = { class: "d-flex-c" };
+  const _hoisted_4$G = { class: "d-flex" };
+  const _hoisted_5$y = ["onClick"];
+  const _hoisted_6$t = { class: "d-flex-c" };
+  const _hoisted_7$n = { class: "d-flex-c" };
 
-  function _sfc_render$17(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1a(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_el_input = vue.resolveComponent("el-input");
@@ -41125,7 +41132,7 @@
     const _component_lineStyle = vue.resolveComponent("lineStyle");
     const _component_el_form = vue.resolveComponent("el-form");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1j, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1o, [
       vue.createVNode(_component_el_form, {
         ref: 'form-yAix',
         size: "small",
@@ -41166,7 +41173,7 @@
                   ], -1)
                 ]))]),
                 default: vue.withCtx(() => [
-                  vue.createElementVNode("div", _hoisted_2$U, [
+                  vue.createElementVNode("div", _hoisted_2$X, [
                     vue.createVNode(_component_el_form_item, { label: "偏移量" }, {
                       default: vue.withCtx(() => [
                         vue.createVNode(_component_el_input_number, {
@@ -41311,8 +41318,8 @@
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_3$J, [
-                                vue.createElementVNode("div", _hoisted_4$D, [
+                              vue.createElementVNode("div", _hoisted_3$M, [
+                                vue.createElementVNode("div", _hoisted_4$G, [
                                   (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.alignOption, (ele) => {
                                     return (vue.openBlock(), vue.createElementBlock("div", {
                                       key: ele.value,
@@ -41322,7 +41329,7 @@
                                       vue.createElementVNode("i", {
                                         class: vue.normalizeClass(['icon am-iconfont align-icon', ele.icon])
                                       }, null, 2)
-                                    ], 10, _hoisted_5$v))
+                                    ], 10, _hoisted_5$y))
                                   }), 128))
                                 ]),
                                 _cache[40] || (_cache[40] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 角度", -1))
@@ -41332,7 +41339,7 @@
                           }),
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_6$q, [
+                              vue.createElementVNode("div", _hoisted_6$t, [
                                 vue.createVNode(_component_el_input_number, {
                                   modelValue: $data.alignActive,
                                   "onUpdate:modelValue": _cache[15] || (_cache[15] = $event => (($data.alignActive) = $event)),
@@ -41355,7 +41362,7 @@
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_7$m, [
+                              vue.createElementVNode("div", _hoisted_7$n, [
                                 vue.createVNode(_component_el_input_number, {
                                   modelValue: $data.form.axisLabel.margin,
                                   "onUpdate:modelValue": _cache[16] || (_cache[16] = $event => (($data.form.axisLabel.margin) = $event)),
@@ -41483,13 +41490,13 @@
       }, 8, ["model", "disabled"])
     ]))
   }
-  const YaxisConfig = /*#__PURE__*/_export_sfc(_sfc_main$18, [['render',_sfc_render$17],['__scopeId',"data-v-59c5c9f5"]]);
+  const YaxisConfig = /*#__PURE__*/_export_sfc(_sfc_main$1b, [['render',_sfc_render$1a],['__scopeId',"data-v-59c5c9f5"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
   /* stylelint-disable-next-line CssSyntaxError */
-  const _sfc_main$17 = {
+  const _sfc_main$1a = {
     name: 'AxisConfig',
     components: {
       XaxisConfig,
@@ -41532,17 +41539,17 @@
     }
   };
 
-  const _hoisted_1$1i = { class: "axis-config-view" };
-  const _hoisted_2$T = { class: "axis-header" };
+  const _hoisted_1$1n = { class: "axis-config-view" };
+  const _hoisted_2$W = { class: "axis-header" };
 
-  function _sfc_render$16(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$19(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_tab_pane = vue.resolveComponent("el-tab-pane");
     const _component_el_tabs = vue.resolveComponent("el-tabs");
     const _component_YaxisConfig = vue.resolveComponent("YaxisConfig");
     const _component_XaxisConfig = vue.resolveComponent("XaxisConfig");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1i, [
-      vue.createElementVNode("div", _hoisted_2$T, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1n, [
+      vue.createElementVNode("div", _hoisted_2$W, [
         vue.createVNode(_component_el_tabs, {
           modelValue: $data.axisActive,
           "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.axisActive) = $event)),
@@ -41575,7 +41582,7 @@
       ])
     ]))
   }
-  const polarAxisConfig = /*#__PURE__*/_export_sfc(_sfc_main$17, [['render',_sfc_render$16],['__scopeId',"data-v-f66e55fa"]]);
+  const polarAxisConfig = /*#__PURE__*/_export_sfc(_sfc_main$1a, [['render',_sfc_render$19],['__scopeId',"data-v-f66e55fa"]]);
 
   const __vite_glob_0_3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
@@ -41585,7 +41592,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$16 = {
+  const _sfc_main$19 = {
     props: {
       visible: {
         type: Boolean,
@@ -41645,30 +41652,30 @@
     }
   };
 
-  const _hoisted_1$1h = { class: "filter-panel" };
-  const _hoisted_2$S = { class: "filter-content" };
-  const _hoisted_3$I = {
+  const _hoisted_1$1m = { class: "filter-panel" };
+  const _hoisted_2$V = { class: "filter-content" };
+  const _hoisted_3$L = {
     key: 0,
     class: "code-bg mtk1"
   };
-  const _hoisted_4$C = { class: "code-content" };
-  const _hoisted_5$u = {
+  const _hoisted_4$F = { class: "code-content" };
+  const _hoisted_5$x = {
     key: 1,
     class: "code-bg mtk1 code-close"
   };
 
-  function _sfc_render$15(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$18(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BKCodeCom = vue.resolveComponent("BKCodeCom");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1h, [
-      vue.createElementVNode("div", _hoisted_2$S, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1m, [
+      vue.createElementVNode("div", _hoisted_2$V, [
         (!$props.type)
-          ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_3$I, [
+          ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_3$L, [
               _cache[2] || (_cache[2] = vue.createElementVNode("span", { class: "mtk8" }, "function", -1)),
               vue.createTextVNode(vue.toDisplayString($props.methodName) + "{ ", 1)
             ]))
           : vue.createCommentVNode("", true),
-        vue.createElementVNode("div", _hoisted_4$C, [
+        vue.createElementVNode("div", _hoisted_4$F, [
           vue.createVNode(_component_BKCodeCom, {
             ref: "editor",
             modelValue: $data.filterScript,
@@ -41682,17 +41689,17 @@
           }, null, 8, ["modelValue", "language", "class", "readonly", "is-modal", "method-name"])
         ]),
         (!$props.type)
-          ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_5$u, " } "))
+          ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_5$x, " } "))
           : vue.createCommentVNode("", true)
       ])
     ]))
   }
-  const InterfaceFilterConfig = /*#__PURE__*/_export_sfc(_sfc_main$16, [['render',_sfc_render$15],['__scopeId',"data-v-95b04760"]]);
+  const InterfaceFilterConfig = /*#__PURE__*/_export_sfc(_sfc_main$19, [['render',_sfc_render$18],['__scopeId',"data-v-95b04760"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$15 = {
+  const _sfc_main$18 = {
     name: 'TooltipConfig',
     components: {
       TextStyle, InterfaceFilterConfig
@@ -41758,17 +41765,17 @@
     }
   };
 
-  const _hoisted_1$1g = { class: "tooltip-config" };
-  const _hoisted_2$R = { class: "d-flex-c" };
-  const _hoisted_3$H = { class: "d-flex" };
-  const _hoisted_4$B = ["onClick"];
-  const _hoisted_5$t = { class: "d-flex-c" };
-  const _hoisted_6$p = { class: "d-flex" };
-  const _hoisted_7$l = ["onClick"];
+  const _hoisted_1$1l = { class: "tooltip-config" };
+  const _hoisted_2$U = { class: "d-flex-c" };
+  const _hoisted_3$K = { class: "d-flex" };
+  const _hoisted_4$E = ["onClick"];
+  const _hoisted_5$w = { class: "d-flex-c" };
+  const _hoisted_6$s = { class: "d-flex" };
+  const _hoisted_7$m = ["onClick"];
   const _hoisted_8$i = { class: "d-flex-c" };
   const _hoisted_9$g = { class: "d-flex-c" };
 
-  function _sfc_render$14(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$17(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_el_col = vue.resolveComponent("el-col");
@@ -41781,7 +41788,7 @@
     const _component_CollapseItem = vue.resolveComponent("CollapseItem");
     const _component_InterfaceFilterConfig = vue.resolveComponent("InterfaceFilterConfig");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1g, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1l, [
       vue.createVNode(_component_CollapseItem, {
         modelValue: $data.form.show,
         "onUpdate:modelValue": _cache[10] || (_cache[10] = $event => (($data.form.show) = $event)),
@@ -41819,14 +41826,14 @@
                     default: vue.withCtx(() => [
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_2$R, [
-                            vue.createElementVNode("div", _hoisted_3$H, [
+                          vue.createElementVNode("div", _hoisted_2$U, [
+                            vue.createElementVNode("div", _hoisted_3$K, [
                               (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.triggerOption, (ele) => {
                                 return (vue.openBlock(), vue.createElementBlock("div", {
                                   key: ele.value,
                                   class: vue.normalizeClass(["chart-align-item", {'active':$data.form.trigger===ele.value,'is-disabled':!$options.saveAble}]),
                                   onClick: $event => ($options.triggerChange(ele))
-                                }, vue.toDisplayString(ele.label), 11, _hoisted_4$B))
+                                }, vue.toDisplayString(ele.label), 11, _hoisted_4$E))
                               }), 128))
                             ]),
                             _cache[14] || (_cache[14] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 触发类型", -1))
@@ -41836,14 +41843,14 @@
                       }),
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_5$t, [
-                            vue.createElementVNode("div", _hoisted_6$p, [
+                          vue.createElementVNode("div", _hoisted_5$w, [
+                            vue.createElementVNode("div", _hoisted_6$s, [
                               (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.triggerOnOption, (el) => {
                                 return (vue.openBlock(), vue.createElementBlock("div", {
                                   key: el.value,
                                   class: vue.normalizeClass(["chart-align-item", {'active':$data.form.triggerOn===el.value,'is-disabled':!$options.saveAble}]),
                                   onClick: $event => ($options.triggerOnChange(el))
-                                }, vue.toDisplayString(el.label), 11, _hoisted_7$l))
+                                }, vue.toDisplayString(el.label), 11, _hoisted_7$m))
                               }), 128))
                             ]),
                             _cache[15] || (_cache[15] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 触发动作", -1))
@@ -41973,7 +41980,7 @@
       }, 8, ["modelValue"])
     ]))
   }
-  const tooltipConfig = /*#__PURE__*/_export_sfc(_sfc_main$15, [['render',_sfc_render$14],['__scopeId',"data-v-5fcf5fea"]]);
+  const tooltipConfig = /*#__PURE__*/_export_sfc(_sfc_main$18, [['render',_sfc_render$17],['__scopeId',"data-v-5fcf5fea"]]);
 
   const __vite_glob_0_4 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
@@ -41994,14 +42001,14 @@
     return preModule
   }, {});
 
-  const _hoisted_1$1f = {
+  const _hoisted_1$1k = {
     viewBox: "0 0 24 24",
     width: "1.2em",
     height: "1.2em"
   };
 
-  function render$e(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1f, [...(_cache[0] || (_cache[0] = [
+  function render$g(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1k, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
         d: "M7 6V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3v3c0 .552-.45 1-1.007 1H4.007A1 1 0 0 1 3 21l.003-14c0-.552.45-1 1.006-1zm2 0h8v10h2V4H9zm-2 5v2h6v-2zm0 4v2h6v-2z"
@@ -42009,17 +42016,17 @@
     ]))]))
   }
 
-  const __unplugin_components_0$4 = { name: 'ri-file-copy2-fill', render: render$e };
+  const __unplugin_components_0$4 = { name: 'ri-file-copy2-fill', render: render$g };
   /* vite-plugin-components disabled */
 
-  const _hoisted_1$1e = {
+  const _hoisted_1$1j = {
     viewBox: "0 0 24 24",
     width: "1.2em",
     height: "1.2em"
   };
 
-  function render$d(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1e, [...(_cache[0] || (_cache[0] = [
+  function render$f(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1j, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
         d: "M21 3a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H9V3zM7 21H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4z"
@@ -42027,12 +42034,12 @@
     ]))]))
   }
 
-  const __unplugin_components_0$3 = { name: 'ri-layout-left-fill', render: render$d };
+  const __unplugin_components_0$3 = { name: 'ri-layout-left-fill', render: render$f };
   /* vite-plugin-components disabled */
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$14 = {
+  const _sfc_main$17 = {
     name: 'SeriesPlane',
     components: {
       draggable
@@ -42097,26 +42104,26 @@
     }
   };
 
-  const _hoisted_1$1d = {
+  const _hoisted_1$1i = {
     class: "series-header",
     style: {"display":"flex","justify-content":"space-between","width":"100%"}
   };
-  const _hoisted_2$Q = { class: "axis-item-title" };
-  const _hoisted_3$G = { style: {"margin-right":"5px"} };
-  const _hoisted_4$A = {
+  const _hoisted_2$T = { class: "axis-item-title" };
+  const _hoisted_3$J = { style: {"margin-right":"5px"} };
+  const _hoisted_4$D = {
     class: "series-header flex-between",
     style: {"width":"100%"}
   };
-  const _hoisted_5$s = { style: {"position":"relative","width":"100%"} };
-  const _hoisted_6$o = { class: "tabs-series" };
-  const _hoisted_7$k = ["name", "onClick"];
+  const _hoisted_5$v = { style: {"position":"relative","width":"100%"} };
+  const _hoisted_6$r = { class: "tabs-series" };
+  const _hoisted_7$l = ["name", "onClick"];
   const _hoisted_8$h = {
     key: 0,
     class: "tabs-series-content"
   };
   const _hoisted_9$f = { class: "series-header icon-viewer" };
 
-  function _sfc_render$13(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$16(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_CirclePlus = vue.resolveComponent("CirclePlus");
     const _component_el_icon = vue.resolveComponent("el-icon");
     const _component_el_button = vue.resolveComponent("el-button");
@@ -42136,9 +42143,9 @@
       default: vue.withCtx(() => [
         vue.createVNode(_component_el_collapse_item, { name: "1" }, {
           title: vue.withCtx(() => [
-            vue.createElementVNode("div", _hoisted_1$1d, [
+            vue.createElementVNode("div", _hoisted_1$1i, [
               vue.createElementVNode("div", null, [
-                vue.createElementVNode("span", _hoisted_2$Q, vue.toDisplayString($props.name), 1),
+                vue.createElementVNode("span", _hoisted_2$T, vue.toDisplayString($props.name), 1),
                 vue.withDirectives(vue.createVNode(_component_el_button, {
                   disabled: !$options.saveAble,
                   size: "small",
@@ -42160,7 +42167,7 @@
                   [vue.vShow, $data.show.length]
                 ])
               ]),
-              vue.withDirectives(vue.createElementVNode("div", _hoisted_3$G, [
+              vue.withDirectives(vue.createElementVNode("div", _hoisted_3$J, [
                 vue.renderSlot(_ctx.$slots, "header-button", {}, undefined, true),
                 vue.createVNode(_component_el_button, {
                   text: "",
@@ -42207,7 +42214,7 @@
                   item: vue.withCtx(({element:series}) => [
                     vue.createVNode(_component_el_collapse_item, null, {
                       title: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_4$A, [
+                        vue.createElementVNode("div", _hoisted_4$D, [
                           vue.renderSlot(_ctx.$slots, "title", {
                             index: $props.seriesList.indexOf(series)
                           }, undefined, true),
@@ -42264,8 +42271,8 @@
             }, 512), [
               [vue.vShow, $data.layoutType==='horizontal']
             ]),
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_5$s, [
-              vue.createElementVNode("div", _hoisted_6$o, [
+            vue.withDirectives(vue.createElementVNode("div", _hoisted_5$v, [
+              vue.createElementVNode("div", _hoisted_6$r, [
                 vue.createVNode(_component_draggable, {
                   list: $props.seriesList,
                   disabled: !$options.saveAble,
@@ -42283,7 +42290,7 @@
                       vue.renderSlot(_ctx.$slots, "title", {
                         index: $props.seriesList.indexOf(series)
                       }, undefined, true)
-                    ], 10, _hoisted_7$k))
+                    ], 10, _hoisted_7$l))
                   ]),
                   _: 3
                 }, 8, ["list", "disabled", "onEnd"]),
@@ -42339,12 +42346,12 @@
       _: 3
     }, 8, ["modelValue"]))
   }
-  const SeriesPlane = /*#__PURE__*/_export_sfc(_sfc_main$14, [['render',_sfc_render$13],['__scopeId',"data-v-593ecb0b"]]);
+  const SeriesPlane = /*#__PURE__*/_export_sfc(_sfc_main$17, [['render',_sfc_render$16],['__scopeId',"data-v-593ecb0b"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$13 = {
+  const _sfc_main$16 = {
     components: {
       SeriesPlane
     },
@@ -42428,16 +42435,16 @@
 
   };
 
-  const _hoisted_1$1c = { class: "full-box" };
-  const _hoisted_2$P = { class: "d-flex-c" };
-  const _hoisted_3$F = { class: "d-flex-c" };
-  const _hoisted_4$z = { class: "d-flex-c" };
-  const _hoisted_5$r = { class: "d-flex" };
-  const _hoisted_6$n = { style: {"width":"80px"} };
-  const _hoisted_7$j = { class: "d-flex-c" };
+  const _hoisted_1$1h = { class: "full-box" };
+  const _hoisted_2$S = { class: "d-flex-c" };
+  const _hoisted_3$I = { class: "d-flex-c" };
+  const _hoisted_4$C = { class: "d-flex-c" };
+  const _hoisted_5$u = { class: "d-flex" };
+  const _hoisted_6$q = { style: {"width":"80px"} };
+  const _hoisted_7$k = { class: "d-flex-c" };
   const _hoisted_8$g = { class: "d-flex-c" };
 
-  function _sfc_render$12(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$15(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input = vue.resolveComponent("el-input");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_LineStyle = vue.resolveComponent("LineStyle");
@@ -42451,7 +42458,7 @@
     const _component_el_form = vue.resolveComponent("el-form");
     const _component_SeriesPlane = vue.resolveComponent("SeriesPlane");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1c, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1h, [
       vue.createVNode(_component_SeriesPlane, {
         name: "系列配置",
         "series-list": $data.seriesList,
@@ -42512,7 +42519,7 @@
                     default: vue.withCtx(() => [
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_2$P, [
+                          vue.createElementVNode("div", _hoisted_2$S, [
                             vue.createVNode(_component_el_input_number, {
                               modelValue: series.symbolSize,
                               "onUpdate:modelValue": $event => ((series.symbolSize) = $event),
@@ -42528,7 +42535,7 @@
                       }, 1024),
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_3$F, [
+                          vue.createElementVNode("div", _hoisted_3$I, [
                             vue.createVNode(_component_CommonColorPicker, {
                               modelValue: series.itemStyle.color,
                               "onUpdate:modelValue": $event => ((series.itemStyle.color) = $event),
@@ -42550,7 +42557,7 @@
                     default: vue.withCtx(() => [
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_4$z, [
+                          vue.createElementVNode("div", _hoisted_4$C, [
                             vue.createVNode(_component_el_select, {
                               modelValue: series.symbol,
                               "onUpdate:modelValue": $event => ((series.symbol) = $event),
@@ -42580,8 +42587,8 @@
                 ]),
                 _: 2
               }, 1024),
-              vue.createElementVNode("div", _hoisted_5$r, [
-                vue.createElementVNode("div", _hoisted_6$n, [
+              vue.createElementVNode("div", _hoisted_5$u, [
+                vue.createElementVNode("div", _hoisted_6$q, [
                   vue.createVNode(_component_el_switch, {
                     modelValue: series.areaStyle.show,
                     "onUpdate:modelValue": $event => ((series.areaStyle.show) = $event),
@@ -42606,7 +42613,7 @@
                       default: vue.withCtx(() => [
                         vue.createVNode(_component_el_col, { span: 12 }, {
                           default: vue.withCtx(() => [
-                            vue.createElementVNode("div", _hoisted_7$j, [
+                            vue.createElementVNode("div", _hoisted_7$k, [
                               vue.createVNode(_component_CommonColorPicker, {
                                 modelValue: series.areaStyle.color,
                                 "onUpdate:modelValue": $event => ((series.areaStyle.color) = $event),
@@ -42651,13 +42658,13 @@
       }, 8, ["series-list", "onDelSeries", "onCopySeries", "onAddSeries"])
     ]))
   }
-  const SeriesConfig$1 = /*#__PURE__*/_export_sfc(_sfc_main$13, [['render',_sfc_render$12],['__scopeId',"data-v-2cbb75fa"]]);
+  const SeriesConfig$1 = /*#__PURE__*/_export_sfc(_sfc_main$16, [['render',_sfc_render$15],['__scopeId',"data-v-2cbb75fa"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$12 = {
+  const _sfc_main$15 = {
 
     inject: ['getSaveAble'],
     emits: ['chartChange'],
@@ -42750,19 +42757,19 @@
     }
   };
 
-  const _hoisted_1$1b = { class: "xAix-cofig" };
-  const _hoisted_2$O = { class: "d-flex-c" };
-  const _hoisted_3$E = { class: "d-flex-c" };
-  const _hoisted_4$y = { class: "d-flex-c" };
-  const _hoisted_5$q = { class: "d-flex-c" };
-  const _hoisted_6$m = { class: "d-flex" };
-  const _hoisted_7$i = ["onClick"];
+  const _hoisted_1$1g = { class: "xAix-cofig" };
+  const _hoisted_2$R = { class: "d-flex-c" };
+  const _hoisted_3$H = { class: "d-flex-c" };
+  const _hoisted_4$B = { class: "d-flex-c" };
+  const _hoisted_5$t = { class: "d-flex-c" };
+  const _hoisted_6$p = { class: "d-flex" };
+  const _hoisted_7$j = ["onClick"];
   const _hoisted_8$f = { class: "d-flex-c" };
   const _hoisted_9$e = { class: "d-flex-c" };
   const _hoisted_10$b = { class: "d-flex-c" };
   const _hoisted_11$7 = { class: "d-flex-c" };
 
-  function _sfc_render$11(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$14(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_row = vue.resolveComponent("el-row");
@@ -42774,7 +42781,7 @@
     const _component_el_collapse = vue.resolveComponent("el-collapse");
     const _component_el_form = vue.resolveComponent("el-form");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1b, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1g, [
       vue.createVNode(_component_el_form, {
         ref: 'form-xAix',
         size: "small",
@@ -42791,7 +42798,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_2$O, [
+                      vue.createElementVNode("div", _hoisted_2$R, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.radius,
                           "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.radius) = $event)),
@@ -42822,7 +42829,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_3$E, [
+                      vue.createElementVNode("div", _hoisted_3$H, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.center[0],
                           "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.center[0]) = $event)),
@@ -42840,7 +42847,7 @@
                   }),
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_4$y, [
+                      vue.createElementVNode("div", _hoisted_4$B, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.center[1],
                           "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.center[1]) = $event)),
@@ -42921,8 +42928,8 @@
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_5$q, [
-                                vue.createElementVNode("div", _hoisted_6$m, [
+                              vue.createElementVNode("div", _hoisted_5$t, [
+                                vue.createElementVNode("div", _hoisted_6$p, [
                                   (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.alignOption, (ele) => {
                                     return (vue.openBlock(), vue.createElementBlock("div", {
                                       key: ele.value,
@@ -42932,7 +42939,7 @@
                                       vue.createElementVNode("i", {
                                         class: vue.normalizeClass(['icon am-iconfont align-icon', ele.icon])
                                       }, null, 2)
-                                    ], 10, _hoisted_7$i))
+                                    ], 10, _hoisted_7$j))
                                   }), 128))
                                 ]),
                                 _cache[37] || (_cache[37] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 角度", -1))
@@ -43113,12 +43120,12 @@
       }, 8, ["disabled"])
     ]))
   }
-  const AxisConfig = /*#__PURE__*/_export_sfc(_sfc_main$12, [['render',_sfc_render$11],['__scopeId',"data-v-ec69a110"]]);
+  const AxisConfig = /*#__PURE__*/_export_sfc(_sfc_main$15, [['render',_sfc_render$14],['__scopeId',"data-v-ec69a110"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$11 = {
+  const _sfc_main$14 = {
     name: 'RadarChartConfig',
     components: {
       ...baseChartComponents,
@@ -43306,15 +43313,15 @@
     }
   };
 
-  const _hoisted_1$1a = {
+  const _hoisted_1$1f = {
     class: "d-flex",
     style: {"height":"100%","overflow":"auto"}
   };
-  const _hoisted_2$N = { class: "radar-basic-config" };
-  const _hoisted_3$D = { class: "copy-button-box" };
-  const _hoisted_4$x = { style: {"margin-top":"10px"} };
+  const _hoisted_2$Q = { class: "radar-basic-config" };
+  const _hoisted_3$G = { class: "copy-button-box" };
+  const _hoisted_4$A = { style: {"margin-top":"10px"} };
 
-  function _sfc_render$10(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$13(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_SidebarTabs = vue.resolveComponent("SidebarTabs");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_ColorsPicker = vue.resolveComponent("ColorsPicker");
@@ -43336,14 +43343,14 @@
       onSaveChartConfig: $options.saveChartCfg
     }), {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$1a, [
+        vue.createElementVNode("div", _hoisted_1$1f, [
           vue.createVNode(_component_SidebarTabs, {
             modelValue: $data.activeConfig,
             "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.activeConfig) = $event)),
             menu: $data.chartMenu
           }, null, 8, ["modelValue", "menu"]),
-          vue.createElementVNode("div", _hoisted_2$N, [
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_3$D, [
+          vue.createElementVNode("div", _hoisted_2$Q, [
+            vue.withDirectives(vue.createElementVNode("div", _hoisted_3$G, [
               vue.createVNode(_component_el_button, {
                 type: "primary",
                 size: "small",
@@ -43368,7 +43375,7 @@
             ], 512), [
               [vue.vShow, $data.activeConfig==='basic']
             ]),
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_4$x, [
+            vue.withDirectives(vue.createElementVNode("div", _hoisted_4$A, [
               vue.createVNode(_component_ColorsPicker, {
                 modelValue: $data.colorList,
                 "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.colorList) = $event)),
@@ -43413,7 +43420,7 @@
       _: 1
     }, 16, ["configs", "page-config", "save-able", "rules", "tjb-u-r-l", "onBuildChartSeriesData", "onConfigOptionInit", "onSaveChartConfig"]))
   }
-  const RadarChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$11, [['render',_sfc_render$10],['__scopeId',"data-v-20246a08"]]);
+  const RadarChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$14, [['render',_sfc_render$13],['__scopeId',"data-v-20246a08"]]);
 
   RadarChartConfig.install = function (Vue) {
     Vue.component(libPrefix + RadarChartConfig.name, RadarChartConfig);
@@ -43560,7 +43567,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$10 = {
+  const _sfc_main$13 = {
     name: 'LegendContent',
 
     props: {
@@ -43736,7 +43743,7 @@
     }
   };
 
-  function _sfc_render$$(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$12(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_EfChartLegend = vue.resolveComponent("EfChartLegend");
 
     return ($data.legendConfig.show)
@@ -43756,11 +43763,11 @@
         ], 4))
       : vue.createCommentVNode("", true)
   }
-  const LegendContent = /*#__PURE__*/_export_sfc(_sfc_main$10, [['render',_sfc_render$$],['__scopeId',"data-v-54865d32"]]);
+  const LegendContent = /*#__PURE__*/_export_sfc(_sfc_main$13, [['render',_sfc_render$12],['__scopeId',"data-v-54865d32"]]);
 
   /* unplugin-vue-components disabled */
   // import { colorList } from '../../configs/chart-cfg'
-  const _sfc_main$$ = {
+  const _sfc_main$12 = {
     name: 'PieChart',
     components: {
       LegendContent
@@ -44025,22 +44032,22 @@
     }
   };
 
-  const _hoisted_1$19 = {
+  const _hoisted_1$1e = {
     ref: "rootRef",
     class: "full-box",
     style: {"position":"relative"}
   };
-  const _hoisted_2$M = {
+  const _hoisted_2$P = {
     ref: "downLoadPic",
     href: "#",
     style: {"display":"none"}
   };
 
-  function _sfc_render$_(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$11(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BKChart = vue.resolveComponent("BKChart");
     const _component_LegendContent = vue.resolveComponent("LegendContent");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$19, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1e, [
       vue.renderSlot(_ctx.$slots, "content", {}, () => [
         (_ctx.contentConfig && _ctx.contentConfig.component)
           ? (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(_ctx.contentConfig.component), vue.normalizeProps(vue.mergeProps({ key: 0 }, _ctx.contentConfig.props || {})), null, 16))
@@ -44055,10 +44062,10 @@
         ref: "legendContent",
         "rel-list": _ctx.relList
       }, null, 8, ["rel-list"]),
-      vue.createElementVNode("a", _hoisted_2$M, null, 512)
+      vue.createElementVNode("a", _hoisted_2$P, null, 512)
     ], 512))
   }
-  const PieChart = /*#__PURE__*/_export_sfc(_sfc_main$$, [['render',_sfc_render$_]]);
+  const PieChart = /*#__PURE__*/_export_sfc(_sfc_main$12, [['render',_sfc_render$11]]);
 
   PieChart.install = function (Vue) {
     Vue.component(libPrefix + PieChart.name, PieChart);
@@ -44068,7 +44075,7 @@
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$_ = {
+  const _sfc_main$11 = {
     name: 'ChartTypeChange',
     inject: ['getSaveAble'],
     props: {
@@ -44138,15 +44145,15 @@
     }
   };
 
-  const _hoisted_1$18 = { class: "" };
+  const _hoisted_1$1d = { class: "" };
 
-  function _sfc_render$Z(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$10(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_option = vue.resolveComponent("el-option");
     const _component_el_select = vue.resolveComponent("el-select");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_el_form = vue.resolveComponent("el-form");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$18, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1d, [
       vue.createVNode(_component_el_form, {
         ref: "form",
         disabled: !$options.saveAble,
@@ -44185,12 +44192,12 @@
       }, 8, ["disabled"])
     ]))
   }
-  const ChartTypeChange = /*#__PURE__*/_export_sfc(_sfc_main$_, [['render',_sfc_render$Z],['__scopeId',"data-v-d39b2def"]]);
+  const ChartTypeChange = /*#__PURE__*/_export_sfc(_sfc_main$11, [['render',_sfc_render$10],['__scopeId',"data-v-d39b2def"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$Z = {
+  const _sfc_main$10 = {
     components: {
       TextStyle
     },
@@ -44277,13 +44284,13 @@
     }
   };
 
-  const _hoisted_1$17 = { style: {"width":"100%"} };
-  const _hoisted_2$L = { class: "d-flex-c" };
-  const _hoisted_3$C = { class: "d-flex-c" };
-  const _hoisted_4$w = { class: "d-flex-c" };
-  const _hoisted_5$p = { class: "d-flex-c" };
-  const _hoisted_6$l = { class: "d-flex-c" };
-  const _hoisted_7$h = { class: "d-flex-c" };
+  const _hoisted_1$1c = { style: {"width":"100%"} };
+  const _hoisted_2$O = { class: "d-flex-c" };
+  const _hoisted_3$F = { class: "d-flex-c" };
+  const _hoisted_4$z = { class: "d-flex-c" };
+  const _hoisted_5$s = { class: "d-flex-c" };
+  const _hoisted_6$o = { class: "d-flex-c" };
+  const _hoisted_7$i = { class: "d-flex-c" };
   const _hoisted_8$e = { class: "d-flex-c" };
   const _hoisted_9$d = { class: "d-flex" };
   const _hoisted_10$a = ["onClick"];
@@ -44295,7 +44302,7 @@
   const _hoisted_16$4 = { class: "d-flex-c" };
   const _hoisted_17$3 = { class: "d-flex-c" };
 
-  function _sfc_render$Y(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$$(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_row = vue.resolveComponent("el-row");
@@ -44311,7 +44318,7 @@
     const _component_text_style = vue.resolveComponent("text-style");
     const _component_CollapseItem = vue.resolveComponent("CollapseItem");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$17, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1c, [
       vue.createVNode(_component_el_form, {
         model: $data.form,
         "label-width": "80px",
@@ -44328,7 +44335,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_2$L, [
+                      vue.createElementVNode("div", _hoisted_2$O, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.radius[0],
                           "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.radius[0]) = $event)),
@@ -44346,7 +44353,7 @@
                   }),
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_3$C, [
+                      vue.createElementVNode("div", _hoisted_3$F, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.radius[1],
                           "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($data.form.radius[1]) = $event)),
@@ -44377,7 +44384,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_4$w, [
+                      vue.createElementVNode("div", _hoisted_4$z, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.center[0],
                           "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.center[0]) = $event)),
@@ -44395,7 +44402,7 @@
                   }),
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_5$p, [
+                      vue.createElementVNode("div", _hoisted_5$s, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.center[1],
                           "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.center[1]) = $event)),
@@ -44419,7 +44426,7 @@
           }),
           vue.createVNode(_component_el_form_item, { label: "风玫瑰图" }, {
             default: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_6$l, [
+              vue.createElementVNode("div", _hoisted_6$o, [
                 vue.createVNode(_component_el_radio_group, {
                   modelValue: $data.form.roseType,
                   "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.roseType) = $event)),
@@ -44478,7 +44485,7 @@
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_7$h, [
+                              vue.createElementVNode("div", _hoisted_7$i, [
                                 vue.createVNode(_component_el_select, {
                                   modelValue: $data.form.label.formatter,
                                   "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.label.formatter) = $event)),
@@ -44681,12 +44688,12 @@
       }, 8, ["model", "disabled"])
     ]))
   }
-  const PieSeriesConfig = /*#__PURE__*/_export_sfc(_sfc_main$Z, [['render',_sfc_render$Y],['__scopeId',"data-v-e8d8b24a"]]);
+  const PieSeriesConfig = /*#__PURE__*/_export_sfc(_sfc_main$10, [['render',_sfc_render$$],['__scopeId',"data-v-e8d8b24a"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$Y = {
+  const _sfc_main$$ = {
     components: {
       PieSeriesConfig,
       SeriesPlane
@@ -44787,9 +44794,9 @@
     }
   };
 
-  const _hoisted_1$16 = { class: "d-flex" };
+  const _hoisted_1$1b = { class: "d-flex" };
 
-  function _sfc_render$X(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$_(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input = vue.resolveComponent("el-input");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_PieSeriesConfig = vue.resolveComponent("PieSeriesConfig");
@@ -44864,7 +44871,7 @@
                   label: "分组逻辑"
                 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$16, [
+                    vue.createElementVNode("div", _hoisted_1$1b, [
                       vue.createVNode(_component_el_input, {
                         size: "small",
                         value: series.collapseRule,
@@ -44923,7 +44930,7 @@
       _: 1
     }, 8, ["series-list", "onDelSeries", "onCopySeries", "onAddSeries"]))
   }
-  const SeriesConfig = /*#__PURE__*/_export_sfc(_sfc_main$Y, [['render',_sfc_render$X],['__scopeId',"data-v-d9ae5082"]]);
+  const SeriesConfig = /*#__PURE__*/_export_sfc(_sfc_main$$, [['render',_sfc_render$_],['__scopeId',"data-v-d9ae5082"]]);
 
   const itemsConfig$3 = {
     basicConfig: {
@@ -44937,7 +44944,7 @@
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$X = {
+  const _sfc_main$_ = {
 
     name: 'ExLegendConfig',
     components: {
@@ -44993,13 +45000,13 @@
     }
   };
 
-  const _hoisted_1$15 = { class: "legend-config" };
-  const _hoisted_2$K = { class: "d-flex-c" };
-  const _hoisted_3$B = { class: "d-flex-c" };
-  const _hoisted_4$v = { class: "d-flex" };
-  const _hoisted_5$o = ["onClick"];
-  const _hoisted_6$k = { class: "d-flex-c" };
-  const _hoisted_7$g = { class: "d-flex-c" };
+  const _hoisted_1$1a = { class: "legend-config" };
+  const _hoisted_2$N = { class: "d-flex-c" };
+  const _hoisted_3$E = { class: "d-flex-c" };
+  const _hoisted_4$y = { class: "d-flex" };
+  const _hoisted_5$r = ["onClick"];
+  const _hoisted_6$n = { class: "d-flex-c" };
+  const _hoisted_7$h = { class: "d-flex-c" };
   const _hoisted_8$d = { class: "d-flex-c" };
   const _hoisted_9$c = { class: "d-flex-c" };
   const _hoisted_10$9 = { class: "d-flex" };
@@ -45007,7 +45014,7 @@
   const _hoisted_12$5 = { class: "d-flex-c" };
   const _hoisted_13$5 = { class: "d-flex-c" };
 
-  function _sfc_render$W(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$Z(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_DataFormatSelect = vue.resolveComponent("DataFormatSelect");
     const _component_el_input = vue.resolveComponent("el-input");
     const _component_el_col = vue.resolveComponent("el-col");
@@ -45025,7 +45032,7 @@
       onChange: $options.exLegendShowChange
     }, {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$15, [
+        vue.createElementVNode("div", _hoisted_1$1a, [
           vue.createVNode(_component_el_form, {
             size: "small",
             "label-width": "80px",
@@ -45047,7 +45054,7 @@
                     default: vue.withCtx(() => [
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_2$K, [
+                          vue.createElementVNode("div", _hoisted_2$N, [
                             vue.createVNode(_component_el_input, {
                               modelValue: $data.form.unit,
                               "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.unit) = $event)),
@@ -45061,14 +45068,14 @@
                       }),
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_3$B, [
-                            vue.createElementVNode("div", _hoisted_4$v, [
+                          vue.createElementVNode("div", _hoisted_3$E, [
+                            vue.createElementVNode("div", _hoisted_4$y, [
                               (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.positionOption, (ele) => {
                                 return (vue.openBlock(), vue.createElementBlock("div", {
                                   key: ele.value,
                                   class: vue.normalizeClass(["chart-align-item", {'active':$data.form.unitPosition===ele.value,'is-disabled':!$options.saveAble}]),
                                   onClick: $event => ($options.unitPositionChange(ele))
-                                }, vue.toDisplayString(ele.label), 11, _hoisted_5$o))
+                                }, vue.toDisplayString(ele.label), 11, _hoisted_5$r))
                               }), 128))
                             ]),
                             _cache[21] || (_cache[21] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 位置", -1))
@@ -45091,7 +45098,7 @@
                     default: vue.withCtx(() => [
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_6$k, [
+                          vue.createElementVNode("div", _hoisted_6$n, [
                             vue.createVNode(_component_el_input, {
                               modelValue: $data.form.header[0],
                               "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.header[0]) = $event)),
@@ -45105,7 +45112,7 @@
                       }),
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_7$g, [
+                          vue.createElementVNode("div", _hoisted_7$h, [
                             vue.createVNode(_component_el_input, {
                               modelValue: $data.form.header[1],
                               "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.header[1]) = $event)),
@@ -45259,12 +45266,12 @@
       _: 1
     }, 8, ["modelValue", "onChange"]))
   }
-  const ExLegendConfig = /*#__PURE__*/_export_sfc(_sfc_main$X, [['render',_sfc_render$W],['__scopeId',"data-v-2ab1a4a7"]]);
+  const ExLegendConfig = /*#__PURE__*/_export_sfc(_sfc_main$_, [['render',_sfc_render$Z],['__scopeId',"data-v-2ab1a4a7"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$W = {
+  const _sfc_main$Z = {
     components: {
       TextStyle
     },
@@ -45326,16 +45333,16 @@
     }
   };
 
-  const _hoisted_1$14 = { style: {"width":"100%"} };
-  const _hoisted_2$J = { class: "d-flex-c" };
-  const _hoisted_3$A = { class: "d-flex-c" };
-  const _hoisted_4$u = { class: "plane-inner-bg" };
-  const _hoisted_5$n = { class: "d-flex-c" };
-  const _hoisted_6$j = { class: "d-flex-c" };
-  const _hoisted_7$f = { class: "d-flex-c" };
+  const _hoisted_1$19 = { style: {"width":"100%"} };
+  const _hoisted_2$M = { class: "d-flex-c" };
+  const _hoisted_3$D = { class: "d-flex-c" };
+  const _hoisted_4$x = { class: "plane-inner-bg" };
+  const _hoisted_5$q = { class: "d-flex-c" };
+  const _hoisted_6$m = { class: "d-flex-c" };
+  const _hoisted_7$g = { class: "d-flex-c" };
   const _hoisted_8$c = { class: "d-flex-c" };
 
-  function _sfc_render$V(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$Y(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_CommonColorPicker = vue.resolveComponent("CommonColorPicker");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_row = vue.resolveComponent("el-row");
@@ -45348,7 +45355,7 @@
     const _component_CollapseItem = vue.resolveComponent("CollapseItem");
     const _component_el_form = vue.resolveComponent("el-form");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$14, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$19, [
       vue.createVNode(_component_el_form, {
         model: $data.form,
         "label-width": "80px",
@@ -45365,7 +45372,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_2$J, [
+                      vue.createElementVNode("div", _hoisted_2$M, [
                         vue.createVNode(_component_CommonColorPicker, {
                           modelValue: $data.series.itemStyle.color,
                           "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.series.itemStyle.color) = $event)),
@@ -45378,7 +45385,7 @@
                   }),
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_3$A, [
+                      vue.createElementVNode("div", _hoisted_3$D, [
                         vue.createVNode(_component_CommonColorPicker, {
                           modelValue: $data.series.backgroundStyle.color,
                           "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.series.backgroundStyle.color) = $event)),
@@ -45402,7 +45409,7 @@
                   vue.createElementVNode("div", { class: "collapse-title-common" }, " 极坐标轴 ", -1)
                 ]))]),
                 default: vue.withCtx(() => [
-                  vue.createElementVNode("div", _hoisted_4$u, [
+                  vue.createElementVNode("div", _hoisted_4$x, [
                     vue.createVNode(_component_el_form_item, { label: "半径" }, {
                       default: vue.withCtx(() => [
                         vue.createVNode(_component_el_row, {
@@ -45412,7 +45419,7 @@
                           default: vue.withCtx(() => [
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_5$n, [
+                                vue.createElementVNode("div", _hoisted_5$q, [
                                   vue.createVNode(_component_el_input_number, {
                                     modelValue: $data.form.polar.radius[0],
                                     "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.polar.radius[0]) = $event)),
@@ -45430,7 +45437,7 @@
                             }),
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_6$j, [
+                                vue.createElementVNode("div", _hoisted_6$m, [
                                   vue.createVNode(_component_el_input_number, {
                                     modelValue: $data.form.polar.radius[1],
                                     "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.polar.radius[1]) = $event)),
@@ -45461,7 +45468,7 @@
                           default: vue.withCtx(() => [
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_7$f, [
+                                vue.createElementVNode("div", _hoisted_7$g, [
                                   vue.createVNode(_component_el_input_number, {
                                     modelValue: $data.form.polar.center[0],
                                     "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form.polar.center[0]) = $event)),
@@ -45538,13 +45545,13 @@
       }, 8, ["model", "disabled"])
     ]))
   }
-  const ProgressSeriesConfig = /*#__PURE__*/_export_sfc(_sfc_main$W, [['render',_sfc_render$V],['__scopeId',"data-v-6111fe75"]]);
+  const ProgressSeriesConfig = /*#__PURE__*/_export_sfc(_sfc_main$Z, [['render',_sfc_render$Y],['__scopeId',"data-v-6111fe75"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$V = {
+  const _sfc_main$Y = {
 
     inject: ['getSaveAble'],
     emits: ['chartChange'],
@@ -45577,20 +45584,20 @@
     }
   };
 
-  const _hoisted_1$13 = { style: {"width":"100%"} };
-  const _hoisted_2$I = { class: "d-flex-c" };
-  const _hoisted_3$z = { class: "d-flex-c" };
-  const _hoisted_4$t = { class: "d-flex-c" };
-  const _hoisted_5$m = { class: "d-flex-c" };
+  const _hoisted_1$18 = { style: {"width":"100%"} };
+  const _hoisted_2$L = { class: "d-flex-c" };
+  const _hoisted_3$C = { class: "d-flex-c" };
+  const _hoisted_4$w = { class: "d-flex-c" };
+  const _hoisted_5$p = { class: "d-flex-c" };
 
-  function _sfc_render$U(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$X(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_row = vue.resolveComponent("el-row");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_el_form = vue.resolveComponent("el-form");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$13, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$18, [
       vue.createVNode(_component_el_form, {
         "label-width": "80px",
         size: "small",
@@ -45606,7 +45613,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 24 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_2$I, [
+                      vue.createElementVNode("div", _hoisted_2$L, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.internalDiameterRatio,
                           "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.internalDiameterRatio) = $event)),
@@ -45638,7 +45645,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 24 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_3$z, [
+                      vue.createElementVNode("div", _hoisted_3$C, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.viewControl.distance,
                           "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.viewControl.distance) = $event)),
@@ -45667,7 +45674,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_4$t, [
+                      vue.createElementVNode("div", _hoisted_4$w, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.viewControl.beta,
                           "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.viewControl.beta) = $event)),
@@ -45686,7 +45693,7 @@
                   }),
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_5$m, [
+                      vue.createElementVNode("div", _hoisted_5$p, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.viewControl.alpha,
                           "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.viewControl.alpha) = $event)),
@@ -45714,13 +45721,13 @@
       }, 8, ["disabled"])
     ]))
   }
-  const Pie3dConfig = /*#__PURE__*/_export_sfc(_sfc_main$V, [['render',_sfc_render$U],['__scopeId',"data-v-d7fcec9c"]]);
+  const Pie3dConfig = /*#__PURE__*/_export_sfc(_sfc_main$Y, [['render',_sfc_render$X],['__scopeId',"data-v-d7fcec9c"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
   // import { colorList } from '../../configs/chart-cfg'
-  const _sfc_main$U = {
+  const _sfc_main$X = {
     name: 'PieChartConfig',
     components: {
       ...baseChartComponents,
@@ -45942,21 +45949,21 @@
     }
   };
 
-  const _hoisted_1$12 = { style: {"display":"flex","height":"100%"} };
-  const _hoisted_2$H = { class: "pie-basic-config" };
-  const _hoisted_3$y = { class: "copy-button-box" };
-  const _hoisted_4$s = { key: 0 };
-  const _hoisted_5$l = { class: "copy-button-box" };
-  const _hoisted_6$i = {
+  const _hoisted_1$17 = { style: {"display":"flex","height":"100%"} };
+  const _hoisted_2$K = { class: "pie-basic-config" };
+  const _hoisted_3$B = { class: "copy-button-box" };
+  const _hoisted_4$v = { key: 0 };
+  const _hoisted_5$o = { class: "copy-button-box" };
+  const _hoisted_6$l = {
     key: 1,
     style: {"padding-top":"10px"}
   };
-  const _hoisted_7$e = { class: "d-flex-c" };
+  const _hoisted_7$f = { class: "d-flex-c" };
   const _hoisted_8$b = { class: "d-flex-c" };
   const _hoisted_9$b = { class: "d-flex-c" };
   const _hoisted_10$8 = { class: "d-flex-c" };
 
-  function _sfc_render$T(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$W(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_SidebarTabs = vue.resolveComponent("SidebarTabs");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_ChartTypeChange = vue.resolveComponent("ChartTypeChange");
@@ -45989,14 +45996,14 @@
       onBuildChartSeriesData: $options.buildChartData
     }), {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$12, [
+        vue.createElementVNode("div", _hoisted_1$17, [
           vue.createVNode(_component_SidebarTabs, {
             modelValue: $data.activeConfig,
             "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.activeConfig) = $event)),
             menu: $options.chartMenu
           }, null, 8, ["modelValue", "menu"]),
-          vue.createElementVNode("div", _hoisted_2$H, [
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_3$y, [
+          vue.createElementVNode("div", _hoisted_2$K, [
+            vue.withDirectives(vue.createElementVNode("div", _hoisted_3$B, [
               vue.createVNode(_component_el_button, {
                 type: "primary",
                 size: "small",
@@ -46042,7 +46049,7 @@
               ])
             }), 128)),
             ($props.configs.branchType!='progressChart')
-              ? vue.withDirectives((vue.openBlock(), vue.createElementBlock("div", _hoisted_4$s, [
+              ? vue.withDirectives((vue.openBlock(), vue.createElementBlock("div", _hoisted_4$v, [
                   vue.createVNode(_component_ColorsPicker, {
                     modelValue: $data.color,
                     "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.color) = $event)),
@@ -46054,7 +46061,7 @@
                   [vue.vShow, $data.activeConfig==='basic']
                 ])
               : vue.createCommentVNode("", true),
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_5$l, [
+            vue.withDirectives(vue.createElementVNode("div", _hoisted_5$o, [
               vue.createVNode(_component_el_button, {
                 type: "primary",
                 size: "small",
@@ -46080,7 +46087,7 @@
               [vue.vShow, $data.activeConfig==='series']
             ]),
             ($props.configs.branchType==='ringChart2' )
-              ? vue.withDirectives((vue.openBlock(), vue.createElementBlock("div", _hoisted_6$i, [
+              ? vue.withDirectives((vue.openBlock(), vue.createElementBlock("div", _hoisted_6$l, [
                   vue.createVNode(_component_el_form, { "label-width": "80px" }, {
                     default: vue.withCtx(() => [
                       vue.createVNode(_component_el_form_item, { label: "饼图半径" }, {
@@ -46092,7 +46099,7 @@
                             default: vue.withCtx(() => [
                               vue.createVNode(_component_el_col, { span: 12 }, {
                                 default: vue.withCtx(() => [
-                                  vue.createElementVNode("div", _hoisted_7$e, [
+                                  vue.createElementVNode("div", _hoisted_7$f, [
                                     vue.createVNode(_component_el_input_number, {
                                       modelValue: $data.form.radius[0],
                                       "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.radius[0]) = $event)),
@@ -46241,14 +46248,14 @@
       _: 1
     }, 16, ["configs", "page-config", "save-able", "items", "rules", "tjb-u-r-l", "onChangeBranchType", "onConfigOptionInit", "onSaveChartConfig", "onBuildChartSeriesData"]))
   }
-  const PieChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$U, [['render',_sfc_render$T],['__scopeId',"data-v-71ed4069"]]);
+  const PieChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$X, [['render',_sfc_render$W],['__scopeId',"data-v-71ed4069"]]);
 
   PieChartConfig.install = function (Vue) {
     Vue.component(libPrefix + PieChartConfig.name, PieChartConfig);
   };
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$T = {
+  const _sfc_main$W = {
     name: 'BarChart',
     components: {
 
@@ -46562,21 +46569,21 @@
     }
   };
 
-  const _hoisted_1$11 = {
+  const _hoisted_1$16 = {
     ref: "rootRef",
     class: "full-box",
     style: {"position":"relative"}
   };
-  const _hoisted_2$G = {
+  const _hoisted_2$J = {
     ref: "downLoadPic",
     href: "#",
     style: {"display":"none"}
   };
 
-  function _sfc_render$S(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$V(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BKChart = vue.resolveComponent("BKChart");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$11, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$16, [
       vue.renderSlot(_ctx.$slots, "content", {}, () => [
         (_ctx.contentConfig && _ctx.contentConfig.component)
           ? (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(_ctx.contentConfig.component), vue.normalizeProps(vue.mergeProps({ key: 0 }, _ctx.contentConfig.props || {})), null, 16))
@@ -46587,10 +46594,10 @@
         option: $data.option,
         onClick: $options.itemClick
       }, null, 8, ["option", "onClick"]),
-      vue.createElementVNode("a", _hoisted_2$G, null, 512)
+      vue.createElementVNode("a", _hoisted_2$J, null, 512)
     ], 512))
   }
-  const BarChart = /*#__PURE__*/_export_sfc(_sfc_main$T, [['render',_sfc_render$S]]);
+  const BarChart = /*#__PURE__*/_export_sfc(_sfc_main$W, [['render',_sfc_render$V]]);
 
   BarChart.install = function (Vue) {
     Vue.component(libPrefix + BarChart.name, BarChart);
@@ -46607,7 +46614,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$S = {
+  const _sfc_main$V = {
     components: {
       TextStyle
     },
@@ -46715,13 +46722,13 @@
     }
   };
 
-  const _hoisted_1$10 = { class: "d-flex-c" };
-  const _hoisted_2$F = { class: "d-flex-c" };
-  const _hoisted_3$x = { class: "d-flex-c" };
-  const _hoisted_4$r = { class: "d-flex-c" };
-  const _hoisted_5$k = { class: "d-flex el-form-item" };
-  const _hoisted_6$h = { style: {"width":"80px"} };
-  const _hoisted_7$d = { style: {"flex":"1"} };
+  const _hoisted_1$15 = { class: "d-flex-c" };
+  const _hoisted_2$I = { class: "d-flex-c" };
+  const _hoisted_3$A = { class: "d-flex-c" };
+  const _hoisted_4$u = { class: "d-flex-c" };
+  const _hoisted_5$n = { class: "d-flex el-form-item" };
+  const _hoisted_6$k = { style: {"width":"80px"} };
+  const _hoisted_7$e = { style: {"flex":"1"} };
   const _hoisted_8$a = { class: "d-flex-c" };
   const _hoisted_9$a = { class: "d-flex-c" };
   const _hoisted_10$7 = { class: "d-flex-c" };
@@ -46729,7 +46736,7 @@
   const _hoisted_12$4 = { style: {"width":"80px"} };
   const _hoisted_13$4 = { class: "d-flex-c" };
 
-  function _sfc_render$R(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$U(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_radio_button = vue.resolveComponent("el-radio-button");
@@ -46760,7 +46767,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$10, [
+                    vue.createElementVNode("div", _hoisted_1$15, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.lineStyle.width,
                         "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.lineStyle.width) = $event)),
@@ -46776,7 +46783,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$F, [
+                    vue.createElementVNode("div", _hoisted_2$I, [
                       vue.createVNode(_component_el_radio_group, {
                         modelValue: $data.form.smooth,
                         "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($data.form.smooth) = $event)),
@@ -46816,7 +46823,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_3$x, [
+                    vue.createElementVNode("div", _hoisted_3$A, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.form.lineStyle.type,
                         "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.lineStyle.type) = $event)),
@@ -46842,7 +46849,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$r, [
+                    vue.createElementVNode("div", _hoisted_4$u, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.lineStyle.color,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.lineStyle.color) = $event)),
@@ -46859,8 +46866,8 @@
           ]),
           _: 1
         }),
-        vue.createElementVNode("div", _hoisted_5$k, [
-          vue.createElementVNode("div", _hoisted_6$h, [
+        vue.createElementVNode("div", _hoisted_5$n, [
+          vue.createElementVNode("div", _hoisted_6$k, [
             vue.createVNode(_component_el_switch, {
               modelValue: $data.form.showSymbol,
               "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.showSymbol) = $event)),
@@ -46871,7 +46878,7 @@
             }, null, 8, ["modelValue", "onChange"]),
             _cache[19] || (_cache[19] = vue.createElementVNode("span", { class: "chart-config-title" }, " 圆点 ", -1))
           ]),
-          vue.createElementVNode("div", _hoisted_7$d, [
+          vue.createElementVNode("div", _hoisted_7$e, [
             vue.createVNode(_component_el_row, {
               gutter: 10,
               type: "flex"
@@ -47012,12 +47019,12 @@
       _: 1
     }, 8, ["model", "disabled"]))
   }
-  const lineSeriesConfig = /*#__PURE__*/_export_sfc(_sfc_main$S, [['render',_sfc_render$R]]);
+  const lineSeriesConfig = /*#__PURE__*/_export_sfc(_sfc_main$V, [['render',_sfc_render$U]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$R = {
+  const _sfc_main$U = {
     components: {
       lineSeriesConfig,
       SeriesPlane
@@ -47148,16 +47155,16 @@
     }
   };
 
-  const _hoisted_1$$ = { class: "full-box" };
-  const _hoisted_2$E = { style: {"width":"100px","margin-bottom":"10px"} };
-  const _hoisted_3$w = { style: {"width":"100px"} };
-  const _hoisted_4$q = {
+  const _hoisted_1$14 = { class: "full-box" };
+  const _hoisted_2$H = { style: {"width":"100px","margin-bottom":"10px"} };
+  const _hoisted_3$z = { style: {"width":"100px"} };
+  const _hoisted_4$t = {
     class: "d-flex",
     style: {"margin-bottom":"10px"}
   };
-  const _hoisted_5$j = { style: {"width":"80px"} };
-  const _hoisted_6$g = { class: "d-flex-c" };
-  const _hoisted_7$c = {
+  const _hoisted_5$m = { style: {"width":"80px"} };
+  const _hoisted_6$j = { class: "d-flex-c" };
+  const _hoisted_7$d = {
     key: 4,
     class: "d-flex"
   };
@@ -47165,7 +47172,7 @@
   const _hoisted_9$9 = { class: "d-flex-c" };
   const _hoisted_10$6 = { class: "d-flex-c" };
 
-  function _sfc_render$Q(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$T(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_el_input = vue.resolveComponent("el-input");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
@@ -47181,8 +47188,8 @@
     const _component_lineSeriesConfig = vue.resolveComponent("lineSeriesConfig");
     const _component_SeriesPlane = vue.resolveComponent("SeriesPlane");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$$, [
-      vue.createElementVNode("div", _hoisted_2$E, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$14, [
+      vue.createElementVNode("div", _hoisted_2$H, [
         vue.createVNode(_component_el_switch, {
           modelValue: $data.filterDataEmpty,
           "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.filterDataEmpty) = $event)),
@@ -47193,7 +47200,7 @@
         }, null, 8, ["modelValue", "disabled"]),
         _cache[16] || (_cache[16] = vue.createElementVNode("span", { class: "chart-config-title" }, " 无数据列过滤 ", -1))
       ]),
-      vue.createElementVNode("div", _hoisted_3$w, [
+      vue.createElementVNode("div", _hoisted_3$z, [
         vue.createVNode(_component_el_switch, {
           modelValue: $data.autoSeries,
           "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.autoSeries) = $event)),
@@ -47331,8 +47338,8 @@
                     _: 2
                   }, 1024))
                 : vue.createCommentVNode("", true),
-              vue.createElementVNode("div", _hoisted_4$q, [
-                vue.createElementVNode("div", _hoisted_5$j, [
+              vue.createElementVNode("div", _hoisted_4$t, [
+                vue.createElementVNode("div", _hoisted_5$m, [
                   vue.createVNode(_component_el_switch, {
                     modelValue: series.basic.legendConfig.show,
                     "onUpdate:modelValue": $event => ((series.basic.legendConfig.show) = $event),
@@ -47357,7 +47364,7 @@
                       default: vue.withCtx(() => [
                         vue.createVNode(_component_el_col, { span: 12 }, {
                           default: vue.withCtx(() => [
-                            vue.createElementVNode("div", _hoisted_6$g, [
+                            vue.createElementVNode("div", _hoisted_6$j, [
                               vue.createVNode(_component_el_select, {
                                 modelValue: series.basic.legendConfig.icon,
                                 "onUpdate:modelValue": $event => ((series.basic.legendConfig.icon) = $event),
@@ -47408,7 +47415,7 @@
                   }, 1024))
                 : vue.createCommentVNode("", true),
               (series.basic.type!=='line')
-                ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_7$c, [
+                ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_7$d, [
                     vue.createElementVNode("div", _hoisted_8$9, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: series.barSeries.showBackground,
@@ -47487,12 +47494,12 @@
       }, 8, ["series-list", "onDelSeries", "onCopySeries", "onAddSeries"])
     ]))
   }
-  const barSeriesConfig$1 = /*#__PURE__*/_export_sfc(_sfc_main$R, [['render',_sfc_render$Q],['__scopeId',"data-v-764285cc"]]);
+  const barSeriesConfig$1 = /*#__PURE__*/_export_sfc(_sfc_main$U, [['render',_sfc_render$T],['__scopeId',"data-v-764285cc"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$Q = {
+  const _sfc_main$T = {
     name: 'BarChartConfig',
     components: {
       ...baseChartComponents,
@@ -47695,21 +47702,21 @@
     }
   };
 
-  const _hoisted_1$_ = { style: {"display":"flex","height":"100%"} };
-  const _hoisted_2$D = { class: "bar-basic-config" };
-  const _hoisted_3$v = { class: "copy-button-box" };
-  const _hoisted_4$p = {
+  const _hoisted_1$13 = { style: {"display":"flex","height":"100%"} };
+  const _hoisted_2$G = { class: "bar-basic-config" };
+  const _hoisted_3$y = { class: "copy-button-box" };
+  const _hoisted_4$s = {
     class: "plane-inner-bg",
     style: {"margin-bottom":"10px"}
   };
-  const _hoisted_5$i = { class: "d-flex-c" };
-  const _hoisted_6$f = { class: "d-flex-c" };
-  const _hoisted_7$b = { class: "d-flex-c" };
+  const _hoisted_5$l = { class: "d-flex-c" };
+  const _hoisted_6$i = { class: "d-flex-c" };
+  const _hoisted_7$c = { class: "d-flex-c" };
   const _hoisted_8$8 = { class: "d-flex-c" };
   const _hoisted_9$8 = { style: {"margin-top":"10px"} };
   const _hoisted_10$5 = { class: "copy-button-box" };
 
-  function _sfc_render$P(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$S(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_SidebarTabs = vue.resolveComponent("SidebarTabs");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_ChartTypeChange = vue.resolveComponent("ChartTypeChange");
@@ -47739,14 +47746,14 @@
       onBuildChartSeriesData: $options.buildChartData
     }), {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$_, [
+        vue.createElementVNode("div", _hoisted_1$13, [
           vue.createVNode(_component_SidebarTabs, {
             modelValue: $data.activeConfig,
             "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.activeConfig) = $event)),
             menu: $data.chartMenu
           }, null, 8, ["modelValue", "menu"]),
-          vue.createElementVNode("div", _hoisted_2$D, [
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_3$v, [
+          vue.createElementVNode("div", _hoisted_2$G, [
+            vue.withDirectives(vue.createElementVNode("div", _hoisted_3$y, [
               vue.createVNode(_component_el_button, {
                 type: "primary",
                 size: "small",
@@ -47798,7 +47805,7 @@
               onChange: $options.getChartBasicConfigData
             }, {
               default: vue.withCtx(() => [
-                vue.createElementVNode("div", _hoisted_4$p, [
+                vue.createElementVNode("div", _hoisted_4$s, [
                   vue.createVNode(_component_el_form, {
                     disabled: !$props.saveAble,
                     "label-width": "90px"
@@ -47813,7 +47820,7 @@
                             default: vue.withCtx(() => [
                               vue.createVNode(_component_el_col, { span: 12 }, {
                                 default: vue.withCtx(() => [
-                                  vue.createElementVNode("div", _hoisted_5$i, [
+                                  vue.createElementVNode("div", _hoisted_5$l, [
                                     vue.createVNode(_component_el_input_number, {
                                       modelValue: $data.borderRadius[0],
                                       "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.borderRadius[0]) = $event)),
@@ -47829,7 +47836,7 @@
                               }),
                               vue.createVNode(_component_el_col, { span: 12 }, {
                                 default: vue.withCtx(() => [
-                                  vue.createElementVNode("div", _hoisted_6$f, [
+                                  vue.createElementVNode("div", _hoisted_6$i, [
                                     vue.createVNode(_component_el_input_number, {
                                       modelValue: $data.borderRadius[1],
                                       "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.borderRadius[1]) = $event)),
@@ -47853,7 +47860,7 @@
                             default: vue.withCtx(() => [
                               vue.createVNode(_component_el_col, { span: 12 }, {
                                 default: vue.withCtx(() => [
-                                  vue.createElementVNode("div", _hoisted_7$b, [
+                                  vue.createElementVNode("div", _hoisted_7$c, [
                                     vue.createVNode(_component_el_input_number, {
                                       modelValue: $data.borderRadius[2],
                                       "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.borderRadius[2]) = $event)),
@@ -47952,14 +47959,14 @@
       _: 1
     }, 16, ["configs", "page-config", "save-able", "items", "rules", "tjb-u-r-l", "onChangeBranchType", "onSaveChartConfig", "onConfigOptionInit", "onBuildChartSeriesData"]))
   }
-  const BarChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$Q, [['render',_sfc_render$P],['__scopeId',"data-v-c5293fb2"]]);
+  const BarChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$T, [['render',_sfc_render$S],['__scopeId',"data-v-c5293fb2"]]);
 
   BarChartConfig.install = function (Vue) {
     Vue.component(libPrefix + BarChartConfig.name, BarChartConfig);
   };
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$P = {
+  const _sfc_main$S = {
     name: 'PolarChart',
     components: {
 
@@ -48125,21 +48132,21 @@
     }
   };
 
-  const _hoisted_1$Z = {
+  const _hoisted_1$12 = {
     ref: "rootRef",
     class: "full-box",
     style: {"position":"relative"}
   };
-  const _hoisted_2$C = {
+  const _hoisted_2$F = {
     ref: "downLoadPic",
     href: "#",
     style: {"display":"none"}
   };
 
-  function _sfc_render$O(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$R(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BKChart = vue.resolveComponent("BKChart");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$Z, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$12, [
       vue.renderSlot(_ctx.$slots, "content", {}, () => [
         (_ctx.contentConfig && _ctx.contentConfig.component)
           ? (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(_ctx.contentConfig.component), vue.normalizeProps(vue.mergeProps({ key: 0 }, _ctx.contentConfig.props || {})), null, 16))
@@ -48150,10 +48157,10 @@
         option: $data.option,
         onClick: $options.itemClick
       }, null, 8, ["option", "onClick"]),
-      vue.createElementVNode("a", _hoisted_2$C, null, 512)
+      vue.createElementVNode("a", _hoisted_2$F, null, 512)
     ], 512))
   }
-  const PolarChart = /*#__PURE__*/_export_sfc(_sfc_main$P, [['render',_sfc_render$O]]);
+  const PolarChart = /*#__PURE__*/_export_sfc(_sfc_main$S, [['render',_sfc_render$R]]);
 
   PolarChart.install = function (Vue) {
     Vue.component(libPrefix + PolarChart.name, PolarChart);
@@ -48170,7 +48177,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$O = {
+  const _sfc_main$R = {
     components: {
       SeriesPlane
     },
@@ -48239,16 +48246,16 @@
     }
   };
 
-  const _hoisted_1$Y = { class: "full-box" };
+  const _hoisted_1$11 = { class: "full-box" };
 
-  function _sfc_render$N(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$Q(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input = vue.resolveComponent("el-input");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_CommonColorPicker = vue.resolveComponent("CommonColorPicker");
     const _component_el_form = vue.resolveComponent("el-form");
     const _component_SeriesPlane = vue.resolveComponent("SeriesPlane");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$Y, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$11, [
       vue.createVNode(_component_SeriesPlane, {
         name: "数据系列",
         "series-list": $data.seriesList,
@@ -48311,12 +48318,12 @@
       }, 8, ["series-list", "onDelSeries", "onCopySeries", "onAddSeries"])
     ]))
   }
-  const barSeriesConfig = /*#__PURE__*/_export_sfc(_sfc_main$O, [['render',_sfc_render$N],['__scopeId',"data-v-07f5fbe9"]]);
+  const barSeriesConfig = /*#__PURE__*/_export_sfc(_sfc_main$R, [['render',_sfc_render$Q],['__scopeId',"data-v-07f5fbe9"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$N = {
+  const _sfc_main$Q = {
     name: 'PolarChartConfig',
     components: {
       ...baseChartComponents,
@@ -48489,13 +48496,13 @@
     }
   };
 
-  const _hoisted_1$X = { style: {"display":"flex","height":"100%"} };
-  const _hoisted_2$B = { class: "polar-basic-config" };
-  const _hoisted_3$u = { class: "copy-button-box" };
-  const _hoisted_4$o = { style: {"margin-top":"10px"} };
-  const _hoisted_5$h = { class: "copy-button-box" };
+  const _hoisted_1$10 = { style: {"display":"flex","height":"100%"} };
+  const _hoisted_2$E = { class: "polar-basic-config" };
+  const _hoisted_3$x = { class: "copy-button-box" };
+  const _hoisted_4$r = { style: {"margin-top":"10px"} };
+  const _hoisted_5$k = { class: "copy-button-box" };
 
-  function _sfc_render$M(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$P(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_SidebarTabs = vue.resolveComponent("SidebarTabs");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_ChartTypeChange = vue.resolveComponent("ChartTypeChange");
@@ -48519,14 +48526,14 @@
       onBuildChartSeriesData: $options.buildChartData
     }), {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$X, [
+        vue.createElementVNode("div", _hoisted_1$10, [
           vue.createVNode(_component_SidebarTabs, {
             modelValue: $data.activeConfig,
             "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.activeConfig) = $event)),
             menu: $data.chartMenu
           }, null, 8, ["modelValue", "menu"]),
-          vue.createElementVNode("div", _hoisted_2$B, [
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_3$u, [
+          vue.createElementVNode("div", _hoisted_2$E, [
+            vue.withDirectives(vue.createElementVNode("div", _hoisted_3$x, [
               vue.createVNode(_component_el_button, {
                 type: "primary",
                 size: "small",
@@ -48571,7 +48578,7 @@
                 [vue.vShow, $data.activeConfig===$data.configType[name]]
               ])
             }), 128)),
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_4$o, [
+            vue.withDirectives(vue.createElementVNode("div", _hoisted_4$r, [
               vue.createVNode(_component_ColorsPicker, {
                 modelValue: $data.colorList,
                 "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.colorList) = $event)),
@@ -48582,7 +48589,7 @@
             ], 512), [
               [vue.vShow, $data.activeConfig==='basic']
             ]),
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_5$h, [
+            vue.withDirectives(vue.createElementVNode("div", _hoisted_5$k, [
               vue.createVNode(_component_el_button, {
                 type: "primary",
                 size: "small",
@@ -48624,7 +48631,7 @@
       _: 1
     }, 16, ["configs", "page-config", "save-able", "items", "rules", "tjb-u-r-l", "onChangeBranchType", "onSaveChartConfig", "onConfigOptionInit", "onBuildChartSeriesData"]))
   }
-  const PolarChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$N, [['render',_sfc_render$M],['__scopeId',"data-v-c4179f75"]]);
+  const PolarChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$Q, [['render',_sfc_render$P],['__scopeId',"data-v-c4179f75"]]);
 
   PolarChartConfig.install = function (Vue) {
     Vue.component(libPrefix + PolarChartConfig.name, PolarChartConfig);
@@ -74616,7 +74623,7 @@
   /* unplugin-vue-components disabled */
   // import originList from '../../map-chart-config/src/config/default-data'
   const deepLevelMap = new Map([['country', '1'], ['province', '2'], ['city', '3']]);
-  const _sfc_main$M = {
+  const _sfc_main$P = {
     name: 'MapChart',
     components: {
 
@@ -74924,26 +74931,26 @@
     }
   };
 
-  const _hoisted_1$W = {
+  const _hoisted_1$$ = {
     ref: "rootRef",
     class: "full-box",
     style: {"position":"relative"}
   };
-  const _hoisted_2$A = { class: "map-check" };
-  const _hoisted_3$t = {
+  const _hoisted_2$D = { class: "map-check" };
+  const _hoisted_3$w = {
     ref: "downLoadPic",
     href: "#",
     style: {"display":"none"}
   };
 
-  function _sfc_render$L(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$O(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_Back = vue.resolveComponent("Back");
     const _component_el_icon = vue.resolveComponent("el-icon");
     const _component_el_checkbox = vue.resolveComponent("el-checkbox");
     const _component_el_checkbox_group = vue.resolveComponent("el-checkbox-group");
     const _component_BKChart = vue.resolveComponent("BKChart");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$W, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$$, [
       vue.renderSlot(_ctx.$slots, "content", {}, () => [
         (_ctx.contentConfig && _ctx.contentConfig.component)
           ? (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(_ctx.contentConfig.component), vue.normalizeProps(vue.mergeProps({ key: 0 }, _ctx.contentConfig.props || {})), null, 16))
@@ -74963,7 +74970,7 @@
       ], 512), [
         [vue.vShow, $data.isDeep&&$data.orginMapItem.level!==$data.nowMapItem.level]
       ]),
-      vue.withDirectives(vue.createElementVNode("div", _hoisted_2$A, [
+      vue.withDirectives(vue.createElementVNode("div", _hoisted_2$D, [
         vue.createVNode(_component_el_checkbox_group, {
           modelValue: $data.checkList,
           "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($data.checkList) = $event)),
@@ -74993,10 +75000,10 @@
         option: $data.option,
         onClick: $options.itemClick
       }, null, 8, ["option", "onClick"]),
-      vue.createElementVNode("a", _hoisted_3$t, null, 512)
+      vue.createElementVNode("a", _hoisted_3$w, null, 512)
     ], 512))
   }
-  const MapChart = /*#__PURE__*/_export_sfc(_sfc_main$M, [['render',_sfc_render$L],['__scopeId',"data-v-0ab883cb"]]);
+  const MapChart = /*#__PURE__*/_export_sfc(_sfc_main$P, [['render',_sfc_render$O],['__scopeId',"data-v-0ab883cb"]]);
 
   MapChart.install = function (Vue) {
     Vue.component(libPrefix + MapChart.name, MapChart);
@@ -75008,7 +75015,7 @@
   /* unplugin-vue-components disabled */
 
   const colorList$1 = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'];
-  const _sfc_main$L = {
+  const _sfc_main$O = {
     components: {
 
     },
@@ -75123,23 +75130,23 @@
     }
   };
 
-  const _hoisted_1$V = { style: {"width":"100%"} };
-  const _hoisted_2$z = { class: "d-flex-c" };
-  const _hoisted_3$s = { class: "d-flex-c" };
-  const _hoisted_4$n = {
+  const _hoisted_1$_ = { style: {"width":"100%"} };
+  const _hoisted_2$C = { class: "d-flex-c" };
+  const _hoisted_3$v = { class: "d-flex-c" };
+  const _hoisted_4$q = {
     class: "axis-item-title",
     style: {"display":"inline-block","width":"90px","padding-left":"20px","text-align":"left"}
   };
-  const _hoisted_5$g = {
+  const _hoisted_5$j = {
     class: "series-header flex-between",
     style: {"width":"100%"}
   };
-  const _hoisted_6$e = { style: {"display":"inline-block","width":"90px","padding-left":"20px","text-align":"left"} };
-  const _hoisted_7$a = { class: "d-flex-c" };
+  const _hoisted_6$h = { style: {"display":"inline-block","width":"90px","padding-left":"20px","text-align":"left"} };
+  const _hoisted_7$b = { class: "d-flex-c" };
   const _hoisted_8$7 = { class: "d-flex-c" };
   const _hoisted_9$7 = { class: "d-flex-c" };
 
-  function _sfc_render$K(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$N(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_el_radio_button = vue.resolveComponent("el-radio-button");
@@ -75157,7 +75164,7 @@
     const _component_el_collapse = vue.resolveComponent("el-collapse");
     const _component_el_form = vue.resolveComponent("el-form");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$V, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$_, [
       vue.createVNode(_component_el_form, {
         disabled: !$options.saveAble,
         model: $data.form,
@@ -75214,7 +75221,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_2$z, [
+                      vue.createElementVNode("div", _hoisted_2$C, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.continuousForm.min,
                           "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.continuousForm.min) = $event)),
@@ -75229,7 +75236,7 @@
                   }),
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_3$s, [
+                      vue.createElementVNode("div", _hoisted_3$v, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.continuousForm.max,
                           "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.continuousForm.max) = $event)),
@@ -75286,7 +75293,7 @@
               vue.createVNode(_component_el_collapse_item, { name: "1" }, {
                 title: vue.withCtx(() => [
                   vue.createElementVNode("div", null, [
-                    vue.createElementVNode("span", _hoisted_4$n, [
+                    vue.createElementVNode("span", _hoisted_4$q, [
                       _cache[19] || (_cache[19] = vue.createTextVNode(" 区间 ", -1)),
                       vue.withDirectives(vue.createVNode(_component_el_button, {
                         size: "small",
@@ -75316,8 +75323,8 @@
                       (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.piecewiseForm.pieces, (ele, index) => {
                         return (vue.openBlock(), vue.createBlock(_component_el_collapse_item, { key: index }, {
                           title: vue.withCtx(() => [
-                            vue.createElementVNode("div", _hoisted_5$g, [
-                              vue.createElementVNode("span", _hoisted_6$e, "区间" + vue.toDisplayString(index + 1), 1),
+                            vue.createElementVNode("div", _hoisted_5$j, [
+                              vue.createElementVNode("span", _hoisted_6$h, "区间" + vue.toDisplayString(index + 1), 1),
                               vue.createElementVNode("div", null, [
                                 vue.createVNode(_component_el_button, {
                                   size: "small",
@@ -75358,7 +75365,7 @@
                               default: vue.withCtx(() => [
                                 vue.createVNode(_component_el_col, { span: 12 }, {
                                   default: vue.withCtx(() => [
-                                    vue.createElementVNode("div", _hoisted_7$a, [
+                                    vue.createElementVNode("div", _hoisted_7$b, [
                                       vue.createVNode(_component_el_input_number, {
                                         modelValue: ele.gt,
                                         "onUpdate:modelValue": $event => ((ele.gt) = $event),
@@ -75430,7 +75437,7 @@
       }, 8, ["disabled", "model"])
     ]))
   }
-  const VisualMap = /*#__PURE__*/_export_sfc(_sfc_main$L, [['render',_sfc_render$K],['__scopeId',"data-v-7c98438e"]]);
+  const VisualMap = /*#__PURE__*/_export_sfc(_sfc_main$O, [['render',_sfc_render$N],['__scopeId',"data-v-7c98438e"]]);
 
   const itemsConfig = {
     basicConfig: {
@@ -75444,7 +75451,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$K = {
+  const _sfc_main$N = {
     inject: ['getSaveAble'],
     props: {
       formData: {
@@ -75615,13 +75622,13 @@
     }
   };
 
-  const _hoisted_1$U = { style: {"width":"100%"} };
-  const _hoisted_2$y = { class: "plane-inner-bg" };
-  const _hoisted_3$r = { style: {"width":"80px","margin-bottom":"10px"} };
-  const _hoisted_4$m = { class: "d-flex" };
-  const _hoisted_5$f = { style: {"width":"80px"} };
-  const _hoisted_6$d = { class: "d-flex-c" };
-  const _hoisted_7$9 = { class: "d-flex-c" };
+  const _hoisted_1$Z = { style: {"width":"100%"} };
+  const _hoisted_2$B = { class: "plane-inner-bg" };
+  const _hoisted_3$u = { style: {"width":"80px","margin-bottom":"10px"} };
+  const _hoisted_4$p = { class: "d-flex" };
+  const _hoisted_5$i = { style: {"width":"80px"} };
+  const _hoisted_6$g = { class: "d-flex-c" };
+  const _hoisted_7$a = { class: "d-flex-c" };
   const _hoisted_8$6 = { class: "d-flex-c" };
   const _hoisted_9$6 = { class: "plane-inner-bg" };
   const _hoisted_10$4 = { class: "d-flex" };
@@ -75635,7 +75642,7 @@
   const _hoisted_18$2 = { class: "d-flex-c" };
   const _hoisted_19$2 = { class: "d-flex-c" };
 
-  function _sfc_render$J(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$M(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_text_style = vue.resolveComponent("text-style");
@@ -75649,7 +75656,7 @@
     const _component_el_collapse = vue.resolveComponent("el-collapse");
     const _component_CollapseItem = vue.resolveComponent("CollapseItem");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$U, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$Z, [
       vue.createVNode(_component_el_form, {
         model: $data.form,
         size: "small",
@@ -75682,8 +75689,8 @@
                   vue.createElementVNode("div", { class: "collapse-title-common" }, " 通常样式 ", -1)
                 ]))]),
                 default: vue.withCtx(() => [
-                  vue.createElementVNode("div", _hoisted_2$y, [
-                    vue.createElementVNode("div", _hoisted_3$r, [
+                  vue.createElementVNode("div", _hoisted_2$B, [
+                    vue.createElementVNode("div", _hoisted_3$u, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.labelContent,
                         "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.labelContent) = $event)),
@@ -75694,8 +75701,8 @@
                       }, null, 8, ["modelValue"]),
                       _cache[42] || (_cache[42] = vue.createElementVNode("span", { class: "chart-config-title" }, " 标签内容", -1))
                     ]),
-                    vue.createElementVNode("div", _hoisted_4$m, [
-                      vue.createElementVNode("div", _hoisted_5$f, [
+                    vue.createElementVNode("div", _hoisted_4$p, [
+                      vue.createElementVNode("div", _hoisted_5$i, [
                         vue.createVNode(_component_el_switch, {
                           modelValue: $data.form.label.show,
                           "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.label.show) = $event)),
@@ -75731,7 +75738,7 @@
                           default: vue.withCtx(() => [
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_6$d, [
+                                vue.createElementVNode("div", _hoisted_6$g, [
                                   vue.createVNode(_component_CommonColorPicker, {
                                     modelValue: $data.form.itemStyle.areaColor,
                                     "onUpdate:modelValue": _cache[10] || (_cache[10] = $event => (($data.form.itemStyle.areaColor) = $event)),
@@ -75752,7 +75759,7 @@
                           default: vue.withCtx(() => [
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_7$9, [
+                                vue.createElementVNode("div", _hoisted_7$a, [
                                   vue.createVNode(_component_el_input_number, {
                                     modelValue: $data.form.itemStyle.borderWidth,
                                     "onUpdate:modelValue": _cache[12] || (_cache[12] = $event => (($data.form.itemStyle.borderWidth) = $event)),
@@ -76025,12 +76032,12 @@
       }, 8, ["model", "disabled"])
     ]))
   }
-  const BasicConfig = /*#__PURE__*/_export_sfc(_sfc_main$K, [['render',_sfc_render$J],['__scopeId',"data-v-561e5514"]]);
+  const BasicConfig = /*#__PURE__*/_export_sfc(_sfc_main$N, [['render',_sfc_render$M],['__scopeId',"data-v-561e5514"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$J = {
+  const _sfc_main$M = {
     components: {
     },
     inject: ['getSaveAble'],
@@ -76096,10 +76103,10 @@
     }
   };
 
-  const _hoisted_1$T = { class: "d-flex-c" };
-  const _hoisted_2$x = { class: "d-flex-c" };
+  const _hoisted_1$Y = { class: "d-flex-c" };
+  const _hoisted_2$A = { class: "d-flex-c" };
 
-  function _sfc_render$I(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$L(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_CommonColorPicker = vue.resolveComponent("CommonColorPicker");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_ShadowStyle = vue.resolveComponent("ShadowStyle");
@@ -76143,7 +76150,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$T, [
+                    vue.createElementVNode("div", _hoisted_1$Y, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.borderWidth,
                         "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($data.form.borderWidth) = $event)),
@@ -76159,7 +76166,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$x, [
+                    vue.createElementVNode("div", _hoisted_2$A, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.borderColor,
                         "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.borderColor) = $event)),
@@ -76180,12 +76187,12 @@
       _: 1
     }, 8, ["model", "disabled"]))
   }
-  const ScatterItemStyleConfig = /*#__PURE__*/_export_sfc(_sfc_main$J, [['render',_sfc_render$I]]);
+  const ScatterItemStyleConfig = /*#__PURE__*/_export_sfc(_sfc_main$M, [['render',_sfc_render$L]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$I = {
+  const _sfc_main$L = {
     components: {
       ScatterItemStyleConfig
     },
@@ -76287,15 +76294,15 @@
     }
   };
 
-  const _hoisted_1$S = { class: "d-flex-c" };
-  const _hoisted_2$w = { class: "d-flex-c" };
-  const _hoisted_3$q = { class: "d-flex-c" };
-  const _hoisted_4$l = { class: "d-flex-c" };
-  const _hoisted_5$e = { class: "d-flex-c" };
-  const _hoisted_6$c = { class: "d-flex-c" };
-  const _hoisted_7$8 = { class: "d-flex-c" };
+  const _hoisted_1$X = { class: "d-flex-c" };
+  const _hoisted_2$z = { class: "d-flex-c" };
+  const _hoisted_3$t = { class: "d-flex-c" };
+  const _hoisted_4$o = { class: "d-flex-c" };
+  const _hoisted_5$h = { class: "d-flex-c" };
+  const _hoisted_6$f = { class: "d-flex-c" };
+  const _hoisted_7$9 = { class: "d-flex-c" };
 
-  function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$K(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_el_input_number = vue.resolveComponent("el-input-number");
@@ -76338,7 +76345,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_1$S, [
+                    vue.createElementVNode("div", _hoisted_1$X, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.symbolSize,
                         "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($data.form.symbolSize) = $event)),
@@ -76354,7 +76361,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$w, [
+                    vue.createElementVNode("div", _hoisted_2$z, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.itemStyle.color,
                         "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.itemStyle.color) = $event)),
@@ -76375,7 +76382,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 24 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_3$q, [
+                    vue.createElementVNode("div", _hoisted_3$t, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.form.symbol,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.symbol) = $event)),
@@ -76424,7 +76431,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$l, [
+                    vue.createElementVNode("div", _hoisted_4$o, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.itemStyle.borderWidth,
                         "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.itemStyle.borderWidth) = $event)),
@@ -76440,7 +76447,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$e, [
+                    vue.createElementVNode("div", _hoisted_5$h, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.itemStyle.borderColor,
                         "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.itemStyle.borderColor) = $event)),
@@ -76466,7 +76473,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_6$c, [
+                    vue.createElementVNode("div", _hoisted_6$f, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.symbolOffset[0],
                         "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.symbolOffset[0]) = $event)),
@@ -76482,7 +76489,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_7$8, [
+                    vue.createElementVNode("div", _hoisted_7$9, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.symbolOffset[1],
                         "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.symbolOffset[1]) = $event)),
@@ -76534,12 +76541,12 @@
       _: 1
     }, 8, ["model", "disabled"]))
   }
-  const ScatterConfig = /*#__PURE__*/_export_sfc(_sfc_main$I, [['render',_sfc_render$H]]);
+  const ScatterConfig = /*#__PURE__*/_export_sfc(_sfc_main$L, [['render',_sfc_render$K]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$H = {
+  const _sfc_main$K = {
     name: 'MapChartConfig',
     components: {
       ...baseChartComponents,
@@ -76729,11 +76736,11 @@
     }
   };
 
-  const _hoisted_1$R = { class: "map-config-container" };
-  const _hoisted_2$v = { class: "map-config-main" };
-  const _hoisted_3$p = { class: "copy-button-box" };
+  const _hoisted_1$W = { class: "map-config-container" };
+  const _hoisted_2$y = { class: "map-config-main" };
+  const _hoisted_3$s = { class: "copy-button-box" };
 
-  function _sfc_render$G(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$J(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_SidebarTabs = vue.resolveComponent("SidebarTabs");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_VisualMap = vue.resolveComponent("VisualMap");
@@ -76758,14 +76765,14 @@
           onConfigOptionInit: $options.configOptionInit
         }), {
           default: vue.withCtx(() => [
-            vue.createElementVNode("div", _hoisted_1$R, [
+            vue.createElementVNode("div", _hoisted_1$W, [
               vue.createVNode(_component_SidebarTabs, {
                 modelValue: $data.activeConfig,
                 "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.activeConfig) = $event)),
                 menu: $data.chartMenu
               }, null, 8, ["modelValue", "menu"]),
-              vue.createElementVNode("div", _hoisted_2$v, [
-                vue.withDirectives(vue.createElementVNode("div", _hoisted_3$p, [
+              vue.createElementVNode("div", _hoisted_2$y, [
+                vue.withDirectives(vue.createElementVNode("div", _hoisted_3$s, [
                   vue.createVNode(_component_el_button, {
                     type: "primary",
                     size: "small",
@@ -76835,7 +76842,7 @@
         }, 16, ["configs", "page-config", "save-able", "items", "rules", "tjb-u-r-l", "onSaveChartConfig", "onBuildChartSeriesData", "onConfigOptionInit"]))
       : vue.createCommentVNode("", true)
   }
-  const MapChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$H, [['render',_sfc_render$G],['__scopeId',"data-v-e93fa0ae"]]);
+  const MapChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$K, [['render',_sfc_render$J],['__scopeId',"data-v-e93fa0ae"]]);
 
   MapChartConfig.install = function (Vue) {
     Vue.component(libPrefix + MapChartConfig.name, MapChartConfig);
@@ -76844,7 +76851,7 @@
   function _isSlot(s) {
     return typeof s === 'function' || Object.prototype.toString.call(s) === '[object Object]' && !vue.isVNode(s);
   }
-  const _sfc_main$G = {
+  const _sfc_main$J = {
     name: 'TableChart',
     components: {},
     mixins: [mixins],
@@ -77194,16 +77201,16 @@
 
   /* unplugin-vue-components disabled */
 
-  const _hoisted_1$Q = {
+  const _hoisted_1$V = {
     ref: "rootRef",
     class: "full-box overflow-hidden",
     style: {"position":"relative"}
   };
 
-  function _sfc_render$F(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$I(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_EfTable = vue.resolveComponent("EfTable");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$Q, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$V, [
       vue.renderSlot(_ctx.$slots, "content", {}, () => [
         (_ctx.contentConfig && _ctx.contentConfig.component)
           ? (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(_ctx.contentConfig.component), vue.normalizeProps(vue.mergeProps({ key: 0 }, _ctx.contentConfig.props || {})), null, 16))
@@ -77227,7 +77234,7 @@
         : vue.createCommentVNode("", true)
     ], 512))
   }
-  const TableChart = /*#__PURE__*/_export_sfc(_sfc_main$G, [['render',_sfc_render$F],['__scopeId',"data-v-e606a10a"]]);
+  const TableChart = /*#__PURE__*/_export_sfc(_sfc_main$J, [['render',_sfc_render$I],['__scopeId',"data-v-e606a10a"]]);
 
   TableChart.install = function (Vue) {
     Vue.component(libPrefix + TableChart.name, TableChart);
@@ -77236,7 +77243,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$F = {
+  const _sfc_main$I = {
     components: {
 
       TextStyle
@@ -77326,13 +77333,13 @@
     }
   };
 
-  const _hoisted_1$P = { style: {"width":"100%"} };
-  const _hoisted_2$u = { class: "d-flex-c" };
-  const _hoisted_3$o = { class: "d-flex-c" };
-  const _hoisted_4$k = { class: "d-flex-c" };
-  const _hoisted_5$d = { class: "d-flex-c" };
-  const _hoisted_6$b = { class: "d-flex-c" };
-  const _hoisted_7$7 = { class: "d-flex-c" };
+  const _hoisted_1$U = { style: {"width":"100%"} };
+  const _hoisted_2$x = { class: "d-flex-c" };
+  const _hoisted_3$r = { class: "d-flex-c" };
+  const _hoisted_4$n = { class: "d-flex-c" };
+  const _hoisted_5$g = { class: "d-flex-c" };
+  const _hoisted_6$e = { class: "d-flex-c" };
+  const _hoisted_7$8 = { class: "d-flex-c" };
   const _hoisted_8$5 = { class: "d-flex-c" };
   const _hoisted_9$5 = { class: "d-flex-c" };
   const _hoisted_10$3 = { class: "d-flex-c" };
@@ -77343,7 +77350,7 @@
   const _hoisted_15$2 = { class: "d-flex-c" };
   const _hoisted_16$2 = { class: "d-flex-c" };
 
-  function _sfc_render$E(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_el_col = vue.resolveComponent("el-col");
     const _component_el_input_number = vue.resolveComponent("el-input-number");
@@ -77356,7 +77363,7 @@
     const _component_el_form = vue.resolveComponent("el-form");
     const _component_CollapseItem = vue.resolveComponent("CollapseItem");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$P, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$U, [
       vue.createVNode(_component_el_form, {
         model: $data.form,
         size: "small",
@@ -77374,7 +77381,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_2$u, [
+                      vue.createElementVNode("div", _hoisted_2$x, [
                         vue.createVNode(_component_el_switch, {
                           modelValue: $data.form.hasPager,
                           "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.hasPager) = $event)),
@@ -77390,7 +77397,7 @@
                   }),
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_3$o, [
+                      vue.createElementVNode("div", _hoisted_3$r, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.pageSize,
                           "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.pageSize) = $event)),
@@ -77414,7 +77421,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_4$k, [
+                      vue.createElementVNode("div", _hoisted_4$n, [
                         vue.createVNode(_component_el_switch, {
                           modelValue: $data.form.isStatic,
                           "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.isStatic) = $event)),
@@ -77443,7 +77450,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_5$d, [
+                      vue.createElementVNode("div", _hoisted_5$g, [
                         vue.createVNode(_component_el_switch, {
                           modelValue: $data.form.hasSeq,
                           "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form.hasSeq) = $event)),
@@ -77460,7 +77467,7 @@
                   _cache[48] || (_cache[48] = vue.createTextVNode()),
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_6$b, [
+                      vue.createElementVNode("div", _hoisted_6$e, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.seqWidth,
                           "onUpdate:modelValue": _cache[11] || (_cache[11] = $event => (($data.form.seqWidth) = $event)),
@@ -77489,7 +77496,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_7$7, [
+                      vue.createElementVNode("div", _hoisted_7$8, [
                         vue.createVNode(_component_el_switch, {
                           modelValue: $data.form.highlightCurrentRow,
                           "onUpdate:modelValue": _cache[13] || (_cache[13] = $event => (($data.form.highlightCurrentRow) = $event)),
@@ -77796,12 +77803,12 @@
       }, 8, ["model", "disabled"])
     ]))
   }
-  const tablePropsConfig = /*#__PURE__*/_export_sfc(_sfc_main$F, [['render',_sfc_render$E],['__scopeId',"data-v-4eb95659"]]);
+  const tablePropsConfig = /*#__PURE__*/_export_sfc(_sfc_main$I, [['render',_sfc_render$H],['__scopeId',"data-v-4eb95659"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$E = {
+  const _sfc_main$H = {
     props: {
       visible: {
         type: Boolean,
@@ -77849,12 +77856,12 @@
     }
   };
 
-  const _hoisted_1$O = { class: "filter-panel" };
-  const _hoisted_2$t = { class: "filter-content" };
-  const _hoisted_3$n = { class: "code-content" };
-  const _hoisted_4$j = { class: "analysis-modal-footer" };
+  const _hoisted_1$T = { class: "filter-panel" };
+  const _hoisted_2$w = { class: "filter-content" };
+  const _hoisted_3$q = { class: "code-content" };
+  const _hoisted_4$m = { class: "analysis-modal-footer" };
 
-  function _sfc_render$D(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$G(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BKCodeCom = vue.resolveComponent("BKCodeCom");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_EfModal = vue.resolveComponent("EfModal");
@@ -77868,13 +77875,13 @@
       onClose: _cache[3] || (_cache[3] = $event => (_ctx.$emit('close')))
     }, {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$O, [
-          vue.createElementVNode("div", _hoisted_2$t, [
+        vue.createElementVNode("div", _hoisted_1$T, [
+          vue.createElementVNode("div", _hoisted_2$w, [
             _cache[4] || (_cache[4] = vue.createElementVNode("div", { class: "code-bg mtk1" }, [
               vue.createElementVNode("span", { class: "mtk8" }, "function"),
               vue.createTextVNode(" setColumn(column) { ")
             ], -1)),
-            vue.createElementVNode("div", _hoisted_3$n, [
+            vue.createElementVNode("div", _hoisted_3$q, [
               vue.createVNode(_component_BKCodeCom, {
                 ref: "editor",
                 modelValue: $data.filterScript,
@@ -77886,7 +77893,7 @@
             ]),
             _cache[5] || (_cache[5] = vue.createElementVNode("div", { class: "code-bg mtk1 code-close" }, " } ", -1))
           ]),
-          vue.createElementVNode("div", _hoisted_4$j, [
+          vue.createElementVNode("div", _hoisted_4$m, [
             vue.createVNode(_component_el_button, {
               type: "primary",
               size: "small",
@@ -77914,12 +77921,12 @@
       _: 1
     }, 8, ["modelValue"]))
   }
-  const ColumnCustomConfig = /*#__PURE__*/_export_sfc(_sfc_main$E, [['render',_sfc_render$D],['__scopeId',"data-v-a28c534e"]]);
+  const ColumnCustomConfig = /*#__PURE__*/_export_sfc(_sfc_main$H, [['render',_sfc_render$G],['__scopeId',"data-v-a28c534e"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$D = {
+  const _sfc_main$G = {
     components: {
       SeriesPlane,
       ColumnCustomConfig
@@ -78025,10 +78032,10 @@
     }
   };
 
-  const _hoisted_1$N = { class: "full-box" };
-  const _hoisted_2$s = { style: {"width":"100px"} };
+  const _hoisted_1$S = { class: "full-box" };
+  const _hoisted_2$v = { style: {"width":"100px"} };
 
-  function _sfc_render$C(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$F(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_CopyDocument = vue.resolveComponent("CopyDocument");
     const _component_el_icon = vue.resolveComponent("el-icon");
@@ -78046,8 +78053,8 @@
     const _component_SeriesPlane = vue.resolveComponent("SeriesPlane");
     const _component_ColumnCustomConfig = vue.resolveComponent("ColumnCustomConfig");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$N, [
-      vue.createElementVNode("div", _hoisted_2$s, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$S, [
+      vue.createElementVNode("div", _hoisted_2$v, [
         vue.createVNode(_component_el_switch, {
           modelValue: $data.filterDataEmpty,
           "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.filterDataEmpty) = $event)),
@@ -78309,12 +78316,12 @@
         : vue.createCommentVNode("", true)
     ]))
   }
-  const tableColumnsConfig = /*#__PURE__*/_export_sfc(_sfc_main$D, [['render',_sfc_render$C],['__scopeId',"data-v-4e9053aa"]]);
+  const tableColumnsConfig = /*#__PURE__*/_export_sfc(_sfc_main$G, [['render',_sfc_render$F],['__scopeId',"data-v-4e9053aa"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$C = {
+  const _sfc_main$F = {
     name: 'TableChartConfig',
     components: {
       SidebarTabs,
@@ -78423,12 +78430,12 @@
     }
   };
 
-  const _hoisted_1$M = { class: "table-config-content" };
-  const _hoisted_2$r = { class: "table-config-table" };
-  const _hoisted_3$m = { class: "copy-button-box" };
-  const _hoisted_4$i = { class: "copy-button-box" };
+  const _hoisted_1$R = { class: "table-config-content" };
+  const _hoisted_2$u = { class: "table-config-table" };
+  const _hoisted_3$p = { class: "copy-button-box" };
+  const _hoisted_4$l = { class: "copy-button-box" };
 
-  function _sfc_render$B(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$E(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_SidebarTabs = vue.resolveComponent("SidebarTabs");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_ChartTypeChange = vue.resolveComponent("ChartTypeChange");
@@ -78452,14 +78459,14 @@
       onBuildChartSeriesData: $options.buildChartData
     }), {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$M, [
+        vue.createElementVNode("div", _hoisted_1$R, [
           vue.createVNode(_component_SidebarTabs, {
             modelValue: $data.activeConfig,
             "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.activeConfig) = $event)),
             menu: $data.chartMenu
           }, null, 8, ["modelValue", "menu"]),
-          vue.createElementVNode("div", _hoisted_2$r, [
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_3$m, [
+          vue.createElementVNode("div", _hoisted_2$u, [
+            vue.withDirectives(vue.createElementVNode("div", _hoisted_3$p, [
               vue.createVNode(_component_el_button, {
                 type: "primary",
                 size: "small",
@@ -78498,7 +78505,7 @@
             }, null, 8, ["onPasteConfig", "onPropsChange"]), [
               [vue.vShow, $data.activeConfig==='basic']
             ]),
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_4$i, [
+            vue.withDirectives(vue.createElementVNode("div", _hoisted_4$l, [
               vue.createVNode(_component_el_button, {
                 type: "primary",
                 size: "small",
@@ -78537,7 +78544,7 @@
       _: 1
     }, 16, ["configs", "page-config", "save-able", "items", "rules", "tjb-u-r-l", "onChangeBranchType", "onSaveChartConfig", "onConfigOptionInit", "onBuildChartSeriesData"]))
   }
-  const TableChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$C, [['render',_sfc_render$B],['__scopeId',"data-v-65b46622"]]);
+  const TableChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$F, [['render',_sfc_render$E],['__scopeId',"data-v-65b46622"]]);
 
   TableChartConfig.install = function (Vue) {
     Vue.component(libPrefix + TableChartConfig.name, TableChartConfig);
@@ -78546,7 +78553,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$B = {
+  const _sfc_main$E = {
 
     props: {
       configs: {
@@ -78601,14 +78608,14 @@
     }
   };
 
-  const _hoisted_1$L = { class: "oper-list" };
+  const _hoisted_1$Q = { class: "oper-list" };
 
-  function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$D(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_RefreshRight = vue.resolveComponent("RefreshRight");
     const _component_el_icon = vue.resolveComponent("el-icon");
     const _component_el_button = vue.resolveComponent("el-button");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$L, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$Q, [
       ($props.showClear)
         ? (vue.openBlock(), vue.createBlock(_component_el_button, {
             key: 0,
@@ -78652,7 +78659,7 @@
       }), 128))
     ]))
   }
-  const OperatorContent = /*#__PURE__*/_export_sfc(_sfc_main$B, [['render',_sfc_render$A],['__scopeId',"data-v-bc85bd49"]]);
+  const OperatorContent = /*#__PURE__*/_export_sfc(_sfc_main$E, [['render',_sfc_render$D],['__scopeId',"data-v-bc85bd49"]]);
 
   var ejs$1 = {};
 
@@ -79876,7 +79883,7 @@
   /* unplugin-vue-components disabled */
 
 
-  const _sfc_main$A = {
+  const _sfc_main$D = {
     name: 'ExplainContent',
 
     props: {
@@ -80008,7 +80015,7 @@
     }
   };
 
-  function _sfc_render$z(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$C(_ctx, _cache, $props, $setup, $data, $options) {
     return ($data.explainConfig.show)
       ? (vue.openBlock(), vue.createElementBlock("div", {
           key: 0,
@@ -80023,12 +80030,12 @@
         ], 4))
       : vue.createCommentVNode("", true)
   }
-  const ExplainContent = /*#__PURE__*/_export_sfc(_sfc_main$A, [['render',_sfc_render$z],['__scopeId',"data-v-6b0b1ae9"]]);
+  const ExplainContent = /*#__PURE__*/_export_sfc(_sfc_main$D, [['render',_sfc_render$C],['__scopeId',"data-v-6b0b1ae9"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$z = {
+  const _sfc_main$C = {
     name: 'QueryArea',
     inject: ['setQueryAreaParams'],
 
@@ -80247,12 +80254,12 @@
     }
   };
 
-  const _hoisted_1$K = {
+  const _hoisted_1$P = {
     key: 1,
     class: "query-empty"
   };
 
-  function _sfc_render$y(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$B(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_EfForm = vue.resolveComponent("EfForm");
 
     return ($data.items.length > 0)
@@ -80279,16 +80286,16 @@
             : vue.createCommentVNode("", true)
         ], 6))
       : (!$props.isChart)
-        ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$K, " 请配置外部全局参数并开启查询 "))
+        ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$P, " 请配置外部全局参数并开启查询 "))
         : vue.createCommentVNode("", true)
   }
-  const QueryArea = /*#__PURE__*/_export_sfc(_sfc_main$z, [['render',_sfc_render$y],['__scopeId',"data-v-9feee8ed"]]);
+  const QueryArea = /*#__PURE__*/_export_sfc(_sfc_main$C, [['render',_sfc_render$B],['__scopeId',"data-v-9feee8ed"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$y = {
+  const _sfc_main$B = {
     name: 'ChartContent',
 
     components: {
@@ -80740,11 +80747,11 @@
     }
   };
 
-  const _hoisted_1$J = ["label", "onClick"];
-  const _hoisted_2$q = { style: {"width":"100%","height":"100%"} };
-  const _hoisted_3$l = { class: "empty-container" };
+  const _hoisted_1$O = ["label", "onClick"];
+  const _hoisted_2$t = { style: {"width":"100%","height":"100%"} };
+  const _hoisted_3$o = { class: "empty-container" };
 
-  function _sfc_render$x(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_Close = vue.resolveComponent("Close");
     const _component_el_icon = vue.resolveComponent("el-icon");
     const _component_el_button = vue.resolveComponent("el-button");
@@ -80808,7 +80815,7 @@
                               _: 1
                             }, 8, ["onClick"]))
                           : vue.createCommentVNode("", true)
-                      ], 10, _hoisted_1$J)
+                      ], 10, _hoisted_1$O)
                     ]),
                     _: 1
                   }, 8, ["list", "disabled", "onChange"])
@@ -80855,7 +80862,7 @@
                     onMove: _cache[3] || (_cache[3] = $event => ($options.handleEvent('move',$event)))
                   }, {
                     item: vue.withCtx(({element:tab}) => [
-                      vue.createElementVNode("div", _hoisted_2$q, [
+                      vue.createElementVNode("div", _hoisted_2$t, [
                         (!$props.setMode || $data.dragList.length > 0)
                           ? (vue.openBlock(), vue.createElementBlock("div", {
                               key: 0,
@@ -80956,7 +80963,7 @@
                       ])
                     ]),
                     footer: vue.withCtx(() => [
-                      vue.withDirectives(vue.createElementVNode("div", _hoisted_3$l, [...(_cache[5] || (_cache[5] = [
+                      vue.withDirectives(vue.createElementVNode("div", _hoisted_3$o, [...(_cache[5] || (_cache[5] = [
                         vue.createElementVNode("div", { class: "empty-img" }, null, -1),
                         vue.createElementVNode("span", null, "拖拽左侧组件到此区域", -1)
                       ]))], 512), [
@@ -80983,13 +80990,13 @@
         : vue.createCommentVNode("", true)
     ]))
   }
-  const ChartContent = /*#__PURE__*/_export_sfc(_sfc_main$y, [['render',_sfc_render$x],['__scopeId',"data-v-9ad5e52e"]]);
+  const ChartContent = /*#__PURE__*/_export_sfc(_sfc_main$B, [['render',_sfc_render$A],['__scopeId',"data-v-9ad5e52e"]]);
 
   const _imports_0$1 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAtCAYAAADV2ImkAAAAAXNSR0IArs4c6QAAA1VJREFUaEPtmU1ME1EQx2febukHaCvxpvHogYORhANeaLkSVA58JF6MF/XgQZBooompBw8aQeLF6EUxHkgrMcavcLFo9EgkxMSEsxq/ggXjdrfd3TGvUGiXdnm7S0qr7PF13rzf/jsznXnF8JBCYPMgw870jeC0nY3dZ5HhTIxMStnZLI6GUNQ/bgNbpNoShU0jMMcwMy76tRXsTAoeZ5J6oOohITNzPqfjZ6fAPpn26Cbbvw28UZVAKfDe1NXrThVmcuA8GWpr1RWuqbLGs9hWOT0wmx7DtFN1C/aRsxQBWT1ot9+JICUFe+cgNTf4lAB3bmDoz69ruOgW1Lpv1wUKS6Q08vVsLqQu3cQFN75LgCNDylMC6M47Qry7OBI85cZpuT3hc5k7QHQy7xrgWXo0dNiN7/8L+MgT2pHWtKWCUgylzuk+X9m+oyYU/qeBayLpnCgcjxN71ZJNIJDfTbIR4B8m4ZijpOOAxYdputKUMaQvhTUZ5a6mBultsY1fAyXZjwZf60ioPL6jboBXqssnR8AdCdW22S8HIgFrS/U3zOSBk+ptIDjtFngFem37RnXYK3A0qV0loot1A1x1hWPJXEnfwQCDOukv1uowDAJIs8UK5hrkmXdH8fdKDD8HgK6qKWw9yEmViN2jgNmY/QFATfUBnFB6TWBJL7Drks5ptyaqcF+CpG+gzQFAi2dgL/2wKHD0kXaZTLriFTavsJd7Ca7cT8itNudZv2++kGAFuM5J7Zhh0MPlrtL7IwRsnen4rLZRc89f5jtkLxFQfLNghRW2jvl8fD8TCn2Nx9G0asarATRmuk1gPAQ8x6zVv5DC5YBb2uRbALQbED4i4AIBNQPBPv4LDACeSpdd4AgBW29++I1O6yFtfHWc8h6awh6EgMtNtdGEujb/CR/n3XAb2LuG9h5c18bNCwk0EeABIX0QedktB0bA+6/7/SdEYNf1EqKbuN2mKYww/KYvMCJ69pYrDEXAsccUAV2vfA/HSK0t4GQuZpJR6Q8cVWJST70A52FTvb6pegBeha25pOMzoyUkSmBrHXgdbC0Dl4X1BNyR0CYAaEC0fla0Ky5ryyHxUiLoSQ0EpsrtcZ10sclsOxlmkgD2eoIuBp5Q2hFZuBIsP+cvt32jwdmnaOMAAAAASUVORK5CYII=";
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$x = {
+  const _sfc_main$A = {
     name: 'GridLayoutContent',
     components: {
       GridLayout: De$1,
@@ -81385,11 +81392,11 @@
   };
 
 
-  const _hoisted_1$I = { class: "el-dropdown-link" };
-  const _hoisted_2$p = { class: "el-dropdown-link" };
-  const _hoisted_3$k = ["onClick"];
+  const _hoisted_1$N = { class: "el-dropdown-link" };
+  const _hoisted_2$s = { class: "el-dropdown-link" };
+  const _hoisted_3$n = ["onClick"];
 
-  function _sfc_render$w(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$z(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_ChartContent = vue.resolveComponent("ChartContent");
     const _component_QueryArea = vue.resolveComponent("QueryArea");
     const _component_BKTabLayout = vue.resolveComponent("BKTabLayout");
@@ -81557,7 +81564,7 @@
                           }, 1024)
                         ]),
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("span", _hoisted_1$I, [
+                          vue.createElementVNode("span", _hoisted_1$N, [
                             vue.createVNode(_component_el_icon, { class: "el-icon--right" }, {
                               default: vue.withCtx(() => [
                                 vue.createVNode(_component_Plus)
@@ -81650,7 +81657,7 @@
                           }, 1024)
                         ]),
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("span", _hoisted_2$p, [
+                          vue.createElementVNode("span", _hoisted_2$s, [
                             vue.createVNode(_component_el_icon, { class: "el-icon--right" }, {
                               default: vue.withCtx(() => [
                                 vue.createVNode(_component_CopyDocument)
@@ -81695,7 +81702,7 @@
                       alt: ""
                     }, null, -1),
                     vue.createElementVNode("span", null, "点击添加区域", -1)
-                  ]))], 8, _hoisted_3$k))
+                  ]))], 8, _hoisted_3$n))
                 : vue.createCommentVNode("", true)
             ]),
             _: 2
@@ -81705,7 +81712,7 @@
       _: 1
     }, 8, ["layout", "col-num", "row-height", "is-draggable", "is-resizable", "margin", "max-rows", "prevent-collision"]))
   }
-  const GridLayoutContent = /*#__PURE__*/_export_sfc(_sfc_main$x, [['render',_sfc_render$w],['__scopeId',"data-v-80652eea"]]);
+  const GridLayoutContent = /*#__PURE__*/_export_sfc(_sfc_main$A, [['render',_sfc_render$z],['__scopeId',"data-v-80652eea"]]);
 
   GridLayoutContent.install = function (Vue) {
     Vue.component(libPrefix + GridLayoutContent.name, GridLayoutContent);
@@ -81715,7 +81722,7 @@
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$w = {
+  const _sfc_main$z = {
     name: 'GridLayoutDecorate',
     components: {
       GridLayout: De$1,
@@ -81836,10 +81843,10 @@
     }
   };
 
-  const _hoisted_1$H = { class: "full-box d-flex ai-c jc-c decorate-content" };
-  const _hoisted_2$o = { class: "grid-item-oper" };
+  const _hoisted_1$M = { class: "full-box d-flex ai-c jc-c decorate-content" };
+  const _hoisted_2$r = { class: "grid-item-oper" };
 
-  function _sfc_render$v(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$y(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BKDecorateChart = vue.resolveComponent("BKDecorateChart");
     const _component_CopyDocument = vue.resolveComponent("CopyDocument");
     const _component_el_icon = vue.resolveComponent("el-icon");
@@ -81875,12 +81882,12 @@
             style: {"pointer-events":"auto"}
           }, {
             default: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_1$H, [
+              vue.createElementVNode("div", _hoisted_1$M, [
                 vue.createVNode(_component_BKDecorateChart, {
                   content: item.content
                 }, null, 8, ["content"])
               ]),
-              vue.createElementVNode("div", _hoisted_2$o, [
+              vue.createElementVNode("div", _hoisted_2$r, [
                 vue.createElementVNode("div", {
                   ref_for: true,
                   ref: 'oper'+ item.i,
@@ -81936,7 +81943,7 @@
       _: 1
     }, 8, ["layout", "col-num", "row-height", "is-draggable", "is-resizable", "max-rows", "margin"]))
   }
-  const GridLayoutDecorate = /*#__PURE__*/_export_sfc(_sfc_main$w, [['render',_sfc_render$v],['__scopeId',"data-v-3ae7b3e4"]]);
+  const GridLayoutDecorate = /*#__PURE__*/_export_sfc(_sfc_main$z, [['render',_sfc_render$y],['__scopeId',"data-v-3ae7b3e4"]]);
 
   GridLayoutDecorate.install = function (Vue) {
     Vue.component(libPrefix + GridLayoutDecorate.name, GridLayoutDecorate);
@@ -81945,7 +81952,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$v = {
+  const _sfc_main$y = {
     components: {
       TextStyle,
       LineStyle,
@@ -82083,13 +82090,13 @@
     }
   };
 
-  const _hoisted_1$G = { style: {"width":"100%"} };
-  const _hoisted_2$n = { class: "d-flex-c" };
-  const _hoisted_3$j = { class: "d-flex-c" };
-  const _hoisted_4$h = { class: "d-flex-c" };
-  const _hoisted_5$c = { class: "d-flex-c" };
-  const _hoisted_6$a = { class: "d-flex-c" };
-  const _hoisted_7$6 = { class: "d-flex-c" };
+  const _hoisted_1$L = { style: {"width":"100%"} };
+  const _hoisted_2$q = { class: "d-flex-c" };
+  const _hoisted_3$m = { class: "d-flex-c" };
+  const _hoisted_4$k = { class: "d-flex-c" };
+  const _hoisted_5$f = { class: "d-flex-c" };
+  const _hoisted_6$d = { class: "d-flex-c" };
+  const _hoisted_7$7 = { class: "d-flex-c" };
   const _hoisted_8$4 = { class: "d-flex-c" };
   const _hoisted_9$4 = { class: "d-flex-c" };
   const _hoisted_10$2 = { class: "d-flex-c" };
@@ -82127,7 +82134,7 @@
   const _hoisted_42 = { class: "d-flex-c" };
   const _hoisted_43 = { class: "d-flex-c" };
 
-  function _sfc_render$u(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$x(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_el_col = vue.resolveComponent("el-col");
@@ -82146,7 +82153,7 @@
     const _component_el_collapse = vue.resolveComponent("el-collapse");
     const _component_InterfaceFilterConfig = vue.resolveComponent("InterfaceFilterConfig");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$G, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$L, [
       vue.createVNode(_component_el_form, {
         model: $data.form,
         disabled: !$options.saveAble,
@@ -82156,7 +82163,7 @@
         default: vue.withCtx(() => [
           vue.createVNode(_component_el_form_item, { label: "半径" }, {
             default: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_2$n, [
+              vue.createElementVNode("div", _hoisted_2$q, [
                 vue.createVNode(_component_el_input_number, {
                   modelValue: $data.form.radius,
                   "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.radius) = $event)),
@@ -82178,7 +82185,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_3$j, [
+                      vue.createElementVNode("div", _hoisted_3$m, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.center[0],
                           "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.center[0]) = $event)),
@@ -82196,7 +82203,7 @@
                   }),
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_4$h, [
+                      vue.createElementVNode("div", _hoisted_4$k, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.center[1],
                           "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.center[1]) = $event)),
@@ -82227,7 +82234,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_5$c, [
+                      vue.createElementVNode("div", _hoisted_5$f, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.startAngle,
                           "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.startAngle) = $event)),
@@ -82243,7 +82250,7 @@
                   }),
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_6$a, [
+                      vue.createElementVNode("div", _hoisted_6$d, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.endAngle,
                           "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form.endAngle) = $event)),
@@ -82272,7 +82279,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_7$6, [
+                      vue.createElementVNode("div", _hoisted_7$7, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.splitNumber,
                           "onUpdate:modelValue": _cache[10] || (_cache[10] = $event => (($data.form.splitNumber) = $event)),
@@ -83036,12 +83043,12 @@
       }, 8, ["model", "disabled"])
     ]))
   }
-  const basicConfig = /*#__PURE__*/_export_sfc(_sfc_main$v, [['render',_sfc_render$u],['__scopeId',"data-v-56fc2bd7"]]);
+  const basicConfig = /*#__PURE__*/_export_sfc(_sfc_main$y, [['render',_sfc_render$x],['__scopeId',"data-v-56fc2bd7"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$u = {
+  const _sfc_main$x = {
     name: 'GaugeChartConfig',
     components: {
       basicConfig
@@ -83103,10 +83110,10 @@
     }
   };
 
-  const _hoisted_1$F = { style: {"height":"100%","padding":"10px","overflow":"auto"} };
-  const _hoisted_2$m = { class: "copy-button-box" };
+  const _hoisted_1$K = { style: {"height":"100%","padding":"10px","overflow":"auto"} };
+  const _hoisted_2$p = { class: "copy-button-box" };
 
-  function _sfc_render$t(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$w(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_basicConfig = vue.resolveComponent("basicConfig");
     const _component_BKBasicChartConfig = vue.resolveComponent("BKBasicChartConfig");
@@ -83124,8 +83131,8 @@
       onSaveChartConfig: $options.saveChartCfg
     }), {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$F, [
-          vue.createElementVNode("div", _hoisted_2$m, [
+        vue.createElementVNode("div", _hoisted_1$K, [
+          vue.createElementVNode("div", _hoisted_2$p, [
             vue.createVNode(_component_el_button, {
               type: "primary",
               size: "small",
@@ -83157,7 +83164,7 @@
       _: 1
     }, 16, ["configs", "page-config", "save-able", "rules", "tjb-u-r-l", "onConfigOptionInit", "onSaveChartConfig"]))
   }
-  const GaugeChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$u, [['render',_sfc_render$t],['__scopeId',"data-v-14ad9603"]]);
+  const GaugeChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$x, [['render',_sfc_render$w],['__scopeId',"data-v-14ad9603"]]);
 
   GaugeChartConfig.install = function (Vue) {
     Vue.component(libPrefix + GaugeChartConfig.name, GaugeChartConfig);
@@ -83165,7 +83172,7 @@
 
   /* unplugin-vue-components disabled */
   // import originList from '../../map-chart-config/src/config/default-data'
-  const _sfc_main$t = {
+  const _sfc_main$w = {
     name: 'GaugeChart',
     components: {
 
@@ -83237,21 +83244,21 @@
     }
   };
 
-  const _hoisted_1$E = {
+  const _hoisted_1$J = {
     ref: "rootRef",
     class: "full-box",
     style: {"position":"relative"}
   };
-  const _hoisted_2$l = {
+  const _hoisted_2$o = {
     ref: "downLoadPic",
     href: "#",
     style: {"display":"none"}
   };
 
-  function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$v(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BKChart = vue.resolveComponent("BKChart");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$E, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$J, [
       vue.renderSlot(_ctx.$slots, "content", {}, () => [
         (_ctx.contentConfig && _ctx.contentConfig.component)
           ? (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(_ctx.contentConfig.component), vue.normalizeProps(vue.mergeProps({ key: 0 }, _ctx.contentConfig.props || {})), null, 16))
@@ -83262,10 +83269,10 @@
         option: $data.option,
         onClick: $options.itemClick
       }, null, 8, ["option", "onClick"]),
-      vue.createElementVNode("a", _hoisted_2$l, null, 512)
+      vue.createElementVNode("a", _hoisted_2$o, null, 512)
     ], 512))
   }
-  const GaugeChart = /*#__PURE__*/_export_sfc(_sfc_main$t, [['render',_sfc_render$s]]);
+  const GaugeChart = /*#__PURE__*/_export_sfc(_sfc_main$w, [['render',_sfc_render$v]]);
 
   GaugeChart.install = function (Vue) {
     Vue.component(libPrefix + GaugeChart.name, GaugeChart);
@@ -83274,7 +83281,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$s = {
+  const _sfc_main$v = {
     props: {
       option: {
         type: Object,
@@ -83337,12 +83344,12 @@
     }
   };
 
-  const _hoisted_1$D = ["onClick"];
-  const _hoisted_2$k = ["src"];
-  const _hoisted_3$i = { class: "statistics-text" };
-  const _hoisted_4$g = { class: "statistics-num" };
+  const _hoisted_1$I = ["onClick"];
+  const _hoisted_2$n = ["src"];
+  const _hoisted_3$l = { class: "statistics-text" };
+  const _hoisted_4$j = { class: "statistics-num" };
 
-  function _sfc_render$r(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$u(_ctx, _cache, $props, $setup, $data, $options) {
     return (vue.openBlock(), vue.createElementBlock("div", {
       class: "statistics-box",
       style: vue.normalizeStyle([{gap:($props.option.styles.gap+'px')||''}, {"position":"relative"}])
@@ -83365,14 +83372,14 @@
             vue.withDirectives(vue.createElementVNode("img", {
               src: item.url,
               class: "statistics-img"
-            }, null, 8, _hoisted_2$k), [
+            }, null, 8, _hoisted_2$n), [
               [vue.vShow, item.url&&$props.option.imageShow]
             ])
           ], 4),
           vue.createElementVNode("div", {
             style: vue.normalizeStyle([$options.getTextStyle(item.number), {"position":"absolute"}])
           }, [
-            vue.createElementVNode("div", _hoisted_3$i, [
+            vue.createElementVNode("div", _hoisted_3$l, [
               vue.createTextVNode(vue.toDisplayString(item.text) + " ", 1),
               vue.withDirectives(vue.createElementVNode("span", {
                 class: "statistics-unit",
@@ -83385,7 +83392,7 @@
           vue.createElementVNode("div", {
             style: vue.normalizeStyle([$options.getNumberStyle(item.number), {"position":"absolute"}])
           }, [
-            vue.createElementVNode("div", _hoisted_4$g, [
+            vue.createElementVNode("div", _hoisted_4$j, [
               vue.createTextVNode(vue.toDisplayString(item.number) + " ", 1),
               vue.withDirectives(vue.createElementVNode("span", {
                 class: "statistics-unit",
@@ -83395,16 +83402,16 @@
               ])
             ])
           ], 4)
-        ], 12, _hoisted_1$D))
+        ], 12, _hoisted_1$I))
       }), 128))
     ], 4))
   }
-  const CustomStatistics = /*#__PURE__*/_export_sfc(_sfc_main$s, [['render',_sfc_render$r],['__scopeId',"data-v-6405b837"]]);
+  const CustomStatistics = /*#__PURE__*/_export_sfc(_sfc_main$v, [['render',_sfc_render$u],['__scopeId',"data-v-6405b837"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$r = {
+  const _sfc_main$u = {
     name: 'StatisticsChart',
     components: {
       CustomStatistics
@@ -83523,7 +83530,7 @@
     }
   };
 
-  function _sfc_render$q(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$t(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_CustomStatistics = vue.resolveComponent("CustomStatistics");
 
     return (vue.openBlock(), vue.createBlock(_component_CustomStatistics, {
@@ -83533,7 +83540,7 @@
       onItemClick: $options.itemClick
     }, null, 8, ["option", "real-data", "onItemClick"]))
   }
-  const StatisticsChart = /*#__PURE__*/_export_sfc(_sfc_main$r, [['render',_sfc_render$q],['__scopeId',"data-v-291d168e"]]);
+  const StatisticsChart = /*#__PURE__*/_export_sfc(_sfc_main$u, [['render',_sfc_render$t],['__scopeId',"data-v-291d168e"]]);
 
   StatisticsChart.install = function (Vue) {
     Vue.component(libPrefix + StatisticsChart.name, StatisticsChart);
@@ -83542,7 +83549,7 @@
   /* unplugin-vue-components disabled */
 
   const colorList = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'];
-  const _sfc_main$q = {
+  const _sfc_main$t = {
     name: 'StatisticsChartConfig',
     components: {
       SidebarTabs
@@ -83676,13 +83683,13 @@
     }
   };
 
-  const _hoisted_1$C = { style: {"display":"flex","height":"100%"} };
-  const _hoisted_2$j = { style: {"flex":"1","height":"100%"} };
-  const _hoisted_3$h = { class: "copy-button-box" };
-  const _hoisted_4$f = { class: "d-flex-c" };
-  const _hoisted_5$b = { class: "d-flex-c" };
-  const _hoisted_6$9 = { class: "d-flex-c" };
-  const _hoisted_7$5 = { class: "d-flex-c" };
+  const _hoisted_1$H = { style: {"display":"flex","height":"100%"} };
+  const _hoisted_2$m = { style: {"flex":"1","height":"100%"} };
+  const _hoisted_3$k = { class: "copy-button-box" };
+  const _hoisted_4$i = { class: "d-flex-c" };
+  const _hoisted_5$e = { class: "d-flex-c" };
+  const _hoisted_6$c = { class: "d-flex-c" };
+  const _hoisted_7$6 = { class: "d-flex-c" };
   const _hoisted_8$3 = { class: "d-flex-c" };
   const _hoisted_9$3 = { class: "d-flex-c" };
   const _hoisted_10$1 = { class: "d-flex-c" };
@@ -83703,7 +83710,7 @@
   const _hoisted_22 = { class: "d-flex-c" };
   const _hoisted_23 = { class: "d-flex-c" };
 
-  function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_SidebarTabs = vue.resolveComponent("SidebarTabs");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_el_input_number = vue.resolveComponent("el-input-number");
@@ -83740,13 +83747,13 @@
       onSaveChartConfig: $options.saveChartCfg
     }), {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$C, [
+        vue.createElementVNode("div", _hoisted_1$H, [
           vue.createVNode(_component_SidebarTabs, {
             modelValue: $data.activeConfig,
             "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.activeConfig) = $event)),
             menu: $data.chartMenu
           }, null, 8, ["modelValue", "menu"]),
-          vue.createElementVNode("div", _hoisted_2$j, [
+          vue.createElementVNode("div", _hoisted_2$m, [
             vue.withDirectives(vue.createVNode(_component_el_form, {
               ref: "customForm",
               model: $data.form,
@@ -83757,7 +83764,7 @@
               style: {"padding":"10px","overflow":"auto"}
             }, {
               default: vue.withCtx(() => [
-                vue.createElementVNode("div", _hoisted_3$h, [
+                vue.createElementVNode("div", _hoisted_3$k, [
                   vue.createVNode(_component_el_button, {
                     type: "primary",
                     size: "small",
@@ -83838,7 +83845,7 @@
                       default: vue.withCtx(() => [
                         vue.createVNode(_component_el_col, { span: 24 }, {
                           default: vue.withCtx(() => [
-                            vue.withDirectives(vue.createElementVNode("div", _hoisted_4$f, [
+                            vue.withDirectives(vue.createElementVNode("div", _hoisted_4$i, [
                               vue.createVNode(_component_PercPxInput, {
                                 modelValue: $data.form.styles.width,
                                 "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.styles.width) = $event)),
@@ -83848,7 +83855,7 @@
                             ], 512), [
                               [vue.vShow, $data.form.widthType==='custom']
                             ]),
-                            vue.withDirectives(vue.createElementVNode("div", _hoisted_5$b, [
+                            vue.withDirectives(vue.createElementVNode("div", _hoisted_5$e, [
                               vue.createVNode(_component_el_input_number, {
                                 modelValue: $data.form.widthNum,
                                 "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.widthNum) = $event)),
@@ -83916,7 +83923,7 @@
                       default: vue.withCtx(() => [
                         vue.createVNode(_component_el_col, { span: 24 }, {
                           default: vue.withCtx(() => [
-                            vue.withDirectives(vue.createElementVNode("div", _hoisted_6$9, [
+                            vue.withDirectives(vue.createElementVNode("div", _hoisted_6$c, [
                               vue.createVNode(_component_PercPxInput, {
                                 modelValue: $data.form.styles.height,
                                 "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form.styles.height) = $event)),
@@ -83926,7 +83933,7 @@
                             ], 512), [
                               [vue.vShow, $data.form.heightType==='custom']
                             ]),
-                            vue.withDirectives(vue.createElementVNode("div", _hoisted_7$5, [
+                            vue.withDirectives(vue.createElementVNode("div", _hoisted_7$6, [
                               vue.createVNode(_component_el_input_number, {
                                 modelValue: $data.form.heightNum,
                                 "onUpdate:modelValue": _cache[9] || (_cache[9] = $event => (($data.form.heightNum) = $event)),
@@ -84391,7 +84398,7 @@
       _: 1
     }, 16, ["configs", "page-config", "save-able", "items", "rules", "tjb-u-r-l", "onConfigOptionInit", "onSaveChartConfig"]))
   }
-  const StatisticsChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$q, [['render',_sfc_render$p],['__scopeId',"data-v-e8f64dfb"]]);
+  const StatisticsChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$t, [['render',_sfc_render$s],['__scopeId',"data-v-e8f64dfb"]]);
 
   StatisticsChartConfig.install = function (Vue) {
     Vue.component(libPrefix + StatisticsChartConfig.name, StatisticsChartConfig);
@@ -84401,7 +84408,7 @@
 
   /* unplugin-vue-components disabled */
   // import dayjs from '../configs/utils/dayjs.min'
-  const _sfc_main$p = {
+  const _sfc_main$s = {
     props: {
       options: {
         type: Object,
@@ -84496,14 +84503,14 @@
     }
   };
 
-  const _hoisted_1$B = { class: "slider-item" };
-  const _hoisted_2$i = ["onClick"];
-  const _hoisted_3$g = { class: "inner-text" };
-  const _hoisted_4$e = { class: "inner-content" };
-  const _hoisted_5$a = ["onClick"];
-  const _hoisted_6$8 = { class: "inner-content" };
+  const _hoisted_1$G = { class: "slider-item" };
+  const _hoisted_2$l = ["onClick"];
+  const _hoisted_3$j = { class: "inner-text" };
+  const _hoisted_4$h = { class: "inner-content" };
+  const _hoisted_5$d = ["onClick"];
+  const _hoisted_6$b = { class: "inner-content" };
 
-  function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$r(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_slider = vue.resolveComponent("el-slider");
 
     return (vue.openBlock(), vue.createElementBlock("div", {
@@ -84522,7 +84529,7 @@
           "show-input": false,
           vertical: $props.options.isVertical
         }, null, 8, ["modelValue", "vertical"]),
-        vue.createElementVNode("div", _hoisted_1$B, [
+        vue.createElementVNode("div", _hoisted_1$G, [
           (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.markList, (item, key) => {
             return (vue.openBlock(), vue.createElementBlock("div", {
               key: key,
@@ -84530,33 +84537,33 @@
               class: vue.normalizeClass(["slider__stop el-slider__marks-stop slider__marks-text", {'is_active':$options.getActive(item)}]),
               onClick: $event => ($options.changeValue(item))
             }, [
-              vue.createElementVNode("div", _hoisted_3$g, [
+              vue.createElementVNode("div", _hoisted_3$j, [
                 vue.createElementVNode("div", {
                   class: vue.normalizeClass(["slider__marks-description", {'is_active':$options.getActive(item)&&$props.options.upTextShow}])
                 }, [
-                  vue.createElementVNode("div", _hoisted_4$e, vue.toDisplayString(item.description), 1)
+                  vue.createElementVNode("div", _hoisted_4$h, vue.toDisplayString(item.description), 1)
                 ], 2),
                 _cache[1] || (_cache[1] = vue.createTextVNode()),
                 vue.createElementVNode("div", {
                   class: vue.normalizeClass(["slider__marks-label", {'is_active':$options.getActive(item)&&$props.options.downTextShow}]),
                   onClick: $event => ($options.changeValue(item))
                 }, [
-                  vue.createElementVNode("div", _hoisted_6$8, vue.toDisplayString(item.showData), 1)
-                ], 10, _hoisted_5$a)
+                  vue.createElementVNode("div", _hoisted_6$b, vue.toDisplayString(item.showData), 1)
+                ], 10, _hoisted_5$d)
               ])
-            ], 14, _hoisted_2$i))
+            ], 14, _hoisted_2$l))
           }), 128))
         ])
       ], 4)
     ], 2))
   }
-  const TimeSilder = /*#__PURE__*/_export_sfc(_sfc_main$p, [['render',_sfc_render$o],['__scopeId',"data-v-1a5d888d"]]);
+  const TimeSilder = /*#__PURE__*/_export_sfc(_sfc_main$s, [['render',_sfc_render$r],['__scopeId',"data-v-1a5d888d"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
   // import { colorList } from '../../configs/chart-cfg'
-  const _sfc_main$o = {
+  const _sfc_main$r = {
     name: 'TimeChart',
     components: {
       TimeSilder
@@ -84612,16 +84619,16 @@
     }
   };
 
-  const _hoisted_1$A = {
+  const _hoisted_1$F = {
     ref: "rootRef",
     class: "full-box",
     style: {"position":"relative"}
   };
 
-  function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$q(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_TimeSilder = vue.resolveComponent("TimeSilder");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$A, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$F, [
       vue.renderSlot(_ctx.$slots, "content", {}, () => [
         (_ctx.contentConfig && _ctx.contentConfig.component)
           ? (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(_ctx.contentConfig.component), vue.normalizeProps(vue.mergeProps({ key: 0 }, _ctx.contentConfig.props || {})), null, 16))
@@ -84635,7 +84642,7 @@
       }, null, 8, ["style", "marks", "options", "onItemClick"])
     ], 512))
   }
-  const TimeChart = /*#__PURE__*/_export_sfc(_sfc_main$o, [['render',_sfc_render$n],['__scopeId',"data-v-97a628cc"]]);
+  const TimeChart = /*#__PURE__*/_export_sfc(_sfc_main$r, [['render',_sfc_render$q],['__scopeId',"data-v-97a628cc"]]);
 
   TimeChart.install = function (Vue) {
     Vue.component(libPrefix + TimeChart.name, TimeChart);
@@ -84644,7 +84651,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$n = {
+  const _sfc_main$q = {
     components: {
     },
     inject: ['getSaveAble'],
@@ -84744,15 +84751,15 @@
     }
   };
 
-  const _hoisted_1$z = { style: {"width":"100%"} };
-  const _hoisted_2$h = { class: "plane-inner-bg" };
-  const _hoisted_3$f = { class: "d-flex-c" };
-  const _hoisted_4$d = { class: "d-flex-c" };
-  const _hoisted_5$9 = { class: "plane-inner-bg" };
-  const _hoisted_6$7 = { class: "d-flex-c" };
-  const _hoisted_7$4 = { class: "d-flex-c" };
+  const _hoisted_1$E = { style: {"width":"100%"} };
+  const _hoisted_2$k = { class: "plane-inner-bg" };
+  const _hoisted_3$i = { class: "d-flex-c" };
+  const _hoisted_4$g = { class: "d-flex-c" };
+  const _hoisted_5$c = { class: "plane-inner-bg" };
+  const _hoisted_6$a = { class: "d-flex-c" };
+  const _hoisted_7$5 = { class: "d-flex-c" };
 
-  function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_radio_button = vue.resolveComponent("el-radio-button");
     const _component_el_radio_group = vue.resolveComponent("el-radio-group");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
@@ -84765,7 +84772,7 @@
     const _component_el_collapse = vue.resolveComponent("el-collapse");
     const _component_el_form = vue.resolveComponent("el-form");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$z, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$E, [
       vue.createVNode(_component_el_form, {
         model: $data.form,
         size: "small",
@@ -84836,7 +84843,7 @@
                   vue.createElementVNode("div", { class: "collapse-title-common" }, " 通常样式 ", -1)
                 ]))]),
                 default: vue.withCtx(() => [
-                  vue.createElementVNode("div", _hoisted_2$h, [
+                  vue.createElementVNode("div", _hoisted_2$k, [
                     vue.createVNode(_component_el_form_item, { label: "节点大小" }, {
                       default: vue.withCtx(() => [
                         vue.createVNode(_component_el_row, {
@@ -84846,7 +84853,7 @@
                           default: vue.withCtx(() => [
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_3$f, [
+                                vue.createElementVNode("div", _hoisted_3$i, [
                                   vue.createVNode(_component_el_input_number, {
                                     modelValue: $data.styles.spot.width,
                                     "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.styles.spot.width) = $event)),
@@ -84862,7 +84869,7 @@
                             }),
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_4$d, [
+                                vue.createElementVNode("div", _hoisted_4$g, [
                                   vue.createVNode(_component_el_input_number, {
                                     modelValue: $data.styles.spot.height,
                                     "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.styles.spot.height) = $event)),
@@ -84924,7 +84931,7 @@
                   vue.createElementVNode("div", { class: "collapse-title-common" }, " 选中样式 ", -1)
                 ]))]),
                 default: vue.withCtx(() => [
-                  vue.createElementVNode("div", _hoisted_5$9, [
+                  vue.createElementVNode("div", _hoisted_5$c, [
                     vue.createVNode(_component_el_form_item, { label: "节点大小" }, {
                       default: vue.withCtx(() => [
                         vue.createVNode(_component_el_row, {
@@ -84934,7 +84941,7 @@
                           default: vue.withCtx(() => [
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_6$7, [
+                                vue.createElementVNode("div", _hoisted_6$a, [
                                   vue.createVNode(_component_el_input_number, {
                                     modelValue: $data.styles.selectspot.width,
                                     "onUpdate:modelValue": _cache[15] || (_cache[15] = $event => (($data.styles.selectspot.width) = $event)),
@@ -84950,7 +84957,7 @@
                             }),
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_7$4, [
+                                vue.createElementVNode("div", _hoisted_7$5, [
                                   vue.createVNode(_component_el_input_number, {
                                     modelValue: $data.styles.selectspot.height,
                                     "onUpdate:modelValue": _cache[17] || (_cache[17] = $event => (($data.styles.selectspot.height) = $event)),
@@ -85015,12 +85022,12 @@
       }, 8, ["model", "disabled"])
     ]))
   }
-  const EventsSpotConfig = /*#__PURE__*/_export_sfc(_sfc_main$n, [['render',_sfc_render$m],['__scopeId',"data-v-598f6ec9"]]);
+  const EventsSpotConfig = /*#__PURE__*/_export_sfc(_sfc_main$q, [['render',_sfc_render$p],['__scopeId',"data-v-598f6ec9"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$m = {
+  const _sfc_main$p = {
     components: {
     },
     inject: ['getSaveAble'],
@@ -85100,15 +85107,15 @@
     }
   };
 
-  const _hoisted_1$y = { style: {"width":"100%"} };
+  const _hoisted_1$D = { style: {"width":"100%"} };
 
-  function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_CommonColorPicker = vue.resolveComponent("CommonColorPicker");
     const _component_el_form = vue.resolveComponent("el-form");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$y, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$D, [
       vue.createVNode(_component_el_form, {
         model: $data.form,
         size: "small",
@@ -85167,12 +85174,12 @@
       }, 8, ["model", "disabled"])
     ]))
   }
-  const SliderConfig = /*#__PURE__*/_export_sfc(_sfc_main$m, [['render',_sfc_render$l],['__scopeId',"data-v-eb416421"]]);
+  const SliderConfig = /*#__PURE__*/_export_sfc(_sfc_main$p, [['render',_sfc_render$o],['__scopeId',"data-v-eb416421"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$l = {
+  const _sfc_main$o = {
     components: {
       TextStyle
     },
@@ -85258,9 +85265,9 @@
     }
   };
 
-  const _hoisted_1$x = { style: {"width":"100%"} };
+  const _hoisted_1$C = { style: {"width":"100%"} };
 
-  function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_text_style = vue.resolveComponent("text-style");
@@ -85269,7 +85276,7 @@
     const _component_CollapseItem = vue.resolveComponent("CollapseItem");
     const _component_el_form = vue.resolveComponent("el-form");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$x, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$C, [
       vue.createVNode(_component_el_form, {
         model: $data.form,
         size: "small",
@@ -85352,12 +85359,12 @@
       }, 8, ["model", "disabled"])
     ]))
   }
-  const SpotTextConfig = /*#__PURE__*/_export_sfc(_sfc_main$l, [['render',_sfc_render$k],['__scopeId',"data-v-56ae20c1"]]);
+  const SpotTextConfig = /*#__PURE__*/_export_sfc(_sfc_main$o, [['render',_sfc_render$n],['__scopeId',"data-v-56ae20c1"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$k = {
+  const _sfc_main$n = {
     name: 'TimeChartConfig',
     components: { EventsSpotConfig, SliderConfig, SpotTextConfig },
     mixins: [Copy],
@@ -85426,14 +85433,14 @@
     }
   };
 
-  const _hoisted_1$w = { class: "copy-button-box" };
-  const _hoisted_2$g = { class: "d-flex" };
-  const _hoisted_3$e = { class: "d-flex-c plane-inner-bg" };
-  const _hoisted_4$c = { class: "d-flex-c plane-inner-bg" };
-  const _hoisted_5$8 = { class: "d-flex-c plane-inner-bg" };
-  const _hoisted_6$6 = { class: "d-flex-c plane-inner-bg" };
+  const _hoisted_1$B = { class: "copy-button-box" };
+  const _hoisted_2$j = { class: "d-flex" };
+  const _hoisted_3$h = { class: "d-flex-c plane-inner-bg" };
+  const _hoisted_4$f = { class: "d-flex-c plane-inner-bg" };
+  const _hoisted_5$b = { class: "d-flex-c plane-inner-bg" };
+  const _hoisted_6$9 = { class: "d-flex-c plane-inner-bg" };
 
-  function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_el_radio_button = vue.resolveComponent("el-radio-button");
     const _component_el_radio_group = vue.resolveComponent("el-radio-group");
@@ -85460,7 +85467,7 @@
       default: vue.withCtx(() => [
         vue.createVNode(_component_el_collapse, { style: {"height":"100%","padding":"10px 10px 0","overflow":"auto"} }, {
           default: vue.withCtx(() => [
-            vue.createElementVNode("div", _hoisted_1$w, [
+            vue.createElementVNode("div", _hoisted_1$B, [
               vue.createVNode(_component_el_button, {
                 type: "primary",
                 size: "small",
@@ -85483,7 +85490,7 @@
                 _: 1
               }, 8, ["disabled"])
             ]),
-            vue.createElementVNode("div", _hoisted_2$g, [
+            vue.createElementVNode("div", _hoisted_2$j, [
               _cache[8] || (_cache[8] = vue.createElementVNode("div", { class: "collapse-title-common" }, " 布局 ", -1)),
               vue.createVNode(_component_el_radio_group, {
                 modelValue: $data.isVertical,
@@ -85513,7 +85520,7 @@
                 vue.createElementVNode("div", { class: "collapse-title-common" }, " 事件节点 ", -1)
               ]))]),
               default: vue.withCtx(() => [
-                vue.createElementVNode("div", _hoisted_3$e, [
+                vue.createElementVNode("div", _hoisted_3$h, [
                   vue.createVNode(_component_EventsSpotConfig, {
                     ref: "spotRef",
                     "form-data": $data.option.spotConfig,
@@ -85528,7 +85535,7 @@
                 vue.createElementVNode("div", { class: "collapse-title-common" }, " 进度条配置 ", -1)
               ]))]),
               default: vue.withCtx(() => [
-                vue.createElementVNode("div", _hoisted_4$c, [
+                vue.createElementVNode("div", _hoisted_4$f, [
                   vue.createVNode(_component_SliderConfig, {
                     ref: "sliderRef",
                     "form-data": $data.option.sliderConfig,
@@ -85543,7 +85550,7 @@
                 vue.createElementVNode("div", { class: "collapse-title-common" }, " 节点标签-上 ", -1)
               ]))]),
               default: vue.withCtx(() => [
-                vue.createElementVNode("div", _hoisted_5$8, [
+                vue.createElementVNode("div", _hoisted_5$b, [
                   vue.createVNode(_component_SpotTextConfig, {
                     ref: "upTextRef",
                     "form-data": $data.option.upTextConfig,
@@ -85558,7 +85565,7 @@
                 vue.createElementVNode("div", { class: "collapse-title-common" }, " 节点标签-下 ", -1)
               ]))]),
               default: vue.withCtx(() => [
-                vue.createElementVNode("div", _hoisted_6$6, [
+                vue.createElementVNode("div", _hoisted_6$9, [
                   vue.createVNode(_component_SpotTextConfig, {
                     ref: "downTextRef",
                     "form-data": $data.option.downTextConfig,
@@ -85575,20 +85582,20 @@
       _: 1
     }, 16, ["configs", "page-config", "save-able", "rules", "items", "tjb-u-r-l", "onConfigOptionInit", "onSaveChartConfig"]))
   }
-  const TimeChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$k, [['render',_sfc_render$j],['__scopeId',"data-v-04443e95"]]);
+  const TimeChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$n, [['render',_sfc_render$m],['__scopeId',"data-v-04443e95"]]);
 
   TimeChartConfig.install = function (Vue) {
     Vue.component(libPrefix + TimeChartConfig.name, TimeChartConfig);
   };
 
-  const _hoisted_1$v = {
+  const _hoisted_1$A = {
     viewBox: "0 0 24 24",
     width: "1.2em",
     height: "1.2em"
   };
 
-  function render$c(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$v, [...(_cache[0] || (_cache[0] = [
+  function render$e(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$A, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
         d: "M16 3h6v6h-2V5h-4zM2 3h6v2H4v4H2zm18 16v-4h2v6h-6v-2zM4 19h4v2H2v-6h2z"
@@ -85596,7 +85603,97 @@
     ]))]))
   }
 
-  const __unplugin_components_7 = { name: 'ri-fullscreen-fill', render: render$c };
+  const __unplugin_components_7 = { name: 'ri-fullscreen-fill', render: render$e };
+  /* vite-plugin-components disabled */
+
+  const _hoisted_1$z = {
+    viewBox: "0 0 24 24",
+    width: "1.2em",
+    height: "1.2em"
+  };
+
+  function render$d(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$z, [...(_cache[0] || (_cache[0] = [
+      vue.createElementVNode("path", {
+        fill: "currentColor",
+        d: "M3 3h18a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1m1 2v14h16V5zm16 7l-3.535 3.536l-1.415-1.415L17.172 12L15.05 9.879l1.415-1.415zM6.828 12l2.122 2.121l-1.414 1.415L4 12l3.536-3.536L8.95 9.88zm4.416 5H9.116l3.64-10h2.128z"
+      }, null, -1)
+    ]))]))
+  }
+
+  const __unplugin_components_6 = { name: 'ri-code-box-line', render: render$d };
+  /* vite-plugin-components disabled */
+
+  const _hoisted_1$y = {
+    viewBox: "0 0 24 24",
+    width: "1.2em",
+    height: "1.2em"
+  };
+
+  function render$c(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$y, [...(_cache[0] || (_cache[0] = [
+      vue.createElementVNode("path", {
+        fill: "currentColor",
+        d: "M7 6V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3v3c0 .552-.45 1-1.007 1H4.007A1 1 0 0 1 3 21l.003-14c0-.552.45-1 1.006-1zm2 0h8v10h2V4H9z"
+      }, null, -1)
+    ]))]))
+  }
+
+  const __unplugin_components_5 = { name: 'ri-file-copy-fill', render: render$c };
+  /* vite-plugin-components disabled */
+
+  const _hoisted_1$x = {
+    viewBox: "0 0 24 24",
+    width: "1.2em",
+    height: "1.2em"
+  };
+
+  function render$b(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$x, [...(_cache[0] || (_cache[0] = [
+      vue.createElementVNode("path", {
+        fill: "currentColor",
+        d: "m2.859 2.877l12.57-1.795a.5.5 0 0 1 .571.494v20.848a.5.5 0 0 1-.57.494L2.858 21.123a1 1 0 0 1-.859-.99V3.867a1 1 0 0 1 .859-.99M17 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-4zm-6.8 9L13 8h-2.4L9 10.286L7.4 8H5l2.8 4L5 16h2.4L9 13.714L10.6 16H13z"
+      }, null, -1)
+    ]))]))
+  }
+
+  const __unplugin_components_4 = { name: 'ri-file-excel2-fill', render: render$b };
+  /* vite-plugin-components disabled */
+
+  const _hoisted_1$w = {
+    viewBox: "0 0 24 24",
+    width: "1.2em",
+    height: "1.2em"
+  };
+
+  function render$a(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$w, [...(_cache[0] || (_cache[0] = [
+      vue.createElementVNode("path", {
+        fill: "currentColor",
+        d: "M14 10v4h-4v-4zm2 0h5v4h-5zm-2 11h-4v-5h4zm2 0v-5h5v4a1 1 0 0 1-1 1zM14 3v5h-4V3zm2 0h4a1 1 0 0 1 1 1v4h-5zm-8 7v4H3v-4zm0 11H4a1 1 0 0 1-1-1v-4h5zM8 3v5H3V4a1 1 0 0 1 1-1z"
+      }, null, -1)
+    ]))]))
+  }
+
+  const __unplugin_components_3 = { name: 'ri-grid-fill', render: render$a };
+  /* vite-plugin-components disabled */
+
+  const _hoisted_1$v = {
+    viewBox: "0 0 24 24",
+    width: "1.2em",
+    height: "1.2em"
+  };
+
+  function render$9(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$v, [...(_cache[0] || (_cache[0] = [
+      vue.createElementVNode("path", {
+        fill: "currentColor",
+        d: "m23 12l-7.071 7.071l-1.414-1.414L20.172 12l-5.657-5.657l1.414-1.414zM3.828 12l5.657 5.657l-1.414 1.414L1 12l7.071-7.071l1.414 1.414z"
+      }, null, -1)
+    ]))]))
+  }
+
+  const __unplugin_components_2$1 = { name: 'ri-code-line', render: render$9 };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$u = {
@@ -85605,16 +85702,16 @@
     height: "1.2em"
   };
 
-  function render$b(_ctx, _cache) {
+  function render$8(_ctx, _cache) {
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$u, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
-        d: "M3 3h18a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1m1 2v14h16V5zm16 7l-3.535 3.536l-1.415-1.415L17.172 12L15.05 9.879l1.415-1.415zM6.828 12l2.122 2.121l-1.414 1.415L4 12l3.536-3.536L8.95 9.88zm4.416 5H9.116l3.64-10h2.128z"
+        d: "M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10m0-11.414L9.172 7.757L7.757 9.172L10.586 12l-2.829 2.828l1.415 1.415L12 13.414l2.828 2.829l1.415-1.415L13.414 12l2.829-2.828l-1.415-1.415z"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_6 = { name: 'ri-code-box-line', render: render$b };
+  const __unplugin_components_1$4 = { name: 'ri-close-circle-fill', render: render$8 };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$t = {
@@ -85623,98 +85720,8 @@
     height: "1.2em"
   };
 
-  function render$a(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$t, [...(_cache[0] || (_cache[0] = [
-      vue.createElementVNode("path", {
-        fill: "currentColor",
-        d: "M7 6V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3v3c0 .552-.45 1-1.007 1H4.007A1 1 0 0 1 3 21l.003-14c0-.552.45-1 1.006-1zm2 0h8v10h2V4H9z"
-      }, null, -1)
-    ]))]))
-  }
-
-  const __unplugin_components_5 = { name: 'ri-file-copy-fill', render: render$a };
-  /* vite-plugin-components disabled */
-
-  const _hoisted_1$s = {
-    viewBox: "0 0 24 24",
-    width: "1.2em",
-    height: "1.2em"
-  };
-
-  function render$9(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$s, [...(_cache[0] || (_cache[0] = [
-      vue.createElementVNode("path", {
-        fill: "currentColor",
-        d: "m2.859 2.877l12.57-1.795a.5.5 0 0 1 .571.494v20.848a.5.5 0 0 1-.57.494L2.858 21.123a1 1 0 0 1-.859-.99V3.867a1 1 0 0 1 .859-.99M17 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-4zm-6.8 9L13 8h-2.4L9 10.286L7.4 8H5l2.8 4L5 16h2.4L9 13.714L10.6 16H13z"
-      }, null, -1)
-    ]))]))
-  }
-
-  const __unplugin_components_4 = { name: 'ri-file-excel2-fill', render: render$9 };
-  /* vite-plugin-components disabled */
-
-  const _hoisted_1$r = {
-    viewBox: "0 0 24 24",
-    width: "1.2em",
-    height: "1.2em"
-  };
-
-  function render$8(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$r, [...(_cache[0] || (_cache[0] = [
-      vue.createElementVNode("path", {
-        fill: "currentColor",
-        d: "M14 10v4h-4v-4zm2 0h5v4h-5zm-2 11h-4v-5h4zm2 0v-5h5v4a1 1 0 0 1-1 1zM14 3v5h-4V3zm2 0h4a1 1 0 0 1 1 1v4h-5zm-8 7v4H3v-4zm0 11H4a1 1 0 0 1-1-1v-4h5zM8 3v5H3V4a1 1 0 0 1 1-1z"
-      }, null, -1)
-    ]))]))
-  }
-
-  const __unplugin_components_3 = { name: 'ri-grid-fill', render: render$8 };
-  /* vite-plugin-components disabled */
-
-  const _hoisted_1$q = {
-    viewBox: "0 0 24 24",
-    width: "1.2em",
-    height: "1.2em"
-  };
-
   function render$7(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$q, [...(_cache[0] || (_cache[0] = [
-      vue.createElementVNode("path", {
-        fill: "currentColor",
-        d: "m23 12l-7.071 7.071l-1.414-1.414L20.172 12l-5.657-5.657l1.414-1.414zM3.828 12l5.657 5.657l-1.414 1.414L1 12l7.071-7.071l1.414 1.414z"
-      }, null, -1)
-    ]))]))
-  }
-
-  const __unplugin_components_2 = { name: 'ri-code-line', render: render$7 };
-  /* vite-plugin-components disabled */
-
-  const _hoisted_1$p = {
-    viewBox: "0 0 24 24",
-    width: "1.2em",
-    height: "1.2em"
-  };
-
-  function render$6(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$p, [...(_cache[0] || (_cache[0] = [
-      vue.createElementVNode("path", {
-        fill: "currentColor",
-        d: "M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10m0-11.414L9.172 7.757L7.757 9.172L10.586 12l-2.829 2.828l1.415 1.415L12 13.414l2.828 2.829l1.415-1.415L13.414 12l2.829-2.828l-1.415-1.415z"
-      }, null, -1)
-    ]))]))
-  }
-
-  const __unplugin_components_1$3 = { name: 'ri-close-circle-fill', render: render$6 };
-  /* vite-plugin-components disabled */
-
-  const _hoisted_1$o = {
-    viewBox: "0 0 24 24",
-    width: "1.2em",
-    height: "1.2em"
-  };
-
-  function render$5(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$o, [...(_cache[0] || (_cache[0] = [
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$t, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
         d: "M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10m-1-11H7v2h4v4h2v-4h4v-2h-4V7h-2z"
@@ -85722,7 +85729,7 @@
     ]))]))
   }
 
-  const __unplugin_components_0$2 = { name: 'ri-add-circle-fill', render: render$5 };
+  const __unplugin_components_0$2 = { name: 'ri-add-circle-fill', render: render$7 };
   /* vite-plugin-components disabled */
 
   function ve(e) {
@@ -86599,7 +86606,7 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
     e.component(De.name, De);
   };
 
-  const _sfc_main$j = {
+  const _sfc_main$m = {
     name: 'CodeCom',
     components: {
       MonacoEditor: De
@@ -87044,33 +87051,33 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
 
   /* unplugin-vue-components disabled */
 
-  const _hoisted_1$n = {
+  const _hoisted_1$s = {
     ref: "codeContainer",
     class: "bk-code-editor"
   };
-  const _hoisted_2$f = { class: "operator-table flex-1" };
-  const _hoisted_3$d = {
+  const _hoisted_2$i = { class: "operator-table flex-1" };
+  const _hoisted_3$g = {
     key: 0,
     class: "operator-tools"
   };
-  const _hoisted_4$b = { style: {"margin":"0","text-align":"right"} };
-  const _hoisted_5$7 = { class: "modal-code-panel" };
-  const _hoisted_6$5 = {
+  const _hoisted_4$e = { style: {"margin":"0","text-align":"right"} };
+  const _hoisted_5$a = { class: "modal-code-panel" };
+  const _hoisted_6$8 = {
     key: 0,
     class: "code-bg mtk1"
   };
-  const _hoisted_7$3 = {
+  const _hoisted_7$4 = {
     key: 1,
     class: "code-bg mtk1 code-close"
   };
 
-  function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_MonacoEditor = vue.resolveComponent("MonacoEditor");
     const _component_EfTable = vue.resolveComponent("EfTable");
     const _component_i_ri_add_circle_fill = __unplugin_components_0$2;
     const _component_el_button = vue.resolveComponent("el-button");
-    const _component_i_ri_close_circle_fill = __unplugin_components_1$3;
-    const _component_i_ri_code_line = __unplugin_components_2;
+    const _component_i_ri_close_circle_fill = __unplugin_components_1$4;
+    const _component_i_ri_code_line = __unplugin_components_2$1;
     const _component_i_ri_grid_fill = __unplugin_components_3;
     const _component_el_input = vue.resolveComponent("el-input");
     const _component_i_ri_file_excel_2_fill = __unplugin_components_4;
@@ -87081,7 +87088,7 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
     const _component_CodeCom = vue.resolveComponent("CodeCom");
     const _component_EfModal = vue.resolveComponent("EfModal");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$n, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$s, [
       vue.withDirectives(vue.createVNode(_component_MonacoEditor, vue.mergeProps({ ref: "editor" }, _ctx.$props, {
         value: $data.currentCode,
         "onUpdate:value": _cache[0] || (_cache[0] = $event => (($data.currentCode) = $event)),
@@ -87096,7 +87103,7 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
             class: "content table-content",
             style: vue.normalizeStyle({width: $props.isModal ? '100%': '430px'})
           }, [
-            vue.createElementVNode("div", _hoisted_2$f, [
+            vue.createElementVNode("div", _hoisted_2$i, [
               vue.createVNode(_component_EfTable, {
                 ref: "grid",
                 "show-header": false,
@@ -87122,7 +87129,7 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
               }, null, 8, ["columns", "data", "has-checkbox", "edit-config", "menu-config", "row-class-name", "onMenuClick", "onCheckboxChange"])
             ]),
             (!$props.readonly)
-              ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_3$d, [
+              ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_3$g, [
                   vue.createVNode(_component_el_button, {
                     text: "",
                     style: {"padding":"0","color":"#1f6aff"},
@@ -87189,7 +87196,7 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
                   type: "textarea",
                   rows: 5
                 }, null, 8, ["modelValue"]),
-                vue.createElementVNode("div", _hoisted_4$b, [
+                vue.createElementVNode("div", _hoisted_4$e, [
                   vue.createVNode(_component_el_button, {
                     size: "small",
                     text: "",
@@ -87241,9 +87248,9 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
         onClose: $options.closeModal
       }, {
         default: vue.withCtx(() => [
-          vue.createElementVNode("div", _hoisted_5$7, [
+          vue.createElementVNode("div", _hoisted_5$a, [
             ($props.methodName)
-              ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_6$5, [
+              ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_6$8, [
                   _cache[9] || (_cache[9] = vue.createElementVNode("span", { class: "mtk8" }, "function", -1)),
                   vue.createTextVNode(" " + vue.toDisplayString($props.methodName) + " { ", 1)
                 ]))
@@ -87254,7 +87261,7 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
               "has-table": $props.hasTable
             }), null, 16, ["class", "has-table"]),
             ($props.methodName)
-              ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_7$3, " } "))
+              ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_7$4, " } "))
               : vue.createCommentVNode("", true)
           ])
         ]),
@@ -87262,7 +87269,7 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
       }, 8, ["modelValue", "onClose"])
     ], 512))
   }
-  const CodeCom = /*#__PURE__*/_export_sfc(_sfc_main$j, [['render',_sfc_render$i],['__scopeId',"data-v-46e883d4"]]);
+  const CodeCom = /*#__PURE__*/_export_sfc(_sfc_main$m, [['render',_sfc_render$l],['__scopeId',"data-v-46e883d4"]]);
 
   CodeCom.install = function (Vue) {
     Vue.component(libPrefix + CodeCom.name, CodeCom);
@@ -87273,7 +87280,7 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
   /* unplugin-vue-components disabled */
 
 
-  const _sfc_main$i = {
+  const _sfc_main$l = {
     name: 'CodeChart',
     components: {
 
@@ -87395,20 +87402,20 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
     }
   };
 
-  const _hoisted_1$m = {
+  const _hoisted_1$r = {
     ref: "rootRef",
     class: "code-panel",
     style: {"position":"relative"}
   };
-  const _hoisted_2$e = {
+  const _hoisted_2$h = {
     ref: "container",
     class: "code-content"
   };
 
-  function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BKCodeCom = vue.resolveComponent("BKCodeCom");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$m, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$r, [
       vue.renderSlot(_ctx.$slots, "content", {}, () => [
         (_ctx.contentConfig && _ctx.contentConfig.component)
           ? (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(_ctx.contentConfig.component), vue.normalizeProps(vue.mergeProps({ key: 0 }, _ctx.contentConfig.props || {})), null, 16))
@@ -87424,12 +87431,12 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
       }, null, 8, ["modelValue", "readonly"]), [
         [vue.vShow, !$props.isModal && !$props.isPreview && !$props.isBasicMode]
       ]),
-      vue.withDirectives(vue.createElementVNode("div", _hoisted_2$e, null, 512), [
+      vue.withDirectives(vue.createElementVNode("div", _hoisted_2$h, null, 512), [
         [vue.vShow, $props.isPreview || !_ctx.setMode]
       ])
     ], 512))
   }
-  const CodeChart = /*#__PURE__*/_export_sfc(_sfc_main$i, [['render',_sfc_render$h],['__scopeId',"data-v-79d2a6eb"]]);
+  const CodeChart = /*#__PURE__*/_export_sfc(_sfc_main$l, [['render',_sfc_render$k],['__scopeId',"data-v-79d2a6eb"]]);
 
   CodeChart.install = function (Vue) {
     Vue.component(libPrefix + CodeChart.name, CodeChart);
@@ -87439,7 +87446,7 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$h = {
+  const _sfc_main$k = {
 
     name: 'ExplainConfig',
     components: {
@@ -87496,13 +87503,13 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
     }
   };
 
-  const _hoisted_1$l = { class: "explain-config" };
-  const _hoisted_2$d = { class: "d-flex" };
-  const _hoisted_3$c = ["onClick"];
-  const _hoisted_4$a = { class: "d-flex-c" };
-  const _hoisted_5$6 = { class: "d-flex-c" };
+  const _hoisted_1$q = { class: "explain-config" };
+  const _hoisted_2$g = { class: "d-flex" };
+  const _hoisted_3$f = ["onClick"];
+  const _hoisted_4$d = { class: "d-flex-c" };
+  const _hoisted_5$9 = { class: "d-flex-c" };
 
-  function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BKCodeCom = vue.resolveComponent("BKCodeCom");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_EfSelect = vue.resolveComponent("EfSelect");
@@ -87520,7 +87527,7 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
       onChange: _cache[9] || (_cache[9] = $event => (_ctx.$emit('chartChange')))
     }, {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$l, [
+        vue.createElementVNode("div", _hoisted_1$q, [
           vue.createVNode(_component_el_form, {
             size: "small",
             "label-width": "80px",
@@ -87556,7 +87563,7 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
               }),
               vue.createVNode(_component_el_form_item, { label: "位置" }, {
                 default: vue.withCtx(() => [
-                  vue.createElementVNode("div", _hoisted_2$d, [
+                  vue.createElementVNode("div", _hoisted_2$g, [
                     (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.alignOption, (ele) => {
                       return (vue.openBlock(), vue.createElementBlock("div", {
                         key: ele.value,
@@ -87566,7 +87573,7 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
                         vue.createElementVNode("i", {
                           class: vue.normalizeClass(['icon am-iconfont align-icon', ele.icon])
                         }, null, 2)
-                      ], 10, _hoisted_3$c))
+                      ], 10, _hoisted_3$f))
                     }), 128))
                   ])
                 ]),
@@ -87581,7 +87588,7 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
                     default: vue.withCtx(() => [
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_4$a, [
+                          vue.createElementVNode("div", _hoisted_4$d, [
                             vue.createVNode(_component_el_input_number, {
                               modelValue: $data.form.x,
                               "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.x) = $event)),
@@ -87597,7 +87604,7 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
                       }),
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_5$6, [
+                          vue.createElementVNode("div", _hoisted_5$9, [
                             vue.createVNode(_component_el_input_number, {
                               modelValue: $data.form.y,
                               "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.y) = $event)),
@@ -87635,13 +87642,13 @@ Component that was made reactive: `, e)), Ht(e, t, n, r, o, i, s, true);
       _: 1
     }, 8, ["modelValue"]))
   }
-  const ExplainConfig = /*#__PURE__*/_export_sfc(_sfc_main$h, [['render',_sfc_render$g],['__scopeId',"data-v-ccef05a3"]]);
+  const ExplainConfig = /*#__PURE__*/_export_sfc(_sfc_main$k, [['render',_sfc_render$j],['__scopeId',"data-v-ccef05a3"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
 
-  const _sfc_main$g = {
+  const _sfc_main$j = {
     name: 'HookConfig',
     inject: ['getSaveAble'],
     emits: ['chartChange'],
@@ -87704,9 +87711,9 @@ onDestroy(function () {
     }
   };
 
-  const _hoisted_1$k = { class: "hook-config" };
+  const _hoisted_1$p = { class: "hook-config" };
 
-  function _sfc_render$f(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BKCodeCom = vue.resolveComponent("BKCodeCom");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_el_form = vue.resolveComponent("el-form");
@@ -87719,7 +87726,7 @@ onDestroy(function () {
       onChange: _cache[3] || (_cache[3] = $event => (_ctx.$emit('chartChange')))
     }, {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$k, [
+        vue.createElementVNode("div", _hoisted_1$p, [
           vue.createVNode(_component_el_form, {
             size: "small",
             "label-width": "80px",
@@ -87749,12 +87756,12 @@ onDestroy(function () {
       _: 1
     }, 8, ["modelValue"]))
   }
-  const HookConfig = /*#__PURE__*/_export_sfc(_sfc_main$g, [['render',_sfc_render$f],['__scopeId',"data-v-b2e4297a"]]);
+  const HookConfig = /*#__PURE__*/_export_sfc(_sfc_main$j, [['render',_sfc_render$i],['__scopeId',"data-v-b2e4297a"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$f = {
+  const _sfc_main$i = {
 
     name: 'QueryPositionConfig',
 
@@ -87784,10 +87791,10 @@ onDestroy(function () {
     }
   };
 
-  const _hoisted_1$j = { class: "d-flex-c" };
-  const _hoisted_2$c = { class: "d-flex-c" };
+  const _hoisted_1$o = { class: "d-flex-c" };
+  const _hoisted_2$f = { class: "d-flex-c" };
 
-  function _sfc_render$e(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_el_col = vue.resolveComponent("el-col");
@@ -87835,7 +87842,7 @@ onDestroy(function () {
                       default: vue.withCtx(() => [
                         vue.createVNode(_component_el_col, { span: 12 }, {
                           default: vue.withCtx(() => [
-                            vue.createElementVNode("div", _hoisted_1$j, [
+                            vue.createElementVNode("div", _hoisted_1$o, [
                               vue.createVNode(_component_el_input_number, {
                                 modelValue: $data.form['--right'],
                                 "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form['--right']) = $event)),
@@ -87851,7 +87858,7 @@ onDestroy(function () {
                         }),
                         vue.createVNode(_component_el_col, { span: 12 }, {
                           default: vue.withCtx(() => [
-                            vue.createElementVNode("div", _hoisted_2$c, [
+                            vue.createElementVNode("div", _hoisted_2$f, [
                               vue.createVNode(_component_el_input_number, {
                                 modelValue: $data.form['--top'],
                                 "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form['--top']) = $event)),
@@ -87881,9 +87888,9 @@ onDestroy(function () {
       _: 1
     }))
   }
-  const QueryPositionConfig = /*#__PURE__*/_export_sfc(_sfc_main$f, [['render',_sfc_render$e],['__scopeId',"data-v-b3a94d68"]]);
+  const QueryPositionConfig = /*#__PURE__*/_export_sfc(_sfc_main$i, [['render',_sfc_render$h],['__scopeId',"data-v-b3a94d68"]]);
 
-  const _sfc_main$e = {
+  const _sfc_main$h = {
     name: 'BasicChartConfig',
     components: {
       // eslint-disable-next-line
@@ -88443,20 +88450,20 @@ onDestroy(function () {
 
   /* unplugin-vue-components disabled */
 
-  const _hoisted_1$i = {
+  const _hoisted_1$n = {
     class: "custom-group inline-col-form",
     style: {"width":"100%","height":"100%"}
   };
-  const _hoisted_2$b = { class: "am-dt-content" };
-  const _hoisted_3$b = {
+  const _hoisted_2$e = { class: "am-dt-content" };
+  const _hoisted_3$e = {
     class: "collapse-item var-table",
     style: {"height":"276px"}
   };
-  const _hoisted_4$9 = { class: "collapse-item" };
-  const _hoisted_5$5 = { class: "collapse-item" };
-  const _hoisted_6$4 = { class: "el-dropdown-link" };
+  const _hoisted_4$c = { class: "collapse-item" };
+  const _hoisted_5$8 = { class: "collapse-item" };
+  const _hoisted_6$7 = { class: "el-dropdown-link" };
 
-  function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_EfForm = vue.resolveComponent("EfForm");
     const _component_EfMutableContainer = vue.resolveComponent("EfMutableContainer");
     const _component_el_tab_pane = vue.resolveComponent("el-tab-pane");
@@ -88520,7 +88527,7 @@ onDestroy(function () {
                         }, null, 8, ["rules", "items", "disabled"])
                       ]),
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_1$i, [
+                        vue.createElementVNode("div", _hoisted_1$n, [
                           vue.renderSlot(_ctx.$slots, "default", {}, undefined, true)
                         ])
                       ]),
@@ -88534,7 +88541,7 @@ onDestroy(function () {
                   lazy: ""
                 }, {
                   label: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2$b, [
+                    vue.createElementVNode("div", _hoisted_2$e, [
                       _cache[4] || (_cache[4] = vue.createElementVNode("i", {
                         class: "am-iconfont icon-a-shujuyuan2",
                         style: {"margin-right":"4px","font-size":"12px"}
@@ -88619,7 +88626,7 @@ onDestroy(function () {
                             vue.createTextVNode(" 变量监听配置 ", -1)
                           ]))]),
                           default: vue.withCtx(() => [
-                            vue.createElementVNode("div", _hoisted_3$b, [
+                            vue.createElementVNode("div", _hoisted_3$e, [
                               vue.createVNode(_component_BKVarListenerConfig, {
                                 ref: "vlCfg",
                                 "save-able": $props.saveAble,
@@ -88637,7 +88644,7 @@ onDestroy(function () {
                                 vue.createTextVNode(" 事件配置 ", -1)
                               ]))]),
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_4$9, [
+                                vue.createElementVNode("div", _hoisted_4$c, [
                                   vue.createVNode(_component_BKEventConfig, {
                                     ref: "eventCfg",
                                     "save-able": $props.saveAble,
@@ -88655,7 +88662,7 @@ onDestroy(function () {
                             vue.createTextVNode(" 操作配置 ", -1)
                           ]))]),
                           default: vue.withCtx(() => [
-                            vue.createElementVNode("div", _hoisted_5$5, [
+                            vue.createElementVNode("div", _hoisted_5$8, [
                               vue.createVNode(_component_BKOperatorConfig, {
                                 ref: "operatorCfg",
                                 "save-able": $props.saveAble,
@@ -88722,7 +88729,7 @@ onDestroy(function () {
                 })
               ]),
               default: vue.withCtx(() => [
-                vue.createElementVNode("span", _hoisted_6$4, [
+                vue.createElementVNode("span", _hoisted_6$7, [
                   _cache[11] || (_cache[11] = vue.createTextVNode(" 复制", -1)),
                   vue.createVNode(_component_el_icon, { class: "el-icon--right" }, {
                     default: vue.withCtx(() => [
@@ -88741,20 +88748,20 @@ onDestroy(function () {
       _: 3
     }))
   }
-  const BasicChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$e, [['render',_sfc_render$d],['__scopeId',"data-v-c9a97c2f"]]);
+  const BasicChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$h, [['render',_sfc_render$g],['__scopeId',"data-v-c9a97c2f"]]);
 
   BasicChartConfig.install = function (Vue) {
     Vue.component(libPrefix + BasicChartConfig.name, BasicChartConfig);
   };
 
-  const _hoisted_1$h = {
+  const _hoisted_1$m = {
     viewBox: "0 0 24 24",
     width: "1.2em",
     height: "1.2em"
   };
 
-  function render$4(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$h, [...(_cache[0] || (_cache[0] = [
+  function render$6(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$m, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
         d: "M1.182 12C2.122 6.88 6.608 3 12 3s9.878 3.88 10.819 9c-.94 5.12-5.427 9-10.819 9s-9.878-3.88-10.818-9M12 17a5 5 0 1 0 0-10a5 5 0 0 0 0 10m0-2a3 3 0 1 1 0-6a3 3 0 0 1 0 6"
@@ -88762,17 +88769,17 @@ onDestroy(function () {
     ]))]))
   }
 
-  const __unplugin_components_1$2 = { name: 'ri-eye-fill', render: render$4 };
+  const __unplugin_components_1$3 = { name: 'ri-eye-fill', render: render$6 };
   /* vite-plugin-components disabled */
 
-  const _hoisted_1$g = {
+  const _hoisted_1$l = {
     viewBox: "0 0 24 24",
     width: "1.2em",
     height: "1.2em"
   };
 
-  function render$3(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$g, [...(_cache[0] || (_cache[0] = [
+  function render$5(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$l, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
         d: "M21 18v2H3v-2zM6.596 3.903L8.01 5.318L4.828 8.5l3.182 3.182l-1.414 1.414L2 8.5zM21 11v2h-9v-2zm0-7v2h-9V4z"
@@ -88780,17 +88787,17 @@ onDestroy(function () {
     ]))]))
   }
 
-  const __unplugin_components_0$1 = { name: 'ri-menu-fold-line', render: render$3 };
+  const __unplugin_components_0$1 = { name: 'ri-menu-fold-line', render: render$5 };
   /* vite-plugin-components disabled */
 
-  const _hoisted_1$f = {
+  const _hoisted_1$k = {
     viewBox: "0 0 24 24",
     width: "1.2em",
     height: "1.2em"
   };
 
-  function render$2(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$f, [...(_cache[0] || (_cache[0] = [
+  function render$4(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$k, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
         d: "M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16m0-9.414l2.828-2.829l1.415 1.415L13.414 12l2.829 2.828l-1.415 1.415L12 13.414l-2.828 2.829l-1.415-1.415L10.586 12L7.757 9.172l1.415-1.415z"
@@ -88798,17 +88805,17 @@ onDestroy(function () {
     ]))]))
   }
 
-  const __unplugin_components_1$1 = { name: 'ri-close-circle-line', render: render$2 };
+  const __unplugin_components_1$2 = { name: 'ri-close-circle-line', render: render$4 };
   /* vite-plugin-components disabled */
 
-  const _hoisted_1$e = {
+  const _hoisted_1$j = {
     viewBox: "0 0 24 24",
     width: "1.2em",
     height: "1.2em"
   };
 
-  function render$1(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$e, [...(_cache[0] || (_cache[0] = [
+  function render$3(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$j, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
         d: "M21 18v2H3v-2zM17.404 3.903L22 8.5l-4.596 4.596l-1.414-1.415L19.172 8.5L15.99 5.318zM12 11v2H3v-2zm0-7v2H3V4z"
@@ -88816,13 +88823,13 @@ onDestroy(function () {
     ]))]))
   }
 
-  const __unplugin_components_0 = { name: 'ri-menu-unfold-line', render: render$1 };
+  const __unplugin_components_0 = { name: 'ri-menu-unfold-line', render: render$3 };
   /* vite-plugin-components disabled */
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$d = {
+  const _sfc_main$g = {
     props: {
       visible: {
         type: Boolean,
@@ -88874,12 +88881,12 @@ onDestroy(function () {
     }
   };
 
-  const _hoisted_1$d = { class: "filter-panel" };
-  const _hoisted_2$a = { class: "filter-content" };
-  const _hoisted_3$a = { class: "code-content" };
-  const _hoisted_4$8 = { class: "analysis-modal-footer" };
+  const _hoisted_1$i = { class: "filter-panel" };
+  const _hoisted_2$d = { class: "filter-content" };
+  const _hoisted_3$d = { class: "code-content" };
+  const _hoisted_4$b = { class: "analysis-modal-footer" };
 
-  function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$f(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BKCodeCom = vue.resolveComponent("BKCodeCom");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_EfModal = vue.resolveComponent("EfModal");
@@ -88893,13 +88900,13 @@ onDestroy(function () {
       onClose: _cache[3] || (_cache[3] = $event => (_ctx.$emit('close')))
     }, {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$d, [
-          vue.createElementVNode("div", _hoisted_2$a, [
+        vue.createElementVNode("div", _hoisted_1$i, [
+          vue.createElementVNode("div", _hoisted_2$d, [
             _cache[4] || (_cache[4] = vue.createElementVNode("div", { class: "code-bg mtk1" }, [
               vue.createElementVNode("span", { class: "mtk8" }, "function"),
               vue.createTextVNode(" filter(data) { ")
             ], -1)),
-            vue.createElementVNode("div", _hoisted_3$a, [
+            vue.createElementVNode("div", _hoisted_3$d, [
               vue.createVNode(_component_BKCodeCom, {
                 ref: "editor",
                 modelValue: $data.filterScript,
@@ -88911,7 +88918,7 @@ onDestroy(function () {
             ]),
             _cache[5] || (_cache[5] = vue.createElementVNode("div", { class: "code-bg mtk1 code-close" }, " } ", -1))
           ]),
-          vue.createElementVNode("div", _hoisted_4$8, [
+          vue.createElementVNode("div", _hoisted_4$b, [
             vue.createVNode(_component_el_button, {
               type: "primary",
               size: "small",
@@ -88939,9 +88946,9 @@ onDestroy(function () {
       _: 1
     }, 8, ["modelValue", "title"]))
   }
-  const FilterConfig = /*#__PURE__*/_export_sfc(_sfc_main$d, [['render',_sfc_render$c],['__scopeId',"data-v-0dba989e"]]);
+  const FilterConfig = /*#__PURE__*/_export_sfc(_sfc_main$g, [['render',_sfc_render$f],['__scopeId',"data-v-0dba989e"]]);
 
-  const _sfc_main$c = {
+  const _sfc_main$f = {
     components: {
       FilterConfig
     },
@@ -89067,20 +89074,20 @@ onDestroy(function () {
 
   /* unplugin-vue-components disabled */
 
-  const _hoisted_1$c = { class: "data-mapping-wrapper" };
-  const _hoisted_2$9 = { class: "data-source-title" };
-  const _hoisted_3$9 = { class: "mapping-panel" };
-  const _hoisted_4$7 = { class: "mapping-tools" };
-  const _hoisted_5$4 = { class: "mapping-form" };
-  const _hoisted_6$3 = {
+  const _hoisted_1$h = { class: "data-mapping-wrapper" };
+  const _hoisted_2$c = { class: "data-source-title" };
+  const _hoisted_3$c = { class: "mapping-panel" };
+  const _hoisted_4$a = { class: "mapping-tools" };
+  const _hoisted_5$7 = { class: "mapping-form" };
+  const _hoisted_6$6 = {
     key: 0,
     class: "add-form"
   };
-  const _hoisted_7$2 = { style: {"margin-bottom":"5px"} };
+  const _hoisted_7$3 = { style: {"margin-bottom":"5px"} };
   const _hoisted_8$2 = ["onClick"];
   const _hoisted_9$2 = { class: "analysis-modal-footer" };
 
-  function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$e(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_i_ri_menu_unfold_line = __unplugin_components_0;
     const _component_CirclePlus = vue.resolveComponent("CirclePlus");
     const _component_el_icon = vue.resolveComponent("el-icon");
@@ -89088,11 +89095,11 @@ onDestroy(function () {
     const _component_el_tooltip = vue.resolveComponent("el-tooltip");
     const _component_EfForm = vue.resolveComponent("EfForm");
     const _component_el_input = vue.resolveComponent("el-input");
-    const _component_i_ri_close_circle_line = __unplugin_components_1$1;
+    const _component_i_ri_close_circle_line = __unplugin_components_1$2;
     const _component_FilterConfig = vue.resolveComponent("FilterConfig");
 
-    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$c, [
-      vue.createElementVNode("div", _hoisted_2$9, [
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$h, [
+      vue.createElementVNode("div", _hoisted_2$c, [
         vue.createElementVNode("span", null, vue.toDisplayString($options.showSelectData ? '③':'②') + " 数据映射", 1),
         vue.createElementVNode("div", {
           class: "icon",
@@ -89101,8 +89108,8 @@ onDestroy(function () {
           vue.createVNode(_component_i_ri_menu_unfold_line)
         ])
       ]),
-      vue.createElementVNode("div", _hoisted_3$9, [
-        vue.createElementVNode("div", _hoisted_4$7, [
+      vue.createElementVNode("div", _hoisted_3$c, [
+        vue.createElementVNode("div", _hoisted_4$a, [
           _cache[2] || (_cache[2] = vue.createElementVNode("span", null, "图表配置", -1)),
           vue.createVNode(_component_el_tooltip, {
             class: "item",
@@ -89133,7 +89140,7 @@ onDestroy(function () {
             _: 1
           })
         ]),
-        vue.createElementVNode("div", _hoisted_5$4, [
+        vue.createElementVNode("div", _hoisted_5$7, [
           vue.createElementVNode("div", null, [
             vue.createVNode(_component_EfForm, {
               ref: "form",
@@ -89147,13 +89154,13 @@ onDestroy(function () {
             }, null, 8, ["rules", "items", "disabled"])
           ]),
           ($data.addItems.length)
-            ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_6$3, [
+            ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_6$6, [
                 (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.addItems, (item, i) => {
                   return (vue.openBlock(), vue.createElementBlock("div", {
                     key: i,
                     class: "add-form-item"
                   }, [
-                    vue.createElementVNode("div", _hoisted_7$2, [
+                    vue.createElementVNode("div", _hoisted_7$3, [
                       vue.createVNode(_component_el_input, {
                         modelValue: item.field,
                         "onUpdate:modelValue": $event => ((item.field) = $event),
@@ -89222,12 +89229,12 @@ onDestroy(function () {
         : vue.createCommentVNode("", true)
     ]))
   }
-  const DataMapping = /*#__PURE__*/_export_sfc(_sfc_main$c, [['render',_sfc_render$b],['__scopeId',"data-v-93e5ef62"]]);
+  const DataMapping = /*#__PURE__*/_export_sfc(_sfc_main$f, [['render',_sfc_render$e],['__scopeId',"data-v-93e5ef62"]]);
 
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
-  const _sfc_main$b = {
+  const _sfc_main$e = {
     props: {
       visible: {
         type: Boolean,
@@ -89355,13 +89362,13 @@ onDestroy(function () {
     }
   };
 
-  const _hoisted_1$b = { class: "watf-panel" };
-  const _hoisted_2$8 = { class: "watf-content" };
-  const _hoisted_3$8 = { class: "watf-header" };
-  const _hoisted_4$6 = { class: "watf-main" };
-  const _hoisted_5$3 = { class: "analysis-modal-footer" };
+  const _hoisted_1$g = { class: "watf-panel" };
+  const _hoisted_2$b = { class: "watf-content" };
+  const _hoisted_3$b = { class: "watf-header" };
+  const _hoisted_4$9 = { class: "watf-main" };
+  const _hoisted_5$6 = { class: "analysis-modal-footer" };
 
-  function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_EfSelect = vue.resolveComponent("EfSelect");
     const _component_el_switch = vue.resolveComponent("el-switch");
     const _component_EfTree = vue.resolveComponent("EfTree");
@@ -89377,9 +89384,9 @@ onDestroy(function () {
       onClose: _cache[8] || (_cache[8] = $event => (_ctx.$emit('close')))
     }, {
       default: vue.withCtx(() => [
-        vue.createElementVNode("div", _hoisted_1$b, [
-          vue.createElementVNode("div", _hoisted_2$8, [
-            vue.createElementVNode("div", _hoisted_3$8, [
+        vue.createElementVNode("div", _hoisted_1$g, [
+          vue.createElementVNode("div", _hoisted_2$b, [
+            vue.createElementVNode("div", _hoisted_3$b, [
               vue.createVNode(_component_EfSelect, {
                 modelValue: $data.bzCode,
                 "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.bzCode) = $event)),
@@ -89408,7 +89415,7 @@ onDestroy(function () {
                 onChange: _cache[4] || (_cache[4] = $event => ($options.loadData(false)))
               }, null, 8, ["modelValue", "disabled"])
             ]),
-            vue.createElementVNode("div", _hoisted_4$6, [
+            vue.createElementVNode("div", _hoisted_4$9, [
               vue.createVNode(_component_EfTree, {
                 ref: "tree",
                 "node-key": "id",
@@ -89429,7 +89436,7 @@ onDestroy(function () {
               }, 8, ["props", "mock"])
             ])
           ]),
-          vue.createElementVNode("div", _hoisted_5$3, [
+          vue.createElementVNode("div", _hoisted_5$6, [
             vue.createVNode(_component_el_button, {
               type: "primary",
               size: "small",
@@ -89457,7 +89464,566 @@ onDestroy(function () {
       _: 1
     }, 8, ["modelValue"]))
   }
-  const WatfConfig = /*#__PURE__*/_export_sfc(_sfc_main$b, [['render',_sfc_render$a],['__scopeId',"data-v-0e17e148"]]);
+  const WatfConfig = /*#__PURE__*/_export_sfc(_sfc_main$e, [['render',_sfc_render$d],['__scopeId',"data-v-0e17e148"]]);
+
+  const _hoisted_1$f = {
+    viewBox: "0 0 24 24",
+    width: "1.2em",
+    height: "1.2em"
+  };
+
+  function render$2(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$f, [...(_cache[0] || (_cache[0] = [
+      vue.createElementVNode("path", {
+        fill: "currentColor",
+        d: "m12 10.587l4.95-4.95l1.414 1.414l-4.95 4.95l4.95 4.95l-1.415 1.414l-4.95-4.95l-4.949 4.95l-1.414-1.415l4.95-4.95l-4.95-4.95L7.05 5.638z"
+      }, null, -1)
+    ]))]))
+  }
+
+  const __unplugin_components_2 = { name: 'ri-close-line', render: render$2 };
+  /* vite-plugin-components disabled */
+
+  const _hoisted_1$e = {
+    viewBox: "0 0 24 24",
+    width: "1.2em",
+    height: "1.2em"
+  };
+
+  function render$1(_ctx, _cache) {
+    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$e, [...(_cache[0] || (_cache[0] = [
+      vue.createElementVNode("path", {
+        fill: "currentColor",
+        d: "M8.5 7a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3m0 6.5a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3m1.5 5a1.5 1.5 0 1 1-3 0a1.5 1.5 0 0 1 3 0M15.5 7a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3m1.5 5a1.5 1.5 0 1 1-3 0a1.5 1.5 0 0 1 3 0m-1.5 8a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3"
+      }, null, -1)
+    ]))]))
+  }
+
+  const __unplugin_components_1$1 = { name: 'ri-draggable', render: render$1 };
+  /* vite-plugin-components disabled */
+
+  /* unplugin-vue-components disabled */
+
+  const AGGS$1 = [
+    { k: 'count', label: '计数' },
+    { k: 'sum', label: '总和' },
+    { k: 'avg', label: '平均值' },
+    { k: 'min', label: '最小值' },
+    { k: 'max', label: '最大值' }
+  ];
+  let _seq$1 = 0;
+
+  const _sfc_main$d = {
+    name: 'MetricSetting',
+    components: { draggable },
+    props: {
+      metrics: { type: Array, default: () => [] },
+      fieldOptions: { type: Array, default: () => [] },
+      setMode: { type: Boolean, default: true }
+    },
+    emits: ['update:metrics'],
+    data () {
+      return { AGGS: AGGS$1, rows: [] }
+    },
+    watch: {
+      metrics: {
+        immediate: true,
+        handler (v) {
+          // 外部数据变化时同步到内部行(忽略 _k),避免与 emitChange 形成回环
+          if (JSON.stringify(this.stripKeys(this.rows)) !== JSON.stringify(v || [])) {
+            this.rows = (v || []).map(m => ({
+              _k: ++_seq$1,
+              field: m.field || '',
+              aggs: Array.isArray(m.aggs) ? [...m.aggs] : []
+            }));
+          }
+        }
+      }
+    },
+    methods: {
+      addRow () {
+        this.rows.push({ _k: ++_seq$1, field: '', aggs: ['count'] });
+        this.emitChange();
+      },
+      removeRow (i) {
+        this.rows.splice(i, 1);
+        this.emitChange();
+      },
+      toggleAgg (row, k, checked) {
+        const i = row.aggs.indexOf(k);
+        if (checked && i < 0) row.aggs.push(k);
+        else if (!checked && i >= 0) row.aggs.splice(i, 1);
+        this.emitChange();
+      },
+      stripKeys (rows) {
+        return (rows || []).map(r => ({ field: r.field, aggs: r.aggs }))
+      },
+      emitChange () {
+        this.$emit('update:metrics', this.stripKeys(this.rows));
+      }
+    }
+  };
+
+  const _hoisted_1$d = { class: "ms-block" };
+  const _hoisted_2$a = { class: "ms-hd" };
+  const _hoisted_3$a = { class: "ms-row" };
+  const _hoisted_4$8 = {
+    key: 0,
+    class: "ms-grip",
+    title: "拖拽排序"
+  };
+  const _hoisted_5$5 = ["onClick"];
+  const _hoisted_6$5 = {
+    key: 0,
+    class: "ms-empty"
+  };
+
+  function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
+    const _component_i_ri_add_line = __unplugin_components_0$9;
+    const _component_i_ri_draggable = __unplugin_components_1$1;
+    const _component_el_option = vue.resolveComponent("el-option");
+    const _component_el_select = vue.resolveComponent("el-select");
+    const _component_el_checkbox = vue.resolveComponent("el-checkbox");
+    const _component_i_ri_close_line = __unplugin_components_2;
+    const _component_draggable = vue.resolveComponent("draggable");
+
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$d, [
+      vue.createElementVNode("div", _hoisted_2$a, [
+        _cache[1] || (_cache[1] = vue.createElementVNode("span", { class: "ms-title" }, "指标设置", -1)),
+        ($props.setMode)
+          ? (vue.openBlock(), vue.createElementBlock("button", {
+              key: 0,
+              class: "ms-add",
+              title: "新增指标",
+              onClick: _cache[0] || (_cache[0] = (...args) => ($options.addRow && $options.addRow(...args)))
+            }, [
+              vue.createVNode(_component_i_ri_add_line)
+            ]))
+          : vue.createCommentVNode("", true)
+      ]),
+      vue.createVNode(_component_draggable, {
+        list: $data.rows,
+        "item-key": "_k",
+        handle: ".ms-grip",
+        disabled: !$props.setMode,
+        class: "ms-list",
+        onEnd: $options.emitChange
+      }, {
+        item: vue.withCtx(({ element: row, index }) => [
+          vue.createElementVNode("div", _hoisted_3$a, [
+            ($props.setMode)
+              ? (vue.openBlock(), vue.createElementBlock("span", _hoisted_4$8, [
+                  vue.createVNode(_component_i_ri_draggable)
+                ]))
+              : vue.createCommentVNode("", true),
+            vue.createVNode(_component_el_select, {
+              modelValue: row.field,
+              "onUpdate:modelValue": $event => ((row.field) = $event),
+              size: "small",
+              filterable: "",
+              "allow-create": "",
+              "default-first-option": "",
+              class: "ms-field",
+              placeholder: "请选择",
+              disabled: !$props.setMode,
+              onChange: $options.emitChange
+            }, {
+              default: vue.withCtx(() => [
+                (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($props.fieldOptions, (o) => {
+                  return (vue.openBlock(), vue.createBlock(_component_el_option, {
+                    key: o.value,
+                    label: o.label,
+                    value: o.value
+                  }, null, 8, ["label", "value"]))
+                }), 128))
+              ]),
+              _: 1
+            }, 8, ["modelValue", "onUpdate:modelValue", "disabled", "onChange"]),
+            (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.AGGS, (a) => {
+              return (vue.openBlock(), vue.createElementBlock("label", {
+                key: a.k,
+                class: "ms-agg"
+              }, [
+                vue.createVNode(_component_el_checkbox, {
+                  "model-value": row.aggs.includes(a.k),
+                  disabled: !$props.setMode,
+                  onChange: (v) => $options.toggleAgg(row, a.k, v)
+                }, {
+                  default: vue.withCtx(() => [
+                    vue.createTextVNode(vue.toDisplayString(a.label), 1)
+                  ]),
+                  _: 2
+                }, 1032, ["model-value", "disabled", "onChange"])
+              ]))
+            }), 128)),
+            ($props.setMode)
+              ? (vue.openBlock(), vue.createElementBlock("button", {
+                  key: 1,
+                  class: "ms-del",
+                  title: "删除",
+                  onClick: $event => ($options.removeRow(index))
+                }, [
+                  vue.createVNode(_component_i_ri_close_line)
+                ], 8, _hoisted_5$5))
+              : vue.createCommentVNode("", true)
+          ])
+        ]),
+        _: 1
+      }, 8, ["list", "disabled", "onEnd"]),
+      (!$data.rows.length)
+        ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_6$5, " 点击右上角 + 添加指标 "))
+        : vue.createCommentVNode("", true)
+    ]))
+  }
+  const MetricSetting = /*#__PURE__*/_export_sfc(_sfc_main$d, [['render',_sfc_render$c],['__scopeId',"data-v-25c3fd96"]]);
+
+  /* unplugin-vue-components disabled */
+
+  /* unplugin-vue-components disabled */
+  function defaultGrouping () {
+    return { field: '', mode: 'include', includeOther: true, selected: [] }
+  }
+
+  const _sfc_main$c = {
+    name: 'GroupFilter',
+    props: {
+      grouping: { type: Object, default: () => defaultGrouping() },
+      dimensionOptions: { type: Array, default: () => [] },
+      groupValues: { type: Array, default: () => [] }, // [{ name, value }]
+      setMode: { type: Boolean, default: true }
+    },
+    emits: ['update:grouping'],
+    data () {
+      return { local: defaultGrouping() }
+    },
+    computed: {
+      maxValue () {
+        return (this.groupValues || []).reduce((m, g) => Math.max(m, Number(g.value) || 0), 0) || 1
+      }
+    },
+    watch: {
+      grouping: {
+        immediate: true,
+        deep: true,
+        handler (v) {
+          const next = { ...defaultGrouping(), ...(v || {}) };
+          next.selected = Array.isArray(next.selected) ? [...next.selected] : [];
+          if (JSON.stringify(next) !== JSON.stringify(this.local)) this.local = next;
+        }
+      }
+    },
+    methods: {
+      isSel (name) { return this.local.selected.includes(name) },
+      toggleSel (name, checked) {
+        const i = this.local.selected.indexOf(name);
+        if (checked && i < 0) this.local.selected.push(name);
+        else if (!checked && i >= 0) this.local.selected.splice(i, 1);
+        this.emitChange();
+      },
+      fmt (v) {
+        const n = Number(v);
+        return isNaN(n) ? (v ?? '') : n.toLocaleString('en-US')
+      },
+      pct (v) {
+        return Math.max(2, Math.round((Number(v) || 0) / this.maxValue * 100))
+      },
+      emitChange () {
+        this.$emit('update:grouping', JSON.parse(JSON.stringify(this.local)));
+      }
+    }
+  };
+
+  const _hoisted_1$c = { class: "gf-block" };
+  const _hoisted_2$9 = { class: "gf-rule" };
+  const _hoisted_3$9 = {
+    key: 0,
+    class: "gf-list"
+  };
+  const _hoisted_4$7 = ["title"];
+  const _hoisted_5$4 = { class: "gf-val" };
+  const _hoisted_6$4 = { class: "gf-bar" };
+  const _hoisted_7$2 = {
+    key: 1,
+    class: "gf-empty"
+  };
+
+  function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
+    const _component_el_option = vue.resolveComponent("el-option");
+    const _component_el_select = vue.resolveComponent("el-select");
+    const _component_el_radio = vue.resolveComponent("el-radio");
+    const _component_el_radio_group = vue.resolveComponent("el-radio-group");
+    const _component_el_checkbox = vue.resolveComponent("el-checkbox");
+
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$c, [
+      _cache[6] || (_cache[6] = vue.createElementVNode("div", { class: "gf-title" }, "分组与筛选", -1)),
+      vue.createVNode(_component_el_select, {
+        modelValue: $data.local.field,
+        "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.local.field) = $event)),
+        size: "small",
+        filterable: "",
+        "allow-create": "",
+        "default-first-option": "",
+        class: "gf-dim",
+        placeholder: "选择分组维度",
+        disabled: !$props.setMode,
+        onChange: $options.emitChange
+      }, {
+        default: vue.withCtx(() => [
+          (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($props.dimensionOptions, (o) => {
+            return (vue.openBlock(), vue.createBlock(_component_el_option, {
+              key: o.value,
+              label: o.label,
+              value: o.value
+            }, null, 8, ["label", "value"]))
+          }), 128))
+        ]),
+        _: 1
+      }, 8, ["modelValue", "disabled", "onChange"]),
+      vue.createElementVNode("div", _hoisted_2$9, [
+        vue.createVNode(_component_el_radio_group, {
+          modelValue: $data.local.mode,
+          "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($data.local.mode) = $event)),
+          disabled: !$props.setMode,
+          onChange: $options.emitChange
+        }, {
+          default: vue.withCtx(() => [
+            vue.createVNode(_component_el_radio, { value: "include" }, {
+              default: vue.withCtx(() => [...(_cache[3] || (_cache[3] = [
+                vue.createTextVNode("包含以下", -1)
+              ]))]),
+              _: 1
+            }),
+            vue.createVNode(_component_el_radio, { value: "exclude" }, {
+              default: vue.withCtx(() => [...(_cache[4] || (_cache[4] = [
+                vue.createTextVNode("排除以下", -1)
+              ]))]),
+              _: 1
+            })
+          ]),
+          _: 1
+        }, 8, ["modelValue", "disabled", "onChange"]),
+        vue.createVNode(_component_el_checkbox, {
+          modelValue: $data.local.includeOther,
+          "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.local.includeOther) = $event)),
+          disabled: !$props.setMode,
+          onChange: $options.emitChange
+        }, {
+          default: vue.withCtx(() => [...(_cache[5] || (_cache[5] = [
+            vue.createTextVNode(" 未匹配归「其他」 ", -1)
+          ]))]),
+          _: 1
+        }, 8, ["modelValue", "disabled", "onChange"])
+      ]),
+      ($props.groupValues && $props.groupValues.length)
+        ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_3$9, [
+            (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($props.groupValues, (g) => {
+              return (vue.openBlock(), vue.createElementBlock("label", {
+                key: g.name,
+                class: vue.normalizeClass(["gf-item", { 'is-on': $options.isSel(g.name) }])
+              }, [
+                vue.createVNode(_component_el_checkbox, {
+                  "model-value": $options.isSel(g.name),
+                  disabled: !$props.setMode,
+                  onChange: (v) => $options.toggleSel(g.name, v)
+                }, null, 8, ["model-value", "disabled", "onChange"]),
+                vue.createElementVNode("span", {
+                  class: "gf-name",
+                  title: g.name
+                }, vue.toDisplayString(g.name), 9, _hoisted_4$7),
+                vue.createElementVNode("span", _hoisted_5$4, vue.toDisplayString($options.fmt(g.value)), 1),
+                vue.createElementVNode("span", _hoisted_6$4, [
+                  vue.createElementVNode("span", {
+                    class: "gf-bar-in",
+                    style: vue.normalizeStyle({ width: $options.pct(g.value) + '%' })
+                  }, null, 4)
+                ])
+              ], 2))
+            }), 128))
+          ]))
+        : (vue.openBlock(), vue.createElementBlock("div", _hoisted_7$2, " 选择维度并保存后,由数据源返回分组取值 "))
+    ]))
+  }
+  const GroupFilter = /*#__PURE__*/_export_sfc(_sfc_main$c, [['render',_sfc_render$b],['__scopeId',"data-v-9ff443d3"]]);
+
+  /* unplugin-vue-components disabled */
+
+  const AGGS = [
+    { k: 'count', label: '计数' },
+    { k: 'sum', label: '总和' },
+    { k: 'avg', label: '平均值' },
+    { k: 'min', label: '最小值' },
+    { k: 'max', label: '最大值' }
+  ];
+  let _seq = 0;
+
+  const _sfc_main$b = {
+    name: 'SortSetting',
+    components: { draggable },
+    props: {
+      sorts: { type: Array, default: () => [] },
+      fieldOptions: { type: Array, default: () => [] },
+      setMode: { type: Boolean, default: true }
+    },
+    emits: ['update:sorts'],
+    data () {
+      return { AGGS, rows: [] }
+    },
+    watch: {
+      sorts: {
+        immediate: true,
+        handler (v) {
+          if (JSON.stringify(this.stripKeys(this.rows)) !== JSON.stringify(v || [])) {
+            this.rows = (v || []).map(s => ({
+              _k: ++_seq,
+              field: s.field || '',
+              agg: s.agg || 'count',
+              desc: s.desc !== false
+            }));
+          }
+        }
+      }
+    },
+    methods: {
+      addRow () {
+        this.rows.push({ _k: ++_seq, field: '', agg: 'count', desc: true });
+        this.emitChange();
+      },
+      removeRow (i) {
+        this.rows.splice(i, 1);
+        this.emitChange();
+      },
+      stripKeys (rows) {
+        return (rows || []).map(r => ({ field: r.field, agg: r.agg, desc: r.desc }))
+      },
+      emitChange () {
+        this.$emit('update:sorts', this.stripKeys(this.rows));
+      }
+    }
+  };
+
+  const _hoisted_1$b = { class: "ss-block" };
+  const _hoisted_2$8 = { class: "ss-hd" };
+  const _hoisted_3$8 = { class: "ss-row" };
+  const _hoisted_4$6 = {
+    key: 0,
+    class: "ss-grip",
+    title: "拖拽调整优先级"
+  };
+  const _hoisted_5$3 = ["onClick"];
+  const _hoisted_6$3 = {
+    key: 0,
+    class: "ss-empty"
+  };
+
+  function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
+    const _component_i_ri_add_line = __unplugin_components_0$9;
+    const _component_i_ri_draggable = __unplugin_components_1$1;
+    const _component_el_option = vue.resolveComponent("el-option");
+    const _component_el_select = vue.resolveComponent("el-select");
+    const _component_el_switch = vue.resolveComponent("el-switch");
+    const _component_i_ri_close_line = __unplugin_components_2;
+    const _component_draggable = vue.resolveComponent("draggable");
+
+    return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$b, [
+      vue.createElementVNode("div", _hoisted_2$8, [
+        _cache[1] || (_cache[1] = vue.createElementVNode("span", { class: "ss-title" }, "排序条件", -1)),
+        ($props.setMode)
+          ? (vue.openBlock(), vue.createElementBlock("button", {
+              key: 0,
+              class: "ss-add",
+              title: "新增排序",
+              onClick: _cache[0] || (_cache[0] = (...args) => ($options.addRow && $options.addRow(...args)))
+            }, [
+              vue.createVNode(_component_i_ri_add_line)
+            ]))
+          : vue.createCommentVNode("", true)
+      ]),
+      vue.createVNode(_component_draggable, {
+        list: $data.rows,
+        "item-key": "_k",
+        handle: ".ss-grip",
+        disabled: !$props.setMode,
+        class: "ss-list",
+        onEnd: $options.emitChange
+      }, {
+        item: vue.withCtx(({ element: row, index }) => [
+          vue.createElementVNode("div", _hoisted_3$8, [
+            ($props.setMode)
+              ? (vue.openBlock(), vue.createElementBlock("span", _hoisted_4$6, [
+                  vue.createVNode(_component_i_ri_draggable)
+                ]))
+              : vue.createCommentVNode("", true),
+            vue.createVNode(_component_el_select, {
+              modelValue: row.field,
+              "onUpdate:modelValue": $event => ((row.field) = $event),
+              size: "small",
+              filterable: "",
+              "allow-create": "",
+              "default-first-option": "",
+              class: "ss-field",
+              placeholder: "字段",
+              disabled: !$props.setMode,
+              onChange: $options.emitChange
+            }, {
+              default: vue.withCtx(() => [
+                (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($props.fieldOptions, (o) => {
+                  return (vue.openBlock(), vue.createBlock(_component_el_option, {
+                    key: o.value,
+                    label: o.label,
+                    value: o.value
+                  }, null, 8, ["label", "value"]))
+                }), 128))
+              ]),
+              _: 1
+            }, 8, ["modelValue", "onUpdate:modelValue", "disabled", "onChange"]),
+            vue.createVNode(_component_el_select, {
+              modelValue: row.agg,
+              "onUpdate:modelValue": $event => ((row.agg) = $event),
+              size: "small",
+              class: "ss-agg",
+              disabled: !$props.setMode,
+              onChange: $options.emitChange
+            }, {
+              default: vue.withCtx(() => [
+                (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.AGGS, (a) => {
+                  return (vue.openBlock(), vue.createBlock(_component_el_option, {
+                    key: a.k,
+                    label: a.label,
+                    value: a.k
+                  }, null, 8, ["label", "value"]))
+                }), 128))
+              ]),
+              _: 1
+            }, 8, ["modelValue", "onUpdate:modelValue", "disabled", "onChange"]),
+            vue.createVNode(_component_el_switch, {
+              modelValue: row.desc,
+              "onUpdate:modelValue": $event => ((row.desc) = $event),
+              disabled: !$props.setMode,
+              "active-text": "降序",
+              "inactive-text": "升序",
+              class: "ss-switch",
+              onChange: $options.emitChange
+            }, null, 8, ["modelValue", "onUpdate:modelValue", "disabled", "onChange"]),
+            ($props.setMode)
+              ? (vue.openBlock(), vue.createElementBlock("button", {
+                  key: 1,
+                  class: "ss-del",
+                  title: "删除",
+                  onClick: $event => ($options.removeRow(index))
+                }, [
+                  vue.createVNode(_component_i_ri_close_line)
+                ], 8, _hoisted_5$3))
+              : vue.createCommentVNode("", true)
+          ])
+        ]),
+        _: 1
+      }, 8, ["list", "disabled", "onEnd"]),
+      (!$data.rows.length)
+        ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_6$3, " 点击右上角 + 添加排序 "))
+        : vue.createCommentVNode("", true)
+    ]))
+  }
+  const SortSetting = /*#__PURE__*/_export_sfc(_sfc_main$b, [['render',_sfc_render$a],['__scopeId',"data-v-25a88742"]]);
 
   /* unplugin-vue-components disabled */
 
@@ -89466,7 +90032,10 @@ onDestroy(function () {
     components: {
       DataMapping,
       InterfaceFilterConfig,
-      WatfConfig
+      WatfConfig,
+      MetricSetting,
+      GroupFilter,
+      SortSetting
     },
     inheritAttrs: false,
 
@@ -89515,8 +90084,11 @@ onDestroy(function () {
         changeTjb: false,
         watfConfigVisible: false,
         paramHandler: '',
-        paramHandlerVisible: false
-
+        paramHandlerVisible: false,
+        metrics: [],
+        grouping: { field: '', mode: 'include', includeOther: true, selected: [] },
+        groupValues: [], // 分组取值列表(P5 由数据源返回填充)
+        sorts: []
       }
     },
     computed: {
@@ -89538,6 +90110,16 @@ onDestroy(function () {
       },
       showSelectData () {
         return this.dataSourceType === 'tjb' || this.dataSourceType === 'watf'
+      },
+      // 指标可选字段:取图表数据字段(finalItems),允许 allow-create 自定义
+      metricFieldOptions () {
+        const seen = new Set();
+        const opts = []
+        ;(this.finalItems || []).forEach(c => {
+          const v = c.field || c.value;
+          if (v && !seen.has(v)) { seen.add(v); opts.push({ label: c.label || v, value: v }); }
+        });
+        return opts
       }
     },
     watch: {
@@ -90010,13 +90592,40 @@ onDestroy(function () {
             this.dataMapping = configs.dataSourceConfig.dataMapping || {};
             this.beforeInterfaceFilter = this.interfaceFilter;
             this.beforeInterfaceTempParams = this.interfaceTempParams;
+            this.metrics = configs.dataSourceConfig.metrics ? efficientSuite.utils.deepClone(configs.dataSourceConfig.metrics) : [];
+            this.grouping = configs.dataSourceConfig.grouping ? efficientSuite.utils.deepClone(configs.dataSourceConfig.grouping) : { field: '', mode: 'include', includeOther: true, selected: [] };
+            this.sorts = configs.dataSourceConfig.sorts ? efficientSuite.utils.deepClone(configs.dataSourceConfig.sorts) : [];
           } else {
             this.clearData();
+            this.metrics = [];
+            this.grouping = { field: '', mode: 'include', includeOther: true, selected: [] };
+            this.sorts = [];
           }
           this.finalItems = (configs && configs.items) ? efficientSuite.utils.deepClone(configs.items) : [];
         } else {
           this.clearData();
+          this.metrics = [];
+          this.grouping = { field: '', mode: 'include', includeOther: true, selected: [] };
+          this.sorts = [];
         }
+      },
+      // 指标变化:写回图表配置 configs.dataSourceConfig.metrics(随页面保存持久化)
+      onMetricsChange (list) {
+        this.metrics = list;
+        if (!this.configs.dataSourceConfig) this.configs.dataSourceConfig = {};
+        this.configs.dataSourceConfig.metrics = efficientSuite.utils.deepClone(list);
+      },
+      // 分组与筛选变化:写回 configs.dataSourceConfig.grouping
+      onGroupingChange (g) {
+        this.grouping = g;
+        if (!this.configs.dataSourceConfig) this.configs.dataSourceConfig = {};
+        this.configs.dataSourceConfig.grouping = efficientSuite.utils.deepClone(g);
+      },
+      // 排序条件变化:写回 configs.dataSourceConfig.sorts
+      onSortsChange (list) {
+        this.sorts = list;
+        if (!this.configs.dataSourceConfig) this.configs.dataSourceConfig = {};
+        this.configs.dataSourceConfig.sorts = efficientSuite.utils.deepClone(list);
       },
       openNext (type) {
         if (type === '1') {
@@ -90049,6 +90658,9 @@ onDestroy(function () {
   };
 
   function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
+    const _component_MetricSetting = vue.resolveComponent("MetricSetting");
+    const _component_GroupFilter = vue.resolveComponent("GroupFilter");
+    const _component_SortSetting = vue.resolveComponent("SortSetting");
     const _component_i_ri_menu_fold_line = __unplugin_components_0$1;
     const _component_EfSelect = vue.resolveComponent("EfSelect");
     const _component_BKCodeCom = vue.resolveComponent("BKCodeCom");
@@ -90057,7 +90669,7 @@ onDestroy(function () {
     const _component_EfRadio = vue.resolveComponent("EfRadio");
     const _component_el_checkbox = vue.resolveComponent("el-checkbox");
     const _component_InterfaceFilterConfig = vue.resolveComponent("InterfaceFilterConfig");
-    const _component_i_ri_eye_fill = __unplugin_components_1$2;
+    const _component_i_ri_eye_fill = __unplugin_components_1$3;
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_DataMapping = vue.resolveComponent("DataMapping");
     const _component_WatfConfig = vue.resolveComponent("WatfConfig");
@@ -90067,6 +90679,34 @@ onDestroy(function () {
         class: "left-container",
         style: vue.normalizeStyle({flex: $data.dataMappingVisible ? '0 0 500px' : '1'})
       }, [
+        (!$data.dataMappingVisible)
+          ? (vue.openBlock(), vue.createBlock(_component_MetricSetting, {
+              key: 0,
+              metrics: $data.metrics,
+              "field-options": $options.metricFieldOptions,
+              "set-mode": $props.saveAble,
+              "onUpdate:metrics": $options.onMetricsChange
+            }, null, 8, ["metrics", "field-options", "set-mode", "onUpdate:metrics"]))
+          : vue.createCommentVNode("", true),
+        (!$data.dataMappingVisible)
+          ? (vue.openBlock(), vue.createBlock(_component_GroupFilter, {
+              key: 1,
+              grouping: $data.grouping,
+              "dimension-options": $options.metricFieldOptions,
+              "group-values": $data.groupValues,
+              "set-mode": $props.saveAble,
+              "onUpdate:grouping": $options.onGroupingChange
+            }, null, 8, ["grouping", "dimension-options", "group-values", "set-mode", "onUpdate:grouping"]))
+          : vue.createCommentVNode("", true),
+        (!$data.dataMappingVisible)
+          ? (vue.openBlock(), vue.createBlock(_component_SortSetting, {
+              key: 2,
+              sorts: $data.sorts,
+              "field-options": $options.metricFieldOptions,
+              "set-mode": $props.saveAble,
+              "onUpdate:sorts": $options.onSortsChange
+            }, null, 8, ["sorts", "field-options", "set-mode", "onUpdate:sorts"]))
+          : vue.createCommentVNode("", true),
         _cache[19] || (_cache[19] = vue.createElementVNode("div", { class: "data-source-title" }, " ① 设置数据源 ", -1)),
         vue.withDirectives(vue.createElementVNode("div", {
           class: "data-map",
@@ -90262,7 +90902,7 @@ onDestroy(function () {
         : vue.createCommentVNode("", true)
     ]))
   }
-  const DataSourceConfig = /*#__PURE__*/_export_sfc(_sfc_main$a, [['render',_sfc_render$9],['__scopeId',"data-v-a3af803c"]]);
+  const DataSourceConfig = /*#__PURE__*/_export_sfc(_sfc_main$a, [['render',_sfc_render$9],['__scopeId',"data-v-d8967f85"]]);
 
   DataSourceConfig.install = function (Vue) {
     Vue.component(libPrefix + DataSourceConfig.name, DataSourceConfig);
@@ -91311,7 +91951,7 @@ onDestroy(function () {
     const _component_EfTable = vue.resolveComponent("EfTable");
     const _component_i_ri_add_circle_fill = __unplugin_components_0$2;
     const _component_el_button = vue.resolveComponent("el-button");
-    const _component_i_ri_close_circle_fill = __unplugin_components_1$3;
+    const _component_i_ri_close_circle_fill = __unplugin_components_1$4;
     const _component_ScriptConfig = vue.resolveComponent("ScriptConfig");
 
     return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$5, [
