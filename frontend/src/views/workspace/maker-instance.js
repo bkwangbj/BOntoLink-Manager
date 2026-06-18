@@ -17,7 +17,11 @@ function dataSource (classId, field, baseQuery) {
   if (baseQuery && baseQuery.q) qs += `&q=${encodeURIComponent(baseQuery.q)}`
   return {
     type: 'get', interfacePath: `/instance/chart-data?${qs}`, paramsType: 'json',
-    interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {}
+    interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {},
+    // 预置数据源面板,与图表一致:按该字段分组、统计数量、按数量降序(用户可增删改)
+    metrics: [{ field, aggs: ['count'] }],                                       // 指标 = 该字段的计数(数量)
+    grouping: { field, mode: 'include', includeOther: false, selected: [] },     // 分组维度 = 该字段
+    sorts: [{ field, agg: 'count', desc: true }]                                 // 排序 = 按该字段计数降序
   }
 }
 
@@ -42,7 +46,7 @@ function applyDarkText (c) {
 }
 
 // 构造图表「tab」配置(扁平,保留模板的 chartComId/type/configOption/chartTheme)
-function makeTab (tpl, classId, dim, baseQuery, kind, titlePrefix, isDark) {
+function makeTab (tpl, classId, dim, baseQuery, kind, titlePrefix, isDark, cols) {
   const c = clone(tpl)
   const id = uid()
   c.id = id
@@ -55,6 +59,8 @@ function makeTab (tpl, classId, dim, baseQuery, kind, titlePrefix, isDark) {
   c.tabord = 0
   c.initChartId = true
   c.dataSourceConfig = dataSource(classId, dim.field, baseQuery)
+  // 数据源面板下拉选项 = 对象类型属性列表(指标/分组维度/排序字段可选)
+  c.dataSourceConfig.fieldOptions = (cols || []).map(o => ({ label: o.label || o.field, value: o.field, dataType: o.dataType })).filter(o => o.value)
   if (kind === 'pie') {
     c.items = [{ label: 'name', field: 'name', value: 'name' }, { label: 'value', field: 'value', value: 'value' }]
     if (c.configOption && Array.isArray(c.configOption.series) && c.configOption.series.length) {
@@ -105,25 +111,26 @@ export function buildPageConfig (classId, columns, baseQuery = {}, linkGroups = 
   // 收集图表规格(specs):主对象 + 链接对象
   const specs = []
   // 主对象首维:柱图 + 饼图 并排(便于同时看分布与占比)
-  specs.push({ classId, dim: useMain[0], kind: 'bar', main: true })
-  if (PIE_TPL) specs.push({ classId, dim: useMain[0], kind: 'pie', main: true })
+  specs.push({ classId, dim: useMain[0], kind: 'bar', main: true, cols: columns })
+  if (PIE_TPL) specs.push({ classId, dim: useMain[0], kind: 'pie', main: true, cols: columns })
   // 主对象其余维度:按类型选图
-  for (let i = 1; i < useMain.length; i++) specs.push({ classId, dim: useMain[i], kind: kindFor(useMain[i]), main: true })
+  for (let i = 1; i < useMain.length; i++) specs.push({ classId, dim: useMain[i], kind: kindFor(useMain[i]), main: true, cols: columns })
   // 链接对象:每个关联类型取前 2 个可视维度,标题带关联对象名
   for (const g of (linkGroups || []).slice(0, 3)) {
     if (!g || !g.classId) continue
     const dims = pickDims(g.columns).slice(0, 2)
-    for (const d of dims) specs.push({ classId: g.classId, dim: d, kind: kindFor(d), prefix: g.name })
+    for (const d of dims) specs.push({ classId: g.classId, dim: d, kind: kindFor(d), prefix: g.name, cols: g.columns })
   }
 
   // 两列网格依次排布(每图 6 列宽 × 9 行高)
+  // 一行三列:每图 4 列宽(12/3),按 3 个一行排布
   const layout = specs.map((s, idx) => {
-    const x = idx % 2 === 0 ? 0 : 6
-    const y = Math.floor(idx / 2) * 9
+    const x = (idx % 3) * 4
+    const y = Math.floor(idx / 3) * 9
     const tpl = (s.kind === 'pie' && PIE_TPL) ? PIE_TPL : BAR_TPL
     // 链接对象的聚合用其自身实例(mock 无联表),不套主对象筛选
     const q = s.main ? baseQuery : {}
-    return gridItem(makeTab(tpl, s.classId, s.dim, q, s.kind, s.prefix, isDark), x, y)
+    return gridItem(makeTab(tpl, s.classId, s.dim, q, s.kind, s.prefix, isDark, s.cols), x, y, 4)
   })
   return { layout, decorateLayout: [], colNum: 12, rowHeight: 30, autoRowHeight: 30, maxRows: Infinity, varConfig: [], margin: [10, 10] }
 }

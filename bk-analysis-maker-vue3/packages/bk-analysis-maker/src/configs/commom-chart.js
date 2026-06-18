@@ -508,10 +508,33 @@ export const mixins = {
     // 事件触发方法
     emitEvent (eventName, payload) {
       componentConfigs.emitter.emit(eventName, payload)
+    },
+    // 点击「应用」保存图表配置后:若是本图表,按新数据源配置(指标/分组/排序)重新取数
+    onSaveChartCfg (cfg) {
+      if (cfg && this.configs && cfg.chartId === this.configs.chartId) {
+        const ds = cfg.dataSourceConfig
+        if (ds && this.configs.dataSourceConfig) {
+          this.configs.dataSourceConfig.metrics = ds.metrics
+          this.configs.dataSourceConfig.grouping = ds.grouping
+          this.configs.dataSourceConfig.sorts = ds.sorts
+        }
+        this.buildParams(true)
+      }
+    },
+    // 数据源面板实时改动(指标/分组/排序):按 chartId 同步到本图表并重新取数
+    onDsApply (p) {
+      if (p && this.configs && p.chartId === this.configs.chartId && this.configs.dataSourceConfig) {
+        this.configs.dataSourceConfig.metrics = p.metrics
+        this.configs.dataSourceConfig.grouping = p.grouping
+        this.configs.dataSourceConfig.sorts = p.sorts
+        this.buildParams(true)
+      }
     }
   },
   created () {
     emitter.on('paramsChange', this.paramsChange)
+    emitter.on('saveChartCfg', this.onSaveChartCfg)
+    emitter.on('am-datasource-apply', this.onDsApply)
     this.defaultData = getDefaultData(this.configs)
     this.debouncedCustomResetChart = debounce(200, (config) => {
       try {
@@ -544,6 +567,8 @@ export const mixins = {
   },
   beforeUnmount () {
     emitter.off('paramsChange', this.paramsChange)
+    emitter.off('saveChartCfg', this.onSaveChartCfg)
+    emitter.off('am-datasource-apply', this.onDsApply)
     clearTimer(this.configs.chartId)
     // 触发销毁钩子
     hookManager.triggerHook('onDestroy', this)

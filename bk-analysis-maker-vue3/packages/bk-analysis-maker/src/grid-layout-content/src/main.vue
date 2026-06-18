@@ -3,8 +3,8 @@
     v-model:layout="configs.layout"
     :col-num="isChild ? pageConfig.themeConfigs.globalCss.childConfig.colNum :pageConfig.colNum"
     :row-height="isChild ? childRowHeight : rowHeight"
-    :is-draggable="pageConfig.draggable"
-    :is-resizable="pageConfig.resizable"
+    :is-draggable="pageConfig.draggable && editMode"
+    :is-resizable="pageConfig.resizable && editMode"
     :vertical-compact="true"
     :use-css-transforms="true"
     :margin="isChild ?pageConfig.themeConfigs.globalCss.childConfig.margin :configs.margin"
@@ -27,7 +27,7 @@
                item.isQuery && isModal ? 'item-modal-query':'',
                (item.isTabLayout || (!item.isChart && !item.isQuery)) && !mergeChild ? 'item-layout-out':'',
                isModal ? 'item-modal-layout':'item-set-layout',
-               item.id === currentConfigId ? 'active' : '']"
+               (editMode && item.id === currentConfigId) ? 'active' : '']"
       :style="customCardStyleProps[item.id]"
     >
       <ChartContent
@@ -266,6 +266,11 @@ export default {
       default: () => { return { } }
     },
     setMode: {
+      type: Boolean,
+      default: true
+    },
+    // 编辑模式(设计=true / 预览=false):显式控制可拖拽/缩放/选中,响应式,首屏即生效
+    editMode: {
       type: Boolean,
       default: true
     },

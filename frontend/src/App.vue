@@ -9,7 +9,7 @@
         </router-view>
       </main>
     </div>
-    <AiFab />
+    <!-- <AiFab /> 已隐藏 -->
     <SettingsModal />
     <DomainSelectorModal />
   </div>
@@ -18,7 +18,6 @@
 <script setup>
 import AppTopBar from '@/components/AppTopBar.vue'
 import AppSidebar from '@/components/AppSidebar.vue'
-import AiFab from '@/components/AiFab.vue'
 import SettingsModal from '@/components/SettingsModal.vue'
 import DomainSelectorModal from '@/components/DomainSelectorModal.vue'
 </script>

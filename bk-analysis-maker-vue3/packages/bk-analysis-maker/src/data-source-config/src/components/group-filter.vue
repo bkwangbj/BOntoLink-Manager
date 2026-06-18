@@ -138,19 +138,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.gf-block { margin: 0 5px 14px 0; }
-.gf-title { font-size: 13px; font-weight: 600; color: #1d2129; margin-bottom: 8px; }
-.gf-dim { width: 100%; margin-bottom: 8px; }
+.gf-block { margin: 0 0 12px 0; }
+.gf-title { font-size: 13px; font-weight: 600; color: #1d2129; margin-bottom: 5px; }
+.gf-dim { width: 100%; margin-bottom: 6px; }
 .gf-rule {
-  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  margin-bottom: 8px; font-size: 12px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: nowrap;
+  margin-bottom: 6px; font-size: 12px;
 }
+/* radio-group 在 maker 里默认满宽会把 checkbox 挤下行 → 收缩为自然宽,checkbox 靠右同行 */
+.gf-rule :deep(.el-radio-group) { flex: 0 0 auto; width: auto; display: inline-flex; background: transparent !important; padding: 0 !important; box-shadow: none !important; }
+.gf-rule :deep(.el-checkbox) { margin-left: auto; margin-right: 0; flex: 0 0 auto; white-space: nowrap; }
 .gf-list {
   border: 1px solid #e9e9e9; border-radius: 6px; overflow: hidden;
 }
 .gf-item {
   display: flex; align-items: center; gap: 8px;
-  padding: 7px 10px; cursor: pointer;
+  padding: 5px 8px; cursor: pointer;
   border-bottom: 1px solid #f2f3f5;
   transition: background-color .12s;
 }

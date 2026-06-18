@@ -3,10 +3,11 @@
     style="height: 100%;padding: 0;"
     :class="[!isShowfull ? '' : 'has_full', 'analysis-maker-wrapper', showGridLine ? 'point-disable' : '']"
   >
+    <Teleport :to="embedToolbarTarget" :disabled="!embedToolbarTarget">
     <div
       v-if="!isModal"
       class="top-header"
-      :class="isModal ? 'query-header':''"
+      :class="[isModal ? 'query-header':'', embedToolbarTarget ? 'is-embed-tools' : '']"
     >
       <div
         v-if="!isModal"
@@ -21,154 +22,123 @@
           <i-ri-file-chart-fill />
         </div>
         <span>{{ configNode.label }}</span>
-        <el-switch
-          v-if="setMode && designMode"
-          v-model="autoSave"
-          :active-text="activeText"
-          inactive-text="手动保存"
-          style="margin-left: 30px;"
-          class="am-switch"
-          size="small"
-        />
       </div>
       <div
         v-if="!isModal"
         class="right"
       >
-        <!-- 模式切换:默认预览,点击进入设计模式 -->
-        <div
-          v-if="setMode"
-          class="text-button mode-toggle"
-          :class="designMode ? 'is-design' : ''"
-          :title="designMode ? '切换到预览模式' : '切换到设计模式'"
-          @click="toggleDesignMode"
-        >
-          <i-ri-pencil-ruler-2-fill v-if="!designMode" />
-          <i-ri-slideshow-2-fill v-else />
-          <span>{{ designMode ? '预览' : '设计' }}</span>
-        </div>
-        <Toolbar
-          v-if="designMode"
-          v-bind="$props"
-          ref="toolBar"
-          :custom-chart="customChart"
-          :disabled="!setMode"
-          :is-app="isApp"
-          :layout-config="layoutConfig"
-          position="top"
-          @toggle-event="toggleEvent"
-          @update-grid-setting="updateGridSetting"
-          @clear-config="clearConfig"
-          @show-left-panel="showLeftPanel"
-          @show-grid-setting="showGridSetting"
-        />
-        <template v-if="!isBasicMode && designMode">
-          <div
-            class="text-button"
-            @click="showVarConfigVisible"
-          >
-            <!-- <img src="./images/global-params.png"> -->
-            <i-ri-file-settings-fill />
-            <span>全局参数</span>
-          </div>
-          <div
-            type="text"
-            class="text-button"
-            @click="openPageSetting"
-          >
-            <!-- <img
-              src="./images/page-setting.png"
-              style="width: 14px;height: 14px;"
-            > -->
-            <i-ri-settings-5-fill />
-            <span>页面设置</span>
-          </div>
-          <div
-            v-if="hasThemeConfigPermission"
-            type="text"
-            class="text-button"
-            @click="themeConfigVisible=true"
-          >
-            <!-- <img
-              src="./images/page-setting.png"
-              style="width: 14px;height: 14px;"
-            > -->
-            <i-ri-equalizer-fill />
-            <span>主题设置</span>
-          </div>
-          <div
-            v-if="hasCardConfigPermission"
-            type="text"
-            class="text-button"
-            @click="cardConfigVisible=true"
-          >
-            <!-- <img
-              src="./images/page-setting.png"
-              style="width: 14px;height: 14px;"
-            > -->
-            <i-ri-equalizer-fill />
-            <span>卡片设置</span>
-          </div>
-          <div
-            :class="['fold-icon', expand ? 'active' : '']"
-            title="配置面板"
-            @click="setRightExpand()"
-          >
-            <i
-              style="font-size: 13px;"
-              class="am-iconfont icon-youceyincang"
-            />
-          </div>
-        </template>
-        <div
-          class="buttons"
-        >
-          <el-button
-            v-if="designMode"
+        <!-- 设计模式:工具按钮组(顺序严格按设计稿) -->
+        <template v-if="designMode">
+          <!-- 添加区域(split:区域/布局/页签/查询) -->
+          <el-dropdown
+            split-button
             size="small"
-            title="增加图层"
-            @click="addLayout(true)"
+            trigger="click"
+            class="add-area-dropdown"
+            @click="addItem(true)"
+            @command="onAddCommand"
           >
-            <i-ri-add-line />
-            <span>增加图层</span>
-          </el-button>
-          <el-button
-            v-if="designMode"
+            <i-ri-add-line /><span style="margin-left:3px">添加区域</span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="addItem">添加区域</el-dropdown-item>
+                <el-dropdown-item command="addLayout">添加布局</el-dropdown-item>
+                <el-dropdown-item command="addTabLayout">页签布局</el-dropdown-item>
+                <el-dropdown-item command="addQuery">添加查询</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+          <div class="text-button" @click="clearConfig">
+            <i-ri-delete-bin-2-fill /><span>清空</span>
+          </div>
+          <div :class="['text-button', showBodyPannel && 'is-on']" @click="showLeftPanel">
+            <i-ri-pencil-ruler-2-fill /><span>工具面板</span>
+          </div>
+          <div v-if="!isBasicMode" :class="['text-button', pageSettingVisible && 'is-on']" @click="openPageSetting">
+            <i-ri-settings-5-fill /><span>页面设置</span>
+          </div>
+          <div
+            :class="['fold-icon', (expand && !pageSettingVisible && !cardSettingVisible) ? 'active' : '']"
+            title="图表配置"
+            @click="toggleChartConfig"
+          >
+            <i style="font-size: 13px;" class="am-iconfont icon-youceyincang" />
+            <span style="margin-left:4px">图表配置</span>
+          </div>
+          <el-dropdown
+            v-if="!isBasicMode"
+            trigger="click"
+            class="more-dropdown"
+            @command="onMoreCommand"
+          >
+            <div class="text-button">
+              <i-ri-more-2-fill /><span>更多</span>
+            </div>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="grid">
+                  <i-ri-table-fill style="margin-right:6px" />栅格
+                </el-dropdown-item>
+                <el-dropdown-item command="vars">
+                  <i-ri-file-settings-fill style="margin-right:6px" />全局参数
+                </el-dropdown-item>
+                <el-dropdown-item v-if="hasThemeConfigPermission" command="theme">
+                  <i-ri-equalizer-fill style="margin-right:6px" />主题设置
+                </el-dropdown-item>
+                <el-dropdown-item v-if="hasCardConfigPermission" command="card">
+                  <i-ri-equalizer-fill style="margin-right:6px" />卡片设置
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+          <span class="tb-divider"></span>
+          <!-- 画布缩放(仅设计模式):−/百分比/+/适应 -->
+          <div class="canvas-zoom-ctrl">
+            <span class="cz-btn" title="缩小" @click="zoomOut">−</span>
+            <span class="cz-val" title="重置 100%" @click="zoomReset">{{ designScale }}%</span>
+            <span class="cz-btn" title="放大" @click="zoomIn">+</span>
+            <span class="cz-fit" title="适应窗口" @click="zoomFit">适应</span>
+          </div>
+          <el-switch
+            v-if="setMode"
+            v-model="autoSave"
+            active-text="自动保存"
+            class="am-switch"
             size="small"
-            type="info"
-            @click="previewPage"
-          >
-            <!-- <img
-              src="./images/preview.png"
-              style="width: 15px;height: 16px;position: relative;top: 2px;"
-            > -->
-            <i-ri-slideshow-2-fill />
-            <span style="position: relative;">预览</span>
-          </el-button>
-          <el-button
-            v-if="setMode && designMode"
+          />
+          <!-- 保存(split:保存 / 另存为探索布局) -->
+          <el-dropdown
+            v-if="setMode"
+            split-button
             type="primary"
             size="small"
+            trigger="click"
+            class="save-dropdown"
             @click="savePageConfig(false)"
+            @command="onSaveCommand"
           >
-            <!-- <img src="./images/save.png"> -->
-            <i-ri-save-fill />
-            <span>保存</span>
-          </el-button>
-          <el-button
-            size="small"
-            :title="isShowfull ? '退出全屏' : '全屏'"
-            @click="toChangeFull"
-          >
-            <i-ri-fullscreen-exit-line v-if="isShowfull" />
-            <i-ri-fullscreen-line v-else />
-            <span>{{ isShowfull ? '退出全屏' : '全屏' }}</span>
-          </el-button>
+            <i-ri-save-fill /><span style="margin-left:3px">保存</span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="saveAs">另存为探索布局</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+          <span class="tb-divider"></span>
+        </template>
+        <!-- 模式分段(始终显示):预览(内联只读看板)/ 设计(可编辑) -->
+        <div
+          v-if="setMode"
+          class="mode-seg"
+        >
+          <span :class="['mode-seg-item', !designMode && 'is-on']" @click="designMode = false">预览</span>
+          <span :class="['mode-seg-item', designMode && 'is-on']" @click="designMode = true">设计</span>
         </div>
       </div>
     </div>
+    </Teleport>
     <div
-      style=" display: flex;flex: 1; overflow: hidden;"
+      style=" display: flex;flex: 1; overflow: hidden; position: relative;"
     >
       <div
         style="position: relative;display: flex;flex: 1; flex-direction: column;height: 100%;overflow: hidden;"
@@ -204,8 +174,8 @@
           />
           <div
             ref="workingContainer"
-            :class="['working-container', isModal ? 'no-background' : '']"
-            :style="`padding: ${isModal ? '0' : '30px 40px'}; height:  ${!layoutConfig.layout.length ? '100%' : 'auto'};${styleText}`"
+            :class="['working-container', (isModal || !designMode) ? 'no-background' : '']"
+            :style="`padding: ${(isModal || !designMode) ? '0' : '30px 40px'}; height:  ${!layoutConfig.layout.length ? '100%' : 'auto'};${styleText}`"
             @scroll="handleScroll"
           >
             <!-- <div
@@ -227,15 +197,16 @@
             >
               <div
                 class="layout-wrapper-content"
-                :style="{ padding: layoutWrapperPadding, color: 'var(--textStylecolor)', fontSize: 'var(--textStylefontSize)'
-                          , fontFamily: 'var(--textStylefontFamily)', fontWeight: 'var(--textStylefontWeight)'}"
+                :style="[{ padding: layoutWrapperPadding, color: 'var(--textStylecolor)', fontSize: 'var(--textStylefontSize)'
+                          , fontFamily: 'var(--textStylefontFamily)', fontWeight: 'var(--textStylefontWeight)'}, canvasZoomStyle]"
               >
                 <BKGridLayoutContent
                   v-if="!isThemeChange && showContent"
                   v-bind="$props"
                   ref="gridLayout"
                   :configs="layoutConfig"
-                  :set-mode="setMode"
+                  :set-mode="editable"
+                  :edit-mode="designMode"
                   :page-config="layoutConfig"
                   :custom-card-style-props="customCardStyleProps"
                   :selected-card-item="cardSettingVisible ? cardItem : null"
@@ -251,7 +222,7 @@
                   v-bind="$props"
                   ref="gridLayoutDecorate"
                   :configs="layoutConfig"
-                  :set-mode="setMode"
+                  :set-mode="editable"
                   :page-config="layoutConfig"
                   :decorate-config="decorateConfig"
                 />
@@ -288,7 +259,7 @@
       </div>
       <div
         v-if="!isModal && !isBasicMode"
-        class="right-setting-container"
+        :class="['right-setting-container', panelPinned && 'is-pinned']"
         :style="{width: expand ? ((!pageSettingVisible && !cardSettingVisible && rightTab !== 'base') ? (dataMappingVisible && rightTab === 'data' ? '745px' : '500px') : '330px') : '0' }"
       >
         <!-- <div class="expand-icon">
@@ -297,6 +268,25 @@
             @click="setRightExpand()"
           />
         </div> -->
+        <!-- 固定/浮动 切换:浮动=悬浮画布上,固定=右侧占位挤压画布 -->
+        <div
+          v-if="expand"
+          :class="['cfg-pin-btn', panelPinned && 'is-on']"
+          :title="panelPinned ? '取消固定(浮动)' : '固定到右侧'"
+          @click="panelPinned = !panelPinned"
+        >
+          <i-ri-pushpin-2-fill v-if="panelPinned" />
+          <i-ri-pushpin-2-line v-else />
+        </div>
+        <!-- 右侧面板关闭按钮:图表配置 / 页面设置 / 卡片设置 / 空态 通用,只要展开就显示,点击清空并收起 -->
+        <div
+          v-if="expand"
+          class="cfg-close-btn"
+          title="关闭"
+          @click="closeRightPanel"
+        >
+          <i-ri-close-line />
+        </div>
         <div
           v-if="!pageSettingVisible && !cardSettingVisible"
           v-show="expand"
@@ -310,6 +300,7 @@
             :configs="configs"
             :page-config="layoutConfig"
             :save-able="setMode"
+            :init-tab="rightTab"
             style="overflow: hidden;"
             @save-chart-cfg="saveChartCfg"
             @set-expand="setRightExpand(false)"
@@ -483,6 +474,16 @@ export default {
       type: Boolean,
       default: true
     },
+    // 宿主提供的工具栏插槽选择器(如 '#ixe-maker-tools');设置后顶栏 Teleport 到该处
+    embedToolbarTarget: {
+      type: String,
+      default: ''
+    },
+    // 宿主"另存为探索布局"回调(保存下拉);未提供则回退 maker 自身另存
+    embedOnSaveAs: {
+      type: Function,
+      default: null
+    },
     pageConfig: {
       type: Object,
       default: () => null
@@ -604,7 +605,11 @@ export default {
       thick: 16,
       rulerScrollLeft: 0,
       rulerScrollTop: 0,
-      customCardStyleProps: {}
+      customCardStyleProps: {},
+      // 看板设计模式画布无级缩放(独立于 maker 原生 scaleVal/isApp,预览恒 1:1)
+      designScale: 100,
+      // 右侧配置面板:false=浮层(悬浮画布上),true=固定(右侧占位,挤压画布)
+      panelPinned: false
     }
   },
   computed: {
@@ -677,12 +682,34 @@ export default {
         return this.configNode.CLIENT_TP === '1'
       }
       return false
+    },
+    // 画布是否可编辑:仅「设计模式」可编辑;「预览模式」只读(无拖拽/关闭/hover 编辑/网格背景)
+    editable () {
+      return this.setMode && this.designMode
+    },
+    // 看板画布缩放比例:仅设计模式生效,预览恒 1:1(不影响预览界面)
+    canvasScale () {
+      return this.designMode ? (this.designScale / 100) : 1
+    },
+    // 用 CSS zoom 缩放画布:zoom 参与真实布局,滚动条自动正确;Chrome 下拖拽命中一致。预览恒不缩放
+    canvasZoomStyle () {
+      if (this.canvasScale === 1) return {}
+      return { zoom: this.canvasScale }
     }
   },
   watch: {
     scaleVal () {
       this.widthScale = this.scaleVal + '%'
       this.heightScale = this.scaleVal + '%'
+    },
+    // 进入预览模式:强制关闭右侧图表配置/页面设置面板(预览纯只读,不出配置面板)
+    designMode (v) {
+      if (!v) {
+        this.pageSettingVisible = false
+        this.cardSettingVisible = false
+        this.configs = {}
+        this.setRightExpand(false)
+      }
     },
     pageConfig: {
       handler () {
@@ -1184,12 +1211,14 @@ export default {
       }
     },
     handleChartClick ({ configs, expand }) {
-      if (this.isModal) {
+      if (this.isModal || !this.designMode) {
         return
       }
+      // 面板已打开且已选中图表 → 切换图表时保持当前 tab(数据源/高级 不跳回基础);否则(首次/重新打开)回到基础
+      const panelWasOpen = this.expand && this.configs && this.configs.type
       this.pageSettingVisible = false
       this.cardSettingVisible = false
-      this.rightTab = 'base'
+      if (!panelWasOpen) this.rightTab = 'base'
       this.dataMappingVisible = false
       this.setRightExpand(expand)
       this.configs = configs
@@ -1308,9 +1337,28 @@ export default {
     toggleDesignMode () {
       this.designMode = !this.designMode
     },
+    onMoreCommand (cmd) {
+      if (cmd === 'grid') this.showGridSetting()
+      else if (cmd === 'vars') this.showVarConfigVisible()
+      else if (cmd === 'theme') this.themeConfigVisible = true
+      else if (cmd === 'card') this.cardConfigVisible = true
+    },
+    onAddCommand (cmd) {
+      if (cmd === 'addItem') this.addItem(true)
+      else if (cmd === 'addLayout') this.addLayout(false)
+      else if (cmd === 'addTabLayout') this.addTabLayout()
+      else if (cmd === 'addQuery') this.addQuery()
+    },
+    onSaveCommand (cmd) {
+      if (cmd === 'saveAs') {
+        if (this.embedOnSaveAs) this.embedOnSaveAs()
+        else this.savePageConfig(true)
+      }
+    },
     openPageSetting () {
+      // 再次点击关闭:收起整个右侧面板,不要回落到空的「图表配置」占位
+      if (this.pageSettingVisible) { this.pageSettingVisible = false; this.setRightExpand(false); return }
       emitter.emit('chartClick', { configs: {}, expand: true })
-      // this.setRightExpand(true)
       this.pageSettingVisible = true
     },
     toggleEvent ({ key, payload }) {
@@ -1345,6 +1393,44 @@ export default {
         this.expand = !this.expand
       } else {
         this.expand = value
+      }
+    },
+    // —— 画布缩放(仅设计模式)——
+    clampScale (v) { return Math.max(25, Math.min(200, Math.round(v))) },
+    zoomIn () { this.designScale = this.clampScale(this.designScale + 10) },
+    zoomOut () { this.designScale = this.clampScale(this.designScale - 10) },
+    zoomReset () { this.designScale = 100 },
+    // 适应窗口:按内容宽/高相对可视区取较小比例,使整页尽量塞进 working-container
+    zoomFit () {
+      const wc = this.$refs.workingContainer
+      const lw = this.$refs.layoutWrapper
+      if (!wc || !lw) { this.designScale = 100; return }
+      const cur = this.canvasScale || 1
+      // lw 当前已被缩放,先还原成原始尺寸再算
+      const naturalW = lw.offsetWidth / cur
+      const naturalH = lw.offsetHeight / cur
+      if (!naturalW || !naturalH) { this.designScale = 100; return }
+      const availW = wc.clientWidth - 32
+      const availH = wc.clientHeight - 32
+      const ratio = Math.min(availW / naturalW, availH / naturalH) * 100
+      this.designScale = this.clampScale(ratio)
+    },
+    // 关闭右侧面板(图表配置/页面设置/卡片设置通用):清空并收起
+    closeRightPanel () {
+      this.pageSettingVisible = false
+      this.cardSettingVisible = false
+      this.configs = {}
+      this.setRightExpand(false)
+    },
+    // 「图表配置」按钮:只控制右侧图表配置面板,不影响「页面设置」面板
+    // 已在图表配置态 → 收起;否则 → 关掉页面设置/卡片设置并打开图表配置
+    toggleChartConfig () {
+      if (this.expand && !this.pageSettingVisible && !this.cardSettingVisible) {
+        this.setRightExpand(false)
+      } else {
+        this.pageSettingVisible = false
+        this.cardSettingVisible = false
+        this.setRightExpand(true)
       }
     },
     toggleGridLine (value) {
@@ -1685,6 +1771,58 @@ export default {
 
 <style lang="scss" scoped>
 // @import "../../styles/index.scss";
+/* 模式分段:预览 / 设计 */
+.mode-seg {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  margin-left: 8px;
+  border: 1px solid #e5e6eb;
+  border-radius: 6px;
+  overflow: hidden;
+}
+/* 画布缩放控件(仅设计模式) */
+.canvas-zoom-ctrl {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  margin-left: 4px;
+}
+.canvas-zoom-ctrl .cz-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; font-size: 16px; line-height: 1;
+  color: #4e5969; cursor: pointer; border-radius: 4px; user-select: none;
+}
+.canvas-zoom-ctrl .cz-btn:hover { background: #f2f3f5; color: #1d2129; }
+.canvas-zoom-ctrl .cz-val {
+  min-width: 42px; text-align: center; font-size: 12px; color: #4e5969;
+  cursor: pointer; user-select: none; font-variant-numeric: tabular-nums;
+}
+.canvas-zoom-ctrl .cz-val:hover { color: #1f6aff; }
+.canvas-zoom-ctrl .cz-fit {
+  margin-left: 4px; padding: 0 7px; height: 22px; line-height: 22px;
+  font-size: 12px; color: #4e5969; cursor: pointer; border-radius: 4px; user-select: none;
+}
+.canvas-zoom-ctrl .cz-fit:hover { background: #f2f3f5; color: #1d2129; }
+.mode-seg-item {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 12px;
+  font-size: 13px;
+  color: #4e5969;
+  cursor: pointer;
+  user-select: none;
+}
+.mode-seg-item.is-on {
+  background: #1f6aff;
+  color: #fff;
+}
+/* 工具面板 / 页面设置 等开关型按钮激活态 */
+.text-button.is-on {
+  color: #1f6aff;
+  background: rgba(31, 106, 255, 0.1);
+}
 .page-cfg-header {
   display: flex;
   align-items: center;
@@ -1716,6 +1854,17 @@ export default {
   position: relative;
   width: 100%;
   overflow: auto;
+}
+/* 预览模式:全幅、无页面边框/背景,贴合预览弹框的纯净展现。
+   注意:挂在祖先 .working-container.no-background 上,不能在 layoutWrapper 自身用响应式 class,
+   否则 Vue 重写 class 会冲掉 changeCardRadius/setTheme 手动加的圆角/主题类(am-card-radius / am-theme),导致切模式后圆角丢失。 */
+.working-container.no-background .layout-wrapper {
+  width: 100% !important;
+  min-width: 0 !important;
+  border: none !important;
+  background: none !important;
+}
+.layout-wrapper {
 
   .layout-wrapper-content {
     width: 100%;
@@ -1861,25 +2010,34 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 28px;
-        height: 24px;
-        color: #a3a3a3;
+        flex-shrink: 0;
+        height: 26px;
+        padding: 0 9px;
+        font-size: 13px;
+        line-height: 26px;
+        color: #4e5969;
         cursor: pointer;
-        background: #ededed;
+        background: transparent;
         border-radius: 4px;
+        white-space: nowrap;
+
+        > span { white-space: nowrap; }
 
         &:hover {
-          background: rgb(0 0 0 / 20%);
+          background: #f2f3f5;
+          color: #1d2129;
 
-          > svg {
-            color: #1a1a1a;
+          > i, > svg {
+            color: #1d2129;
           }
         }
 
         &.active {
+          background: #e8f3ff;
+          color: #1f6aff;
 
-          > svg {
-            color: #1a1a1a;
+          > i, > svg {
+            color: #1f6aff;
           }
         }
       }
@@ -1918,6 +2076,17 @@ export default {
     &.no-background {
       background: #fff;
     }
+    /* 预览模式(no-background)纯只读:隐藏缩放/拖拽手柄、卡片操作区(复制/增删)、选中边框 */
+    &.no-background :deep(.vue-resizable-handle),
+    &.no-background :deep(.vue-draggable-handle),
+    &.no-background :deep(.grid-item-oper) {
+      display: none !important;
+    }
+    &.no-background :deep(.vue-grid-item.active),
+    &.no-background :deep(.item-set-layout.active) {
+      border-color: transparent !important;
+      box-shadow: none !important;
+    }
 
     &:not(.no-background) {
       border: 1px solid #ebebeb;
@@ -1943,6 +2112,15 @@ export default {
     }
   }
 
+  /* 固定模式:回到 flex 流里占位,挤压画布,无浮层阴影 */
+  .right-setting-container.is-pinned {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    height: 100%;
+    box-shadow: none;
+  }
   .right-setting-container {
     /* 浮在画布之上(不再占据布局宽度,画布占满) */
     position: absolute;
@@ -1955,6 +2133,29 @@ export default {
     display: flex;
     flex-direction: column;
     border-left: 1px solid #ededed;
+
+    .cfg-close-btn, .cfg-pin-btn {
+      position: absolute;
+      top: 8px;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 5px;
+      color: #86909c;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background-color .15s, color .15s;
+    }
+    .cfg-close-btn { right: 10px; }
+    .cfg-pin-btn { right: 38px; }
+    .cfg-pin-btn.is-on { color: #1f6aff; }
+    .cfg-close-btn:hover, .cfg-pin-btn:hover {
+      background: #f2f3f5;
+      color: #1d2129;
+    }
 
     .expand-icon {
       position: absolute;

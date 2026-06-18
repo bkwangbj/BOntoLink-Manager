@@ -54,8 +54,11 @@ if (!self.MonacoEnvironment) {
 const props = defineProps({
   classId: { type: String, default: '' },
   columns: { type: Array, default: () => [] },
-  filterParams: { type: Object, default: () => ({}) }
+  filterParams: { type: Object, default: () => ({}) },
+  // 宿主工具栏插槽选择器:设置后 maker 顶栏 Teleport 到该处(看板与子头工具栏合并成一行)
+  toolbarTarget: { type: String, default: '' }
 })
+const emit = defineEmits(['save-as'])
 
 const host = ref(null)
 let childApp = null
@@ -95,7 +98,9 @@ async function mount () {
         operPermission: ['*.*'],
         layoutTools: ['addItem', 'addTabLayout'],
         isBasicMode: false,
-        defaultThemeKey: themeKey
+        defaultThemeKey: themeKey,
+        embedToolbarTarget: props.toolbarTarget,
+        embedOnSaveAs: () => emit('save-as')
       })
     }
   }

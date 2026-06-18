@@ -1,5 +1,5 @@
 <template>
-  <div class="ixe-root">
+  <div class="ixe-root" ref="rootEl">
     <!-- 头部:对象名/类型(标题) + 搜索(含菜单面板) + 保存 -->
     <div class="ixe-head">
       <!-- 从某实例进入:固定标题(不可选择) -->
@@ -114,6 +114,8 @@
         </button>
       </div>
       <span class="bl-grow"></span>
+      <!-- maker 顶栏 Teleport 到这里(看板模式,靠右,与布局选择同行) -->
+      <div v-show="viewMode==='charts'" id="ixe-maker-tools" class="ixe-maker-tools"></div>
       <div class="ixe-layout-sel" @click.stop="layoutMenu=!layoutMenu" v-click-outside="()=>layoutMenu=false">
         <span class="bl-truncate">{{ designName }}</span>
         <span v-html="BL.icon('chevronDown', 11)"></span>
@@ -132,14 +134,17 @@
                v-html="iconText2('plus','另存为新设计…')"></div>
         </div>
       </div>
-      <span class="ixe-result-badge">{{ total.toLocaleString() }} 条结果</span>
+      <span v-if="viewMode!=='charts'" class="ixe-result-badge">{{ total.toLocaleString() }} 条结果</span>
+      <button v-if="viewMode==='charts'" class="ixe-full-btn" :title="dashFull ? '退出全屏' : '全屏'"
+              @click="toggleDashFull" v-html="BL.icon(dashFull ? 'minimize' : 'maximize', 15)"></button>
     </div>
 
     <!-- 主体:图表看板 + 右结果列 -->
     <div class="ixe-main" v-if="classId">
       <!-- 看板模式:内嵌数据可视化设计器(按数据特征自动出图,可增删改) -->
       <MakerEmbed v-if="viewMode==='charts'" class="ixe-dash" :class-id="classId"
-                  :columns="columns" :filter-params="filterParams" />
+                  :columns="columns" :filter-params="filterParams" toolbar-target="#ixe-maker-tools"
+                  @save-as="onSave" />
 
       <!-- 列表模式:列表探索(滚动加载 + 预览/多实例/比较) -->
       <InstanceListView v-else class="ixe-listview" :class-id="classId" :type-name="curType?.display_name"
@@ -225,7 +230,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch, onMounted, nextTick } from 'vue'
+import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { BL } from '@/lib/bl.js'
 import { instanceApi } from '@/api'
@@ -242,6 +247,17 @@ const props = defineProps({
 defineEmits(['open-instance'])
 
 const viewMode = ref('list')   // list(列表,默认) | charts(看板/可视化设计器)
+
+/* 看板全屏(整块实例探索区,工具栏一并全屏) */
+const rootEl = ref(null)
+const dashFull = ref(false)
+function toggleDashFull () {
+  const el = rootEl.value
+  if (!el) return
+  if (!document.fullscreenElement) el.requestFullscreen?.().catch(() => {})
+  else document.exitFullscreen?.()
+}
+function onFsChange () { dashFull.value = !!document.fullscreenElement }
 const searchPanelOpen = ref(false)
 const layoutMenu = ref(false)
 const designName = ref('默认探索布局')
@@ -563,7 +579,8 @@ const vClickOutside = {
 }
 
 watch(() => props.initialClassId, (v) => { if (v && v !== classId.value) selectType(v) })
-onMounted(() => { if (classId.value) loadMeta() })
+onMounted(() => { if (classId.value) loadMeta(); document.addEventListener('fullscreenchange', onFsChange) })
+onBeforeUnmount(() => { document.removeEventListener('fullscreenchange', onFsChange) })
 </script>
 
 <style scoped>
@@ -782,4 +799,41 @@ onMounted(() => { if (classId.value) loadMeta() })
 .ixe-code-col { width: 90px; }
 .ixe-pager { display: flex; align-items: center; gap: 12px; justify-content: center; padding: 8px; border-top: 1px solid var(--bl-divider); }
 .ixe-pick { flex: 1; padding: 80px 20px; }
+.ixe-full-btn { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; margin-left: 10px; border: 0; background: transparent; color: var(--bl-text-2); cursor: pointer; border-radius: 5px; }
+.ixe-full-btn:hover { background: var(--bl-bg-hover); color: var(--bl-primary); }
+</style>
+
+<!-- 非 scoped:maker 顶栏 Teleport 到看板子头后,子 app 的 scoped 样式失效,这里全局还原工具栏外观 -->
+<style>
+.ixe-maker-tools { display: flex; align-items: center; min-width: 0; margin-right: 12px; }
+.ixe-maker-tools .top-header { height: auto !important; min-height: 0 !important; padding: 0 !important; margin: 0 !important; border: 0 !important; background: transparent !important; box-shadow: none !important; }
+.ixe-maker-tools .top-header .left { display: none !important; }
+.ixe-maker-tools .top-header .right { display: flex; align-items: center; gap: 4px; }
+.ixe-maker-tools .text-button { display: inline-flex; align-items: center; gap: 3px; padding: 0 8px; height: 28px; font-size: 13px; line-height: 1; color: var(--bl-text-2, #4e5969); cursor: pointer; border-radius: 4px; white-space: nowrap; }
+.ixe-maker-tools .text-button:hover { background: var(--bl-bg-hover, #f2f3f5); color: var(--bl-primary, #1f6aff); }
+.ixe-maker-tools .text-button.is-on { background: rgba(31,106,255,.1); color: var(--bl-primary, #1f6aff); }
+.ixe-maker-tools .text-button svg { width: 14px; height: 14px; }
+.ixe-maker-tools .mode-toggle.is-design { color: var(--bl-primary, #1f6aff); }
+.ixe-maker-tools .fold-icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; height: 28px; padding: 0 9px; cursor: pointer; color: #4e5969; border-radius: 4px; white-space: nowrap; font-size: 13px; }
+.ixe-maker-tools .fold-icon > span { white-space: nowrap; }
+.ixe-maker-tools .fold-icon:hover { background: #f2f3f5; color: #1d2129; }
+.ixe-maker-tools .fold-icon.active { background: #e8f3ff; color: var(--bl-primary, #1f6aff); }
+.ixe-maker-tools .buttons { display: flex; align-items: center; gap: 6px; margin-left: 6px; }
+/* 画布缩放控件(teleport 到宿主后的兜底样式) */
+.ixe-maker-tools .canvas-zoom-ctrl { display: inline-flex; align-items: center; height: 26px; margin-left: 4px; flex-shrink: 0; }
+.ixe-maker-tools .canvas-zoom-ctrl .cz-btn { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; font-size: 16px; line-height: 1; color: #4e5969; cursor: pointer; border-radius: 4px; user-select: none; }
+.ixe-maker-tools .canvas-zoom-ctrl .cz-btn:hover { background: #f2f3f5; color: #1d2129; }
+.ixe-maker-tools .canvas-zoom-ctrl .cz-val { min-width: 42px; text-align: center; font-size: 12px; color: #4e5969; cursor: pointer; user-select: none; }
+.ixe-maker-tools .canvas-zoom-ctrl .cz-val:hover { color: var(--bl-primary, #1f6aff); }
+.ixe-maker-tools .canvas-zoom-ctrl .cz-fit { margin-left: 4px; padding: 0 7px; height: 22px; line-height: 22px; font-size: 12px; color: #4e5969; cursor: pointer; border-radius: 4px; user-select: none; }
+.ixe-maker-tools .canvas-zoom-ctrl .cz-fit:hover { background: #f2f3f5; color: #1d2129; }
+.ixe-maker-tools .more-dropdown, .ixe-maker-tools .add-area-dropdown, .ixe-maker-tools .save-dropdown { margin: 0; }
+.ixe-maker-tools .top-header .right > * + * { margin-left: 2px; }
+/* 分隔竖线 / 自动保存开关 */
+.ixe-maker-tools .tb-divider { width: 1px; height: 18px; background: var(--bl-divider, #e5e6eb); margin: 0 6px; flex-shrink: 0; }
+.ixe-maker-tools .am-switch { margin: 0 6px; flex-shrink: 0; }
+/* 模式分段(预览/设计):传送后 scoped 失效,这里全局还原 */
+.ixe-maker-tools .mode-seg { display: inline-flex; align-items: center; height: 28px; margin-left: 8px; border: 1px solid var(--bl-border, #e5e6eb); border-radius: 6px; overflow: hidden; }
+.ixe-maker-tools .mode-seg-item { display: inline-flex; align-items: center; height: 100%; padding: 0 12px; font-size: 13px; color: var(--bl-text-2, #4e5969); cursor: pointer; user-select: none; }
+.ixe-maker-tools .mode-seg-item.is-on { background: var(--bl-primary, #1f6aff); color: #fff; }
 </style>

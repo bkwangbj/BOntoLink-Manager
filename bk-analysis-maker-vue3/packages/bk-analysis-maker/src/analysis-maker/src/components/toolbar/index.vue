@@ -42,6 +42,7 @@
       </div>
 
       <div
+        v-if="!hideGrid"
         class="grid-icon text-button"
         @click="openGridSetting"
       >
@@ -206,6 +207,10 @@ export default {
     layoutTools: {
       type: Array,
       default: () => []
+    },
+    hideGrid: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['clearConfig', 'toggleEvent', 'showLeftPanel', 'showGridSetting', 'updateGridSetting'],

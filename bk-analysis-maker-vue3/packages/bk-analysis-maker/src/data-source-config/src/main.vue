@@ -26,6 +26,7 @@
         :set-mode="saveAble"
         @update:sorts="onSortsChange"
       />
+      <template v-if="showRawSource">
       <div class="data-source-title">
         ① 设置数据源
       </div>
@@ -188,9 +189,10 @@
           <i-ri-eye-fill class="am-btn-icon" />提取数据
         </el-button>
       </div>
+      </template>
     </div>
     <div
-      v-if="dataMappingVisible"
+      v-if="dataMappingVisible && showRawSource"
       class="right-container"
       :style="{flex: '0 0 245px', width: '245px'}"
     >
@@ -287,7 +289,9 @@ export default {
       metrics: [],
       grouping: { field: '', mode: 'include', includeOther: true, selected: [] },
       groupValues: [], // 分组取值列表(P5 由数据源返回填充)
-      sorts: []
+      sorts: [],
+      // 看板场景隐藏 maker 原生「① 设置数据源 / 数据映射」配置(数据由预置 chart-data 提供)
+      showRawSource: false
     }
   },
   computed: {
@@ -310,8 +314,10 @@ export default {
     showSelectData () {
       return this.dataSourceType === 'tjb' || this.dataSourceType === 'watf'
     },
-    // 指标可选字段:取图表数据字段(finalItems),允许 allow-create 自定义
+    // 指标/分组/排序可选字段:优先用对象类型属性(宿主注入 dataSourceConfig.fieldOptions),回退图表数据字段
     metricFieldOptions () {
+      const injected = this.configs && this.configs.dataSourceConfig && this.configs.dataSourceConfig.fieldOptions
+      if (Array.isArray(injected) && injected.length) return injected
       const seen = new Set()
       const opts = []
       ;(this.finalItems || []).forEach(c => {
@@ -754,7 +760,11 @@ export default {
         interfaceTempParamsVisible: this.interfaceTempParamsVisible,
         paramHandler: this.paramHandler,
         paramHandlerVisible: this.paramHandlerVisible,
-        tjbConfig: this.tjbConfig
+        tjbConfig: this.tjbConfig,
+        // 指标/分组筛选/排序(本面板新增):随「应用/保存」一并写回,避免被旧配置覆盖
+        metrics: utils.deepClone(this.metrics),
+        grouping: utils.deepClone(this.grouping),
+        sorts: utils.deepClone(this.sorts)
       }
       if (this.dataMapping) {
         res.dataMapping = this.dataMapping
@@ -794,11 +804,13 @@ export default {
           this.metrics = configs.dataSourceConfig.metrics ? utils.deepClone(configs.dataSourceConfig.metrics) : []
           this.grouping = configs.dataSourceConfig.grouping ? utils.deepClone(configs.dataSourceConfig.grouping) : { field: '', mode: 'include', includeOther: true, selected: [] }
           this.sorts = configs.dataSourceConfig.sorts ? utils.deepClone(configs.dataSourceConfig.sorts) : []
+          this.$nextTick(() => this.loadGroupValues())
         } else {
           this.clearData()
           this.metrics = []
           this.grouping = { field: '', mode: 'include', includeOther: true, selected: [] }
           this.sorts = []
+          this.groupValues = []
         }
         this.finalItems = (configs && configs.items) ? utils.deepClone(configs.items) : []
       } else {
@@ -808,23 +820,52 @@ export default {
         this.sorts = []
       }
     },
+    // 把当前 指标/分组/排序 广播给对应图表(按 chartId),图表同步后重新取数(实时生效)
+    applyToChart () {
+      emitter.emit('am-datasource-apply', {
+        chartId: this.configs && this.configs.chartId,
+        metrics: utils.deepClone(this.metrics),
+        grouping: utils.deepClone(this.grouping),
+        sorts: utils.deepClone(this.sorts)
+      })
+    },
     // 指标变化:写回图表配置 configs.dataSourceConfig.metrics(随页面保存持久化)
     onMetricsChange (list) {
       this.metrics = list
       if (!this.configs.dataSourceConfig) this.configs.dataSourceConfig = {}
       this.configs.dataSourceConfig.metrics = utils.deepClone(list)
+      this.applyToChart()
     },
-    // 分组与筛选变化:写回 configs.dataSourceConfig.grouping
+    // 分组与筛选变化:写回 configs.dataSourceConfig.grouping;维度变化则重新拉取分组取值
     onGroupingChange (g) {
+      const fieldChanged = g.field !== (this.grouping && this.grouping.field)
       this.grouping = g
       if (!this.configs.dataSourceConfig) this.configs.dataSourceConfig = {}
       this.configs.dataSourceConfig.grouping = utils.deepClone(g)
+      if (fieldChanged) this.loadGroupValues()
+      this.applyToChart()
+    },
+    // 用图表接口按当前分组维度拉取取值列表 [{name,value}] → 填充分组值列表(勾选/数值/进度条)
+    loadGroupValues () {
+      const ds = this.configs && this.configs.dataSourceConfig
+      const field = this.grouping && this.grouping.field
+      const reqGet = componentConfigs.request && componentConfigs.request.get
+      if (!ds || !ds.interfacePath || !field || !reqGet) { this.groupValues = []; return }
+      Promise.resolve(reqGet(ds.interfacePath, { grouping: JSON.stringify({ field }), limit: 50 }, true))
+        .then(res => {
+          const data = (res && (res.data || res)) || []
+          this.groupValues = Array.isArray(data)
+            ? data.map(d => ({ name: d.name != null ? d.name : (d.x != null ? d.x : d.key), value: d.value != null ? d.value : (d.y != null ? d.y : 0) }))
+            : []
+        })
+        .catch(() => { this.groupValues = [] })
     },
     // 排序条件变化:写回 configs.dataSourceConfig.sorts
     onSortsChange (list) {
       this.sorts = list
       if (!this.configs.dataSourceConfig) this.configs.dataSourceConfig = {}
       this.configs.dataSourceConfig.sorts = utils.deepClone(list)
+      this.applyToChart()
     },
     openNext (type) {
       if (type === '1') {
@@ -914,6 +955,28 @@ export default {
     position: relative;
     display: flex;
     flex-direction: column;
+    padding: 12px 14px;
+    box-sizing: border-box;
+
+    /* 指标/分组/排序里的下拉:白底 + 边框(覆盖 maker 灰底/无边框) */
+    :deep(.el-select__wrapper),
+    :deep(.el-input__wrapper) {
+      background-color: #fff !important;
+      box-shadow: 0 0 0 1px #dcdfe6 inset !important;
+      border-radius: 4px;
+    }
+    :deep(.el-select__wrapper:hover),
+    :deep(.el-input__wrapper:hover) {
+      box-shadow: 0 0 0 1px #c0c4cc inset !important;
+    }
+    :deep(.el-select__wrapper.is-focused),
+    :deep(.el-input.is-focus .el-input__wrapper) {
+      box-shadow: 0 0 0 1px #1f6aff inset !important;
+    }
+    :deep(.el-select__wrapper.is-disabled),
+    :deep(.el-input.is-disabled .el-input__wrapper) {
+      background-color: #f5f7fa !important;
+    }
 
     .data-map {
       position: absolute;

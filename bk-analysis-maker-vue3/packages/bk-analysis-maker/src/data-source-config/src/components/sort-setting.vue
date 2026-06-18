@@ -152,9 +152,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.ss-block { margin: 0 5px 14px 0; }
+.ss-block { margin: 0 0 12px 0; }
 .ss-hd {
-  display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;
 }
 .ss-title { font-size: 13px; font-weight: 600; color: #1d2129; }
 .ss-add {
@@ -163,10 +163,10 @@ export default {
   display: inline-flex; align-items: center; justify-content: center;
 }
 .ss-add:hover { background: #4080ff; }
-.ss-list { display: flex; flex-direction: column; gap: 4px; }
+.ss-list { display: flex; flex-direction: column; gap: 3px; }
 .ss-row {
-  display: flex; align-items: center; gap: 8px;
-  padding: 6px 8px; border-radius: 6px; background: #f7f8fa;
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 6px; border-radius: 6px; background: #f7f8fa;
   transition: background-color .12s;
 }
 .ss-row:hover { background: #eef3ff; }

@@ -41,7 +41,7 @@
             class="ms-field"
             placeholder="请选择"
             :disabled="!setMode"
-            @change="emitChange"
+            @change="onFieldChange(row)"
           >
             <el-option
               v-for="o in fieldOptions"
@@ -57,7 +57,7 @@
           >
             <el-checkbox
               :model-value="row.aggs.includes(a.k)"
-              :disabled="!setMode"
+              :disabled="!setMode || (a.numericOnly && !isNumericField(row.field))"
               @change="(v) => toggleAgg(row, a.k, v)"
             >
               {{ a.label }}
@@ -137,6 +137,20 @@ export default {
       else if (!checked && i >= 0) row.aggs.splice(i, 1)
       this.emitChange()
     },
+    // 属性是否为数值型(决定能否用 总和/平均/最值;否则只能计数)
+    isNumericField (field) {
+      const o = (this.fieldOptions || []).find(x => x.value === field)
+      const dt = (o && o.dataType ? String(o.dataType) : '').toLowerCase()
+      return /int|decimal|number|integer|long|float|double|bigint|year|年/.test(dt)
+    },
+    // 切换属性:非数值属性只保留「计数」,清掉总和/平均/最值
+    onFieldChange (row) {
+      if (!this.isNumericField(row.field)) {
+        row.aggs = (row.aggs || []).filter(k => k === 'count')
+        if (!row.aggs.length) row.aggs = ['count']
+      }
+      this.emitChange()
+    },
     stripKeys (rows) {
       return (rows || []).map(r => ({ field: r.field, aggs: r.aggs }))
     },
@@ -148,9 +162,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.ms-block { margin: 0 5px 14px 0; }
+.ms-block { margin: 0 0 12px 0; }
 .ms-hd {
-  display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;
 }
 .ms-title { font-size: 13px; font-weight: 600; color: #1d2129; }
 .ms-add {
@@ -159,10 +173,10 @@ export default {
   display: inline-flex; align-items: center; justify-content: center;
 }
 .ms-add:hover { background: #4080ff; }
-.ms-list { display: flex; flex-direction: column; gap: 4px; }
+.ms-list { display: flex; flex-direction: column; gap: 3px; }
 .ms-row {
-  display: flex; align-items: center; gap: 8px;
-  padding: 6px 8px; border-radius: 6px; background: #f7f8fa;
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 6px; border-radius: 6px; background: #f7f8fa;
   transition: background-color .12s;
 }
 .ms-row:hover { background: #eef3ff; }

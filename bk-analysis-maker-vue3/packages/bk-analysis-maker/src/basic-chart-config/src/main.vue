@@ -258,6 +258,11 @@ export default {
     tjbURL: {
       type: String,
       default: ''
+    },
+    // 初始激活的配置 tab(base/data/...);切换左侧图表时由宿主透传当前 tab,保持不跳回基础
+    initTab: {
+      type: String,
+      default: 'base'
     }
   },
   emits: ['configOptionInit', 'buildChartSeriesData', 'changeBranchType', 'saveChartCfg', 'saveChartConfig', 'changeTab'],
@@ -268,7 +273,7 @@ export default {
       // eventConfig: [],
       finalConfig: {},
       // addItems: [],
-      currentTab: 'base',
+      currentTab: this.initTab || 'base',
       finalFormItems: [],
       isFresh: true,
       explainConfigRef: null,
@@ -779,14 +784,17 @@ export default {
     margin-bottom: 0;
     background: #f7f7f7;
     border-bottom: none;
+    /* 右侧留位,避免最右页签与上层「固定/关闭」图标按钮重合 */
+    padding-right: 72px;
 
     .el-tabs__nav {
       display: flex;
-      width: 100%;
+      width: auto;
       border: none;
       // border-top: 1px solid #e4e7ed;
       .el-tabs__item {
-        flex: 1;
+        flex: 0 0 auto;
+        padding: 0 16px;
         font-size: 12px;
         color: #a3a3a3;
         text-align: center;

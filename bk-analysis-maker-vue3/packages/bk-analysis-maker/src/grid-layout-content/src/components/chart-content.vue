@@ -352,6 +352,11 @@ export default {
     currentConfigId (v) {
       this.$emit('updateCurrentConfigId', v)
     },
+    // 设计/预览模式切换时重置选中态,避免上个模式残留的 focusFlag 让切回后点不开配置面板
+    setMode () {
+      this.focusFlag = false
+      this.currentConfigId = ''
+    },
     focusFlag () {
       if (!this.isModal && !this.isBasicMode && this.chartList.length > 0 && this.chartList[0].type === 'BKCodeChart') {
         this.isPreview = !this.focusFlag
@@ -465,7 +470,8 @@ export default {
       }
     },
     clickChart () {
-      if (!this.isModal && !this.focusFlag) {
+      // 仅设计模式(setMode)可点击弹出配置面板;预览模式点击不触发,避免污染 focusFlag 导致切回设计后点不开
+      if (!this.isModal && !this.focusFlag && this.setMode) {
         emitter.emit('chartClick', { configs: this.chartList.length > 0 ? { ...utils.deepClone(this.configs), ...utils.deepClone(this.chartList[0]), id: this.configs.id } : this.configs, expand: this.chartList.length > 0 })
       }
     },
