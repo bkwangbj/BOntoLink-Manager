@@ -162,7 +162,7 @@
         </div>
         <div style="display: flex;flex: 1; overflow: hidden; position: relative;">
           <ToolbarPannel
-            v-if="showBodyPannel && !isModal"
+            v-if="showBodyPannel && !isModal && designMode"
             ref="pannel"
             v-bind="{...$props}"
             :custom-chart="customChart"

@@ -30,7 +30,7 @@ import 'uno.css'
 import makerRequest from '@/lib/maker-request'
 import { instanceApi } from '@/api'
 import { chartList } from './maker-presets'
-import { buildPageConfig } from './maker-instance'
+import { buildPageConfig, buildEmbedDefaultDataSource } from './maker-instance'
 import MakerChart from './maker-chart.vue'
 
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
@@ -89,6 +89,10 @@ async function mount () {
   let pageConfig = null
   try { pageConfig = props.classId ? buildPageConfig(props.classId, props.columns, props.filterParams, linkGroups, isDark) : null }
   catch (e) { console.error('[MakerEmbed] buildPageConfig failed', e); pageConfig = null }
+  // 新增图表默认数据源工厂(绑定实例 chart-data,默认第一个维度);类型不支持时返回 null
+  let embedDefaultDataSource = null
+  try { embedDefaultDataSource = props.classId ? buildEmbedDefaultDataSource(props.classId, props.columns, props.filterParams, isDark) : null }
+  catch (e) { console.error('[MakerEmbed] buildEmbedDefaultDataSource failed', e); embedDefaultDataSource = null }
   const Root = {
     render () {
       const Maker = resolveComponent('AnalysisMaker')
@@ -117,7 +121,7 @@ async function mount () {
   childApp.use(ContextMenu)
   childApp.use(TColorPicker)
   childApp.use(Suite, { request: makerRequest })
-  childApp.use(AnalysisMaker, { request: makerRequest })
+  childApp.use(AnalysisMaker, { request: makerRequest, embedDefaultDataSource })
   try { childApp.mount(host.value) } catch (e) { console.error('[MakerEmbed] mount failed', e) }
 }
 
@@ -209,11 +213,37 @@ onBeforeUnmount(() => { destroy(); if (themeObserver) themeObserver.disconnect()
 :root[data-theme="dark"] .maker-host .el-tabs__content [class*="title"]:not([class*="active"]),
 :root[data-theme="dark"] .maker-host .el-tabs__content [class*="name"],
 :root[data-theme="dark"] .maker-host .el-tabs__content span:not([class*="active"]):not([class*="selected"]) { color: #C9D6EC !important; }
+/* 分区标题(指标设置/分组与筛选/排序条件)→ 纯白,与正文(#C9D6EC)拉开层次
+   注:ms-title/ss-title 是 <span>,被通用 `.el-tabs__content span:not():not()` (0,6,1) 命中;
+   这里重复类名抬到 (0,7,0) 稳压,gf-title 是 <div> 一并覆盖 */
+:root[data-theme="dark"] .maker-host .el-tabs__content .ms-title.ms-title:not([class*="active"]),
+:root[data-theme="dark"] .maker-host .el-tabs__content .gf-title.gf-title:not([class*="active"]),
+:root[data-theme="dark"] .maker-host .el-tabs__content .ss-title.ss-title:not([class*="active"]) { color: #fff !important; }
 /* 开关(el-switch / t-switch):关闭态深底蓝边,开启态蓝 */
 :root[data-theme="dark"] .maker-host .el-switch { --el-switch-off-color: #0E224C !important; --el-switch-border-color: #1E3A6E !important; --el-switch-on-color: #2E74FF !important; }
 :root[data-theme="dark"] .maker-host .el-switch__core { border: 1px solid #0c41a1 !important; }
 :root[data-theme="dark"] .maker-host .t-switch:not(.t-is-checked) { background-color: #0E224C !important; border-color: #1E3A6E !important; }
 :root[data-theme="dark"] .maker-host .t-switch.t-is-checked { background-color: #2E74FF !important; }
+/* 复选框(分组筛选项 等):未选白底 → 深底蓝边,hover 蓝边,选中蓝底白勾 */
+:root[data-theme="dark"] .maker-host .el-checkbox__inner { background-color: #0E224C !important; border-color: #1E3A6E !important; }
+:root[data-theme="dark"] .maker-host .el-checkbox:hover .el-checkbox__inner,
+:root[data-theme="dark"] .maker-host .el-checkbox__input:hover .el-checkbox__inner { border-color: #2E74FF !important; }
+:root[data-theme="dark"] .maker-host .el-checkbox__input.is-checked .el-checkbox__inner,
+:root[data-theme="dark"] .maker-host .el-checkbox__input.is-indeterminate .el-checkbox__inner { background-color: #2E74FF !important; border-color: #2E74FF !important; }
+:root[data-theme="dark"] .maker-host .el-checkbox__label { color: #C9D6EC !important; }
+/* 指标行 / 排序行 / 分组项(浅底 #f7f8fa + 浅蓝 hover + 浅粉删除)→ 深色分层 */
+:root[data-theme="dark"] .maker-host .ms-row,
+:root[data-theme="dark"] .maker-host .ss-row { background: #102A55 !important; }
+:root[data-theme="dark"] .maker-host .ms-row:hover,
+:root[data-theme="dark"] .maker-host .ss-row:hover { background: #143063 !important; }
+:root[data-theme="dark"] .maker-host .gf-item { border-bottom-color: #1E3A6E !important; }
+:root[data-theme="dark"] .maker-host .gf-item:hover { background: #102A55 !important; }
+:root[data-theme="dark"] .maker-host .gf-item.is-on { background: #143063 !important; }
+/* 删除按钮(× 默认 #86909c,hover 浅粉底红字)→ 暗红半透明 + 浅红字 */
+:root[data-theme="dark"] .maker-host .ms-del,
+:root[data-theme="dark"] .maker-host .ss-del { color: #8A97AD !important; }
+:root[data-theme="dark"] .maker-host .ms-del:hover,
+:root[data-theme="dark"] .maker-host .ss-del:hover { background: rgba(245,63,63,.18) !important; color: #F76560 !important; }
 /* 数字输入框上下调节按钮(el-input-number spinner)深色 + hover */
 :root[data-theme="dark"] .maker-host .el-input-number__increase,
 :root[data-theme="dark"] .maker-host .el-input-number__decrease { background-color: #0E224C !important; color: #C9D6EC !important; border-color: #1E3A6E !important; }
@@ -283,13 +313,22 @@ onBeforeUnmount(() => { destroy(); if (themeObserver) themeObserver.disconnect()
 :root[data-theme="dark"] .el-select-dropdown__item.is-hovering,
 :root[data-theme="dark"] .el-select-dropdown__item:hover { background-color: #0E224C !important; }
 :root[data-theme="dark"] .el-select__popper.el-popper .el-popper__arrow::before { background: #0A1A3C !important; border-color: #1E3A6E !important; }
+/* el-dropdown 菜单(添加区域/更多/保存 等,teleport 到 body)深色 */
+:root[data-theme="dark"] .el-dropdown__popper.el-popper,
+:root[data-theme="dark"] .el-dropdown-menu { background: #0A1A3C !important; border-color: #1E3A6E !important; }
+:root[data-theme="dark"] .el-dropdown-menu__item { color: #C9D6EC !important; }
+:root[data-theme="dark"] .el-dropdown-menu__item:not(.is-disabled):hover,
+:root[data-theme="dark"] .el-dropdown-menu__item:not(.is-disabled):focus { background-color: #0E224C !important; color: #fff !important; }
+:root[data-theme="dark"] .el-dropdown-menu__item.is-disabled { color: #5A6B8C !important; }
+:root[data-theme="dark"] .el-dropdown-menu__item--divided { border-top-color: #1E3A6E !important; }
+:root[data-theme="dark"] .el-dropdown__popper.el-popper .el-popper__arrow::before { background: #0A1A3C !important; border-color: #1E3A6E !important; }
 /* —— 共性批量:配置面板容器统一深底 —— */
 :root[data-theme="dark"] .maker-host .right-setting-container,
 :root[data-theme="dark"] .maker-host .chart-cfg-wrap,
 :root[data-theme="dark"] .maker-host .page-setting-wrapper { background-color: #0A1A3C !important; color: #C9D6EC !important; }
 /* —— 共性批量:面板内「非控件」布局块背景一律透明露深底(一次盖掉各种 #f7f7f7/#ededed/#fff 白底);控件因类名带 input/select/radio/picker… 被排除,保留各自深色 —— */
-:root[data-theme="dark"] .maker-host .right-setting-container div:not([class*="input"]):not([class*="select"]):not([class*="radio"]):not([class*="button"]):not([class*="picker"]):not([class*="switch"]):not([class*="segment"]):not([class*="checkbox"]):not([class*="slider"]):not([class*="color"]):not([class*="active"]):not([class*="selected"]):not([class*="inner-bg"]):not([class*="padding-box"]):not([class*="el-tabs__header"]):not([class*="el-tabs__nav"]):not([class*="sidebar"]),
-:root[data-theme="dark"] .maker-host .chart-cfg-wrap div:not([class*="input"]):not([class*="select"]):not([class*="radio"]):not([class*="button"]):not([class*="picker"]):not([class*="switch"]):not([class*="segment"]):not([class*="checkbox"]):not([class*="slider"]):not([class*="color"]):not([class*="active"]):not([class*="selected"]):not([class*="inner-bg"]):not([class*="padding-box"]):not([class*="el-tabs__header"]):not([class*="el-tabs__nav"]):not([class*="sidebar"]) { background-color: transparent !important; }
+:root[data-theme="dark"] .maker-host .right-setting-container div:not([class*="input"]):not([class*="select"]):not([class*="radio"]):not([class*="button"]):not([class*="picker"]):not([class*="switch"]):not([class*="segment"]):not([class*="checkbox"]):not([class*="slider"]):not([class*="color"]):not([class*="active"]):not([class*="selected"]):not([class*="inner-bg"]):not([class*="padding-box"]):not([class*="el-tabs__header"]):not([class*="el-tabs__nav"]):not([class*="sidebar"]):not([class*="-row"]):not([class*="gf-item"]),
+:root[data-theme="dark"] .maker-host .chart-cfg-wrap div:not([class*="input"]):not([class*="select"]):not([class*="radio"]):not([class*="button"]):not([class*="picker"]):not([class*="switch"]):not([class*="segment"]):not([class*="checkbox"]):not([class*="slider"]):not([class*="color"]):not([class*="active"]):not([class*="selected"]):not([class*="inner-bg"]):not([class*="padding-box"]):not([class*="el-tabs__header"]):not([class*="el-tabs__nav"]):not([class*="sidebar"]):not([class*="-row"]):not([class*="gf-item"]) { background-color: transparent !important; }
 /* 功能区块(边距框/内边距框等)→ 比页面底稍亮一档,形成层次差异 */
 :root[data-theme="dark"] .maker-host .padding-box-wrapper,
 :root[data-theme="dark"] .maker-host .plane-inner-bg,
@@ -410,6 +449,12 @@ onBeforeUnmount(() => { destroy(); if (themeObserver) themeObserver.disconnect()
 :root[data-theme="dark"] .maker-host .right-setting-container .el-segmented__item { background: transparent !important; }
 /* 颜色选择器(背景颜色/边框颜色 色块) */
 :root[data-theme="dark"] .maker-host .right-setting-container .el-color-picker__trigger { background: #0E224C !important; border-color: #1E3A6E !important; }
+/* 配置面板右上角 关闭/固定 按钮:默认 #86909c,hover 浅底深字 → 深色 hover */
+:root[data-theme="dark"] .maker-host .right-setting-container .cfg-close-btn,
+:root[data-theme="dark"] .maker-host .right-setting-container .cfg-pin-btn { color: #C9D6EC !important; }
+:root[data-theme="dark"] .maker-host .right-setting-container .cfg-close-btn:hover,
+:root[data-theme="dark"] .maker-host .right-setting-container .cfg-pin-btn:hover { background: rgba(255,255,255,.10) !important; color: #fff !important; }
+:root[data-theme="dark"] .maker-host .right-setting-container .cfg-pin-btn.is-on { color: #4D8BFF !important; }
 /* 画布工作区底色(左侧浅色工作台 → 深色) */
 :root[data-theme="dark"] .maker-host .working-container {background: url("./images/dark-bg.png") repeat !important; }
 :root[data-theme="dark"] .maker-host .working-container.no-background { background: transparent !important; }

@@ -13699,7 +13699,9 @@
   const componentConfigs = {
     getStore: () => { return '' },
     request: null,
-    emitter: null
+    emitter: null,
+    // 宿主可注入:新增图表时回调,返回默认数据源(绑定宿主真实数据)。(chartConfig) => { dataSourceConfig, items, autoSeries } | null
+    embedDefaultDataSource: null
   };
 
   const typeChartData = {
@@ -14319,7 +14321,20 @@
   async function getDefaultConfig (tab, theme) {
     const data = getDefaultData(tab);
     const { configOption, chartTheme, explainConfig } = await getDefaultOption(tab, data, theme);
-    return { dataSourceConfig: { type: 'static', data }, configOption, chartTheme, explainConfig, hookId: tab.type.replace('BK', '') + efficientSuite.utils.createDate().format('YYYYMMDDHHmmss') }
+    const base = { dataSourceConfig: { type: 'static', data }, configOption, chartTheme, explainConfig, hookId: tab.type.replace('BK', '') + efficientSuite.utils.createDate().format('YYYYMMDDHHmmss') };
+    // 宿主注入:新增图表默认绑定真实数据源(替代静态默认),(chartConfig) => { dataSourceConfig, items, autoSeries } | null
+    try {
+      const factory = componentConfigs.embedDefaultDataSource;
+      if (factory) {
+        const patch = factory(tab);
+        if (patch && patch.dataSourceConfig) {
+          base.dataSourceConfig = patch.dataSourceConfig;
+          if (patch.items) base.items = patch.items;
+          if (patch.autoSeries && base.configOption) base.configOption.autoSeries = true;
+        }
+      }
+    } catch (e) { console.warn('[maker] embedDefaultDataSource failed', e); }
+    return base
   }
   // 位置组件转换函数
   function getPositionStyle (position) {
@@ -36171,7 +36186,7 @@
               ]))
             : vue.createCommentVNode("", true),
           vue.createElementVNode("div", _hoisted_10$c, [
-            ($data.showBodyPannel && !$props.isModal)
+            ($data.showBodyPannel && !$props.isModal && $data.designMode)
               ? (vue.openBlock(), vue.createBlock(_component_ToolbarPannel, vue.mergeProps({
                   key: 0,
                   ref: "pannel"
@@ -36401,7 +36416,7 @@
         : vue.createCommentVNode("", true)
     ], 2))
   }
-  const AnalysisMaker = /*#__PURE__*/_export_sfc(_sfc_main$1s, [['render',_sfc_render$1r],['__scopeId',"data-v-3936ee1c"]]);
+  const AnalysisMaker = /*#__PURE__*/_export_sfc(_sfc_main$1s, [['render',_sfc_render$1r],['__scopeId',"data-v-e15190bf"]]);
 
   AnalysisMaker.install = function (Vue) {
     Vue.component(AnalysisMaker.name, AnalysisMaker);
@@ -93569,6 +93584,7 @@ onDestroy(function () {
     }
     componentConfigs.request = opts.request;
     componentConfigs.emitter = opts.emitter;
+    componentConfigs.embedDefaultDataSource = opts.embedDefaultDataSource || null;
     app.config.globalProperties.$stage = stage;
   };
 

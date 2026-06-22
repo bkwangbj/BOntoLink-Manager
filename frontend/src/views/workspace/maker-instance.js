@@ -134,3 +134,36 @@ export function buildPageConfig (classId, columns, baseQuery = {}, linkGroups = 
   })
   return { layout, decorateLayout: [], colNum: 12, rowHeight: 30, autoRowHeight: 30, maxRows: Infinity, varConfig: [], margin: [10, 10] }
 }
+
+// 可绑实例数据的图表类型(数据形态 = 分组 + 计数,{name,value});其它(地图/仪表盘/排名/代码…)跳过
+const EMBED_BINDABLE = ['BKBarChart', 'BKPieChart']
+
+/**
+ * 生成「新增图表默认数据源」工厂,供 maker 在新增图表时回调(embedDefaultDataSource 钩子)。
+ * 默认按第一个可用分类维度 groupBy+count 绑定实例 chart-data;用户可在数据源面板改维度。
+ * 返回的工厂:(chartConfig) => { dataSourceConfig, items, autoSeries } | null(类型不支持时 null)
+ */
+export function buildEmbedDefaultDataSource (classId, columns, filterParams = {}, isDark = false) {
+  const dims = pickDims(columns)
+  const dim = dims.length ? dims[0] : (columns || [])[0]
+  if (!classId || !dim || !dim.field) return null
+  const fieldOptions = (columns || []).map(o => ({ label: o.label || o.field, value: o.field, dataType: o.dataType })).filter(o => o.value)
+  return (chartConfig) => {
+    if (!chartConfig || !EMBED_BINDABLE.includes(chartConfig.type)) return null
+    const ds = dataSource(classId, dim.field, filterParams)
+    ds.fieldOptions = fieldOptions
+    if (chartConfig.type === 'BKPieChart') {
+      return { dataSourceConfig: ds, items: [{ label: 'name', field: 'name', value: 'name' }, { label: 'value', field: 'value', value: 'value' }] }
+    }
+    // 柱/条/线:数据 name/value 映射到 x/y,开启 autoSeries(与自动图表一致)
+    return {
+      dataSourceConfig: ds,
+      items: [
+        { label: '名称', field: 'name', value: 'x' },
+        { label: '数量', field: 'value', value: 'y' },
+        { label: '颜色映射', field: 'colorField', value: 'colorField' }
+      ],
+      autoSeries: true
+    }
+  }
+}

@@ -84,6 +84,7 @@ const install = function (app, opts = {}) {
   }
   componentConfigs.request = opts.request
   componentConfigs.emitter = opts.emitter
+  componentConfigs.embedDefaultDataSource = opts.embedDefaultDataSource || null
   app.config.globalProperties.$stage = stage
 }
 

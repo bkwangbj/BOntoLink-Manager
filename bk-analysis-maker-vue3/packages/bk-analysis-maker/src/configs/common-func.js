@@ -622,7 +622,20 @@ function getDefaultData (tab) {
 async function getDefaultConfig (tab, theme) {
   const data = getDefaultData(tab)
   const { configOption, chartTheme, explainConfig } = await getDefaultOption(tab, data, theme)
-  return { dataSourceConfig: { type: 'static', data }, configOption, chartTheme, explainConfig, hookId: tab.type.replace('BK', '') + utils.createDate().format('YYYYMMDDHHmmss') }
+  const base = { dataSourceConfig: { type: 'static', data }, configOption, chartTheme, explainConfig, hookId: tab.type.replace('BK', '') + utils.createDate().format('YYYYMMDDHHmmss') }
+  // 宿主注入:新增图表默认绑定真实数据源(替代静态默认),(chartConfig) => { dataSourceConfig, items, autoSeries } | null
+  try {
+    const factory = componentConfigs.embedDefaultDataSource
+    if (factory) {
+      const patch = factory(tab)
+      if (patch && patch.dataSourceConfig) {
+        base.dataSourceConfig = patch.dataSourceConfig
+        if (patch.items) base.items = patch.items
+        if (patch.autoSeries && base.configOption) base.configOption.autoSeries = true
+      }
+    }
+  } catch (e) { console.warn('[maker] embedDefaultDataSource failed', e) }
+  return base
 }
 // 位置组件转换函数
 function getPositionStyle (position) {

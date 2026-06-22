@@ -814,24 +814,46 @@ onBeforeUnmount(() => { document.removeEventListener('fullscreenchange', onFsCha
 .ixe-maker-tools .text-button.is-on { background: rgba(31,106,255,.1); color: var(--bl-primary, #1f6aff); }
 .ixe-maker-tools .text-button svg { width: 14px; height: 14px; }
 .ixe-maker-tools .mode-toggle.is-design { color: var(--bl-primary, #1f6aff); }
-.ixe-maker-tools .fold-icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; height: 28px; padding: 0 9px; cursor: pointer; color: #4e5969; border-radius: 4px; white-space: nowrap; font-size: 13px; }
+.ixe-maker-tools .fold-icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; height: 28px; padding: 0 9px; cursor: pointer; color: var(--bl-text-2, #4e5969); border-radius: 4px; white-space: nowrap; font-size: 13px; }
 .ixe-maker-tools .fold-icon > span { white-space: nowrap; }
-.ixe-maker-tools .fold-icon:hover { background: #f2f3f5; color: #1d2129; }
-.ixe-maker-tools .fold-icon.active { background: #e8f3ff; color: var(--bl-primary, #1f6aff); }
+.ixe-maker-tools .fold-icon:hover { background: var(--bl-bg-hover, #f2f3f5); color: var(--bl-text-1, #1d2129); }
+.ixe-maker-tools .fold-icon.active { background: var(--bl-primary-soft, #e8f3ff); color: var(--bl-primary, #1f6aff); }
 .ixe-maker-tools .buttons { display: flex; align-items: center; gap: 6px; margin-left: 6px; }
 /* 画布缩放控件(teleport 到宿主后的兜底样式) */
 .ixe-maker-tools .canvas-zoom-ctrl { display: inline-flex; align-items: center; height: 26px; margin-left: 4px; flex-shrink: 0; }
-.ixe-maker-tools .canvas-zoom-ctrl .cz-btn { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; font-size: 16px; line-height: 1; color: #4e5969; cursor: pointer; border-radius: 4px; user-select: none; }
-.ixe-maker-tools .canvas-zoom-ctrl .cz-btn:hover { background: #f2f3f5; color: #1d2129; }
-.ixe-maker-tools .canvas-zoom-ctrl .cz-val { min-width: 42px; text-align: center; font-size: 12px; color: #4e5969; cursor: pointer; user-select: none; }
+.ixe-maker-tools .canvas-zoom-ctrl .cz-btn { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; font-size: 16px; line-height: 1; color: var(--bl-text-2, #4e5969); cursor: pointer; border-radius: 4px; user-select: none; }
+.ixe-maker-tools .canvas-zoom-ctrl .cz-btn:hover { background: var(--bl-bg-hover, #f2f3f5); color: var(--bl-text-1, #1d2129); }
+.ixe-maker-tools .canvas-zoom-ctrl .cz-val { min-width: 42px; text-align: center; font-size: 12px; color: var(--bl-text-2, #4e5969); cursor: pointer; user-select: none; }
 .ixe-maker-tools .canvas-zoom-ctrl .cz-val:hover { color: var(--bl-primary, #1f6aff); }
-.ixe-maker-tools .canvas-zoom-ctrl .cz-fit { margin-left: 4px; padding: 0 7px; height: 22px; line-height: 22px; font-size: 12px; color: #4e5969; cursor: pointer; border-radius: 4px; user-select: none; }
-.ixe-maker-tools .canvas-zoom-ctrl .cz-fit:hover { background: #f2f3f5; color: #1d2129; }
+.ixe-maker-tools .canvas-zoom-ctrl .cz-fit { margin-left: 4px; padding: 0 7px; height: 22px; line-height: 22px; font-size: 12px; color: var(--bl-text-2, #4e5969); cursor: pointer; border-radius: 4px; user-select: none; }
+.ixe-maker-tools .canvas-zoom-ctrl .cz-fit:hover { background: var(--bl-bg-hover, #f2f3f5); color: var(--bl-text-1, #1d2129); }
 .ixe-maker-tools .more-dropdown, .ixe-maker-tools .add-area-dropdown, .ixe-maker-tools .save-dropdown { margin: 0; }
+/* 深色:添加区域 split-button(默认白底 el-button)→ 跟随主题 token */
+:root[data-theme="dark"] .ixe-maker-tools .add-area-dropdown .el-button {
+  background-color: var(--bl-bg-2, #242832) !important;
+  border-color: var(--bl-border, #363B47) !important;
+  color: var(--bl-text-2, #C9CDD4) !important;
+}
+:root[data-theme="dark"] .ixe-maker-tools .add-area-dropdown .el-button:hover,
+:root[data-theme="dark"] .ixe-maker-tools .add-area-dropdown .el-button:focus {
+  background-color: var(--bl-bg-hover, #2E323D) !important;
+  border-color: var(--bl-primary, #165DFF) !important;
+  color: var(--bl-text-1, #fff) !important;
+}
+/* caret 按钮与主按钮之间的分隔竖线 → 比主边框略明显,但不刺眼 */
+:root[data-theme="dark"] .ixe-maker-tools .add-area-dropdown .el-dropdown__caret-button::before {
+  background-color: var(--bl-border-strong, #4A5060) !important;
+}
+:root[data-theme="dark"] .ixe-maker-tools .add-area-dropdown .el-dropdown__caret-button {
+  border-left-color: var(--bl-border-strong, #4A5060) !important;
+}
 .ixe-maker-tools .top-header .right > * + * { margin-left: 2px; }
 /* 分隔竖线 / 自动保存开关 */
 .ixe-maker-tools .tb-divider { width: 1px; height: 18px; background: var(--bl-divider, #e5e6eb); margin: 0 6px; flex-shrink: 0; }
 .ixe-maker-tools .am-switch { margin: 0 6px; flex-shrink: 0; }
+/* 深色:自动保存开关后的 label 文字(默认深色文字 → 看不清) */
+:root[data-theme="dark"] .ixe-maker-tools .am-switch .el-switch__label { color: var(--bl-text-2, #C9CDD4) !important; }
+:root[data-theme="dark"] .ixe-maker-tools .am-switch .el-switch__label.is-active { color: var(--bl-text-1, #fff) !important; }
 /* 模式分段(预览/设计):传送后 scoped 失效,这里全局还原 */
 .ixe-maker-tools .mode-seg { display: inline-flex; align-items: center; height: 28px; margin-left: 8px; border: 1px solid var(--bl-border, #e5e6eb); border-radius: 6px; overflow: hidden; }
 .ixe-maker-tools .mode-seg-item { display: inline-flex; align-items: center; height: 100%; padding: 0 12px; font-size: 13px; color: var(--bl-text-2, #4e5969); cursor: pointer; user-select: none; }
