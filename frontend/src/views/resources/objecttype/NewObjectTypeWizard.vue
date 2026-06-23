@@ -563,10 +563,13 @@ async function batchDelProps() {
 function onCancel() { emit('cancel'); emit('update:open', false) }
 function goNext() {
   if (form.mode === 'exist' && !form.main.physical_table) { BL.warning('请先选择主表'); return }
-  // 把向导收集到的数据透传给父级；下一步进入对象类型详情页（由父级负责）
-  emit('next', JSON.parse(JSON.stringify(form)))
+  // 带上所选数据源的编码/领域, 供父级创建对象类型用
+  const ds = datasources.value.find(d => d.id === form.dsId)
+  const payload = JSON.parse(JSON.stringify(form))
+  payload.dsCode = ds?.dsCode || ds?.ds_code || ''
+  payload.categoryCode = ds?.categoryCode || ds?.category_code || ''
+  emit('next', payload)
   emit('update:open', false)
-  BL.success('已收集数据源绑定信息，可进入「对象类型详情」继续完善')
 }
 </script>
 

@@ -1064,10 +1064,27 @@ function onCreateFromDrawer() {
   closeDrawer()
   wizardOpen.value = true
 }
-function onWizardNext(payload) {
-  // 步骤 1 收集到的数据源绑定信息，正式联调后用于创建对象 + 数据集 + 属性
-  console.log('[wizard] step-1 payload', payload)
-  BL.info('已收集主表/附表/字段映射，下一步「对象类型详情」对接中')
+async function onWizardNext(payload) {
+  try {
+    const body = {
+      api_name: payload.main?.physical_table || '',
+      display_name: payload.main?.alias_name || payload.main?.physical_table || '新对象类型',
+      rdfs_label: payload.main?.alias_name || payload.main?.physical_table || '',
+      category_code: payload.categoryCode || '',
+      ds_code: payload.dsCode || '',
+      ds_id: payload.dsId || '',
+      main: payload.main || null,
+      subs: payload.subs || [],
+      props: payload.props || []
+    }
+    const created = await classMetaApi.createClass(body)
+    BL.success(`对象类型「${created.display_name || created.api_name}」已创建，可在详情中继续完善`)
+    rows.value = await resourceApi.classes({ aggregate: true }).catch(() => rows.value)
+    const row = rows.value.find(r => r.id === created.id) || created
+    openDrawer(row)
+  } catch (e) {
+    BL.error(e?.msg || '创建失败')
+  }
 }
 function onEdit() { BL.info('编辑面板待联调') }
 function onAi() { BL.info('AI 助手待联调') }

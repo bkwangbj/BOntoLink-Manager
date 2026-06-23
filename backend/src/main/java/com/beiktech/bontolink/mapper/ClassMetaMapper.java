@@ -249,6 +249,22 @@ public interface ClassMetaMapper {
     """)
     int insertClass(Map<String, Object> row);
 
+    /** api_name 是否已存在 */
+    @Select("SELECT COUNT(1) FROM ont_class WHERE api_name = #{apiName}")
+    int existsApiName(@Param("apiName") String apiName);
+
+    /** 写入 类→数据集(主表/附表) 绑定 */
+    @Insert("""
+        INSERT INTO ont_class_ds(
+            id, class_id, ds_code, physical_table, table_label, rel_type, alias,
+            pk_keys, join_on_keys, join_type, physical_fields, sort, status
+        ) VALUES (
+            #{id}, #{class_id}, #{ds_code}, #{physical_table}, #{table_label}, #{rel_type}, #{alias},
+            #{pk_keys}, #{join_on_keys}, #{join_type}, #{physical_fields}, #{sort}, #{status}
+        )
+    """)
+    int insertClassDs(Map<String, Object> row);
+
     /** 检索可作为等价/不相交/互斥并集等候选的对象类（按行业/领域过滤） */
     @Select("""
         SELECT id, api_name, display_name, rdfs_label, rdfs_comment, category_code, icon, color, status

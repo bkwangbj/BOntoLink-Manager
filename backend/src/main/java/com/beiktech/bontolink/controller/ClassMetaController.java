@@ -16,6 +16,7 @@ import java.util.*;
 public class ClassMetaController {
 
     @Autowired private ClassMetaMapper mapper;
+    @Autowired private com.beiktech.bontolink.service.ObjectTypeCreateService createService;
 
     /* ============ 候选对象类 ============ */
 
@@ -233,6 +234,17 @@ public class ClassMetaController {
             mapper.updateClassPropertySort(pid, i++);
         }
         return R.ok();
+    }
+
+    /* ============ 新建对象类型 (向导一站式创建) ============ */
+
+    @PostMapping("/classes")
+    public R<Map<String, Object>> createClass(@RequestBody Map<String, Object> body) {
+        try {
+            return R.ok(createService.create(body));
+        } catch (Exception e) {
+            return R.error(500, "创建对象类型失败: " + e.getMessage());
+        }
     }
 
     /* ============ 类基础保存 (概览各 sub-tab) ============ */

@@ -122,6 +122,7 @@ export const classMetaApi = {
   reorderProps:      (classId, ids) => http.post(`/class-meta/classes/${classId}/properties/reorder`, { ids }),
 
   updateClass:       (id, data) => http.put(`/class-meta/classes/${id}`, data),
+  createClass:       (data) => http.post('/class-meta/classes', data),
 }
 
 /* 值类型 (Value types) */
