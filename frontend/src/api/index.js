@@ -262,7 +262,8 @@ export const datasourceApi = {
 export const physicalTableApi = {
   list:       (dsId) => http.get('/physical-tables', { params: dsId ? { dsId } : {} }),
   sync:       (dsId) => http.post('/physical-tables/sync', null, { params: { dsId } }),
-  updateName: (id, displayName) => http.put(`/physical-tables/${id}/name`, { displayName })
+  updateName: (id, displayName) => http.put(`/physical-tables/${id}/name`, { displayName }),
+  remove:     (id) => http.delete(`/physical-tables/${id}`)
 }
 
 /* 全局搜索 — 头部 ⌘K 弹框驱动. type: all / object / link / prop / ds / other */

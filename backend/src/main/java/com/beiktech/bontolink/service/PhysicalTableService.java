@@ -1,5 +1,6 @@
 package com.beiktech.bontolink.service;
 
+import com.beiktech.bontolink.common.DataSourceConnector;
 import com.beiktech.bontolink.entity.SysDataSource;
 import com.beiktech.bontolink.mapper.PhysicalTableMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +22,7 @@ public class PhysicalTableService {
 
     @Autowired private DataSourceService dsService;
     @Autowired private PhysicalTableMapper mapper;
+    @Autowired private DataSourceConnector connector;
     private final ObjectMapper json = new ObjectMapper();
     private static final DateTimeFormatter TS = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -83,6 +85,11 @@ public class PhysicalTableService {
         return list(dsId);
     }
 
+    /** 删除物理表 */
+    public void delete(String id) {
+        mapper.deleteById(id);
+    }
+
     /** 修改中文名 */
     public Map<String, Object> updateName(String id, String displayName) {
         mapper.updateDisplayName(id, displayName, LocalDateTime.now().format(TS));
@@ -110,23 +117,8 @@ public class PhysicalTableService {
 
     /** 按数据源配置动态建立 JDBC 连接, 读取其库中所有 table / view */
     private List<Map<String, Object>> readFromDatabase(SysDataSource ds) {
-        if ("mongodb".equalsIgnoreCase(ds.getDsType())) {
-            throw new RuntimeException("MongoDB 暂不支持物理表同步");
-        }
-        String url = ds.getJdbcUrl();
-        if (url == null || url.isBlank()) throw new RuntimeException("数据源未配置 JDBC 连接地址");
-        // 显式加载驱动(后端未集成对应驱动时给出明确提示)
-        if (ds.getJdbcDriver() != null && !ds.getJdbcDriver().isBlank()) {
-            try {
-                Class.forName(ds.getJdbcDriver());
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException("后端未集成该数据库的 JDBC 驱动: " + ds.getJdbcDriver());
-            }
-        }
-
         List<Map<String, Object>> result = new ArrayList<>();
-        DriverManager.setLoginTimeout(8);   // 避免不可达主机长时间阻塞
-        try (Connection conn = DriverManager.getConnection(url, ds.getUsername(), ds.getPassword())) {
+        try (Connection conn = connector.open(ds)) {
             DatabaseMetaData meta = conn.getMetaData();
             String catalog = conn.getCatalog();
 

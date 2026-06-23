@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <transition name="wz-fade">
-      <div v-if="open" class="wz-mask" @click.self="onCancel">
+      <div v-if="open" class="wz-mask">
         <div class="wz-modal">
           <!-- 顶部标题栏 -->
           <div class="wz-hd">
@@ -511,8 +511,8 @@ const propChecked = ref(new Set())
 function syncPropsFromTables() {
   const existing = new Set(form.props.map(p => p.physical_table + ':' + p.physical_column))
   const out = [...form.props]
-  const tables = [form.main.physical_table, ...form.subs.map(s => s.physical_table)].filter(Boolean)
-  for (const tname of tables) {
+  const tableNames = [form.main.physical_table, ...form.subs.map(s => s.physical_table)].filter(Boolean)
+  for (const tname of tableNames) {
     const meta = tables.value.find(t => t.physical_table === tname)
     if (!meta) continue
     for (const col of (meta.columns || [])) {
@@ -530,7 +530,7 @@ function syncPropsFromTables() {
     }
   }
   // 过滤掉已不存在的表的字段
-  const validTables = new Set(tables)
+  const validTables = new Set(tableNames)
   form.props = out.filter(p => validTables.has(p.physical_table))
 }
 

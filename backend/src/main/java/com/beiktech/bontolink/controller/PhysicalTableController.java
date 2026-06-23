@@ -41,4 +41,11 @@ public class PhysicalTableController {
                 : String.valueOf(body.getOrDefault("display_name", ""));
         return R.ok(service.updateName(id, name));
     }
+
+    /** 删除物理表 */
+    @DeleteMapping("/{id}")
+    public R<?> delete(@PathVariable String id) {
+        service.delete(id);
+        return R.ok();
+    }
 }

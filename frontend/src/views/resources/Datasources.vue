@@ -360,7 +360,7 @@
             </div>
             <table class="bl-table pt-table">
               <thead>
-                <tr><th>物理表</th><th style="width:64px">类型</th><th>中文名</th><th style="width:64px">字段数</th></tr>
+                <tr><th>物理表</th><th style="width:64px">类型</th><th>中文名</th><th style="width:56px">字段数</th><th style="width:48px">操作</th></tr>
               </thead>
               <tbody>
                 <tr v-for="t in physTables" :key="t.id">
@@ -371,6 +371,9 @@
                            @change="renameTable(t, $event.target.value)" placeholder="中文名" />
                   </td>
                   <td class="t-center bl-muted">{{ t.column_count }}</td>
+                  <td class="t-center">
+                    <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="删除" v-html="BL.icon('trash', 12)" @click="removeTable(t)"></button>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -454,6 +457,17 @@ async function renameTable(t, name) {
     BL.success('中文名已更新')
   } catch (e) {
     BL.error(e?.msg || '更新失败')
+  }
+}
+async function removeTable(t) {
+  const ok = await BL.confirm({ title: '删除物理表', content: `确定删除「${t.physical_table}」？（重新同步会再次拉取）`, danger: true, okText: '删除' })
+  if (!ok) return
+  try {
+    await physicalTableApi.remove(t.id)
+    physTables.value = physTables.value.filter(x => x.id !== t.id)
+    BL.success('已删除')
+  } catch (e) {
+    BL.error(e?.msg || '删除失败')
   }
 }
 

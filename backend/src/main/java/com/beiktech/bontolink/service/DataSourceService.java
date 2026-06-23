@@ -1,10 +1,12 @@
 package com.beiktech.bontolink.service;
 
+import com.beiktech.bontolink.common.DataSourceConnector;
 import com.beiktech.bontolink.entity.SysDataSource;
 import com.beiktech.bontolink.mapper.SysDataSourceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Connection;
 import java.util.*;
 
 @Service
@@ -12,6 +14,7 @@ public class DataSourceService {
 
     @Autowired private SysDataSourceMapper mapper;
     @Autowired private com.beiktech.bontolink.mapper.PhysicalTableMapper physicalTableMapper;
+    @Autowired private DataSourceConnector connector;
 
     public List<SysDataSource> list() { return mapper.listAll(); }
     public SysDataSource get(String id) { return mapper.findById(id); }
@@ -45,19 +48,34 @@ public class DataSourceService {
     }
 
     /**
-     * 测试数据源连通性（演示用，按 ds_type 给出固定的成功/失败语义，并模拟响应时间）
+     * 测试数据源连通性（真实 JDBC 连接：按配置建连 + conn.isValid 校验，记录真实耗时）。
      */
     public Map<String, Object> testConnection(String id) {
         SysDataSource d = mapper.findById(id);
         Map<String, Object> r = new LinkedHashMap<>();
         if (d == null) { r.put("ok", false); r.put("msg", "数据源不存在"); return r; }
-        int rt = 10 + new Random().nextInt(120);
-        boolean ok = !"offline".equals(d.getConnectStatus()) && d.getStatus() == 1;
+
+        boolean ok = false;
+        String msg;
+        int rt = 0;
+
+        if (d.getStatus() != null && d.getStatus() == 0) {
+            msg = "测试失败：数据源已禁用";
+        } else {
+            long start = System.currentTimeMillis();
+            try (Connection conn = connector.open(d)) {
+                ok = conn.isValid(5);
+                rt = (int) (System.currentTimeMillis() - start);
+                msg = ok ? "测试成功（" + d.getDsType().toUpperCase() + " 连接正常）" : "测试失败：连接无效";
+            } catch (Exception e) {
+                rt = (int) (System.currentTimeMillis() - start);
+                msg = "测试失败：" + e.getMessage();
+            }
+        }
+
         r.put("ok", ok);
         r.put("responseMs", rt);
-        r.put("msg", ok
-                ? "测试成功（" + d.getDsType().toUpperCase() + " 连接正常）"
-                : "测试失败：" + (d.getStatus() == 0 ? "数据源已禁用" : "无法建立连接，请检查 URL / 账号 / 网络"));
+        r.put("msg", msg);
         // 把测试结果同步到监控字段
         mapper.updateMonitor(id, ok ? "online" : "offline", rt, d.getActiveConn() == null ? 0 : d.getActiveConn());
         return r;
