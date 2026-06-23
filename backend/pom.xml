@@ -24,6 +24,7 @@
         <postgresql.version>42.7.4</postgresql.version>
         <!-- 与 Spring Boot 3.3.5 BOM 管理的 flyway-core 版本保持一致 -->
         <flyway.version>10.10.0</flyway.version>
+        <mysql-connector-java.version>8.3.0</mysql-connector-java.version>
     </properties>
 
     <dependencies>
@@ -54,6 +55,11 @@
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+              <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>${mysql-connector-java.version}</version>
         </dependency>
         <!-- Flyway 数据库迁移: flyway-core 自带 SQLite 支持;
              PostgreSQL 在 Flyway 10 中拆为独立模块(社区版,不在 BOM 内,需显式版本) -->
