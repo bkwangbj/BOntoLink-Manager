@@ -21,6 +21,13 @@ public class NamespaceService {
         if (ns.getStatus() == null) ns.setStatus(1);
         if (ns.getCurrVersion() == null) ns.setCurrVersion("1.0");
         mapper.insert(ns);
+        // 新增命名空间时自动创建第一个版本，并设为当前版本
+        BizNamespaceVersion first = new BizNamespaceVersion();
+        first.setNsCode(ns.getNsCode());
+        first.setVersion(ns.getCurrVersion());
+        first.setUri(ns.getNsUri() != null ? ns.getNsUri() : "");
+        first.setRdfsLabel((ns.getNsName() != null ? ns.getNsName() : ns.getNsCode()) + " v" + ns.getCurrVersion());
+        createVersion(first);
         return ns;
     }
 
@@ -47,10 +54,10 @@ public class NamespaceService {
     public BizNamespaceVersion setCurrentVersion(String id) {
         BizNamespaceVersion v = mapper.findVersionById(id);
         if (v == null) throw new IllegalArgumentException("版本不存在");
+        v.setIsCurrent(1);
         mapper.clearCurrentByNs(v.getNsCode());
         mapper.setVersionCurrent(id);
         mapper.updateCurrVersion(v.getNsCode(), v.getVersion());
-        v.setIsCurrent(1);
         return v;
     }
 

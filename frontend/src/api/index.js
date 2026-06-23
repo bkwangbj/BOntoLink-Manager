@@ -258,6 +258,13 @@ export const datasourceApi = {
   monitor:  (id) => http.get(`/datasource/${id}/monitor`)
 }
 
+/* 物理表/视图元数据 — 落库于 ont_physical_table, 同步源为后端自身库 */
+export const physicalTableApi = {
+  list:       (dsId) => http.get('/physical-tables', { params: dsId ? { dsId } : {} }),
+  sync:       (dsId) => http.post('/physical-tables/sync', null, { params: { dsId } }),
+  updateName: (id, displayName) => http.put(`/physical-tables/${id}/name`, { displayName })
+}
+
 /* 全局搜索 — 头部 ⌘K 弹框驱动. type: all / object / link / prop / ds / other */
 export const searchApi = {
   global: (q, type = 'all') => http.get('/search/global', { params: { q, type } })

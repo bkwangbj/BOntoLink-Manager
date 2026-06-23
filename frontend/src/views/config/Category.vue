@@ -123,10 +123,10 @@
           <div class="versions-body">
             <div v-for="v in versions" :key="v.id" class="version-row">
               <span class="bl-tag" :class="v.isCurrent ? 'bl-tag-success' : ''">{{ v.version }}</span>
-              <span v-if="v.isCurrent" class="bl-muted" style="font-size:11px;color:#00b42a">当前</span>
+              <span v-if="v.isCurrent" class="bl-muted" style="display:inline-flex;align-items:center;gap:2px;font-size:11px;color:#00b42a" v-html="BL.icon('check', 12, '#00b42a') + '当前'"></span>
               <span class="bl-grow bl-truncate" :title="v.rdfsLabel || ''">{{ v.rdfsLabel || '—' }}</span>
               <span class="bl-muted" style="font-size:11px">{{ shortDate(v.publishTime) }}</span>
-              <button v-if="!v.isCurrent" class="bl-btn bl-btn-text bl-btn-sm" title="设为当前版本" @click="setCurrentVersion(v)">设为当前</button>
+              <button v-if="!v.isCurrent" class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="设为当前版本" v-html="BL.icon('flag', 12, '#86909c')" @click="setCurrentVersion(v)"></button>
               <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="删除" v-html="BL.icon('trash', 12)" @click="removeVersion(v)"></button>
             </div>
             <div v-if="!versions.length" class="bl-empty" style="padding:16px">尚无版本</div>
@@ -2218,6 +2218,8 @@ async function setCurrentVersion(v) {
   if (v.isCurrent) return
   try {
     await namespaceApi.setCurrentVersion(v.id)
+    // 乐观更新：本地立即只保留一个当前版本，避免刷新前状态未变
+    versions.value = versions.value.map(x => ({ ...x, isCurrent: x.id === v.id ? 1 : 0 }))
     BL.success(`已将 ${v.version} 设为当前版本`)
     await Promise.all([loadVersions(), loadNsInfo()])
   } catch (e) {

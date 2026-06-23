@@ -186,6 +186,10 @@
             <span v-html="BL.icon('zap', 13)"></span>
             <span style="margin-left:4px">监控</span>
           </button>
+          <button :class="['ds-drawer-tab', drawerTab==='tables' && 'is-on']" :disabled="!selected" @click="switchTab('tables')">
+            <span v-html="BL.icon('database', 13)"></span>
+            <span style="margin-left:4px">物理表</span>
+          </button>
         </div>
 
         <!-- 数据源 (编辑) 页签 -->
@@ -337,6 +341,43 @@
         </template>
         </div><!-- /监控 页签 -->
 
+        <!-- 物理表 页签 -->
+        <div v-show="drawerTab==='tables'" class="pt-pane">
+          <div v-if="!selected" class="bl-empty" style="padding:60px">
+            <div class="bl-empty-icon" v-html="BL.icon('database', 36)"></div>
+            请先选择左侧数据源
+          </div>
+          <template v-else>
+            <div class="pt-bar">
+              <div class="bl-muted" style="font-size:12px">
+                共 {{ physTables.length }} 项（表 {{ physTableCount }} · 视图 {{ physViewCount }}）
+                <span v-if="physSyncTime">· 最近同步 {{ physSyncTime }}</span>
+              </div>
+              <button class="bl-btn bl-btn-sm bl-btn-primary" :disabled="physSyncing" @click="syncTables">
+                <span v-html="BL.icon('refresh', 12)"></span>
+                <span style="margin-left:4px">{{ physSyncing ? '同步中…' : '同步物理表' }}</span>
+              </button>
+            </div>
+            <table class="bl-table pt-table">
+              <thead>
+                <tr><th>物理表</th><th style="width:64px">类型</th><th>中文名</th><th style="width:64px">字段数</th></tr>
+              </thead>
+              <tbody>
+                <tr v-for="t in physTables" :key="t.id">
+                  <td><span class="bl-mono">{{ t.physical_table }}</span></td>
+                  <td><span class="bl-tag" :class="t.type === 'view' ? 'bl-tag-warning' : 'bl-tag-primary'">{{ t.type === 'view' ? '视图' : '表' }}</span></td>
+                  <td>
+                    <input class="bl-input bl-input-xs" :value="t.display_name"
+                           @change="renameTable(t, $event.target.value)" placeholder="中文名" />
+                  </td>
+                  <td class="t-center bl-muted">{{ t.column_count }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div v-if="!physTables.length" class="bl-empty" style="padding:32px;font-size:12px">尚未同步，点击右上角「同步物理表」</div>
+          </template>
+        </div><!-- /物理表 页签 -->
+
         <!-- 底部按钮: 仅数据源页签显示保存/取消 -->
         <div v-if="drawerTab==='config'" class="cfg-ft">
           <button class="bl-btn" @click="drawerOpen=false">取消</button>
@@ -354,7 +395,7 @@ import { useRoute, useRouter } from 'vue-router'
 import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
-import { datasourceApi, namespaceApi, categoryApi } from '@/api'
+import { datasourceApi, namespaceApi, categoryApi, physicalTableApi } from '@/api'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 
 const route = useRoute()
@@ -371,11 +412,49 @@ const mon = ref({})
 
 /* 全局抽屉: 数据源 (编辑) / 监控 双页签 */
 const drawerOpen = ref(false)
-const drawerTab = ref('config')  // 'config' | 'monitor'
+const drawerTab = ref('config')  // 'config' | 'monitor' | 'tables'
 function switchTab(t) {
-  if (t === 'monitor' && !selected.value) { BL.warning('请先选择一个数据源'); return }
+  if ((t === 'monitor' || t === 'tables') && !selected.value) { BL.warning('请先选择一个数据源'); return }
   drawerTab.value = t
   if (t === 'monitor') loadMonitor()
+  if (t === 'tables') loadPhysTables()
+}
+
+/* 物理表 页签 */
+const physTables = ref([])
+const physSyncing = ref(false)
+const physTableCount = computed(() => physTables.value.filter(t => t.type !== 'view').length)
+const physViewCount  = computed(() => physTables.value.filter(t => t.type === 'view').length)
+const physSyncTime = computed(() => {
+  const ts = physTables.value.map(t => t.sync_time).filter(Boolean).sort()
+  return ts.length ? ts[ts.length - 1] : ''
+})
+async function loadPhysTables() {
+  if (!selected.value) return
+  physTables.value = await physicalTableApi.list(selected.value.id).catch(() => [])
+}
+async function syncTables() {
+  if (!selected.value || physSyncing.value) return
+  physSyncing.value = true
+  try {
+    physTables.value = await physicalTableApi.sync(selected.value.id)
+    BL.success(`已同步 ${physTables.value.length} 张表/视图`)
+  } catch (e) {
+    BL.error(e?.msg || '同步失败')
+  } finally {
+    physSyncing.value = false
+  }
+}
+async function renameTable(t, name) {
+  const v = (name || '').trim()
+  if (v === (t.display_name || '')) return
+  try {
+    await physicalTableApi.updateName(t.id, v)
+    t.display_name = v
+    BL.success('中文名已更新')
+  } catch (e) {
+    BL.error(e?.msg || '更新失败')
+  }
 }
 
 /* 抽屉宽度拖拽 (持久化到 localStorage) */
@@ -890,6 +969,11 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
 .ds-drawer-tab:disabled { opacity: .4; cursor: not-allowed; }
 .bl-grow { flex: 1; }
 .mon-pane { flex: 1; overflow: auto; }
+
+.pt-pane { flex: 1; overflow: auto; padding: 12px 14px; }
+.pt-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.pt-table { width: 100%; }
+.pt-table .bl-input-xs { width: 100%; }
 
 .ds-drawer-enter-active, .ds-drawer-leave-active { transition: transform .22s, opacity .18s; }
 .ds-drawer-enter-from, .ds-drawer-leave-to { transform: translateX(20px); opacity: 0; }

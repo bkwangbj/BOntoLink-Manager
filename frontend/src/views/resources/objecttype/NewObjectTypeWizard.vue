@@ -52,10 +52,11 @@
                   <div class="ds-panel-body">
                     <div v-if="form.main.physical_table" class="main-form">
                       <FieldRow label="物理表" inline><span class="bl-mono bl-tag">{{ form.main.physical_table }}</span></FieldRow>
-                      <FieldRow label="表名称" inline>
-                        <select class="bl-input" v-model="form.main.alias_name">
+                      <FieldRow label="表名称" inline hint="可输入中文名, 或从下拉选友好名/物理名">
+                        <input class="bl-input" v-model="form.main.alias_name" list="main-alias-options" placeholder="输入表中文名" />
+                        <datalist id="main-alias-options">
                           <option v-for="o in subAliasOptions(form.main.physical_table)" :key="'main-alias-'+o.value" :value="o.value">{{ o.label }}</option>
-                        </select>
+                        </datalist>
                       </FieldRow>
                       <FieldRow label="主键字段" inline>
                         <div class="pk-list">
@@ -115,9 +116,10 @@
                           <td class="t-center bl-muted" style="cursor:grab" :title="`拖拽调整顺序 #${i+1}`">{{ i+1 }}</td>
                           <td><span class="bl-mono bl-tag">{{ s.physical_table }}</span></td>
                           <td>
-                            <select class="bl-input bl-input-xs" v-model="s.alias_name">
+                            <input class="bl-input bl-input-xs" v-model="s.alias_name" :list="'alias-list-'+i" placeholder="表中文名" />
+                            <datalist :id="'alias-list-'+i">
                               <option v-for="o in subAliasOptions(s.physical_table)" :key="'alias-'+i+'-'+o.value" :value="o.value">{{ o.label }}</option>
-                            </select>
+                            </datalist>
                           </td>
                           <td>
                             <select class="bl-input bl-input-xs bl-mono" v-model="s.join_on_keys">
@@ -252,6 +254,7 @@
                  @click="t._disabled || pickTable(t)">
               <span class="tbl-side" :style="{ background: t._disabled ? '#86909C' : '#165DFF' }"></span>
               <span class="bl-mono" style="font-weight:500">{{ t.physical_table }}</span>
+              <span class="bl-tag" :class="t.type === 'view' ? 'bl-tag-warning' : 'bl-tag-primary'" style="margin-left:6px;font-size:11px">{{ t.type === 'view' ? '视图' : '表' }}</span>
               <span class="bl-muted" style="font-size:11px;margin-left:6px">{{ t.column_count }} 字段</span>
               <span v-if="t._disabled" class="bl-tag" style="margin-left:auto">已选</span>
             </div>
@@ -269,6 +272,7 @@
 <script setup>
 import { ref, computed, watch, reactive } from 'vue'
 import { BL } from '@/lib/bl.js'
+import { physicalTableApi } from '@/api'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 
 const props = defineProps({
@@ -306,6 +310,23 @@ const MOCK_TABLES = [
   ]}
 ]
 
+/* 物理表/视图清单: 优先读后端自身库, 失败或为空时回退到上面的演示数据 */
+const tables = ref([])
+async function loadTables() {
+  try {
+    const data = await physicalTableApi.list()
+    if (Array.isArray(data) && data.length) {
+      // 跨数据源按物理表名去重
+      const seen = new Set()
+      tables.value = data.filter(t => !seen.has(t.physical_table) && seen.add(t.physical_table))
+    } else {
+      tables.value = MOCK_TABLES
+    }
+  } catch {
+    tables.value = MOCK_TABLES
+  }
+}
+
 const xsdTypes = ['xsd:string','xsd:decimal','xsd:integer','xsd:boolean','xsd:dateTime','xsd:date','xsd:anyURI']
 
 const step = ref(1)
@@ -327,7 +348,7 @@ function resetAll() {
   propFilterTable.value = ''
   propQ.value = ''
 }
-watch(() => props.open, (v) => { if (v) resetAll() })
+watch(() => props.open, (v) => { if (v) { resetAll(); loadTables() } })
 
 /* ---------- 物理表选择 ---------- */
 const tablePickerOpen = ref(false)
@@ -343,7 +364,7 @@ function openSubPicker() {
 const tableOptions = computed(() => {
   const used = new Set([form.main.physical_table, ...form.subs.map(s => s.physical_table)])
   const k = tablePickerQ.value.trim().toLowerCase()
-  return MOCK_TABLES
+  return tables.value
     .filter(t => !k || t.physical_table.toLowerCase().includes(k))
     .map(t => ({ ...t, _disabled: used.has(t.physical_table) }))
 })
@@ -365,7 +386,7 @@ function confirmSubs() {
   const used = new Set(form.subs.map(s => s.physical_table))
   for (const tname of tableSelected.value) {
     if (used.has(tname)) continue
-    const meta = MOCK_TABLES.find(t => t.physical_table === tname)
+    const meta = tables.value.find(t => t.physical_table === tname)
     form.subs.push({
       physical_table: tname,
       alias_name: meta?.display_name || tname,    // 默认用中文友好名 (可下拉切回物理名)
@@ -393,7 +414,7 @@ const dragIdx = ref(null)
 
 /* 已选主表的列清单 — 主键字段下拉 / 关联字段提示用 */
 const mainTableColumns = computed(() => {
-  const t = MOCK_TABLES.find(x => x.physical_table === form.main.physical_table)
+  const t = tables.value.find(x => x.physical_table === form.main.physical_table)
   return t?.columns || []
 })
 
@@ -416,14 +437,14 @@ function onPkDrop(targetIdx) {
 
 /* 附表行的辅助查询 (基于 physical_table 拿元信息) */
 function subColumns(physTable) {
-  const t = MOCK_TABLES.find(x => x.physical_table === physTable)
+  const t = tables.value.find(x => x.physical_table === physTable)
   return t?.columns || []
 }
 function subAliasOptions(physTable) {
-  const t = MOCK_TABLES.find(x => x.physical_table === physTable)
+  const t = tables.value.find(x => x.physical_table === physTable)
   if (!t) return []
   const opts = []
-  if (t.display_name) opts.push({ value: t.display_name, label: t.display_name + ' (友好名)' })
+  if (t.display_name && t.display_name !== t.physical_table) opts.push({ value: t.display_name, label: t.display_name + ' (友好名)' })
   opts.push({ value: t.physical_table, label: t.physical_table + ' (物理名)' })
   return opts
 }
@@ -453,7 +474,7 @@ function syncPropsFromTables() {
   const out = [...form.props]
   const tables = [form.main.physical_table, ...form.subs.map(s => s.physical_table)].filter(Boolean)
   for (const tname of tables) {
-    const meta = MOCK_TABLES.find(t => t.physical_table === tname)
+    const meta = tables.value.find(t => t.physical_table === tname)
     if (!meta) continue
     for (const col of (meta.columns || [])) {
       const key = tname + ':' + col.name

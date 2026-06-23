@@ -180,11 +180,15 @@
                 <option value="action">操作 (action)</option>
               </select>
             </FieldRow>
-            <FieldRow label="种类 *" inline hint="英文标识 (如 vertex / timeseries / hubble)">
-              <input class="bl-input bl-mono" v-model="form.category" placeholder="vertex" />
+            <FieldRow label="种类 *" inline hint="可选择已有种类, 或输入新种类英文标识 (如 vertex / timeseries)">
+              <input class="bl-input bl-mono" v-model="form.category" list="tc-category-options" placeholder="vertex" />
+              <datalist id="tc-category-options">
+                <option v-for="o in categoryOptions" :key="o.category" :value="o.category">{{ o.category_cn }}</option>
+              </datalist>
             </FieldRow>
-            <FieldRow label="种类中文 *" inline>
-              <input class="bl-input" v-model="form.category_cn" placeholder="知识图谱" />
+            <FieldRow label="种类中文 *" inline :hint="categoryLocked ? '已选已有种类, 中文名自动带入' : ''">
+              <input class="bl-input" v-model="form.category_cn" :readonly="categoryLocked"
+                     :class="{ 'bl-input-readonly': categoryLocked }" placeholder="知识图谱" />
             </FieldRow>
             <FieldRow label="名称 *" inline hint="英文标识, 支持参数化 (如 event_intent.<intent_>)">
               <input class="bl-input bl-mono" v-model="form.name" placeholder="component" />
@@ -226,7 +230,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { BL } from '@/lib/bl.js'
 import { typeClassApi } from '@/api'
 import PageHeader from '@/components/PageHeader.vue'
@@ -253,6 +257,22 @@ function defaultForm() {
            value: '', description: '', is_deprecated: 0,
            link_type_id: null, object_type_id: null, action_type_id: null }
 }
+
+/* 种类下拉候选(按当前适用类型去重) + 选中已有种类时锁定种类中文 */
+const categoryOptions = computed(() => {
+  const m = new Map()
+  stats.value.forEach(s => {
+    if (form.applicable_type && s.applicable_type !== form.applicable_type) return
+    if (s.category && !m.has(s.category)) m.set(s.category, s.category_cn || '')
+  })
+  return [...m.entries()].map(([category, category_cn]) => ({ category, category_cn }))
+})
+const matchedCategory = computed(() => categoryOptions.value.find(o => o.category === form.category))
+// 选中已有种类 → 种类中文只读; 自行输入新种类 → 可编辑
+const categoryLocked = computed(() => !!matchedCategory.value)
+watch(() => form.category, () => {
+  if (matchedCategory.value) form.category_cn = matchedCategory.value.category_cn
+})
 
 async function load() {
   rows.value = await typeClassApi.list().catch(() => [])
@@ -310,7 +330,13 @@ function openCreate() {
   Object.assign(form, defaultForm())
   // 用当前过滤项作为默认
   if (filterApplicable.value) form.applicable_type = filterApplicable.value
-  if (filterCategory.value) form.category = filterCategory.value
+  if (filterCategory.value) {
+    form.category = filterCategory.value
+    // 带入当前选中种类的中文名
+    const g = stats.value.find(s => s.category === filterCategory.value
+      && (!filterApplicable.value || s.applicable_type === filterApplicable.value))
+    if (g?.category_cn) form.category_cn = g.category_cn
+  }
   formOpen.value = true
 }
 function openEdit(r) {
@@ -412,6 +438,8 @@ function onHandleDown(ev) {
 
 <style scoped>
 .page { display: flex; flex-direction: column; height: 100%; }
+
+.bl-input-readonly { background: var(--bl-bg-2); color: var(--bl-text-2); cursor: not-allowed; }
 
 .ov { display: inline-flex; gap: 14px; padding: 4px 12px; background: var(--bl-bg-2); border-radius: var(--bl-radius-2); }
 .ov-item { font-size: 13px; color: var(--bl-text-2); }
