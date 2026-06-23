@@ -43,7 +43,18 @@
 
             <!-- 数据源关联配置 -->
             <template v-if="form.mode === 'exist'">
-              <div class="ds-area">
+              <!-- 先选数据源, 再列其物理表 -->
+              <div class="ds-select-bar">
+                <span class="ds-select-lbl">数据源 <span style="color:#f53f3f">*</span></span>
+                <select class="bl-input" style="max-width:320px" v-model="form.dsId" @change="onDsChange">
+                  <option value="">— 请选择数据源 —</option>
+                  <option v-for="d in datasources" :key="d.id" :value="d.id">{{ d.dsName }}（{{ d.dsCode }}）</option>
+                </select>
+                <span class="bl-muted" style="font-size:11px;margin-left:8px">先选数据源，再从其已同步的物理表中选择主表</span>
+              </div>
+
+              <div v-if="!form.dsId" class="bl-empty" style="padding:40px;font-size:13px">请先选择数据源</div>
+              <div v-else class="ds-area">
                 <!-- 左：主表 -->
                 <div class="ds-panel">
                   <div class="ds-panel-hd">
@@ -89,9 +100,20 @@
                         </button>
                       </div>
                     </div>
-                    <button v-else class="main-pick-btn" @click="openMainPicker">
-                      <span v-html="BL.icon('plus', 12)"></span><span style="margin-left:4px">选择主表（物理表）</span>
-                    </button>
+                    <div v-else class="inline-tbl-pick">
+                      <input class="bl-input bl-input-sm" placeholder="搜索物理表 / 视图" v-model="tablePickerQ" style="margin-bottom:6px" />
+                      <div class="inline-tbl-list">
+                        <div v-for="t in mainTableOptions" :key="t.physical_table" class="tbl-row" @click="pickMain(t)">
+                          <span class="tbl-side" style="background:#165DFF"></span>
+                          <span class="bl-mono" style="font-weight:500">{{ t.physical_table }}</span>
+                          <span class="bl-tag" :class="t.type === 'view' ? 'bl-tag-warning' : 'bl-tag-primary'" style="margin-left:6px;font-size:11px">{{ t.type === 'view' ? '视图' : '表' }}</span>
+                          <span class="bl-muted" style="font-size:11px;margin-left:6px">{{ t.column_count }} 字段</span>
+                        </div>
+                        <div v-if="!mainTableOptions.length" class="bl-empty" style="padding:16px;font-size:12px">
+                          {{ tables.length ? '无匹配物理表' : '该数据源暂无物理表，请先到「数据源 → 物理表」同步' }}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -272,7 +294,7 @@
 <script setup>
 import { ref, computed, watch, reactive } from 'vue'
 import { BL } from '@/lib/bl.js'
-import { physicalTableApi } from '@/api'
+import { physicalTableApi, datasourceApi } from '@/api'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 
 const props = defineProps({
@@ -310,21 +332,22 @@ const MOCK_TABLES = [
   ]}
 ]
 
-/* 物理表/视图清单: 优先读后端自身库, 失败或为空时回退到上面的演示数据 */
+/* 数据源 + 其已同步的物理表清单 */
+const datasources = ref([])
 const tables = ref([])
-async function loadTables() {
-  try {
-    const data = await physicalTableApi.list()
-    if (Array.isArray(data) && data.length) {
-      // 跨数据源按物理表名去重
-      const seen = new Set()
-      tables.value = data.filter(t => !seen.has(t.physical_table) && seen.add(t.physical_table))
-    } else {
-      tables.value = MOCK_TABLES
-    }
-  } catch {
-    tables.value = MOCK_TABLES
-  }
+async function loadDatasources() {
+  datasources.value = await datasourceApi.list().catch(() => [])
+}
+async function loadTables(dsId) {
+  if (!dsId) { tables.value = []; return }
+  tables.value = await physicalTableApi.list(dsId).catch(() => [])
+}
+function onDsChange() {
+  // 切换数据源: 清空已选主表/附表/属性, 重新按数据源加载物理表
+  form.main = { physical_table: '', alias_name: '', pk_keys: [''] }
+  form.subs = []
+  form.props = []
+  loadTables(form.dsId)
 }
 
 const xsdTypes = ['xsd:string','xsd:decimal','xsd:integer','xsd:boolean','xsd:dateTime','xsd:date','xsd:anyURI']
@@ -332,6 +355,7 @@ const xsdTypes = ['xsd:string','xsd:decimal','xsd:integer','xsd:boolean','xsd:da
 const step = ref(1)
 const form = reactive({
   mode: 'exist',
+  dsId: '',
   main: { physical_table: '', alias_name: '', pk_keys: [''] },
   subs: [],
   props: []   // { _key, physical_table, physical_column, api_name, display_name, data_type, is_key, is_required, is_multi_valued_prop, is_range_constraint_prop }
@@ -341,14 +365,16 @@ const form = reactive({
 function resetAll() {
   step.value = 1
   form.mode = 'exist'
+  form.dsId = ''
   form.main = { physical_table: '', alias_name: '', pk_keys: [''] }
   form.subs = []
   form.props = []
+  tables.value = []
   propChecked.value = new Set()
   propFilterTable.value = ''
   propQ.value = ''
 }
-watch(() => props.open, (v) => { if (v) { resetAll(); loadTables() } })
+watch(() => props.open, (v) => { if (v) { resetAll(); loadDatasources() } })
 
 /* ---------- 物理表选择 ---------- */
 const tablePickerOpen = ref(false)
@@ -356,11 +382,24 @@ const tablePickerMode = ref('main')   // main | sub
 const tablePickerQ = ref('')
 const tableSelected = ref(new Set())
 
-function openMainPicker() { tablePickerMode.value = 'main'; tableSelected.value = new Set(); tablePickerOpen.value = true; tablePickerQ.value = '' }
 function openSubPicker() {
   if (!form.main.physical_table) { BL.warning('请先选择主表'); return }
   tablePickerMode.value = 'sub'; tableSelected.value = new Set(); tablePickerOpen.value = true; tablePickerQ.value = ''
 }
+/* 主表内联候选: 该数据源已同步的物理表(排除已作为附表的), 支持搜索 */
+const mainTableOptions = computed(() => {
+  const used = new Set(form.subs.map(s => s.physical_table))
+  const k = tablePickerQ.value.trim().toLowerCase()
+  return tables.value.filter(t => !used.has(t.physical_table) && (!k || t.physical_table.toLowerCase().includes(k)))
+})
+function pickMain(t) {
+  form.main.physical_table = t.physical_table
+  form.main.alias_name = t.display_name || t.physical_table
+  form.main.pk_keys = [(t.columns?.[0]?.name) || '']
+  tablePickerQ.value = ''
+  syncPropsFromTables()
+}
+
 const tableOptions = computed(() => {
   const used = new Set([form.main.physical_table, ...form.subs.map(s => s.physical_table)])
   const k = tablePickerQ.value.trim().toLowerCase()
@@ -742,6 +781,9 @@ function goNext() {
 .tbl-row.is-on { border-color: var(--bl-primary); background: var(--bl-primary-soft); }
 .tbl-row.is-disabled { opacity: .5; cursor: not-allowed; }
 .tbl-side { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+
+.inline-tbl-pick { display: flex; flex-direction: column; }
+.inline-tbl-list { max-height: 320px; overflow: auto; }
 
 .wz-fade-enter-active, .wz-fade-leave-active { transition: opacity .15s; }
 .wz-fade-enter-from, .wz-fade-leave-to { opacity: 0; }

@@ -42,4 +42,7 @@ public interface PhysicalTableMapper {
 
     @Delete("DELETE FROM ont_physical_table WHERE id = #{id}")
     int deleteById(@Param("id") String id);
+
+    @Delete("DELETE FROM ont_physical_table WHERE ds_id = #{dsId}")
+    int deleteByDs(@Param("dsId") String dsId);
 }

@@ -11,6 +11,7 @@ import java.util.*;
 public class DataSourceService {
 
     @Autowired private SysDataSourceMapper mapper;
+    @Autowired private com.beiktech.bontolink.mapper.PhysicalTableMapper physicalTableMapper;
 
     public List<SysDataSource> list() { return mapper.listAll(); }
     public SysDataSource get(String id) { return mapper.findById(id); }
@@ -32,7 +33,10 @@ public class DataSourceService {
         return mapper.findById(d.getId());
     }
 
-    public void delete(String id) { mapper.delete(id); }
+    public void delete(String id) {
+        physicalTableMapper.deleteByDs(id);   // 级联清理该数据源的物理表
+        mapper.delete(id);
+    }
 
     public void toggleStatus(String id) {
         SysDataSource d = mapper.findById(id);
