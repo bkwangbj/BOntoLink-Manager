@@ -342,31 +342,44 @@
               <!-- 同步规则 -->
               <div v-if="activeTab === 'sync'">
                 <div class="sync-form">
-                  <FieldRow label="数据源类型 *" inline>
-                    <select class="bl-input" v-model="syncForm.data_source_id">
-                      <option value="">— 请选择 —</option>
-                      <option value="ds-mysql-main">MySQL 数据库</option>
-                      <option value="ds-oracle-main">Oracle 数据库</option>
-                      <option value="ds-http">HTTP 接口</option>
+                  <FieldRow label="数据源 *" inline>
+                    <select class="bl-input" v-model="syncForm.data_source_id" @change="onSyncDsChange">
+                      <option value="">— 请选择数据源 —</option>
+                      <option v-for="d in syncDatasources" :key="d.id" :value="d.id">{{ d.ds_name }}（{{ (d.ds_type || '').toUpperCase() }}）</option>
                     </select>
                   </FieldRow>
                   <FieldRow label="数据表 *" inline>
                     <div class="bl-row" style="gap:8px;flex:1">
-                      <input class="bl-input" v-model="syncForm.table_alias" placeholder="备注名 (例: 行政区划表)" />
-                      <input class="bl-input bl-mono" v-model="syncForm.table_name" placeholder="表代码名 (例: t_area)" />
+                      <select class="bl-input bl-mono" v-model="syncForm.table_name" :disabled="!syncForm.data_source_id" @change="onSyncTableChange">
+                        <option value="">{{ syncForm.data_source_id ? (syncTables.length ? '— 选择数据表 —' : '该数据源暂无已同步物理表') : '请先选择数据源' }}</option>
+                        <option v-for="t in syncTables" :key="t.physical_table" :value="t.physical_table">{{ t.display_name && t.display_name !== t.physical_table ? (t.display_name + ' · ' + t.physical_table) : t.physical_table }}</option>
+                      </select>
+                      <input class="bl-input" v-model="syncForm.table_alias" placeholder="备注名 (自动带出, 可改)" />
                     </div>
                   </FieldRow>
                   <FieldRow label="字段配置" inline>
                     <div class="bl-row" style="gap:8px;flex:1">
-                      <input class="bl-input" v-model="syncForm.field_code" placeholder="编码字段 (area_code)" />
-                      <input class="bl-input" v-model="syncForm.field_name" placeholder="名称字段 (area_name)" />
+                      <select class="bl-input bl-mono" v-model="syncForm.field_code" :disabled="!syncForm.table_name">
+                        <option value="">编码字段 (area_code)</option>
+                        <option v-for="c in colOpts(syncForm.field_code)" :key="c" :value="c">{{ c }}</option>
+                      </select>
+                      <select class="bl-input bl-mono" v-model="syncForm.field_name" :disabled="!syncForm.table_name">
+                        <option value="">名称字段 (area_name)</option>
+                        <option v-for="c in colOpts(syncForm.field_name)" :key="c" :value="c">{{ c }}</option>
+                      </select>
                     </div>
                   </FieldRow>
                   <FieldRow label="排序字段" inline>
-                    <input class="bl-input" v-model="syncForm.field_sort" placeholder="排序依据字段 (默认按编码)" />
+                    <select class="bl-input bl-mono" v-model="syncForm.field_sort" :disabled="!syncForm.table_name">
+                      <option value="">排序依据字段 (默认按编码)</option>
+                      <option v-for="c in colOpts(syncForm.field_sort)" :key="c" :value="c">{{ c }}</option>
+                    </select>
                   </FieldRow>
                   <FieldRow label="状态字段" inline>
-                    <input class="bl-input" v-model="syncForm.field_status" placeholder="筛选启用/禁用的字段" />
+                    <select class="bl-input bl-mono" v-model="syncForm.field_status" :disabled="!syncForm.table_name">
+                      <option value="">筛选启用/禁用的字段</option>
+                      <option v-for="c in colOpts(syncForm.field_status)" :key="c" :value="c">{{ c }}</option>
+                    </select>
                   </FieldRow>
                   <FieldRow label="顶级筛选表达式" inline>
                     <input class="bl-input bl-mono" v-model="syncForm.filter_sql" placeholder="例: parent_code IS NULL" />
@@ -576,7 +589,7 @@ import { useRoute, useRouter } from 'vue-router'
 import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
-import { enumTypeApi, groupApi, groupRefApi } from '@/api'
+import { enumTypeApi, groupApi, groupRefApi, datasourceApi, physicalTableApi } from '@/api'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 
 /* —— 数据 Tab 树节点 (递归) —— */
@@ -650,6 +663,39 @@ const syncForm = reactive({
 const syncLogs = ref([])
 const syncLogsOpen = ref(false)
 const syncRunning = ref(false)
+
+/* —— 同步规则: 数据源 → 物理表 → 字段 联动 —— */
+const syncDatasources = ref([])   // 真实数据源 (sys_data_source)
+const syncTables = ref([])        // 所选数据源已同步的物理表 [{physical_table, display_name, columns:[{name}]}]
+const syncColumns = computed(() => {
+  const t = syncTables.value.find(x => x.physical_table === syncForm.table_name)
+  return (t?.columns || []).map(c => c?.name).filter(Boolean)
+})
+/* 字段下拉选项: 含当前已存值 (兼容旧配置手填的列名) */
+function colOpts(cur) {
+  const arr = [...syncColumns.value]
+  if (cur && !arr.includes(cur)) arr.unshift(cur)
+  return arr
+}
+async function loadSyncDatasources() {
+  if (!syncDatasources.value.length) syncDatasources.value = await datasourceApi.list().catch(() => [])
+}
+async function loadSyncTables(dsId) {
+  syncTables.value = dsId ? await physicalTableApi.list(dsId).catch(() => []) : []
+}
+async function onSyncDsChange() {
+  syncForm.table_name = ''; syncForm.table_alias = ''
+  syncForm.field_code = ''; syncForm.field_name = ''
+  syncForm.field_sort = ''; syncForm.field_status = ''
+  await loadSyncTables(syncForm.data_source_id)
+}
+function onSyncTableChange() {
+  const t = syncTables.value.find(x => x.physical_table === syncForm.table_name)
+  syncForm.table_alias = t?.display_name || syncForm.table_name || ''
+  // 换表后字段需重选
+  syncForm.field_code = ''; syncForm.field_name = ''
+  syncForm.field_sort = ''; syncForm.field_status = ''
+}
 
 /* —— 引用 Tab —— */
 const refs = ref([])
@@ -950,9 +996,11 @@ function resetSyncForm() {
 }
 async function loadSyncConfig() {
   if (!current.value) return
+  await loadSyncDatasources()
   const cfg = await enumTypeApi.getSyncConfig(current.value.id).catch(() => null)
   if (cfg && cfg.id) Object.assign(syncForm, cfg)
   else resetSyncForm()
+  await loadSyncTables(syncForm.data_source_id)   // 回填已选数据源的物理表, 供下拉显示
 }
 async function saveSyncConfig() {
   if (!syncForm.data_source_id || !syncForm.table_name) { BL.warning('数据源、表名为必填'); return }
@@ -961,9 +1009,11 @@ async function saveSyncConfig() {
   await loadSyncConfig()
 }
 async function testConnection() {
-  const r = await enumTypeApi.testSync(current.value.id, { data_source_id: syncForm.data_source_id }).catch(() => null)
-  if (r && r.ok) BL.success(r.message || '连接测试通过')
-  else BL.error(r?.message || '连接测试失败')
+  if (!syncForm.data_source_id) { BL.warning('请先选择数据源'); return }
+  // 走真实数据源连通性测试 (与数据源模块一致)
+  const r = await datasourceApi.test(syncForm.data_source_id).catch(() => null)
+  if (r && r.ok) BL.success(r.msg || `连接测试通过 (${r.responseMs ?? 0}ms)`)
+  else BL.error(r?.msg || '连接测试失败')
 }
 async function runSync() {
   syncRunning.value = true
