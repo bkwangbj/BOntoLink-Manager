@@ -345,7 +345,7 @@
                   <FieldRow label="数据源 *" inline>
                     <select class="bl-input" v-model="syncForm.data_source_id" @change="onSyncDsChange">
                       <option value="">— 请选择数据源 —</option>
-                      <option v-for="d in syncDatasources" :key="d.id" :value="d.id">{{ d.ds_name }}（{{ (d.ds_type || '').toUpperCase() }}）</option>
+                      <option v-for="d in syncDatasources" :key="d.id" :value="d.id">{{ d.dsName || d.ds_name || d.dsCode || d.id }}（{{ (d.dsType || d.ds_type || '').toUpperCase() }}）</option>
                     </select>
                   </FieldRow>
                   <FieldRow label="数据表 *" inline>
