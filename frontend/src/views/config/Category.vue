@@ -26,6 +26,21 @@
                 <span class="create-menu-sub">新增一个顶级行业</span>
               </div>
             </div>
+            <div class="create-menu-divider" v-if="selected && selected.categoryType <= 2"></div>
+            <div class="create-menu-item" @click="openCreateDomain" v-if="selected?.categoryType === 1">
+              <span v-html="BL.icon('folder', 12)"></span>
+              <div class="create-menu-text">
+                <span>新建领域</span>
+                <span class="create-menu-sub">在所选行业下新增领域</span>
+              </div>
+            </div>
+            <div class="create-menu-item" @click="openCreateGroup" v-if="selected && selected.categoryType <= 2">
+              <span v-html="BL.icon('layers', 12)"></span>
+              <div class="create-menu-text">
+                <span>新建分组</span>
+                <span class="create-menu-sub">在所选{{ catTypeText(selected.categoryType) }}下新增分组</span>
+              </div>
+            </div>
           </div>
         </div>
       </template>
@@ -427,8 +442,8 @@
             <select class="bl-input" v-model="formData.categoryType"
                     :disabled="formMode==='edit' || formParent?.categoryType !== 1">
               <option v-if="formMode==='create' && !formParent" :value="1">行业 (Industry)</option>
-              <option v-if="formMode==='edit' || formParent" :value="2">领域 (Domain)</option>
-              <option v-if="formMode==='edit' || formParent" :value="3">分组 (Group)</option>
+              <option v-if="formMode==='edit' || formParent?.categoryType===1" :value="2">领域 (Domain)</option>
+              <option v-if="formMode==='edit' || formParent?.categoryType===2" :value="3">分组 (Group)</option>
             </select>
           </FieldRow>
           <FieldRow label="父级"><input class="bl-input" :value="formParentLabel" disabled /></FieldRow>
@@ -1988,20 +2003,34 @@ const formParentLabel = computed(() => formParent.value?.label || '（顶级）'
 
 function openCreate(kind, parent) {
   formMode.value = 'create'
-  const p = parent || selected.value
-  formParent.value = p
-  const type = Math.min(p ? p.categoryType + 1 : 1, 3)
+  formParent.value = parent || selected.value
+  // kind 可以指定目标类型，若无则自动推算：父类+1，无选则行业
+  let type
+  if (typeof kind === 'number') {
+    type = kind
+  } else {
+    type = parent ? parent.categoryType + 1 : (selected.value ? selected.value.categoryType + 1 : 1)
+  }
   Object.assign(formData, {
-    categoryType: type,
+    categoryType: Math.min(type, 3),
     categoryCode: '',
     rdfsLabel: '',
-    // 分组继承父领域命名空间；其余沿用所选节点的命名空间作为默认
-    nsCode: p?.nsCode || '',
-    icon: 'folder',
-    color: '#165DFF',
+    nsCode: selected.value?.nsCode || '',
+    icon: type === 3 ? 'layers' : 'folder',
+    color: type === 3 ? '#722ED1' : '#165DFF',
     description: ''
   })
   formOpen.value = true
+}
+
+function openCreateDomain() {
+  createMenuOpen.value = false
+  openCreate(2, selected.value)
+}
+
+function openCreateGroup() {
+  createMenuOpen.value = false
+  openCreate(3, selected.value)
 }
 
 /* —— 新建按钮的下拉 —— */
