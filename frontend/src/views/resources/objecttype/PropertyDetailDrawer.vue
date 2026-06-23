@@ -277,7 +277,8 @@ const props = defineProps({
   classId: { type: String, default: '' },
   className: { type: String, default: '' },
   property: { type: Object, default: null }, // 编辑模式: 完整属性对象;新建: null
-  datasources: { type: Array, default: () => [] }
+  datasources: { type: Array, default: () => [] },
+  siblingProps: { type: Array, default: () => [] } // 同类已有属性 (用于排除已占用的物理字段)
 })
 const emit = defineEmits(['update:open', 'saved', 'navigateToTab'])
 
@@ -385,9 +386,22 @@ const dsOptions = computed(() => {
 })
 const tableOptions = computed(() => props.datasources.filter(d => d.ds_code === selDsCode.value))
 const selectedClassDs = computed(() => props.datasources.find(d => d.id === form.class_ds_id) || null)
+/* 该物理表下已被同类其他属性占用的字段 (同名列在一张表内唯一, 故按 physical_table 比对) */
+const usedColumns = computed(() => {
+  const tbl = form.physical_table
+  const set = new Set()
+  if (!tbl) return set
+  for (const p of props.siblingProps) {
+    if (!p || p.id === form.id) continue          // 跳过当前编辑的属性自身
+    if (p.physical_table === tbl && p.physical_column) set.add(p.physical_column)
+  }
+  return set
+})
 const columnOptions = computed(() => {
-  const names = (selectedClassDs.value?.physical_fields || []).map(f => f?.name).filter(Boolean)
-  // 兜底: 编辑时已存的列若不在字段清单内也保留, 避免回显丢失
+  let names = (selectedClassDs.value?.physical_fields || []).map(f => f?.name).filter(Boolean)
+  // 物理表重复时, 排除已被其他属性占用的字段
+  names = names.filter(n => !usedColumns.value.has(n))
+  // 兜底: 编辑时本属性已存的列即便被判定占用也保留, 避免回显丢失
   if (form.physical_column && !names.includes(form.physical_column)) names.unshift(form.physical_column)
   return names
 })

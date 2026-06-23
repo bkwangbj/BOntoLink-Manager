@@ -203,6 +203,7 @@
                           :class-name="className"
                           :property="drawerProperty"
                           :datasources="datasources"
+                          :sibling-props="rows"
                           @saved="onDrawerSaved"
                           @navigate-to-tab="$emit('navigate-tab', $event)" />
 
