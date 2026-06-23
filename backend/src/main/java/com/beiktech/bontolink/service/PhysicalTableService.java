@@ -4,6 +4,9 @@ import com.beiktech.bontolink.common.DataSourceConnector;
 import com.beiktech.bontolink.entity.SysDataSource;
 import com.beiktech.bontolink.mapper.PhysicalTableMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,7 @@ import java.util.*;
  * 同步源为该数据源自身配置的库(按 dsId 取 sys_data_source 配置, 动态 JDBC 连接读取 DatabaseMetaData, 方言无关);
  * 同步时只更新结构(类型/字段), 保留用户设置的中文名(display_name)。
  */
+@Slf4j
 @Service
 public class PhysicalTableService {
 
@@ -155,6 +159,7 @@ public class PhysicalTableService {
                 result.add(row);
             }
         } catch (SQLException e) {
+            log.error("连接数据源失败: " + e.getMessage(), e);
             throw new RuntimeException("连接数据源失败: " + e.getMessage(), e);
         }
         return result;
