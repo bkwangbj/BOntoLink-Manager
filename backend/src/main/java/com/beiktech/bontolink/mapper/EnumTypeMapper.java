@@ -37,6 +37,7 @@ public interface EnumTypeMapper {
 
     @Update("""
         UPDATE ont_enum_types SET enum_type=#{enum_type}, max_level=#{max_level},
+            category_code=#{category_code},
             top_code=#{top_code}, status=#{status}, rdfs_label=#{rdfs_label}, rdfs_comment=#{rdfs_comment},
             rdfs_see_also=#{rdfs_see_also}, rdfs_defined_by=#{rdfs_defined_by},
             update_time = datetime('now','localtime')

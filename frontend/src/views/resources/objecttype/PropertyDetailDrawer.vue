@@ -95,16 +95,13 @@
             <div class="pd-sec">表映射</div>
             <div class="pd-grid-1">
               <FieldRow label="数据源" inline hint="真实数据源 (类已绑定)">
-                <select class="bl-input" v-model="selDsCode" @change="onDsChange">
-                  <option value="">— 选择数据源 —</option>
-                  <option v-for="d in dsOptions" :key="d.code" :value="d.code">{{ d.name }}</option>
-                </select>
+                <FilterableSelect v-model="selDsCode" :options="dsOptions" value-key="code" label-key="name"
+                                  placeholder="— 选择数据源 —" search-placeholder="筛选数据源" @change="onDsChange" />
               </FieldRow>
               <FieldRow label="物理表" inline hint="按所选数据源取">
-                <select class="bl-input bl-mono" v-model="form.class_ds_id" :disabled="!selDsCode" @change="onTableChange">
-                  <option value="">— 选择物理表 —</option>
-                  <option v-for="t in tableOptions" :key="t.id" :value="t.id">{{ t.table_label || t.alias || t.physical_table }} · {{ t.physical_table }}</option>
-                </select>
+                <FilterableSelect v-model="form.class_ds_id" :options="tableSelectOpts" mono
+                                  :disabled="!selDsCode" placeholder="— 选择物理表 —"
+                                  search-placeholder="筛选物理表" @change="onTableChange" />
               </FieldRow>
               <FieldRow label="物理字段" inline hint="优先从现有表字段选择, 自动带出编码/名称/类型">
                 <select class="bl-input bl-mono" v-model="form.physical_column" :disabled="!form.class_ds_id" @change="onColumnChange">
@@ -269,6 +266,7 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
+import FilterableSelect from '@/components/FilterableSelect.vue'
 import { BL } from '@/lib/bl.js'
 import { classMetaApi, valueTypeApi, datasourceApi } from '@/api'
 
@@ -385,6 +383,9 @@ const dsOptions = computed(() => {
   return [...seen.values()]
 })
 const tableOptions = computed(() => props.datasources.filter(d => d.ds_code === selDsCode.value))
+const tableSelectOpts = computed(() => tableOptions.value.map(t => ({
+  value: t.id, label: `${t.table_label || t.alias || t.physical_table} · ${t.physical_table}`
+})))
 const selectedClassDs = computed(() => props.datasources.find(d => d.id === form.class_ds_id) || null)
 /* 该物理表下已被同类其他属性占用的字段 (同名列在一张表内唯一, 故按 physical_table 比对) */
 const usedColumns = computed(() => {

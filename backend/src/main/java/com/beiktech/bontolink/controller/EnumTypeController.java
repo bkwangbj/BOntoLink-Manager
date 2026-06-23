@@ -15,6 +15,7 @@ import java.util.*;
 public class EnumTypeController {
 
     @Autowired private EnumTypeMapper mapper;
+    @Autowired private com.beiktech.bontolink.service.EnumSyncService syncService;
 
     /* ===== 分组 ===== */
 
@@ -178,22 +179,16 @@ public class EnumTypeController {
     }
 
     /**
-     * 立即执行同步 (占位实现): 当前仅插入一条 success 日志,真实拉取数据由后续同步引擎实现.
+     * 立即执行同步: 连接配置的数据源, 按字段映射拉取目标表数据写入 ont_enum_items, 返回带真实计数的日志。
      */
     @PostMapping("/{enumId}/sync-run")
     public R<Map<String, Object>> runSync(@PathVariable String enumId, @RequestBody(required = false) Map<String, Object> body) {
-        Map<String, Object> log = new LinkedHashMap<>();
-        log.put("id", "enum-sync-log-" + UUID.randomUUID());
-        log.put("enum_id", enumId);
-        log.put("sync_type", body != null && body.get("sync_type") != null ? body.get("sync_type") : "manual");
-        log.put("add_count", 0);
-        log.put("update_count", 0);
-        log.put("del_count", 0);
-        log.put("fail_count", 0);
-        log.put("sync_status", "success");
-        log.put("error_msg", null);
-        log.put("oper_user", body != null ? body.get("oper_user") : null);
-        mapper.insertSyncLog(log);
+        String syncType = body != null && body.get("sync_type") != null ? String.valueOf(body.get("sync_type")) : "manual";
+        String operUser = body != null && body.get("oper_user") != null ? String.valueOf(body.get("oper_user")) : null;
+        Map<String, Object> log = syncService.run(enumId, syncType, operUser);
+        if ("failed".equals(log.get("sync_status"))) {
+            return R.error(500, "同步失败: " + (log.get("error_msg") == null ? "未知错误" : log.get("error_msg")));
+        }
         return R.ok(log);
     }
 
