@@ -16,6 +16,7 @@ public class CategoryService {
     @Autowired private BizCategoryMapper categoryMapper;
     @Autowired private OntologyMapper ontologyMapper;
     @Autowired private BizNamespaceMapper namespaceMapper;
+    @Autowired private NamespaceService namespaceService;
 
     public List<Map<String, Object>> tree() {
         List<BizCategory> all = categoryMapper.listAll();
@@ -100,14 +101,12 @@ public class CategoryService {
             BizNamespace existing = namespaceMapper.findByCode(code);
             if (existing == null) {
                 BizNamespace ns = new BizNamespace();
-                ns.setId("namespace-" + UUID.randomUUID());
                 ns.setNsCode(code);
                 ns.setNsName(c.getRdfsLabel() != null ? c.getRdfsLabel() : code);
                 ns.setNsUri("http://ont.beiktech.com/ns/" + code);
                 ns.setHierarchyPath(code);
-                ns.setCurrVersion("1.0");
-                ns.setStatus(1);
-                namespaceMapper.insert(ns);
+                // 通过 NamespaceService 创建，自动生成版本记录 v1.0
+                namespaceService.create(ns);
             }
             // 领域绑定到该命名空间
             c.setNsCode(code);
