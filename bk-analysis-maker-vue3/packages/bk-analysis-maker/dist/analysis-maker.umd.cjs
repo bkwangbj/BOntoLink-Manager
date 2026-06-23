@@ -35197,6 +35197,7 @@
         }
       },
       setTheme (theme) {
+        if (!this.$refs.layoutWrapper) return
         const list = [];
         this.$refs.layoutWrapper.classList.forEach(c => {
           if (c.startsWith('am-theme-')) {
@@ -35924,7 +35925,7 @@
       class: vue.normalizeClass([!$data.isShowfull ? '' : 'has_full', 'analysis-maker-wrapper', $data.showGridLine ? 'point-disable' : ''])
     }, [
       (vue.openBlock(), vue.createBlock(vue.Teleport, {
-        to: $props.embedToolbarTarget,
+        to: $props.embedToolbarTarget || 'body',
         disabled: !$props.embedToolbarTarget
       }, [
         (!$props.isModal)
@@ -36416,7 +36417,7 @@
         : vue.createCommentVNode("", true)
     ], 2))
   }
-  const AnalysisMaker = /*#__PURE__*/_export_sfc(_sfc_main$1s, [['render',_sfc_render$1r],['__scopeId',"data-v-e15190bf"]]);
+  const AnalysisMaker = /*#__PURE__*/_export_sfc(_sfc_main$1s, [['render',_sfc_render$1r],['__scopeId',"data-v-e541e621"]]);
 
   AnalysisMaker.install = function (Vue) {
     Vue.component(AnalysisMaker.name, AnalysisMaker);
@@ -81470,7 +81471,8 @@
       },
       calculateContainer (value, copyItem) {
         const w = copyItem ? copyItem.w : (value ? 6 : 4);
-        const h = copyItem ? copyItem.h : (value ? 16 : 8);
+        // 新增区域默认高度 9(= 自动图表块高度,350px),与现有块保持一致
+        const h = copyItem ? copyItem.h : (value ? 16 : 9);
         const maxYLayout = Math.max(...this.configs.layout.map(item => (item.y + item.h)));
         const maxY = (!this.configs.maxRows || this.configs.maxRows === Infinity) ? maxYLayout : (this.configs.maxRows - h);
         const maxX = this.configs.colNum - w;
@@ -81498,7 +81500,7 @@
           x: (this.configs.layout.length * 2) % (this.configs.colNum || 12),
           y: this.configs.layout.length + (this.configs.colNum || 12),
           w: copyItem ? copyItem.w : (this.configs.w || 4),
-          h: copyItem ? copyItem.h : (isChild ? 16 : (this.configs.h || 8)),
+          h: copyItem ? copyItem.h : (isChild ? 16 : (this.configs.h || 9)),
           i: v4()
         };
         item = coordinates ? Object.assign(item, coordinates) : item;
@@ -81996,7 +81998,7 @@
       _: 1
     }, 8, ["layout", "col-num", "row-height", "is-draggable", "is-resizable", "margin", "max-rows", "prevent-collision"]))
   }
-  const GridLayoutContent = /*#__PURE__*/_export_sfc(_sfc_main$A, [['render',_sfc_render$z],['__scopeId',"data-v-aa62b630"]]);
+  const GridLayoutContent = /*#__PURE__*/_export_sfc(_sfc_main$A, [['render',_sfc_render$z],['__scopeId',"data-v-8bc9f5e9"]]);
 
   GridLayoutContent.install = function (Vue) {
     Vue.component(libPrefix + GridLayoutContent.name, GridLayoutContent);
@@ -89840,8 +89842,13 @@ onDestroy(function () {
         }
         this.emitChange();
       },
+      // 取字段的显示名(供后端多字段序列命名 colorField 用)
+      fieldLabel (field) {
+        const o = (this.fieldOptions || []).find(x => x.value === field);
+        return (o && o.label) ? o.label : field
+      },
       stripKeys (rows) {
-        return (rows || []).map(r => ({ field: r.field, aggs: r.aggs }))
+        return (rows || []).map(r => ({ field: r.field, label: this.fieldLabel(r.field), aggs: r.aggs }))
       },
       emitChange () {
         this.$emit('update:metrics', this.stripKeys(this.rows));
@@ -89960,7 +89967,7 @@ onDestroy(function () {
         : vue.createCommentVNode("", true)
     ]))
   }
-  const MetricSetting = /*#__PURE__*/_export_sfc(_sfc_main$d, [['render',_sfc_render$c],['__scopeId',"data-v-daaaa30c"]]);
+  const MetricSetting = /*#__PURE__*/_export_sfc(_sfc_main$d, [['render',_sfc_render$c],['__scopeId',"data-v-bf5c9ac3"]]);
 
   /* unplugin-vue-components disabled */
 

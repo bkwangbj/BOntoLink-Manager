@@ -183,9 +183,9 @@
               <header class="gr-drawer-hd">
                 <div class="gr-drawer-title">
                   <div class="gr-drawer-cn">{{ linkDrawer.title }}
-                    <span class="bl-tag" style="margin-left:8px;font-size:11px">{{ linkDrawer.links.length }} 条链接</span>
+                    <span class="bl-tag" style="margin-left:8px;font-size:11px">{{ linkDrawer.links.length }} 条关系</span>
                   </div>
-                  <div class="gr-drawer-en bl-mono">普通链接</div>
+                  <div class="gr-drawer-en bl-mono">对象类型间关系</div>
                 </div>
                 <button class="gr-drawer-close" title="关闭" @click="closeLinkDrawer"><span v-html="BL.icon('x', 16)"></span></button>
               </header>
@@ -194,7 +194,9 @@
                   <span class="gr-link-node" :title="l.src">{{ l.src }}</span>
                   <span class="gr-link-rel">
                     <span class="gr-link-line"></span>
-                    <span class="gr-link-name">{{ l.name }}</span>
+                    <span class="gr-link-name">
+                      <span class="gr-rel-mark" :style="{ background: l.kindColor, marginRight: '5px', display: 'inline-block', verticalAlign: 'middle' }"></span>{{ l.name }}
+                    </span>
                     <span v-html="BL.icon('chevronRight', 12, 'var(--bl-text-3)')"></span>
                   </span>
                   <span class="gr-link-node" :title="l.tgt">{{ l.tgt }}</span>
@@ -625,6 +627,14 @@ function edgeStyleOf(kind) {
   const r = RELATION_MAP[kind] || RELATION_MAP.link
   return { stroke: r.color, lineWidth: r.width, lineDash: r.dash, endArrow: kind === 'sub' }
 }
+/* 合并边样式:仅一种(可见)关系类型 → 用该类型色/线型;多种 → 中性灰实线(代表"多关系") */
+function mergedEdgeStyle(group) {
+  const onKinds = [...new Set(group.filter(x => edgeOn(x.kind)).map(x => x.kind))]
+  if (onKinds.length === 1) return edgeStyleOf(onKinds[0])
+  const allKinds = [...new Set(group.map(x => x.kind))]
+  if (allKinds.length === 1) return edgeStyleOf(allKinds[0])
+  return { stroke: '#86909c', lineWidth: 2, lineDash: [0], endArrow: false }
+}
 /* 右画布:力导向关系图(对象类型卡片 + 5 类关系) */
 function initRight() {
   const el = rightCanvas.value; if (!el) return
@@ -642,28 +652,27 @@ function initRight() {
   const data = rightData()   // 全部 或 当前范围裁剪+聚合后的图
   // 节点名 + 普通链接按"对象类型对"分组(用于线上计数标注 + 点击查看链接列表)
   nodeNameStore = {}; data.nodes.forEach(n => { nodeNameStore[n.id] = n.label || n.apiName || n.id })
-  linkGroupsStore = {}
+  // 所有关系按"对象类型对"(无向)分组 → 每对只画一条线,数量=该对关系总数(避免多条并排弧线杂乱)
+  pairGroupsStore = {}
   data.edges.forEach(e => {
-    if (e.kind !== 'link') return
-    const k = [e.source, e.target].slice().sort().join('|')
-    ;(linkGroupsStore[k] = linkGroupsStore[k] || []).push(e)
+    const pk = [e.source, e.target].slice().sort().join('|')
+    ;(pairGroupsStore[pk] = pairGroupsStore[pk] || []).push(e)
   })
-  const countShown = new Set()
-  const edges = data.edges.map((e, i) => {
-    let lbl = ''; let pairKey = null
-    if (e.kind === 'link') {
-      pairKey = [e.source, e.target].slice().sort().join('|')
-      if (!countShown.has(pairKey)) { countShown.add(pairKey); lbl = String(linkGroupsStore[pairKey].length) }  // 数字=链接数量
-    }
+  const edges = Object.keys(pairGroupsStore).map((pk, i) => {
+    const group = pairGroupsStore[pk]
+    const first = group[0]
+    const onCount = group.filter(x => edgeOn(x.kind)).length
+    const lbl = onCount > 1 ? String(onCount) : ''   // 数量≥2 才标数字(关系线总数)
     return {
-      id: 'e' + i, source: e.source, target: e.target, kind: e.kind, pairKey, label: lbl, style: edgeStyleOf(e.kind),
+      id: 'e' + i, source: first.source, target: first.target, kind: first.kind, pairKey: pk,
+      label: lbl, style: mergedEdgeStyle(group),
       labelCfg: lbl ? { refY: 0, autoRotate: false, style: {
         fontSize: 11, fontWeight: 600, fill: '#165DFF', cursor: 'pointer',
-        background: { fill: '#fff', stroke: RELATION_MAP.link.color, lineWidth: 1, padding: [3, 7, 3, 7], radius: 10 }
+        background: { fill: '#fff', stroke: '#c9cdd4', lineWidth: 1, padding: [3, 7, 3, 7], radius: 10 }
       } } : undefined
     }
   })
-  // 同一对节点间多条不同关系的边会重叠 → 散开成不同弧度,让每种关系各显其色
+  // 每对已合并为一条;此处主要处理自环重叠
   if (G6.Util && G6.Util.processParallelEdges) {
     G6.Util.processParallelEdges(edges, 20, 'quadratic', 'cubic-horizontal', 'loop')
   }
@@ -674,7 +683,7 @@ function initRight() {
     if (m._agg) applyScope(m.categoryCode)     // 点聚合方图 → 下钻到该范围
     else openRightDrawer(m)
   })
-  g.on('edge:click', (evt) => { const m = evt.item.getModel(); if (m.kind === 'link') openLinkDrawer(m.pairKey, evt.item) })
+  g.on('edge:click', (evt) => { const m = evt.item.getModel(); if (m.pairKey) openLinkDrawer(m.pairKey, evt.item) })
   g.on('canvas:click', () => { closeDrawer(); closeLinkDrawer() })
   rightG.value = g
   nextTick(applyRelFilter)
@@ -693,19 +702,21 @@ function openRightDrawer(m) {
 function closeDrawer() { drawerNode.value = null; drawerClassDetail.value = null; resetRight() }
 
 /* —— 链接信息抽屉(点普通链接标注:对象类型—链接—对象类型 列表) —— */
-let linkGroupsStore = {}
+let pairGroupsStore = {}   // pairKey -> 该对节点间全部关系边(任意类型)
 let nodeNameStore = {}
 const linkDrawer = ref(null)
 function openLinkDrawer(pairKey, edgeItem) {
-  const group = linkGroupsStore[pairKey] || []
+  const group = (pairGroupsStore[pairKey] || []).filter(x => edgeOn(x.kind))
   if (!group.length) return
   drawerNode.value = null; drawerClassDetail.value = null
   linkDrawer.value = {
-    title: '链接信息',
+    title: '关系信息',
     links: group.map(l => ({
       src: nodeNameStore[l.source] || l.source,
       srcId: l.source,
-      name: l.label || '链接',
+      name: l.label || (RELATION_MAP[l.kind] && RELATION_MAP[l.kind].cn) || '关系',
+      kindCn: (RELATION_MAP[l.kind] && RELATION_MAP[l.kind].cn) || l.kind,
+      kindColor: (RELATION_MAP[l.kind] && RELATION_MAP[l.kind].color) || '#86909c',
       tgt: nodeNameStore[l.target] || l.target,
       tgtId: l.target
     }))
@@ -780,7 +791,23 @@ function applyGraph(k) { curGraph.value = k; const g = rightG.value; if (g) { bi
 /* —— 关系筛选:复选框控制连线显隐 —— */
 function applyRelFilter() {
   const g = rightG.value; if (!g) return
-  g.getEdges().forEach(e => { edgeOn(e.getModel().kind) ? g.showItem(e, false) : g.hideItem(e, false) })
+  g.getEdges().forEach(e => {
+    const m = e.getModel()
+    const group = pairGroupsStore[m.pairKey] || []
+    const onCount = group.length ? group.filter(x => edgeOn(x.kind)).length : (edgeOn(m.kind) ? 1 : 0)
+    if (onCount === 0) { g.hideItem(e, false); return }   // 该对所有关系类型都被关掉 → 隐藏
+    g.showItem(e, false)
+    if (!group.length) return
+    const lbl = onCount > 1 ? String(onCount) : ''
+    g.updateItem(e, {
+      label: lbl,
+      style: mergedEdgeStyle(group),
+      labelCfg: lbl ? { refY: 0, autoRotate: false, style: {
+        fontSize: 11, fontWeight: 600, fill: '#165DFF', cursor: 'pointer',
+        background: { fill: '#fff', stroke: '#c9cdd4', lineWidth: 1, padding: [3, 7, 3, 7], radius: 10 }
+      } } : undefined
+    })
+  })
 }
 
 /* —— 搜索高亮:命中节点高亮 + 关联连线加粗,其余弱化 —— */

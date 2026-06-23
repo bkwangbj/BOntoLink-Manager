@@ -17,6 +17,7 @@ import { createRouter, createMemoryHistory, useRoute } from 'vue-router'
 import { instanceApi } from '@/api'
 import { buildPageConfig } from './maker-instance'
 import ElementPlus from 'element-plus'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import 'element-plus/dist/index.css'
 import * as ElIcons from '@element-plus/icons-vue'
 import VXETable from 'vxe-table'
@@ -87,7 +88,7 @@ onMounted(async () => {
   childApp.use(createRouter({ history: createMemoryHistory(), routes: [{ path: '/', component: { render: () => null } }] }))
   for (const [k, c] of Object.entries(ElIcons)) childApp.component(k, c)
   childApp.component('BKChart', MakerChart)   // maker 图表渲染委托给宿主提供的 BKChart
-  childApp.use(ElementPlus)
+  childApp.use(ElementPlus, { locale: zhCn })
   childApp.use(VXETable)
   childApp.use(ContextMenu)
   childApp.use(TColorPicker)

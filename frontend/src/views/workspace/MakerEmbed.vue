@@ -14,6 +14,7 @@ import { createApp, h, ref, watch, onMounted, onBeforeUnmount, nextTick, resolve
 import { createPinia } from 'pinia'
 import { createRouter, createMemoryHistory } from 'vue-router'
 import ElementPlus from 'element-plus'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import 'element-plus/dist/index.css'
 import * as ElIcons from '@element-plus/icons-vue'
 import VXETable from 'vxe-table'
@@ -56,15 +57,39 @@ const props = defineProps({
   columns: { type: Array, default: () => [] },
   filterParams: { type: Object, default: () => ({}) },
   // 宿主工具栏插槽选择器:设置后 maker 顶栏 Teleport 到该处(看板与子头工具栏合并成一行)
-  toolbarTarget: { type: String, default: '' }
+  toolbarTarget: { type: String, default: '' },
+  // 已保存的看板配置(整个 layoutConfig);有则用它恢复存档,无则按数据特征自动生成
+  savedConfig: { type: Object, default: null }
 })
-const emit = defineEmits(['save-as'])
+const emit = defineEmits(['save-as', 'save-page'])
 
 const host = ref(null)
 let childApp = null
 let mountSeq = 0
+let makerInst = null   // maker 根组件公开实例(读取当前 layoutConfig 用)
 
-function destroy () { if (childApp) { childApp.unmount(); childApp = null } }
+function destroy () { if (childApp) { childApp.unmount(); childApp = null } makerInst = null }
+
+/** 把 finalConfig(按区域 id 的图表配置 map)合并回 layout 各区域的 tabList。
+ *  maker 渲染时图表配置在 finalConfig 里、layout[i].tabList 会被清空,持久化必须合并回去否则丢图。 */
+function mergeFinal (node, finalConfig) {
+  if (!node || !finalConfig) return
+  const cfg = finalConfig[node.id]
+  if (cfg && cfg.length) node.tabList = JSON.parse(JSON.stringify(cfg))
+  if (Array.isArray(node.layout)) node.layout.forEach(n => mergeFinal(n, finalConfig))
+  if (node.isTabLayout && Array.isArray(node.tabList)) node.tabList.forEach(n => mergeFinal(n, finalConfig))
+}
+
+/** 拉取 maker 当前完整布局配置(含图表,供宿主「另存为」持久化) */
+function getConfig () {
+  try {
+    if (!makerInst || !makerInst.layoutConfig) return null
+    const merged = JSON.parse(JSON.stringify(makerInst.layoutConfig))
+    mergeFinal(merged, makerInst.finalConfig)
+    return merged
+  } catch { return null }
+}
+defineExpose({ getConfig })
 
 // 取链接对象类型及其列(供看板自动分析关联对象的属性/枚举)
 async function loadLinkGroups (classId) {
@@ -87,8 +112,13 @@ async function mount () {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
   const themeKey = isDark ? 'blue' : 'default'
   let pageConfig = null
-  try { pageConfig = props.classId ? buildPageConfig(props.classId, props.columns, props.filterParams, linkGroups, isDark) : null }
-  catch (e) { console.error('[MakerEmbed] buildPageConfig failed', e); pageConfig = null }
+  // 有存档 → 用存档恢复;否则按数据特征自动生成
+  if (props.savedConfig && props.savedConfig.layout) {
+    pageConfig = JSON.parse(JSON.stringify(props.savedConfig))
+  } else {
+    try { pageConfig = props.classId ? buildPageConfig(props.classId, props.columns, props.filterParams, linkGroups, isDark) : null }
+    catch (e) { console.error('[MakerEmbed] buildPageConfig failed', e); pageConfig = null }
+  }
   // 新增图表默认数据源工厂(绑定实例 chart-data,默认第一个维度);类型不支持时返回 null
   let embedDefaultDataSource = null
   try { embedDefaultDataSource = props.classId ? buildEmbedDefaultDataSource(props.classId, props.columns, props.filterParams, isDark) : null }
@@ -97,6 +127,7 @@ async function mount () {
     render () {
       const Maker = resolveComponent('AnalysisMaker')
       return h(Maker, {
+        ref: (el) => { makerInst = el },
         chartMenuList: chartList,
         pageConfig,
         operPermission: ['*.*'],
@@ -104,7 +135,17 @@ async function mount () {
         isBasicMode: false,
         defaultThemeKey: themeKey,
         embedToolbarTarget: props.toolbarTarget,
-        embedOnSaveAs: () => emit('save-as')
+        embedOnSaveAs: () => emit('save-as'),
+        // maker「保存」→ 合并图表配置后把完整 layoutConfig 抛给宿主入库
+        // (savePageConfig 给的 data 已删 tabList,图表在 finalConfig 里,需合并回去)
+        onInvokeAMakerMethod: (method, data, finalConfig, isAuto, cb) => {
+          if (method === 'savePageConfig') {
+            const merged = JSON.parse(JSON.stringify(data))
+            mergeFinal(merged, finalConfig)
+            emit('save-page', merged)
+            if (typeof cb === 'function') cb()
+          }
+        }
       })
     }
   }
@@ -116,7 +157,7 @@ async function mount () {
   childApp.use(createRouter({ history: createMemoryHistory(), routes: [{ path: '/', component: { render: () => null } }] }))
   for (const [k, c] of Object.entries(ElIcons)) childApp.component(k, c)
   childApp.component('BKChart', MakerChart)
-  childApp.use(ElementPlus)
+  childApp.use(ElementPlus, { locale: zhCn })
   childApp.use(VXETable)
   childApp.use(ContextMenu)
   childApp.use(TColorPicker)
@@ -137,8 +178,9 @@ onMounted(() => {
   })
   themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 })
-// 对象类型变化 → 重建(列随之变);筛选变化不重建,避免覆盖用户编辑
+// 对象类型变化 / 存档加载完成 → 重建(列随之变);筛选变化不重建,避免覆盖用户编辑
 watch(() => props.classId, (v, old) => { if (v !== old) nextTick(mount) })
+watch(() => props.savedConfig, () => nextTick(mount))
 
 onBeforeUnmount(() => { destroy(); if (themeObserver) themeObserver.disconnect() })
 </script>

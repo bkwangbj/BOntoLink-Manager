@@ -148,16 +148,27 @@ public class InstanceController {
         boolean sortDesc = true, includeOther = false;
         String groupMode = "include";
         Set<String> selected = null;
-        // 指标:单系列图取第一项 field + 第一个聚合
+
+        // 序列规格:每个 (field, agg) 组合 = 一条序列(支持多指标/多聚合并排对比)
+        List<String[]> specs = new ArrayList<>();   // [field, agg, fieldLabel]
         List<Map<String, Object>> metricList = parseList(metrics);
-        if (!metricList.isEmpty()) {
-            Map<String, Object> m0 = metricList.get(0);
-            Object f = m0.get("field");
-            if (f != null && !String.valueOf(f).isBlank()) mField = String.valueOf(f);
-            Object aggs = m0.get("aggs");
-            if (aggs instanceof List && !((List<?>) aggs).isEmpty()) mAgg = String.valueOf(((List<?>) aggs).get(0));
-            sortAgg = mAgg;
+        Set<String> specSeen = new HashSet<>();
+        for (Map<String, Object> m : metricList) {
+            String f = m.get("field") == null ? "" : String.valueOf(m.get("field"));
+            String lbl = m.get("label") == null ? "" : String.valueOf(m.get("label"));
+            Object aggsO = m.get("aggs");
+            List<?> aggs = (aggsO instanceof List && !((List<?>) aggsO).isEmpty()) ? (List<?>) aggsO : List.of("count");
+            for (Object a : aggs) {
+                String ag = String.valueOf(a);
+                // 空字段只对「计数」有意义(组大小);其余聚合需字段
+                if (f.isBlank() && !"count".equals(ag)) continue;
+                if (specSeen.add(f + "|" + ag)) specs.add(new String[]{f, ag, lbl});
+            }
         }
+        if (specs.isEmpty()) specs.add(new String[]{mField == null ? "" : mField, mAgg, ""});  // 旧行为:单序列
+        // 排序基准 = 第一条序列的聚合
+        sortAgg = specs.get(0)[1];
+
         // 分组与筛选
         Map<String, Object> gp = parseFilter(grouping);
         if (gp != null) {
@@ -178,43 +189,102 @@ public class InstanceController {
             sortDesc = !Boolean.FALSE.equals(s0.get("desc"));
         }
 
-        // 2) 全量聚合(limit=0),再做筛选 / 归其他 / 排序 / 截断
+        // 2) 每个序列字段各做一次全量分组聚合(每组含 count/sum/avg/min/max)
         List<Map<String, Object>> rows = mock.query(classId, q, parseFilter(filter));
-        List<Map<String, Object>> aggd = new ArrayList<>(mock.aggregate(rows, gb, mField, sortAgg, 0));
+        final String fgb = gb;   // lambda 需 effectively-final
+        Map<String, Map<String, Map<String, Object>>> aggByField = new LinkedHashMap<>();  // field -> (key -> aggRow)
+        Map<String, List<Map<String, Object>>> listByField = new LinkedHashMap<>();
+        for (String[] s : specs) {
+            aggByField.computeIfAbsent(s[0], f -> {
+                List<Map<String, Object>> list = new ArrayList<>(mock.aggregate(rows, fgb, f, "count", 0));
+                listByField.put(f, list);
+                Map<String, Map<String, Object>> byKey = new LinkedHashMap<>();
+                for (Map<String, Object> r : list) byKey.put(String.valueOf(r.get("key")), r);
+                return byKey;
+            });
+        }
 
+        // 3) 用第一条序列确定分组顺序:筛选 / 归其他 / 排序 / 截断
+        String[] primary = specs.get(0);
+        List<Map<String, Object>> prim = new ArrayList<>(listByField.get(primary[0]));
+        List<Map<String, Object>> kept = new ArrayList<>(), rest = new ArrayList<>();
         if (selected != null && !selected.isEmpty()) {
             boolean exclude = "exclude".equals(groupMode);
-            List<Map<String, Object>> kept = new ArrayList<>(), rest = new ArrayList<>();
-            for (Map<String, Object> row : aggd) {
+            for (Map<String, Object> row : prim) {
                 boolean hit = selected.contains(String.valueOf(row.get("key")));
                 (((exclude) ? !hit : hit) ? kept : rest).add(row);
             }
-            if (includeOther && !rest.isEmpty()) kept.add(mergeOther(rest, sortAgg));
-            aggd = kept;
+        } else {
+            kept = prim;
         }
-
         final boolean desc = sortDesc;
-        aggd.sort((x, y) -> {
-            int c = Double.compare(toD(x.get("value")), toD(y.get("value")));
+        final String pAgg = primary[1];
+        kept.sort((x, y) -> {
+            int c = Double.compare(toD(aggVal(x, pAgg)), toD(aggVal(y, pAgg)));
             return desc ? -c : c;
         });
-        if (limit > 0 && aggd.size() > limit) aggd = new ArrayList<>(aggd.subList(0, limit));
+        if (limit > 0 && kept.size() > limit) kept = new ArrayList<>(kept.subList(0, limit));
+        List<String> orderedKeys = new ArrayList<>();
+        for (Map<String, Object> row : kept) orderedKeys.add(String.valueOf(row.get("key")));
+        boolean hasOther = includeOther && !rest.isEmpty();
 
-        // 3) 输出([{name,value,x,y,colorField}]),value 取指标聚合
+        // 「其他」按每个字段分别合并被排除的分组
+        Set<String> restKeys = new HashSet<>();
+        for (Map<String, Object> r : rest) restKeys.add(String.valueOf(r.get("key")));
+        Map<String, Map<String, Object>> otherByField = new HashMap<>();
+        if (hasOther) {
+            for (String f : aggByField.keySet()) {
+                List<Map<String, Object>> fRest = new ArrayList<>();
+                for (Map<String, Object> r : listByField.get(f)) {
+                    if (restKeys.contains(String.valueOf(r.get("key")))) fRest.add(r);
+                }
+                otherByField.put(f, mergeOther(fRest, "count"));
+            }
+        }
+
+        // 4) 序列标签:单序列保持「数量」;同字段多聚合用聚合名;多字段用「字段·聚合」
+        boolean single = specs.size() == 1;
+        boolean sameField = specs.stream().map(s -> s[0]).distinct().count() <= 1;
+
+        // 5) 长格式输出:每组 × 每序列一行,colorField 区分序列(前端 autoSeries 据此分组)
         List<Map<String, Object>> out = new ArrayList<>();
-        for (Map<String, Object> g : aggd) {
-            Object key = g.get("key");
-            Object v = "count".equals(mAgg) ? g.get("count") : g.get(mAgg);
-            if (v == null) v = g.get("count");
-            Map<String, Object> o = new LinkedHashMap<>();
-            o.put("name", key);
-            o.put("value", v);
-            o.put("x", key);
-            o.put("y", v);
-            o.put("colorField", "数量");
-            out.add(o);
+        List<String> keys = new ArrayList<>(orderedKeys);
+        if (hasOther) keys.add("其他");
+        for (String key : keys) {
+            for (String[] s : specs) {
+                Map<String, Object> aggRow = "其他".equals(key)
+                        ? otherByField.get(s[0])
+                        : aggByField.get(s[0]).get(key);
+                Object v = aggRow == null ? 0 : aggVal(aggRow, s[1]);
+                Map<String, Object> o = new LinkedHashMap<>();
+                o.put("name", key);
+                o.put("value", v);
+                o.put("x", key);
+                o.put("y", v);
+                o.put("colorField", seriesLabel(s, single, sameField));
+                out.add(o);
+            }
         }
         return R.ok(out);
+    }
+
+    /** 从聚合行取指定聚合值(count/sum/avg/min/max),缺省回退 count。 */
+    private Object aggVal(Map<String, Object> aggRow, String agg) {
+        if (aggRow == null) return 0;
+        Object v = "count".equals(agg) ? aggRow.get("count") : aggRow.get(agg);
+        return v != null ? v : aggRow.get("count");
+    }
+
+    private static final Map<String, String> AGG_LABEL = Map.of(
+            "count", "计数", "sum", "总和", "avg", "平均值", "min", "最小值", "max", "最大值");
+
+    /** 序列名:单序列「数量」;同字段多聚合用聚合名;多字段用「字段·聚合」。 */
+    private String seriesLabel(String[] spec, boolean single, boolean sameField) {
+        if (single) return "数量";
+        String aggLbl = AGG_LABEL.getOrDefault(spec[1], spec[1]);
+        if (sameField) return aggLbl;
+        String fieldLbl = (spec[2] != null && !spec[2].isBlank()) ? spec[2] : spec[0];
+        return fieldLbl + "·" + aggLbl;
     }
 
     /** 把多个分组合并为「其他」一条(count/sum 累加,min/max 取极值,avg=sum/count)。 */

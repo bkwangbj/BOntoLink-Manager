@@ -143,8 +143,8 @@ const menus = [
   { key: 'workspace', title: '工作区', items: [
     { path: '/workspace/discover',   icon: 'grid',     label: '总览',     en: 'Overview' },
     { path: '/workspace/graph',      icon: 'network',  label: '图谱',     en: 'Graph' },
-    { path: '/workspace/instances',  icon: 'database', label: '实例探索', en: 'Individual discover' },
-    { path: '/workspace/maker',       icon: 'barChart', label: '可视化制作', en: 'Analysis maker' }
+    { path: '/workspace/instances',  icon: 'database', label: '实例探索', en: 'Individual discover' }
+    // { path: '/workspace/maker',       icon: 'barChart', label: '可视化制作', en: 'Analysis maker' }  // 暂时隐藏(看板已内嵌于实例探索)
   ]},
   { key: 'resources', title: '资源', items: [
     { path: '/resources/object-types', icon: 'cube',    label: '对象类型', en: 'Object types' },

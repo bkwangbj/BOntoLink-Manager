@@ -436,7 +436,8 @@ export default {
     },
     calculateContainer (value, copyItem) {
       const w = copyItem ? copyItem.w : (value ? 6 : 4)
-      const h = copyItem ? copyItem.h : (value ? 16 : 8)
+      // 新增区域默认高度 9(= 自动图表块高度,350px),与现有块保持一致
+      const h = copyItem ? copyItem.h : (value ? 16 : 9)
       const maxYLayout = Math.max(...this.configs.layout.map(item => (item.y + item.h)))
       const maxY = (!this.configs.maxRows || this.configs.maxRows === Infinity) ? maxYLayout : (this.configs.maxRows - h)
       const maxX = this.configs.colNum - w
@@ -464,7 +465,7 @@ export default {
         x: (this.configs.layout.length * 2) % (this.configs.colNum || 12),
         y: this.configs.layout.length + (this.configs.colNum || 12),
         w: copyItem ? copyItem.w : (this.configs.w || 4),
-        h: copyItem ? copyItem.h : (isChild ? 16 : (this.configs.h || 8)),
+        h: copyItem ? copyItem.h : (isChild ? 16 : (this.configs.h || 9)),
         i: uuidv4()
       }
       item = coordinates ? Object.assign(item, coordinates) : item

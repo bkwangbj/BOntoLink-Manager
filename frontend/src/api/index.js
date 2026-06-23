@@ -293,4 +293,15 @@ export const instanceApi = {
   searchResults: (q, sampleN = 4) => http.get('/instance/search-results', { params: { q, sampleN } })
 }
 
+/* 实例探索「看板/设计」持久化(替代原 localStorage)
+   default: 每对象类型一份默认看板(maker 保存写回);命名设计走 listNamed/create/update/remove */
+export const exploreDesignApi = {
+  listNamed:   (classId) => http.get('/explore-design', { params: { classId } }),
+  getDefault:  (classId) => http.get('/explore-design/default', { params: { classId } }),
+  saveDefault: (classId, config, kind = 'query') => http.put('/explore-design/default', { classId, config, kind }),
+  create:      (data) => http.post('/explore-design', data),
+  update:      (id, data) => http.put(`/explore-design/${id}`, data),
+  remove:      (id) => http.delete(`/explore-design/${id}`)
+}
+
 export default http

@@ -151,8 +151,13 @@ export default {
       }
       this.emitChange()
     },
+    // 取字段的显示名(供后端多字段序列命名 colorField 用)
+    fieldLabel (field) {
+      const o = (this.fieldOptions || []).find(x => x.value === field)
+      return (o && o.label) ? o.label : field
+    },
     stripKeys (rows) {
-      return (rows || []).map(r => ({ field: r.field, aggs: r.aggs }))
+      return (rows || []).map(r => ({ field: r.field, label: this.fieldLabel(r.field), aggs: r.aggs }))
     },
     emitChange () {
       this.$emit('update:metrics', this.stripKeys(this.rows))

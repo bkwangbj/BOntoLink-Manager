@@ -3,7 +3,7 @@
     style="height: 100%;padding: 0;"
     :class="[!isShowfull ? '' : 'has_full', 'analysis-maker-wrapper', showGridLine ? 'point-disable' : '']"
   >
-    <Teleport :to="embedToolbarTarget" :disabled="!embedToolbarTarget">
+    <Teleport :to="embedToolbarTarget || 'body'" :disabled="!embedToolbarTarget">
     <div
       v-if="!isModal"
       class="top-header"
@@ -1107,6 +1107,7 @@ export default {
       }
     },
     setTheme (theme) {
+      if (!this.$refs.layoutWrapper) return
       const list = []
       this.$refs.layoutWrapper.classList.forEach(c => {
         if (c.startsWith('am-theme-')) {

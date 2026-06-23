@@ -142,9 +142,10 @@
     <!-- 主体:图表看板 + 右结果列 -->
     <div class="ixe-main" v-if="classId">
       <!-- 看板模式:内嵌数据可视化设计器(按数据特征自动出图,可增删改) -->
-      <MakerEmbed v-if="viewMode==='charts'" class="ixe-dash" :class-id="classId"
-                  :columns="columns" :filter-params="filterParams" toolbar-target="#ixe-maker-tools"
-                  @save-as="onSave" />
+      <MakerEmbed v-if="viewMode==='charts'" ref="chartsRef" class="ixe-dash" :class-id="classId"
+                  :columns="columns" :filter-params="filterParams" :saved-config="savedConfig"
+                  toolbar-target="#ixe-maker-tools"
+                  @save-as="onSave" @save-page="onSavePage" />
 
       <!-- 列表模式:列表探索(滚动加载 + 预览/多实例/比较) -->
       <InstanceListView v-else class="ixe-listview" :class-id="classId" :type-name="curType?.display_name"
@@ -275,10 +276,26 @@ function openMaker() {
   router.push({ path: '/workspace/maker', query })
 }
 
-/* —— 保存设计 / 模版(localStorage) —— */
-const { listFor, save: saveDesign, remove: removeDesignStore } = useDesigns()
+/* —— 保存设计 / 模版(后端入库) —— */
+const { listFor, save: saveDesign, remove: removeDesignStore, getDefault, saveDefault } = useDesigns()
 const currentDesignId = ref(null)
-const designsForType = computed(() => listFor(classId.value))
+const designsForType = ref([])              // 当前对象类型的命名设计列表(异步加载)
+const savedConfig = ref(null)               // 当前看板的存档(layoutConfig);null=按数据特征自动生成
+
+async function loadDesigns() {
+  try { designsForType.value = classId.value ? await listFor(classId.value) : [] }
+  catch { designsForType.value = [] }
+}
+async function loadDefaultDash() {
+  try { savedConfig.value = classId.value ? await getDefault(classId.value) : null }
+  catch { savedConfig.value = null }
+}
+/* maker「保存」→ 把完整布局存为该对象类型的默认看板 */
+async function onSavePage(config) {
+  if (!classId.value || !config) return
+  try { await saveDefault(classId.value, config); BL.success('看板已保存') }
+  catch { /* http 拦截器已弹错误 */ }
+}
 
 /* 列表模式下勾选的实例 id */
 const listSelectedIds = ref([])
@@ -304,32 +321,37 @@ function onSave() {
   sdErr.value = ''
   saveModal.value = true
 }
-function confirmSave() {
+async function confirmSave() {
   const name = sdName.value.trim()
   if (!name) { sdErr.value = '请输入名称'; return }
   const useSel = sdKind.value === 'list' && sdScope.value === 'selected' && listSelectedIds.value.length
-  const d = saveDesign({
-    name,
-    kind: sdKind.value,
-    instanceIds: useSel ? [...listSelectedIds.value] : [],
-    desc: sdDesc.value.trim(),
-    visibility: sdVisibility.value,
-    project: sdVisibility.value === 'public' ? sdProject.value.trim() : '',
-    classId: classId.value,
-    className: curType.value?.display_name || '',
-    icon: curType.value?.icon || 'search',
-    color: curType.value?.color || '#165DFF',
-    fixedTitle: props.fixedTitle || '',
-    kw: kw.value,
-    pills: JSON.parse(JSON.stringify(pills.value)),
-    sort: sort.value, order: order.value,
-    viewMode: viewMode.value,
-    charts: chartsRef.value ? chartsRef.value.getConfig() : []
-  })
-  currentDesignId.value = d.id
-  designName.value = d.name
-  saveModal.value = false
-  BL.success(`已保存设计「${d.name}」`)
+  // 命名设计同时存当前看板布局(layoutConfig),应用时可整盘恢复
+  const layoutConfig = (viewMode.value === 'charts' && chartsRef.value) ? chartsRef.value.getConfig() : null
+  try {
+    const d = await saveDesign({
+      name,
+      kind: sdKind.value,
+      instanceIds: useSel ? [...listSelectedIds.value] : [],
+      desc: sdDesc.value.trim(),
+      visibility: sdVisibility.value,
+      project: sdVisibility.value === 'public' ? sdProject.value.trim() : '',
+      classId: classId.value,
+      className: curType.value?.display_name || '',
+      icon: curType.value?.icon || 'search',
+      color: curType.value?.color || '#165DFF',
+      fixedTitle: props.fixedTitle || '',
+      kw: kw.value,
+      pills: JSON.parse(JSON.stringify(pills.value)),
+      sort: sort.value, order: order.value,
+      viewMode: viewMode.value,
+      layoutConfig
+    })
+    currentDesignId.value = d.id
+    designName.value = d.name
+    saveModal.value = false
+    await loadDesigns()
+    BL.success(`已保存设计「${d.name}」`)
+  } catch { /* http 拦截器已弹错误 */ }
 }
 function applyDesign(d) {
   layoutMenu.value = false
@@ -342,24 +364,28 @@ function applyDesign(d) {
   // pills 补回唯一 id(老数据可能无 id)
   pills.value = (d.pills || []).map(p => ({ ...p, id: p.id != null ? p.id : ++pidSeq }))
   page.value = 1
+  // 整盘恢复看板布局(MakerEmbed 监听 savedConfig 变化重建)
+  savedConfig.value = d.layoutConfig || null
   reload()
-  // 图表需等看板渲染后注入
-  nextTick(() => { if (chartsRef.value) chartsRef.value.setConfig(d.charts || []) })
 }
 function resetDesign() {
   layoutMenu.value = false
   currentDesignId.value = null
   designName.value = '默认探索布局'
   pills.value = []; kw.value = ''; sort.value = ''; page.value = 1
-  if (chartsRef.value) chartsRef.value.setConfig([])
+  // 回到默认看板(若该对象类型存过默认看板则恢复,否则自动生成)
+  loadDefaultDash()
   reload()
 }
 async function removeDesign(d) {
   const ok = await BL.confirm({ title: '删除设计', content: `确定删除「${d.name}」?`, danger: true, okText: '删除' })
   if (!ok) return
-  removeDesignStore(d.id)
-  if (currentDesignId.value === d.id) resetDesign()
-  BL.success('已删除')
+  try {
+    await removeDesignStore(d.id)
+    await loadDesigns()
+    if (currentDesignId.value === d.id) resetDesign()
+    BL.success('已删除')
+  } catch { /* http 拦截器已弹错误 */ }
 }
 
 /* —— 状态 —— */
@@ -440,7 +466,7 @@ function selectType(id) {
   Object.keys(linkColsCache).forEach(k => delete linkColsCache[k])
   currentDesignId.value = null
   designName.value = '默认探索布局'
-  if (chartsRef.value) chartsRef.value.setConfig([])
+  savedConfig.value = null
   loadMeta()
 }
 
@@ -454,6 +480,8 @@ async function loadMeta() {
     columns.value = cols || []
     links.value = lk || []
   } catch { columns.value = []; links.value = [] }
+  loadDesigns()
+  loadDefaultDash()
   reload()
 }
 

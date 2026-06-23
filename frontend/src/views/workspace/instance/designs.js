@@ -1,47 +1,42 @@
-import { ref } from 'vue'
+import { exploreDesignApi } from '@/api'
 
-/* 实例探索 — 已保存的"探索设计/模版"(localStorage 持久化, 全局单例响应式)
- * 每个设计:{ id, name, classId, className, icon, color, kw, pills, sort, order, viewMode, charts, savedAt } */
-const KEY = 'bl-instance-designs'
+/* 实例探索 — 「看板/设计」持久化(后端入库, 替代原 localStorage)
+ * - 默认看板:每对象类型一份(name=''), config 即 maker 的 layoutConfig, 由 maker「保存」写回。
+ * - 命名设计:name 非空, config 为整个设计对象(含 meta + layoutConfig), 由「另存为」创建。 */
 
-function load() {
-  try { return JSON.parse(localStorage.getItem(KEY) || '[]') }
-  catch { return [] }
+// 后端行 → 前端命名设计对象:展开 config(含 meta/layoutConfig) + 带 id/savedAt
+function toDesign (row) {
+  if (!row) return null
+  const cfg = (row.config && typeof row.config === 'object') ? row.config : {}
+  return { ...cfg, id: row.id, name: row.name || cfg.name || '', savedAt: row.updated_at || row.updatedAt }
 }
 
-const designs = ref(load())
-
-function persist() {
-  localStorage.setItem(KEY, JSON.stringify(designs.value))
-}
-
-let seq = 0
-function newId() { return 'design-' + Date.now().toString(36) + '-' + (++seq) }
-
-export function useDesigns() {
-  /* 某对象类型下的设计列表 */
-  const listFor = (classId) => designs.value.filter(d => d.classId === classId)
-
-  /* 新增设计;返回带 id 的对象 */
-  const save = (design) => {
-    const d = { ...design, id: newId(), savedAt: new Date().toISOString() }
-    designs.value = [...designs.value, d]
-    persist()
-    return d
+export function useDesigns () {
+  /* 某对象类型下的命名设计列表 */
+  const listFor = async (classId) => {
+    if (!classId) return []
+    const rows = await exploreDesignApi.listNamed(classId)
+    return (rows || []).map(toDesign)
   }
 
-  /* 覆盖更新已有设计 */
-  const update = (id, patch) => {
-    designs.value = designs.value.map(d => d.id === id ? { ...d, ...patch, savedAt: new Date().toISOString() } : d)
-    persist()
+  /* 新建命名设计(design 为整个设计对象);返回带 id 的对象 */
+  const save = async (design) => {
+    const row = await exploreDesignApi.create({
+      classId: design.classId, name: design.name, kind: design.kind || 'query', config: design
+    })
+    return toDesign(row)
   }
 
-  const remove = (id) => {
-    designs.value = designs.value.filter(d => d.id !== id)
-    persist()
+  const remove = (id) => exploreDesignApi.remove(id)
+
+  /* 默认看板:config 直接是 maker 的 layoutConfig(无则 null) */
+  const getDefault = async (classId) => {
+    if (!classId) return null
+    const row = await exploreDesignApi.getDefault(classId)
+    return row && row.config ? row.config : null
   }
+  const saveDefault = (classId, layoutConfig, kind = 'query') =>
+    exploreDesignApi.saveDefault(classId, layoutConfig, kind)
 
-  const get = (id) => designs.value.find(d => d.id === id) || null
-
-  return { designs, listFor, save, update, remove, get }
+  return { listFor, save, remove, getDefault, saveDefault }
 }
