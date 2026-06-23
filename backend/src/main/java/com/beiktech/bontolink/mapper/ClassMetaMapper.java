@@ -253,6 +253,14 @@ public interface ClassMetaMapper {
     @Select("SELECT COUNT(1) FROM ont_class WHERE api_name = #{apiName}")
     int existsApiName(@Param("apiName") String apiName);
 
+    /** 按 category_code 取分类的 ns_code + parent_id (用于新建对象时自动带入命名空间) */
+    @Select("SELECT ns_code, parent_id FROM ont_biz_category WHERE category_code = #{code}")
+    Map<String, Object> findCategoryByCode(@Param("code") String code);
+
+    /** 按分类 id 取 ns_code + parent_id (沿 parent_id 向上回溯命名空间) */
+    @Select("SELECT ns_code, parent_id FROM ont_biz_category WHERE id = #{id}")
+    Map<String, Object> findCategoryById(@Param("id") String id);
+
     /* ============ 对象类状态切换 / 删除 ============ */
 
     /** 仅切换类状态 (启用 1 / 禁用 0)，不触碰其他字段 */

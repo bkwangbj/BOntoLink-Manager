@@ -94,17 +94,23 @@
           <section ref="sec_mapping" data-sec="mapping" v-if="form.prop_type !== 'annotation' && !form.is_derived">
             <div class="pd-sec">表映射</div>
             <div class="pd-grid-1">
-              <FieldRow label="数据源" inline>
-                <select class="bl-input" v-model="form.class_ds_id">
-                  <option value="">— 无 —</option>
-                  <option v-for="d in datasources" :key="d.id" :value="d.id">{{ d.alias }} · {{ d.physical_table }}</option>
+              <FieldRow label="数据源" inline hint="真实数据源 (类已绑定)">
+                <select class="bl-input" v-model="selDsCode" @change="onDsChange">
+                  <option value="">— 选择数据源 —</option>
+                  <option v-for="d in dsOptions" :key="d.code" :value="d.code">{{ d.name }}</option>
                 </select>
               </FieldRow>
-              <FieldRow label="物理表" inline>
-                <input class="bl-input bl-mono" v-model="form.physical_table" />
+              <FieldRow label="物理表" inline hint="按所选数据源取">
+                <select class="bl-input bl-mono" v-model="form.class_ds_id" :disabled="!selDsCode" @change="onTableChange">
+                  <option value="">— 选择物理表 —</option>
+                  <option v-for="t in tableOptions" :key="t.id" :value="t.id">{{ t.table_label || t.alias || t.physical_table }} · {{ t.physical_table }}</option>
+                </select>
               </FieldRow>
-              <FieldRow label="物理字段" inline>
-                <input class="bl-input bl-mono" v-model="form.physical_column" />
+              <FieldRow label="物理字段" inline hint="优先从现有表字段选择, 自动带出编码/名称/类型">
+                <select class="bl-input bl-mono" v-model="form.physical_column" :disabled="!form.class_ds_id" @change="onColumnChange">
+                  <option value="">— 选择字段 —</option>
+                  <option v-for="c in columnOptions" :key="c" :value="c">{{ c }}</option>
+                </select>
               </FieldRow>
             </div>
           </section>
@@ -264,7 +270,7 @@
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
-import { classMetaApi, valueTypeApi } from '@/api'
+import { classMetaApi, valueTypeApi, datasourceApi } from '@/api'
 
 const props = defineProps({
   open: { type: Boolean, default: false },
@@ -362,6 +368,64 @@ const classCandidates = ref([])
 const equivList = ref([])
 const disjointList = ref([])
 
+/* —— 表映射: 数据源 → 物理表 → 物理字段 三级联动 ——
+   数据来源为类已绑定的物理数据集 (props.datasources / ont_class_ds):
+   每行含 id(=class_ds_id) / ds_code / physical_table / physical_fields[]。
+   属性只能映射到类所建表的列, 故级联严格限定在类的绑定范围内。 */
+const selDsCode = ref('')               // 当前所选数据源 ds_code
+const dsNameMap = ref({})               // ds_code → 数据源中文名 (真实数据源清单)
+const dsOptions = computed(() => {
+  const seen = new Map()
+  for (const d of props.datasources) {
+    if (d.ds_code && !seen.has(d.ds_code)) {
+      seen.set(d.ds_code, { code: d.ds_code, name: dsNameMap.value[d.ds_code] || d.ds_code })
+    }
+  }
+  return [...seen.values()]
+})
+const tableOptions = computed(() => props.datasources.filter(d => d.ds_code === selDsCode.value))
+const selectedClassDs = computed(() => props.datasources.find(d => d.id === form.class_ds_id) || null)
+const columnOptions = computed(() => {
+  const names = (selectedClassDs.value?.physical_fields || []).map(f => f?.name).filter(Boolean)
+  // 兜底: 编辑时已存的列若不在字段清单内也保留, 避免回显丢失
+  if (form.physical_column && !names.includes(form.physical_column)) names.unshift(form.physical_column)
+  return names
+})
+function onDsChange() {
+  form.class_ds_id = ''
+  form.physical_table = ''
+  form.physical_column = ''
+}
+function onTableChange() {
+  form.physical_table = selectedClassDs.value?.physical_table || ''
+  form.physical_column = ''
+}
+/* 选中现有表字段 → 新建数据属性时自动带出属性编码 / 名称 / 数据类型 (空则填, 类型按物理字段为准) */
+function onColumnChange() {
+  const col = form.physical_column
+  if (!col || !isNew.value || form.prop_type !== 'data') return
+  const field = (selectedClassDs.value?.physical_fields || []).find(f => f?.name === col)
+  if (!form.api_name) form.api_name = sanitizeApi(col)
+  if (!form.display_name) form.display_name = col
+  if (field?.data_type) form.data_type = mapColTypeToXsd(field.data_type)
+}
+function sanitizeApi(s) {
+  let v = String(s || '').trim().toLowerCase().replace(/[^a-z0-9_]/g, '_')
+  if (v && !/^[a-z]/.test(v)) v = 'f_' + v
+  return v
+}
+function mapColTypeToXsd(t) {
+  const s = String(t || '').toLowerCase()
+  if (s.startsWith('xsd:')) return xsdTypes.includes(t) ? t : 'xsd:string'
+  if (s.includes('bool') || s.includes('bit')) return 'xsd:boolean'
+  if (s.includes('timestamp') || s.includes('datetime')) return 'xsd:dateTime'
+  if (s.includes('date')) return 'xsd:date'
+  if (s.includes('int') || s.includes('serial')) return 'xsd:integer'
+  if (s.includes('real') || s.includes('floa') || s.includes('doub')
+      || s.includes('deci') || s.includes('numer') || s.includes('money')) return 'xsd:decimal'
+  return 'xsd:string'
+}
+
 /* —— OWL 互斥规则 —— */
 const owlWarn = ref('')
 function toggleOwl(field, ev) {
@@ -423,6 +487,14 @@ async function reloadForm() {
   if (!classCandidates.value.length) {
     classCandidates.value = await classMetaApi.candidates().catch(() => [])
   }
+  // 真实数据源名映射 (ds_code → ds_name), 仅首次加载
+  if (!Object.keys(dsNameMap.value).length) {
+    const list = await datasourceApi.list().catch(() => [])
+    const m = {}; list.forEach(x => { if (x.ds_code) m[x.ds_code] = x.ds_name || x.ds_code })
+    dsNameMap.value = m
+  }
+  // 依据已存 class_ds_id 回填所选数据源 (编辑模式); 新建则为空
+  selDsCode.value = props.datasources.find(d => d.id === form.class_ds_id)?.ds_code || ''
   // 加载当前属性的等价 / 互斥关系
   if (props.classId && !isNew.value) {
     const all = await classMetaApi.listPropEquiv(props.classId).catch(() => [])

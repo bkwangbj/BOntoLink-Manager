@@ -27,11 +27,15 @@ public class ObjectTypeCreateService {
         String classId = "class-" + UUID.randomUUID();
         String displayName = firstNonBlank(str(body.get("display_name")), apiName);
 
+        // 命名空间:向导未指定时,按所属领域(category)自动带入(领域未绑定则向上回溯到行业)
+        String nsCode = str(body.get("ns_code"));
+        if (nsCode.isBlank()) nsCode = resolveNsCode(str(body.get("category_code")));
+
         Map<String, Object> cls = new HashMap<>();
         cls.put("id", classId);
         cls.put("rid", "ri.ont.class." + classId);
         cls.put("api_name", apiName);
-        cls.put("ns_code", body.get("ns_code"));
+        cls.put("ns_code", (nsCode == null || nsCode.isBlank()) ? null : nsCode);
         cls.put("category_code", body.get("category_code"));
         cls.put("display_name", displayName);
         cls.put("rdfs_label", firstNonBlank(str(body.get("rdfs_label")), displayName));
@@ -161,6 +165,21 @@ public class ObjectTypeCreateService {
             }
         }
         try { return json.writeValueAsString(arr); } catch (Exception e) { return "[]"; }
+    }
+
+    /** 按领域 category_code 解析命名空间编码:自身未绑定则沿 parent_id 向上回溯到行业 */
+    private String resolveNsCode(String categoryCode) {
+        if (categoryCode == null || categoryCode.isBlank()) return null;
+        Map<String, Object> row = mapper.findCategoryByCode(categoryCode);
+        int guard = 0;
+        while (row != null && guard++ < 20) {
+            String ns = str(row.get("ns_code"));
+            if (!ns.isBlank()) return ns;
+            String parentId = str(row.get("parent_id"));
+            if (parentId.isBlank() || "0".equals(parentId)) break;
+            row = mapper.findCategoryById(parentId);
+        }
+        return null;
     }
 
     private String uniqueApiName(String base) {
