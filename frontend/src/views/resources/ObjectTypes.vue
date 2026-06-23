@@ -1089,26 +1089,66 @@ async function onWizardNext(payload) {
 function onEdit() { BL.info('编辑面板待联调') }
 function onAi() { BL.info('AI 助手待联调') }
 function onViewInstances() { BL.info('查看实例待联调') }
+async function reloadRows() {
+  rows.value = await resourceApi.classes({ aggregate: true }).catch(() => rows.value)
+  // 抽屉打开的对象若已被删除则关闭, 否则同步状态标签
+  if (selected.value) {
+    const row = rows.value.find(r => r.id === selected.value.id)
+    if (!row) closeDrawer()
+    else selected.value.status = row.status
+  }
+}
 async function toggleStatus(r) {
-  BL.info(`切换 ${r.api_name} 状态待联调`)
+  const next = r.status === 1 ? 0 : 1
+  try {
+    await classMetaApi.setClassStatus(r.id, next)
+    r.status = next
+    if (selected.value?.id === r.id) selected.value.status = next
+    BL.success(next === 1 ? '已启用' : '已禁用')
+  } catch (e) { BL.error(e?.msg || '操作失败') }
 }
 async function removeOne(r) {
-  const ok = await BL.confirm({ title: '删除对象', content: `确定删除 ${r.rdfs_label || r.api_name}?`, danger: true, okText: '删除' })
+  const ok = await BL.confirm({ title: '删除对象', content: `确定删除「${r.rdfs_label || r.display_name || r.api_name}」?该对象的属性、表映射、规则约束将一并清除。`, danger: true, okText: '删除' })
   if (!ok) return
-  BL.info('删除待联调')
+  try {
+    const res = await classMetaApi.removeClass(r.id)
+    if (res?.blocked) { BL.warning(res.reason || '该对象被引用,无法删除'); return }
+    BL.success('已删除')
+    checked.value = new Set([...checked.value].filter(id => id !== r.id))
+    await reloadRows()
+  } catch (e) { BL.error(e?.msg || '删除失败') }
 }
 async function removeBatch() {
-  const ok = await BL.confirm({ title: '批量删除', content: `确认删除 ${checked.value.size} 个对象?`, danger: true })
+  const ids = [...checked.value]
+  if (!ids.length) return
+  const ok = await BL.confirm({ title: '批量删除', content: `确认删除 ${ids.length} 个对象?被引用的对象会自动跳过。`, danger: true, okText: '删除' })
   if (!ok) return
-  BL.info('批量删除待联调')
+  let okCount = 0, blockedCount = 0
+  for (const id of ids) {
+    try {
+      const res = await classMetaApi.removeClass(id)
+      if (res?.blocked) blockedCount++; else okCount++
+    } catch { blockedCount++ }
+  }
+  if (blockedCount) BL.warning(`已删除 ${okCount} 个,${blockedCount} 个被引用未删除`)
+  else BL.success(`已删除 ${okCount} 个`)
+  checked.value = new Set()
+  await reloadRows()
 }
 async function batchSetStatus(status) {
-  const n = checked.value.size
-  if (!n) return
+  const ids = [...checked.value]
+  if (!ids.length) return
   const verb = status === 1 ? '启用' : '禁用'
-  const ok = await BL.confirm({ title: `批量${verb}`, content: `确认${verb} ${n} 个对象?`, okText: verb })
+  const ok = await BL.confirm({ title: `批量${verb}`, content: `确认${verb} ${ids.length} 个对象?`, okText: verb })
   if (!ok) return
-  BL.info(`批量${verb}待联调`)
+  let okCount = 0, failCount = 0
+  for (const id of ids) {
+    try { await classMetaApi.setClassStatus(id, status); okCount++ } catch { failCount++ }
+  }
+  if (failCount) BL.warning(`成功 ${okCount} 个,失败 ${failCount} 个`)
+  else BL.success(`已${verb} ${okCount} 个`)
+  checked.value = new Set()
+  await reloadRows()
 }
 
 /* ===== 生命周期 ===== */

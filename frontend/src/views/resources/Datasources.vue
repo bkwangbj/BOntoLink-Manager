@@ -250,7 +250,8 @@
             <div class="mon-meta-left">
               <span class="bl-tag mon-tag" :style="{ color: typeColor(selected.dsType), background: typeColor(selected.dsType) + '14' }">{{ selected.dsType.toUpperCase() }}</span>
               <span class="bl-mono bl-muted">{{ mon.basic?.host || '—' }}</span>
-              <span class="bl-muted">版本: <span class="bl-mono">{{ mon.basic?.version || '—' }}</span></span>
+              <span class="bl-muted" :title="mon.basic?.driver || ''">{{ mon.basic?.product || '—' }} <span class="bl-mono">{{ mon.basic?.version || '—' }}</span></span>
+              <span v-if="mon.basic?.probeError" class="bl-tag bl-tag-danger" :title="mon.basic.probeError">探测失败</span>
             </div>
             <div class="mon-legend">
               <span class="legend-item"><span class="ld" style="background:#00B42A"></span>正常</span>
@@ -266,12 +267,12 @@
             <div class="mon-panel">
               <div class="mp-hd"><span class="mp-ic" style="color:#F53F3F" v-html="BL.icon('bell', 14)"></span>全局状态</div>
               <div class="seg-bar">
-                <div class="seg-fill" :style="{ width: (mon.basic?.loadPct || 0) + '%', background: loadColor() }"></div>
-                <div class="seg-text">负载占比 {{ mon.basic?.loadPct ?? 0 }}%</div>
+                <div class="seg-fill" :style="{ width: (poolReady ? (mon.basic?.loadPct || 0) : 0) + '%', background: loadColor() }"></div>
+                <div class="seg-text">负载占比 {{ poolReady ? (mon.basic?.loadPct ?? 0) + '%' : '—' }}</div>
               </div>
               <table class="kv-table">
                 <tr><td>数据源连通状态</td><td><span :class="['bl-tag', statusTag(selected).cls]">{{ statusTag(selected).text }}</span></td></tr>
-                <tr><td>连接池负载占比</td><td><b>{{ mon.basic?.loadPct ?? 0 }}</b> <span class="bl-muted">%</span></td></tr>
+                <tr><td>连接池负载占比</td><td><b>{{ poolReady ? (mon.basic?.loadPct ?? 0) : '—' }}</b> <span class="bl-muted">{{ poolReady ? '%' : '' }}</span></td></tr>
               </table>
             </div>
 
@@ -295,6 +296,7 @@
             <!-- 实时状态 -->
             <div class="mon-panel">
               <div class="mp-hd"><span class="mp-ic" style="color:#722ED1" v-html="BL.icon('zap', 14)"></span>实时状态</div>
+              <template v-if="poolReady">
               <div class="bar-row">
                 <div class="bar-track"><div class="bar-fill" :style="{ width: pctActive + '%', background: statusColor }"></div><span class="bar-label">活跃连接</span></div>
               </div>
@@ -307,6 +309,8 @@
                 <tr><td>排队等待连接</td><td><b>{{ mon.detail?.waitingConn ?? 0 }}</b> <span class="bl-muted">个</span></td></tr>
                 <tr><td>已创建总连接</td><td><b>{{ mon.detail?.totalCreated ?? 0 }}</b> <span class="bl-muted">个</span></td></tr>
               </table>
+              </template>
+              <div v-else class="mon-na">连接池实时指标需接入采集（Druid/Agent）后可用</div>
             </div>
 
             <!-- 响应耗时 -->
@@ -329,7 +333,8 @@
           <!-- 健康统计 -->
           <div class="mon-health">
             <div class="mp-hd"><span class="mp-ic" style="color:#00B42A" v-html="BL.icon('check', 14)"></span>健康统计</div>
-            <div class="health-grid">
+            <div v-if="!poolReady" class="mon-na">连接池健康统计需接入采集（Druid/Agent）后可用</div>
+            <div v-else class="health-grid">
               <div class="health-cell"><div class="hc-lbl">获取成功次数</div><div class="hc-val">{{ fmt(mon.health?.acquireSuccess || 0) }}</div></div>
               <div class="health-cell"><div class="hc-lbl">获取失败次数</div><div class="hc-val" :class="(mon.health?.acquireFail||0) > 0 && 'is-warn'">{{ mon.health?.acquireFail ?? 0 }}</div></div>
               <div class="health-cell"><div class="hc-lbl">自动重连次数</div><div class="hc-val">{{ mon.health?.autoReconnect ?? 0 }}</div></div>
@@ -704,6 +709,9 @@ async function loadMonitor() {
   if (!selected.value) return
   mon.value = await datasourceApi.monitor(selected.value.id).catch(() => ({}))
 }
+
+/* 连接池运行时指标是否已接入真实采集 (后端 poolAvailable=false 时为演示占位, 前端提示暂不可用) */
+const poolReady = computed(() => mon.value?.poolAvailable === true)
 
 /* 状态色:正常绿 / 预警橙 / 异常红 / 闲置灰 */
 const STATUS_GREEN  = '#00B42A'
@@ -1205,6 +1213,15 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
 .kv-table td:first-child { color: var(--bl-text-3); }
 .kv-table td:last-child  { text-align: right; }
 .kv-table td b { font-weight: 600; color: var(--bl-text-1); font-feature-settings: "tnum"; }
+
+/* 连接池指标未接入采集时的占位提示 */
+.mon-na {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 88px; padding: 16px;
+  color: var(--bl-text-3); font-size: 12px;
+  background: var(--bl-bg-2); border: 1px dashed var(--bl-border);
+  border-radius: var(--bl-radius-2);
+}
 
 /* 健康统计 */
 .mon-health {

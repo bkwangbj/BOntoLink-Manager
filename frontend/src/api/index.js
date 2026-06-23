@@ -123,6 +123,8 @@ export const classMetaApi = {
 
   updateClass:       (id, data) => http.put(`/class-meta/classes/${id}`, data),
   createClass:       (data) => http.post('/class-meta/classes', data),
+  setClassStatus:    (id, status) => http.put(`/class-meta/classes/${id}/status`, { status }),
+  removeClass:       (id) => http.delete(`/class-meta/classes/${id}`),
 }
 
 /* 值类型 (Value types) */

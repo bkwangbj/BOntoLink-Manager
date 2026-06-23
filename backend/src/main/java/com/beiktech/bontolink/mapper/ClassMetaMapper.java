@@ -253,6 +253,56 @@ public interface ClassMetaMapper {
     @Select("SELECT COUNT(1) FROM ont_class WHERE api_name = #{apiName}")
     int existsApiName(@Param("apiName") String apiName);
 
+    /* ============ 对象类状态切换 / 删除 ============ */
+
+    /** 仅切换类状态 (启用 1 / 禁用 0)，不触碰其他字段 */
+    @Update("UPDATE ont_class SET status = #{status}, update_time = datetime('now','localtime') WHERE id = #{id}")
+    int updateClassStatus(@Param("id") String id, @Param("status") int status);
+
+    @Select("SELECT display_name FROM ont_class WHERE id = #{id}")
+    String findClassName(@Param("id") String id);
+
+    /* —— 删除前引用检查 (被其他资源引用则禁止删除) —— */
+    @Select("SELECT COUNT(1) FROM ont_class WHERE parent_class_id = #{id}")
+    int countChildClasses(@Param("id") String id);
+
+    @Select("SELECT COUNT(1) FROM ont_link_types WHERE l_object_type_id = #{id} OR r_object_type_id = #{id}")
+    int countLinkTypeRefs(@Param("id") String id);
+
+    @Select("SELECT COUNT(1) FROM ont_class_link WHERE source_class_id = #{id} OR target_class_id = #{id}")
+    int countClassLinkRefs(@Param("id") String id);
+
+    /* —— 级联清理类自有子数据 (删除对象类时一并清除) —— */
+    @Delete("DELETE FROM ont_class_property WHERE class_id = #{id}")
+    int deletePropertiesByClass(@Param("id") String id);
+
+    @Delete("DELETE FROM ont_class_ds WHERE class_id = #{id}")
+    int deleteClassDsByClass(@Param("id") String id);
+
+    @Delete("DELETE FROM ont_class_action WHERE class_id = #{id}")
+    int deleteActionsByClass(@Param("id") String id);
+
+    @Delete("DELETE FROM ont_class_group WHERE class_id = #{id} OR ref_class_id = #{id}")
+    int deleteClassGroupByClass(@Param("id") String id);
+
+    @Delete("DELETE FROM ont_class_disjoint_union WHERE parent_class_id = #{id} OR sub_class_id = #{id}")
+    int deleteDisjointUnionByClass(@Param("id") String id);
+
+    @Delete("DELETE FROM ont_property_equivalent WHERE class_id1 = #{id} OR class_id2 = #{id}")
+    int deletePropEquivByClass(@Param("id") String id);
+
+    @Delete("DELETE FROM ont_property_disjoint WHERE class_id1 = #{id} OR class_id2 = #{id}")
+    int deletePropDisjointByClass(@Param("id") String id);
+
+    @Delete("DELETE FROM ont_interface_class WHERE class_id = #{id}")
+    int deleteInterfaceClassByClass(@Param("id") String id);
+
+    @Delete("DELETE FROM ont_biz_group_class WHERE ref_id = #{id} AND group_type = 'object_types'")
+    int deleteGroupRefByClass(@Param("id") String id);
+
+    @Delete("DELETE FROM ont_class WHERE id = #{id}")
+    int deleteClass(@Param("id") String id);
+
     /** 写入 类→数据集(主表/附表) 绑定 */
     @Insert("""
         INSERT INTO ont_class_ds(

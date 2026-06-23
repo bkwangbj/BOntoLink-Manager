@@ -3,6 +3,7 @@ package com.beiktech.bontolink.controller;
 import com.beiktech.bontolink.common.R;
 import com.beiktech.bontolink.mapper.ClassMetaMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -258,5 +259,53 @@ public class ClassMetaController {
         body.putIfAbsent("is_common", 0);
         mapper.updateClassFull(body);
         return R.ok();
+    }
+
+    /** 仅切换对象类状态 (启用/禁用),不触碰其他字段。请求体: { "status": 0|1 } */
+    @PutMapping("/classes/{id}/status")
+    public R<?> updateClassStatus(@PathVariable String id, @RequestBody Map<String, Object> body) {
+        Object s = body.get("status");
+        int status = (s instanceof Number) ? ((Number) s).intValue() : Integer.parseInt(String.valueOf(s));
+        mapper.updateClassStatus(id, status == 1 ? 1 : 0);
+        return R.ok();
+    }
+
+    /**
+     * 删除对象类:被其他资源引用(子类 / 链接类型 / 类关系)时禁止删除并返回原因;
+     * 否则级联清理类自有子数据(属性 / 表映射 / 动作 / 规则约束 / 分组关联)后删除主记录。
+     * 返回: { deleted: true } 或 { deleted: false, blocked: true, reason: "..." }
+     */
+    @DeleteMapping("/classes/{id}")
+    @Transactional
+    public R<Map<String, Object>> deleteClass(@PathVariable String id) {
+        Map<String, Object> result = new LinkedHashMap<>();
+
+        int children   = mapper.countChildClasses(id);
+        int linkTypes  = mapper.countLinkTypeRefs(id);
+        int classLinks = mapper.countClassLinkRefs(id);
+        if (children > 0 || linkTypes > 0 || classLinks > 0) {
+            List<String> reasons = new ArrayList<>();
+            if (children > 0)   reasons.add(children + " 个子类");
+            if (linkTypes > 0)  reasons.add(linkTypes + " 个链接类型");
+            if (classLinks > 0) reasons.add(classLinks + " 个类关系");
+            result.put("deleted", false);
+            result.put("blocked", true);
+            result.put("reason", "被引用,无法删除:" + String.join("、", reasons));
+            return R.ok(result);
+        }
+
+        mapper.deletePropertiesByClass(id);
+        mapper.deleteClassDsByClass(id);
+        mapper.deleteActionsByClass(id);
+        mapper.deleteClassGroupByClass(id);
+        mapper.deleteDisjointUnionByClass(id);
+        mapper.deletePropEquivByClass(id);
+        mapper.deletePropDisjointByClass(id);
+        mapper.deleteInterfaceClassByClass(id);
+        mapper.deleteGroupRefByClass(id);
+        mapper.deleteClass(id);
+
+        result.put("deleted", true);
+        return R.ok(result);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.util.*;
 
 @Service
@@ -96,96 +97,92 @@ public class DataSourceService {
     }
 
     /**
-     * 监控指标（演示数据：实际由 Druid/Agent 推送）
-     * 返回基础监控 / 详细监控 / 历史趋势 三段
+     * 监控指标。
+     * <p><b>基础信息为真实探测</b>:每次调用对数据源发起真实 JDBC 连接(最多 3 次),
+     * 得到真实的连通状态、响应耗时(min/avg/max)、数据库产品名+版本、驱动信息。
+     * <p><b>连接池运行时指标</b>(活跃/空闲/排队连接、执行/提交/回滚次数、QPS、24h 趋势、
+     * 健康统计)需接入真实连接池采集(Druid/HikariCP MXBean 或 Agent)才能获得,
+     * 当前不再伪造演示数据,统一以 {@code poolAvailable=false} 标识,由前端提示"暂未接入采集"。
      */
     public Map<String, Object> monitor(String id) {
         SysDataSource d = mapper.findById(id);
         Map<String, Object> r = new LinkedHashMap<>();
         if (d == null) return r;
-        Random rnd = new Random(id.hashCode());
 
-        int active = d.getActiveConn() == null ? 0 : d.getActiveConn();
-        int max    = d.getMaxConn()    == null ? 100 : d.getMaxConn();
-        int rt     = d.getResponseMs() == null ? 0 : d.getResponseMs();
+        int max = d.getMaxConn() == null ? 100 : d.getMaxConn();
 
-        Map<String, Object> basic = new LinkedHashMap<>();
-        basic.put("connectStatus", d.getConnectStatus());
-        basic.put("activeConn", active);
-        basic.put("maxConn", max);
-        basic.put("idleConn", Math.max(0, max / 10 - active / 2));
-        basic.put("loadPct", max > 0 ? (int) Math.round(active * 100.0 / max) : 0);
-        basic.put("minIdle", 5);
-        basic.put("idleTimeoutMs",    300000);
-        basic.put("connectTimeoutMs", 60000);
-        basic.put("responseMs", rt);
-        basic.put("uptimeHours", 12 + rnd.nextInt(720));
-        basic.put("version", inferVersion(d.getDsType()));
-        basic.put("host", extractHost(d));
+        // —— 真实探测:连接状态 / 响应耗时 / 数据库版本 ——
+        boolean online = false;
+        String productName = null, productVersion = null, driverInfo = null, probeError = null;
+        List<Integer> pings = new ArrayList<>();
 
-        int totalCreated = 15 + active + rnd.nextInt(40);
-
-        Map<String, Object> detail = new LinkedHashMap<>();
-        detail.put("logicConnect",   active);
-        detail.put("physicalConnect",Math.max(active + 1, 2));
-        detail.put("waitThreadCount",rnd.nextInt(5));
-        detail.put("notEmptyWaitMs", rnd.nextInt(50));
-        detail.put("executeCount",   1000 + rnd.nextInt(20000));
-        detail.put("errorCount",     rnd.nextInt(10));
-        detail.put("commitCount",    500 + rnd.nextInt(10000));
-        detail.put("rollbackCount",  rnd.nextInt(20));
-        detail.put("recycleErrorCount", rnd.nextInt(3));
-        detail.put("idleConn",       Math.max(0, max - active));
-        detail.put("waitingConn",    rnd.nextInt(3));
-        detail.put("totalCreated",   totalCreated);
-
-        Map<String, Object> rtBlock = new LinkedHashMap<>();
-        rtBlock.put("min", Math.max(2, rt / 4));
-        rtBlock.put("avg", Math.max(rt / 2, 8));
-        rtBlock.put("max", Math.max(rt + 20 + rnd.nextInt(80), 30));
-
-        Map<String, Object> health = new LinkedHashMap<>();
-        int success = 800 + rnd.nextInt(3000);
-        health.put("acquireSuccess", success);
-        health.put("acquireFail",    rnd.nextInt(8));
-        health.put("autoReconnect",  rnd.nextInt(4));
-        health.put("killedInvalid",  rnd.nextInt(3));
-        health.put("leak",           rnd.nextInt(2));
-
-        List<Map<String, Object>> trend = new ArrayList<>();
-        for (int i = 23; i >= 0; i--) {
-            Map<String, Object> p = new LinkedHashMap<>();
-            p.put("hour", "T-" + i + "h");
-            p.put("rt", Math.max(5, rt + rnd.nextInt(60) - 30));
-            p.put("qps", 30 + rnd.nextInt(200));
-            trend.add(p);
+        if (d.getStatus() != null && d.getStatus() == 0) {
+            probeError = "数据源已禁用";
+        } else if ("mongodb".equalsIgnoreCase(d.getDsType())) {
+            probeError = "MongoDB 暂不支持 JDBC 探测";
+        } else {
+            for (int i = 0; i < 3; i++) {
+                long start = System.currentTimeMillis();
+                try (Connection conn = connector.open(d)) {
+                    if (conn.isValid(5)) {
+                        online = true;
+                        pings.add((int) (System.currentTimeMillis() - start));
+                        if (productName == null) {
+                            try {
+                                DatabaseMetaData md = conn.getMetaData();
+                                productName = md.getDatabaseProductName();
+                                productVersion = md.getDatabaseProductVersion();
+                                driverInfo = md.getDriverName() + " " + md.getDriverVersion();
+                            } catch (Exception ignore) { /* 元数据不可读时忽略 */ }
+                        }
+                    }
+                } catch (Exception e) {
+                    probeError = e.getMessage();
+                    break;
+                }
+            }
         }
 
-        r.put("basic", basic);
-        r.put("detail", detail);
-        r.put("rt", rtBlock);
-        r.put("health", health);
-        r.put("trend", trend);
-        return r;
-    }
+        int rtMin = 0, rtAvg = 0, rtMax = 0;
+        if (!pings.isEmpty()) {
+            rtMin = pings.stream().mapToInt(Integer::intValue).min().orElse(0);
+            rtMax = pings.stream().mapToInt(Integer::intValue).max().orElse(0);
+            rtAvg = (int) Math.round(pings.stream().mapToInt(Integer::intValue).average().orElse(0));
+        }
+        String connectStatus = online ? "online" : "offline";
+        // 真实探测结果同步回库(与"测试连接"一致)
+        mapper.updateMonitor(id, connectStatus, rtAvg, 0);
 
-    private String inferVersion(String dsType) {
-        if (dsType == null) return "—";
-        return switch (dsType) {
-            case "mysql" -> "8.0.30";
-            case "postgresql" -> "15.4";
-            case "oracle" -> "19c";
-            case "mongodb" -> "6.0.8";
-            case "dm" -> "DM8";
-            case "kingbase" -> "V8R6";
-            case "oscar" -> "7.0";
-            case "gbase" -> "8s 8.8";
-            case "polardb" -> "MySQL 8.0";
-            case "tdsql" -> "MySQL 5.7";
-            case "gaussdb" -> "GaussDB 505.1";
-            case "oceanbase" -> "4.2";
-            default -> "—";
-        };
+        Map<String, Object> basic = new LinkedHashMap<>();
+        basic.put("connectStatus", connectStatus);
+        basic.put("maxConn", max);
+        basic.put("minIdle", 5);
+        basic.put("idleTimeoutMs", 300000);
+        basic.put("connectTimeoutMs", DataSourceConnector.LOGIN_TIMEOUT * 1000);
+        basic.put("responseMs", rtAvg);
+        basic.put("product", productName != null ? productName
+                : (d.getDsType() == null ? "—" : d.getDsType().toUpperCase()));
+        basic.put("version", productVersion != null ? productVersion : "—");
+        basic.put("driver", driverInfo);
+        basic.put("host", extractHost(d));
+        basic.put("loadPct", null);          // 需连接池采集
+        basic.put("poolAvailable", false);
+        basic.put("probeError", probeError);
+
+        Map<String, Object> rtBlock = new LinkedHashMap<>();
+        rtBlock.put("available", !pings.isEmpty());
+        rtBlock.put("min", rtMin);
+        rtBlock.put("avg", rtAvg);
+        rtBlock.put("max", rtMax);
+
+        r.put("basic", basic);
+        r.put("rt", rtBlock);
+        r.put("poolAvailable", false);
+        // 连接池运行时指标 / 健康统计 / 历史趋势:暂未接入真实采集
+        r.put("detail", null);
+        r.put("health", null);
+        r.put("trend", new ArrayList<>());
+        return r;
     }
 
     private String extractHost(SysDataSource d) {
