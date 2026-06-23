@@ -33,8 +33,23 @@ public interface BizNamespaceMapper {
     """)
     int update(BizNamespace ns);
 
-    @Select("SELECT * FROM ont_biz_namespace_version WHERE ns_code = #{code} ORDER BY publish_time DESC")
+    @Select("SELECT * FROM ont_biz_namespace_version WHERE ns_code = #{code} ORDER BY is_current DESC, publish_time DESC")
     List<BizNamespaceVersion> listVersions(@Param("code") String code);
+
+    @Select("SELECT * FROM ont_biz_namespace_version WHERE id = #{id}")
+    BizNamespaceVersion findVersionById(@Param("id") String id);
+
+    /** 清掉某命名空间下所有版本的当前标记 */
+    @Update("UPDATE ont_biz_namespace_version SET is_current = 0 WHERE ns_code = #{code}")
+    int clearCurrentByNs(@Param("code") String code);
+
+    /** 把某个版本标记为当前 */
+    @Update("UPDATE ont_biz_namespace_version SET is_current = 1 WHERE id = #{id}")
+    int setVersionCurrent(@Param("id") String id);
+
+    /** 同步命名空间主表的当前版本号 */
+    @Update("UPDATE ont_biz_namespace SET curr_version = #{version} WHERE ns_code = #{code}")
+    int updateCurrVersion(@Param("code") String code, @Param("version") String version);
 
     @Insert("""
         INSERT INTO ont_biz_namespace_version(

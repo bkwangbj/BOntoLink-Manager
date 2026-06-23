@@ -46,6 +46,7 @@ export const namespaceApi = {
   update:  (code, data) => http.put(`/namespace/${code}`, data),
   versions:(code) => http.get(`/namespace/${code}/versions`),
   createVersion: (data) => http.post('/namespace/versions', data),
+  setCurrentVersion: (id) => http.post(`/namespace/versions/${id}/current`),
   removeVersion: (id) => http.delete(`/namespace/versions/${id}`)
 }
 

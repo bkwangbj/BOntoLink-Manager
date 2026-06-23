@@ -85,6 +85,13 @@ public class CategoryService {
         if (c.getStatus() == null) c.setStatus(1);
         if (c.getSort() == null) c.setSort(0);
         if (c.getParentId() == null) c.setParentId("0");
+
+        // 分组的命名空间只能继承所属领域（父级）的命名空间，忽略前端传入值
+        if (c.getCategoryType() != null && c.getCategoryType() == 3
+                && c.getParentId() != null && !"0".equals(c.getParentId())) {
+            BizCategory parent = categoryMapper.findById(c.getParentId());
+            c.setNsCode(parent != null ? parent.getNsCode() : null);
+        }
         categoryMapper.insert(c);
 
         // 创建领域时自动创建命名空间（nsCode = categoryCode）
@@ -111,6 +118,12 @@ public class CategoryService {
     }
 
     public BizCategory update(BizCategory c) {
+        // 分组的命名空间始终跟随所属领域，不允许独立修改
+        if (c.getCategoryType() != null && c.getCategoryType() == 3
+                && c.getParentId() != null && !"0".equals(c.getParentId())) {
+            BizCategory parent = categoryMapper.findById(c.getParentId());
+            c.setNsCode(parent != null ? parent.getNsCode() : null);
+        }
         categoryMapper.update(c);
         return categoryMapper.findById(c.getId());
     }

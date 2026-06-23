@@ -34,8 +34,23 @@ public class NamespaceService {
     public BizNamespaceVersion createVersion(BizNamespaceVersion v) {
         if (v.getId() == null) v.setId("namespace-v-" + UUID.randomUUID());
         if (v.getStatus() == null) v.setStatus(1);
-        if (v.getIsCurrent() == null) v.setIsCurrent(0);
+        if (v.getPublishTime() == null) v.setPublishTime(java.time.LocalDateTime.now());
+        // 新建版本默认成为当前版本：先清掉旧的当前标记，再插入并同步主表版本号
+        v.setIsCurrent(1);
+        mapper.clearCurrentByNs(v.getNsCode());
         mapper.insertVersion(v);
+        mapper.updateCurrVersion(v.getNsCode(), v.getVersion());
+        return v;
+    }
+
+    /** 设为当前版本：标记该版本为当前，其余取消，并同步命名空间主表 curr_version */
+    public BizNamespaceVersion setCurrentVersion(String id) {
+        BizNamespaceVersion v = mapper.findVersionById(id);
+        if (v == null) throw new IllegalArgumentException("版本不存在");
+        mapper.clearCurrentByNs(v.getNsCode());
+        mapper.setVersionCurrent(id);
+        mapper.updateCurrVersion(v.getNsCode(), v.getVersion());
+        v.setIsCurrent(1);
         return v;
     }
 

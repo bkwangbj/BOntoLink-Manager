@@ -108,8 +108,10 @@
           <div class="versions-body">
             <div v-for="v in versions" :key="v.id" class="version-row">
               <span class="bl-tag" :class="v.isCurrent ? 'bl-tag-success' : ''">{{ v.version }}</span>
+              <span v-if="v.isCurrent" class="bl-muted" style="font-size:11px;color:#00b42a">当前</span>
               <span class="bl-grow bl-truncate" :title="v.rdfsLabel || ''">{{ v.rdfsLabel || '—' }}</span>
               <span class="bl-muted" style="font-size:11px">{{ shortDate(v.publishTime) }}</span>
+              <button v-if="!v.isCurrent" class="bl-btn bl-btn-text bl-btn-sm" title="设为当前版本" @click="setCurrentVersion(v)">设为当前</button>
               <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="删除" v-html="BL.icon('trash', 12)" @click="removeVersion(v)"></button>
             </div>
             <div v-if="!versions.length" class="bl-empty" style="padding:16px">尚无版本</div>
@@ -432,15 +434,22 @@
           <FieldRow label="父级"><input class="bl-input" :value="formParentLabel" disabled /></FieldRow>
           <FieldRow label="编码 *"><input class="bl-input bl-mono" v-model="formData.categoryCode" placeholder="小写+下划线" /></FieldRow>
           <FieldRow label="中文名 (rdfs:label) *"><input class="bl-input" v-model="formData.rdfsLabel" /></FieldRow>
-          <FieldRow label="命名空间编码" v-if="!(formMode==='create' && formData.categoryType===2)">
+          <!-- 新建领域：命名空间自动 = 领域编码，不可选 -->
+          <FieldRow v-if="formMode==='create' && formData.categoryType===2" label="命名空间编码">
+            <input class="bl-input bl-mono" :value="formData.categoryCode" disabled />
+            <span class="bl-muted" style="font-size:11px">自动创建（与领域编码一致）</span>
+          </FieldRow>
+          <!-- 分组：命名空间继承所属领域，不可选 -->
+          <FieldRow v-else-if="formData.categoryType===3" label="命名空间编码">
+            <input class="bl-input bl-mono" :value="formData.nsCode || '—'" disabled />
+            <span class="bl-muted" style="font-size:11px">继承所属领域</span>
+          </FieldRow>
+          <!-- 其他（行业 / 编辑领域）：可选下拉 -->
+          <FieldRow v-else label="命名空间编码">
             <select class="bl-input" v-model="formData.nsCode" :disabled="formMode==='edit' && formData.categoryType===2">
               <option value="">— 无 —</option>
               <option v-for="ns in nsList" :key="ns.nsCode" :value="ns.nsCode">{{ ns.nsCode }} · {{ ns.nsName }}</option>
             </select>
-          </FieldRow>
-          <FieldRow v-else label="命名空间编码">
-            <input class="bl-input bl-mono" :value="formData.categoryCode" disabled />
-            <span class="bl-muted" style="font-size:11px">自动创建</span>
           </FieldRow>
           <FieldRow label="图标">
             <IconPickerField v-model="formData.icon" label="图标" :suggest-name="formData.rdfsLabel" :preset-count="32" />
@@ -1979,13 +1988,15 @@ const formParentLabel = computed(() => formParent.value?.label || '（顶级）'
 
 function openCreate(kind, parent) {
   formMode.value = 'create'
-  formParent.value = parent || selected.value
-  const type = parent ? parent.categoryType + 1 : (selected.value ? selected.value.categoryType + 1 : 1)
+  const p = parent || selected.value
+  formParent.value = p
+  const type = Math.min(p ? p.categoryType + 1 : 1, 3)
   Object.assign(formData, {
-    categoryType: Math.min(type, 3),
+    categoryType: type,
     categoryCode: '',
     rdfsLabel: '',
-    nsCode: selected.value?.nsCode || '',
+    // 分组继承父领域命名空间；其余沿用所选节点的命名空间作为默认
+    nsCode: p?.nsCode || '',
     icon: 'folder',
     color: '#165DFF',
     description: ''
@@ -2039,13 +2050,15 @@ function openCreateIndustry() {
 function openEdit() {
   if (!selected.value) return
   formMode.value = 'edit'
-  formParent.value = findById(selected.value.parentId)
+  const parentNode = findById(selected.value.parentId)
+  formParent.value = parentNode
   Object.assign(formData, {
     id: selected.value.id,
     categoryType: selected.value.categoryType,
     categoryCode: selected.value.categoryCode,
     rdfsLabel: selected.value.rdfsLabel || '',
-    nsCode: selected.value.nsCode || '',
+    // 分组命名空间始终跟随所属领域
+    nsCode: selected.value.categoryType === 3 ? (parentNode?.nsCode || '') : (selected.value.nsCode || ''),
     icon: selected.value.icon || 'folder',
     color: selected.value.color || '#165DFF',
     description: selected.value.description || ''
@@ -2094,6 +2107,10 @@ async function submitForm() {
   // 创建领域时自动创建命名空间，nsCode = categoryCode
   if (formMode.value === 'create' && formData.categoryType === 2) {
     formData.nsCode = formData.categoryCode
+  }
+  // 分组的命名空间强制继承所属领域
+  if (formData.categoryType === 3) {
+    formData.nsCode = formParent.value?.nsCode || ''
   }
   const payload = {
     ...formData,
@@ -2165,14 +2182,24 @@ async function newVersion() {
     isCurrent: 0,
     status: 1
   })
-  BL.success('版本已创建')
-  await loadVersions()
+  BL.success('版本已创建并设为当前')
+  await Promise.all([loadVersions(), loadNsInfo()])
+}
+async function setCurrentVersion(v) {
+  if (v.isCurrent) return
+  try {
+    await namespaceApi.setCurrentVersion(v.id)
+    BL.success(`已将 ${v.version} 设为当前版本`)
+    await Promise.all([loadVersions(), loadNsInfo()])
+  } catch (e) {
+    BL.error(e?.msg || '设置失败')
+  }
 }
 async function removeVersion(v) {
   const ok = await BL.confirm({ title: '删除版本', content: `删除版本 ${v.version}？`, danger: true })
   if (!ok) return
   await namespaceApi.removeVersion(v.id)
-  await loadVersions()
+  await Promise.all([loadVersions(), loadNsInfo()])
 }
 
 async function loadTree(preserveSelection = true) {

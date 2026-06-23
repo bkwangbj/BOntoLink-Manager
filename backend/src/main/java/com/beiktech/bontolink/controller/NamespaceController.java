@@ -39,6 +39,11 @@ public class NamespaceController {
         return R.ok(service.createVersion(v));
     }
 
+    @PostMapping("/versions/{id}/current")
+    public R<BizNamespaceVersion> setCurrentVersion(@PathVariable String id) {
+        return R.ok(service.setCurrentVersion(id));
+    }
+
     @DeleteMapping("/versions/{id}")
     public R<?> deleteVersion(@PathVariable String id) {
         service.deleteVersion(id);
