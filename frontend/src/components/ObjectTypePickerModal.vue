@@ -17,7 +17,7 @@
                 <span class="otp-tag-ic" :style="{ background: r.color || '#165DFF' }" v-html="BL.icon(r.icon || 'cube', 12, '#fff')"></span>
                 <div class="otp-tag-body">
                   <div class="otp-tag-title bl-truncate">
-                    {{ r.rdfs_label || r.display_name || r.api_name }}
+                    {{ r.display_name || r.rdfs_label || r.api_name }}
                     <span class="otp-tag-stat">属性 {{ r.propTotal ?? 0 }}</span>
                     <span :class="['bl-tag', r.status===1?'bl-tag-success':'bl-tag-danger']">{{ r.status===1?'有效':'禁用' }}</span>
                   </div>
@@ -69,7 +69,7 @@
                   <div class="otp-card-ic" :style="{ background: r.color || '#165DFF' }" v-html="BL.icon(r.icon || 'cube', 14, '#fff')"></div>
                   <div class="otp-card-body">
                     <div class="otp-card-title">
-                      <span class="bl-truncate">{{ r.rdfs_label || r.display_name || r.api_name }}</span>
+                      <span class="bl-truncate">{{ r.display_name || r.rdfs_label || r.api_name }}</span>
                       <span :class="['bl-tag', r.status===1?'bl-tag-success':'bl-tag-danger']">{{ r.status===1?'有效':'禁用' }}</span>
                     </div>
                     <div class="otp-card-meta bl-truncate">

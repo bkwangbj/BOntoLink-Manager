@@ -65,7 +65,7 @@
       <div class="ov-section-title">分组颜色</div>
       <ColorPickerField v-model="form.color" />
       <div class="ov-section-title">图标</div>
-      <IconPickerField v-model="form.icon" label="" :preset-count="32" :suggest-name="form.rdfs_label || form.display_name || form.api_name" />
+      <IconPickerField v-model="form.icon" label="" :preset-count="32" :suggest-name="form.display_name || form.rdfs_label || form.api_name" />
     </div>
 
     <!-- 类表达式 -->

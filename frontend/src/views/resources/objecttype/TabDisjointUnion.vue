@@ -82,7 +82,7 @@
                   <div class="bl-row" style="gap:6px;align-items:center;min-width:0">
                     <span class="du-ic" :style="{ background: r.color || '#165DFF' }" v-html="BL.icon(r.icon || 'cube', 11, '#fff')"></span>
                     <div style="min-width:0">
-                      <div class="bl-truncate">{{ r.rdfs_label || r.display_name || r.api_name }}</div>
+                      <div class="bl-truncate">{{ r.display_name || r.rdfs_label || r.api_name }}</div>
                       <div class="bl-mono bl-muted" style="font-size:11px">{{ r.api_name }}</div>
                     </div>
                   </div>

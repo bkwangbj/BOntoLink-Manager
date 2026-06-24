@@ -308,7 +308,7 @@ async function onAdd() {
 async function onPickRight({ ids, rows: picked }) {
   if (!ids?.length) return
   draft.class_id2 = ids[0]
-  rightClassLabel.value = (picked && picked[0]) ? (picked[0].rdfs_label || picked[0].display_name || picked[0].api_name) : ''
+  rightClassLabel.value = (picked && picked[0]) ? (picked[0].display_name || picked[0].rdfs_label || picked[0].api_name) : ''
   rightProps.value = await classMetaApi.listProps(ids[0]).catch(() => []) || []
   draft.prop_id2 = ''
 }

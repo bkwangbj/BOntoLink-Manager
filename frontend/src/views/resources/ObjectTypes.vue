@@ -95,7 +95,7 @@
                       <div class="ot-name-cell">
                         <span class="ot-ic" :style="{ background: row.data.color || '#165DFF' }" v-html="BL.icon(row.data.icon || 'cube', 12, '#fff')"></span>
                         <div class="ot-name-text">
-                          <div class="ot-obj-label bl-truncate" :title="row.data.rdfs_label || row.data.display_name || row.data.api_name">{{ row.data.rdfs_label || row.data.display_name || row.data.api_name }}</div>
+                          <div class="ot-obj-label bl-truncate" :title="row.data.display_name || row.data.rdfs_label || row.data.api_name">{{ row.data.display_name || row.data.rdfs_label || row.data.api_name }}</div>
                           <div class="ot-obj-api bl-mono bl-muted bl-truncate">{{ row.data.api_name }}</div>
                         </div>
                       </div>
@@ -189,7 +189,7 @@
             <div class="ot-card-hd">
               <div class="ot-ic ot-ic-lg" :style="{ background: r.color || '#165DFF' }" v-html="BL.icon(r.icon || 'cube', 18, '#fff')"></div>
               <div class="bl-grow" style="min-width:0">
-                <div class="ot-card-title bl-truncate">{{ r.rdfs_label || r.display_name || r.api_name }}</div>
+                <div class="ot-card-title bl-truncate">{{ r.display_name || r.rdfs_label || r.api_name }}</div>
                 <div class="ot-card-api bl-mono bl-muted bl-truncate">{{ r.api_name }}</div>
               </div>
               <span :class="['bl-tag', r.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']">{{ r.status === 1 ? '启用' : '禁用' }}</span>
@@ -229,7 +229,7 @@
             <div class="ot-ic ot-ic-lg" :style="{ background: selected?.color || '#165DFF' }" v-html="BL.icon(selected?.icon || 'cube', 18, '#fff')"></div>
             <div class="bl-grow" style="min-width:0">
               <div class="ot-drawer-title">
-                <span class="bl-truncate">{{ selected?.rdfs_label || selected?.display_name || selected?.api_name }}</span>
+                <span class="bl-truncate">{{ selected?.display_name || selected?.rdfs_label || selected?.api_name }}</span>
                 <span class="bl-mono bl-muted" style="font-size:12px">({{ selected?.api_name }})</span>
                 <span :class="['bl-tag', selected?.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']">{{ selected?.status === 1 ? '启用' : '禁用' }}</span>
               </div>
@@ -304,7 +304,7 @@
             <div v-else-if="drawerTab === 'disjointUnion'" class="ot-tab-content">
               <TabDisjointUnion
                 :class-id="selected?.id"
-                :parent-label="selected?.rdfs_label || selected?.display_name || selected?.api_name"
+                :parent-label="selected?.display_name || selected?.rdfs_label || selected?.api_name"
                 :parent-api="selected?.api_name"
                 :parent-icon="selected?.icon || 'cube'"
                 :parent-color="selected?.color || '#165DFF'" />
@@ -314,7 +314,7 @@
             <div v-else-if="drawerTab === 'propEquiv'" class="ot-tab-content">
               <TabPropertyRelation
                 :class-id="selected?.id"
-                :class-label="selected?.rdfs_label || selected?.display_name || selected?.api_name"
+                :class-label="selected?.display_name || selected?.rdfs_label || selected?.api_name"
                 type="equivalent" />
             </div>
 
@@ -322,7 +322,7 @@
             <div v-else-if="drawerTab === 'propDisjoint'" class="ot-tab-content">
               <TabPropertyRelation
                 :class-id="selected?.id"
-                :class-label="selected?.rdfs_label || selected?.display_name || selected?.api_name"
+                :class-label="selected?.display_name || selected?.rdfs_label || selected?.api_name"
                 type="disjoint" />
             </div>
 
@@ -612,7 +612,7 @@ const filtered = computed(() => {
     list = [...list].sort((a, b) => {
       let va, vb
       switch (sortKey.value) {
-        case 'name':     va = a.rdfs_label || a.display_name || a.api_name || ''; vb = b.rdfs_label || b.display_name || b.api_name || ''; break
+        case 'name':     va = a.display_name || a.rdfs_label || a.api_name || ''; vb = b.display_name || b.rdfs_label || b.api_name || ''; break
         case 'category': va = a.categoryLabel || ''; vb = b.categoryLabel || ''; break
         case 'prop':     va = a.propTotal || 0; vb = b.propTotal || 0; break
         case 'parent':   va = a.parentLabel || ''; vb = b.parentLabel || ''; break
@@ -784,7 +784,7 @@ function onNestedDragEnd() {
 }
 
 function tabLabel(t) {
-  return t?.rdfs_label || t?.display_name || t?.api_name || '—'
+  return t?.display_name || t?.rdfs_label || t?.api_name || '—'
 }
 function nestedTabTooltip(i) {
   const chain = []
@@ -1108,7 +1108,7 @@ async function toggleStatus(r) {
   } catch (e) { BL.error(e?.msg || '操作失败') }
 }
 async function removeOne(r) {
-  const ok = await BL.confirm({ title: '删除对象', content: `确定删除「${r.rdfs_label || r.display_name || r.api_name}」?该对象的属性、表映射、规则约束将一并清除。`, danger: true, okText: '删除' })
+  const ok = await BL.confirm({ title: '删除对象', content: `确定删除「${r.display_name || r.rdfs_label || r.api_name}」?该对象的属性、表映射、规则约束将一并清除。`, danger: true, okText: '删除' })
   if (!ok) return
   try {
     const res = await classMetaApi.removeClass(r.id)

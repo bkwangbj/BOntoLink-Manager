@@ -36,7 +36,7 @@
             <div class="cg-cell-obj">
               <span class="cg-ic" :style="{ background: r.other_color || '#165DFF' }" v-html="BL.icon(r.other_icon || 'cube', 11, '#fff')"></span>
               <div style="min-width:0">
-                <div class="bl-truncate">{{ r.other_rdfs_label || r.other_display_name || r.other_api_name }}</div>
+                <div class="bl-truncate">{{ r.other_display_name || r.other_rdfs_label || r.other_api_name }}</div>
                 <div class="bl-mono bl-muted" style="font-size:11px">{{ r.other_api_name }}</div>
               </div>
             </div>
