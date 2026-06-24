@@ -74,8 +74,12 @@
               </div>
             </div>
 
-            <!-- 所属领域 (与 ont_biz_category 对齐, 列表左侧分类树按此过滤) -->
-            <div class="lke-meta-row lke-meta-row-domain">
+            <!-- 名称 (rdfs_label, 列表/标题显示) + 所属领域 (与 ont_biz_category 对齐, 列表左侧分类树按此过滤) -->
+            <div class="lke-meta-row lke-meta-row-2">
+              <div class="lke-meta-cell">
+                <span class="lke-meta-lbl">名称</span>
+                <input class="bl-input" v-model="form.rdfs_label" :disabled="!editMode" placeholder="链接类型名称 (如: 执飞)" />
+              </div>
               <div class="lke-meta-cell">
                 <span class="lke-meta-lbl">领域</span>
                 <select class="bl-input" v-model="form.category_code" :disabled="!editMode">
@@ -842,8 +846,9 @@ function pickTable(t) {
 }
 .lke-meta-cell .bl-input { flex: 1; min-width: 0; height: 28px; font-size: 12px; }
 .lke-status-sel { width: 100%; }
-/* 领域行: 单列占满, 紧贴上方元数据行 */
-.lke-meta-row-domain { grid-template-columns: 1fr; margin-top: -4px; }
+/* 名称 + 领域行: 两列, 紧贴上方元数据行 */
+.lke-meta-row-2 { grid-template-columns: 1fr 1fr; margin-top: -4px; }
+.lke-meta-row-2 .lke-meta-lbl { width: 36px; }
 
 /* 左右对称 — 4 行网格: 数据上半 / 中间数据源横跨 / 数据下半 / 展示
    每行的左右两张卡 stretch 到同行最高, 中间数据源横跨两列 */
