@@ -523,9 +523,9 @@ function syncPropsFromTables() {
         physical_table: tname,
         physical_column: col.name,
         api_name: col.name.toLowerCase(),
-        display_name: col.name,
+        display_name: (col.comment && col.comment.trim()) || col.name,   // 优先用注释, 无注释退回字段名
         data_type: 'xsd:' + (col.type === 'dateTime' ? 'dateTime' : col.type === 'date' ? 'date' : col.type === 'decimal' ? 'decimal' : col.type === 'integer' ? 'integer' : col.type === 'boolean' ? 'boolean' : 'string'),
-        is_key: 0, is_required: 0, is_multi_valued_prop: 0, is_range_constraint_prop: 0
+        is_key: col.is_key ? 1 : 0, is_required: col.is_required ? 1 : 0, is_multi_valued_prop: 0, is_range_constraint_prop: 0   // 自动标识主键/必填
       })
     }
   }

@@ -72,7 +72,10 @@ public class PhysicalTableService {
                 ins.put("id", "phys-" + UUID.randomUUID());
                 ins.put("dsId", dsId);
                 ins.put("physicalTable", name);
-                ins.put("displayName", name);  // 新表中文名默认= 物理名, 之后用户可改
+                // 新表中文名: 优先用表注释, 无注释再退回物理名, 之后用户可改
+                Object remarks = t.get("display_name");
+                String disp = remarks == null ? "" : remarks.toString().trim();
+                ins.put("displayName", disp.isEmpty() ? name : disp);
                 ins.put("tableType", t.get("type"));
                 ins.put("columnsJson", columnsJson);
                 ins.put("columnCount", t.get("column_count"));
@@ -126,7 +129,7 @@ public class PhysicalTableService {
             DatabaseMetaData meta = conn.getMetaData();
             String catalog = conn.getCatalog();
 
-            List<String[]> tables = new ArrayList<>();   // [name, type]
+            List<String[]> tables = new ArrayList<>();   // [name, type, schema, remarks]
             try (ResultSet rs = meta.getTables(catalog, null, "%", new String[]{"TABLE", "VIEW"})) {
                 while (rs.next()) {
                     String name = rs.getString("TABLE_NAME");
@@ -136,24 +139,38 @@ public class PhysicalTableService {
                     if (nl.isEmpty() || nl.startsWith("sqlite_")
                             || nl.equals("flyway_schema_history") || nl.equals("ont_physical_table")) continue;
                     if (isSystemSchema(schema)) continue;   // 跳过 pg_catalog / information_schema 等系统库
-                    tables.add(new String[]{name, rs.getString("TABLE_TYPE"), schema});
+                    tables.add(new String[]{name, rs.getString("TABLE_TYPE"), schema, rs.getString("REMARKS")});
                 }
             }
             for (String[] t : tables) {
                 String name = t[0];
+                String schema = t[2];
+                String tableRemarks = t[3];   // 表注释
                 boolean isView = t[1] != null && t[1].toUpperCase().contains("VIEW");
+                // 主键列集合 (视图无主键, 容错忽略异常)
+                Set<String> pkCols = new HashSet<>();
+                try (ResultSet pk = meta.getPrimaryKeys(catalog, schema, name)) {
+                    while (pk.next()) pkCols.add(pk.getString("COLUMN_NAME"));
+                } catch (SQLException ignore) {}
                 List<Map<String, Object>> columns = new ArrayList<>();
-                try (ResultSet cr = meta.getColumns(catalog, t[2], name, "%")) {
+                try (ResultSet cr = meta.getColumns(catalog, schema, name, "%")) {
                     while (cr.next()) {
                         Map<String, Object> c = new LinkedHashMap<>();
-                        c.put("name", cr.getString("COLUMN_NAME"));
+                        String colName = cr.getString("COLUMN_NAME");
+                        c.put("name", colName);
                         c.put("type", mapType(cr.getString("TYPE_NAME")));
+                        String remarks = cr.getString("REMARKS");
+                        c.put("comment", remarks == null ? "" : remarks);   // 字段注释
+                        // NOT NULL → 必填; columnNoNulls 表示不允许 NULL
+                        c.put("is_required", cr.getInt("NULLABLE") == DatabaseMetaData.columnNoNulls ? 1 : 0);
+                        c.put("is_key", pkCols.contains(colName) ? 1 : 0);   // 主键标识
                         columns.add(c);
                     }
                 }
                 Map<String, Object> row = new LinkedHashMap<>();
                 row.put("physical_table", name);
                 row.put("type", isView ? "view" : "table");
+                row.put("display_name", tableRemarks == null ? "" : tableRemarks.trim());   // 表注释 → 中文名
                 row.put("columns", columns);
                 row.put("column_count", columns.size());
                 result.add(row);
