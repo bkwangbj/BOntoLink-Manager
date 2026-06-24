@@ -48,7 +48,9 @@ public class LinkTypeController {
 
         String id = "link-types-" + UUID.randomUUID();
         body.put("id", id);
-        body.putIfAbsent("rid", "ri.ont.link.types." + code);
+        // rid 自动生成: 前端会带 rid:"" 空串, putIfAbsent 不覆盖, 故按"空白则生成"处理
+        String rid = String.valueOf(body.getOrDefault("rid", "")).trim();
+        if (rid.isEmpty() || "null".equalsIgnoreCase(rid)) body.put("rid", "ri.ont.link.types." + code);
         body.putIfAbsent("status", "experimental");
         body.putIfAbsent("l_cardinality", "one");
         body.putIfAbsent("r_cardinality", "one");
@@ -73,6 +75,12 @@ public class LinkTypeController {
     public R<?> update(@PathVariable String id, @RequestBody Map<String, Object> body) {
         body.put("id", id);
         body.putIfAbsent("updated_by", "admin");
+        // 历史数据 rid 为空时, 按 link_type_id 补生成 (重存即修复)
+        String rid = String.valueOf(body.getOrDefault("rid", "")).trim();
+        if (rid.isEmpty() || "null".equalsIgnoreCase(rid)) {
+            String code = String.valueOf(body.getOrDefault("link_type_id", "")).trim();
+            body.put("rid", code.isEmpty() ? null : "ri.ont.link.types." + code);
+        }
         if (body.get("is_data_source_rel") instanceof Number
                 && ((Number) body.get("is_data_source_rel")).intValue() == 0) {
             body.put("rel_data_table", null);

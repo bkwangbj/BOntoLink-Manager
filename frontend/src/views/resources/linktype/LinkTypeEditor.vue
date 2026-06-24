@@ -206,9 +206,11 @@
                   <div class="lke-cell">
                     <div class="lke-cell-lbl">API 名称 <span class="bl-muted" v-html="BL.icon('help', 11)" title="代码调用名,驼峰命名,同对象下唯一"></span></div>
                     <div class="lke-input-wrap">
-                      <input class="bl-input bl-mono" v-model="form.l_api_name" :disabled="!editMode" placeholder="operatedFlights" />
+                      <input class="bl-input bl-mono" :class="{ 'is-invalid': form.l_api_name && !isValidApi(form.l_api_name) }" v-model="form.l_api_name" :disabled="!editMode" placeholder="operatedFlights" />
                       <span v-if="isValidApi(form.l_api_name)" class="lke-valid-tag">有效</span>
+                      <span v-else-if="form.l_api_name" class="lke-invalid-tag">格式错误</span>
                     </div>
+                    <div v-if="form.l_api_name && !isValidApi(form.l_api_name)" class="lke-field-err">需小写字母开头，仅字母和数字（不能有下划线、连字符或空格）</div>
                   </div>
 
                   <!-- 类型类 (源) -->
@@ -324,9 +326,11 @@
                   <div class="lke-cell">
                     <div class="lke-cell-lbl">API 名称</div>
                     <div class="lke-input-wrap">
-                      <input class="bl-input bl-mono" v-model="form.r_api_name" :disabled="!editMode" placeholder="operatingAircraft" />
+                      <input class="bl-input bl-mono" :class="{ 'is-invalid': form.r_api_name && !isValidApi(form.r_api_name) }" v-model="form.r_api_name" :disabled="!editMode" placeholder="operatingAircraft" />
                       <span v-if="isValidApi(form.r_api_name)" class="lke-valid-tag">有效</span>
+                      <span v-else-if="form.r_api_name" class="lke-invalid-tag">格式错误</span>
                     </div>
+                    <div v-if="form.r_api_name && !isValidApi(form.r_api_name)" class="lke-field-err">需小写字母开头，仅字母和数字（不能有下划线、连字符或空格）</div>
                   </div>
 
                   <!-- 类型类 (目标) -->
@@ -377,7 +381,9 @@
           </button>
           <span style="flex:1"></span>
           <button class="bl-btn" @click="onClose">取消</button>
-          <button v-if="editMode" class="bl-btn bl-btn-primary" :disabled="!canSave" @click="onSave">保存</button>
+          <span :title="canSave ? '' : ('请先完善：' + saveBlockers.join('、'))" style="display:inline-flex">
+            <button v-if="editMode" class="bl-btn bl-btn-primary" :disabled="!canSave" @click="onSave">保存</button>
+          </span>
         </footer>
       </aside>
     </transition>
@@ -598,6 +604,19 @@ const canSave = computed(() =>
   && (!form.is_data_source_rel || form.rel_data_table)
   // 非中间表模式下两侧数量由 addMapping/removeMapping 自动对齐, 此处不再校验
 )
+// 保存被禁用时, 逐项列出缺失原因 (用于按钮悬停提示)
+const saveBlockers = computed(() => {
+  const m = []
+  if (!form.link_type_id || !/^[a-z][a-z0-9-]*$/.test(form.link_type_id)) m.push('ID（小写字母开头，仅小写字母/数字/连字符）')
+  if (!form.l_object_type_id) m.push('源对象类型')
+  if (!form.r_object_type_id) m.push('目标对象类型')
+  if (!form.l_display_name) m.push('源显示名称')
+  if (!form.r_display_name) m.push('目标显示名称')
+  if (!isValidApi(form.l_api_name)) m.push('源 API 名（小写驼峰，无下划线/连字符）')
+  if (!isValidApi(form.r_api_name)) m.push('目标 API 名（小写驼峰，无下划线/连字符）')
+  if (form.is_data_source_rel && !form.rel_data_table) m.push('中间表')
+  return m
+})
 
 /* —— 保存 / 删除 —— */
 async function onSave() {
@@ -931,6 +950,13 @@ function pickTable(t) {
   font-size: 10px; background: var(--bl-success-soft); color: var(--bl-success);
   padding: 1px 6px; border-radius: 3px;
 }
+.lke-invalid-tag {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  font-size: 10px; background: var(--bl-danger-soft, #ffece8); color: var(--bl-danger, #f53f3f);
+  padding: 1px 6px; border-radius: 3px;
+}
+.lke-input-wrap .bl-input.is-invalid { border-color: var(--bl-danger, #f53f3f); }
+.lke-field-err { margin-top: 4px; font-size: 11px; color: var(--bl-danger, #f53f3f); line-height: 1.4; }
 
 /* 基数 segmented control */
 .lke-card-seg {

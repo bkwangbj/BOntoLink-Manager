@@ -64,6 +64,7 @@ public interface LinkTypeMapper {
 
     @Update("""
         UPDATE ont_link_types SET
+          rid = #{rid},
           status = #{status},
           l_object_type_id = #{l_object_type_id}, r_object_type_id = #{r_object_type_id},
           l_cardinality = #{l_cardinality}, r_cardinality = #{r_cardinality},
