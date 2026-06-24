@@ -91,17 +91,7 @@
                   共 {{ filteredTypes.length }} 项
                 </template>
               </div>
-              <div class="et-pager-r">
-                <span class="bl-muted" style="font-size:12px;margin-right:6px">每页</span>
-                <select class="bl-input et-page-size" v-model.number="typePageSize">
-                  <option :value="20">20</option>
-                  <option :value="50">50</option>
-                  <option :value="100">100</option>
-                </select>
-                <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="typePage<=1" @click="typePage--">‹</button>
-                <span class="bl-muted" style="font-size:12px">{{ typePage }} / {{ typeTotalPages }}</span>
-                <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="typePage>=typeTotalPages" @click="typePage++">›</button>
-              </div>
+              <Pager v-model:page="typePage" v-model:page-size="typePageSize" :total-pages="typeTotalPages" />
             </div>
           </div>
       </section>
@@ -628,6 +618,8 @@ import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
 import { enumTypeApi, groupApi, groupRefApi, datasourceApi, physicalTableApi, categoryApi } from '@/api'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
+import Pager from '@/components/Pager.vue'
+import { usePagination } from '@/lib/usePagination'
 import FilterableSelect from '@/components/FilterableSelect.vue'
 
 /* —— 数据 Tab 树节点 (递归) —— */
@@ -868,16 +860,8 @@ const filteredTypes = computed(() => {
   return list
 })
 
-/* —— 枚举类型分页 —— */
-const typePage = ref(1)
-const typePageSize = ref(20)
-const typeTotalPages = computed(() => Math.max(1, Math.ceil(filteredTypes.value.length / typePageSize.value)))
-const pagedTypes = computed(() => {
-  const start = (typePage.value - 1) * typePageSize.value
-  return filteredTypes.value.slice(start, start + typePageSize.value)
-})
-// 过滤/搜索/每页大小变化导致页码越界时回到首页
-watch([filteredTypes, typePageSize], () => { if (typePage.value > typeTotalPages.value) typePage.value = 1 })
+/* —— 枚举类型分页 (封装在 usePagination) —— */
+const { page: typePage, pageSize: typePageSize, totalPages: typeTotalPages, paged: pagedTypes } = usePagination(filteredTypes)
 
 const filteredItems = computed(() => {
   let list = items.value

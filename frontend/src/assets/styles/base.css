@@ -249,7 +249,7 @@ button { font-family: inherit; }
 .bl-toast-wrap {
   position: fixed; top: 16px; left: 50%;
   transform: translateX(-50%);
-  z-index: 1200;
+  z-index: 9999;   /* 全局提示必须高于所有浮层(大弹框≥1200/确认框1300/最大化层3000), 否则保存提示被盖住看不见 */
   display: flex; flex-direction: column; gap: 8px;
   pointer-events: none;
 }

@@ -130,17 +130,7 @@
               <span v-if="groupMode" class="bl-muted" style="margin-left:8px">· {{ groupCount }} 个领域</span>
             </template>
           </div>
-          <div class="ds-pager-r" v-if="!groupMode">
-            <span class="bl-muted" style="font-size:12px;margin-right:6px">每页</span>
-            <select class="bl-input ds-page-size" v-model.number="pageSize">
-              <option :value="20">20</option>
-              <option :value="50">50</option>
-              <option :value="100">100</option>
-            </select>
-            <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="page<=1" @click="page--">‹</button>
-            <span class="bl-muted" style="font-size:12px">{{ page }} / {{ totalPages }}</span>
-            <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="page>=totalPages" @click="page++">›</button>
-          </div>
+          <Pager v-if="!groupMode" v-model:page="page" v-model:page-size="pageSize" :total-pages="totalPages" />
           <div class="ds-pager-r" v-else>
             <button class="bl-btn bl-btn-sm bl-btn-text" @click="expandAllGroups">展开全部</button>
             <button class="bl-btn bl-btn-sm bl-btn-text" @click="collapseAllGroups">折叠全部</button>
@@ -422,6 +412,8 @@ import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
 import { datasourceApi, namespaceApi, categoryApi, physicalTableApi } from '@/api'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
+import Pager from '@/components/Pager.vue'
+import { usePagination } from '@/lib/usePagination'
 
 const route = useRoute()
 const router = useRouter()
@@ -649,15 +641,8 @@ const filtered = computed(() => {
   return list
 })
 
-/* —— 分页 —— */
-const page = ref(1)
-const pageSize = ref(20)
-const totalPages = computed(() => Math.max(1, Math.ceil(filtered.value.length / pageSize.value)))
-const paged = computed(() => {
-  const start = (page.value - 1) * pageSize.value
-  return filtered.value.slice(start, start + pageSize.value)
-})
-watch([filtered, pageSize], () => { if (page.value > totalPages.value) page.value = 1 })
+/* —— 分页 (封装在 usePagination) —— */
+const { page, pageSize, totalPages, paged } = usePagination(filtered)
 
 /* —— 按所属领域分组显示 —— */
 const groupMode = ref(false)

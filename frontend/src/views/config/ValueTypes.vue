@@ -109,15 +109,7 @@
               共 {{ filtered.length }} 项
             </template>
           </div>
-          <div class="bl-row" style="gap:4px">
-            <span class="bl-muted" style="font-size:12px;margin-right:6px">每页</span>
-            <select class="bl-input vt-page-size" v-model.number="pageSize">
-              <option :value="20">20</option><option :value="50">50</option><option :value="100">100</option>
-            </select>
-            <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="page<=1" @click="page--">‹</button>
-            <span class="bl-muted" style="font-size:12px">{{ page }} / {{ totalPages }}</span>
-            <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="page>=totalPages" @click="page++">›</button>
-          </div>
+          <Pager v-model:page="page" v-model:page-size="pageSize" :total-pages="totalPages" />
         </div>
       </div>
 
@@ -372,6 +364,8 @@ import { BL } from '@/lib/bl.js'
 import { valueTypeApi, enumTypeApi, categoryApi } from '@/api'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 import EnumPickerModal from '@/components/EnumPickerModal.vue'
+import Pager from '@/components/Pager.vue'
+import { usePagination } from '@/lib/usePagination'
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
@@ -436,8 +430,6 @@ const form = reactive({})
 const cfg = reactive({})
 const usageCfg = reactive({ max_select_level: 0, allow_non_leaf: 0, display_format: 'label' })
 const checked = ref(new Set())
-const page = ref(1)
-const pageSize = ref(20)
 const activeTab = ref('meta')
 
 function statusCount(k) {
@@ -496,9 +488,7 @@ const filtered = computed(() => {
   }
   return list
 })
-const totalPages = computed(() => Math.max(1, Math.ceil(filtered.value.length / pageSize.value)))
-const paged = computed(() => filtered.value.slice((page.value - 1) * pageSize.value, page.value * pageSize.value))
-
+const { page, pageSize, totalPages, paged } = usePagination(filtered)
 watch([filterStatus, filterCategory, q], () => { page.value = 1 })
 
 const allChecked = computed(() => paged.value.length > 0 && paged.value.every(r => checked.value.has(r.id)))
@@ -637,7 +627,23 @@ async function submitForm() {
     form.default_usage_config_id = null
   }
 
-  const payload = { ...form }; delete payload._apiTouched
+  // 仅提交真实列, 避免把 JOIN 派生字段(enum_label/enum_api_name 等)与 _apiTouched 一并发往后端
+  const payload = {
+    rid: form.rid,
+    api_name: form.api_name,
+    category_code: form.category_code || null,
+    base_type: form.base_type,
+    constraint_type: form.constraint_type,
+    constraint_config: form.constraint_config ?? null,
+    enum_id: form.constraint_type === 'Enum' ? (form.enum_id || null) : null,
+    default_usage_config_id: form.default_usage_config_id ?? null,
+    status: form.status ?? 1,
+    rdfs_label: form.rdfs_label,
+    rdfs_comment: form.rdfs_comment,
+    rdfs_see_also: form.rdfs_see_also,
+    rdfs_defined_by: form.rdfs_defined_by
+  }
+  // 失败时 http 拦截器已统一弹 BL.error 并 reject, 此处 await 抛出后不会执行下面的成功流程
   if (form.id) await valueTypeApi.update(form.id, payload)
   else         await valueTypeApi.create(payload)
   BL.success('已保存')

@@ -65,7 +65,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="r in filtered" :key="r.id"
+              <tr v-for="r in paged" :key="r.id"
                   :class="['lk-row', selectedId === r.id && 'is-active']"
                   @click="onRowClick(r)">
                 <td class="t-center" @click.stop>
@@ -133,6 +133,7 @@
               共 {{ filtered.length }} 项
             </template>
           </div>
+          <Pager v-model:page="lkPage" v-model:page-size="lkPageSize" :total-pages="lkTotalPages" />
         </div>
       </section>
     </div>
@@ -155,6 +156,8 @@ import { linkTypeApi, resourceApi } from '@/api'
 import PageHeader from '@/components/PageHeader.vue'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 import LinkTypeEditor from './linktype/LinkTypeEditor.vue'
+import Pager from '@/components/Pager.vue'
+import { usePagination } from '@/lib/usePagination'
 
 const MiniSwitch = {
   name: 'MiniSwitch',
@@ -232,14 +235,17 @@ const filtered = computed(() => {
   return list
 })
 
-const allChecked = computed(() => filtered.value.length > 0 && filtered.value.every(r => checked.value.has(r.id)))
+/* —— 分页 (封装在 usePagination) —— */
+const { page: lkPage, pageSize: lkPageSize, totalPages: lkTotalPages, paged } = usePagination(filtered)
+
+const allChecked = computed(() => paged.value.length > 0 && paged.value.every(r => checked.value.has(r.id)))
 function toggleCheck(id) {
   const s = new Set(checked.value); s.has(id) ? s.delete(id) : s.add(id); checked.value = s
 }
 function toggleAll() {
   const s = new Set(checked.value)
-  if (allChecked.value) filtered.value.forEach(r => s.delete(r.id))
-  else filtered.value.forEach(r => s.add(r.id))
+  if (allChecked.value) paged.value.forEach(r => s.delete(r.id))
+  else paged.value.forEach(r => s.add(r.id))
   checked.value = s
 }
 
@@ -313,6 +319,8 @@ function statusTagCls(s) {
   font-size: 12px; display: flex; justify-content: space-between; align-items: center;
 }
 .lk-pager-l { display: inline-flex; align-items: center; }
+.lk-pager-r { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.lk-page-size { width: 64px; height: 26px; }
 .lk-del-btn { background: var(--bl-bg-1); border: 1px solid #f53f3f; color: #f53f3f; }
 .lk-del-btn:hover { background: color-mix(in srgb, #f53f3f 8%, var(--bl-bg-1)); }
 
