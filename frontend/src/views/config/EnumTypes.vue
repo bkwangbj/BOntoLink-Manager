@@ -46,7 +46,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="e in filteredTypes" :key="e.id" @click="selectEnum(e)" class="et-trow">
+                  <tr v-for="e in pagedTypes" :key="e.id" @click="selectEnum(e)" class="et-trow">
                     <td class="t-center" @click.stop>
                       <input type="checkbox" :checked="typeChecked.has(e.id)" @change="toggleTypeCheck(e.id)" />
                     </td>
@@ -90,6 +90,17 @@
                 <template v-else>
                   共 {{ filteredTypes.length }} 项
                 </template>
+              </div>
+              <div class="et-pager-r">
+                <span class="bl-muted" style="font-size:12px;margin-right:6px">每页</span>
+                <select class="bl-input et-page-size" v-model.number="typePageSize">
+                  <option :value="20">20</option>
+                  <option :value="50">50</option>
+                  <option :value="100">100</option>
+                </select>
+                <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="typePage<=1" @click="typePage--">‹</button>
+                <span class="bl-muted" style="font-size:12px">{{ typePage }} / {{ typeTotalPages }}</span>
+                <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="typePage>=typeTotalPages" @click="typePage++">›</button>
               </div>
             </div>
           </div>
@@ -664,7 +675,11 @@ const expanded = ref(new Set())   // 保留: 旧分组浮层 / 其它子组件�
 
 /* 行业分类过滤 (来自 CategoryTreeFilter) */
 const selectedCategoryCodes = ref(null)
-function onCategoryChange({ codes }) { selectedCategoryCodes.value = codes || null }
+const selectedCategoryCode = ref('')   // 当前选中的领域 code (null/全部 → '')
+function onCategoryChange({ codes, categoryCode }) {
+  selectedCategoryCodes.value = codes || null
+  selectedCategoryCode.value = categoryCode || ''
+}
 
 /* 业务领域候选 (新建/编辑枚举时选"所属领域", 与其他模块一致) */
 const domainOpts = ref([])
@@ -852,6 +867,17 @@ const filteredTypes = computed(() => {
   }
   return list
 })
+
+/* —— 枚举类型分页 —— */
+const typePage = ref(1)
+const typePageSize = ref(20)
+const typeTotalPages = computed(() => Math.max(1, Math.ceil(filteredTypes.value.length / typePageSize.value)))
+const pagedTypes = computed(() => {
+  const start = (typePage.value - 1) * typePageSize.value
+  return filteredTypes.value.slice(start, start + typePageSize.value)
+})
+// 过滤/搜索/每页大小变化导致页码越界时回到首页
+watch([filteredTypes, typePageSize], () => { if (typePage.value > typeTotalPages.value) typePage.value = 1 })
 
 const filteredItems = computed(() => {
   let list = items.value
@@ -1106,7 +1132,7 @@ const typeFormOpen = ref(false)
 const typeForm = reactive({})
 function openCreateType() {
   Object.keys(typeForm).forEach(k => delete typeForm[k])
-  Object.assign(typeForm, { enum_type: 'general_single', max_level: 1, status: 'active', group_id: activeGroupId.value || '', category_code: '' })
+  Object.assign(typeForm, { enum_type: 'general_single', max_level: 1, status: 'active', group_id: activeGroupId.value || '', category_code: selectedCategoryCode.value || '' })
   ensureDrawerSize()
   typeFormOpen.value = true
 }
@@ -1205,7 +1231,7 @@ async function removeType(e) {
 /* —— 类型列表批量选择 + 删除 —— */
 const typeChecked = ref(new Set())
 const allTypeChecked = computed(() =>
-  filteredTypes.value.length > 0 && filteredTypes.value.every(e => typeChecked.value.has(e.id))
+  pagedTypes.value.length > 0 && pagedTypes.value.every(e => typeChecked.value.has(e.id))
 )
 function toggleTypeCheck(id) {
   const s = new Set(typeChecked.value)
@@ -1214,8 +1240,8 @@ function toggleTypeCheck(id) {
 }
 function toggleTypeAll() {
   const s = new Set(typeChecked.value)
-  if (allTypeChecked.value) filteredTypes.value.forEach(e => s.delete(e.id))
-  else filteredTypes.value.forEach(e => s.add(e.id))
+  if (allTypeChecked.value) pagedTypes.value.forEach(e => s.delete(e.id))
+  else pagedTypes.value.forEach(e => s.add(e.id))
   typeChecked.value = s
 }
 async function batchRemoveTypes() {
@@ -1411,6 +1437,7 @@ async function removeItem(it) {
   font-size: var(--bl-fs-12);
 }
 .et-pager-l { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 0; }
+.et-pager-r { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; }
 
 /* 批量操作按钮 (统一 outline 配色) */
 .et-del-btn { background: #fff; border: 1px solid #f53f3f; color: #f53f3f; }

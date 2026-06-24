@@ -93,10 +93,10 @@
           <col style="width:40px" />
           <col style="width:170px" />
           <col style="width:140px" />
+          <col style="width:140px" /><col style="width:140px" />
           <col style="width:110px" /><col style="width:110px" />
           <col style="width:110px" />
           <col style="width:70px" /><col style="width:70px" /><col style="width:70px" /><col style="width:80px" />
-          <col style="width:140px" /><col style="width:140px" />
           <col style="width:80px" /><col style="width:200px" />
           <col style="width:80px" />
         </colgroup>
@@ -109,6 +109,8 @@
             <th class="t-left pp-stk-l3">
               <span class="th-sort" @click="toggleSort('api')">编码<span class="th-arrow">{{ sortArrow('api') }}</span></span>
             </th>
+            <th class="t-center t-left"><span class="th-sort" @click="toggleSort('physical_table')">物理表<span class="th-arrow">{{ sortArrow('physical_table') }}</span></span></th>
+            <th class="t-center t-left"><span class="th-sort" @click="toggleSort('physical_column')">物理字段<span class="th-arrow">{{ sortArrow('physical_column') }}</span></span></th>
             <th class="t-center"><span class="th-sort" @click="toggleSort('data_type')">数据类型<span class="th-arrow">{{ sortArrow('data_type') }}</span></span></th>
             <th class="t-center">值类型</th>
             <th class="t-center">格式化</th>
@@ -116,8 +118,6 @@
             <th class="t-center"><span class="th-sort" @click="toggleSort('is_required')">必填<span class="th-arrow">{{ sortArrow('is_required') }}</span></span></th>
             <th class="t-center"><span class="th-sort" @click="toggleSort('is_multi_valued_prop')">多值<span class="th-arrow">{{ sortArrow('is_multi_valued_prop') }}</span></span></th>
             <th class="t-center" title="值域约束"><span class="th-sort" @click="toggleSort('is_range_constraint_prop')">约束<span class="th-arrow">{{ sortArrow('is_range_constraint_prop') }}</span></span></th>
-            <th class="t-center t-left"><span class="th-sort" @click="toggleSort('physical_table')">物理表<span class="th-arrow">{{ sortArrow('physical_table') }}</span></span></th>
-            <th class="t-center t-left"><span class="th-sort" @click="toggleSort('physical_column')">物理字段<span class="th-arrow">{{ sortArrow('physical_column') }}</span></span></th>
             <th class="t-center"><span class="th-sort" @click="toggleSort('status')">状态<span class="th-arrow">{{ sortArrow('status') }}</span></span></th>
             <th class="t-center t-left">备注</th>
             <th class="t-center pp-stk-r1" style="width:80px">操作</th>
@@ -141,6 +141,12 @@
               <td class="pp-stk-l3 t-left">
                 <span class="bl-mono bl-truncate" :title="p.api_name">{{ p.api_name }}</span>
               </td>
+              <td class="t-left">
+                <span class="bl-mono bl-muted bl-truncate" :title="p.physical_table">{{ p.physical_table || '—' }}</span>
+              </td>
+              <td class="t-left">
+                <span class="bl-mono bl-muted bl-truncate" :title="p.physical_column">{{ p.physical_column || '—' }}</span>
+              </td>
               <td class="t-center"><span class="bl-tag">{{ p.data_type || '—' }}</span></td>
               <!-- 值类型: 点击单元格 → 唤起「值类型选择面板」 -->
               <td class="t-center vt-cell" @click.stop="openValueTypePicker(p)">
@@ -162,12 +168,6 @@
               <td class="t-center"><input type="checkbox" :checked="p.is_required" disabled /></td>
               <td class="t-center"><input type="checkbox" :checked="p.is_multi_valued_prop" disabled /></td>
               <td class="t-center" title="值域约束"><input type="checkbox" :checked="p.is_range_constraint_prop" disabled /></td>
-              <td class="t-left">
-                <span class="bl-mono bl-muted bl-truncate" :title="p.physical_table">{{ p.physical_table || '—' }}</span>
-              </td>
-              <td class="t-left">
-                <span class="bl-mono bl-muted bl-truncate" :title="p.physical_column">{{ p.physical_column || '—' }}</span>
-              </td>
               <td class="t-center">
                 <span :class="['pp-status', p.status===1 ? 'is-on' : 'is-off']">{{ p.status===1 ? '启用' : '禁用' }}</span>
               </td>

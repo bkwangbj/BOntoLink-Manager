@@ -141,6 +141,7 @@
     <LinkTypeEditor v-model:open="editorOpen"
                     :link-id="editorLinkId"
                     :all-classes="allClasses"
+                    :init-category="selectedCategoryCode"
                     @saved="onSaved"
                     @deleted="onDeleted" />
   </div>
@@ -177,7 +178,11 @@ const filterStatus = ref('')
 const filterCardinality = ref('')
 
 const selectedCategoryCodes = ref(null)
-function onCategoryChange({ codes }) { selectedCategoryCodes.value = codes || null }
+const selectedCategoryCode = ref('')   // 当前选中的领域 code (null/全部 → '')
+function onCategoryChange({ codes, categoryCode }) {
+  selectedCategoryCodes.value = codes || null
+  selectedCategoryCode.value = categoryCode || ''
+}
 
 const editorOpen = ref(false)
 const editorLinkId = ref('')

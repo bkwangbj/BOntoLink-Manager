@@ -505,7 +505,11 @@ const industryFilterOptions = computed(() => {
 
 /* —— 左侧行业分类树 —— */
 const selectedCategoryCodes = ref(null)
-function onCategoryChange({ codes }) { selectedCategoryCodes.value = codes || null }
+const selectedCategoryCode = ref('')   // 当前选中的领域 code (null/全部 → '')
+function onCategoryChange({ codes, categoryCode }) {
+  selectedCategoryCodes.value = codes || null
+  selectedCategoryCode.value = categoryCode || ''
+}
 
 const filtered = computed(() => {
   let list = rows.value
@@ -595,7 +599,7 @@ async function load() {
 function openCreate() {
   selected.value = null
   Object.keys(form).forEach(k => delete form[k])
-  Object.assign(form, { status: 1, color: '#165DFF', icon: 'station' })
+  Object.assign(form, { status: 1, color: '#165DFF', icon: 'station', category_code: selectedCategoryCode.value || '' })
   drawerTab.value = 'overview'
   ensureDrawerSize()
   drawerOpen.value = true

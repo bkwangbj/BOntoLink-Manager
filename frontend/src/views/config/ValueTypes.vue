@@ -300,7 +300,20 @@
                   <!-- 日期 -->
                   <input v-else-if="form.base_type === 'DateTime'"
                          type="datetime-local" class="bl-input bl-mono" v-model="testValue" />
-                  <!-- 枚举 -->
+                  <!-- 枚举(多级): 异步树形选择 -->
+                  <div v-else-if="form.constraint_type === 'Enum' && enumIsMultiLevel" class="vt-tv-tree" ref="tvTreeRef">
+                    <div :class="['vt-tv-display', !testValue && 'is-empty']" @click="tvTreeOpen = !tvTreeOpen">
+                      <span class="bl-truncate">{{ testValue ? testValueLabel : '— 选择枚举项 —' }}</span>
+                      <span :class="['vt-tv-arrow', tvTreeOpen && 'is-open']" v-html="BL.icon('chevronDown', 11)"></span>
+                    </div>
+                    <div v-if="tvTreeOpen" class="vt-tv-panel">
+                      <div v-if="!currentEnumItems.length" class="bl-muted" style="padding:10px;font-size:12px">加载中…</div>
+                      <ul v-else class="vt-tv-root">
+                        <TestValueTreeNode v-for="n in currentEnumItemTree" :key="n.id" :node="n" :selected="testValue" :pick-fn="onPickTestValue" />
+                      </ul>
+                    </div>
+                  </div>
+                  <!-- 枚举(单级): 下拉 -->
                   <select v-else-if="form.constraint_type === 'Enum'" class="bl-input" v-model="testValue">
                     <option value="">— 选择枚举项 —</option>
                     <option v-for="i in currentEnumItems" :key="i.id" :value="i.code">{{ formatEnumItem(i) }}</option>
@@ -352,7 +365,7 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, computed, reactive, watch, onMounted, onBeforeUnmount, nextTick, h } from 'vue'
 import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
@@ -448,7 +461,11 @@ function sortArrow(key) {
 
 /* —— 左侧行业分类树 (统一组件, 按 category_code 子树过滤) —— */
 const selectedCategoryCodes = ref(null)
-function onCategoryChange({ codes }) { selectedCategoryCodes.value = codes || null }
+const selectedCategoryCode = ref('')   // 当前选中的领域 code (null/全部 → '')
+function onCategoryChange({ codes, categoryCode }) {
+  selectedCategoryCodes.value = codes || null
+  selectedCategoryCode.value = categoryCode || ''
+}
 
 const filtered = computed(() => {
   let list = rows.value
@@ -546,7 +563,7 @@ function onLabelInput() {
 
 function openCreate() {
   Object.keys(form).forEach(k => delete form[k])
-  Object.assign(form, { base_type: 'String', constraint_type: 'Length', status: 1, enum_id: '', category_code: '', default_usage_config_id: null, _apiTouched: false })
+  Object.assign(form, { base_type: 'String', constraint_type: 'Length', status: 1, enum_id: '', category_code: selectedCategoryCode.value || '', default_usage_config_id: null, _apiTouched: false })
   Object.keys(cfg).forEach(k => delete cfg[k]); cfg.min = 0; cfg.max = 255
   Object.assign(usageCfg, { max_select_level: 0, allow_non_leaf: 0, display_format: 'label' })
   testValue.value = ''
@@ -684,6 +701,68 @@ function formatEnumItem(i) {
   }
 }
 watch(() => form.enum_id, (v) => { if (v) loadEnumItems(v) })
+
+/* —— 测试值: 多级枚举 → 异步树形选择 —— */
+const tvTreeOpen = ref(false)
+const tvTreeRef = ref(null)
+// 判定当前枚举是否多级: 优先看枚举主表 max_level, 兜底看枚举项是否带父级/层级
+const enumIsMultiLevel = computed(() => {
+  if (form.constraint_type !== 'Enum' || !form.enum_id) return false
+  const lv = pickedEnum.value?.max_level
+  if (lv != null && lv !== '') return Number(lv) > 1
+  return currentEnumItems.value.some(i => Number(i.level) > 1 || i.parent_code)
+})
+// 由扁平枚举项按 parent_code 建树 (与 EnumTypes 数据页树视图同算法)
+const currentEnumItemTree = computed(() => {
+  const list = currentEnumItems.value
+  if (!list.length) return []
+  const byCode = new Map()
+  list.forEach(x => byCode.set(x.code, { ...x, children: [] }))
+  const roots = []
+  list.forEach(x => {
+    const node = byCode.get(x.code)
+    if (x.parent_code && byCode.has(x.parent_code)) byCode.get(x.parent_code).children.push(node)
+    else roots.push(node)
+  })
+  return roots
+})
+const testValueLabel = computed(() => {
+  const it = currentEnumItems.value.find(i => i.code === testValue.value)
+  return it ? formatEnumItem(it) : testValue.value
+})
+function onPickTestValue(code) { testValue.value = code; tvTreeOpen.value = false }
+// 递归树节点 (点击行选中, chevron 展开/收起)
+const TestValueTreeNode = {
+  name: 'TestValueTreeNode',
+  props: ['node', 'selected', 'pickFn'],
+  setup(props) {
+    const open = ref(true)
+    return () => {
+      const n = props.node
+      const kids = n.children || []
+      const isSel = props.selected === n.code
+      return h('li', { class: 'vt-tn' }, [
+        h('div', { class: ['vt-tn-row', isSel && 'is-sel'] }, [
+          kids.length
+            ? h('span', { class: ['vt-tn-chev', open.value && 'is-open'], onClick: (e) => { e.stopPropagation(); open.value = !open.value }, innerHTML: BL.icon('chevronRight', 11) })
+            : h('span', { class: 'vt-tn-pad' }),
+          h('span', { class: 'vt-tn-hit', onClick: () => props.pickFn && props.pickFn(n.code) }, [
+            h('span', { class: 'vt-tn-code bl-mono' }, n.code),
+            h('span', { class: 'vt-tn-label' }, n.label)
+          ])
+        ]),
+        kids.length && open.value
+          ? h('ul', { class: 'vt-tn-kids' }, kids.map(c => h(TestValueTreeNode, { node: c, selected: props.selected, pickFn: props.pickFn, key: c.id })))
+          : null
+      ])
+    }
+  }
+}
+function onTvDocClick(e) {
+  if (tvTreeOpen.value && tvTreeRef.value && !tvTreeRef.value.contains(e.target)) tvTreeOpen.value = false
+}
+onMounted(() => document.addEventListener('click', onTvDocClick))
+onBeforeUnmount(() => document.removeEventListener('click', onTvDocClick))
 
 /* —— 测试值 + 校验 —— */
 const testValue = ref('')
@@ -910,6 +989,36 @@ onBeforeUnmount(() => {
 .mini-summary { width: 100%; font-size: 12px; margin-top: 6px; }
 .mini-summary td { padding: 4px 8px; border-bottom: 1px dashed var(--bl-divider); }
 .mini-summary td:first-child { color: var(--bl-text-3); width: 90px; }
+
+/* 测试值: 多级枚举树形选择 */
+.vt-tv-tree { position: relative; width: 100%; }
+.vt-tv-display {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  height: 32px; padding: 0 10px; cursor: pointer;
+  border: 1px solid var(--bl-border); border-radius: 6px; background: var(--bl-bg-1);
+  font-size: 13px;
+}
+.vt-tv-display:hover { border-color: var(--bl-primary); }
+.vt-tv-display.is-empty { color: var(--bl-text-3); background: var(--bl-bg-2); border-style: dashed; }
+.vt-tv-arrow { flex-shrink: 0; color: var(--bl-text-3); transition: transform .15s; }
+.vt-tv-arrow.is-open { transform: rotate(180deg); }
+.vt-tv-panel {
+  margin-top: 4px; max-height: 260px; overflow: auto;
+  border: 1px solid var(--bl-border); border-radius: 6px; padding: 6px 4px;
+  background: var(--bl-bg-1); box-shadow: 0 4px 12px rgba(0,0,0,.08);
+}
+.vt-tv-root, .vt-tn-kids { list-style: none; margin: 0; padding: 0; }
+.vt-tn-kids { padding-left: 16px; }
+.vt-tn-row { display: flex; align-items: center; gap: 4px; border-radius: 4px; padding: 1px 4px; }
+.vt-tn-row.is-sel { background: var(--bl-primary-soft); }
+.vt-tn-row.is-sel .vt-tn-label { color: var(--bl-primary); font-weight: 500; }
+.vt-tn-chev { display: inline-flex; cursor: pointer; color: var(--bl-text-3); transition: transform .15s; }
+.vt-tn-chev.is-open { transform: rotate(90deg); }
+.vt-tn-pad { width: 11px; flex-shrink: 0; }
+.vt-tn-hit { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; min-width: 0; padding: 3px 4px; font-size: 12.5px; }
+.vt-tn-hit:hover .vt-tn-label { color: var(--bl-primary); }
+.vt-tn-code { color: var(--bl-text-3); flex-shrink: 0; }
+.vt-tn-label { color: var(--bl-text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .radio-group { display: inline-flex; gap: 20px; }
 .radio-item { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; }

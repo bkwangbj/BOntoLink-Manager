@@ -149,7 +149,9 @@ import ValueTypePickerModal from '@/components/ValueTypePickerModal.vue'
 
 const props = defineProps({
   open: { type: Boolean, default: false },
-  presetGroupId: { type: String, default: '' }
+  presetGroupId: { type: String, default: '' },
+  /* 新建时默认带入的领域 (来自列表左侧已选行业分类) */
+  initCategory: { type: String, default: '' }
 })
 const emit = defineEmits(['update:open', 'created'])
 
@@ -183,6 +185,7 @@ watch(() => props.open, (v) => {
   if (v) {
     Object.assign(form, defaultForm())
     form.group_id = props.presetGroupId || ''
+    form.category_code = props.initCategory || ''   // 带入左侧已选领域
     step.value = 0
     codeError.value = ''
     loadAux()

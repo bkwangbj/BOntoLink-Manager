@@ -363,26 +363,43 @@
                 <span style="margin-left:4px">{{ physSyncing ? '同步中…' : '同步物理表' }}</span>
               </button>
             </div>
-            <table class="bl-table pt-table">
-              <thead>
-                <tr><th>物理表</th><th style="width:64px">类型</th><th>中文名</th><th style="width:56px">字段数</th><th style="width:48px">操作</th></tr>
-              </thead>
-              <tbody>
-                <tr v-for="t in physTables" :key="t.id">
-                  <td><span class="bl-mono">{{ t.physical_table }}</span></td>
-                  <td><span class="bl-tag" :class="t.type === 'view' ? 'bl-tag-warning' : 'bl-tag-primary'">{{ t.type === 'view' ? '视图' : '表' }}</span></td>
-                  <td>
-                    <input class="bl-input bl-input-xs" :value="t.display_name"
-                           @change="renameTable(t, $event.target.value)" placeholder="中文名" />
-                  </td>
-                  <td class="t-center bl-muted">{{ t.column_count }}</td>
-                  <td class="t-center">
-                    <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="删除" v-html="BL.icon('trash', 12)" @click="removeTable(t)"></button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div v-if="!physTables.length" class="bl-empty" style="padding:32px;font-size:12px">尚未同步，点击右上角「同步物理表」</div>
+            <div class="pt-table-scroll">
+              <table class="bl-table pt-table">
+                <thead>
+                  <tr><th>物理表</th><th style="width:64px">类型</th><th>中文名</th><th style="width:56px">字段数</th><th style="width:48px">操作</th></tr>
+                </thead>
+                <tbody>
+                  <tr v-for="t in ptPaged" :key="t.id">
+                    <td><span class="bl-mono">{{ t.physical_table }}</span></td>
+                    <td><span class="bl-tag" :class="t.type === 'view' ? 'bl-tag-warning' : 'bl-tag-primary'">{{ t.type === 'view' ? '视图' : '表' }}</span></td>
+                    <td>
+                      <input class="bl-input bl-input-xs" :value="t.display_name"
+                             @change="renameTable(t, $event.target.value)" placeholder="中文名" />
+                    </td>
+                    <td class="t-center bl-muted">{{ t.column_count }}</td>
+                    <td class="t-center">
+                      <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="删除" v-html="BL.icon('trash', 12)" @click="removeTable(t)"></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div v-if="!physTables.length" class="bl-empty" style="padding:32px;font-size:12px">尚未同步，点击右上角「同步物理表」</div>
+            </div>
+            <!-- 物理表分页钉底 -->
+            <div class="pt-pager" v-if="physTables.length">
+              <div class="bl-muted" style="font-size:12px">共 {{ physTables.length }} 项</div>
+              <div class="pt-pager-r">
+                <span class="bl-muted" style="font-size:12px;margin-right:6px">每页</span>
+                <select class="bl-input ds-page-size" v-model.number="ptPageSize">
+                  <option :value="20">20</option>
+                  <option :value="50">50</option>
+                  <option :value="100">100</option>
+                </select>
+                <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="ptPage<=1" @click="ptPage--">‹</button>
+                <span class="bl-muted" style="font-size:12px">{{ ptPage }} / {{ ptTotalPages }}</span>
+                <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="ptPage>=ptTotalPages" @click="ptPage++">›</button>
+              </div>
+            </div>
           </template>
         </div><!-- /物理表 页签 -->
 
@@ -437,6 +454,15 @@ const physSyncTime = computed(() => {
   const ts = physTables.value.map(t => t.sync_time).filter(Boolean).sort()
   return ts.length ? ts[ts.length - 1] : ''
 })
+/* 物理表分页 */
+const ptPage = ref(1)
+const ptPageSize = ref(20)
+const ptTotalPages = computed(() => Math.max(1, Math.ceil(physTables.value.length / ptPageSize.value)))
+const ptPaged = computed(() => {
+  const start = (ptPage.value - 1) * ptPageSize.value
+  return physTables.value.slice(start, start + ptPageSize.value)
+})
+watch([physTables, ptPageSize], () => { if (ptPage.value > ptTotalPages.value) ptPage.value = 1 })
 async function loadPhysTables() {
   if (!selected.value) return
   physTables.value = await physicalTableApi.list(selected.value.id).catch(() => [])
@@ -591,7 +617,11 @@ const industryFilterOptions = computed(() => {
 
 /* —— 左侧行业分类树 (统一组件) —— */
 const selectedCategoryCodes = ref(null)
-function onCategoryChange({ codes }) { selectedCategoryCodes.value = codes || null }
+const selectedCategoryCode = ref('')   // 当前选中的领域 code (null/全部 → '')
+function onCategoryChange({ codes, categoryCode }) {
+  selectedCategoryCodes.value = codes || null
+  selectedCategoryCode.value = categoryCode || ''
+}
 
 const filtered = computed(() => {
   let list = rows.value
@@ -787,7 +817,7 @@ function trendPoints(key) {
 
 function openCreate() {
   Object.keys(form).forEach(k => delete form[k])
-  Object.assign(form, { dsType:'mysql', status:1, refCount:0 })
+  Object.assign(form, { dsType:'mysql', status:1, refCount:0, categoryCode: selectedCategoryCode.value || '' })
   selected.value = null
   drawerTab.value = 'config'
   drawerOpen.value = true
@@ -992,10 +1022,25 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
 .bl-grow { flex: 1; }
 .mon-pane { flex: 1; overflow: auto; }
 
-.pt-pane { flex: 1; overflow: auto; padding: 12px 14px; }
-.pt-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.pt-pane { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 12px 14px; }
+.pt-bar { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+/* 表格区: 自适应充满, 独立滚动 */
+.pt-table-scroll { flex: 1; min-height: 0; overflow: auto; }
 .pt-table { width: 100%; }
 .pt-table .bl-input-xs { width: 100%; }
+/* 滚动时表头固定 */
+.pt-table thead th {
+  position: sticky; top: 0; z-index: 2;
+  background: var(--bl-bg-2);
+  box-shadow: inset 0 -1px 0 var(--bl-divider);
+}
+/* 分页钉底 */
+.pt-pager {
+  flex-shrink: 0; margin-top: 8px; padding-top: 8px;
+  border-top: 1px solid var(--bl-divider);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.pt-pager-r { display: inline-flex; align-items: center; gap: 4px; }
 
 .ds-drawer-enter-active, .ds-drawer-leave-active { transition: transform .22s, opacity .18s; }
 .ds-drawer-enter-from, .ds-drawer-leave-to { transform: translateX(20px); opacity: 0; }

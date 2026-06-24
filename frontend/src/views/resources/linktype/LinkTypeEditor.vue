@@ -407,7 +407,9 @@ const props = defineProps({
   showTabs: { type: Boolean, default: true },
   /* 新建模式时的默认标题 (e.g. 图谱里选中边的关系名).
      有 form.rdfs_label / link_type_id 时仍以那个为准. */
-  fallbackTitle: { type: String, default: '' }
+  fallbackTitle: { type: String, default: '' },
+  /* 新建模式时默认带入的领域 (来自列表左侧已选行业分类) */
+  initCategory: { type: String, default: '' }
 })
 const emit = defineEmits(['update:open', 'saved', 'deleted'])
 
@@ -462,6 +464,7 @@ async function loadEditor() {
     }
   } else {
     Object.assign(form, defaultForm())
+    if (props.initCategory) form.category_code = props.initCategory   // 带入左侧已选领域
     form.mappings = [
       { side: 'left',  seq: 1, object_field: '', join_table_column: '' },
       { side: 'right', seq: 1, object_field: '', join_table_column: '' }

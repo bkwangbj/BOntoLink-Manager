@@ -202,6 +202,7 @@
 
     <!-- 新建向导 -->
     <NewSharedPropertyWizard v-model:open="wizardOpen"
+                             :init-category="selectedCategoryCode"
                              @created="onCreated" />
   </div>
 </template>
@@ -281,7 +282,11 @@ onMounted(async () => {
 watch(() => route.query.openId, applyOpenId)
 
 /* —— 行业分类筛选 (左树) —— */
-function onCategoryChange({ codes }) { selectedCategoryCodes.value = codes || null }
+const selectedCategoryCode = ref('')   // 当前选中的领域 code (null/全部 → '')
+function onCategoryChange({ codes, categoryCode }) {
+  selectedCategoryCodes.value = codes || null
+  selectedCategoryCode.value = categoryCode || ''
+}
 
 /* —— 排序 —— */
 function toggleSort(key) {
