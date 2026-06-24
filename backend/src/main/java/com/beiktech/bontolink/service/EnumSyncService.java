@@ -50,6 +50,7 @@ public class EnumSyncService {
 
             String fieldSort = str(cfg.get("field_sort"));
             String fieldStatus = str(cfg.get("field_status"));
+            String fieldParent = str(cfg.get("field_parent"));
             String table = str(cfg.get("table_name")).trim();
             String filter = str(cfg.get("filter_sql")).trim();
             String mode = str(cfg.getOrDefault("sync_mode", "level_diff"));
@@ -58,10 +59,12 @@ public class EnumSyncService {
             sql.append(col(fieldCode)).append(" AS ec, ").append(col(fieldName)).append(" AS el");
             if (!fieldSort.isBlank())   sql.append(", ").append(col(fieldSort)).append(" AS es");
             if (!fieldStatus.isBlank()) sql.append(", ").append(col(fieldStatus)).append(" AS est");
+            if (!fieldParent.isBlank()) sql.append(", ").append(col(fieldParent)).append(" AS ep");
             sql.append(" FROM ").append(table);
             if (!filter.isBlank()) sql.append(" WHERE ").append(filter);
 
             // 1) 拉取源数据
+            boolean hasParent = !fieldParent.isBlank();
             List<Map<String, Object>> src = new ArrayList<>();
             try (Connection conn = connector.open(ds);
                  Statement st = conn.createStatement();
@@ -75,12 +78,23 @@ public class EnumSyncService {
                     row.put("label", rs.getString("el"));
                     row.put("sort", hasSort ? rs.getString("es") : null);
                     row.put("status", hasStatus ? rs.getString("est") : null);
+                    row.put("parentRaw", hasParent ? rs.getString("ep") : null);
                     src.add(row);
                 }
             }
 
-            // 2) 层次编码规则 → 按 code 长度推导 level / parent_code (无规则则平铺为一级)
-            int[] cum = cumulativeLengths(mapper.listLevelRules(enumId));
+            // 2) 层级推导:
+            //    优先用"上级编码字段"显式建父子关系(parent 为源表父级编码列);
+            //    否则回退到层次编码规则(按 code 长度切分)。
+            int[] cum = hasParent ? new int[0] : cumulativeLengths(mapper.listLevelRules(enumId));
+            Map<String, String> parentMap = new HashMap<>();   // code → parent_code (仅 hasParent 时有效)
+            if (hasParent) {
+                for (Map<String, Object> r : src) {
+                    String code = str(r.get("code"));
+                    String p = r.get("parentRaw") == null ? "" : String.valueOf(r.get("parentRaw")).trim();
+                    if (!p.isBlank() && !p.equals(code)) parentMap.put(code, p);
+                }
+            }
 
             // 3) 现有项
             List<Map<String, Object>> existing = mapper.listItems(enumId);
@@ -99,8 +113,14 @@ public class EnumSyncService {
             for (Map<String, Object> r : src) {
                 String code = str(r.get("code"));
                 srcCodes.add(code);
-                int level = levelOf(code, cum);
-                String parent = parentOf(code, cum);
+                int level; String parent;
+                if (hasParent) {
+                    parent = parentMap.get(code);   // null = 顶级
+                    level = depthByParent(code, parentMap);
+                } else {
+                    level = levelOf(code, cum);
+                    parent = parentOf(code, cum);
+                }
                 String status = mapStatus(r.get("status"));
                 int sortNum = parseSort(r.get("sort"), seq++);
 
@@ -185,6 +205,25 @@ public class EnumSyncService {
         if (lvl <= 1) return null;
         int plen = cum[lvl - 2];
         return code.length() >= plen ? code.substring(0, plen) : null;
+    }
+
+    /* —— 显式父级字段: 沿 parent 链计算层级(只统计数据集内存在的祖先, 带环/深度保护) —— */
+    private int depthByParent(String code, Map<String, String> parentMap) {
+        int d = 1;
+        String cur = code;
+        Set<String> seen = new HashSet<>();
+        seen.add(cur);
+        while (true) {
+            String p = parentMap.get(cur);
+            if (p == null || p.isBlank() || seen.contains(p) || !parentMap.containsKey(p)) {
+                // 父级存在于数据集(作为某行)但自身无再上级时, 仍计一层
+                if (p != null && !p.isBlank() && !seen.contains(p)) d++;
+                break;
+            }
+            d++; seen.add(p); cur = p;
+            if (d > 50) break;
+        }
+        return d;
     }
 
     /* —— 状态映射: 源值 → active/inactive —— */

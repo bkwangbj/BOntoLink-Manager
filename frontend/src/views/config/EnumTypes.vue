@@ -380,6 +380,12 @@
                       <option v-for="c in colOpts(syncForm.field_status)" :key="c" :value="c">{{ c }}</option>
                     </select>
                   </FieldRow>
+                  <FieldRow label="上级编码" inline hint="源表中的父级编码字段, 用于建立层级 (可选, 留空则按编码长度规则推导)">
+                    <select class="bl-input bl-mono" v-model="syncForm.field_parent" :disabled="!syncForm.table_name">
+                      <option value="">— 选择上级编码字段 (可选) —</option>
+                      <option v-for="c in colOpts(syncForm.field_parent)" :key="c" :value="c">{{ c }}</option>
+                    </select>
+                  </FieldRow>
                   <FieldRow label="顶级筛选表达式" inline>
                     <input class="bl-input bl-mono" v-model="syncForm.filter_sql" placeholder="例: parent_code IS NULL" />
                   </FieldRow>
@@ -674,7 +680,7 @@ const dataView = ref('table')              // 'table' | 'tree'
 /* —— 同步规则 表单 + 日志 —— */
 const syncForm = reactive({
   data_source_id: '', table_alias: '', table_name: '',
-  field_code: '', field_name: '', field_sort: '', field_status: '',
+  field_code: '', field_name: '', field_sort: '', field_status: '', field_parent: '',
   filter_sql: '', sync_mode: 'level_diff', sync_strategy: 'once'
 })
 const syncLogs = ref([])

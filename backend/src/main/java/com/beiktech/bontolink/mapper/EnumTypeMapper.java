@@ -93,9 +93,9 @@ public interface EnumTypeMapper {
 
     @Insert("""
         INSERT INTO ont_enum_sync_config(id, enum_id, data_source_id, table_alias, table_name,
-            field_code, field_name, field_sort, field_status, filter_sql, sync_mode, sync_strategy)
+            field_code, field_name, field_sort, field_status, field_parent, filter_sql, sync_mode, sync_strategy)
         VALUES (#{id}, #{enum_id}, #{data_source_id}, #{table_alias}, #{table_name},
-            #{field_code}, #{field_name}, #{field_sort}, #{field_status}, #{filter_sql},
+            #{field_code}, #{field_name}, #{field_sort}, #{field_status}, #{field_parent}, #{filter_sql},
             #{sync_mode}, #{sync_strategy})
     """)
     int insertSyncConfig(Map<String, Object> row);
@@ -104,7 +104,7 @@ public interface EnumTypeMapper {
         UPDATE ont_enum_sync_config SET
           data_source_id=#{data_source_id}, table_alias=#{table_alias}, table_name=#{table_name},
           field_code=#{field_code}, field_name=#{field_name}, field_sort=#{field_sort},
-          field_status=#{field_status}, filter_sql=#{filter_sql},
+          field_status=#{field_status}, field_parent=#{field_parent}, filter_sql=#{filter_sql},
           sync_mode=#{sync_mode}, sync_strategy=#{sync_strategy},
           update_time = datetime('now','localtime')
         WHERE id=#{id}
