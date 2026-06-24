@@ -281,6 +281,7 @@
 
                 <!-- 表格视图 -->
                 <template v-if="dataView === 'table'">
+                <div class="item-table-scroll">
                 <table class="bl-table mini-table item-table">
                   <thead>
                     <tr>
@@ -294,7 +295,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="it in filteredItems" :key="it.id" :class="['item-row', it._editing && 'is-editing']" @dblclick="editItemRow(it)">
+                    <tr v-for="it in pagedItems" :key="it.id" :class="['item-row', it._editing && 'is-editing']" @dblclick="editItemRow(it)">
                       <td>
                         <input v-if="it._editing" class="bl-input bl-input-xs" v-model="it.label" placeholder="名称" />
                         <span v-else>{{ it.label }}</span>
@@ -335,7 +336,21 @@
                     </tr>
                   </tbody>
                 </table>
+                </div><!-- /item-table-scroll -->
                 <div v-if="!filteredItems.length" class="bl-empty" style="padding:24px">尚无枚举项,点击「新增项」添加</div>
+                <div v-else class="et-item-pager">
+                  <span class="bl-muted">共 {{ filteredItems.length }} 项</span>
+                  <div class="bl-grow"></div>
+                  <span class="bl-muted" style="font-size:12px;margin-right:8px">每页</span>
+                  <select class="bl-input et-page-size" v-model.number="itemPageSize">
+                    <option :value="20">20</option>
+                    <option :value="50">50</option>
+                    <option :value="100">100</option>
+                  </select>
+                  <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="itemPage<=1" @click="itemPage--">‹</button>
+                  <span class="bl-muted" style="font-size:12px">{{ itemPage }} / {{ itemTotalPages }}</span>
+                  <button class="bl-btn bl-btn-sm bl-btn-text" :disabled="itemPage>=itemTotalPages" @click="itemPage++">›</button>
+                </div>
                 </template>
               </div>
 
@@ -862,6 +877,17 @@ const filteredItems = computed(() => {
   }
   return list
 })
+
+/* —— 枚举项分页 —— */
+const itemPage = ref(1)
+const itemPageSize = ref(20)
+const itemTotalPages = computed(() => Math.max(1, Math.ceil(filteredItems.value.length / itemPageSize.value)))
+const pagedItems = computed(() => {
+  const start = (itemPage.value - 1) * itemPageSize.value
+  return filteredItems.value.slice(start, start + itemPageSize.value)
+})
+// 过滤/搜索/分页大小变化导致页码越界时回到首页
+watch([filteredItems, itemPageSize], () => { if (itemPage.value > itemTotalPages.value) itemPage.value = 1 })
 
 function enumTypeLabel(t) {
   return ({ general_single: '一级通用', general_multi: '多级通用', biz_single: '业务一级', biz_multi: '业务多级' })[t] || t
@@ -1424,6 +1450,23 @@ async function removeItem(it) {
 .mini-table td { padding: 6px 8px; }
 .item-table .bl-input.bl-input-xs { height: 26px; padding: 0 6px; font-size: 12px; width: 100%; min-width: 80px; }
 .item-row.is-editing { background: var(--bl-primary-soft) !important; }
+
+/* 枚举项表格: 滚动容器 + 固定表头 */
+.item-table-scroll {
+  max-height: 52vh; overflow: auto;
+  border: 1px solid var(--bl-divider); border-radius: 4px;
+}
+.item-table-scroll .item-table thead th {
+  position: sticky; top: 0; z-index: 2;
+  background: #fafafa;
+  box-shadow: inset 0 -1px 0 var(--bl-divider);
+}
+/* 分页钉条 */
+.et-item-pager {
+  display: flex; align-items: center; gap: 4px;
+  padding: 8px 2px 0; font-size: 12px;
+}
+.et-page-size { width: 64px; height: 26px; }
 .item-row { cursor: default; }
 .item-row:hover { background: #f5f7fa; }
 
