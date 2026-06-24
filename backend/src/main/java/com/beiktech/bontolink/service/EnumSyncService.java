@@ -88,6 +88,8 @@ public class EnumSyncService {
             //    否则回退到层次编码规则(按 code 长度切分)。
             int[] cum = hasParent ? new int[0] : cumulativeLengths(mapper.listLevelRules(enumId));
             Map<String, String> parentMap = new HashMap<>();   // code → parent_code (仅 hasParent 时有效)
+            Set<String> allCodes = new HashSet<>();            // 数据集内全部编码 (判定父级是否存在)
+            for (Map<String, Object> r : src) allCodes.add(str(r.get("code")));
             if (hasParent) {
                 for (Map<String, Object> r : src) {
                     String code = str(r.get("code"));
@@ -116,7 +118,7 @@ public class EnumSyncService {
                 int level; String parent;
                 if (hasParent) {
                     parent = parentMap.get(code);   // null = 顶级
-                    level = depthByParent(code, parentMap);
+                    level = depthByParent(code, parentMap, allCodes);
                 } else {
                     level = levelOf(code, cum);
                     parent = parentOf(code, cum);
@@ -207,19 +209,16 @@ public class EnumSyncService {
         return code.length() >= plen ? code.substring(0, plen) : null;
     }
 
-    /* —— 显式父级字段: 沿 parent 链计算层级(只统计数据集内存在的祖先, 带环/深度保护) —— */
-    private int depthByParent(String code, Map<String, String> parentMap) {
+    /* —— 显式父级字段: 沿 parent 链计算层级。
+       只统计"数据集内真实存在"的祖先: 父级不在数据集(如 ROOT/外部根)时即视为顶级, 不再加层。 */
+    private int depthByParent(String code, Map<String, String> parentMap, Set<String> allCodes) {
         int d = 1;
         String cur = code;
         Set<String> seen = new HashSet<>();
         seen.add(cur);
         while (true) {
             String p = parentMap.get(cur);
-            if (p == null || p.isBlank() || seen.contains(p) || !parentMap.containsKey(p)) {
-                // 父级存在于数据集(作为某行)但自身无再上级时, 仍计一层
-                if (p != null && !p.isBlank() && !seen.contains(p)) d++;
-                break;
-            }
+            if (p == null || p.isBlank() || seen.contains(p) || !allCodes.contains(p)) break;
             d++; seen.add(p); cur = p;
             if (d > 50) break;
         }

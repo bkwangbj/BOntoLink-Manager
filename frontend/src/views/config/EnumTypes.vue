@@ -249,8 +249,8 @@
               </div>
 
               <!-- 数据 -->
-              <div v-if="activeTab === 'data'">
-                <div class="bl-row" style="gap:8px;margin-bottom:8px;align-items:center">
+              <div v-if="activeTab === 'data'" class="et-data-tab">
+                <div class="bl-row" style="gap:8px;margin-bottom:8px;align-items:center;flex-shrink:0">
                   <div class="seg" style="flex-shrink:0">
                     <button :class="['seg-btn', dataView==='tree' && 'is-on']" @click="dataView='tree'">
                       <span v-html="BL.icon('layers', 11)"></span><span style="margin-left:4px">树视图</span>
@@ -1451,9 +1451,14 @@ async function removeItem(it) {
 .item-table .bl-input.bl-input-xs { height: 26px; padding: 0 6px; font-size: 12px; width: 100%; min-width: 80px; }
 .item-row.is-editing { background: var(--bl-primary-soft) !important; }
 
+/* 数据 Tab: 自适应充满详情面板 (工具栏固定, 列表区 flex 撑满) */
+.et-data-tab { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.et-data-tab .item-table-scroll { flex: 1; min-height: 0; max-height: none; }
+.et-data-tab .item-tree { flex: 1; min-height: 0; overflow: auto; }
+
 /* 枚举项表格: 滚动容器 + 固定表头 */
 .item-table-scroll {
-  max-height: 52vh; overflow: auto;
+  overflow: auto;
   border: 1px solid var(--bl-divider); border-radius: 4px;
 }
 .item-table-scroll .item-table thead th {
