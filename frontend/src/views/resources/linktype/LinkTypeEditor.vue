@@ -74,6 +74,17 @@
               </div>
             </div>
 
+            <!-- 所属领域 (与 ont_biz_category 对齐, 列表左侧分类树按此过滤) -->
+            <div class="lke-meta-row lke-meta-row-domain">
+              <div class="lke-meta-cell">
+                <span class="lke-meta-lbl">领域</span>
+                <select class="bl-input" v-model="form.category_code" :disabled="!editMode">
+                  <option value="">— 通用 (不属于任何领域) —</option>
+                  <option v-for="c in domainOpts" :key="c.code" :value="c.code">{{ c.indent }}{{ c.label }}</option>
+                </select>
+              </div>
+            </div>
+
             <!-- 左右对称配置: 数据卡(上/下) + 中间数据源横跨行 + 展示卡 -->
             <div class="lke-sym">
               <!-- 中间数据源 (横跨两列, 位于基数与键之间) -->
@@ -396,7 +407,7 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
 import { BL } from '@/lib/bl.js'
-import { linkTypeApi, resourceApi } from '@/api'
+import { linkTypeApi, resourceApi, categoryApi } from '@/api'
 
 const props = defineProps({
   open: { type: Boolean, default: false },
@@ -448,9 +459,24 @@ const classOptions = computed(() => (props.allClasses || []).map(c => ({
   id: c.id, cn: c.display_name || c.rdfs_label || c.api_name, api_name: c.api_name
 })))
 
+/* —— 所属领域候选 (行业分类树拍平, 与其他模块一致) —— */
+const domainOpts = ref([])
+async function loadDomainOpts() {
+  if (domainOpts.value.length) return
+  const tree = await categoryApi.tree().catch(() => [])
+  const list = []
+  const walk = (ns, depth) => (ns || []).forEach(n => {
+    if (n.categoryCode) list.push({ code: n.categoryCode, label: n.label || n.rdfsLabel || n.categoryCode, indent: '　'.repeat(depth) })
+    if (n.children) walk(n.children, depth + 1)
+  })
+  walk(tree, 0)
+  domainOpts.value = list
+}
+
 /* —— 打开生命周期 —— */
 async function loadEditor() {
   activeTab.value = 'basic'
+  loadDomainOpts()
   if (props.linkId) {
     const res = await linkTypeApi.get(props.linkId).catch(() => null)
     if (res) {
@@ -816,6 +842,8 @@ function pickTable(t) {
 }
 .lke-meta-cell .bl-input { flex: 1; min-width: 0; height: 28px; font-size: 12px; }
 .lke-status-sel { width: 100%; }
+/* 领域行: 单列占满, 紧贴上方元数据行 */
+.lke-meta-row-domain { grid-template-columns: 1fr; margin-top: -4px; }
 
 /* 左右对称 — 4 行网格: 数据上半 / 中间数据源横跨 / 数据下半 / 展示
    每行的左右两张卡 stretch 到同行最高, 中间数据源横跨两列 */

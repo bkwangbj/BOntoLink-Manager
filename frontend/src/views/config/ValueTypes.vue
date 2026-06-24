@@ -736,20 +736,19 @@ const TestValueTreeNode = {
   name: 'TestValueTreeNode',
   props: ['node', 'selected', 'pickFn'],
   setup(props) {
-    const open = ref(true)
+    const open = ref(false)   // 默认折叠: 展开时才渲染子级 (大树性能)
     return () => {
       const n = props.node
       const kids = n.children || []
       const isSel = props.selected === n.code
       return h('li', { class: 'vt-tn' }, [
-        h('div', { class: ['vt-tn-row', isSel && 'is-sel'] }, [
+        // 整行可点选; chevron 单独控制展开/收起
+        h('div', { class: ['vt-tn-row', isSel && 'is-sel'], onClick: () => props.pickFn && props.pickFn(n.code) }, [
           kids.length
-            ? h('span', { class: ['vt-tn-chev', open.value && 'is-open'], onClick: (e) => { e.stopPropagation(); open.value = !open.value }, innerHTML: BL.icon('chevronRight', 11) })
+            ? h('span', { class: ['vt-tn-chev', open.value && 'is-open'], onClick: (e) => { e.stopPropagation(); open.value = !open.value }, innerHTML: BL.icon('chevronRight', 12) })
             : h('span', { class: 'vt-tn-pad' }),
-          h('span', { class: 'vt-tn-hit', onClick: () => props.pickFn && props.pickFn(n.code) }, [
-            h('span', { class: 'vt-tn-code bl-mono' }, n.code),
-            h('span', { class: 'vt-tn-label' }, n.label)
-          ])
+          h('span', { class: 'vt-tn-code bl-mono' }, n.code),
+          h('span', { class: 'vt-tn-label' }, n.label)
         ]),
         kids.length && open.value
           ? h('ul', { class: 'vt-tn-kids' }, kids.map(c => h(TestValueTreeNode, { node: c, selected: props.selected, pickFn: props.pickFn, key: c.id })))
@@ -1003,22 +1002,10 @@ onBeforeUnmount(() => {
 .vt-tv-arrow { flex-shrink: 0; color: var(--bl-text-3); transition: transform .15s; }
 .vt-tv-arrow.is-open { transform: rotate(180deg); }
 .vt-tv-panel {
-  margin-top: 4px; max-height: 260px; overflow: auto;
-  border: 1px solid var(--bl-border); border-radius: 6px; padding: 6px 4px;
-  background: var(--bl-bg-1); box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  margin-top: 4px; max-height: 280px; overflow: auto;
+  border: 1px solid var(--bl-border); border-radius: 8px; padding: 6px;
+  background: var(--bl-bg-1); box-shadow: 0 6px 20px rgba(0,0,0,.10);
 }
-.vt-tv-root, .vt-tn-kids { list-style: none; margin: 0; padding: 0; }
-.vt-tn-kids { padding-left: 16px; }
-.vt-tn-row { display: flex; align-items: center; gap: 4px; border-radius: 4px; padding: 1px 4px; }
-.vt-tn-row.is-sel { background: var(--bl-primary-soft); }
-.vt-tn-row.is-sel .vt-tn-label { color: var(--bl-primary); font-weight: 500; }
-.vt-tn-chev { display: inline-flex; cursor: pointer; color: var(--bl-text-3); transition: transform .15s; }
-.vt-tn-chev.is-open { transform: rotate(90deg); }
-.vt-tn-pad { width: 11px; flex-shrink: 0; }
-.vt-tn-hit { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; min-width: 0; padding: 3px 4px; font-size: 12.5px; }
-.vt-tn-hit:hover .vt-tn-label { color: var(--bl-primary); }
-.vt-tn-code { color: var(--bl-text-3); flex-shrink: 0; }
-.vt-tn-label { color: var(--bl-text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .radio-group { display: inline-flex; gap: 20px; }
 .radio-item { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; }
@@ -1053,4 +1040,35 @@ onBeforeUnmount(() => {
 .vt-enum-ic-empty { background: transparent; color: var(--bl-text-3); }
 .vt-enum-name { flex-shrink: 1; min-width: 0; font-weight: 500; color: var(--bl-text-1); }
 .vt-enum-rid { flex-shrink: 2; min-width: 0; font-size: 11px; max-width: 40%; }
+</style>
+
+<!-- 测试值多级枚举树: 节点由 h() 渲染的内联子组件, scoped 的 data-v 不会注入,
+     必须用非 scoped 全局样式 (类名 vt-tn* 足够独特, 不会污染其它模块) -->
+<style>
+.vt-tv-root, .vt-tn-kids { list-style: none; margin: 0; padding: 0; }
+.vt-tn-kids { margin-left: 9px; padding-left: 9px; border-left: 1px dashed var(--bl-border); }
+.vt-tn-row {
+  display: flex; align-items: center; gap: 4px;
+  padding: 4px 6px; margin: 1px 0; border-radius: 6px;
+  cursor: pointer; transition: background-color .12s;
+}
+.vt-tn-row:hover { background: var(--bl-bg-2); }
+.vt-tn-row.is-sel { background: var(--bl-primary-soft); }
+.vt-tn-row.is-sel .vt-tn-label { color: var(--bl-primary); font-weight: 600; }
+.vt-tn-chev {
+  width: 18px; height: 18px; flex-shrink: 0; border-radius: 4px;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--bl-text-3); cursor: pointer; transition: transform .15s, background-color .12s;
+}
+.vt-tn-chev:hover { background: rgba(0,0,0,.06); color: var(--bl-text-1); }
+.vt-tn-chev.is-open { transform: rotate(90deg); }
+.vt-tn-pad { width: 18px; flex-shrink: 0; }
+.vt-tn-code {
+  flex-shrink: 0; font-size: 11px; line-height: 18px; color: var(--bl-text-3);
+  background: var(--bl-bg-2); border-radius: 4px; padding: 0 6px;
+}
+.vt-tn-label {
+  flex: 1; min-width: 0; font-size: 13px; color: var(--bl-text-1);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 </style>
