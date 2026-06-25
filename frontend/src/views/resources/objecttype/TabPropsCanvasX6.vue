@@ -40,8 +40,8 @@
       </button>
     </div>
 
-    <!-- X6 画布 -->
-    <div class="erx-canvas" ref="containerRef"></div>
+    <!-- X6 画布 (仅连线模式显示端口圆点, 其余模式隐藏避免噪点) -->
+    <div class="erx-canvas" :class="{ 'is-connect': mode === 'connect' }" ref="containerRef"></div>
 
     <!-- x6-vue-shape 的传送容器: 让 Vue 节点挂载进 X6 -->
     <TeleportContainer />
@@ -459,4 +459,8 @@ onBeforeUnmount(() => {
 .erx-tab-dot.is-supp { background: #FF7D00; }
 
 .erx-canvas { flex: 1; position: relative; overflow: hidden; min-height: 400px; }
+
+/* 端口圆点默认隐藏 (映射线仍跟随卡片), 仅连线模式显示供拖拽吸附 */
+.erx-canvas :deep(.x6-port-body) { opacity: 0; pointer-events: none; transition: opacity .12s; }
+.erx-canvas.is-connect :deep(.x6-port-body) { opacity: 1; pointer-events: auto; }
 </style>
