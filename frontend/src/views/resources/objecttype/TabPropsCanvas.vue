@@ -45,6 +45,18 @@
       </div>
     </div>
 
+    <!-- 物理表切换条 (多表时: 每个表一张独立的图, 一次只画 对象 ↔ 当前表) -->
+    <div v-if="datasourcesSorted.length > 1" class="er-tabs">
+      <button v-for="ds in datasourcesSorted" :key="ds.id"
+              :class="['er-tab', activeTableId === ds.id && 'is-on']"
+              :title="`${ds.physical_table} · ${ds.rel_type === 1 ? '主表' : '辅助表'}`"
+              @click="activeTableId = ds.id">
+        <span class="er-tab-dot" :class="ds.rel_type === 1 ? 'is-main' : 'is-supp'"></span>
+        <span class="bl-truncate">{{ ds.physical_table }}</span>
+        <span class="bl-muted" style="margin-left:4px">{{ (ds.physical_fields || []).length }}</span>
+      </button>
+    </div>
+
     <!-- 画布 -->
     <div :class="['er-canvas', showGrid && 'is-grid', `is-mode-${mode}`]"
          ref="canvasRef"
@@ -120,8 +132,8 @@
           </div>
         </div>
 
-        <!-- 物理表卡片 (主表 + 补充表) -->
-        <div v-for="(ds, dsIdx) in datasourcesSorted" :key="ds.id"
+        <!-- 物理表卡片 (当前选中表; 多表时由顶部切换条决定) -->
+        <div v-for="(ds, dsIdx) in visibleDatasources" :key="ds.id"
              :ref="el => tableRefs[ds.id] = el"
              :class="['er-card', 'er-card-tbl', ds.rel_type === 1 ? 'is-main' : 'is-supp']"
              :style="{ left: layout.tables[ds.id]?.x + 'px', top: layout.tables[ds.id]?.y + 'px', width: layout.obj.w + 'px' }">
@@ -203,6 +215,15 @@ const datasources = ref([])
 const propertiesSorted = computed(() => [...properties.value].sort((a, b) => (a.sort ?? 99999) - (b.sort ?? 99999) || (a.api_name || '').localeCompare(b.api_name || '')))
 const datasourcesSorted = computed(() => [...datasources.value].sort((a, b) => (a.rel_type - b.rel_type) || (a.sort - b.sort)))
 
+/* 当前选中的物理表: 每个表一张独立的图 (单表直接显示, 多表用顶部切换条切换) */
+const activeTableId = ref('')
+const visibleDatasources = computed(() => {
+  const list = datasourcesSorted.value
+  if (list.length <= 1) return list
+  const active = list.find(d => d.id === activeTableId.value)
+  return active ? [active] : [list[0]]
+})
+
 const totalProps = computed(() => properties.value.length)
 const mappedCount = computed(() => properties.value.filter(p => p._mapped).length)
 
@@ -220,10 +241,16 @@ async function loadDetail() {
     }))
     return { ...d, physical_fields: fields }
   })
+  // 默认选中第一张表 (主表优先, datasourcesSorted 已按 rel_type 排序)
+  if (!datasourcesSorted.value.some(d => d.id === activeTableId.value)) {
+    activeTableId.value = datasourcesSorted.value[0]?.id || ''
+  }
   resetLayout()
 }
 onMounted(loadDetail)
 watch(() => props.classId, loadDetail)
+/* 切换物理表 → 重新布局当前表的图 */
+watch(activeTableId, () => resetLayout())
 
 /* 布局: 自适应宽度,对象类左,物理表右垂直排布 */
 const wrapRef = ref(null)
@@ -253,7 +280,7 @@ function resetLayout() {
   layout.obj.w = 380
   const tableX = layout.obj.x + layout.obj.w + 180
   let cursorY = layout.obj.y
-  for (const d of datasourcesSorted.value) {
+  for (const d of visibleDatasources.value) {
     layout.tables[d.id] = { x: tableX, y: cursorY }
     // 估算高度: 44 头 + 36 * fields + 16 边距
     const h = 44 + Math.max(1, (d.physical_fields || []).length) * 38 + 18
@@ -343,10 +370,10 @@ function recomputeLines() {
     }
   }
   const lines = []
-  // 属性 -> 字段 映射
+  // 属性 -> 字段 映射 (仅当前可见表)
   for (const p of properties.value) {
     if (!p.physical_table || !p.physical_column) continue
-    const ds = datasources.value.find(d => d.physical_table === p.physical_table)
+    const ds = visibleDatasources.value.find(d => d.physical_table === p.physical_table)
     if (!ds) continue
     const aOut = canvasRef.value.querySelector(`[data-anchor="prop:${p.id}"]`)
     const aIn  = canvasRef.value.querySelector(`[data-anchor="field:${ds.id}:${p.physical_column}"]`)
@@ -822,6 +849,27 @@ const highlightFields = computed(() => {
 .er-zoom-btn:disabled { opacity: .35; cursor: not-allowed; }
 .er-status { font-size: 12px; color: var(--bl-text-2); margin-left: auto; }
 .er-mode-label b { color: var(--bl-primary); margin-left: 4px; }
+
+/* 物理表切换条 (多表时每张表一个 tab) */
+.er-tabs {
+  display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+  padding: 6px 10px; background: var(--bl-bg-1);
+  border-bottom: 1px solid var(--bl-divider);
+  flex-shrink: 0;
+}
+.er-tab {
+  display: inline-flex; align-items: center; gap: 4px; max-width: 200px;
+  height: 26px; padding: 0 10px;
+  border: 1px solid var(--bl-border); border-radius: 13px;
+  background: var(--bl-bg-2); color: var(--bl-text-2);
+  font-size: 12px; cursor: pointer;
+  transition: background-color .12s, color .12s, border-color .12s;
+}
+.er-tab:hover { background: var(--bl-bg-1); color: var(--bl-text-1); }
+.er-tab.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); border-color: var(--bl-primary); }
+.er-tab-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.er-tab-dot.is-main { background: #00B42A; }
+.er-tab-dot.is-supp { background: #FF7D00; }
 
 /* 画布 */
 .er-canvas {
