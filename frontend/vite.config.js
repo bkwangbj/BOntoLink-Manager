@@ -13,6 +13,12 @@ export default defineConfig({
       content: { filesystem: ['node_modules/analysis-maker-vue3/dist/analysis-maker.js'] }
     })
   ],
+  build: {
+    // analysis-maker-vue3/dist 是 3.4MB 的纯 ESM 预构建包,本不需 commonjs 转换。
+    // Windows + 杀软实时扫描下,esbuild 处理它会偶发"删临时文件 Access is denied"导致构建失败。
+    // 它是 ESM,从 commonjs 转换里排除即可绕开该 esbuild 路径(语义正确、不影响功能)。
+    commonjsOptions: { exclude: [/analysis-maker-vue3/] }
+  },
   resolve: {
     // analysis-maker-vue3 是 file: 符号链接(指向 frontend 外部),其 dist 把
     // vuedraggable/throttle-debounce/monaco-editor 当外部依赖、要求宿主提供。

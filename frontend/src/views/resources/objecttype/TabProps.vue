@@ -223,7 +223,7 @@ import { BL } from '@/lib/bl.js'
 import { classMetaApi, valueTypeApi, propertyFormatApi, resourceApi } from '@/api'
 import PropertyFormatModal from '@/components/PropertyFormatModal.vue'
 import ValueTypePickerModal from '@/components/ValueTypePickerModal.vue'
-import TabPropsCanvas from './TabPropsCanvas.vue'
+import TabPropsCanvas from './TabPropsCanvasX6.vue'
 import PropertyDetailDrawer from './PropertyDetailDrawer.vue'
 
 const props = defineProps({ classId: { type: String, default: '' }, className: { type: String, default: '' } })

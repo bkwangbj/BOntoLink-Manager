@@ -12,6 +12,8 @@
   "dependencies": {
     "@ant-design/icons-svg": "^4.4.2",
     "@antv/g6": "^4.8.25",
+    "@antv/x6": "^3.1.7",
+    "@antv/x6-vue-shape": "^3.0.2",
     "@element-plus/icons-vue": "2.3.2",
     "@imengyu/vue3-context-menu": "1.5.4",
     "analysis-maker-vue3": "file:../bk-analysis-maker-vue3/packages/bk-analysis-maker",
