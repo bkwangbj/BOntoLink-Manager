@@ -380,23 +380,53 @@
               <Placeholder icon="branch" label="派生属性函数" desc="管理与当前对象关联的 Function 计算逻辑,支持实时计算与 TTL 缓存" />
             </div>
 
-            <!-- 数据源 -->
+            <!-- 数据源 (本对象实际挂接的物理表: 主表 + 附表, 可编辑/删除) -->
             <div v-else-if="drawerTab === 'ds'" class="ot-tab-content">
               <div class="ot-tab-toolbar">
-                <span class="bl-muted">同领域数据源 {{ (detail.datasources || []).length }} 个</span>
+                <span class="bl-muted">本对象数据源 {{ (detail.classDatasources || []).length }} 个 (主表 / 附表)</span>
               </div>
-              <table class="bl-table">
-                <thead><tr><th>编码</th><th>名称</th><th>类型</th><th>状态</th></tr></thead>
+              <table class="bl-table ot-ds-table">
+                <thead><tr>
+                  <th>物理表</th><th>名称/别名</th><th>类型</th><th>字段数</th>
+                  <th>关联键 (附表)</th><th>连接 (附表)</th><th style="width:60px">操作</th>
+                </tr></thead>
                 <tbody>
-                  <tr v-for="d in (detail.datasources || [])" :key="d.id">
-                    <td class="bl-mono">{{ d.ds_code }}</td>
-                    <td>{{ d.ds_name }}</td>
-                    <td><span class="bl-tag">{{ d.ds_type }}</span></td>
-                    <td><span :class="['bl-tag', d.status === 1 ? 'bl-tag-success' : 'bl-tag-warning']">{{ d.status === 1 ? '启用' : '禁用' }}</span></td>
+                  <tr v-for="d in (detail.classDatasources || [])" :key="d.id">
+                    <td class="bl-mono">{{ d.physical_table }}</td>
+                    <td>
+                      <input class="bl-input bl-input-sm" :value="d.table_label || d.alias || ''"
+                             placeholder="中文名/别名" @change="onSaveClassDs(d, { table_label: $event.target.value })" />
+                    </td>
+                    <td>
+                      <select class="bl-input bl-input-sm" :value="d.rel_type"
+                              @change="onSaveClassDs(d, { rel_type: Number($event.target.value) })">
+                        <option :value="1">主表</option>
+                        <option :value="2">附表</option>
+                      </select>
+                    </td>
+                    <td>{{ (d.physical_fields || []).length }}</td>
+                    <td>
+                      <input v-if="d.rel_type !== 1" class="bl-input bl-input-sm bl-mono" :value="d.join_on_keys || ''"
+                             placeholder="如 station_code" @change="onSaveClassDs(d, { join_on_keys: $event.target.value })" />
+                      <span v-else class="bl-muted">—</span>
+                    </td>
+                    <td>
+                      <select v-if="d.rel_type !== 1" class="bl-input bl-input-sm" :value="d.join_type || 'left'"
+                              @change="onSaveClassDs(d, { join_type: $event.target.value })">
+                        <option value="left">LEFT</option>
+                        <option value="inner">INNER</option>
+                        <option value="right">RIGHT</option>
+                      </select>
+                      <span v-else class="bl-muted">—</span>
+                    </td>
+                    <td>
+                      <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="删除绑定"
+                              @click="onDeleteClassDs(d)" v-html="BL.icon('trash', 13, '#f53f3f')"></button>
+                    </td>
                   </tr>
                 </tbody>
               </table>
-              <div v-if="!(detail.datasources || []).length" class="bl-empty" style="padding:32px">同领域暂无数据源</div>
+              <div v-if="!(detail.classDatasources || []).length" class="bl-empty" style="padding:32px">本对象暂未挂接物理表，请在「新建对象向导」的数据源映射步骤配置</div>
             </div>
 
             <!-- 使用情况 -->
@@ -960,6 +990,35 @@ async function loadDetail(id) {
     detail.value = {}
   }
   await loadTabCounts(id)
+}
+
+/* —— 数据源 tab: 编辑 / 删除 本对象挂接的物理表绑定 (ont_class_ds) —— */
+function curClassId() { return selected.value?.id || detail.value?.id || '' }
+async function onSaveClassDs(d, patch) {
+  const body = {
+    table_label: d.table_label, alias: d.alias, rel_type: d.rel_type,
+    pk_keys: d.pk_keys, join_on_keys: d.join_on_keys, join_type: d.join_type,
+    sort: d.sort ?? 0, status: d.status ?? 1,
+    ...patch
+  }
+  try {
+    await classMetaApi.updateClassDs(d.id, body)
+    BL.success('已保存')
+    await loadDetail(curClassId())
+  } catch (e) { BL.error(e?.msg || '保存失败') }
+}
+async function onDeleteClassDs(d) {
+  const ok = await BL.confirm({
+    title: '删除数据源绑定',
+    content: `确定删除「${d.physical_table}」(${d.rel_type === 1 ? '主表' : '附表'}) 的绑定？引用它的属性映射会一并解除。`,
+    danger: true, okText: '删除'
+  })
+  if (!ok) return
+  try {
+    await classMetaApi.removeClassDs(d.id)
+    BL.success('已删除绑定')
+    await loadDetail(curClassId())
+  } catch (e) { BL.error(e?.msg || '删除失败') }
 }
 
 /* —— 左导航每个 tab 的数量徽标 —— */

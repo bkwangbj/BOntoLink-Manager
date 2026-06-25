@@ -237,6 +237,33 @@ public class ClassMetaController {
         return R.ok();
     }
 
+    /* ============ ont_class_ds (类→物理表 绑定: 主表/附表) ============ */
+
+    /** 更新一条 类→物理表 绑定 (别名 / 主附表 / 关联键 / 连接方式) */
+    @PutMapping("/datasources/{id}")
+    public R<?> updateClassDs(@PathVariable String id, @RequestBody Map<String, Object> body) {
+        body.put("id", id);
+        body.putIfAbsent("rel_type", 2);
+        body.putIfAbsent("status", 1);
+        body.putIfAbsent("sort", 0);
+        body.putIfAbsent("alias", null);
+        body.putIfAbsent("pk_keys", null);
+        body.putIfAbsent("join_on_keys", null);
+        body.putIfAbsent("join_type", null);
+        body.putIfAbsent("table_label", null);
+        mapper.updateClassDs(body);
+        return R.ok();
+    }
+
+    /** 删除一条 类→物理表 绑定 (同时解除引用它的属性映射) */
+    @DeleteMapping("/datasources/{id}")
+    @Transactional
+    public R<?> deleteClassDs(@PathVariable String id) {
+        mapper.clearPropMappingsByDs(id);
+        mapper.deleteClassDs(id);
+        return R.ok();
+    }
+
     /* ============ 新建对象类型 (向导一站式创建) ============ */
 
     @PostMapping("/classes")

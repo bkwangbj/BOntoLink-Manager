@@ -323,6 +323,24 @@ public interface ClassMetaMapper {
     """)
     int insertClassDs(Map<String, Object> row);
 
+    /** 更新一条 类→数据集 绑定 (表名/别名/类型/关联键/连接方式/排序/状态; 不动 physical_fields) */
+    @Update("""
+        UPDATE ont_class_ds SET
+            table_label = #{table_label}, alias = #{alias}, rel_type = #{rel_type},
+            pk_keys = #{pk_keys}, join_on_keys = #{join_on_keys}, join_type = #{join_type},
+            sort = #{sort}, status = #{status}
+        WHERE id = #{id}
+    """)
+    int updateClassDs(Map<String, Object> row);
+
+    /** 删除一条 类→数据集 绑定 */
+    @Delete("DELETE FROM ont_class_ds WHERE id = #{id}")
+    int deleteClassDs(@Param("id") String id);
+
+    /** 解除引用某 class_ds 的属性映射 (删除绑定前调用, 避免关系图残留脏连线) */
+    @Update("UPDATE ont_class_property SET class_ds_id = NULL, physical_table = NULL, physical_column = NULL WHERE class_ds_id = #{dsId}")
+    int clearPropMappingsByDs(@Param("dsId") String dsId);
+
     /** 检索可作为等价/不相交/互斥并集等候选的对象类（按行业/领域过滤） */
     @Select("""
         SELECT id, api_name, display_name, rdfs_label, rdfs_comment, category_code, icon, color, status

@@ -121,6 +121,9 @@ export const classMetaApi = {
   removeProp:        (propId) => http.delete(`/class-meta/properties/${propId}`),
   reorderProps:      (classId, ids) => http.post(`/class-meta/classes/${classId}/properties/reorder`, { ids }),
 
+  updateClassDs:     (id, data) => http.put(`/class-meta/datasources/${id}`, data),
+  removeClassDs:     (id) => http.delete(`/class-meta/datasources/${id}`),
+
   updateClass:       (id, data) => http.put(`/class-meta/classes/${id}`, data),
   createClass:       (data) => http.post('/class-meta/classes', data),
   setClassStatus:    (id, status) => http.put(`/class-meta/classes/${id}/status`, { status }),
