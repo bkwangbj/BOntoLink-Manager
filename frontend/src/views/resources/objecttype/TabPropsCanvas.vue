@@ -45,8 +45,14 @@
       </div>
     </div>
 
-    <!-- 物理表切换条 (多表时: 每个表一张独立的图, 一次只画 对象 ↔ 当前表) -->
+    <!-- 物理表切换条 (多表时: 每个表一张独立的图, 一次只画 对象 ↔ 当前表; 「全部」= 含表间关联) -->
     <div v-if="datasourcesSorted.length > 1" class="er-tabs">
+      <button :class="['er-tab', activeTableId === ALL_ID && 'is-on']"
+              title="显示全部物理表 (含表间 JOIN 关联曲线)"
+              @click="activeTableId = ALL_ID">
+        <span v-html="BL.icon('grid', 12)"></span>
+        <span style="margin-left:4px">全部</span>
+      </button>
       <button v-for="ds in datasourcesSorted" :key="ds.id"
               :class="['er-tab', activeTableId === ds.id && 'is-on']"
               :title="`${ds.physical_table} · ${ds.rel_type === 1 ? '主表' : '辅助表'}`"
@@ -155,10 +161,8 @@
                     @click.stop="onAnchorClick('field', { dsId: ds.id, name: f.name, f })"></span>
               <span class="er-row-text bl-mono">{{ f.name }}</span>
               <span class="er-dt-ic" :title="f.data_type">{{ dataTypeShort(f.data_type) }}</span>
-              <!-- 表间关联圆点 (右侧,橙色) - 只在主键/外键显示 -->
-              <span v-if="ds.rel_type === 1 && (f.is_pk || f.is_fk)" class="er-dot er-dot-rel"
-                    :data-anchor="`rel:${ds.id}:${f.name}`"></span>
-              <span v-if="ds.rel_type !== 1 && (f.is_pk || f.is_fk)" class="er-dot er-dot-rel"
+              <!-- 表间关联圆点 (右侧,橙色) - 主键/外键 或 被配置为 JOIN 关联键的字段 -->
+              <span v-if="showRelDot(ds, f)" class="er-dot er-dot-rel"
                     :data-anchor="`rel:${ds.id}:${f.name}`"></span>
             </div>
             <div v-if="!(ds.physical_fields || []).length" class="bl-empty" style="padding:18px;font-size:12px">该数据集无字段定义</div>
@@ -215,17 +219,41 @@ const datasources = ref([])
 const propertiesSorted = computed(() => [...properties.value].sort((a, b) => (a.sort ?? 99999) - (b.sort ?? 99999) || (a.api_name || '').localeCompare(b.api_name || '')))
 const datasourcesSorted = computed(() => [...datasources.value].sort((a, b) => (a.rel_type - b.rel_type) || (a.sort - b.sort)))
 
-/* 当前选中的物理表: 每个表一张独立的图 (单表直接显示, 多表用顶部切换条切换) */
+/* 当前选中的物理表: 每个表一张独立的图 (单表直接显示, 多表用顶部切换条切换);
+   特殊值 ALL_ID = 显示全部物理表 (含表间 JOIN 关联曲线) */
+const ALL_ID = '__all__'
 const activeTableId = ref('')
 const visibleDatasources = computed(() => {
   const list = datasourcesSorted.value
   if (list.length <= 1) return list
+  if (activeTableId.value === ALL_ID) return list
   const active = list.find(d => d.id === activeTableId.value)
   return active ? [active] : [list[0]]
 })
 
 const totalProps = computed(() => properties.value.length)
 const mappedCount = computed(() => properties.value.filter(p => p._mapped).length)
+
+/* 被配置为表间 JOIN 关联键的字段 (dsId -> Set<fieldName>); 让这些字段也长出橙色关联圆点 */
+const joinAnchorFields = computed(() => {
+  const map = {}
+  const main = datasources.value.find(d => d.rel_type === 1)
+  const supps = datasources.value.filter(d => d.rel_type !== 1)
+  const add = (dsId, name) => { if (dsId && name) (map[dsId] || (map[dsId] = new Set())).add(name) }
+  supps.forEach(s => {
+    const first = (s.join_on_keys || '').split(',')[0].trim()
+    let mk = first, sk = first
+    if (first.includes('=')) { const [m, sp] = first.split('='); mk = (m || '').trim(); sk = (sp || '').trim() }
+    if (main) add(main.id, mk)
+    add(s.id, sk)
+  })
+  return map
+})
+function showRelDot(ds, f) {
+  if (f.is_pk || f.is_fk) return true
+  const set = joinAnchorFields.value[ds.id]
+  return !!(set && set.has(f.name))
+}
 
 async function loadDetail() {
   if (!props.classId) return
@@ -241,8 +269,8 @@ async function loadDetail() {
     }))
     return { ...d, physical_fields: fields }
   })
-  // 默认选中第一张表 (主表优先, datasourcesSorted 已按 rel_type 排序)
-  if (!datasourcesSorted.value.some(d => d.id === activeTableId.value)) {
+  // 默认选中第一张表 (主表优先, datasourcesSorted 已按 rel_type 排序); 保留「全部」选择
+  if (activeTableId.value !== ALL_ID && !datasourcesSorted.value.some(d => d.id === activeTableId.value)) {
     activeTableId.value = datasourcesSorted.value[0]?.id || ''
   }
   resetLayout()
@@ -399,9 +427,12 @@ function recomputeLines() {
   const rels = []
   if (main) {
     supps.forEach((s, i) => {
-      const joinKey = (s.join_on_keys || '').split(',').map(x => x.trim()).filter(Boolean)[0] || ''
-      const aOut = canvasRef.value.querySelector(`[data-anchor="rel:${main.id}:${joinKey}"]`)
-      const aIn  = canvasRef.value.querySelector(`[data-anchor="rel:${s.id}:${joinKey}"]`)
+      const first = (s.join_on_keys || '').split(',').map(x => x.trim()).filter(Boolean)[0] || ''
+      // 格式 "主表字段=附表字段"; 无 '=' 则两侧同名
+      let mainKey = first, suppKey = first
+      if (first.includes('=')) { const [m, sp] = first.split('='); mainKey = (m || '').trim(); suppKey = (sp || '').trim() }
+      const aOut = canvasRef.value.querySelector(`[data-anchor="rel:${main.id}:${mainKey}"]`)
+      const aIn  = canvasRef.value.querySelector(`[data-anchor="rel:${s.id}:${suppKey}"]`)
       if (!aOut || !aIn) return
       const A = xy(aOut), B = xy(aIn)
       // 向外弯曲 150px 贝塞尔

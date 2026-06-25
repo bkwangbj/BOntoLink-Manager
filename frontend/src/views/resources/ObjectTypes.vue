@@ -406,8 +406,19 @@
                     </td>
                     <td>{{ (d.physical_fields || []).length }}</td>
                     <td>
-                      <input v-if="d.rel_type !== 1" class="bl-input bl-input-sm bl-mono" :value="d.join_on_keys || ''"
-                             placeholder="如 station_code" @change="onSaveClassDs(d, { join_on_keys: $event.target.value })" />
+                      <div v-if="d.rel_type !== 1" class="ot-ds-join">
+                        <select class="bl-input bl-input-sm bl-mono" :value="joinParts(d).main" title="主表关联字段"
+                                @change="onSaveJoin(d, 'main', $event.target.value)">
+                          <option value="">主表字段…</option>
+                          <option v-for="f in dsMainFields" :key="'m-'+f" :value="f">{{ f }}</option>
+                        </select>
+                        <span class="bl-muted">=</span>
+                        <select class="bl-input bl-input-sm bl-mono" :value="joinParts(d).supp" title="附表关联字段"
+                                @change="onSaveJoin(d, 'supp', $event.target.value)">
+                          <option value="">附表字段…</option>
+                          <option v-for="f in (d.physical_fields || [])" :key="'s-'+f.name" :value="f.name">{{ f.name }}</option>
+                        </select>
+                      </div>
                       <span v-else class="bl-muted">—</span>
                     </td>
                     <td>
@@ -994,6 +1005,23 @@ async function loadDetail(id) {
 
 /* —— 数据源 tab: 编辑 / 删除 本对象挂接的物理表绑定 (ont_class_ds) —— */
 function curClassId() { return selected.value?.id || detail.value?.id || '' }
+/* 主表字段列表 (供附表选择关联字段) */
+const dsMainFields = computed(() => {
+  const main = (detail.value?.classDatasources || []).find(d => d.rel_type === 1)
+  return (main?.physical_fields || []).map(f => f.name)
+})
+/* join_on_keys 存储格式: "主表字段=附表字段"; 无 '=' 则视为两侧同名 */
+function joinParts(d) {
+  const raw = (d.join_on_keys || '').split(',')[0].trim()
+  if (raw.includes('=')) { const [m, s] = raw.split('='); return { main: (m || '').trim(), supp: (s || '').trim() } }
+  return { main: raw, supp: raw }
+}
+function onSaveJoin(d, side, val) {
+  const p = joinParts(d)
+  p[side] = val
+  const joined = p.main && p.supp ? `${p.main}=${p.supp}` : (p.main || p.supp || '')
+  onSaveClassDs(d, { join_on_keys: joined })
+}
 async function onSaveClassDs(d, patch) {
   const body = {
     table_label: d.table_label, alias: d.alias, rel_type: d.rel_type,
@@ -1589,6 +1617,9 @@ watch(() => route.query.openId, applyOpenId)
 /* 对象图谱: 去除上下间隙,让 SVG 画布顶满抽屉空间 */
 .ot-tab-content.ot-tab-canvas { gap: 0; padding: 0; height: 100%; }
 .ot-tab-toolbar { display: flex; align-items: center; gap: 8px;  }
+.ot-ds-table td .bl-input-sm { width: 100%; min-width: 84px; }
+.ot-ds-join { display: flex; align-items: center; gap: 4px; }
+.ot-ds-join select { flex: 1; min-width: 72px; }
 .ot-section-title {
   font-size: var(--bl-fs-13); font-weight: 600; color: var(--bl-text-2);
   padding: 12px 0 6px; border-bottom: 1px solid var(--bl-divider); margin-bottom: 8px;
