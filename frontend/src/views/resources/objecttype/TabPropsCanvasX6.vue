@@ -63,6 +63,7 @@ const props = defineProps({ classId: { type: String, default: '' } })
 const HH = 38, ROWH = 36
 const OBJ_W = 330, TBL_W = 240
 const OBJ_X = 40, OBJ_Y = 40, TBL_X = 40 + OBJ_W + 170, GAP = 30
+const PORT_GAP = 12  // 端口外移量: 让连线端点与卡片边框留出间距
 
 /* —— 注册 X6 Vue 节点 (object / table 共用一个组件, 由 data.type 区分) —— */
 const SHAPE = 'erx-card-node'
@@ -251,7 +252,7 @@ function rebuild(resetView = false) {
       groups: { out: { position: 'absolute', attrs: { circle: { r: 6, magnet: true, stroke: '#fff', strokeWidth: 2 } } } },
       items: propsList.map((p, i) => ({
         id: `prop:${p.id}`, group: 'out',
-        args: { x: OBJ_W, y: HH + i * ROWH + ROWH / 2 },
+        args: { x: OBJ_W + PORT_GAP, y: HH + i * ROWH + ROWH / 2 },
         attrs: { circle: { fill: propPortFill(p) } }
       }))
     }
@@ -265,12 +266,12 @@ function rebuild(resetView = false) {
     const h = HH + Math.max(fields.length, 1) * ROWH
     const inItems = fields.map((f, i) => ({
       id: `field:${ds.id}:${f.name}`, group: 'in',
-      args: { x: 0, y: HH + i * ROWH + ROWH / 2 },
+      args: { x: -PORT_GAP, y: HH + i * ROWH + ROWH / 2 },
       attrs: { circle: { fill: fieldPortFill(f) } }
     }))
     const relItems = fields.map((f, i) => ({ f, i })).filter(({ f }) => showRelDot(ds, f)).map(({ f, i }) => ({
       id: `rel:${ds.id}:${f.name}`, group: 'rel',
-      args: { x: TBL_W, y: HH + i * ROWH + ROWH / 2 },
+      args: { x: TBL_W + PORT_GAP, y: HH + i * ROWH + ROWH / 2 },
       attrs: { circle: { fill: '#FF7D00' } }
     }))
     const node = graph.addNode({
