@@ -18,6 +18,17 @@ public class ObjectTypeCreateService {
     @Autowired private ClassMetaMapper mapper;
     private final ObjectMapper json = new ObjectMapper();
 
+    /**
+     * 事务化创建一个对象类型（包含数据源绑定与字段映射）。
+     *
+     * @param body 向导提交的数据，包含：
+     *             api_name / display_name / category_code / ns_code / icon / color / description —— 对象基本信息；
+     *             ds_code —— 数据源编码；
+     *             main —— 主表配置（physical_table / alias_name / pk_keys）；
+     *             subs —— 附表列表（physical_table / alias_name / join_on_keys / join_type）；
+     *             props —— 字段映射列表（physical_table / physical_column / api_name / data_type 等）。
+     * @return 已插入的 ont_class 行（Map 形式）
+     */
     @Transactional
     public Map<String, Object> create(Map<String, Object> body) {
         // 1) 对象主表 ont_class
@@ -129,7 +140,23 @@ public class ObjectTypeCreateService {
         return cls;
     }
 
-    /* —— 写入一条 ont_class_ds，返回其 id —— */
+    /**
+     * 向 ont_class_ds 写入一条数据源绑定记录，返回新行 id。
+     *
+     * @param classId       所属对象类型 ID
+     * @param dsCode        数据源编码
+     * @param physicalTable 物理表名
+     * @param tableLabel    表别名（展示用）
+     * @param relType       关系类型（1=主表 / 2=附表）
+     * @param alias         SQL 别名（主表 "main"，附表 "s1"/"s2" 等）
+     * @param pkKeys        主键列名逗号分隔（仅主表有效）
+     * @param joinOnKeys    附表关联条件（仅附表有效）
+     * @param joinType      JOIN 类型（"LEFT"/"INNER" 等，仅附表有效）
+     * @param cols          该表所有字段映射列表（用于 physical_fields JSON）
+     * @param pkSet         主键列名集合（标记 physical_fields 中哪些是主键）
+     * @param sort          表顺序（主表 0，附表依次递增）
+     * @return 新插入行的 id（格式 "class-ds-{UUID}"）
+     */
     private String insertDs(String classId, String dsCode, String physicalTable, String tableLabel,
                             int relType, String alias, String pkKeys, String joinOnKeys, String joinType,
                             List<Map<String, Object>> cols, Set<String> pkSet, int sort) {
@@ -152,6 +179,11 @@ public class ObjectTypeCreateService {
         return id;
     }
 
+    /**
+     * 将字段列表序列化为 physical_fields JSON 字符串（存入 ont_class_ds）。
+     * 每个元素格式：{"name": "col", "data_type": "varchar", "is_pk": 0/1}。
+     * 序列化失败时返回 "[]" 而不抛出异常，避免中断整体事务。
+     */
     private String toFieldsJson(List<Map<String, Object>> cols, Set<String> pkSet) {
         List<Map<String, Object>> arr = new ArrayList<>();
         if (cols != null) {
@@ -182,6 +214,9 @@ public class ObjectTypeCreateService {
         return null;
     }
 
+    /**
+     * 生成全局唯一的 api_name：若 base 已存在则追加 _2、_3 …，直到找到空闲名称。
+     */
     private String uniqueApiName(String base) {
         String name = base;
         int n = 2;
@@ -191,6 +226,7 @@ public class ObjectTypeCreateService {
         return name;
     }
 
+    /** 将 OWL 语义标志（functional/transitive/symmetric 等）默认置 0，避免漏填字段导致 DB 约束报错。 */
     private static void setFlagDefaults(Map<String, Object> row) {
         for (String k : new String[]{
                 "owl_functional", "owl_inverse_functional", "owl_transitive", "owl_symmetric",
@@ -202,13 +238,16 @@ public class ObjectTypeCreateService {
     /* —— 小工具 —— */
     private static String str(Object o) { return o == null ? "" : String.valueOf(o); }
 
+    /** 返回 a（非空白时）否则 b，用于展示名称 / rdfs_label 兜底。 */
     private static String firstNonBlank(String a, String b) { return (a != null && !a.isBlank()) ? a : b; }
 
+    /** 将任意字符串转为合法 api_name：非字母数字下划线替换为 _，整体小写。 */
     private static String sanitize(String s) {
         if (s == null) return "";
         return s.trim().replaceAll("[^A-Za-z0-9_]", "_").toLowerCase();
     }
 
+    /** 将布尔/数字/字符串统一转为 0/1 整数标志（"true"/"1" → 1，其余 → 0）。 */
     private static int toInt(Object o) {
         if (o == null) return 0;
         if (o instanceof Boolean b) return b ? 1 : 0;
@@ -217,6 +256,7 @@ public class ObjectTypeCreateService {
         return ("1".equals(s) || "true".equalsIgnoreCase(s)) ? 1 : 0;
     }
 
+    /** 将列表或单个值拼成逗号分隔字符串（pk_keys 存储用）；列表为空时返回 null。 */
     private static String joinCsv(Object o) {
         if (o instanceof List<?> list) {
             StringJoiner sj = new StringJoiner(",");

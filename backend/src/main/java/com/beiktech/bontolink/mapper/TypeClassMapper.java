@@ -15,6 +15,10 @@ import java.util.Map;
 @Mapper
 public interface TypeClassMapper {
 
+    /**
+     * 动态条件查询类型类列表。
+     * catalogOnly=true 时筛选三个外键均为 null 的目录预置项（即未挂到具体对象的公共类型类）。
+     */
     @Select("""
         <script>
         SELECT * FROM ont_type_class
@@ -34,6 +38,7 @@ public interface TypeClassMapper {
                                     @Param("isDeprecated") Integer isDeprecated,
                                     @Param("catalogOnly") Boolean catalogOnly);
 
+    /** 按 id 查单条类型类 */
     @Select("SELECT * FROM ont_type_class WHERE id = #{id}")
     Map<String, Object> findById(@Param("id") String id);
 
@@ -49,6 +54,7 @@ public interface TypeClassMapper {
     """)
     List<Map<String, Object>> categoryStats();
 
+    /** 新增类型类 */
     @Insert("""
         INSERT INTO ont_type_class(id, link_type_id, object_type_id, action_type_id,
             applicable_type, is_deprecated, category, category_cn, name, name_cn,
@@ -59,6 +65,7 @@ public interface TypeClassMapper {
     """)
     int insert(Map<String, Object> row);
 
+    /** 更新类型类（同步 updated_at） */
     @Update("""
         UPDATE ont_type_class SET
           link_type_id = #{link_type_id}, object_type_id = #{object_type_id}, action_type_id = #{action_type_id},
@@ -71,6 +78,7 @@ public interface TypeClassMapper {
     """)
     int update(Map<String, Object> row);
 
+    /** 删除类型类 */
     @Delete("DELETE FROM ont_type_class WHERE id = #{id}")
     int delete(@Param("id") String id);
 

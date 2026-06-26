@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+/**
+ * 行业分类（BizCategory）的查询、树形构建、统计与图谱服务。
+ * 分类分三级：行业(type=1) → 领域(type=2) → 分组(type=3)。
+ */
 @Service
 public class CategoryService {
 
@@ -18,6 +22,10 @@ public class CategoryService {
     @Autowired private BizNamespaceMapper namespaceMapper;
     @Autowired private NamespaceService namespaceService;
 
+    /**
+     * 查询所有分类并组装为嵌套树（parentId=null/"0" 的节点为根）。
+     * 父节点不存在时该节点归入根层，防止孤儿节点消失。
+     */
     public List<Map<String, Object>> tree() {
         List<BizCategory> all = categoryMapper.listAll();
         Map<String, Map<String, Object>> idx = new LinkedHashMap<>();
@@ -69,8 +77,15 @@ public class CategoryService {
         return m;
     }
 
+    /** 按 id 查单条分类。 */
     public BizCategory get(String id) { return categoryMapper.findById(id); }
 
+    /**
+     * 新建分类节点。
+     * - id 缺失时自动生成（格式 "category-{UUID}"），rid 同步生成。
+     * - 领域(type=2)创建后自动创建同 code 的命名空间（若不存在），并将自身绑定该命名空间。
+     * - 分组(type=3)的 nsCode 强制继承父级领域，前端传入值被忽略。
+     */
     public BizCategory create(BizCategory c) {
         // 行业只能是第一级
         if (c.getCategoryType() != null && c.getCategoryType() == 1
@@ -116,6 +131,10 @@ public class CategoryService {
         return c;
     }
 
+    /**
+     * 更新分类节点。分组(type=3)的 nsCode 始终跟随父级领域，不允许独立修改。
+     * 返回更新后的完整对象。
+     */
     public BizCategory update(BizCategory c) {
         // 分组的命名空间始终跟随所属领域，不允许独立修改
         if (c.getCategoryType() != null && c.getCategoryType() == 3
@@ -127,6 +146,9 @@ public class CategoryService {
         return categoryMapper.findById(c.getId());
     }
 
+    /**
+     * 删除分类节点。存在下级子节点时拒绝删除（防止孤儿节点）。
+     */
     public void delete(String id) {
         int children = categoryMapper.countByParent(id);
         if (children > 0) throw new IllegalArgumentException("存在下级节点，无法删除");
@@ -197,6 +219,7 @@ public class CategoryService {
         return out;
     }
 
+    /** 递归构建 picker 树，叶子节点（无子节点）不进入树，只出现在 leaves 区。 */
     private List<Map<String, Object>> buildPickerTree(List<BizCategory> all,
                                                      Map<String, List<BizCategory>> idx,
                                                      String parentId) {
@@ -219,6 +242,7 @@ public class CategoryService {
         return out;
     }
 
+    /** 优先返回 rdfsLabel，为空时降级为 categoryCode。 */
     private String labelOf(BizCategory c) {
         return c.getRdfsLabel() != null && !c.getRdfsLabel().isEmpty() ? c.getRdfsLabel() : c.getCategoryCode();
     }
@@ -239,6 +263,10 @@ public class CategoryService {
         return r;
     }
 
+    /**
+     * 收集指定节点子树下关联的所有 class id。
+     * 领域/行业节点走 category_code 直查 ont_class，分组节点走 ont_biz_group_class。
+     */
     private Set<String> resolveClassIds(String id, List<BizCategory> all, Map<String, List<BizCategory>> idx) {
         BizCategory self = all.stream().filter(c -> id.equals(c.getId())).findFirst().orElse(null);
         if (self == null) return Collections.emptySet();
@@ -273,6 +301,7 @@ public class CategoryService {
         return r;
     }
 
+    /** 将所有分类按 parentId 分组，便于 O(1) 查子节点，null parentId 归入 "0" 桶。 */
     private Map<String, List<BizCategory>> indexByParent(List<BizCategory> all) {
         Map<String, List<BizCategory>> m = new HashMap<>();
         for (BizCategory c : all) {
@@ -281,6 +310,12 @@ public class CategoryService {
         return m;
     }
 
+    /**
+     * 内部统计实现：BFS 遍历子树，汇总子节点数/对象数/链接数/属性数/接口数等指标，
+     * 并截取前 8 个 class 作为 classChips 供页面气泡展示。
+     * @param all 全量分类列表（外部一次性查出，避免重复查库）
+     * @param idx parentId → children 的索引
+     */
     private Map<String, Object> statsInternal(String id,
                                               List<BizCategory> all,
                                               Map<String, List<BizCategory>> idx) {

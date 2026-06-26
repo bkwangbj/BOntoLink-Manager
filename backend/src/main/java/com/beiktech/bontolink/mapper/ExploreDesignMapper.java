@@ -20,9 +20,11 @@ public interface ExploreDesignMapper {
     @Select("SELECT * FROM ont_explore_design WHERE class_id = #{classId} AND name = '' LIMIT 1")
     Map<String, Object> getDefault(@Param("classId") String classId);
 
+    // 按 id 查单条看板/设计记录
     @Select("SELECT * FROM ont_explore_design WHERE id = #{id}")
     Map<String, Object> findById(@Param("id") String id);
 
+    // 新增看板或命名设计
     @Insert("""
         INSERT INTO ont_explore_design(id, class_id, name, kind, config)
         VALUES (#{id}, #{classId}, #{name}, #{kind}, #{config})
@@ -37,6 +39,7 @@ public interface ExploreDesignMapper {
     """)
     int update(Map<String, Object> row);
 
+    // 删除指定看板/设计记录
     @Delete("DELETE FROM ont_explore_design WHERE id = #{id}")
     int deleteById(@Param("id") String id);
 }

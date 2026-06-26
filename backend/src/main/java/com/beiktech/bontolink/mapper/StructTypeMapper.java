@@ -23,9 +23,11 @@ public interface StructTypeMapper {
     """)
     List<Map<String, Object>> listAll();
 
+    /** 按 id 查单条结构类型 */
     @Select("SELECT * FROM ont_struct_types WHERE id = #{id}")
     Map<String, Object> findById(@Param("id") String id);
 
+    /** 检查结构编码是否已存在 */
     @Select("SELECT 1 FROM ont_struct_types WHERE struct_code = #{code} LIMIT 1")
     Integer existsByCode(@Param("code") String code);
 
@@ -44,6 +46,7 @@ public interface StructTypeMapper {
     """)
     List<Map<String, Object>> listItems(@Param("structId") String structId);
 
+    /** 新增结构类型 */
     @Insert("""
         INSERT INTO ont_struct_types(id, struct_code, category_code, status,
             rdfs_label, rdfs_comment, rdfs_see_also, rdfs_defined_by)
@@ -52,6 +55,7 @@ public interface StructTypeMapper {
     """)
     int insert(Map<String, Object> row);
 
+    /** 更新结构类型（同步 update_time） */
     @Update("""
         UPDATE ont_struct_types SET
           category_code = #{category_code}, status = #{status},
@@ -62,19 +66,23 @@ public interface StructTypeMapper {
     """)
     int update(Map<String, Object> row);
 
+    /** 删除结构类型主记录 */
     @Delete("DELETE FROM ont_struct_types WHERE id = #{id}")
     int delete(@Param("id") String id);
 
     /* —— 条目操作 —— */
+    /** 删除某结构类型的全部条目（保存前先清空再批量插入） */
     @Delete("DELETE FROM ont_struct_items WHERE struct_id = #{structId}")
     int deleteItemsByStruct(@Param("structId") String structId);
 
+    /** 新增结构条目（一条共享属性引用） */
     @Insert("""
         INSERT INTO ont_struct_items(id, struct_id, sort_no, prop_id)
         VALUES (#{id}, #{struct_id}, #{sort_no}, #{prop_id})
     """)
     int insertItem(Map<String, Object> row);
 
+    /** 按条目 id 单条删除 */
     @Delete("DELETE FROM ont_struct_items WHERE id = #{id}")
     int deleteItem(@Param("id") String id);
 }

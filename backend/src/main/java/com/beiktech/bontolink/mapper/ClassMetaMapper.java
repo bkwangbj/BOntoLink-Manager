@@ -18,6 +18,7 @@ public interface ClassMetaMapper {
 
     /* ============ ont_class_group (equivalent / disjoint) ============ */
 
+    /** 按关系类型(equivalent/disjoint)查当前类涉及的分组；CASE WHEN 自动将"另一端"类 id 归一到 other_class_id */
     @Select("""
         SELECT g.id, g.class_id, g.ref_class_id, g.group_type, g.status,
                g.rdfs_comment, g.rdfs_see_also, g.rdfs_defined_by,
@@ -39,22 +40,27 @@ public interface ClassMetaMapper {
     """)
     List<Map<String, Object>> listGroupByType(@Param("currentId") String currentId, @Param("type") String type);
 
+    /** 检查同类型的类对关系是否已存在（防重；minId/maxId 为排序后的 id，保证无向去重） */
     @Select("SELECT COUNT(*) FROM ont_class_group WHERE group_type = #{type} AND class_id = #{minId} AND ref_class_id = #{maxId}")
     int existsGroupPair(@Param("type") String type, @Param("minId") String minId, @Param("maxId") String maxId);
 
+    /** 新增一条类分组关系（equivalent / disjoint） */
     @Insert("INSERT INTO ont_class_group(id, class_id, ref_class_id, group_type, status, rdfs_comment, rdfs_see_also, rdfs_defined_by) " +
             "VALUES (#{id}, #{class_id}, #{ref_class_id}, #{group_type}, #{status}, #{rdfs_comment}, #{rdfs_see_also}, #{rdfs_defined_by})")
     int insertGroup(Map<String, Object> row);
 
+    /** 更新类分组关系的状态和 RDFS 注解字段 */
     @Update("UPDATE ont_class_group SET status = #{status}, rdfs_comment = #{rdfs_comment}, " +
             "rdfs_see_also = #{rdfs_see_also}, rdfs_defined_by = #{rdfs_defined_by} WHERE id = #{id}")
     int updateGroup(Map<String, Object> row);
 
+    /** 删除一条类分组关系 */
     @Delete("DELETE FROM ont_class_group WHERE id = #{id}")
     int deleteGroup(@Param("id") String id);
 
     /* ============ ont_class_disjoint_union ============ */
 
+    /** 查某父类下的所有互斥并集子类（JOIN ont_class 获取子类展示信息） */
     @Select("""
         SELECT du.id, du.parent_class_id, du.sub_class_id, du.status,
                du.rdfs_comment, du.rdfs_see_also, du.rdfs_defined_by,
@@ -76,18 +82,22 @@ public interface ClassMetaMapper {
     """)
     List<Map<String, Object>> listDisjointUnionParents(@Param("subClassId") String subClassId);
 
+    /** 新增一条互斥并集关系（parent_class_id 为并集容器，sub_class_id 为成员类） */
     @Insert("INSERT INTO ont_class_disjoint_union(id, parent_class_id, sub_class_id, status, rdfs_comment, rdfs_see_also, rdfs_defined_by) " +
             "VALUES (#{id}, #{parent_class_id}, #{sub_class_id}, #{status}, #{rdfs_comment}, #{rdfs_see_also}, #{rdfs_defined_by})")
     int insertDisjointUnion(Map<String, Object> row);
 
+    /** 更新互斥并集关系的状态和备注 */
     @Update("UPDATE ont_class_disjoint_union SET status = #{status}, rdfs_comment = #{rdfs_comment} WHERE id = #{id}")
     int updateDisjointUnion(Map<String, Object> row);
 
+    /** 删除一条互斥并集关系 */
     @Delete("DELETE FROM ont_class_disjoint_union WHERE id = #{id}")
     int deleteDisjointUnion(@Param("id") String id);
 
     /* ============ ont_property_equivalent / ont_property_disjoint ============ */
 
+    /** 按属性 id 查其等价属性关系（四表 JOIN：关系表 + 两端属性 + 两端类，双向匹配） */
     @Select("""
         SELECT pe.id, pe.class_id1, pe.prop_id1, pe.class_id2, pe.prop_id2, pe.status, pe.rdfs_comment,
                p1.api_name AS api1, p1.display_name AS name1, p1.prop_type AS type1, p1.data_type AS dt1,
@@ -103,6 +113,7 @@ public interface ClassMetaMapper {
     """)
     List<Map<String, Object>> listPropertyEquivalents(@Param("propId") String propId);
 
+    /** 按类 id 查该类所有属性的等价关系（用于类详情页汇总展示） */
     @Select("""
         SELECT pe.id, pe.class_id1, pe.prop_id1, pe.class_id2, pe.prop_id2, pe.status, pe.rdfs_comment,
                p1.api_name AS api1, p1.display_name AS name1, p1.prop_type AS type1, p1.data_type AS dt1,
@@ -118,16 +129,20 @@ public interface ClassMetaMapper {
     """)
     List<Map<String, Object>> listPropertyEquivalentsByClass(@Param("classId") String classId);
 
+    /** 新增一条属性等价关系 */
     @Insert("INSERT INTO ont_property_equivalent(id, class_id1, prop_id1, class_id2, prop_id2, status, rdfs_comment) " +
             "VALUES (#{id}, #{class_id1}, #{prop_id1}, #{class_id2}, #{prop_id2}, #{status}, #{rdfs_comment})")
     int insertPropertyEquivalent(Map<String, Object> row);
 
+    /** 更新属性等价关系的状态和备注 */
     @Update("UPDATE ont_property_equivalent SET status = #{status}, rdfs_comment = #{rdfs_comment} WHERE id = #{id}")
     int updatePropertyEquivalent(Map<String, Object> row);
 
+    /** 删除一条属性等价关系 */
     @Delete("DELETE FROM ont_property_equivalent WHERE id = #{id}")
     int deletePropertyEquivalent(@Param("id") String id);
 
+    /** 按类 id 查该类所有属性的互斥关系（四表 JOIN，结构同 listPropertyEquivalentsByClass） */
     @Select("""
         SELECT pd.id, pd.class_id1, pd.prop_id1, pd.class_id2, pd.prop_id2, pd.status, pd.rdfs_comment,
                p1.api_name AS api1, p1.display_name AS name1, p1.prop_type AS type1, p1.data_type AS dt1,
@@ -143,18 +158,22 @@ public interface ClassMetaMapper {
     """)
     List<Map<String, Object>> listPropertyDisjointByClass(@Param("classId") String classId);
 
+    /** 新增一条属性互斥关系 */
     @Insert("INSERT INTO ont_property_disjoint(id, class_id1, prop_id1, class_id2, prop_id2, status, rdfs_comment) " +
             "VALUES (#{id}, #{class_id1}, #{prop_id1}, #{class_id2}, #{prop_id2}, #{status}, #{rdfs_comment})")
     int insertPropertyDisjoint(Map<String, Object> row);
 
+    /** 更新属性互斥关系的状态和备注 */
     @Update("UPDATE ont_property_disjoint SET status = #{status}, rdfs_comment = #{rdfs_comment} WHERE id = #{id}")
     int updatePropertyDisjoint(Map<String, Object> row);
 
+    /** 删除一条属性互斥关系 */
     @Delete("DELETE FROM ont_property_disjoint WHERE id = #{id}")
     int deletePropertyDisjoint(@Param("id") String id);
 
     /* ============ ont_class_property CRUD (扩展版) ============ */
 
+    /** 查某类的完整属性列表（含全部 OWL 特性、XSD 约束及物理映射字段） */
     @Select("""
         SELECT id, class_id, category_code, api_name, prop_code, prop_type, data_type, value_type,
                display_name, rdfs_label, rdfs_comment, rdfs_see_also, rdfs_defined_by,
@@ -171,6 +190,7 @@ public interface ClassMetaMapper {
     """)
     List<Map<String, Object>> listClassPropertiesFull(@Param("classId") String classId);
 
+    /** 新增一条类属性（含 OWL/XSD 约束及物理映射字段） */
     @Insert("""
         INSERT INTO ont_class_property(
             id, rid, class_id, category_code, api_name, prop_code, prop_type, data_type, value_type,
@@ -196,6 +216,7 @@ public interface ClassMetaMapper {
     """)
     int insertClassProperty(Map<String, Object> row);
 
+    /** 全量更新一条类属性（含 OWL/XSD/物理映射；同时刷新 update_time） */
     @Update("""
         UPDATE ont_class_property SET
             prop_code = #{prop_code}, prop_type = #{prop_type}, data_type = #{data_type}, value_type = #{value_type},
@@ -217,6 +238,7 @@ public interface ClassMetaMapper {
     """)
     int updateClassProperty(Map<String, Object> row);
 
+    /** 删除一条类属性 */
     @Delete("DELETE FROM ont_class_property WHERE id = #{id}")
     int deleteClassProperty(@Param("id") String id);
 
@@ -226,6 +248,7 @@ public interface ClassMetaMapper {
 
     /* ============ ont_class extended fields (类表达式 / 其他) ============ */
 
+    /** 全量更新对象类（含 RDFS/OWL 表达式/分类/命名空间等所有可编辑字段） */
     @Update("""
         UPDATE ont_class SET
             display_name = #{display_name}, rdfs_label = #{rdfs_label}, rdfs_comment = #{rdfs_comment},
@@ -239,6 +262,7 @@ public interface ClassMetaMapper {
     """)
     int updateClassFull(Map<String, Object> row);
 
+    /** 新建对象类 */
     @Insert("""
         INSERT INTO ont_class(id, rid, api_name, ns_code, category_code, display_name, rdfs_label, rdfs_comment,
                               rdfs_see_also, rdfs_defined_by, description, icon, color, status, metadata,
@@ -267,47 +291,61 @@ public interface ClassMetaMapper {
     @Update("UPDATE ont_class SET status = #{status}, update_time = datetime('now','localtime') WHERE id = #{id}")
     int updateClassStatus(@Param("id") String id, @Param("status") int status);
 
+    /** 按 id 取对象类的显示名称（删除确认弹框用） */
     @Select("SELECT display_name FROM ont_class WHERE id = #{id}")
     String findClassName(@Param("id") String id);
 
     /* —— 删除前引用检查 (被其他资源引用则禁止删除) —— */
+    /** 统计以该类为父类的子类数量 */
     @Select("SELECT COUNT(1) FROM ont_class WHERE parent_class_id = #{id}")
     int countChildClasses(@Param("id") String id);
 
+    /** 统计引用该类的链接类型数（左端或右端） */
     @Select("SELECT COUNT(1) FROM ont_link_types WHERE l_object_type_id = #{id} OR r_object_type_id = #{id}")
     int countLinkTypeRefs(@Param("id") String id);
 
+    /** 统计引用该类的类关系数（出向或入向） */
     @Select("SELECT COUNT(1) FROM ont_class_link WHERE source_class_id = #{id} OR target_class_id = #{id}")
     int countClassLinkRefs(@Param("id") String id);
 
     /* —— 级联清理类自有子数据 (删除对象类时一并清除) —— */
+    /** 级联删除该类的全部属性 */
     @Delete("DELETE FROM ont_class_property WHERE class_id = #{id}")
     int deletePropertiesByClass(@Param("id") String id);
 
+    /** 级联删除该类的全部数据集绑定 */
     @Delete("DELETE FROM ont_class_ds WHERE class_id = #{id}")
     int deleteClassDsByClass(@Param("id") String id);
 
+    /** 级联删除该类的全部动作 */
     @Delete("DELETE FROM ont_class_action WHERE class_id = #{id}")
     int deleteActionsByClass(@Param("id") String id);
 
+    /** 级联删除该类参与的全部等价/不相交分组关系（双端匹配） */
     @Delete("DELETE FROM ont_class_group WHERE class_id = #{id} OR ref_class_id = #{id}")
     int deleteClassGroupByClass(@Param("id") String id);
 
+    /** 级联删除该类作为父类或子类的全部互斥并集关系 */
     @Delete("DELETE FROM ont_class_disjoint_union WHERE parent_class_id = #{id} OR sub_class_id = #{id}")
     int deleteDisjointUnionByClass(@Param("id") String id);
 
+    /** 级联删除该类所有属性的等价关系 */
     @Delete("DELETE FROM ont_property_equivalent WHERE class_id1 = #{id} OR class_id2 = #{id}")
     int deletePropEquivByClass(@Param("id") String id);
 
+    /** 级联删除该类所有属性的互斥关系 */
     @Delete("DELETE FROM ont_property_disjoint WHERE class_id1 = #{id} OR class_id2 = #{id}")
     int deletePropDisjointByClass(@Param("id") String id);
 
+    /** 级联解除该类实现的所有接口关联 */
     @Delete("DELETE FROM ont_interface_class WHERE class_id = #{id}")
     int deleteInterfaceClassByClass(@Param("id") String id);
 
+    /** 级联删除该类在业务分组表中的引用记录（group_type = object_types） */
     @Delete("DELETE FROM ont_biz_group_class WHERE ref_id = #{id} AND group_type = 'object_types'")
     int deleteGroupRefByClass(@Param("id") String id);
 
+    /** 删除对象类本身（级联清理完成后最后执行） */
     @Delete("DELETE FROM ont_class WHERE id = #{id}")
     int deleteClass(@Param("id") String id);
 

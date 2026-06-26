@@ -10,6 +10,10 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.util.*;
 
+/**
+ * 数据源（sys_data_source）的 CRUD、连通性测试与监控指标服务。
+ * 支持 MySQL/PostgreSQL/Oracle/达梦/人大金仓等多种数据库类型，通过 {@link DataSourceConnector} 动态建立 JDBC 连接。
+ */
 @Service
 public class DataSourceService {
 
@@ -17,9 +21,17 @@ public class DataSourceService {
     @Autowired private com.beiktech.bontolink.mapper.PhysicalTableMapper physicalTableMapper;
     @Autowired private DataSourceConnector connector;
 
+    /** 查询所有数据源。 */
     public List<SysDataSource> list() { return mapper.listAll(); }
+
+    /** 按 id 查单条数据源。 */
     public SysDataSource get(String id) { return mapper.findById(id); }
 
+    /**
+     * 新建或更新数据源。id 为空时视为新建：自动生成 "datasource-{UUID}"，
+     * 并初始化默认状态（启用、online、maxConn=100 等）；id 已存在则直接更新。
+     * 返回落库后的最新对象。
+     */
     public SysDataSource save(SysDataSource d) {
         if (d.getId() == null || d.getId().isEmpty()) {
             d.setId("datasource-" + UUID.randomUUID());
@@ -37,11 +49,17 @@ public class DataSourceService {
         return mapper.findById(d.getId());
     }
 
+    /**
+     * 删除数据源，同时级联删除其名下所有已同步的物理表记录。
+     */
     public void delete(String id) {
         physicalTableMapper.deleteByDs(id);   // 级联清理该数据源的物理表
         mapper.delete(id);
     }
 
+    /**
+     * 切换数据源启用/禁用状态（1→0 或 0→1）。
+     */
     public void toggleStatus(String id) {
         SysDataSource d = mapper.findById(id);
         if (d == null) throw new IllegalArgumentException("数据源不存在");
@@ -185,6 +203,7 @@ public class DataSourceService {
         return r;
     }
 
+    /** 从 JDBC URL 或 MongoDB URL 中解析 host(:port) 部分，用于监控面板展示。 */
     private String extractHost(SysDataSource d) {
         String url = "mongodb".equals(d.getDsType()) ? d.getMongoUrl() : d.getJdbcUrl();
         if (url == null || url.isEmpty()) return "—";

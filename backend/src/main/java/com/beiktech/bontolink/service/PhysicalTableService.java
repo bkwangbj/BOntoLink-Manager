@@ -97,7 +97,7 @@ public class PhysicalTableService {
         return list(dsId);
     }
 
-    /** 删除物理表 */
+    /** 按 id 删除物理表记录（不影响远端实际数据库结构）。 */
     public void delete(String id) {
         mapper.deleteById(id);
     }
@@ -122,6 +122,7 @@ public class PhysicalTableService {
         r.put("type", r.get("table_type"));
     }
 
+    /** 将对象序列化为 JSON 字符串，失败时返回 "[]" 防止列字段为 null。 */
     private String toJson(Object v) {
         try { return json.writeValueAsString(v == null ? Collections.emptyList() : v); }
         catch (Exception e) { return "[]"; }
@@ -196,7 +197,10 @@ public class PhysicalTableService {
                 || s.startsWith("pg_");
     }
 
-    /** JDBC 类型名 → 前端简单类型 */
+    /**
+     * 将 JDBC 原始类型名（如 "varchar2"、"int4"、"timestamptz"）映射为前端统一简单类型。
+     * 未匹配的类型一律归为 "string"。
+     */
     private static String mapType(String typeName) {
         if (typeName == null) return "string";
         String t = typeName.toLowerCase();

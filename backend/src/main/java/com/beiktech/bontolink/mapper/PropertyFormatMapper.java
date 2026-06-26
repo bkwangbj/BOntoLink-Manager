@@ -12,9 +12,11 @@ import java.util.Map;
 @Mapper
 public interface PropertyFormatMapper {
 
+    // 按属性 id 查格式化配置
     @Select("SELECT * FROM ont_property_format WHERE property_id = #{propertyId}")
     Map<String, Object> findByProperty(@Param("propertyId") String propertyId);
 
+    // 批量按属性 id 列表查格式化配置（用于列表页一次性加载多属性的格式）
     @Select("""
         <script>
         SELECT * FROM ont_property_format
@@ -24,6 +26,7 @@ public interface PropertyFormatMapper {
     """)
     List<Map<String, Object>> findByProperties(@Param("ids") java.util.Collection<String> ids);
 
+    // 新增属性格式化配置（包含数值/日期/文本/百分比等全量格式字段）
     @Insert("""
         INSERT INTO ont_property_format(
             format_id, src_type, property_id, property_scope, format_enabled, format_type,
@@ -37,6 +40,7 @@ public interface PropertyFormatMapper {
     """)
     int insert(Map<String, Object> row);
 
+    // 按属性 id 更新格式化配置（format_id/property_id 不变）
     @Update("""
         UPDATE ont_property_format SET
             src_type = #{src_type},
@@ -52,6 +56,7 @@ public interface PropertyFormatMapper {
     """)
     int updateByProperty(Map<String, Object> row);
 
+    // 删除指定属性的格式化配置
     @Delete("DELETE FROM ont_property_format WHERE property_id = #{propertyId}")
     int deleteByProperty(@Param("propertyId") String propertyId);
 }

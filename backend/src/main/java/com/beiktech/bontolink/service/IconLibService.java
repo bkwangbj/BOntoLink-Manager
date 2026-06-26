@@ -19,6 +19,9 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * 图标库业务服务：管理图标分组（两级目录）与图标条目，并在启动时按行业分类结构自动种入演示图标。
+ */
 @Service
 public class IconLibService {
     private static final Logger log = LoggerFactory.getLogger(IconLibService.class);
@@ -113,6 +116,9 @@ public class IconLibService {
     }
 
     /** 列表：返回所有 group + 每组 icon 数,以及全部 icon(供前端按 groupId 索引) */
+    /**
+     * 查询全量数据：返回所有分组列表与图标列表，前端按 groupId 自行索引。
+     */
     public Map<String, Object> all() {
         List<IconLibGroup> groups = mapper.listGroups();
         List<IconLibIcon> icons = mapper.listIcons();
@@ -122,6 +128,12 @@ public class IconLibService {
         return r;
     }
 
+    /**
+     * 创建图标分组。
+     * @param parentId 父组 ID，null 或空字符串表示顶级；最多支持两级目录
+     * @param name     分组显示名称
+     * @return 新建的分组实体（含生成的 id）
+     */
     public IconLibGroup createGroup(String parentId, String name) {
         // 严格限制 2 级
         if (parentId != null && !parentId.isEmpty()) {
@@ -132,6 +144,7 @@ public class IconLibService {
             }
         }
         IconLibGroup g = new IconLibGroup();
+        // ID 格式: "ig-" + UUID
         g.setId("ig-" + UUID.randomUUID());
         g.setParentId(parentId == null || parentId.isEmpty() ? null : parentId);
         g.setName(name);
@@ -141,6 +154,9 @@ public class IconLibService {
         return g;
     }
 
+    /**
+     * 重命名图标分组。ID 不存在时返回 null（由 Controller 决定是否 404）。
+     */
     public IconLibGroup renameGroup(String id, String name) {
         IconLibGroup g = mapper.findGroup(id);
         if (g == null) return null;
@@ -165,6 +181,13 @@ public class IconLibService {
         mapper.deleteGroupBatch(ids);
     }
 
+    /**
+     * 向指定分组添加单个图标。
+     * @param groupId 目标分组 ID
+     * @param name    图标名称（建议中文，用于搜索/展示）
+     * @param viewBox SVG viewBox，为空时默认 "0 0 1024 1024"
+     * @param content SVG path 内容字符串
+     */
     public IconLibIcon addIcon(String groupId, String name, String viewBox, String content) {
         IconLibGroup g = mapper.findGroup(groupId);
         if (g == null) throw new IllegalArgumentException("目标分组不存在");
@@ -179,7 +202,10 @@ public class IconLibService {
         return ic;
     }
 
+    /** 删除单个图标。 */
     public void deleteIcon(String id) { mapper.deleteIcon(id); }
+
+    /** 批量删除图标，ids 为空时直接返回。 */
     public void deleteIconBatch(Collection<String> ids) {
         if (ids == null || ids.isEmpty()) return;
         mapper.deleteIconBatch(ids);
@@ -208,7 +234,7 @@ public class IconLibService {
                 .sorted(Comparator.comparing(c -> c.getSort() == null ? 0 : c.getSort()))
                 .collect(Collectors.toList());
 
-        // 2) 创建行业(顶级 group)与领域(二级 group)
+        // 2) 创建行业(顶级 group)与领域(二级 group)，并记录 categoryId -> groupId 映射，供领域层回溯父组使用
         int created = 0;
         Map<String, String> categoryId2GroupId = new HashMap<>();
         for (BizCategory ind : industries) {

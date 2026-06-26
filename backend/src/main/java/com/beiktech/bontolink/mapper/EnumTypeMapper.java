@@ -5,6 +5,11 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 枚举类型 Mapper — 覆盖 ont_enum_types / ont_enum_items / ont_enum_level_code_rule
+ * / ont_enum_sync_config / ont_enum_sync_log 五张表, 提供枚举主表 CRUD、枚举项管理、
+ * 层次编码规则、数据库同步配置及同步日志功能.
+ */
 @Mapper
 public interface EnumTypeMapper {
 
@@ -16,6 +21,7 @@ public interface EnumTypeMapper {
     default int deleteGroup(@Param("id") String id) { return 0; }
 
     /* ---- 枚举类型主表 (不再包含 group_id) ---- */
+    /** 查询所有枚举类型, 附带子查询统计每个枚举的枚举项数量 item_count */
     @Select("""
         SELECT t.*,
                (SELECT COUNT(*) FROM ont_enum_items i WHERE i.enum_id = t.id) AS item_count
@@ -24,9 +30,11 @@ public interface EnumTypeMapper {
     """)
     List<Map<String, Object>> listTypes();
 
+    /** 按 id 查询单条枚举类型 */
     @Select("SELECT * FROM ont_enum_types WHERE id = #{id}")
     Map<String, Object> findType(@Param("id") String id);
 
+    /** 新增枚举类型 */
     @Insert("""
         INSERT INTO ont_enum_types(id, rid, api_name, category_code, enum_type, max_level,
             top_code, status, rdfs_label, rdfs_comment, rdfs_see_also, rdfs_defined_by)
@@ -35,6 +43,7 @@ public interface EnumTypeMapper {
     """)
     int insertType(Map<String, Object> row);
 
+    /** 更新枚举类型基础信息 */
     @Update("""
         UPDATE ont_enum_types SET enum_type=#{enum_type}, max_level=#{max_level},
             category_code=#{category_code},
@@ -45,22 +54,26 @@ public interface EnumTypeMapper {
     """)
     int updateType(Map<String, Object> row);
 
+    /** 删除枚举类型主记录 */
     @Delete("DELETE FROM ont_enum_types WHERE id = #{id}")
     int deleteType(@Param("id") String id);
 
     /* ---- 枚举项 ---- */
+    /** 查询指定枚举的所有枚举项, 按层级、排序号、编码排序 */
     @Select("""
         SELECT * FROM ont_enum_items WHERE enum_id = #{enumId}
         ORDER BY level, sort_num, code
     """)
     List<Map<String, Object>> listItems(@Param("enumId") String enumId);
 
+    /** 新增枚举项 */
     @Insert("""
         INSERT INTO ont_enum_items(id, enum_id, code, api_name, label, parent_code, level, sort_num, status)
         VALUES (#{id}, #{enum_id}, #{code}, #{api_name}, #{label}, #{parent_code}, #{level}, #{sort_num}, #{status})
     """)
     int insertItem(Map<String, Object> row);
 
+    /** 更新枚举项信息 */
     @Update("""
         UPDATE ont_enum_items SET label=#{label}, api_name=#{api_name}, parent_code=#{parent_code},
             level=#{level}, sort_num=#{sort_num}, status=#{status},
@@ -69,13 +82,16 @@ public interface EnumTypeMapper {
     """)
     int updateItem(Map<String, Object> row);
 
+    /** 删除单条枚举项 */
     @Delete("DELETE FROM ont_enum_items WHERE id = #{id}")
     int deleteItem(@Param("id") String id);
 
     /* ---- 层次编码规则 ---- */
+    /** 查询指定枚举的所有层次编码规则, 按层级升序 */
     @Select("SELECT * FROM ont_enum_level_code_rule WHERE enum_id = #{enumId} ORDER BY rule_level")
     List<Map<String, Object>> listLevelRules(@Param("enumId") String enumId);
 
+    /** 新增层次编码规则 */
     @Insert("""
         INSERT INTO ont_enum_level_code_rule(id, enum_id, code_name, rule_level, code_separator,
             code_len, total_len, fill_char, fill_pos)
@@ -84,13 +100,16 @@ public interface EnumTypeMapper {
     """)
     int insertLevelRule(Map<String, Object> row);
 
+    /** 删除指定枚举的全部层次编码规则 (更新前先清空再重新插入) */
     @Delete("DELETE FROM ont_enum_level_code_rule WHERE enum_id = #{enumId}")
     int deleteLevelRulesByEnum(@Param("enumId") String enumId);
 
     /* ---- 数据库同步配置 ---- */
+    /** 查询指定枚举的数据库同步配置 */
     @Select("SELECT * FROM ont_enum_sync_config WHERE enum_id = #{enumId}")
     Map<String, Object> findSyncConfig(@Param("enumId") String enumId);
 
+    /** 新增数据库同步配置 */
     @Insert("""
         INSERT INTO ont_enum_sync_config(id, enum_id, data_source_id, table_alias, table_name,
             field_code, field_name, field_sort, field_status, field_parent, filter_sql, sync_mode, sync_strategy)
@@ -100,6 +119,7 @@ public interface EnumTypeMapper {
     """)
     int insertSyncConfig(Map<String, Object> row);
 
+    /** 更新数据库同步配置 */
     @Update("""
         UPDATE ont_enum_sync_config SET
           data_source_id=#{data_source_id}, table_alias=#{table_alias}, table_name=#{table_name},
@@ -111,13 +131,16 @@ public interface EnumTypeMapper {
     """)
     int updateSyncConfig(Map<String, Object> row);
 
+    /** 删除数据库同步配置 */
     @Delete("DELETE FROM ont_enum_sync_config WHERE id = #{id}")
     int deleteSyncConfig(@Param("id") String id);
 
     /* ---- 同步日志 ---- */
+    /** 查询指定枚举的同步日志, 最新优先, 最多返回 200 条 */
     @Select("SELECT * FROM ont_enum_sync_log WHERE enum_id = #{enumId} ORDER BY sync_time DESC LIMIT 200")
     List<Map<String, Object>> listSyncLogs(@Param("enumId") String enumId);
 
+    /** 写入一条同步执行日志 */
     @Insert("""
         INSERT INTO ont_enum_sync_log(id, enum_id, sync_type, add_count, update_count, del_count,
             fail_count, sync_status, error_msg, oper_user)
@@ -127,6 +150,11 @@ public interface EnumTypeMapper {
     int insertSyncLog(Map<String, Object> row);
 
     /* ---- 被引用查询: 枚举 → 值类型 → 类属性 / 接口属性 ---- */
+    /**
+     * 查询枚举被哪些属性引用; UNION ALL 合并两路:
+     * 1) 对象类属性 (ont_class_property → ont_value_types → ont_class)
+     * 2) 接口属性 (ont_interface_property → ont_value_types → ont_interface)
+     */
     @Select("""
         SELECT 'class_prop' AS ref_type,
                c.rdfs_label AS object_label, c.api_name AS object_api, c.id AS object_id,

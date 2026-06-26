@@ -28,6 +28,15 @@ public class EnumSyncService {
     @Autowired private DataSourceService dsService;
     @Autowired private DataSourceConnector connector;
 
+    /**
+     * 执行一次枚举同步。
+     *
+     * @param enumId    目标枚举类型 ID
+     * @param syncType  同步触发类型（"manual"/"auto" 等，null 时默认 "manual"）
+     * @param operUser  操作人标识，写入同步日志
+     * @return 本次同步日志记录（含 add_count/update_count/del_count/sync_status 等字段），
+     *         无论成功失败都返回（失败时含 _error 字段），并已写入 ont_enum_sync_log 表
+     */
     public Map<String, Object> run(String enumId, String syncType, String operUser) {
         Map<String, Object> log = new LinkedHashMap<>();
         log.put("id", "enum-sync-log-" + UUID.randomUUID());
@@ -183,6 +192,10 @@ public class EnumSyncService {
     }
 
     /* —— 层次编码: 各层累计 code 长度 —— */
+    /**
+     * 将层次编码规则列表转为各层累计长度数组。
+     * 例如规则 [2, 2, 2] → cum = [2, 4, 6]，后续按 code.length() 匹配 level。
+     */
     private int[] cumulativeLengths(List<Map<String, Object>> rules) {
         if (rules == null || rules.isEmpty()) return new int[0];
         int[] cum = new int[rules.size()];
@@ -193,6 +206,7 @@ public class EnumSyncService {
         }
         return cum;
     }
+    /** 按累计长度数组推断 code 所处层级（从 1 开始）。code 长度恰好命中某层取该层；无精确命中取最长不超过 code 长度的层。 */
     private int levelOf(String code, int[] cum) {
         if (cum.length == 0 || code == null) return 1;
         int len = code.length();
@@ -201,6 +215,7 @@ public class EnumSyncService {
         for (int i = 0; i < cum.length; i++) if (cum[i] <= len) lvl = i + 1;
         return lvl;
     }
+    /** 按累计长度数组截取父级编码；顶级（level=1）返回 null。 */
     private String parentOf(String code, int[] cum) {
         if (cum.length == 0 || code == null) return null;
         int lvl = levelOf(code, cum);
@@ -226,6 +241,10 @@ public class EnumSyncService {
     }
 
     /* —— 状态映射: 源值 → active/inactive —— */
+    /**
+     * 将源表状态字段值映射为本系统的 "active"/"inactive"。
+     * null/空/正向值 → "active"；匹配 off 集合（0/n/false/停用等）→ "inactive"。
+     */
     private static String mapStatus(Object v) {
         if (v == null) return "active";
         String s = String.valueOf(v).trim().toLowerCase();
@@ -233,6 +252,7 @@ public class EnumSyncService {
         Set<String> off = Set.of("0", "n", "no", "false", "inactive", "disabled", "停用", "禁用", "无效");
         return off.contains(s) ? "inactive" : "active";
     }
+    /** 将排序字段值解析为整数；无法解析时返回 fallback（通常为当前行序号）。 */
     private static int parseSort(Object v, int fallback) {
         if (v == null) return fallback;
         try { return (int) Double.parseDouble(String.valueOf(v).trim()); }

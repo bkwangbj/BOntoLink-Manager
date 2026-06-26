@@ -20,6 +20,7 @@ public interface OverviewMapper {
 
     /* ============================== 第一行: 行业 / 领域 / 分组 / 数据源 ============================== */
 
+    /** 统计行业数量 (category_type=1) */
     @Select({"<script>",
             "SELECT COUNT(*) FROM ont_biz_category WHERE category_type = 1",
             "<if test='codes != null and codes.size() > 0'>",
@@ -29,6 +30,7 @@ public interface OverviewMapper {
             "</script>"})
     int countIndustries(@Param("codes") Collection<String> codes, @Param("activeOnly") boolean activeOnly);
 
+    /** 统计领域数量 (category_type=2) */
     @Select({"<script>",
             "SELECT COUNT(*) FROM ont_biz_category WHERE category_type = 2",
             "<if test='codes != null and codes.size() > 0'>",
@@ -48,6 +50,7 @@ public interface OverviewMapper {
             "</where></script>"})
     int countGroups(@Param("codes") Collection<String> codes, @Param("activeOnly") boolean activeOnly);
 
+    /** 统计数据源数量 (sys_data_source) */
     @Select({"<script>",
             "SELECT COUNT(*) FROM sys_data_source",
             "<where>",
@@ -60,6 +63,7 @@ public interface OverviewMapper {
 
     /* ============================== 第二行: 对象 / 关系 / 动作 / 函数 / 类型类 / 接口 ============================== */
 
+    /** 统计对象类型数量 (ont_class) */
     @Select({"<script>",
             "SELECT COUNT(*) FROM ont_class",
             "<where>",
@@ -124,6 +128,7 @@ public interface OverviewMapper {
 
     /* ============================== 第三行: 属性 / 枚举 / 值类型 / 结构属性 / 共享属性 ============================== */
 
+    /** 统计对象属性数量; 通过 EXISTS 子查询关联 ont_class 实现 category_code 过滤 */
     @Select({"<script>",
             "SELECT COUNT(*) FROM ont_class_property p",
             "<where>",
@@ -146,6 +151,7 @@ public interface OverviewMapper {
             "</where></script>"})
     int countEnumTypes(@Param("codes") Collection<String> codes, @Param("activeOnly") boolean activeOnly);
 
+    /** 统计值类型数量 (ont_value_types) */
     @Select({"<script>",
             "SELECT COUNT(*) FROM ont_value_types",
             "<where>",
@@ -156,6 +162,7 @@ public interface OverviewMapper {
             "</where></script>"})
     int countValueTypes(@Param("codes") Collection<String> codes, @Param("activeOnly") boolean activeOnly);
 
+    /** 统计结构属性类型数量 (ont_struct_types) */
     @Select({"<script>",
             "SELECT COUNT(*) FROM ont_struct_types",
             "<where>",
@@ -166,6 +173,7 @@ public interface OverviewMapper {
             "</where></script>"})
     int countStructProperties(@Param("codes") Collection<String> codes, @Param("activeOnly") boolean activeOnly);
 
+    /** 统计共享属性数量 (ont_shared_properties) */
     @Select({"<script>",
             "SELECT COUNT(*) FROM ont_shared_properties",
             "<where>",

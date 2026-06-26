@@ -219,6 +219,10 @@ public class InstanceMockService {
 
     /* ===================== 生成逻辑 ===================== */
 
+    /**
+     * 核心生成逻辑：按对象类型 classId 的属性定义确定性生成实例列表，结果写入 cache。
+     * <p>实例数量由 classId.hashCode() 决定（18~107 条），保证同一类型每次重启结果一致。</p>
+     */
     private List<Map<String, Object>> generate(String classId) {
         Map<String, Object> cls = ontologyMapper.findClassById(classId);
         if (cls == null) return Collections.emptyList();
@@ -235,6 +239,7 @@ public class InstanceMockService {
         Map<String, Object> codeProp = pickCodeProp(props);
         String codePrefix = codePrefix(apiName);
 
+        // 数量由 classId 哈希值决定，保证同类型结果稳定
         int n = 18 + Math.floorMod(classId.hashCode(), 90);   // 18..107 条
         List<Map<String, Object>> list = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {
@@ -257,6 +262,7 @@ public class InstanceMockService {
                     : displayName + " " + code;
             if (title.isBlank()) title = displayName + " " + code;
 
+            // id 格式: {apiName}-{序号}，rid 格式: ri.inst.{apiName}.{序号}
             row.put("id", apiName + "-" + (i + 1));
             row.put("classId", classId);
             row.put("className", displayName);
@@ -273,7 +279,10 @@ public class InstanceMockService {
         return list;
     }
 
-    /** 按属性 data_type 生成确定性取值。 */
+    /**
+     * 按属性元数据（data_type / api_name / display_name）生成确定性取值。
+     * <p>随机数通过 {@link #seeded} 以 (classId, field, i) 为种子构造，保证同参数结果一致。</p>
+     */
     private Object genValue(Map<String, Object> p, String classId, int i) {
         String field = str(p.get("api_name"));
         String display = str(p.get("display_name"));
@@ -308,6 +317,10 @@ public class InstanceMockService {
         return r.nextInt(1000);
     }
 
+    /**
+     * 按字段语义生成合理范围的浮点数（水利领域物理量范围）。
+     * 经度 73~135、纬度 18~53（覆盖中国版图），其余按物理量量级约定。
+     */
     private Object decimalByName(String field, String display, Random r) {
         String s = (field + display).toLowerCase();
         double v;
@@ -332,6 +345,10 @@ public class InstanceMockService {
         return ENUM_STATUS[r.nextInt(ENUM_STATUS.length)];
     }
 
+    /**
+     * 对 string 类型属性按字段语义选取合适的水利领域词库词汇。
+     * 无法匹配语义时回退为"河流+方位"组合（如"黄河上游"）。
+     */
     private String stringByName(String field, String display, String classId, int i, Random r) {
         String s = field + display;
         if (display.contains("状态") || s.toLowerCase().contains("status")) return ENUM_STATUS[r.nextInt(ENUM_STATUS.length)];
@@ -341,10 +358,14 @@ public class InstanceMockService {
         if (display.contains("城市") || display.contains("地点") || display.contains("位置")) return CITIES[r.nextInt(CITIES.length)];
         if (display.contains("编码") || display.contains("编号") || s.toLowerCase().contains("code") || s.toLowerCase().contains("no")) return codePrefix(field).toUpperCase() + pad(r.nextInt(100000), 5);
         if (display.contains("名称") || s.toLowerCase().contains("name")) return genName(display, classId, i);
-        // 通用：地名 + 修饰
+        // 通用：地名 + 方位修饰，如"黄河上游"
         return PROVINCES[r.nextInt(PROVINCES.length)] + REGIONS[r.nextInt(REGIONS.length)];
     }
 
+    /**
+     * 生成中文名称，格式：{河流}{修饰词}{类名(最多6字)}NN号，如"黄河示范水库03号"。
+     * classDisplay 括号及括号内内容先剥离，避免名称过长。
+     */
     private String genName(String classDisplay, String classId, int i) {
         Random r = seeded(classId, "__name__", i);
         String base = classDisplay.replaceAll("[（(].*", "").trim();
@@ -352,11 +373,15 @@ public class InstanceMockService {
         return PROVINCES[r.nextInt(PROVINCES.length)] + ADJ[r.nextInt(ADJ.length)] + base + pad(i + 1, 2) + "号";
     }
 
+    /**
+     * 生成格式为 yyyy-MM-dd 的确定性日期（2018~2025 年）。
+     * salt 用于区分同一实例不同日期属性，避免取值完全相同。
+     */
     private String genDate(String classId, int i, int salt) {
         Random r = seeded(classId, "__date__" + salt, i);
         int year = 2018 + r.nextInt(8);     // 2018~2025
         int month = 1 + r.nextInt(12);
-        int day = 1 + r.nextInt(28);
+        int day = 1 + r.nextInt(28);        // 最大取28，规避月份天数差异
         return year + "-" + pad(month, 2) + "-" + pad(day, 2);
     }
 
@@ -450,9 +475,15 @@ public class InstanceMockService {
         private static Node and(Node a, Node b) { return t -> a.eval(t) && b.eval(t); }
         private static Node or(Node a, Node b)  { return t -> a.eval(t) || b.eval(t); }
 
+        /**
+         * 构造单词/短语匹配节点。
+         * 非短语且含通配符时，将 {@code ?/?} 转为 {@code .}、{@code *} 转为 {@code .*}，
+         * 其余字符用 Pattern.quote 转义，编译为正则进行子串匹配（find，非全匹配）。
+         */
         private static Node term(String w, boolean phrase) {
             String s = w.toLowerCase();
             if (!phrase && (s.indexOf('?') >= 0 || s.indexOf('*') >= 0 || s.indexOf('？') >= 0)) {
+                // 通配符模式：? → 单字符, * → 任意长度；其余字面量字符转义防止正则注入
                 StringBuilder rx = new StringBuilder();
                 for (int k = 0; k < s.length(); k++) {
                     char c = s.charAt(k);
@@ -520,9 +551,11 @@ public class InstanceMockService {
             case "after":       return sv.compareTo(val) > 0;
             case "before":      return sv.compareTo(val) < 0;
             case "between":
+                // 数值时用数值比较，否则字典序比较（适用于日期字符串 yyyy-MM-dd）
                 if (cellNum != null && valNum != null && val2Num != null) return cellNum >= valNum && cellNum <= val2Num;
                 return sv.compareTo(val) >= 0 && sv.compareTo(String.valueOf(c.get("value2"))) <= 0;
             case "in": {
+                // value 可能是 List（前端直传数组）或逗号分隔字符串，两种格式兼容
                 Object raw = c.get("value");
                 if (raw instanceof List<?> arr) return arr.stream().anyMatch(x -> sv.equals(String.valueOf(x)));
                 return Arrays.asList(val.split("\\s*,\\s*")).contains(sv);
@@ -557,6 +590,10 @@ public class InstanceMockService {
     }
 
 
+    /**
+     * 从属性列表中识别"名称属性"：api_name 以 name 结尾或 display_name 含"名称"，且为 string 类型。
+     * 找到的第一个属性用于生成实例 title。
+     */
     private Map<String, Object> pickNameProp(List<Map<String, Object>> props) {
         for (Map<String, Object> p : props) {
             String a = str(p.get("api_name")).toLowerCase();
@@ -566,6 +603,10 @@ public class InstanceMockService {
         return null;
     }
 
+    /**
+     * 从属性列表中识别"编码属性"：api_name 以 code 结尾、display_name 含"编码"，或标记了 is_primary，且为 string 类型。
+     * 找到的第一个属性的值固定填充为 {codePrefix}-NNN 格式编码。
+     */
     private Map<String, Object> pickCodeProp(List<Map<String, Object>> props) {
         for (Map<String, Object> p : props) {
             String a = str(p.get("api_name")).toLowerCase();
@@ -580,6 +621,11 @@ public class InstanceMockService {
         return dt.equals("string");
     }
 
+    /**
+     * 将数据库中的 data_type 字符串统一归一化为内部枚举值：
+     * string / int / decimal / date / datetime / time / boolean / enum。
+     * 未能匹配的类型一律归为 string。
+     */
     private static String normType(String dt) {
         if (dt == null) return "string";
         String d = dt.toLowerCase();
@@ -593,6 +639,10 @@ public class InstanceMockService {
         return "string";
     }
 
+    /**
+     * 从 apiName 中提取大写字母作为编码前缀（最多4位，如 WaterGate → WG）。
+     * 全小写时取首字母大写。apiName 为空时返回 "OBJ"。
+     */
     private static String codePrefix(String apiName) {
         if (apiName == null || apiName.isEmpty()) return "OBJ";
         StringBuilder sb = new StringBuilder();

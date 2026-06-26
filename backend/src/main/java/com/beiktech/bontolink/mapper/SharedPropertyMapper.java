@@ -28,6 +28,7 @@ public interface SharedPropertyMapper {
     """)
     List<Map<String, Object>> listAll();
 
+    /** 按 id 查单条共享属性（含值类型名称及对象类引用计数） */
     @Select("""
         SELECT sp.*,
                v.rdfs_label AS value_type_label,
@@ -39,9 +40,11 @@ public interface SharedPropertyMapper {
     """)
     Map<String, Object> findById(@Param("id") String id);
 
+    /** 检查属性编码是否已存在 */
     @Select("SELECT 1 FROM ont_shared_properties WHERE prop_code = #{code} LIMIT 1")
     Integer existsByCode(@Param("code") String code);
 
+    /** 新增共享属性（包含 XSD 约束 + OWL 特性字段） */
     @Insert("""
         INSERT INTO ont_shared_properties(id, rid, category_code, prop_code, prop_type, is_key,
             data_type, value_type, is_required, is_multi_valued_prop, is_range_constraint_prop,
@@ -58,6 +61,7 @@ public interface SharedPropertyMapper {
     """)
     int insert(Map<String, Object> row);
 
+    /** 更新共享属性（同步 update_time） */
     @Update("""
         UPDATE ont_shared_properties SET
           category_code = #{category_code},
@@ -80,6 +84,7 @@ public interface SharedPropertyMapper {
     """)
     int update(Map<String, Object> row);
 
+    /** 删除共享属性 */
     @Delete("DELETE FROM ont_shared_properties WHERE id = #{id}")
     int delete(@Param("id") String id);
 

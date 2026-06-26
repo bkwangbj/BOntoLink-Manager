@@ -30,6 +30,7 @@ public interface LinkTypeMapper {
     """)
     List<Map<String, Object>> listAll();
 
+    /** 按 id 查单条 (JOIN 两端对象类名称) */
     @Select("""
         SELECT lt.*,
                lc.display_name AS l_class_name, lc.api_name AS l_class_api,
@@ -41,9 +42,11 @@ public interface LinkTypeMapper {
     """)
     Map<String, Object> findById(@Param("id") String id);
 
+    /** 检查链接类型编码是否已存在 */
     @Select("SELECT 1 FROM ont_link_types WHERE link_type_id = #{code} LIMIT 1")
     Integer existsByCode(@Param("code") String code);
 
+    /** 新增链接类型 */
     @Insert("""
         INSERT INTO ont_link_types(id, link_type_id, rid, status,
             l_object_type_id, r_object_type_id, l_cardinality, r_cardinality,
@@ -62,6 +65,7 @@ public interface LinkTypeMapper {
     """)
     int insert(Map<String, Object> row);
 
+    /** 更新链接类型 (同步更新 updated_at) */
     @Update("""
         UPDATE ont_link_types SET
           rid = #{rid},
@@ -82,10 +86,12 @@ public interface LinkTypeMapper {
     """)
     int update(Map<String, Object> row);
 
+    /** 删除链接类型主记录 */
     @Delete("DELETE FROM ont_link_types WHERE id = #{id}")
     int delete(@Param("id") String id);
 
     /* —— 关联映射 —— */
+    /** 查询某链接类型下所有字段映射 (按 side/seq 排序) */
     @Select("""
         SELECT * FROM ont_link_mappings
         WHERE link_id = #{linkId}
@@ -93,9 +99,11 @@ public interface LinkTypeMapper {
     """)
     List<Map<String, Object>> listMappings(@Param("linkId") String linkId);
 
+    /** 删除某链接类型的全部字段映射 (保存前先清空再批量插入) */
     @Delete("DELETE FROM ont_link_mappings WHERE link_id = #{linkId}")
     int deleteMappingsByLink(@Param("linkId") String linkId);
 
+    /** 新增一条字段映射 */
     @Insert("""
         INSERT INTO ont_link_mappings(mapping_id, link_id, side, seq, object_field, join_table_column)
         VALUES (#{mapping_id}, #{link_id}, #{side}, #{seq}, #{object_field}, #{join_table_column})
@@ -103,6 +111,7 @@ public interface LinkTypeMapper {
     int insertMapping(Map<String, Object> row);
 
     /* —— 关联类型类 (relation 类型) —— */
+    /** 查询挂在某链接类型下的 relation 类型类列表 */
     @Select("""
         SELECT * FROM ont_type_class
         WHERE link_type_id = #{linkId} AND applicable_type = 'relation'
@@ -110,6 +119,7 @@ public interface LinkTypeMapper {
     """)
     List<Map<String, Object>> listTypeClasses(@Param("linkId") String linkId);
 
+    /** 删除某链接类型下的全部 relation 类型类 */
     @Delete("DELETE FROM ont_type_class WHERE link_type_id = #{linkId} AND applicable_type = 'relation'")
     int deleteTypeClassesByLink(@Param("linkId") String linkId);
 }

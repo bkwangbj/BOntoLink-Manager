@@ -6,18 +6,26 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 数据源 mapper，覆盖 sys_data_source 表。
+ * 支持 JDBC（MySQL/PostgreSQL 等）和 MongoDB 两类连接配置。
+ */
 @Mapper
 public interface SysDataSourceMapper {
 
+    // 查询所有数据源，按创建时间倒序
     @Select("SELECT * FROM sys_data_source ORDER BY create_time DESC")
     List<SysDataSource> listAll();
 
+    // 按 id 查单条数据源
     @Select("SELECT * FROM sys_data_source WHERE id = #{id}")
     SysDataSource findById(@Param("id") String id);
 
+    // 按数据源类型分组统计数量（用于首页统计卡片）
     @Select("SELECT ds_type, COUNT(*) AS cnt FROM sys_data_source GROUP BY ds_type")
     List<Map<String, Object>> groupByType();
 
+    // 新增数据源（含连接参数和监控初始值）
     @Insert("""
         INSERT INTO sys_data_source(
             id, category_code, ds_code, ds_name, ds_type, jdbc_driver, jdbc_url,
@@ -31,6 +39,7 @@ public interface SysDataSourceMapper {
     """)
     int insert(SysDataSource d);
 
+    // 更新数据源基本配置（不更新监控字段）
     @Update("""
         UPDATE sys_data_source SET
             category_code=#{categoryCode}, ds_code=#{dsCode}, ds_name=#{dsName}, ds_type=#{dsType},
@@ -40,15 +49,18 @@ public interface SysDataSourceMapper {
     """)
     int update(SysDataSource d);
 
+    // 单独更新启用/禁用状态
     @Update("UPDATE sys_data_source SET status=#{status} WHERE id=#{id}")
     int updateStatus(@Param("id") String id, @Param("status") int status);
 
+    // 更新连接探活结果（连接状态/响应时长/活跃连接数）
     @Update("UPDATE sys_data_source SET connect_status=#{connectStatus}, response_ms=#{responseMs}, active_conn=#{activeConn} WHERE id=#{id}")
     int updateMonitor(@Param("id") String id,
                       @Param("connectStatus") String connectStatus,
                       @Param("responseMs") int responseMs,
                       @Param("activeConn") int activeConn);
 
+    // 删除数据源
     @Delete("DELETE FROM sys_data_source WHERE id = #{id}")
     int delete(@Param("id") String id);
 }
