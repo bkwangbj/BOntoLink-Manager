@@ -176,6 +176,10 @@ public interface OntologyMapper {
             "  FROM ont_class_ds WHERE class_id = #{id} ORDER BY rel_type, sort")
     List<Map<String, Object>> listClassDatasources(@Param("id") String id);
 
+    /** 对象类型挂接的物理表精简信息 (仅 ds_code/physical_table) — 用于列表的数据源数/关联表列, 避免拉取大字段 physical_fields */
+    @Select("SELECT ds_code, physical_table FROM ont_class_ds WHERE class_id = #{id} ORDER BY rel_type, sort")
+    List<Map<String, Object>> listClassDsBrief(@Param("id") String id);
+
     /** 子类数（按 parent_class_id；当前 schema 暂无该列，返回 0 即可，留接口） */
     @Select("SELECT 0")
     int countChildClassesOfClass(@Param("id") String id);

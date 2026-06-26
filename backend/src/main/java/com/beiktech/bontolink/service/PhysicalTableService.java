@@ -57,6 +57,8 @@ public class PhysicalTableService {
             String name = String.valueOf(t.get("physical_table"));
             currentNames.add(name);
             String columnsJson = toJson(t.get("columns"));
+            // 表注释(REMARKS); 同步规则: 有注释→中文名用注释, 无注释→新表用物理名/旧表保留原名
+            String remark = t.get("display_name") == null ? "" : t.get("display_name").toString().trim();
             Map<String, Object> old = existing.get(name);
             if (old != null) {
                 Map<String, Object> upd = new HashMap<>();
@@ -66,16 +68,19 @@ public class PhysicalTableService {
                 upd.put("columnCount", t.get("column_count"));
                 upd.put("syncTime", now);
                 upd.put("updateTime", now);
-                mapper.updateStructure(upd);   // 不动 display_name
+                mapper.updateStructure(upd);   // 结构字段; display_name 单独按下方规则处理
+                // 有注释则把注释刷进中文名(重新同步也能更新); 无注释不动, 避免覆盖用户手改的名字
+                String oldDisp = old.get("display_name") == null ? "" : old.get("display_name").toString();
+                if (!remark.isEmpty() && !remark.equals(oldDisp)) {
+                    mapper.updateDisplayName(String.valueOf(old.get("id")), remark, now);
+                }
             } else {
                 Map<String, Object> ins = new HashMap<>();
                 ins.put("id", "phys-" + UUID.randomUUID());
                 ins.put("dsId", dsId);
                 ins.put("physicalTable", name);
-                // 新表中文名: 优先用表注释, 无注释再退回物理名, 之后用户可改
-                Object remarks = t.get("display_name");
-                String disp = remarks == null ? "" : remarks.toString().trim();
-                ins.put("displayName", disp.isEmpty() ? name : disp);
+                // 新表中文名: 有注释用注释, 无注释退回物理表名(之后用户可改)
+                ins.put("displayName", remark.isEmpty() ? name : remark);
                 ins.put("tableType", t.get("type"));
                 ins.put("columnsJson", columnsJson);
                 ins.put("columnCount", t.get("column_count"));

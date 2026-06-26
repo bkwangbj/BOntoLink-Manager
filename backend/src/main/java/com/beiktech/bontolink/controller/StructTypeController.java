@@ -18,9 +18,11 @@ public class StructTypeController {
 
     @Autowired private StructTypeMapper mapper;
 
+    /** 查询所有结构类型列表 */
     @GetMapping
     public R<List<Map<String, Object>>> list() { return R.ok(mapper.listAll()); }
 
+    /** 按 ID 查单个结构类型，同时内嵌其 items（子字段列表） */
     @GetMapping("/{id}")
     public R<Map<String, Object>> get(@PathVariable String id) {
         Map<String, Object> row = mapper.findById(id);
@@ -28,6 +30,7 @@ public class StructTypeController {
         return R.ok(row);
     }
 
+    /** 查询结构类型的子字段列表（ont_struct_items） */
     @GetMapping("/{id}/items")
     public R<List<Map<String, Object>>> items(@PathVariable String id) {
         return R.ok(mapper.listItems(id));

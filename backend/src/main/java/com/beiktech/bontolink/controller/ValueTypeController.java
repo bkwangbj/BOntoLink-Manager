@@ -16,14 +16,17 @@ public class ValueTypeController {
 
     @Autowired private ValueTypeMapper mapper;
 
+    /** 查询所有值类型列表 */
     @GetMapping
     public R<List<Map<String, Object>>> list() { return R.ok(mapper.listAll()); }
 
+    /** 按 ID 查单个值类型 */
     @GetMapping("/{id}")
     public R<Map<String, Object>> get(@PathVariable String id) {
         return R.ok(mapper.findById(id));
     }
 
+    /** 新建值类型；ID 格式 "value-types-{uuid}"，rid 按 UUID 后段自动生成 */
     @PostMapping
     public R<Map<String, Object>> create(@RequestBody Map<String, Object> body) {
         String id = "value-types-" + UUID.randomUUID();
@@ -34,6 +37,7 @@ public class ValueTypeController {
         return R.ok(body);
     }
 
+    /** 更新值类型基本信息 */
     @PutMapping("/{id}")
     public R<?> update(@PathVariable String id, @RequestBody Map<String, Object> body) {
         body.put("id", id);
@@ -42,6 +46,7 @@ public class ValueTypeController {
         return R.ok();
     }
 
+    /** 删除值类型 */
     @DeleteMapping("/{id}")
     public R<?> delete(@PathVariable String id) {
         mapper.delete(id);
@@ -49,9 +54,11 @@ public class ValueTypeController {
     }
 
     /* 默认使用配置 */
+    /** 查询所有值类型默认使用配置（ont_valuetypes_usage_config） */
     @GetMapping("/usage-configs")
     public R<List<Map<String, Object>>> listUsageConfigs() { return R.ok(mapper.listUsageConfigs()); }
 
+    /** 新建使用配置；max_select_level/allow_non_leaf/display_format 不传时使用安全默认值 */
     @PostMapping("/usage-configs")
     public R<Map<String, Object>> createUsageConfig(@RequestBody Map<String, Object> body) {
         String id = "vt-usage-config-" + UUID.randomUUID();
@@ -64,6 +71,7 @@ public class ValueTypeController {
         return R.ok(body);
     }
 
+    /** 更新使用配置；同 create 补齐默认值，防止 NOT NULL 列写入 null */
     @PutMapping("/usage-configs/{id}")
     public R<?> updateUsageConfig(@PathVariable String id, @RequestBody Map<String, Object> body) {
         body.put("id", id);

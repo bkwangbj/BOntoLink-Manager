@@ -27,6 +27,7 @@ public class InstanceController {
     private static final ObjectMapper JSON = new ObjectMapper();
 
     /* ============ 对象类型列表(概览卡片 / 侧边导航 / 对象类型页) ============ */
+    /** 返回所有对象类型，附加模拟实例数、属性数、链接数及行业/领域标签，供概览卡片与侧边导航使用。 */
     @GetMapping("/object-types")
     public R<List<Map<String, Object>>> objectTypes() {
         Map<String, BizCategory> byCode = new HashMap<>();
@@ -53,6 +54,11 @@ public class InstanceController {
     }
 
     /* ============ 实例列表(分页 + 关键词 + 多条件筛选 + 排序) ============ */
+    /**
+     * 查询指定对象类型的实例列表。
+     * 支持关键词 q、JSON 格式多条件 filter、字段排序(sort/order)、分页(page/size)。
+     * 返回 {total, page, size, rows, columns}，columns 为表头定义。
+     */
     @GetMapping("/list")
     public R<Map<String, Object>> list(
             @RequestParam String classId,
@@ -92,12 +98,14 @@ public class InstanceController {
     }
 
     /* ============ 属性列表(探索视图右侧字段面板) ============ */
+    /** 返回指定对象类型的列定义（系统列 + 属性列），供探索视图右侧字段面板使用。 */
     @GetMapping("/columns")
     public R<List<Map<String, Object>>> columnsApi(@RequestParam String classId) {
         return R.ok(columns(classId));
     }
 
     /* ============ 单条实例详情 + 关联对象类型 ============ */
+    /** 返回单条实例详情，附带列定义(columns)和关联对象类型(links)；实例不存在时返回空对象。 */
     @GetMapping("/detail")
     public R<Map<String, Object>> detail(@RequestParam String classId, @RequestParam String id) {
         Map<String, Object> inst = mock.detail(classId, id);
@@ -109,6 +117,7 @@ public class InstanceController {
     }
 
     /* ============ 关联对象类型(探索视图左侧 Linked Object Types) ============ */
+    /** 返回与指定对象类型存在链接关系的相邻类型列表，含模拟链接条数；id 为可选实例 ID（影响随机种子）。 */
     @GetMapping("/links")
     public R<List<Map<String, Object>>> links(@RequestParam String classId,
                                               @RequestParam(required = false) String id) {
@@ -116,6 +125,10 @@ public class InstanceController {
     }
 
     /* ============ 分组聚合(列表直方图 / 统计表) ============ */
+    /**
+     * 对指定对象类型按 groupBy 字段分组聚合，支持 count/sum/avg/min/max。
+     * 返回 [{key, count, sum, avg, min, max, value}]，limit 控制最大分组数。
+     */
     @GetMapping("/aggregate")
     public R<List<Map<String, Object>>> aggregate(
             @RequestParam String classId,
@@ -130,6 +143,11 @@ public class InstanceController {
     }
 
     /* ============ 可视化制作(analysis-maker)图表数据:返回 [{name, value}] ============ */
+    /**
+     * 为可视化制作页面提供图表数据，输出长格式 [{name, value, x, y, colorField}]，前端按 colorField 自动分组为多序列。
+     * 支持多指标(metrics JSON)、分组筛选(grouping JSON)、排序(sorts JSON)；
+     * 三个 JSON 参数均缺省时回退到单序列旧行为(groupBy/metric/agg)。
+     */
     @GetMapping("/chart-data")
     public R<List<Map<String, Object>>> chartData(
             @RequestParam String classId,
@@ -157,11 +175,13 @@ public class InstanceController {
             String f = m.get("field") == null ? "" : String.valueOf(m.get("field"));
             String lbl = m.get("label") == null ? "" : String.valueOf(m.get("label"));
             Object aggsO = m.get("aggs");
+            // metrics 中每个指标可携带多个聚合函数，缺省为 count
             List<?> aggs = (aggsO instanceof List && !((List<?>) aggsO).isEmpty()) ? (List<?>) aggsO : List.of("count");
             for (Object a : aggs) {
                 String ag = String.valueOf(a);
                 // 空字段只对「计数」有意义(组大小);其余聚合需字段
                 if (f.isBlank() && !"count".equals(ag)) continue;
+                // specSeen 去重，防止同一 (field,agg) 被多个指标条目重复加入
                 if (specSeen.add(f + "|" + ag)) specs.add(new String[]{f, ag, lbl});
             }
         }
@@ -192,9 +212,11 @@ public class InstanceController {
         // 2) 每个序列字段各做一次全量分组聚合(每组含 count/sum/avg/min/max)
         List<Map<String, Object>> rows = mock.query(classId, q, parseFilter(filter));
         final String fgb = gb;   // lambda 需 effectively-final
+        // aggByField: field -> (groupKey -> aggRow)；同字段多聚合只聚合一次，复用结果
         Map<String, Map<String, Map<String, Object>>> aggByField = new LinkedHashMap<>();  // field -> (key -> aggRow)
         Map<String, List<Map<String, Object>>> listByField = new LinkedHashMap<>();
         for (String[] s : specs) {
+            // computeIfAbsent 保证同一字段只查一次
             aggByField.computeIfAbsent(s[0], f -> {
                 List<Map<String, Object>> list = new ArrayList<>(mock.aggregate(rows, fgb, f, "count", 0));
                 listByField.put(f, list);
@@ -330,6 +352,7 @@ public class InstanceController {
     }
 
     /* ============ 单一统计(整组单值聚合) ============ */
+    /** 对全量数据做整体聚合统计（不分组），返回 {count, sum, avg, min, max} 供指标卡片使用。 */
     @GetMapping("/stat")
     public R<Map<String, Object>> stat(
             @RequestParam String classId,
@@ -341,6 +364,10 @@ public class InstanceController {
     }
 
     /* ============ 网格图 / 热力图(二维交叉) ============ */
+    /**
+     * 二维交叉聚合：以 rowField 和 colField 作为两个维度，对 metric 字段做 agg 聚合。
+     * 返回 {rowKeys, colKeys, cells} 供热力图/矩阵图渲染，limit 控制每维度取前 N 个值。
+     */
     @GetMapping("/matrix")
     public R<Map<String, Object>> matrix(
             @RequestParam String classId,
@@ -356,6 +383,10 @@ public class InstanceController {
     }
 
     /* ============ 全局搜索(对象类型 + 实例样本) ============ */
+    /**
+     * 简版全局搜索：按关键词 q 匹配对象类型名称，并从每个对象类型取最多 perType 条实例样本。
+     * 返回 {objectTypes, instances, counts}，实例命中总数上限 60 条，objectTypes 按实例数升序排列。
+     */
     @GetMapping("/search")
     public R<Map<String, Object>> search(@RequestParam String q,
                                          @RequestParam(defaultValue = "8") int perType) {
@@ -389,6 +420,11 @@ public class InstanceController {
     }
 
     /* ============ 搜索结果页面(1.1.1.2.4：多标签 + 分类导航 + 分组结果) ============ */
+    /**
+     * 完整搜索结果页数据：支持搜索语法(AND/OR/引号短语)，同时匹配对象类型名称和实例字段。
+     * 返回 {query, objectTypes, instanceGroups, groups(分类Facet), counts}；
+     * instanceGroups 按命中数升序，每组附最多 sampleN 条样本摘要(id/title/desc)。
+     */
     @GetMapping("/search-results")
     public R<Map<String, Object>> searchResults(@RequestParam String q,
                                                 @RequestParam(defaultValue = "4") int sampleN) {
@@ -557,6 +593,7 @@ public class InstanceController {
         return new String[]{ industryLabel, domainLabel };
     }
 
+    /** JSON 字符串 → filter Map；解析失败或空串返回 null（视为无筛选条件）。 */
     @SuppressWarnings("unchecked")
     private Map<String, Object> parseFilter(String filter) {
         if (filter == null || filter.isBlank()) return null;
@@ -567,6 +604,7 @@ public class InstanceController {
         }
     }
 
+    /** 比较两个单元格值：数字按数值比，其余转字符串字典序；null 视为最小值。 */
     private static int compareCell(Object a, Object b) {
         if (a == null && b == null) return 0;
         if (a == null) return -1;
@@ -577,6 +615,7 @@ public class InstanceController {
         return String.valueOf(a).compareTo(String.valueOf(b));
     }
 
+    /** 将数据库/本体中的 data_type 字符串统一规范为前端识别的类型标识（string/int/decimal/datetime/date/time/boolean/enum）。 */
     private static String normType(String dt) {
         if (dt == null) return "string";
         String d = dt.toLowerCase();
@@ -590,6 +629,7 @@ public class InstanceController {
         return "string";
     }
 
+    /** 从多个候选值中返回第一个非空/非 blank 的字符串，全部为空则返回 ""。 */
     private static String firstNonBlank(Object... ss) {
         for (Object s : ss) if (s != null && !String.valueOf(s).isBlank()) return String.valueOf(s);
         return "";

@@ -18,6 +18,7 @@ public class LinkTypeController {
 
     @Autowired private LinkTypeMapper mapper;
 
+    /** 查询所有链接类型列表 */
     @GetMapping
     public R<List<Map<String, Object>>> list() { return R.ok(mapper.listAll()); }
 
@@ -31,6 +32,7 @@ public class LinkTypeController {
         return R.ok(row);
     }
 
+    /** 查询指定链接类型的字段映射列表（ont_link_mappings） */
     @GetMapping("/{id}/mappings")
     public R<List<Map<String, Object>>> mappings(@PathVariable String id) {
         return R.ok(mapper.listMappings(id));
@@ -112,6 +114,7 @@ public class LinkTypeController {
         }
     }
 
+    /** 删除链接类型，级联删除其 mappings 和 type_class 关联 */
     @DeleteMapping("/{id}")
     public R<?> delete(@PathVariable String id) {
         mapper.deleteMappingsByLink(id);

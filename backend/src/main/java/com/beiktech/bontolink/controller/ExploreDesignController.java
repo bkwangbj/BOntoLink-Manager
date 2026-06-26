@@ -116,6 +116,7 @@ public class ExploreDesignController {
         return R.ok(unwrap(mapper.findById(id)));
     }
 
+    /** 删除命名设计（默认看板不可从此接口删除，前端不应调用） */
     @DeleteMapping("/{id}")
     public R<Void> remove(@PathVariable String id) {
         mapper.deleteById(id);

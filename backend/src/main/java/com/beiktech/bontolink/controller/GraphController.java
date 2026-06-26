@@ -31,6 +31,11 @@ public class GraphController {
     @Autowired private BizGroupMapper bizGroupMapper;
 
     /* ============================== 左画布: 行业层级图谱 ============================== */
+    /**
+     * 返回左画布行业层级图谱数据 {nodes, edges}。
+     * 节点类型：industry(行业) / domain(领域) / subdomain(子领域) / group(分组)。
+     * 每个节点附 boundClassIds，供前端点击时联动右画布定位对应对象类型。
+     */
     @GetMapping("/industry-tree")
     public R<Map<String, Object>> industryTree() {
         Map<String, Object> graph = new LinkedHashMap<>();
@@ -86,6 +91,7 @@ public class GraphController {
             String parentCatId = g.getParentId();
             String catCode = g.getCategoryCode();
             // boundClassIds 双重来源合并: ① category_code 反查 ② ont_biz_group_class 关联表
+            // 用 LinkedHashSet 保持插入顺序并去重
             java.util.LinkedHashSet<String> bound = new java.util.LinkedHashSet<>();
             if (catCode != null) bound.addAll(classIdsByCode.getOrDefault(catCode, Collections.emptyList()));
             // 关联表里通过 group_id 找绑定的 class
@@ -112,6 +118,11 @@ public class GraphController {
     }
 
     /* ============================== 右画布: 对象本体图谱 ============================== */
+    /**
+     * 返回右画布对象本体图谱数据 {nodes, edges}。
+     * 节点：全部对象类型。边含 5 类关系：sub(父子类) / eq(等价类) / dis(互斥不相交) / union(并集) / link(普通关联)。
+     * 数据不足时调用 ensureMockRelations 补充演示用 mock 边，保证图谱连通可探索。
+     */
     @GetMapping("/ontology")
     public R<Map<String, Object>> ontology() {
         Map<String, Object> graph = new LinkedHashMap<>();
@@ -173,7 +184,7 @@ public class GraphController {
             }
         }
 
-        // 兜底: 如果 eq/dis/union 一条都没有 (老数据库), 在水利水文领域中插 mock 数据演示样式
+        // 兜底: 如果 eq/dis/union 一条都没有 (老数据库), 补充 mock 边以演示 5 类关系样式
         ensureMockRelations(nodes, edges);
 
         graph.put("nodes", nodes);
@@ -182,9 +193,14 @@ public class GraphController {
     }
 
     /* —— mock 关系生成: 编织 5 类边覆盖所有节点, 确保多层连通 (探索时可达 3+ 层放射网) —— */
+    /**
+     * 在真实边不足时填充演示用 mock 边。
+     * 固定 seed=42 保证每次生成结果相同；existing 集合双向存储防止重复边。
+     * 目标：每节点至少 2 个邻居，整图至少 max(60, nodes*1.5) 条边。
+     */
     private void ensureMockRelations(List<Map<String, Object>> nodes, List<Map<String, Object>> edges) {
         if (nodes.size() < 4) return;
-        // 已存在的 (src,tgt) 集合, 避免重复
+        // 双向记录已有边，避免正反方向重复添加
         java.util.Set<String> existing = new java.util.HashSet<>();
         for (Map<String, Object> e : edges) {
             existing.add(e.get("source") + "|" + e.get("target"));
@@ -230,6 +246,7 @@ public class GraphController {
         }
     }
 
+    /** 计算指定节点在当前边集合中的度（出度 + 入度之和）。 */
     private int countDegree(String nodeId, List<Map<String, Object>> edges) {
         int d = 0;
         for (Map<String, Object> e : edges) {
@@ -238,6 +255,7 @@ public class GraphController {
         return d;
     }
 
+    /** 构建边 Map {source, target, kind}，供节点关系边列表使用。 */
     private static Map<String, Object> edge(String source, String target, String kind) {
         Map<String, Object> e = new LinkedHashMap<>();
         e.put("source", source);

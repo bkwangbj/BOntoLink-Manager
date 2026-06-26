@@ -18,9 +18,11 @@ public class SharedPropertyController {
 
     @Autowired private SharedPropertyMapper mapper;
 
+    /** 查询所有共享属性列表（含 ref_count 引用次数） */
     @GetMapping
     public R<List<Map<String, Object>>> list() { return R.ok(mapper.listAll()); }
 
+    /** 按 ID 查单个共享属性 */
     @GetMapping("/{id}")
     public R<Map<String, Object>> get(@PathVariable String id) {
         return R.ok(mapper.findById(id));

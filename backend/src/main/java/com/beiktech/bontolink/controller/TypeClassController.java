@@ -34,6 +34,7 @@ public class TypeClassController {
         return R.ok(mapper.list(applicableType, category, deprecated, catalogOnly));
     }
 
+    /** 按 ID 查单个类型类 */
     @GetMapping("/{id}")
     public R<Map<String, Object>> get(@PathVariable String id) {
         return R.ok(mapper.findById(id));
@@ -43,6 +44,7 @@ public class TypeClassController {
     @GetMapping("/category-stats")
     public R<List<Map<String, Object>>> stats() { return R.ok(mapper.categoryStats()); }
 
+    /** 新建类型类；applicable_type/category/name 必填，ID 取 UUID 前 8 位 */
     @PostMapping
     public R<Map<String, Object>> create(@RequestBody Map<String, Object> body) {
         if (body.get("applicable_type") == null || String.valueOf(body.get("applicable_type")).isBlank())
@@ -52,6 +54,7 @@ public class TypeClassController {
         if (body.get("name") == null || String.valueOf(body.get("name")).isBlank())
             return R.error(400, "name 必填");
 
+        // ID 只取 UUID 前 8 位，保持简短
         String id = "type-class-" + UUID.randomUUID().toString().substring(0, 8);
         body.put("id", id);
         body.putIfAbsent("is_deprecated", 0);
@@ -61,6 +64,7 @@ public class TypeClassController {
         return R.ok(mapper.findById(id));
     }
 
+    /** 更新类型类基本信息 */
     @PutMapping("/{id}")
     public R<?> update(@PathVariable String id, @RequestBody Map<String, Object> body) {
         body.put("id", id);
@@ -69,6 +73,7 @@ public class TypeClassController {
         return R.ok();
     }
 
+    /** 删除类型类 */
     @DeleteMapping("/{id}")
     public R<?> delete(@PathVariable String id) {
         mapper.delete(id);

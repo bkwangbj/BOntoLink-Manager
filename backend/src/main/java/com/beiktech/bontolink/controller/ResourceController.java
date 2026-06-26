@@ -153,7 +153,10 @@ public class ResourceController {
         return m;
     }
 
-    /** 兼容旧端点 (sidebar 老页面仍在用) */
+    /**
+     * 兼容旧端点 (sidebar 老页面仍在用)。
+     * 返回不带筛选的全局简单计数：行业数、领域数、对象类型数、接口数、关系数、动作数、属性数、命名空间数。
+     */
     @GetMapping("/discover/stats")
     public R<Map<String, Object>> discoverStats() {
         Map<String, Object> r = new LinkedHashMap<>();
@@ -170,6 +173,10 @@ public class ResourceController {
         return R.ok(r);
     }
 
+    /**
+     * 查询所有对象类型。aggregate=false 时直接返回原始行；aggregate=true 时附加属性数、关系数、动作数、
+     * 接口数、数据源数、关联表名列表及行业/领域中文路径(categoryLabel)。
+     */
     @GetMapping("/classes")
     public R<List<Map<String, Object>>> classes(
             @RequestParam(value = "aggregate", required = false, defaultValue = "false") boolean aggregate) {
@@ -192,11 +199,20 @@ public class ResourceController {
             r.put("linkCount", ontologyMapper.countLinksOfClass(id));
             r.put("actionCount", ontologyMapper.countActionsOfClass(id));
             r.put("interfaceCount", ontologyMapper.countInterfacesOfClass(id));
-            r.put("dsCount", categoryCode == null ? 0 : ontologyMapper.countDatasourcesByCategory(categoryCode));
-            // 关联表名：暂以 datasource ds_code 列表填充（待 ont_class_ds 落地后改）
-            List<Map<String, Object>> dsList = categoryCode == null ? Collections.emptyList()
-                    : ontologyMapper.listDatasourcesByCategory(categoryCode);
-            r.put("relatedTables", dsList.stream().map(x -> String.valueOf(x.get("ds_code"))).filter(s -> s != null && !"null".equals(s)).toList());
+            // 数据源数 / 关联表：按本对象实际挂接的物理表(ont_class_ds)算, 而非按领域(category)推算
+            List<Map<String, Object>> dsBrief = ontologyMapper.listClassDsBrief(id);
+            // 关联表：本对象挂接的物理表名(去重, 过滤空/"null")
+            List<String> relatedTables = dsBrief.stream()
+                    .map(x -> String.valueOf(x.get("physical_table")))
+                    .filter(s -> s != null && !s.isBlank() && !"null".equals(s))
+                    .distinct().toList();
+            r.put("relatedTables", relatedTables);
+            // 数据源数：这些表来自多少个不同数据源(distinct ds_code)
+            long dsn = dsBrief.stream()
+                    .map(x -> String.valueOf(x.get("ds_code")))
+                    .filter(s -> s != null && !s.isBlank() && !"null".equals(s))
+                    .distinct().count();
+            r.put("dsCount", (int) dsn);
             // 父类暂无 parent_class_id 列，留占位
             r.put("parentLabel", null);
             r.put("parentApiName", null);
@@ -255,15 +271,19 @@ public class ResourceController {
         return R.ok(info);
     }
 
+    /** 返回所有链接类型(ont_class_link)列表，供图谱和关系浏览使用。 */
     @GetMapping("/links")
     public R<List<Map<String, Object>>> links() { return R.ok(ontologyMapper.listLinks()); }
 
+    /** 返回所有动作类型列表。 */
     @GetMapping("/actions")
     public R<List<Map<String, Object>>> actions() { return R.ok(ontologyMapper.listActions()); }
 
+    /** 返回所有接口列表。 */
     @GetMapping("/interfaces")
     public R<List<Map<String, Object>>> interfaces() { return R.ok(ontologyMapper.listInterfaces()); }
 
+    /** 返回单个接口详情，附 properties 属性列表；接口不存在返回空对象。 */
     @GetMapping("/interfaces/{id}")
     public R<Map<String, Object>> interfaceDetail(@PathVariable String id) {
         Map<String, Object> r = new LinkedHashMap<>();
@@ -274,6 +294,7 @@ public class ResourceController {
         return R.ok(r);
     }
 
+    /** 返回指定对象类型的属性列表。 */
     @GetMapping("/classes/{id}/properties")
     public R<List<Map<String, Object>>> properties(@PathVariable String id) {
         return R.ok(ontologyMapper.listProperties(id));

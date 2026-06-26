@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * 数据源连接公共工具：按 sys_data_source 配置动态建立 JDBC 连接。
@@ -39,7 +40,28 @@ public class DataSourceConnector {
                 throw new SQLException("后端未集成该数据库的 JDBC 驱动: " + driver);
             }
         }
+        // 账号密码 + 注释上报参数一并放进 Properties:
+        // 多数驱动默认不通过 DatabaseMetaData 返回表/字段注释(REMARKS),
+        // 必须按方言开启对应开关, 否则同步拿到的注释恒为空 → 中文名取不到。
+        Properties props = new Properties();
+        if (ds.getUsername() != null) props.setProperty("user", ds.getUsername());
+        if (ds.getPassword() != null) props.setProperty("password", ds.getPassword());
+        applyRemarksProps(url, props);
+
         DriverManager.setLoginTimeout(LOGIN_TIMEOUT);
-        return DriverManager.getConnection(url, ds.getUsername(), ds.getPassword());
+        return DriverManager.getConnection(url, props);
+    }
+
+    /** 按 JDBC 方言开启"注释上报", 让 DatabaseMetaData 能读到表/字段注释(REMARKS) */
+    private static void applyRemarksProps(String url, Properties props) {
+        String u = url.toLowerCase();
+        if (u.startsWith("jdbc:mysql") || u.startsWith("jdbc:mariadb")) {
+            // MySQL/MariaDB: 走 information_schema 才会带回 table/column comment
+            props.setProperty("useInformationSchema", "true");
+        } else if (u.startsWith("jdbc:oracle") || u.startsWith("jdbc:dm")) {
+            // Oracle / 达梦: 开启 REMARKS 上报
+            props.setProperty("remarksReporting", "true");
+        }
+        // PostgreSQL/KingbaseES 默认即返回注释; SQLite 无表注释, 均无需额外参数
     }
 }

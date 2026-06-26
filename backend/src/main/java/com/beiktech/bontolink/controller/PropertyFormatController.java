@@ -23,6 +23,7 @@ public class PropertyFormatController {
         return R.ok(mapper.findByProperties(ids));
     }
 
+    /** 查询单条格式化配置；无记录时返回空对象而非 null，方便前端直接展开使用 */
     @GetMapping("/property/{propertyId}")
     public R<Map<String, Object>> getOne(@PathVariable String propertyId) {
         Map<String, Object> r = mapper.findByProperty(propertyId);
@@ -62,6 +63,7 @@ public class PropertyFormatController {
         return R.ok();
     }
 
+    /** 删除属性格式化配置（属性删除时同步调用，避免孤记录） */
     @DeleteMapping("/property/{propertyId}")
     public R<?> remove(@PathVariable String propertyId) {
         mapper.deleteByProperty(propertyId);

@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/** 健康检查接口，供 smoke test / 运维探活使用。 */
 @RestController
 public class HealthController {
+    /** 返回服务存活状态、应用名称、版本号及当前时间戳（毫秒）。 */
     @GetMapping("/api/health")
     public R<Map<String, Object>> health() {
         Map<String, Object> r = new LinkedHashMap<>();

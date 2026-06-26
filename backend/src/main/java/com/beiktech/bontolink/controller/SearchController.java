@@ -33,6 +33,10 @@ public class SearchController {
     private static final int LIMIT_DIGEST = 5;
     private static final int LIMIT_FOCUSED = 30;
 
+    /**
+     * 全局搜索：按关键字 q 在各类资源表中模糊查询，type 指定范围(all/object/link/prop/ds/other)。
+     * 综合模式每类上限 5 条，单类型聚焦时上限 30 条；结果附 kind + route 供前端直接跳转。
+     */
     @GetMapping("/global")
     public R<Map<String, Object>> global(@RequestParam(required = false) String q,
                                           @RequestParam(required = false, defaultValue = "all") String type) {

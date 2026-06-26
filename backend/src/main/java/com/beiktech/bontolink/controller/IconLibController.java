@@ -36,6 +36,8 @@ public class IconLibController {
     }
 
     /* ===== Group CRUD ===== */
+
+    /** 新建图标分组；parentId 为空则创建根级分组，name 不可为空 */
     @PostMapping("/groups")
     public R<IconLibGroup> createGroup(@RequestBody Map<String, Object> body) {
         String parentId = (String) body.get("parentId");
@@ -44,6 +46,7 @@ public class IconLibController {
         return R.ok(service.createGroup(parentId, name.trim()));
     }
 
+    /** 重命名图标分组 */
     @PutMapping("/groups/{id}")
     public R<IconLibGroup> renameGroup(@PathVariable String id, @RequestBody Map<String, Object> body) {
         String name = (String) body.get("name");
@@ -51,6 +54,7 @@ public class IconLibController {
         return R.ok(service.renameGroup(id, name.trim()));
     }
 
+    /** 删除图标分组及其下所有图标 */
     @DeleteMapping("/groups/{id}")
     public R<Void> deleteGroup(@PathVariable String id) {
         service.deleteGroup(id);
@@ -58,22 +62,27 @@ public class IconLibController {
     }
 
     /* ===== Icon CRUD ===== */
+
+    /** 向指定分组上传 SVG 图标；content 为 SVG path 内容，viewBox 可选 */
     @PostMapping("/groups/{groupId}/icons")
     public R<IconLibIcon> addIcon(@PathVariable String groupId, @RequestBody Map<String, Object> body) {
         String name = (String) body.get("name");
         String viewBox = (String) body.get("viewBox");
         String content = (String) body.get("content");
+        // name 和 content 为必填，提前校验避免落库脏数据
         if (name == null || name.trim().isEmpty()) throw new IllegalArgumentException("name 不能为空");
         if (content == null || content.trim().isEmpty()) throw new IllegalArgumentException("content 不能为空");
         return R.ok(service.addIcon(groupId, name.trim(), viewBox, content));
     }
 
+    /** 删除单个图标 */
     @DeleteMapping("/icons/{id}")
     public R<Void> deleteIcon(@PathVariable String id) {
         service.deleteIcon(id);
         return R.ok();
     }
 
+    /** 批量删除图标；body 含 ids 列表 */
     @PostMapping("/icons/batch-delete")
     public R<Void> deleteIconBatch(@RequestBody Map<String, Object> body) {
         @SuppressWarnings("unchecked")
