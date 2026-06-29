@@ -6,83 +6,67 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 类型类 (Type Classes) Mapper
- * <p>
- * 三类: property / relation / action,通过 applicable_type 区分。
- * 当 link_type_id / object_type_id / action_type_id 三者其一非空时,
- * 表示挂到具体对象上;均为空时表示目录预置项。
+ * 类型类标准定义(ont_type_class)Mapper。
+ * 升级版:定义与绑定分离,本表仅存"标准定义/元数据"。
  */
 @Mapper
 public interface TypeClassMapper {
 
-    /**
-     * 动态条件查询类型类列表。
-     * catalogOnly=true 时筛选三个外键均为 null 的目录预置项（即未挂到具体对象的公共类型类）。
-     */
-    @Select("""
-        <script>
-        SELECT * FROM ont_type_class
-        <where>
-          <if test='applicableType != null and applicableType != ""'> AND applicable_type = #{applicableType} </if>
-          <if test='category != null and category != ""'> AND category = #{category} </if>
-          <if test='isDeprecated != null'> AND is_deprecated = #{isDeprecated} </if>
-          <if test='catalogOnly != null and catalogOnly == true'>
-            AND link_type_id IS NULL AND object_type_id IS NULL AND action_type_id IS NULL
-          </if>
-        </where>
-        ORDER BY is_deprecated, applicable_type, category, name
-        </script>
-    """)
-    List<Map<String, Object>> list(@Param("applicableType") String applicableType,
-                                    @Param("category") String category,
-                                    @Param("isDeprecated") Integer isDeprecated,
-                                    @Param("catalogOnly") Boolean catalogOnly);
+    @Select("SELECT * FROM ont_type_class ORDER BY sort_weight, category_code, name_prefix")
+    List<Map<String, Object>> listAll();
 
-    /** 按 id 查单条类型类 */
     @Select("SELECT * FROM ont_type_class WHERE id = #{id}")
     Map<String, Object> findById(@Param("id") String id);
 
-    /** 按种类聚合 (用于左侧分组树: category → 包含数量) */
-    @Select("""
-        SELECT applicable_type, category, category_cn,
-               SUM(CASE WHEN is_deprecated = 0 THEN 1 ELSE 0 END) AS active_count,
-               SUM(CASE WHEN is_deprecated = 1 THEN 1 ELSE 0 END) AS deprecated_count,
-               COUNT(1) AS total_count
-        FROM ont_type_class
-        GROUP BY applicable_type, category
-        ORDER BY applicable_type, category
-    """)
+    /** 大类下统计(总数/弃用数) */
+    @Select("SELECT category_code, COUNT(*) AS total, SUM(is_deprecated) AS deprecated_count FROM ont_type_class GROUP BY category_code")
     List<Map<String, Object>> categoryStats();
 
-    /** 新增类型类 */
+    /** 同一大类下 name_prefix 是否重复(排除自身) */
+    @Select("SELECT COUNT(*) FROM ont_type_class WHERE category_code = #{categoryCode} AND name_prefix = #{namePrefix} AND id <> #{excludeId}")
+    int countSameName(@Param("categoryCode") String categoryCode, @Param("namePrefix") String namePrefix, @Param("excludeId") String excludeId);
+
     @Insert("""
-        INSERT INTO ont_type_class(id, link_type_id, object_type_id, action_type_id,
-            applicable_type, is_deprecated, category, category_cn, name, name_cn,
-            value, description)
-        VALUES (#{id}, #{link_type_id}, #{object_type_id}, #{action_type_id},
-            #{applicable_type}, #{is_deprecated}, #{category}, #{category_cn}, #{name}, #{name_cn},
-            #{value}, #{description})
+        INSERT INTO ont_type_class(
+            id, category_code, icon, color, name_prefix, name_template, name_cn_base,
+            source_type, group_tag, allow_apply_types, allow_multi_bind, is_array_value,
+            system_protected, param_type, frontend_component, param_options_json, param_validator_json,
+            param_desc, demo_value, depend_on_meta_ids, description, replacement_meta_id,
+            is_deprecated, deprecated_reason, support_version_min, current_version_no, sort_weight,
+            create_user, update_user
+        ) VALUES (
+            #{id}, #{category_code}, #{icon}, #{color}, #{name_prefix}, #{name_template}, #{name_cn_base},
+            #{source_type}, #{group_tag}, #{allow_apply_types}, #{allow_multi_bind}, #{is_array_value},
+            #{system_protected}, #{param_type}, #{frontend_component}, #{param_options_json}, #{param_validator_json},
+            #{param_desc}, #{demo_value}, #{depend_on_meta_ids}, #{description}, #{replacement_meta_id},
+            #{is_deprecated}, #{deprecated_reason}, #{support_version_min}, #{current_version_no}, #{sort_weight},
+            #{create_user}, #{update_user}
+        )
     """)
     int insert(Map<String, Object> row);
 
-    /** 更新类型类（同步 updated_at） */
     @Update("""
         UPDATE ont_type_class SET
-          link_type_id = #{link_type_id}, object_type_id = #{object_type_id}, action_type_id = #{action_type_id},
-          applicable_type = #{applicable_type}, is_deprecated = #{is_deprecated},
-          category = #{category}, category_cn = #{category_cn},
-          name = #{name}, name_cn = #{name_cn},
-          value = #{value}, description = #{description},
-          updated_at = datetime('now','localtime')
+            category_code = #{category_code}, icon = #{icon}, color = #{color},
+            name_prefix = #{name_prefix}, name_template = #{name_template}, name_cn_base = #{name_cn_base},
+            source_type = #{source_type}, group_tag = #{group_tag}, allow_apply_types = #{allow_apply_types},
+            allow_multi_bind = #{allow_multi_bind}, is_array_value = #{is_array_value}, system_protected = #{system_protected},
+            param_type = #{param_type}, frontend_component = #{frontend_component},
+            param_options_json = #{param_options_json}, param_validator_json = #{param_validator_json},
+            param_desc = #{param_desc}, demo_value = #{demo_value}, depend_on_meta_ids = #{depend_on_meta_ids},
+            description = #{description}, replacement_meta_id = #{replacement_meta_id},
+            is_deprecated = #{is_deprecated}, deprecated_reason = #{deprecated_reason},
+            support_version_min = #{support_version_min}, current_version_no = #{current_version_no},
+            sort_weight = #{sort_weight}, update_user = #{update_user},
+            updated_at = #{updated_at}
         WHERE id = #{id}
     """)
     int update(Map<String, Object> row);
 
-    /** 删除类型类 */
+    @Update("UPDATE ont_type_class SET is_deprecated = #{deprecated}, deprecated_reason = #{reason}, updated_at = #{updatedAt} WHERE id = #{id}")
+    int setDeprecated(@Param("id") String id, @Param("deprecated") int deprecated,
+                      @Param("reason") String reason, @Param("updatedAt") String updatedAt);
+
     @Delete("DELETE FROM ont_type_class WHERE id = #{id}")
     int delete(@Param("id") String id);
-
-    /** 切换弃用 */
-    @Update("UPDATE ont_type_class SET is_deprecated = #{deprecated}, updated_at = datetime('now','localtime') WHERE id = #{id}")
-    int setDeprecated(@Param("id") String id, @Param("deprecated") Integer deprecated);
 }

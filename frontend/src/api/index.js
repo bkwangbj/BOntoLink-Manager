@@ -176,15 +176,43 @@ export const linkTypeApi = {
   setStatus:   (id, status) => http.post(`/link-types/${id}/status`, { status }),
 }
 
-/* 类型类 (Type Classes) — 三类: property / relation / action */
+/* 类型类 (Type Classes) — 升级版:定义 + 大类字典 + 绑定 + 枚举字典 */
 export const typeClassApi = {
-  list:        (params) => http.get('/type-classes', { params }),   // { applicableType, category, deprecated, catalogOnly }
+  // 定义(元数据);params: { categoryCode, applicableType, deprecated, q }
+  list:        (params) => http.get('/type-classes', { params }),
   get:         (id) => http.get(`/type-classes/${id}`),
   stats:       () => http.get('/type-classes/category-stats'),
   create:      (data) => http.post('/type-classes', data),
   update:      (id, data) => http.put(`/type-classes/${id}`, data),
   remove:      (id) => http.delete(`/type-classes/${id}`),
-  deprecate:   (id, deprecated = 1) => http.post(`/type-classes/${id}/deprecate`, { deprecated }),
+  deprecate:   (id, deprecated = 1, reason = '') => http.post(`/type-classes/${id}/deprecate`, { deprecated, reason }),
+}
+
+/* 类型类一级大类(Kind)字典 */
+export const tcCategoryApi = {
+  list:   () => http.get('/tc-category'),                 // 含 tc_count
+  get:    (code) => http.get(`/tc-category/${code}`),
+  create: (data) => http.post('/tc-category', data),
+  update: (code, data) => http.put(`/tc-category/${code}`, data),
+  remove: (code) => http.delete(`/tc-category/${code}`),
+}
+
+/* 类型类绑定实例(引用页签) */
+export const tcBindApi = {
+  list:   (metaId, params = {}) => http.get('/tc-bind', { params: { metaId, ...params } }),
+  stats:  (metaId) => http.get('/tc-bind/stats', { params: { metaId } }),
+  create: (data) => http.post('/tc-bind', data),
+  remove: (id) => http.delete(`/tc-bind/${id}`),
+}
+
+/* 类型类枚举字典 */
+export const tcEnumApi = {
+  names:  () => http.get('/tc-enum/names'),
+  list:   (enumName, onlyEnabled = false) => http.get('/tc-enum', { params: { enumName, onlyEnabled } }),
+  create: (data) => http.post('/tc-enum', data),
+  update: (id, data) => http.put(`/tc-enum/${id}`, data),
+  remove: (id) => http.delete(`/tc-enum/${id}`),
+  reorder:(items) => http.post('/tc-enum/reorder', items),
 }
 
 /* 枚举类型 (Enum types) */
