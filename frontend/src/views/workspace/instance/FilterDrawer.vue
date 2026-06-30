@@ -186,7 +186,7 @@ function toggleMulti(idx, e) {
   if (openMulti.value === idx) { openMulti.value = -1; return }
   openMulti.value = idx
   const r = e.currentTarget.getBoundingClientRect()
-  const popH = Math.min(220, options.value.length * 30 + 12)
+  const popH = Math.min(220, props.options.length * 30 + 12)
   const below = r.bottom + 4
   const top = (below + popH > window.innerHeight - 8) ? (r.top - popH - 4) : below
   multiPopStyle.value = { left: r.left + 'px', top: Math.max(8, top) + 'px', width: Math.max(160, r.width) + 'px' }

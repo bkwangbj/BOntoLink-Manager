@@ -612,11 +612,8 @@ const dragging = ref(false)
 /* 抽屉浮层顶部:对齐整个探索区(.ixe-root)顶部,使其铺满黄色区域高度 */
 const drawerTop = ref(0)
 function measureDrawer() {
-  const el = rootRef.value
-  if (!el) return
-  // 顶部对齐到"探索实例"整块容器(含页签行),抽屉位于其右侧、横跨全高
-  const host = el.closest('.ix-root') || el.closest('.ixe-root') || el
-  drawerTop.value = Math.max(0, Math.round(host.getBoundingClientRect().top))
+  // 右侧预览/对比面板:全屏高度(顶到视口顶,与看板配置面板一致)
+  drawerTop.value = 0
 }
 watch(previewOpen, (v) => { if (v) nextTick(measureDrawer) })
 onMounted(() => { measureDrawer(); window.addEventListener('resize', measureDrawer) })
@@ -758,12 +755,12 @@ thead .ilv-frozen { z-index: 5 !important; }
 .ilv-hm-ok { width: 24px; height: 24px; border: 0; background: var(--bl-primary); border-radius: 5px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; margin-left: auto; }
 
 /* 拖拽分隔条(浮层) */
-.ilv-divider { position: fixed; bottom: 0; width: 5px; background: var(--bl-border); cursor: col-resize; z-index: 1011; }
+.ilv-divider { position: fixed; bottom: 0; width: 5px; background: var(--bl-border); cursor: col-resize; z-index: 2001; }
 .ilv-divider:hover, .ilv-divider.is-active { background: var(--bl-primary); }
 .ilv-divider::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 2px; height: 26px; background: rgba(255,255,255,.7); border-radius: 2px; }
 
 /* 预览面板(浮层:贴整个探索区右侧、横跨全高) */
-.ilv-preview { position: fixed; right: 0; bottom: 0; border-left: 1px solid var(--bl-border); background: var(--bl-bg-1); display: flex; flex-direction: column; overflow: hidden; z-index: 1010; box-shadow: -6px 0 20px rgba(0,0,0,.08); }
+.ilv-preview { position: fixed; right: 0; bottom: 0; border-left: 1px solid var(--bl-border); background: var(--bl-bg-1); display: flex; flex-direction: column; overflow: hidden; z-index: 2000; box-shadow: -6px 0 20px rgba(0,0,0,.12); }
 .ilv-pv-hd { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--bl-divider); flex-shrink: 0; }
 .ilv-pv-collapse { width: 26px; height: 26px; border: 0; background: transparent; border-radius: 6px; color: var(--bl-text-3); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
 .ilv-pv-collapse:hover { background: var(--bl-bg-hover); color: var(--bl-text-1); }
@@ -799,9 +796,13 @@ thead .ilv-frozen { z-index: 5 !important; }
 
 /* 预览|对比 下拉 */
 .ilv-pv-mode { position: relative; display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 8px; border: 1px solid var(--bl-border); border-radius: 6px; cursor: pointer; font-size: 12px; color: var(--bl-text-1); flex-shrink: 0; }
+/* 触发器内图标 span 去基线空隙,与文字垂直居中 */
+.ilv-pv-mode > span { display: inline-flex; align-items: center; }
 .ilv-pv-mode:hover { border-color: var(--bl-primary-border); }
 .ilv-pv-modemenu { position: absolute; top: 100%; right: 0; margin-top: 4px; width: 120px; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.16); padding: 4px; z-index: 20; }
 .ilv-pv-modeitem { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 6px; font-size: 12.5px; cursor: pointer; color: var(--bl-text-1); }
+/* 图标 span 去掉内联基线空隙,与文字垂直居中对齐 */
+.ilv-pv-modeitem > span { display: inline-flex; align-items: center; flex-shrink: 0; }
 .ilv-pv-modeitem:hover { background: var(--bl-bg-hover); }
 .ilv-pv-modeitem.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); }
 

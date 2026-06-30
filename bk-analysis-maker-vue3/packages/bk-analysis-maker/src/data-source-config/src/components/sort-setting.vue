@@ -33,46 +33,6 @@
           >
             <i-ri-draggable />
           </span>
-          <el-select
-            v-model="row.field"
-            size="small"
-            filterable
-            allow-create
-            default-first-option
-            class="ss-field"
-            placeholder="字段"
-            :disabled="!setMode"
-            @change="emitChange"
-          >
-            <el-option
-              v-for="o in fieldOptions"
-              :key="o.value"
-              :label="o.label"
-              :value="o.value"
-            />
-          </el-select>
-          <el-select
-            v-model="row.agg"
-            size="small"
-            class="ss-agg"
-            :disabled="!setMode"
-            @change="emitChange"
-          >
-            <el-option
-              v-for="a in AGGS"
-              :key="a.k"
-              :label="a.label"
-              :value="a.k"
-            />
-          </el-select>
-          <el-switch
-            v-model="row.desc"
-            :disabled="!setMode"
-            active-text="降序"
-            inactive-text="升序"
-            class="ss-switch"
-            @change="emitChange"
-          />
           <button
             v-if="setMode"
             class="ss-del"
@@ -81,6 +41,48 @@
           >
             <i-ri-close-line />
           </button>
+          <div class="ss-selects">
+            <el-select
+              v-model="row.field"
+              size="small"
+              filterable
+              allow-create
+              default-first-option
+              class="ss-field"
+              placeholder="字段"
+              :disabled="!setMode"
+              @change="emitChange"
+            >
+              <el-option
+                v-for="o in fieldOptions"
+                :key="o.value"
+                :label="o.label"
+                :value="o.value"
+              />
+            </el-select>
+            <el-select
+              v-model="row.agg"
+              size="small"
+              class="ss-agg"
+              :disabled="!setMode"
+              @change="emitChange"
+            >
+              <el-option
+                v-for="a in AGGS"
+                :key="a.k"
+                :label="a.label"
+                :value="a.k"
+              />
+            </el-select>
+          </div>
+          <el-switch
+            v-model="row.desc"
+            :disabled="!setMode"
+            active-text="降序"
+            inactive-text="升序"
+            class="ss-switch"
+            @change="emitChange"
+          />
         </div>
       </template>
     </draggable>
@@ -164,19 +166,21 @@ export default {
 }
 .ss-add:hover { background: #4080ff; }
 .ss-list { display: flex; flex-direction: column; gap: 3px; }
+/* 行内三段:① 顶行(拖拽柄左 + 删除右上角) ② 字段+计算整行 ③ 升降序整行 */
 .ss-row {
-  display: flex; align-items: center; gap: 6px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px;
   padding: 4px 6px; border-radius: 6px; background: #f7f8fa;
   transition: background-color .12s;
 }
 .ss-row:hover { background: #eef3ff; }
-.ss-grip { color: #c9cdd4; cursor: grab; display: inline-flex; font-size: 14px; flex-shrink: 0; }
+.ss-grip { order: 0; color: #c9cdd4; cursor: grab; display: inline-flex; font-size: 14px; flex-shrink: 0; }
 .ss-grip:active { cursor: grabbing; }
-.ss-field { flex: 1; min-width: 80px; }
-.ss-agg { flex: 0 0 88px; }
-.ss-switch { flex-shrink: 0; }
+.ss-selects { order: 2; flex: 1 1 100%; display: flex; align-items: center; gap: 6px; }
+.ss-field { flex: 1 1 auto; min-width: 90px; }
+.ss-agg { flex: 0 0 80px; }
+.ss-switch { order: 3; flex: 0 0 auto; }
 .ss-del {
-  width: 22px; height: 22px; border: 0; background: transparent;
+  order: 1; margin-left: auto; width: 22px; height: 22px; border: 0; background: transparent;
   color: #86909c; cursor: pointer; border-radius: 5px; opacity: 0; flex-shrink: 0;
   display: inline-flex; align-items: center; justify-content: center;
   transition: opacity .12s, background-color .12s, color .12s;

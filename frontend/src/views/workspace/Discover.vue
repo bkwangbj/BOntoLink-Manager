@@ -18,13 +18,10 @@
         <ChipFilterBar all-label="全部行业" :items="industryItems" :selected="industriesSel" :rows="1"
                        @select-all="setAllIndustries" @toggle="toggleIndustry" />
       </div>
-      <!-- 领域:最多两行,可展开;右上角清空 -->
+      <!-- 领域:单行,溢出横滚 -->
       <div class="ov-filter-row">
-        <ChipFilterBar all-label="全部领域" :items="domainItems" :selected="domainsSel" :rows="2"
+        <ChipFilterBar all-label="全部领域" :items="domainItems" :selected="domainsSel" :rows="1"
                        @select-all="setAllDomains" @toggle="toggleDomain" />
-        <button class="ov-clear-btn" title="清空筛选条件" @click="clearFilter">
-          <span v-html="BL.icon('x', 18)"></span>
-        </button>
       </div>
     </section>
 
@@ -32,12 +29,15 @@
     <nav class="ov-breadcrumb">
       <span v-html="BL.icon('map', 12)"></span>
       <span class="ov-bc-text">{{ breadcrumb }}</span>
+      <button v-if="industriesSel.length || domainsSel.length" class="ov-bc-clear" @click="clearFilter">
+        <span v-html="BL.icon('x', 11)"></span>清除筛选条件
+      </button>
     </nav>
 
     <!-- 统计卡片矩阵区 (三行: 4 / 6 / 5) -->
     <section class="ov-stats">
       <div v-for="(group, gi) in STAT_GROUPS" :key="'g-'+gi"
-           class="ov-stats-row" :style="{ '--cols': group.cols }">
+           :class="['ov-stats-row', gi === 0 && 'ov-stats-row--nowrap']" :style="{ '--cols': group.cols }">
         <div v-for="s in group.items" :key="s.key"
              :class="['ov-card', s.noClick && 'is-noclick']" :style="{ '--sc': s.color }"
              @click="onCardClick(s)">
@@ -200,7 +200,7 @@ const breadcrumb = computed(() => {
   const domPart = domainsSel.value.length === 0
     ? '全部领域'
     : namesOf(domainsSel.value, availableDomainByCode.value)
-  return `当前统计范围: ${indPart} | ${domPart}`
+  return `${indPart} | ${domPart}`
 })
 const availableDomainByCode = computed(() => {
   const m = {}
@@ -282,6 +282,7 @@ onMounted(async () => {
 
 /* —— 筛选导航区 —— */
 .ov-filter {
+  flex-shrink: 0;   /* overflow:hidden 会让 flex 子项 min-height 归 0,空间紧张时被压没,故禁止收缩 */
   background: var(--bl-bg-1);
   border: 1px solid var(--bl-border);
   border-radius: var(--bl-radius-3, 6px);
@@ -336,20 +337,15 @@ onMounted(async () => {
 }
 
 /* 清空筛选按钮 (右上角) */
-.ov-clear-btn {
-  position: absolute; top: 8px; right: 8px;
-  width: 26px; height: 26px;
-  border: 0; background: transparent;
-  border-radius: 4px;
-  display: inline-flex; align-items: center; justify-content: center;
-  color: var(--bl-text-3);
-  cursor: pointer;
-  transition: background .15s, color .15s;
+/* 清除筛选条件:置于统计范围后,灰色文字按钮 */
+.ov-bc-clear {
+  margin-left: 10px;
+  display: inline-flex; align-items: center; gap: 3px;
+  border: 0; background: transparent; padding: 1px 4px;
+  color: var(--bl-text-3); font-size: 12px; cursor: pointer; border-radius: 4px;
+  transition: color .15s, background .15s;
 }
-.ov-clear-btn:hover {
-  background: #fff1f0;
-  color: #f53f3f;
-}
+.ov-bc-clear:hover { color: #f53f3f; background: var(--bl-bg-hover); }
 
 /* —— 面包屑导航区 —— */
 .ov-breadcrumb {
@@ -357,16 +353,21 @@ onMounted(async () => {
   padding: 4px 4px;
   color: var(--bl-text-3); font-size: 12px;
 }
+/* 图标 span 内联居中,消除 SVG 基线间隙导致的与文字错位 */
+.ov-breadcrumb > span:first-child { display: inline-flex; align-items: center; }
+.ov-breadcrumb svg { display: block; }
 
 /* —— 统计卡片矩阵区 —— */
 .ov-stats {
-  display: flex; flex-direction: column; gap: 12px;
+  display: flex; flex-direction: column; gap: 16px;
 }
 .ov-stats-row {
   display: grid;
   grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
   gap: 12px;
 }
+/* 各类别之间浅灰分割线,区分不同统计组 */
+.ov-stats-row:not(:last-child) { padding-bottom: 16px; border-bottom: 1px solid var(--bl-border); }
 .ov-card {
   --sc: var(--bl-primary);
   position: relative;
@@ -456,14 +457,14 @@ onMounted(async () => {
   text-overflow: ellipsis;
 }
 
-/* —— 响应式断点 —— */
+/* —— 响应式断点(首行 .ov-stats-row--nowrap 例外:始终保持列数不换行) —— */
 @media (max-width: 1280px) {
-  .ov-stats-row { grid-template-columns: repeat(min(var(--cols), 3), minmax(0, 1fr)); }
+  .ov-stats-row:not(.ov-stats-row--nowrap) { grid-template-columns: repeat(min(var(--cols), 3), minmax(0, 1fr)); }
 }
 @media (max-width: 960px) {
-  .ov-stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ov-stats-row:not(.ov-stats-row--nowrap) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 640px) {
-  .ov-stats-row { grid-template-columns: 1fr; }
+  .ov-stats-row:not(.ov-stats-row--nowrap) { grid-template-columns: 1fr; }
 }
 </style>

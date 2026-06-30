@@ -142,11 +142,16 @@ export default {
 .gf-title { font-size: 13px; font-weight: 600; color: #1d2129; margin-bottom: 5px; }
 .gf-dim { width: 100%; margin-bottom: 6px; }
 .gf-rule {
-  display: flex; align-items: center; gap: 12px; flex-wrap: nowrap;
+  display: flex; align-items: center; gap: 8px; flex-wrap: nowrap;
   margin-bottom: 6px; font-size: 12px;
 }
 /* radio-group 在 maker 里默认满宽会把 checkbox 挤下行 → 收缩为自然宽,checkbox 靠右同行 */
 .gf-rule :deep(.el-radio-group) { flex: 0 0 auto; width: auto; display: inline-flex; background: transparent !important; padding: 0 !important; box-shadow: none !important; }
+/* 窄面板(330):压缩单选间距/标签内边距,保证「包含以下 / 排除以下 / 未匹配归其他」三项同一行 */
+.gf-rule :deep(.el-radio) { margin-right: 10px; }
+.gf-rule :deep(.el-radio:last-child) { margin-right: 0; }
+.gf-rule :deep(.el-radio__label) { padding-left: 6px; }
+.gf-rule :deep(.el-checkbox__label) { padding-left: 6px; }
 .gf-rule :deep(.el-checkbox) { margin-left: auto; margin-right: 0; flex: 0 0 auto; white-space: nowrap; }
 .gf-list {
   border: 1px solid #e9e9e9; border-radius: 6px; overflow: hidden;

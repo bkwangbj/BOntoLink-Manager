@@ -38,7 +38,7 @@
                   <div
                     v-for="ele in triggerOption"
                     :key="ele.value"
-                    class="chart-align-item"
+                    class="chart-align-item trigger-btn"
                     :class="{'active':form.trigger===ele.value,'is-disabled':!saveAble}"
                     @click="triggerChange(ele)"
                   >
@@ -57,7 +57,7 @@
                     v-for="el in triggerOnOption"
 
                     :key="el.value"
-                    class="chart-align-item"
+                    class="chart-align-item trigger-btn"
                     :class="{'active':form.triggerOn===el.value,'is-disabled':!saveAble}"
                     @click="triggerOnChange(el)"
                   >
@@ -240,4 +240,19 @@ export default {
   display: flex;
 }
 
+/* 触发类型/触发动作:文字按钮 —— 自适应宽度不折行、选中蓝底用白字 */
+.chart-align-item.trigger-btn {
+  width: auto;
+  min-width: 29px;
+  height: 26px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  line-height: 1;
+}
+.chart-align-item.trigger-btn.active {
+  color: #fff;
+}
 </style>

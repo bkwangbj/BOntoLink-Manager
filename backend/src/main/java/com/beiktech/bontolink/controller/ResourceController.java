@@ -65,10 +65,18 @@ public class ResourceController {
             if (cat != null) collectDescendantCodes(cat, childrenOf, expandedFromIndustries);
         }
 
-        // 最终 scope = (展开后的行业 codes) ∪ (显式选中的 domain codes)
+        // 最终 scope:选了具体领域 → 仅按这些领域(含子级)在行业内收窄;否则按选中行业整体展开。
+        // (原先是行业展开 ∪ 领域的并集 → 行业已含全部领域,再选领域无法收窄,故改为领域优先。)
         Set<String> scope = new LinkedHashSet<>();
-        scope.addAll(expandedFromIndustries);
-        scope.addAll(domainSet);
+        if (!domainSet.isEmpty()) {
+            for (String code : domainSet) {
+                com.beiktech.bontolink.entity.BizCategory cat = byCode.get(code);
+                if (cat != null) collectDescendantCodes(cat, childrenOf, scope);
+                else scope.add(code);
+            }
+        } else {
+            scope.addAll(expandedFromIndustries);
+        }
         boolean hasFilter = !scope.isEmpty();
         List<String> scopeList = hasFilter ? new ArrayList<>(scope) : null;
 

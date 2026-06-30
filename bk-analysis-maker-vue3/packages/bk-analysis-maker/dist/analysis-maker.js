@@ -5,6 +5,60 @@ import { utils as utils$1 } from 'efficient-suite';
 import { debounce as debounce$2 } from 'throttle-debounce';
 import * as T$2 from 'monaco-editor';
 
+const _hoisted_1$2n = {
+  viewBox: "0 0 24 24",
+  width: "1.2em",
+  height: "1.2em"
+};
+
+function render$y(_ctx, _cache) {
+  return (openBlock(), createElementBlock("svg", _hoisted_1$2n, [...(_cache[0] || (_cache[0] = [
+    createElementVNode("path", {
+      fill: "currentColor",
+      d: "m12 10.587l4.95-4.95l1.414 1.414l-4.95 4.95l4.95 4.95l-1.415 1.414l-4.95-4.95l-4.949 4.95l-1.414-1.415l4.95-4.95l-4.95-4.95L7.05 5.638z"
+    }, null, -1)
+  ]))]))
+}
+
+const __unplugin_components_2$2 = { name: 'ri-close-line', render: render$y };
+/* vite-plugin-components disabled */
+
+const _hoisted_1$2m = {
+  viewBox: "0 0 24 24",
+  width: "1.2em",
+  height: "1.2em"
+};
+
+function render$x(_ctx, _cache) {
+  return (openBlock(), createElementBlock("svg", _hoisted_1$2m, [...(_cache[0] || (_cache[0] = [
+    createElementVNode("path", {
+      fill: "currentColor",
+      d: "M18 3v2h-1v6l2 3v2h-6v7h-2v-7H5v-2l2-3V5H6V3zM9 5v6.606L7.404 14h9.192L15 11.606V5z"
+    }, null, -1)
+  ]))]))
+}
+
+const __unplugin_components_14 = { name: 'ri-pushpin2-line', render: render$x };
+/* vite-plugin-components disabled */
+
+const _hoisted_1$2l = {
+  viewBox: "0 0 24 24",
+  width: "1.2em",
+  height: "1.2em"
+};
+
+function render$w(_ctx, _cache) {
+  return (openBlock(), createElementBlock("svg", _hoisted_1$2l, [...(_cache[0] || (_cache[0] = [
+    createElementVNode("path", {
+      fill: "currentColor",
+      d: "M18 3v2h-1v6l2 3v2h-6v7h-2v-7H5v-2l2-3V5H6V3z"
+    }, null, -1)
+  ]))]))
+}
+
+const __unplugin_components_13 = { name: 'ri-pushpin2-fill', render: render$w };
+/* vite-plugin-components disabled */
+
 const _hoisted_1$2k = {
   viewBox: "0 0 24 24",
   width: "1.2em",
@@ -15,12 +69,12 @@ function render$v(_ctx, _cache) {
   return (openBlock(), createElementBlock("svg", _hoisted_1$2k, [...(_cache[0] || (_cache[0] = [
     createElementVNode("path", {
       fill: "currentColor",
-      d: "m12 10.587l4.95-4.95l1.414 1.414l-4.95 4.95l4.95 4.95l-1.415 1.414l-4.95-4.95l-4.949 4.95l-1.414-1.415l4.95-4.95l-4.95-4.95L7.05 5.638z"
+      d: "m12 13.171l4.95-4.95l1.414 1.415L12 16L5.636 9.636L7.05 8.222z"
     }, null, -1)
   ]))]))
 }
 
-const __unplugin_components_2$2 = { name: 'ri-close-line', render: render$v };
+const __unplugin_components_12 = { name: 'ri-arrow-down-s-line', render: render$v };
 /* vite-plugin-components disabled */
 
 const _hoisted_1$2j = {
@@ -33,12 +87,12 @@ function render$u(_ctx, _cache) {
   return (openBlock(), createElementBlock("svg", _hoisted_1$2j, [...(_cache[0] || (_cache[0] = [
     createElementVNode("path", {
       fill: "currentColor",
-      d: "M18 3v2h-1v6l2 3v2h-6v7h-2v-7H5v-2l2-3V5H6V3zM9 5v6.606L7.404 14h9.192L15 11.606V5z"
+      d: "M12 3c5.392 0 9.878 3.88 10.819 9c-.94 5.12-5.427 9-10.819 9s-9.878-3.88-10.818-9C2.122 6.88 6.608 3 12 3m0 16a9.005 9.005 0 0 0 8.778-7a9.005 9.005 0 0 0-17.555 0A9.005 9.005 0 0 0 12 19m0-2.5a4.5 4.5 0 1 1 0-9a4.5 4.5 0 0 1 0 9m0-2a2.5 2.5 0 1 0 0-5a2.5 2.5 0 0 0 0 5"
     }, null, -1)
   ]))]))
 }
 
-const __unplugin_components_11 = { name: 'ri-pushpin2-line', render: render$u };
+const __unplugin_components_11 = { name: 'ri-eye-line', render: render$u };
 /* vite-plugin-components disabled */
 
 const _hoisted_1$2i = {
@@ -51,12 +105,12 @@ function render$t(_ctx, _cache) {
   return (openBlock(), createElementBlock("svg", _hoisted_1$2i, [...(_cache[0] || (_cache[0] = [
     createElementVNode("path", {
       fill: "currentColor",
-      d: "M18 3v2h-1v6l2 3v2h-6v7h-2v-7H5v-2l2-3V5H6V3z"
+      d: "m7.05 14.121l-2.12 2.122l2.828 2.828L19.071 7.757L16.243 4.93L14.12 7.05l1.415 1.414L14.12 9.88l-1.414-1.415l-1.414 1.415l1.414 1.414l-1.414 1.414l-1.414-1.414l-1.414 1.414l1.414 1.414l-1.414 1.415zm9.9-11.313l4.243 4.242a1 1 0 0 1 0 1.414L8.465 21.192a1 1 0 0 1-1.415 0L2.808 16.95a1 1 0 0 1 0-1.414L15.536 2.808a1 1 0 0 1 1.414 0m-2.83 15.555l1.415-1.414l2.242 2.243h1.414v-1.414l-2.242-2.243l1.414-1.414L21 16.756V21h-4.242zM5.636 9.878L2.808 7.05a1 1 0 0 1 0-1.415l2.828-2.828a1 1 0 0 1 1.414 0l2.83 2.828L8.464 7.05l-2.12-2.122l-1.415 1.415l2.121 2.12z"
     }, null, -1)
   ]))]))
 }
 
-const __unplugin_components_10 = { name: 'ri-pushpin2-fill', render: render$t };
+const __unplugin_components_10 = { name: 'ri-pencil-ruler2-line', render: render$t };
 /* vite-plugin-components disabled */
 
 const _hoisted_1$2h = {
@@ -23570,7 +23624,7 @@ const _hoisted_3$1e = { class: "d-flex-c" };
 const _hoisted_4$14 = { class: "d-flex-c" };
 const _hoisted_5$R = { class: "d-flex-c" };
 const _hoisted_6$J = { class: "d-flex-c" };
-const _hoisted_7$z = { class: "d-flex-c" };
+const _hoisted_7$B = { class: "d-flex-c" };
 const _hoisted_8$r = { class: "d-flex-c" };
 const _hoisted_9$m = { class: "d-flex-c" };
 const _hoisted_10$h = { class: "d-flex-c" };
@@ -23579,7 +23633,7 @@ const _hoisted_12$a = { class: "d-flex-c" };
 const _hoisted_13$a = { class: "d-flex-c" };
 const _hoisted_14$7 = { class: "d-flex-c" };
 const _hoisted_15$7 = { class: "d-flex-c" };
-const _hoisted_16$6 = { class: "d-flex-c" };
+const _hoisted_16$7 = { class: "d-flex-c" };
 const _hoisted_17$5 = { class: "d-flex-c" };
 const _hoisted_18$4 = { class: "d-flex ai-c" };
 const _hoisted_19$4 = { style: {"margin-left":"10px"} };
@@ -23762,7 +23816,7 @@ function _sfc_render$1R(_ctx, _cache, $props, $setup, $data, $options) {
                 default: withCtx(() => [
                   createVNode(_component_el_col, { span: 12 }, {
                     default: withCtx(() => [
-                      createElementVNode("div", _hoisted_7$z, [
+                      createElementVNode("div", _hoisted_7$B, [
                         createVNode(_component_CommonColorPicker, {
                           modelValue: $data.form.splitlineStyle.textColor,
                           "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.splitlineStyle.textColor) = $event)),
@@ -23956,7 +24010,7 @@ function _sfc_render$1R(_ctx, _cache, $props, $setup, $data, $options) {
                 default: withCtx(() => [
                   createVNode(_component_el_col, { span: 12 }, {
                     default: withCtx(() => [
-                      createElementVNode("div", _hoisted_16$6, [
+                      createElementVNode("div", _hoisted_16$7, [
                         createVNode(_component_CommonColorPicker, {
                           modelValue: $data.form.blockStyle.selectedBorderColor,
                           "onUpdate:modelValue": _cache[15] || (_cache[15] = $event => (($data.form.blockStyle.selectedBorderColor) = $event)),
@@ -24158,7 +24212,7 @@ const _hoisted_5$Q = {
   class: "d-flex-c"
 };
 const _hoisted_6$I = { class: "d-flex-c" };
-const _hoisted_7$y = { class: "d-flex-c" };
+const _hoisted_7$A = { class: "d-flex-c" };
 
 function _sfc_render$1Q(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_EfRadio = resolveComponent("EfRadio");
@@ -24344,7 +24398,7 @@ function _sfc_render$1Q(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_form_item, { label: "" }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_7$y, [
+                  createElementVNode("div", _hoisted_7$A, [
                     createVNode(_component_el_input_number, {
                       modelValue: $data.form.colMargin,
                       "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.colMargin) = $event)),
@@ -25021,7 +25075,7 @@ const _hoisted_3$1a = {
 const _hoisted_4$10 = { class: "color-view" };
 const _hoisted_5$O = { class: "color-view-dropdown" };
 const _hoisted_6$H = { style: {"position":"relative","width":"100%","padding":"30px 10px 10px 20px","border-bottom":"1px solid #e8eaec"} };
-const _hoisted_7$x = {
+const _hoisted_7$z = {
   class: "down-color-item",
   style: {"margin":"2px 0"}
 };
@@ -25135,7 +25189,7 @@ function _sfc_render$1M(_ctx, _cache, $props, $setup, $data, $options) {
               class: "color-example",
               style: normalizeStyle(`background:${$data.conversionColorList[index].color};`)
             }, null, 4),
-            createElementVNode("div", _hoisted_7$x, [
+            createElementVNode("div", _hoisted_7$z, [
               createVNode(_component_CommonColorPicker, {
                 modelValue: $data.conversionColorList[index].color,
                 "onUpdate:modelValue": $event => (($data.conversionColorList[index].color) = $event),
@@ -25674,7 +25728,7 @@ const _hoisted_3$17 = { class: "d-flex-c" };
 const _hoisted_4$Z = { class: "d-flex-c" };
 const _hoisted_5$L = { class: "d-flex-c" };
 const _hoisted_6$G = { class: "d-flex-c" };
-const _hoisted_7$w = { class: "d-flex-c" };
+const _hoisted_7$y = { class: "d-flex-c" };
 const _hoisted_8$p = { class: "d-flex-c" };
 
 function _sfc_render$1J(_ctx, _cache, $props, $setup, $data, $options) {
@@ -25866,7 +25920,7 @@ function _sfc_render$1J(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_col, { span: 12 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_7$w, [
+                  createElementVNode("div", _hoisted_7$y, [
                     createVNode(_component_el_switch, {
                       modelValue: $data.form.label.show,
                       "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.label.show) = $event)),
@@ -26693,7 +26747,7 @@ const _hoisted_3$13 = { class: "d-flex-c" };
 const _hoisted_4$W = { class: "d-flex-c" };
 const _hoisted_5$J = { class: "d-flex-c" };
 const _hoisted_6$E = { class: "d-flex-c" };
-const _hoisted_7$v = { class: "d-flex-c" };
+const _hoisted_7$x = { class: "d-flex-c" };
 const _hoisted_8$o = { class: "d-flex-c" };
 const _hoisted_9$k = { class: "d-flex-c" };
 const _hoisted_10$f = { class: "d-flex-c" };
@@ -26872,7 +26926,7 @@ function _sfc_render$1D(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_col, { span: 12 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_7$v, [
+                  createElementVNode("div", _hoisted_7$x, [
                     createVNode(_component_el_input_number, {
                       modelValue: $data.styles['--tablecellheight'],
                       "onUpdate:modelValue": _cache[14] || (_cache[14] = $event => (($data.styles['--tablecellheight']) = $event)),
@@ -27429,7 +27483,7 @@ const _hoisted_3$10 = { class: "d-flex" };
 const _hoisted_4$T = ["onClick"];
 const _hoisted_5$I = { class: "d-flex-c" };
 const _hoisted_6$D = { class: "d-flex-c" };
-const _hoisted_7$u = { class: "d-flex-c" };
+const _hoisted_7$w = { class: "d-flex-c" };
 const _hoisted_8$n = { class: "d-flex-c" };
 
 function _sfc_render$1A(_ctx, _cache, $props, $setup, $data, $options) {
@@ -27543,7 +27597,7 @@ function _sfc_render$1A(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_col, { span: 12 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_7$u, [
+                  createElementVNode("div", _hoisted_7$w, [
                     createVNode(_component_el_input_number, {
                       modelValue: $data.form.labelLine.length,
                       "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.labelLine.length) = $event)),
@@ -29163,7 +29217,7 @@ const _hoisted_3$$ = ["onClick"];
 const _hoisted_4$S = { class: "collapse-item" };
 const _hoisted_5$H = { class: "collapse-item" };
 const _hoisted_6$C = { class: "input-number-box" };
-const _hoisted_7$t = { class: "input-number-box" };
+const _hoisted_7$v = { class: "input-number-box" };
 const _hoisted_8$m = { class: "collapse-item" };
 const _hoisted_9$j = { class: "collapse-item layout-collapse-item" };
 const _hoisted_10$e = { class: "collapse-item" };
@@ -29310,7 +29364,7 @@ function _sfc_render$1y(_ctx, _cache, $props, $setup, $data, $options) {
                     }, null, 8, ["modelValue", "disabled"]),
                     _cache[10] || (_cache[10] = createElementVNode("span", { class: "input-label" }, "行间距", -1))
                   ]),
-                  createElementVNode("div", _hoisted_7$t, [
+                  createElementVNode("div", _hoisted_7$v, [
                     createVNode(_component_el_input_number, {
                       modelValue: $data.colSpace,
                       "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.colSpace) = $event)),
@@ -30608,7 +30662,7 @@ const _hoisted_5$G = {
   class: "group-content"
 };
 const _hoisted_6$B = ["onClick"];
-const _hoisted_7$s = { class: "menu-item-tip" };
+const _hoisted_7$u = { class: "menu-item-tip" };
 const _hoisted_8$l = {
   key: 0,
   class: "decorate-tip d-flex ai-c jc-c"
@@ -30633,7 +30687,7 @@ const _hoisted_15$6 = {
   class: "menu-item",
   title: "拖拽到对应区域"
 };
-const _hoisted_16$5 = { class: "menu-item-tip" };
+const _hoisted_16$6 = { class: "menu-item-tip" };
 const _hoisted_17$4 = ["src", "title"];
 const _hoisted_18$3 = { class: "menu-card-name" };
 const _hoisted_19$3 = { class: "menu-item-wrapper" };
@@ -30709,7 +30763,7 @@ function _sfc_render$1w(_ctx, _cache, $props, $setup, $data, $options) {
                           class: normalizeClass(item.isDecorate ? 'menu-item-decorate' : '')
                         }, {
                           content: withCtx(() => [
-                            createElementVNode("div", _hoisted_7$s, [
+                            createElementVNode("div", _hoisted_7$u, [
                               (item.isDecorate)
                                 ? (openBlock(), createElementBlock("div", _hoisted_8$l, [
                                     createVNode(_component_BKDecorateChart, {
@@ -30767,7 +30821,7 @@ function _sfc_render$1w(_ctx, _cache, $props, $setup, $data, $options) {
                           "popper-class": "tip_popper"
                         }, {
                           content: withCtx(() => [
-                            createElementVNode("div", _hoisted_16$5, [
+                            createElementVNode("div", _hoisted_16$6, [
                               createElementVNode("img", {
                                 src: item.img,
                                 title: item.name
@@ -35428,6 +35482,9 @@ const _sfc_main$1s = {
         else this.savePageConfig(true);
       }
     },
+    onModeCommand (cmd) {
+      this.designMode = (cmd === 'design');
+    },
     openPageSetting () {
       // 再次点击关闭:收起整个右侧面板,不要回落到空的「图表配置」占位
       if (this.pageSettingVisible) { this.pageSettingVisible = false; this.setRightExpand(false); return }
@@ -35842,31 +35899,29 @@ const _hoisted_3$U = {
 };
 const _hoisted_4$M = { class: "text-button" };
 const _hoisted_5$E = { class: "canvas-zoom-ctrl" };
-const _hoisted_6$z = {
-  key: 1,
-  class: "mode-seg"
-};
-const _hoisted_7$r = { style: {"display":"flex","flex":"1","overflow":"hidden","position":"relative"} };
-const _hoisted_8$k = {
+const _hoisted_6$z = { class: "mode-dd-trigger" };
+const _hoisted_7$t = { class: "mode-dd-label" };
+const _hoisted_8$k = { style: {"display":"flex","flex":"1","overflow":"hidden","position":"relative"} };
+const _hoisted_9$h = {
   style: {"position":"relative","display":"flex","flex":"1","flex-direction":"column","height":"100%","overflow":"hidden"},
   direction: "vertical"
 };
-const _hoisted_9$h = {
+const _hoisted_10$c = {
   key: 0,
   style: {"padding":"0"}
 };
-const _hoisted_10$c = { style: {"display":"flex","flex":"1","overflow":"hidden","position":"relative"} };
-const _hoisted_11$8 = { class: "decorate-container" };
-const _hoisted_12$7 = {
+const _hoisted_11$8 = { style: {"display":"flex","flex":"1","overflow":"hidden","position":"relative"} };
+const _hoisted_12$7 = { class: "decorate-container" };
+const _hoisted_13$7 = {
   ref: "gridLineContainer",
   class: "grid-line-container"
 };
-const _hoisted_13$7 = ["title"];
-const _hoisted_14$5 = {
+const _hoisted_14$5 = ["title"];
+const _hoisted_15$5 = {
   key: 2,
   style: {"display":"flex","height":"100%","overflow":"auto"}
 };
-const _hoisted_15$5 = {
+const _hoisted_16$5 = {
   key: 1,
   style: {"display":"flex","flex-direction":"column","align-items":"center","align-self":"center","justify-content":"center","width":"100%","overflow":"hidden"}
 };
@@ -35886,12 +35941,15 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_i_ri_equalizer_fill = __unplugin_components_8;
   const _component_el_switch = resolveComponent("el-switch");
   const _component_i_ri_save_fill = __unplugin_components_9;
+  const _component_i_ri_pencil_ruler_2_line = __unplugin_components_10;
+  const _component_i_ri_eye_line = __unplugin_components_11;
+  const _component_i_ri_arrow_down_s_line = __unplugin_components_12;
   const _component_Toolbar = resolveComponent("Toolbar");
   const _component_ToolbarPannel = resolveComponent("ToolbarPannel");
   const _component_BKGridLayoutContent = resolveComponent("BKGridLayoutContent");
   const _component_BKGridLayoutDecorate = resolveComponent("BKGridLayoutDecorate");
-  const _component_i_ri_pushpin_2_fill = __unplugin_components_10;
-  const _component_i_ri_pushpin_2_line = __unplugin_components_11;
+  const _component_i_ri_pushpin_2_fill = __unplugin_components_13;
+  const _component_i_ri_pushpin_2_line = __unplugin_components_14;
   const _component_i_ri_close_line = __unplugin_components_2$2;
   const _component_PageSetting = resolveComponent("PageSetting");
   const _component_CardSetting = resolveComponent("CardSetting");
@@ -35939,25 +35997,25 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                             createVNode(_component_el_dropdown_menu, null, {
                               default: withCtx(() => [
                                 createVNode(_component_el_dropdown_item, { command: "addItem" }, {
-                                  default: withCtx(() => [...(_cache[26] || (_cache[26] = [
+                                  default: withCtx(() => [...(_cache[24] || (_cache[24] = [
                                     createTextVNode("添加区域", -1)
                                   ]))]),
                                   _: 1
                                 }),
                                 createVNode(_component_el_dropdown_item, { command: "addLayout" }, {
-                                  default: withCtx(() => [...(_cache[27] || (_cache[27] = [
+                                  default: withCtx(() => [...(_cache[25] || (_cache[25] = [
                                     createTextVNode("添加布局", -1)
                                   ]))]),
                                   _: 1
                                 }),
                                 createVNode(_component_el_dropdown_item, { command: "addTabLayout" }, {
-                                  default: withCtx(() => [...(_cache[28] || (_cache[28] = [
+                                  default: withCtx(() => [...(_cache[26] || (_cache[26] = [
                                     createTextVNode("页签布局", -1)
                                   ]))]),
                                   _: 1
                                 }),
                                 createVNode(_component_el_dropdown_item, { command: "addQuery" }, {
-                                  default: withCtx(() => [...(_cache[29] || (_cache[29] = [
+                                  default: withCtx(() => [...(_cache[27] || (_cache[27] = [
                                     createTextVNode("添加查询", -1)
                                   ]))]),
                                   _: 1
@@ -35968,7 +36026,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                           ]),
                           default: withCtx(() => [
                             createVNode(_component_i_ri_add_line),
-                            _cache[30] || (_cache[30] = createElementVNode("span", { style: {"margin-left":"3px"} }, "添加区域", -1))
+                            _cache[28] || (_cache[28] = createElementVNode("span", { style: {"margin-left":"3px"} }, "添加区域", -1))
                           ]),
                           _: 1
                         }, 8, ["onCommand"]),
@@ -35977,14 +36035,14 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                           onClick: _cache[1] || (_cache[1] = (...args) => ($options.clearConfig && $options.clearConfig(...args)))
                         }, [
                           createVNode(_component_i_ri_delete_bin_2_fill),
-                          _cache[31] || (_cache[31] = createElementVNode("span", null, "清空", -1))
+                          _cache[29] || (_cache[29] = createElementVNode("span", null, "清空", -1))
                         ]),
                         createElementVNode("div", {
                           class: normalizeClass(['text-button', $data.showBodyPannel && 'is-on']),
                           onClick: _cache[2] || (_cache[2] = (...args) => ($options.showLeftPanel && $options.showLeftPanel(...args)))
                         }, [
                           createVNode(_component_i_ri_pencil_ruler_2_fill),
-                          _cache[32] || (_cache[32] = createElementVNode("span", null, "工具面板", -1))
+                          _cache[30] || (_cache[30] = createElementVNode("span", null, "工具面板", -1))
                         ], 2),
                         (!$props.isBasicMode)
                           ? (openBlock(), createElementBlock("div", {
@@ -35993,14 +36051,14 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                               onClick: _cache[3] || (_cache[3] = (...args) => ($options.openPageSetting && $options.openPageSetting(...args)))
                             }, [
                               createVNode(_component_i_ri_settings_5_fill),
-                              _cache[33] || (_cache[33] = createElementVNode("span", null, "页面设置", -1))
+                              _cache[31] || (_cache[31] = createElementVNode("span", null, "页面设置", -1))
                             ], 2))
                           : createCommentVNode("", true),
                         createElementVNode("div", {
                           class: normalizeClass(['fold-icon', ($data.expand && !$data.pageSettingVisible && !$data.cardSettingVisible) ? 'active' : '']),
                           title: "图表配置",
                           onClick: _cache[4] || (_cache[4] = (...args) => ($options.toggleChartConfig && $options.toggleChartConfig(...args)))
-                        }, [...(_cache[34] || (_cache[34] = [
+                        }, [...(_cache[32] || (_cache[32] = [
                           createElementVNode("i", {
                             style: {"font-size":"13px"},
                             class: "am-iconfont icon-youceyincang"
@@ -36020,14 +36078,14 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                                     createVNode(_component_el_dropdown_item, { command: "grid" }, {
                                       default: withCtx(() => [
                                         createVNode(_component_i_ri_table_fill, { style: {"margin-right":"6px"} }),
-                                        _cache[36] || (_cache[36] = createTextVNode("栅格 ", -1))
+                                        _cache[34] || (_cache[34] = createTextVNode("栅格 ", -1))
                                       ]),
                                       _: 1
                                     }),
                                     createVNode(_component_el_dropdown_item, { command: "vars" }, {
                                       default: withCtx(() => [
                                         createVNode(_component_i_ri_file_settings_fill, { style: {"margin-right":"6px"} }),
-                                        _cache[37] || (_cache[37] = createTextVNode("全局参数 ", -1))
+                                        _cache[35] || (_cache[35] = createTextVNode("全局参数 ", -1))
                                       ]),
                                       _: 1
                                     }),
@@ -36038,7 +36096,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                                         }, {
                                           default: withCtx(() => [
                                             createVNode(_component_i_ri_equalizer_fill, { style: {"margin-right":"6px"} }),
-                                            _cache[38] || (_cache[38] = createTextVNode("主题设置 ", -1))
+                                            _cache[36] || (_cache[36] = createTextVNode("主题设置 ", -1))
                                           ]),
                                           _: 1
                                         }))
@@ -36050,7 +36108,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                                         }, {
                                           default: withCtx(() => [
                                             createVNode(_component_i_ri_equalizer_fill, { style: {"margin-right":"6px"} }),
-                                            _cache[39] || (_cache[39] = createTextVNode("卡片设置 ", -1))
+                                            _cache[37] || (_cache[37] = createTextVNode("卡片设置 ", -1))
                                           ]),
                                           _: 1
                                         }))
@@ -36062,13 +36120,13 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                               default: withCtx(() => [
                                 createElementVNode("div", _hoisted_4$M, [
                                   createVNode(_component_i_ri_more_2_fill),
-                                  _cache[35] || (_cache[35] = createElementVNode("span", null, "更多", -1))
+                                  _cache[33] || (_cache[33] = createElementVNode("span", null, "更多", -1))
                                 ])
                               ]),
                               _: 1
                             }, 8, ["onCommand"]))
                           : createCommentVNode("", true),
-                        _cache[42] || (_cache[42] = createElementVNode("span", { class: "tb-divider" }, null, -1)),
+                        _cache[40] || (_cache[40] = createElementVNode("span", { class: "tb-divider" }, null, -1)),
                         createElementVNode("div", _hoisted_5$E, [
                           createElementVNode("span", {
                             class: "cz-btn",
@@ -36116,7 +36174,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                                 createVNode(_component_el_dropdown_menu, null, {
                                   default: withCtx(() => [
                                     createVNode(_component_el_dropdown_item, { command: "saveAs" }, {
-                                      default: withCtx(() => [...(_cache[40] || (_cache[40] = [
+                                      default: withCtx(() => [...(_cache[38] || (_cache[38] = [
                                         createTextVNode("另存为探索布局", -1)
                                       ]))]),
                                       _: 1
@@ -36127,35 +36185,71 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                               ]),
                               default: withCtx(() => [
                                 createVNode(_component_i_ri_save_fill),
-                                _cache[41] || (_cache[41] = createElementVNode("span", { style: {"margin-left":"3px"} }, "保存", -1))
+                                _cache[39] || (_cache[39] = createElementVNode("span", { style: {"margin-left":"3px"} }, "保存", -1))
                               ]),
                               _: 1
                             }, 8, ["onCommand"]))
                           : createCommentVNode("", true),
-                        _cache[43] || (_cache[43] = createElementVNode("span", { class: "tb-divider" }, null, -1))
+                        _cache[41] || (_cache[41] = createElementVNode("span", { class: "tb-divider" }, null, -1))
                       ], 64))
                     : createCommentVNode("", true),
                   ($props.setMode)
-                    ? (openBlock(), createElementBlock("div", _hoisted_6$z, [
-                        createElementVNode("span", {
-                          class: normalizeClass(['mode-seg-item', !$data.designMode && 'is-on']),
-                          onClick: _cache[11] || (_cache[11] = $event => ($data.designMode = false))
-                        }, "预览", 2),
-                        createElementVNode("span", {
-                          class: normalizeClass(['mode-seg-item', $data.designMode && 'is-on']),
-                          onClick: _cache[12] || (_cache[12] = $event => ($data.designMode = true))
-                        }, "设计", 2)
-                      ]))
+                    ? (openBlock(), createBlock(_component_el_dropdown, {
+                        key: 1,
+                        trigger: "click",
+                        size: "small",
+                        class: "mode-dropdown",
+                        "popper-class": "mode-dd-menu",
+                        onCommand: $options.onModeCommand
+                      }, {
+                        dropdown: withCtx(() => [
+                          createVNode(_component_el_dropdown_menu, null, {
+                            default: withCtx(() => [
+                              createVNode(_component_el_dropdown_item, {
+                                command: "preview",
+                                class: normalizeClass(!$data.designMode && 'is-cur')
+                              }, {
+                                default: withCtx(() => [
+                                  createVNode(_component_i_ri_eye_line),
+                                  _cache[42] || (_cache[42] = createElementVNode("span", { style: {"margin-left":"6px"} }, "预览", -1))
+                                ]),
+                                _: 1
+                              }, 8, ["class"]),
+                              createVNode(_component_el_dropdown_item, {
+                                command: "design",
+                                class: normalizeClass($data.designMode && 'is-cur')
+                              }, {
+                                default: withCtx(() => [
+                                  createVNode(_component_i_ri_pencil_ruler_2_line),
+                                  _cache[43] || (_cache[43] = createElementVNode("span", { style: {"margin-left":"6px"} }, "设计", -1))
+                                ]),
+                                _: 1
+                              }, 8, ["class"])
+                            ]),
+                            _: 1
+                          })
+                        ]),
+                        default: withCtx(() => [
+                          createElementVNode("span", _hoisted_6$z, [
+                            ($data.designMode)
+                              ? (openBlock(), createBlock(_component_i_ri_pencil_ruler_2_line, { key: 0 }))
+                              : (openBlock(), createBlock(_component_i_ri_eye_line, { key: 1 })),
+                            createElementVNode("span", _hoisted_7$t, toDisplayString($data.designMode ? '设计' : '预览'), 1),
+                            createVNode(_component_i_ri_arrow_down_s_line, { class: "mode-dd-caret" })
+                          ])
+                        ]),
+                        _: 1
+                      }, 8, ["onCommand"]))
                     : createCommentVNode("", true)
                 ]))
               : createCommentVNode("", true)
           ], 2))
         : createCommentVNode("", true)
     ], 8, ["to", "disabled"])),
-    createElementVNode("div", _hoisted_7$r, [
-      createElementVNode("div", _hoisted_8$k, [
+    createElementVNode("div", _hoisted_8$k, [
+      createElementVNode("div", _hoisted_9$h, [
         (!$props.isModal)
-          ? (openBlock(), createElementBlock("div", _hoisted_9$h, [
+          ? (openBlock(), createElementBlock("div", _hoisted_10$c, [
               createVNode(_component_Toolbar, mergeProps(_ctx.$props, {
                 ref: "leftToolBar",
                 "custom-chart": $props.customChart,
@@ -36168,7 +36262,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
               }), null, 16, ["custom-chart", "disabled", "is-app", "layout-config", "onToggleEvent", "onUpdateGridSetting", "onClearConfig"])
             ]))
           : createCommentVNode("", true),
-        createElementVNode("div", _hoisted_10$c, [
+        createElementVNode("div", _hoisted_11$8, [
           ($data.showBodyPannel && !$props.isModal && $data.designMode)
             ? (openBlock(), createBlock(_component_ToolbarPannel, mergeProps({
                 key: 0,
@@ -36179,14 +36273,14 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                 "append-to-body": "",
                 "is-app": $options.isApp,
                 onClickItem: $options.toggleEvent,
-                onHidden: _cache[13] || (_cache[13] = $event => ($data.showBodyPannel = false))
+                onHidden: _cache[11] || (_cache[11] = $event => ($data.showBodyPannel = false))
               }), null, 16, ["custom-chart", "disabled", "is-app", "onClickItem"]))
             : createCommentVNode("", true),
           createElementVNode("div", {
             ref: "workingContainer",
             class: normalizeClass(['working-container', ($props.isModal || !$data.designMode) ? 'no-background' : '']),
             style: normalizeStyle(`padding: ${($props.isModal || !$data.designMode) ? '0' : '30px 40px'}; height:  ${!$data.layoutConfig.layout.length ? '100%' : 'auto'};${$data.styleText}`),
-            onScroll: _cache[14] || (_cache[14] = (...args) => ($options.handleScroll && $options.handleScroll(...args)))
+            onScroll: _cache[12] || (_cache[12] = (...args) => ($options.handleScroll && $options.handleScroll(...args)))
           }, [
             withDirectives(createElementVNode("div", {
               ref: "layoutWrapper",
@@ -36213,7 +36307,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                     }), null, 16, ["configs", "set-mode", "edit-mode", "page-config", "custom-card-style-props", "selected-card-item", "onRemoveItem", "onCancelSetCard"]))
                   : createCommentVNode("", true)
               ], 4),
-              createElementVNode("div", _hoisted_11$8, [
+              createElementVNode("div", _hoisted_12$7, [
                 (!$data.isThemeChange && $data.showContent)
                   ? (openBlock(), createBlock(_component_BKGridLayoutDecorate, mergeProps({ key: 0 }, _ctx.$props, {
                       ref: "gridLayoutDecorate",
@@ -36224,7 +36318,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                     }), null, 16, ["configs", "set-mode", "page-config", "decorate-config"]))
                   : createCommentVNode("", true)
               ]),
-              withDirectives(createElementVNode("div", _hoisted_12$7, [
+              withDirectives(createElementVNode("div", _hoisted_13$7, [
                 (openBlock(true), createElementBlock(Fragment, null, renderList($data.layoutConfig.colNum, (num) => {
                   return (openBlock(), createElementBlock("div", { key: num }))
                 }), 128))
@@ -36241,32 +36335,32 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
         ? (openBlock(), createElementBlock("div", {
             key: 0,
             class: normalizeClass(['right-setting-container', $data.panelPinned && 'is-pinned']),
-            style: normalizeStyle({width: $data.expand ? ((!$data.pageSettingVisible && !$data.cardSettingVisible && $data.rightTab !== 'base') ? ($data.dataMappingVisible && $data.rightTab === 'data' ? '745px' : '500px') : '330px') : '0' })
+            style: normalizeStyle({width: $data.expand ? ($data.dataMappingVisible && $data.rightTab === 'data' ? '745px' : '330px') : '0' })
           }, [
             ($data.expand)
               ? (openBlock(), createElementBlock("div", {
                   key: 0,
                   class: normalizeClass(['cfg-pin-btn', $data.panelPinned && 'is-on']),
                   title: $data.panelPinned ? '取消固定(浮动)' : '固定到右侧',
-                  onClick: _cache[15] || (_cache[15] = $event => ($data.panelPinned = !$data.panelPinned))
+                  onClick: _cache[13] || (_cache[13] = $event => ($data.panelPinned = !$data.panelPinned))
                 }, [
                   ($data.panelPinned)
                     ? (openBlock(), createBlock(_component_i_ri_pushpin_2_fill, { key: 0 }))
                     : (openBlock(), createBlock(_component_i_ri_pushpin_2_line, { key: 1 }))
-                ], 10, _hoisted_13$7))
+                ], 10, _hoisted_14$5))
               : createCommentVNode("", true),
             ($data.expand)
               ? (openBlock(), createElementBlock("div", {
                   key: 1,
                   class: "cfg-close-btn",
                   title: "关闭",
-                  onClick: _cache[16] || (_cache[16] = (...args) => ($options.closeRightPanel && $options.closeRightPanel(...args)))
+                  onClick: _cache[14] || (_cache[14] = (...args) => ($options.closeRightPanel && $options.closeRightPanel(...args)))
                 }, [
                   createVNode(_component_i_ri_close_line)
                 ]))
               : createCommentVNode("", true),
             (!$data.pageSettingVisible && !$data.cardSettingVisible)
-              ? withDirectives((openBlock(), createElementBlock("div", _hoisted_14$5, [
+              ? withDirectives((openBlock(), createElementBlock("div", _hoisted_15$5, [
                   ($data.configs && $data.configs.type)
                     ? (openBlock(), createBlock(resolveDynamicComponent($options.getConfigName($data.configs)), mergeProps({ key: 0 }, _ctx.$props, {
                         key: $data.configs.chartId,
@@ -36276,11 +36370,11 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                         "init-tab": $data.rightTab,
                         style: {"overflow":"hidden"},
                         onSaveChartCfg: $options.saveChartCfg,
-                        onSetExpand: _cache[17] || (_cache[17] = $event => ($options.setRightExpand(false))),
-                        onChangeTab: _cache[18] || (_cache[18] = $event => ($data.rightTab = $event)),
-                        onChangeDataMappingVisible: _cache[19] || (_cache[19] = $event => ($data.dataMappingVisible = $event))
+                        onSetExpand: _cache[15] || (_cache[15] = $event => ($options.setRightExpand(false))),
+                        onChangeTab: _cache[16] || (_cache[16] = $event => ($data.rightTab = $event)),
+                        onChangeDataMappingVisible: _cache[17] || (_cache[17] = $event => ($data.dataMappingVisible = $event))
                       }), null, 16, ["configs", "page-config", "save-able", "init-tab", "onSaveChartCfg"]))
-                    : (openBlock(), createElementBlock("div", _hoisted_15$5, [...(_cache[44] || (_cache[44] = [
+                    : (openBlock(), createElementBlock("div", _hoisted_16$5, [...(_cache[44] || (_cache[44] = [
                         createElementVNode("img", {
                           src: _imports_0$2,
                           alt: ""
@@ -36314,7 +36408,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                     onPublicChangeMethod: _ctx.publicChangeMethod,
                     onCustomScriptBlur: _ctx.customScriptBlur,
                     onCustomStyleBlur: _ctx.customStyleBlur,
-                    onOpenSaveAs: _cache[20] || (_cache[20] = $event => ($data.themeEditVisible=true))
+                    onOpenSaveAs: _cache[18] || (_cache[18] = $event => ($data.themeEditVisible=true))
                   }, null, 8, ["oper-permission", "theme", "disabled", "is-app", "onSetTheme", "onChangeCardRadius", "onChangeSpaceMode", "onChangeSpace", "onChangePageWidth", "onChangePagePadding", "onChangeCardPadding", "onInnerPaddingRefChange", "onChangePreTheme", "onChangePageHeightMode", "onChangePageMinHeight", "onChangePageMinWidth", "onChartStyleChange", "onPublicChangeMethod", "onCustomScriptBlur", "onCustomStyleBlur"])), [
                     [vShow, $data.expand]
                   ])
@@ -36339,7 +36433,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
           visible: $data.varConfigVisible,
           "set-mode": $props.setMode,
           configs: $data.layoutConfig,
-          onClose: _cache[21] || (_cache[21] = $event => ($data.varConfigVisible=false)),
+          onClose: _cache[19] || (_cache[19] = $event => ($data.varConfigVisible=false)),
           onSave: $options.saveVarConfig
         }, null, 8, ["visible", "set-mode", "configs", "onSave"]))
       : createCommentVNode("", true),
@@ -36365,14 +36459,14 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
           "map-path": $props.mapPath,
           "is-basic-mode": $props.isBasicMode,
           "is-app": $options.isApp,
-          onPreviewClose: _cache[22] || (_cache[22] = $event => ($data.previewVisible=false))
+          onPreviewClose: _cache[20] || (_cache[20] = $event => ($data.previewVisible=false))
         }), null, 16, ["visible", "configs", "map-source", "tjb-u-r-l", "map-path", "is-basic-mode", "is-app"]))
       : createCommentVNode("", true),
     ($data.cardConfigVisible)
       ? (openBlock(), createBlock(_component_CardConfig, {
           key: 3,
           visible: $data.cardConfigVisible,
-          onClose: _cache[23] || (_cache[23] = $event => ($data.cardConfigVisible=false)),
+          onClose: _cache[21] || (_cache[21] = $event => ($data.cardConfigVisible=false)),
           onSave: $options.saveCardConfig,
           onRefresh: $options.refreshCardConfig
         }, null, 8, ["visible", "onSave", "onRefresh"]))
@@ -36381,7 +36475,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
       ? (openBlock(), createBlock(_component_ThemeConfig, {
           key: 4,
           visible: $data.themeConfigVisible,
-          onClose: _cache[24] || (_cache[24] = $event => ($data.themeConfigVisible=false)),
+          onClose: _cache[22] || (_cache[22] = $event => ($data.themeConfigVisible=false)),
           onSave: $options.saveThemeConfig,
           onRefresh: $options.refreshThemeConfig
         }, null, 8, ["visible", "onSave", "onRefresh"]))
@@ -36392,14 +36486,14 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
           visible: $data.themeEditVisible,
           "pre-theme": $data.layoutConfig.themeConfigs,
           "oper-permission": $props.operPermission,
-          onClose: _cache[25] || (_cache[25] = $event => ($data.themeEditVisible=false)),
+          onClose: _cache[23] || (_cache[23] = $event => ($data.themeEditVisible=false)),
           onSave: $options.saveThemeConfig,
           onRefresh: $options.refreshThemeConfig
         }, null, 8, ["visible", "pre-theme", "oper-permission", "onSave", "onRefresh"]))
       : createCommentVNode("", true)
   ], 2))
 }
-const AnalysisMaker = /*#__PURE__*/_export_sfc(_sfc_main$1s, [['render',_sfc_render$1r],['__scopeId',"data-v-e541e621"]]);
+const AnalysisMaker = /*#__PURE__*/_export_sfc(_sfc_main$1s, [['render',_sfc_render$1r],['__scopeId',"data-v-b3794da8"]]);
 
 AnalysisMaker.install = function (Vue) {
   Vue.component(AnalysisMaker.name, AnalysisMaker);
@@ -38392,7 +38486,7 @@ const _hoisted_3$S = { class: "d-flex-c" };
 const _hoisted_4$K = { class: "d-flex-c" };
 const _hoisted_5$C = { class: "d-flex-c" };
 const _hoisted_6$x = { class: "d-flex-c" };
-const _hoisted_7$q = { class: "d-flex-c" };
+const _hoisted_7$s = { class: "d-flex-c" };
 const _hoisted_8$j = { class: "d-flex-c" };
 
 function _sfc_render$1k(_ctx, _cache, $props, $setup, $data, $options) {
@@ -38605,7 +38699,7 @@ function _sfc_render$1k(_ctx, _cache, $props, $setup, $data, $options) {
                   }),
                   createVNode(_component_el_col, { span: 12 }, {
                     default: withCtx(() => [
-                      createElementVNode("div", _hoisted_7$q, [
+                      createElementVNode("div", _hoisted_7$s, [
                         createVNode(_component_el_select, {
                           modelValue: $data.form['--numfontWeight'],
                           "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form['--numfontWeight']) = $event)),
@@ -39316,7 +39410,7 @@ const _hoisted_3$Q = { class: "d-flex-c" };
 const _hoisted_4$I = { class: "d-flex" };
 const _hoisted_5$A = ["onClick"];
 const _hoisted_6$v = { class: "d-flex-c" };
-const _hoisted_7$p = { class: "d-flex-c" };
+const _hoisted_7$r = { class: "d-flex-c" };
 
 function _sfc_render$1g(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_switch = resolveComponent("el-switch");
@@ -39592,7 +39686,7 @@ function _sfc_render$1g(_ctx, _cache, $props, $setup, $data, $options) {
                       default: withCtx(() => [
                         createVNode(_component_el_col, { span: 12 }, {
                           default: withCtx(() => [
-                            createElementVNode("div", _hoisted_7$p, [
+                            createElementVNode("div", _hoisted_7$r, [
                               createVNode(_component_el_input_number, {
                                 modelValue: $data.form.axisLabel.margin,
                                 "onUpdate:modelValue": _cache[18] || (_cache[18] = $event => (($data.form.axisLabel.margin) = $event)),
@@ -39826,7 +39920,7 @@ const _hoisted_3$P = { class: "d-flex-c" };
 const _hoisted_4$H = { class: "d-flex" };
 const _hoisted_5$z = ["onClick"];
 const _hoisted_6$u = { class: "d-flex-c" };
-const _hoisted_7$o = { class: "d-flex-c" };
+const _hoisted_7$q = { class: "d-flex-c" };
 
 function _sfc_render$1f(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_switch = resolveComponent("el-switch");
@@ -40102,7 +40196,7 @@ function _sfc_render$1f(_ctx, _cache, $props, $setup, $data, $options) {
                       default: withCtx(() => [
                         createVNode(_component_el_col, { span: 12 }, {
                           default: withCtx(() => [
-                            createElementVNode("div", _hoisted_7$o, [
+                            createElementVNode("div", _hoisted_7$q, [
                               createVNode(_component_el_input_number, {
                                 modelValue: $data.form.axisLabel.margin,
                                 "onUpdate:modelValue": _cache[18] || (_cache[18] = $event => (($data.form.axisLabel.margin) = $event)),
@@ -41369,7 +41463,7 @@ const _hoisted_3$M = { class: "d-flex-c" };
 const _hoisted_4$G = { class: "d-flex" };
 const _hoisted_5$y = ["onClick"];
 const _hoisted_6$t = { class: "d-flex-c" };
-const _hoisted_7$n = { class: "d-flex-c" };
+const _hoisted_7$p = { class: "d-flex-c" };
 
 function _sfc_render$1a(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_switch = resolveComponent("el-switch");
@@ -41618,7 +41712,7 @@ function _sfc_render$1a(_ctx, _cache, $props, $setup, $data, $options) {
                       default: withCtx(() => [
                         createVNode(_component_el_col, { span: 12 }, {
                           default: withCtx(() => [
-                            createElementVNode("div", _hoisted_7$n, [
+                            createElementVNode("div", _hoisted_7$p, [
                               createVNode(_component_el_input_number, {
                                 modelValue: $data.form.axisLabel.margin,
                                 "onUpdate:modelValue": _cache[16] || (_cache[16] = $event => (($data.form.axisLabel.margin) = $event)),
@@ -42027,7 +42121,7 @@ const _hoisted_3$K = { class: "d-flex" };
 const _hoisted_4$E = ["onClick"];
 const _hoisted_5$w = { class: "d-flex-c" };
 const _hoisted_6$s = { class: "d-flex" };
-const _hoisted_7$m = ["onClick"];
+const _hoisted_7$o = ["onClick"];
 const _hoisted_8$i = { class: "d-flex-c" };
 const _hoisted_9$g = { class: "d-flex-c" };
 
@@ -42087,7 +42181,7 @@ function _sfc_render$17(_ctx, _cache, $props, $setup, $data, $options) {
                             (openBlock(true), createElementBlock(Fragment, null, renderList($data.triggerOption, (ele) => {
                               return (openBlock(), createElementBlock("div", {
                                 key: ele.value,
-                                class: normalizeClass(["chart-align-item", {'active':$data.form.trigger===ele.value,'is-disabled':!$options.saveAble}]),
+                                class: normalizeClass(["chart-align-item trigger-btn", {'active':$data.form.trigger===ele.value,'is-disabled':!$options.saveAble}]),
                                 onClick: $event => ($options.triggerChange(ele))
                               }, toDisplayString(ele.label), 11, _hoisted_4$E))
                             }), 128))
@@ -42104,9 +42198,9 @@ function _sfc_render$17(_ctx, _cache, $props, $setup, $data, $options) {
                             (openBlock(true), createElementBlock(Fragment, null, renderList($data.triggerOnOption, (el) => {
                               return (openBlock(), createElementBlock("div", {
                                 key: el.value,
-                                class: normalizeClass(["chart-align-item", {'active':$data.form.triggerOn===el.value,'is-disabled':!$options.saveAble}]),
+                                class: normalizeClass(["chart-align-item trigger-btn", {'active':$data.form.triggerOn===el.value,'is-disabled':!$options.saveAble}]),
                                 onClick: $event => ($options.triggerOnChange(el))
-                              }, toDisplayString(el.label), 11, _hoisted_7$m))
+                              }, toDisplayString(el.label), 11, _hoisted_7$o))
                             }), 128))
                           ]),
                           _cache[15] || (_cache[15] = createElementVNode("span", { class: "extra-bottom-text" }, " 触发动作", -1))
@@ -42236,7 +42330,7 @@ function _sfc_render$17(_ctx, _cache, $props, $setup, $data, $options) {
     }, 8, ["modelValue"])
   ]))
 }
-const tooltipConfig = /*#__PURE__*/_export_sfc(_sfc_main$18, [['render',_sfc_render$17],['__scopeId',"data-v-5fcf5fea"]]);
+const tooltipConfig = /*#__PURE__*/_export_sfc(_sfc_main$18, [['render',_sfc_render$17],['__scopeId',"data-v-69a6e5ec"]]);
 
 const __vite_glob_0_4 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
@@ -42372,7 +42466,7 @@ const _hoisted_4$D = {
 };
 const _hoisted_5$v = { style: {"position":"relative","width":"100%"} };
 const _hoisted_6$r = { class: "tabs-series" };
-const _hoisted_7$l = ["name", "onClick"];
+const _hoisted_7$n = ["name", "onClick"];
 const _hoisted_8$h = {
   key: 0,
   class: "tabs-series-content"
@@ -42546,7 +42640,7 @@ function _sfc_render$16(_ctx, _cache, $props, $setup, $data, $options) {
                     renderSlot(_ctx.$slots, "title", {
                       index: $props.seriesList.indexOf(series)
                     }, undefined, true)
-                  ], 10, _hoisted_7$l))
+                  ], 10, _hoisted_7$n))
                 ]),
                 _: 3
               }, 8, ["list", "disabled", "onEnd"]),
@@ -42697,7 +42791,7 @@ const _hoisted_3$I = { class: "d-flex-c" };
 const _hoisted_4$C = { class: "d-flex-c" };
 const _hoisted_5$u = { class: "d-flex" };
 const _hoisted_6$q = { style: {"width":"80px"} };
-const _hoisted_7$k = { class: "d-flex-c" };
+const _hoisted_7$m = { class: "d-flex-c" };
 const _hoisted_8$g = { class: "d-flex-c" };
 
 function _sfc_render$15(_ctx, _cache, $props, $setup, $data, $options) {
@@ -42869,7 +42963,7 @@ function _sfc_render$15(_ctx, _cache, $props, $setup, $data, $options) {
                     default: withCtx(() => [
                       createVNode(_component_el_col, { span: 12 }, {
                         default: withCtx(() => [
-                          createElementVNode("div", _hoisted_7$k, [
+                          createElementVNode("div", _hoisted_7$m, [
                             createVNode(_component_CommonColorPicker, {
                               modelValue: series.areaStyle.color,
                               "onUpdate:modelValue": $event => ((series.areaStyle.color) = $event),
@@ -43019,7 +43113,7 @@ const _hoisted_3$H = { class: "d-flex-c" };
 const _hoisted_4$B = { class: "d-flex-c" };
 const _hoisted_5$t = { class: "d-flex-c" };
 const _hoisted_6$p = { class: "d-flex" };
-const _hoisted_7$j = ["onClick"];
+const _hoisted_7$l = ["onClick"];
 const _hoisted_8$f = { class: "d-flex-c" };
 const _hoisted_9$e = { class: "d-flex-c" };
 const _hoisted_10$b = { class: "d-flex-c" };
@@ -43195,7 +43289,7 @@ function _sfc_render$14(_ctx, _cache, $props, $setup, $data, $options) {
                                     createElementVNode("i", {
                                       class: normalizeClass(['icon am-iconfont align-icon', ele.icon])
                                     }, null, 2)
-                                  ], 10, _hoisted_7$j))
+                                  ], 10, _hoisted_7$l))
                                 }), 128))
                               ]),
                               _cache[37] || (_cache[37] = createElementVNode("span", { class: "extra-bottom-text" }, " 角度", -1))
@@ -44546,7 +44640,7 @@ const _hoisted_3$F = { class: "d-flex-c" };
 const _hoisted_4$z = { class: "d-flex-c" };
 const _hoisted_5$s = { class: "d-flex-c" };
 const _hoisted_6$o = { class: "d-flex-c" };
-const _hoisted_7$i = { class: "d-flex-c" };
+const _hoisted_7$k = { class: "d-flex-c" };
 const _hoisted_8$e = { class: "d-flex-c" };
 const _hoisted_9$d = { class: "d-flex" };
 const _hoisted_10$a = ["onClick"];
@@ -44741,7 +44835,7 @@ function _sfc_render$$(_ctx, _cache, $props, $setup, $data, $options) {
                       default: withCtx(() => [
                         createVNode(_component_el_col, { span: 12 }, {
                           default: withCtx(() => [
-                            createElementVNode("div", _hoisted_7$i, [
+                            createElementVNode("div", _hoisted_7$k, [
                               createVNode(_component_el_select, {
                                 modelValue: $data.form.label.formatter,
                                 "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.label.formatter) = $event)),
@@ -45262,7 +45356,7 @@ const _hoisted_3$E = { class: "d-flex-c" };
 const _hoisted_4$y = { class: "d-flex" };
 const _hoisted_5$r = ["onClick"];
 const _hoisted_6$n = { class: "d-flex-c" };
-const _hoisted_7$h = { class: "d-flex-c" };
+const _hoisted_7$j = { class: "d-flex-c" };
 const _hoisted_8$d = { class: "d-flex-c" };
 const _hoisted_9$c = { class: "d-flex-c" };
 const _hoisted_10$9 = { class: "d-flex" };
@@ -45368,7 +45462,7 @@ function _sfc_render$Z(_ctx, _cache, $props, $setup, $data, $options) {
                     }),
                     createVNode(_component_el_col, { span: 12 }, {
                       default: withCtx(() => [
-                        createElementVNode("div", _hoisted_7$h, [
+                        createElementVNode("div", _hoisted_7$j, [
                           createVNode(_component_el_input, {
                             modelValue: $data.form.header[1],
                             "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.header[1]) = $event)),
@@ -45595,7 +45689,7 @@ const _hoisted_3$D = { class: "d-flex-c" };
 const _hoisted_4$x = { class: "plane-inner-bg" };
 const _hoisted_5$q = { class: "d-flex-c" };
 const _hoisted_6$m = { class: "d-flex-c" };
-const _hoisted_7$g = { class: "d-flex-c" };
+const _hoisted_7$i = { class: "d-flex-c" };
 const _hoisted_8$c = { class: "d-flex-c" };
 
 function _sfc_render$Y(_ctx, _cache, $props, $setup, $data, $options) {
@@ -45724,7 +45818,7 @@ function _sfc_render$Y(_ctx, _cache, $props, $setup, $data, $options) {
                         default: withCtx(() => [
                           createVNode(_component_el_col, { span: 12 }, {
                             default: withCtx(() => [
-                              createElementVNode("div", _hoisted_7$g, [
+                              createElementVNode("div", _hoisted_7$i, [
                                 createVNode(_component_el_input_number, {
                                   modelValue: $data.form.polar.center[0],
                                   "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form.polar.center[0]) = $event)),
@@ -46214,7 +46308,7 @@ const _hoisted_6$l = {
   key: 1,
   style: {"padding-top":"10px"}
 };
-const _hoisted_7$f = { class: "d-flex-c" };
+const _hoisted_7$h = { class: "d-flex-c" };
 const _hoisted_8$b = { class: "d-flex-c" };
 const _hoisted_9$b = { class: "d-flex-c" };
 const _hoisted_10$8 = { class: "d-flex-c" };
@@ -46355,7 +46449,7 @@ function _sfc_render$W(_ctx, _cache, $props, $setup, $data, $options) {
                           default: withCtx(() => [
                             createVNode(_component_el_col, { span: 12 }, {
                               default: withCtx(() => [
-                                createElementVNode("div", _hoisted_7$f, [
+                                createElementVNode("div", _hoisted_7$h, [
                                   createVNode(_component_el_input_number, {
                                     modelValue: $data.form.radius[0],
                                     "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.radius[0]) = $event)),
@@ -46984,7 +47078,7 @@ const _hoisted_3$A = { class: "d-flex-c" };
 const _hoisted_4$u = { class: "d-flex-c" };
 const _hoisted_5$n = { class: "d-flex el-form-item" };
 const _hoisted_6$k = { style: {"width":"80px"} };
-const _hoisted_7$e = { style: {"flex":"1"} };
+const _hoisted_7$g = { style: {"flex":"1"} };
 const _hoisted_8$a = { class: "d-flex-c" };
 const _hoisted_9$a = { class: "d-flex-c" };
 const _hoisted_10$7 = { class: "d-flex-c" };
@@ -47134,7 +47228,7 @@ function _sfc_render$U(_ctx, _cache, $props, $setup, $data, $options) {
           }, null, 8, ["modelValue", "onChange"]),
           _cache[19] || (_cache[19] = createElementVNode("span", { class: "chart-config-title" }, " 圆点 ", -1))
         ]),
-        createElementVNode("div", _hoisted_7$e, [
+        createElementVNode("div", _hoisted_7$g, [
           createVNode(_component_el_row, {
             gutter: 10,
             type: "flex"
@@ -47420,7 +47514,7 @@ const _hoisted_4$t = {
 };
 const _hoisted_5$m = { style: {"width":"80px"} };
 const _hoisted_6$j = { class: "d-flex-c" };
-const _hoisted_7$d = {
+const _hoisted_7$f = {
   key: 4,
   class: "d-flex"
 };
@@ -47671,7 +47765,7 @@ function _sfc_render$T(_ctx, _cache, $props, $setup, $data, $options) {
                 }, 1024))
               : createCommentVNode("", true),
             (series.basic.type!=='line')
-              ? (openBlock(), createElementBlock("div", _hoisted_7$d, [
+              ? (openBlock(), createElementBlock("div", _hoisted_7$f, [
                   createElementVNode("div", _hoisted_8$9, [
                     createVNode(_component_el_switch, {
                       modelValue: series.barSeries.showBackground,
@@ -47967,7 +48061,7 @@ const _hoisted_4$s = {
 };
 const _hoisted_5$l = { class: "d-flex-c" };
 const _hoisted_6$i = { class: "d-flex-c" };
-const _hoisted_7$c = { class: "d-flex-c" };
+const _hoisted_7$e = { class: "d-flex-c" };
 const _hoisted_8$8 = { class: "d-flex-c" };
 const _hoisted_9$8 = { style: {"margin-top":"10px"} };
 const _hoisted_10$5 = { class: "copy-button-box" };
@@ -48116,7 +48210,7 @@ function _sfc_render$S(_ctx, _cache, $props, $setup, $data, $options) {
                           default: withCtx(() => [
                             createVNode(_component_el_col, { span: 12 }, {
                               default: withCtx(() => [
-                                createElementVNode("div", _hoisted_7$c, [
+                                createElementVNode("div", _hoisted_7$e, [
                                   createVNode(_component_el_input_number, {
                                     modelValue: $data.borderRadius[2],
                                     "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.borderRadius[2]) = $event)),
@@ -75398,7 +75492,7 @@ const _hoisted_5$j = {
   style: {"width":"100%"}
 };
 const _hoisted_6$h = { style: {"display":"inline-block","width":"90px","padding-left":"20px","text-align":"left"} };
-const _hoisted_7$b = { class: "d-flex-c" };
+const _hoisted_7$d = { class: "d-flex-c" };
 const _hoisted_8$7 = { class: "d-flex-c" };
 const _hoisted_9$7 = { class: "d-flex-c" };
 
@@ -75621,7 +75715,7 @@ function _sfc_render$N(_ctx, _cache, $props, $setup, $data, $options) {
                             default: withCtx(() => [
                               createVNode(_component_el_col, { span: 12 }, {
                                 default: withCtx(() => [
-                                  createElementVNode("div", _hoisted_7$b, [
+                                  createElementVNode("div", _hoisted_7$d, [
                                     createVNode(_component_el_input_number, {
                                       modelValue: ele.gt,
                                       "onUpdate:modelValue": $event => ((ele.gt) = $event),
@@ -75884,7 +75978,7 @@ const _hoisted_3$u = { style: {"width":"80px","margin-bottom":"10px"} };
 const _hoisted_4$p = { class: "d-flex" };
 const _hoisted_5$i = { style: {"width":"80px"} };
 const _hoisted_6$g = { class: "d-flex-c" };
-const _hoisted_7$a = { class: "d-flex-c" };
+const _hoisted_7$c = { class: "d-flex-c" };
 const _hoisted_8$6 = { class: "d-flex-c" };
 const _hoisted_9$6 = { class: "plane-inner-bg" };
 const _hoisted_10$4 = { class: "d-flex" };
@@ -76015,7 +76109,7 @@ function _sfc_render$M(_ctx, _cache, $props, $setup, $data, $options) {
                         default: withCtx(() => [
                           createVNode(_component_el_col, { span: 12 }, {
                             default: withCtx(() => [
-                              createElementVNode("div", _hoisted_7$a, [
+                              createElementVNode("div", _hoisted_7$c, [
                                 createVNode(_component_el_input_number, {
                                   modelValue: $data.form.itemStyle.borderWidth,
                                   "onUpdate:modelValue": _cache[12] || (_cache[12] = $event => (($data.form.itemStyle.borderWidth) = $event)),
@@ -76556,7 +76650,7 @@ const _hoisted_3$t = { class: "d-flex-c" };
 const _hoisted_4$o = { class: "d-flex-c" };
 const _hoisted_5$h = { class: "d-flex-c" };
 const _hoisted_6$f = { class: "d-flex-c" };
-const _hoisted_7$9 = { class: "d-flex-c" };
+const _hoisted_7$b = { class: "d-flex-c" };
 
 function _sfc_render$K(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_switch = resolveComponent("el-switch");
@@ -76745,7 +76839,7 @@ function _sfc_render$K(_ctx, _cache, $props, $setup, $data, $options) {
               }),
               createVNode(_component_el_col, { span: 12 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_7$9, [
+                  createElementVNode("div", _hoisted_7$b, [
                     createVNode(_component_el_input_number, {
                       modelValue: $data.form.symbolOffset[1],
                       "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.symbolOffset[1]) = $event)),
@@ -77595,7 +77689,7 @@ const _hoisted_3$r = { class: "d-flex-c" };
 const _hoisted_4$n = { class: "d-flex-c" };
 const _hoisted_5$g = { class: "d-flex-c" };
 const _hoisted_6$e = { class: "d-flex-c" };
-const _hoisted_7$8 = { class: "d-flex-c" };
+const _hoisted_7$a = { class: "d-flex-c" };
 const _hoisted_8$5 = { class: "d-flex-c" };
 const _hoisted_9$5 = { class: "d-flex-c" };
 const _hoisted_10$3 = { class: "d-flex-c" };
@@ -77752,7 +77846,7 @@ function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
               default: withCtx(() => [
                 createVNode(_component_el_col, { span: 12 }, {
                   default: withCtx(() => [
-                    createElementVNode("div", _hoisted_7$8, [
+                    createElementVNode("div", _hoisted_7$a, [
                       createVNode(_component_el_switch, {
                         modelValue: $data.form.highlightCurrentRow,
                         "onUpdate:modelValue": _cache[13] || (_cache[13] = $event => (($data.form.highlightCurrentRow) = $event)),
@@ -82364,7 +82458,7 @@ const _hoisted_3$m = { class: "d-flex-c" };
 const _hoisted_4$k = { class: "d-flex-c" };
 const _hoisted_5$f = { class: "d-flex-c" };
 const _hoisted_6$d = { class: "d-flex-c" };
-const _hoisted_7$7 = { class: "d-flex-c" };
+const _hoisted_7$9 = { class: "d-flex-c" };
 const _hoisted_8$4 = { class: "d-flex-c" };
 const _hoisted_9$4 = { class: "d-flex-c" };
 const _hoisted_10$2 = { class: "d-flex-c" };
@@ -82547,7 +82641,7 @@ function _sfc_render$x(_ctx, _cache, $props, $setup, $data, $options) {
               default: withCtx(() => [
                 createVNode(_component_el_col, { span: 12 }, {
                   default: withCtx(() => [
-                    createElementVNode("div", _hoisted_7$7, [
+                    createElementVNode("div", _hoisted_7$9, [
                       createVNode(_component_el_input_number, {
                         modelValue: $data.form.splitNumber,
                         "onUpdate:modelValue": _cache[10] || (_cache[10] = $event => (($data.form.splitNumber) = $event)),
@@ -83957,7 +84051,7 @@ const _hoisted_3$k = { class: "copy-button-box" };
 const _hoisted_4$i = { class: "d-flex-c" };
 const _hoisted_5$e = { class: "d-flex-c" };
 const _hoisted_6$c = { class: "d-flex-c" };
-const _hoisted_7$6 = { class: "d-flex-c" };
+const _hoisted_7$8 = { class: "d-flex-c" };
 const _hoisted_8$3 = { class: "d-flex-c" };
 const _hoisted_9$3 = { class: "d-flex-c" };
 const _hoisted_10$1 = { class: "d-flex-c" };
@@ -84201,7 +84295,7 @@ function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
                           ], 512), [
                             [vShow, $data.form.heightType==='custom']
                           ]),
-                          withDirectives(createElementVNode("div", _hoisted_7$6, [
+                          withDirectives(createElementVNode("div", _hoisted_7$8, [
                             createVNode(_component_el_input_number, {
                               modelValue: $data.form.heightNum,
                               "onUpdate:modelValue": _cache[9] || (_cache[9] = $event => (($data.form.heightNum) = $event)),
@@ -85025,7 +85119,7 @@ const _hoisted_3$i = { class: "d-flex-c" };
 const _hoisted_4$g = { class: "d-flex-c" };
 const _hoisted_5$c = { class: "plane-inner-bg" };
 const _hoisted_6$a = { class: "d-flex-c" };
-const _hoisted_7$5 = { class: "d-flex-c" };
+const _hoisted_7$7 = { class: "d-flex-c" };
 
 function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_radio_button = resolveComponent("el-radio-button");
@@ -85225,7 +85319,7 @@ function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
                           }),
                           createVNode(_component_el_col, { span: 12 }, {
                             default: withCtx(() => [
-                              createElementVNode("div", _hoisted_7$5, [
+                              createElementVNode("div", _hoisted_7$7, [
                                 createVNode(_component_el_input_number, {
                                   modelValue: $data.styles.selectspot.height,
                                   "onUpdate:modelValue": _cache[17] || (_cache[17] = $event => (($data.styles.selectspot.height) = $event)),
@@ -87334,7 +87428,7 @@ const _hoisted_6$8 = {
   key: 0,
   class: "code-bg mtk1"
 };
-const _hoisted_7$4 = {
+const _hoisted_7$6 = {
   key: 1,
   class: "code-bg mtk1 code-close"
 };
@@ -87529,7 +87623,7 @@ function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
             "has-table": $props.hasTable
           }), null, 16, ["class", "has-table"]),
           ($props.methodName)
-            ? (openBlock(), createElementBlock("div", _hoisted_7$4, " } "))
+            ? (openBlock(), createElementBlock("div", _hoisted_7$6, " } "))
             : createCommentVNode("", true)
         ])
       ]),
@@ -89021,7 +89115,7 @@ function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
     _: 3
   }))
 }
-const BasicChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$h, [['render',_sfc_render$g],['__scopeId',"data-v-80e83644"]]);
+const BasicChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$h, [['render',_sfc_render$g],['__scopeId',"data-v-c9be76ad"]]);
 
 BasicChartConfig.install = function (Vue) {
   Vue.component(libPrefix + BasicChartConfig.name, BasicChartConfig);
@@ -89356,7 +89450,7 @@ const _hoisted_6$6 = {
   key: 0,
   class: "add-form"
 };
-const _hoisted_7$3 = { style: {"margin-bottom":"5px"} };
+const _hoisted_7$5 = { style: {"margin-bottom":"5px"} };
 const _hoisted_8$2 = ["onClick"];
 const _hoisted_9$2 = { class: "analysis-modal-footer" };
 
@@ -89433,7 +89527,7 @@ function _sfc_render$e(_ctx, _cache, $props, $setup, $data, $options) {
                   key: i,
                   class: "add-form-item"
                 }, [
-                  createElementVNode("div", _hoisted_7$3, [
+                  createElementVNode("div", _hoisted_7$5, [
                     createVNode(_component_el_input, {
                       modelValue: item.field,
                       "onUpdate:modelValue": $event => ((item.field) = $event),
@@ -89847,7 +89941,8 @@ const _hoisted_4$8 = {
   title: "拖拽排序"
 };
 const _hoisted_5$5 = ["onClick"];
-const _hoisted_6$5 = {
+const _hoisted_6$5 = { class: "ms-aggs" };
+const _hoisted_7$4 = {
   key: 0,
   class: "ms-empty"
 };
@@ -89857,8 +89952,8 @@ function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_i_ri_draggable = __unplugin_components_1$1;
   const _component_el_option = resolveComponent("el-option");
   const _component_el_select = resolveComponent("el-select");
-  const _component_el_checkbox = resolveComponent("el-checkbox");
   const _component_i_ri_close_line = __unplugin_components_2$2;
+  const _component_el_checkbox = resolveComponent("el-checkbox");
   const _component_draggable = resolveComponent("draggable");
 
   return (openBlock(), createElementBlock("div", _hoisted_1$d, [
@@ -89913,23 +90008,6 @@ function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
             ]),
             _: 1
           }, 8, ["modelValue", "onUpdate:modelValue", "disabled", "onChange"]),
-          (openBlock(true), createElementBlock(Fragment, null, renderList($data.AGGS, (a) => {
-            return (openBlock(), createElementBlock("label", {
-              key: a.k,
-              class: "ms-agg"
-            }, [
-              createVNode(_component_el_checkbox, {
-                "model-value": row.aggs.includes(a.k),
-                disabled: !$props.setMode || (a.numericOnly && !$options.isNumericField(row.field)),
-                onChange: (v) => $options.toggleAgg(row, a.k, v)
-              }, {
-                default: withCtx(() => [
-                  createTextVNode(toDisplayString(a.label), 1)
-                ]),
-                _: 2
-              }, 1032, ["model-value", "disabled", "onChange"])
-            ]))
-          }), 128)),
           ($props.setMode)
             ? (openBlock(), createElementBlock("button", {
                 key: 1,
@@ -89939,17 +90017,36 @@ function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
               }, [
                 createVNode(_component_i_ri_close_line)
               ], 8, _hoisted_5$5))
-            : createCommentVNode("", true)
+            : createCommentVNode("", true),
+          createElementVNode("div", _hoisted_6$5, [
+            (openBlock(true), createElementBlock(Fragment, null, renderList($data.AGGS, (a) => {
+              return (openBlock(), createElementBlock("label", {
+                key: a.k,
+                class: "ms-agg"
+              }, [
+                createVNode(_component_el_checkbox, {
+                  "model-value": row.aggs.includes(a.k),
+                  disabled: !$props.setMode || (a.numericOnly && !$options.isNumericField(row.field)),
+                  onChange: (v) => $options.toggleAgg(row, a.k, v)
+                }, {
+                  default: withCtx(() => [
+                    createTextVNode(toDisplayString(a.label), 1)
+                  ]),
+                  _: 2
+                }, 1032, ["model-value", "disabled", "onChange"])
+              ]))
+            }), 128))
+          ])
         ])
       ]),
       _: 1
     }, 8, ["list", "disabled", "onEnd"]),
     (!$data.rows.length)
-      ? (openBlock(), createElementBlock("div", _hoisted_6$5, " 点击右上角 + 添加指标 "))
+      ? (openBlock(), createElementBlock("div", _hoisted_7$4, " 点击右上角 + 添加指标 "))
       : createCommentVNode("", true)
   ]))
 }
-const MetricSetting = /*#__PURE__*/_export_sfc(_sfc_main$d, [['render',_sfc_render$c],['__scopeId',"data-v-bf5c9ac3"]]);
+const MetricSetting = /*#__PURE__*/_export_sfc(_sfc_main$d, [['render',_sfc_render$c],['__scopeId',"data-v-1430b066"]]);
 
 /* unplugin-vue-components disabled */
 
@@ -90016,7 +90113,7 @@ const _hoisted_3$9 = {
 const _hoisted_4$7 = ["title"];
 const _hoisted_5$4 = { class: "gf-val" };
 const _hoisted_6$4 = { class: "gf-bar" };
-const _hoisted_7$2 = {
+const _hoisted_7$3 = {
   key: 1,
   class: "gf-empty"
 };
@@ -90114,10 +90211,10 @@ function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
             ], 2))
           }), 128))
         ]))
-      : (openBlock(), createElementBlock("div", _hoisted_7$2, " 选择维度并保存后,由数据源返回分组取值 "))
+      : (openBlock(), createElementBlock("div", _hoisted_7$3, " 选择维度并保存后,由数据源返回分组取值 "))
   ]))
 }
-const GroupFilter = /*#__PURE__*/_export_sfc(_sfc_main$c, [['render',_sfc_render$b],['__scopeId',"data-v-865c7dbd"]]);
+const GroupFilter = /*#__PURE__*/_export_sfc(_sfc_main$c, [['render',_sfc_render$b],['__scopeId',"data-v-14adcc0c"]]);
 
 /* unplugin-vue-components disabled */
 
@@ -90184,7 +90281,8 @@ const _hoisted_4$6 = {
   title: "拖拽调整优先级"
 };
 const _hoisted_5$3 = ["onClick"];
-const _hoisted_6$3 = {
+const _hoisted_6$3 = { class: "ss-selects" };
+const _hoisted_7$2 = {
   key: 0,
   class: "ss-empty"
 };
@@ -90192,10 +90290,10 @@ const _hoisted_6$3 = {
 function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_i_ri_add_line = __unplugin_components_0$9;
   const _component_i_ri_draggable = __unplugin_components_1$1;
+  const _component_i_ri_close_line = __unplugin_components_2$2;
   const _component_el_option = resolveComponent("el-option");
   const _component_el_select = resolveComponent("el-select");
   const _component_el_switch = resolveComponent("el-switch");
-  const _component_i_ri_close_line = __unplugin_components_2$2;
   const _component_draggable = resolveComponent("draggable");
 
   return (openBlock(), createElementBlock("div", _hoisted_1$b, [
@@ -90227,57 +90325,6 @@ function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
                 createVNode(_component_i_ri_draggable)
               ]))
             : createCommentVNode("", true),
-          createVNode(_component_el_select, {
-            modelValue: row.field,
-            "onUpdate:modelValue": $event => ((row.field) = $event),
-            size: "small",
-            filterable: "",
-            "allow-create": "",
-            "default-first-option": "",
-            class: "ss-field",
-            placeholder: "字段",
-            disabled: !$props.setMode,
-            onChange: $options.emitChange
-          }, {
-            default: withCtx(() => [
-              (openBlock(true), createElementBlock(Fragment, null, renderList($props.fieldOptions, (o) => {
-                return (openBlock(), createBlock(_component_el_option, {
-                  key: o.value,
-                  label: o.label,
-                  value: o.value
-                }, null, 8, ["label", "value"]))
-              }), 128))
-            ]),
-            _: 1
-          }, 8, ["modelValue", "onUpdate:modelValue", "disabled", "onChange"]),
-          createVNode(_component_el_select, {
-            modelValue: row.agg,
-            "onUpdate:modelValue": $event => ((row.agg) = $event),
-            size: "small",
-            class: "ss-agg",
-            disabled: !$props.setMode,
-            onChange: $options.emitChange
-          }, {
-            default: withCtx(() => [
-              (openBlock(true), createElementBlock(Fragment, null, renderList($data.AGGS, (a) => {
-                return (openBlock(), createBlock(_component_el_option, {
-                  key: a.k,
-                  label: a.label,
-                  value: a.k
-                }, null, 8, ["label", "value"]))
-              }), 128))
-            ]),
-            _: 1
-          }, 8, ["modelValue", "onUpdate:modelValue", "disabled", "onChange"]),
-          createVNode(_component_el_switch, {
-            modelValue: row.desc,
-            "onUpdate:modelValue": $event => ((row.desc) = $event),
-            disabled: !$props.setMode,
-            "active-text": "降序",
-            "inactive-text": "升序",
-            class: "ss-switch",
-            onChange: $options.emitChange
-          }, null, 8, ["modelValue", "onUpdate:modelValue", "disabled", "onChange"]),
           ($props.setMode)
             ? (openBlock(), createElementBlock("button", {
                 key: 1,
@@ -90287,17 +90334,70 @@ function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
               }, [
                 createVNode(_component_i_ri_close_line)
               ], 8, _hoisted_5$3))
-            : createCommentVNode("", true)
+            : createCommentVNode("", true),
+          createElementVNode("div", _hoisted_6$3, [
+            createVNode(_component_el_select, {
+              modelValue: row.field,
+              "onUpdate:modelValue": $event => ((row.field) = $event),
+              size: "small",
+              filterable: "",
+              "allow-create": "",
+              "default-first-option": "",
+              class: "ss-field",
+              placeholder: "字段",
+              disabled: !$props.setMode,
+              onChange: $options.emitChange
+            }, {
+              default: withCtx(() => [
+                (openBlock(true), createElementBlock(Fragment, null, renderList($props.fieldOptions, (o) => {
+                  return (openBlock(), createBlock(_component_el_option, {
+                    key: o.value,
+                    label: o.label,
+                    value: o.value
+                  }, null, 8, ["label", "value"]))
+                }), 128))
+              ]),
+              _: 1
+            }, 8, ["modelValue", "onUpdate:modelValue", "disabled", "onChange"]),
+            createVNode(_component_el_select, {
+              modelValue: row.agg,
+              "onUpdate:modelValue": $event => ((row.agg) = $event),
+              size: "small",
+              class: "ss-agg",
+              disabled: !$props.setMode,
+              onChange: $options.emitChange
+            }, {
+              default: withCtx(() => [
+                (openBlock(true), createElementBlock(Fragment, null, renderList($data.AGGS, (a) => {
+                  return (openBlock(), createBlock(_component_el_option, {
+                    key: a.k,
+                    label: a.label,
+                    value: a.k
+                  }, null, 8, ["label", "value"]))
+                }), 128))
+              ]),
+              _: 1
+            }, 8, ["modelValue", "onUpdate:modelValue", "disabled", "onChange"])
+          ]),
+          createVNode(_component_el_switch, {
+            modelValue: row.desc,
+            "onUpdate:modelValue": $event => ((row.desc) = $event),
+            disabled: !$props.setMode,
+            "active-text": "降序",
+            "inactive-text": "升序",
+            class: "ss-switch",
+            onChange: $options.emitChange
+          }, null, 8, ["modelValue", "onUpdate:modelValue", "disabled", "onChange"])
         ])
       ]),
       _: 1
     }, 8, ["list", "disabled", "onEnd"]),
     (!$data.rows.length)
-      ? (openBlock(), createElementBlock("div", _hoisted_6$3, " 点击右上角 + 添加排序 "))
+      ? (openBlock(), createElementBlock("div", _hoisted_7$2, " 点击右上角 + 添加排序 "))
       : createCommentVNode("", true)
   ]))
 }
-const SortSetting = /*#__PURE__*/_export_sfc(_sfc_main$b, [['render',_sfc_render$a],['__scopeId',"data-v-b9d9540a"]]);
+const SortSetting = /*#__PURE__*/_export_sfc(_sfc_main$b, [['render',_sfc_render$a],['__scopeId',"data-v-ba3aefac"]]);
 
 /* unplugin-vue-components disabled */
 

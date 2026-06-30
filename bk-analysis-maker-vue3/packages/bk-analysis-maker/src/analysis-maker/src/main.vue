@@ -126,14 +126,32 @@
           </el-dropdown>
           <span class="tb-divider"></span>
         </template>
-        <!-- 模式分段(始终显示):预览(内联只读看板)/ 设计(可编辑) -->
-        <div
+        <!-- 模式切换(下拉,与列表「预览/对比」一致):预览(只读) / 设计(可编辑),互斥单选 -->
+        <el-dropdown
           v-if="setMode"
-          class="mode-seg"
+          trigger="click"
+          size="small"
+          class="mode-dropdown"
+          popper-class="mode-dd-menu"
+          @command="onModeCommand"
         >
-          <span :class="['mode-seg-item', !designMode && 'is-on']" @click="designMode = false">预览</span>
-          <span :class="['mode-seg-item', designMode && 'is-on']" @click="designMode = true">设计</span>
-        </div>
+          <span class="mode-dd-trigger">
+            <i-ri-pencil-ruler-2-line v-if="designMode" />
+            <i-ri-eye-line v-else />
+            <span class="mode-dd-label">{{ designMode ? '设计' : '预览' }}</span>
+            <i-ri-arrow-down-s-line class="mode-dd-caret" />
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="preview" :class="!designMode && 'is-cur'">
+                <i-ri-eye-line /><span style="margin-left:6px">预览</span>
+              </el-dropdown-item>
+              <el-dropdown-item command="design" :class="designMode && 'is-cur'">
+                <i-ri-pencil-ruler-2-line /><span style="margin-left:6px">设计</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
     </div>
     </Teleport>
@@ -260,7 +278,7 @@
       <div
         v-if="!isModal && !isBasicMode"
         :class="['right-setting-container', panelPinned && 'is-pinned']"
-        :style="{width: expand ? ((!pageSettingVisible && !cardSettingVisible && rightTab !== 'base') ? (dataMappingVisible && rightTab === 'data' ? '745px' : '500px') : '330px') : '0' }"
+        :style="{width: expand ? (dataMappingVisible && rightTab === 'data' ? '745px' : '330px') : '0' }"
       >
         <!-- <div class="expand-icon">
           <i
@@ -1356,6 +1374,9 @@ export default {
         else this.savePageConfig(true)
       }
     },
+    onModeCommand (cmd) {
+      this.designMode = (cmd === 'design')
+    },
     openPageSetting () {
       // 再次点击关闭:收起整个右侧面板,不要回落到空的「图表配置」占位
       if (this.pageSettingVisible) { this.pageSettingVisible = false; this.setRightExpand(false); return }
@@ -1772,16 +1793,30 @@ export default {
 
 <style lang="scss" scoped>
 // @import "../../styles/index.scss";
-/* 模式分段:预览 / 设计 */
-.mode-seg {
+/* 模式切换下拉:预览 / 设计(触发器,与列表「预览/对比」一致) */
+.mode-dropdown {
+  margin-left: 8px;
+}
+.mode-dd-trigger {
   display: inline-flex;
   align-items: center;
+  gap: 5px;
+  width: 96px;
+  box-sizing: border-box;
   height: 28px;
-  margin-left: 8px;
+  padding: 0 8px 0 10px;
   border: 1px solid #e5e6eb;
   border-radius: 6px;
-  overflow: hidden;
+  font-size: 13px;
+  color: #4e5969;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
 }
+.mode-dd-trigger:hover { border-color: #1f6aff; color: #1f6aff; }
+.mode-dd-label { flex: 1; }
+.mode-dd-caret { margin-left: auto; font-size: 13px; color: #86909c; }
+.mode-dd-trigger svg { flex-shrink: 0; }
 /* 画布缩放控件(仅设计模式) */
 .canvas-zoom-ctrl {
   display: inline-flex;
@@ -1805,20 +1840,6 @@ export default {
   font-size: 12px; color: #4e5969; cursor: pointer; border-radius: 4px; user-select: none;
 }
 .canvas-zoom-ctrl .cz-fit:hover { background: #f2f3f5; color: #1d2129; }
-.mode-seg-item {
-  display: inline-flex;
-  align-items: center;
-  height: 100%;
-  padding: 0 12px;
-  font-size: 13px;
-  color: #4e5969;
-  cursor: pointer;
-  user-select: none;
-}
-.mode-seg-item.is-on {
-  background: #1f6aff;
-  color: #fff;
-}
 /* 工具面板 / 页面设置 等开关型按钮激活态 */
 .text-button.is-on {
   color: #1f6aff;
@@ -2123,12 +2144,12 @@ export default {
     box-shadow: none;
   }
   .right-setting-container {
-    /* 浮在画布之上(不再占据布局宽度,画布占满) */
-    position: absolute;
+    /* 浮在画布之上(不再占据布局宽度,画布占满);贴视口右侧、全屏高度 */
+    position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
-    z-index: 20;
+    z-index: 2000;
     background: #fff;
     box-shadow: -6px 0 20px rgba(0, 0, 0, 0.12);
     display: flex;

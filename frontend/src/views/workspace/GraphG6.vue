@@ -13,12 +13,12 @@
         <div class="gx-toolbar">
           <div class="gx-search">
             <span class="gx-search-ic" v-html="BL.icon('search', 12, 'var(--bl-text-3)')"></span>
-            <input v-model="qLeft" placeholder="搜索行业 / 领域 / 子领域 / 分组" @input="searchSide('L')" />
-            <button v-if="qLeft" class="gx-search-x" @click="qLeft=''; searchSide('L')" v-html="BL.icon('x', 10)"></button>
+            <input v-model="qLeft" placeholder="关键字" @input="searchSide('L')" />
+            <button v-if="qLeft" class="gx-search-x" title="清空" @click="qLeft=''; searchSide('L')" v-html="BL.icon('x', 13)"></button>
           </div>
           <button class="bl-btn bl-btn-sm gx-tb-ic" title="重置" @click="fitSide('L')" v-html="BL.icon('refresh', 15)"></button>
           <span class="bl-grow"></span>
-          <button class="bl-btn bl-btn-sm gx-tb-ic" title="导出图片" @click="exportSide('L')" v-html="BL.icon('share', 15)"></button>
+          <button class="bl-btn bl-btn-sm gx-tb-ic" title="导出图片" @click="exportSide('L')" v-html="BL.icon('download', 15)"></button>
         </div>
         <div class="gx-canvas-wrap">
           <div class="gx-canvas" ref="leftCanvas"></div>
@@ -72,8 +72,8 @@
         <div class="gx-toolbar">
           <div class="gx-search gx-search-wide">
             <span class="gx-search-ic" v-html="BL.icon('search', 12, 'var(--bl-text-3)')"></span>
-            <input v-model="qRight" placeholder="搜索本体对象" @input="searchSide('R')" />
-            <button v-if="qRight" class="gx-search-x" @click="qRight=''; searchSide('R')" v-html="BL.icon('x', 10)"></button>
+            <input v-model="qRight" placeholder="关键字" @input="searchSide('R')" />
+            <button v-if="qRight" class="gx-search-x" title="清空" @click="qRight=''; searchSide('R')" v-html="BL.icon('x', 13)"></button>
           </div>
           <button class="bl-btn bl-btn-sm gx-tb-ic" title="重置" @click="fitSide('R')" v-html="BL.icon('refresh', 15)"></button>
           <span class="bl-grow"></span>
@@ -87,7 +87,7 @@
                    @click="applyGraph(l.key); graphMenu=false">{{ l.label }}</div>
             </div>
           </div>
-          <button class="bl-btn bl-btn-sm gx-tb-ic" title="导出图片" @click="exportSide('R')" v-html="BL.icon('share', 15)"></button>
+          <button class="bl-btn bl-btn-sm gx-tb-ic" title="导出图片" @click="exportSide('R')" v-html="BL.icon('download', 15)"></button>
         </div>
         <div class="gx-canvas-wrap">
           <div class="gx-canvas" ref="rightCanvas"></div>
@@ -119,8 +119,11 @@
               </template>
             </template>
           </div>
-          <!-- 节点详情抽屉 -->
-          <aside class="gr-drawer" :class="{ 'is-open': !!drawerNode }">
+        </div>
+      </section>
+    </div>
+    <!-- 节点详情抽屉(覆盖整个图谱模块:标题栏+工具条+画布,与图谱等高) -->
+    <aside class="gr-drawer" :class="{ 'is-open': !!drawerNode }">
             <div v-if="drawerNode" class="gr-drawer-inner">
               <header class="gr-drawer-hd">
                 <div class="gr-drawer-title">
@@ -204,9 +207,6 @@
               </div>
             </div>
           </aside>
-        </div>
-      </section>
-    </div>
   </div>
 </template>
 
@@ -511,7 +511,7 @@ function bindLeftEvents(g) {
     if (tname === 'collapse-marker') toggleCollapse(item)   // 仅 +/- 标识负责收展
     else selectLeftAndLink(item)                            // 点节点其它任意处 = 选中+联动
   })
-  g.on('canvas:click', () => { clearLeftSel(); showFullRight() })
+  // 点击左侧空白处不做处理(保留当前选中/高亮);仅支持拖拽平移与缩放
 }
 function toggleCollapse(item) {
   const g = leftG.value; const m = item.getModel()
@@ -926,12 +926,14 @@ const vClickOutside = {
 .gx-toolbar { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--bl-border); flex-wrap: nowrap; min-height: 46px; position: relative; z-index: 6; }
 .gx-search { position: relative; display: flex; align-items: center; flex-shrink: 0; }
 .gx-search-ic { position: absolute; left: 8px; display: inline-flex; }
-.gx-search input { width: 90px; height: 30px; box-sizing: border-box; padding: 0 22px 0 26px; border: 1px solid var(--bl-border); border-radius: 6px; font-size: 12.5px; outline: none; }
+.gx-search input { width: 128px; height: 30px; box-sizing: border-box; padding: 0 26px 0 26px; border: 1px solid var(--bl-border); border-radius: 6px; font-size: 12.5px; outline: none; }
 .gx-search-wide input { width: 240px; }
 /* 工具条纯图标按钮 */
 .gx-tb-ic { flex-shrink: 0; padding: 0 !important; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; }
 .gx-search input:focus { border-color: var(--bl-primary); }
-.gx-search-x { position: absolute; right: 6px; width: 16px; height: 16px; border: 0; background: transparent; color: var(--bl-text-3); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+/* 与顶部全局搜索清空按钮一致:浅灰圆底 + × */
+.gx-search-x { position: absolute; right: 5px; width: 18px; height: 18px; border: 0; padding: 0; border-radius: 50%; background: var(--bl-fill-2, rgba(0,0,0,.06)); color: var(--bl-text-3); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background .15s, color .15s; }
+.gx-search-x:hover { background: color-mix(in srgb, #f53f3f 14%, var(--bl-bg-1)); color: #f53f3f; }
 
 .gx-rel { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .gx-rel-leg, .gx-rel-chk { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--bl-text-2); cursor: default; }
@@ -949,7 +951,7 @@ const vClickOutside = {
 .gx-cv-div { height: 1px; background: var(--bl-divider); margin: 2px 4px; }
 
 /* 图形(树布局)下拉选择器:左画布右下角 */
-.gx-cv-sel { position: absolute; right: 12px; bottom: 12px; z-index: 5; width: 96px; }
+.gx-cv-sel { position: absolute; left: 12px; bottom: 12px; z-index: 5; width: 80px; }
 .gx-cv-sel-btn { width: 100%; height: 30px; display: flex; align-items: center; gap: 4px; padding: 0 8px; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,.08); color: var(--bl-text-2); cursor: pointer; font-size: 12px; }
 .gx-cv-sel-btn:hover { border-color: var(--bl-primary-border); }
 .gx-cv-sel-menu { position: absolute; left: 0; right: 0; bottom: calc(100% + 4px); background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.14); padding: 4px; }
@@ -1003,7 +1005,7 @@ const vClickOutside = {
 .gx-collapse { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 18px; height: 36px; border: 1px solid var(--bl-border); background: var(--bl-bg-1); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: var(--bl-text-3); z-index: 3; }
 .gx-collapse:hover { color: var(--bl-primary); border-color: var(--bl-primary); }
 
-.gx-legend { position: absolute; bottom: 12px; left: 12px; display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,.85); border: 1px solid var(--bl-border); border-radius: 8px; padding: 6px 10px; backdrop-filter: blur(2px); }
+.gx-legend { position: absolute; bottom: 48px; left: 12px; display: inline-flex; align-items: center; gap: 9px; background: rgba(255,255,255,.85); border: 1px solid var(--bl-border); border-radius: 8px; padding: 5px 9px; backdrop-filter: blur(2px); white-space: nowrap; }
 .gx-leg { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--bl-text-2); }
 .gx-legend-toggle { display: inline-flex; align-items: center; gap: 4px; border: 0; background: transparent; color: var(--bl-text-2); font-size: 12px; cursor: pointer; padding: 0; }
 .gx-legend-toggle:hover { color: var(--bl-primary); }

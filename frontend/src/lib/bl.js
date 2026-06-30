@@ -114,6 +114,7 @@ const ICONS = {
   network:  'M5 5h4v4H5z M15 5h4v4h-4z M5 15h4v4H5z M15 15h4v4h-4z M9 7h6 M9 17h6 M7 9v6 M17 9v6',
   link:     'M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5 M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1.5-1.5',
   share:    'M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7 M16 6l-4-4-4 4 M12 2v13',
+  download: 'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M7 10l5 5 5-5 M12 15V3',
   branch:   'M6 3v12 M18 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z M6 21a3 3 0 1 1 0-6 3 3 0 0 1 0 6z M18 9c0 6-6 6-6 12',
   workflow: 'M3 3h6v6H3z M15 3h6v6h-6z M9 6h6 M9 9v6 M3 15h6v6H3z M15 15h6v6h-6z M15 18H9',
   hash:     'M4 9h16 M4 15h16 M10 3L8 21 M16 3l-2 18',

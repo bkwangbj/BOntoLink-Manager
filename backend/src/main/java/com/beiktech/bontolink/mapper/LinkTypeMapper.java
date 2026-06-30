@@ -22,7 +22,7 @@ public interface LinkTypeMapper {
                rc.display_name AS r_class_name, rc.api_name AS r_class_api,
                rc.icon AS r_class_icon, rc.color AS r_class_color,
                (SELECT COUNT(1) FROM ont_link_mappings m WHERE m.link_id = lt.id) AS mapping_count,
-               (SELECT COUNT(1) FROM ont_type_class tc WHERE tc.link_type_id = lt.id) AS type_class_count
+               (SELECT COUNT(1) FROM ont_type_class_bind tc WHERE tc.link_type_id = lt.id AND tc.applicable_type = 'relation') AS type_class_count
         FROM ont_link_types lt
         LEFT JOIN ont_class lc ON lc.id = lt.l_object_type_id
         LEFT JOIN ont_class rc ON rc.id = lt.r_object_type_id
@@ -111,15 +111,19 @@ public interface LinkTypeMapper {
     int insertMapping(Map<String, Object> row);
 
     /* —— 关联类型类 (relation 类型) —— */
-    /** 查询挂在某链接类型下的 relation 类型类列表 */
+    /** 查询挂在某链接类型下的 relation 类型类绑定列表 (JOIN 元数据取大类/名称) */
     @Select("""
-        SELECT * FROM ont_type_class
-        WHERE link_type_id = #{linkId} AND applicable_type = 'relation'
-        ORDER BY category, name
+        SELECT b.*,
+               m.category_code AS category,
+               m.name_cn_base  AS name
+        FROM ont_type_class_bind b
+        LEFT JOIN ont_type_class m ON m.id = b.type_class_meta_id
+        WHERE b.link_type_id = #{linkId} AND b.applicable_type = 'relation'
+        ORDER BY m.category_code, m.name_cn_base
     """)
     List<Map<String, Object>> listTypeClasses(@Param("linkId") String linkId);
 
-    /** 删除某链接类型下的全部 relation 类型类 */
-    @Delete("DELETE FROM ont_type_class WHERE link_type_id = #{linkId} AND applicable_type = 'relation'")
+    /** 删除某链接类型下的全部 relation 类型类绑定 */
+    @Delete("DELETE FROM ont_type_class_bind WHERE link_type_id = #{linkId} AND applicable_type = 'relation'")
     int deleteTypeClassesByLink(@Param("linkId") String linkId);
 }

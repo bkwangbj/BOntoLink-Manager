@@ -821,6 +821,7 @@ export default {
         box-sizing: border-box;
         height: 100%;
         padding-top: 5px;
+        padding-right: 14px;
 
         & > .el-form > .el-row {
           // display: flex;

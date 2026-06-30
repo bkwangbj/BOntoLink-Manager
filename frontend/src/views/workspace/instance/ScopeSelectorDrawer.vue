@@ -12,7 +12,7 @@
         </div>
         <div class="ssd-tree">
           <div v-for="n in flatVisible" :key="n.code"
-               class="ssd-node" :class="leftSel.has(n.code) && 'is-sel'"
+               class="ssd-node" :class="[leftSel.has(n.code) && 'is-sel', addedSet.has(n.code) && 'is-added']"
                :style="{ paddingLeft: (8 + n.depth*16) + 'px' }"
                @click="onNodeClick(n, $event)">
             <span class="ssd-caret" @click.stop="toggleExpand(n)">
@@ -20,6 +20,7 @@
             </span>
             <span class="ssd-sq" :style="{ background: n.color || '#86909c' }"></span>
             <span class="bl-grow bl-truncate">{{ n.label }}</span>
+            <span v-if="addedSet.has(n.code)" class="ssd-added-ic" title="已加入已选" v-html="BL.icon('check', 12)"></span>
             <span class="ssd-cnt">{{ n.count }}</span>
           </div>
           <div v-if="!flatVisible.length" class="ssd-empty">无匹配节点</div>
@@ -38,6 +39,9 @@
       <div class="ssd-pane">
         <div class="ssd-pane-hd">已选<span class="ssd-hint">（行业、领域、分组）</span>
           <span class="bl-grow"></span>
+          <button v-if="selected.length" class="ssd-clear-all" title="清空全部已选" @click="clearAll">
+            <span v-html="BL.icon('trash', 11)"></span>全部取消
+          </button>
           <span class="ssd-selcount">已选 {{ selected.length }} 项</span>
         </div>
         <div class="ssd-tags">
@@ -90,6 +94,8 @@ function syncFromModel() {
   selected.value = props.modelValue.map(c => byCode.value[c]).filter(Boolean)
 }
 watch(() => [props.modelValue, props.tree], syncFromModel, { immediate: true })
+/* 已选 codes 集合(用于在左侧待选树标注「已加入」) */
+const addedSet = computed(() => new Set(selected.value.map(t => t.code)))
 
 /* —— 展开 / 搜索 —— */
 const expanded = ref(new Set(props.tree.map(n => n.code)))   // 默认展开行业
@@ -180,6 +186,12 @@ function removeTag(code) {
   selected.value = selected.value.filter(t => t.code !== code)
   commit()
 }
+/* 一键清空全部已选(恢复默认全部范围) */
+function clearAll() {
+  selected.value = []
+  rightSel.value = new Set()
+  commit()
+}
 </script>
 
 <style scoped>
@@ -195,6 +207,8 @@ function removeTag(code) {
 .ssd-pane-hd { display: flex; align-items: center; font-size: 13px; font-weight: 600; color: var(--bl-text-1); margin-bottom: 8px; }
 .ssd-hint { font-size: 11px; font-weight: 400; color: var(--bl-text-3); margin-left: 2px; }
 .ssd-selcount { font-size: 12px; color: var(--bl-primary); font-weight: 500; }
+.ssd-clear-all { display: inline-flex; align-items: center; gap: 3px; margin-right: 10px; padding: 2px 6px; border: 0; background: transparent; border-radius: 4px; font-size: 12px; color: var(--bl-text-3); cursor: pointer; }
+.ssd-clear-all:hover { background: color-mix(in srgb, #f53f3f 12%, var(--bl-bg-1)); color: #f53f3f; }
 
 .ssd-search { position: relative; display: flex; align-items: center; margin-bottom: 8px; }
 .ssd-search-ic { position: absolute; left: 8px; display: inline-flex; }
@@ -204,7 +218,12 @@ function removeTag(code) {
 .ssd-tree { border: 1px solid var(--bl-border); border-radius: 6px; flex: 1; min-height: 0; overflow: auto; padding: 4px; }
 .ssd-node { display: flex; align-items: center; gap: 6px; padding: 5px 6px; border-radius: 5px; cursor: pointer; font-size: 12.5px; color: var(--bl-text-1); user-select: none; }
 .ssd-node:hover { background: var(--bl-bg-hover); }
+/* 已加入「已选」的节点:浅绿底 + 绿色对勾(优先级低于 is-sel,被点中时仍走蓝色高亮) */
+.ssd-node.is-added { background: rgba(0,180,42,.08); }
+.ssd-node.is-added:hover { background: rgba(0,180,42,.14); }
+.ssd-added-ic { display: inline-flex; align-items: center; color: #00b42a; flex-shrink: 0; }
 .ssd-node.is-sel { background: var(--bl-primary-soft); color: var(--bl-primary); }
+.ssd-node.is-sel .ssd-added-ic { color: var(--bl-primary); }
 .ssd-caret { width: 14px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--bl-text-3); }
 .ssd-sq { width: 11px; height: 11px; border-radius: 2px; flex-shrink: 0; }
 .ssd-cnt { font-size: 11px; color: var(--bl-text-3); flex-shrink: 0; }

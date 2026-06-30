@@ -14,6 +14,13 @@
         <span v-html="BL.icon('chevronDown', 12)"></span>
         <div v-if="typeMenu" class="ixe-type-menu" @click.stop>
           <input class="bl-input bl-input-sm" v-model="typeKw" placeholder="搜索对象类型…" style="margin-bottom:6px" />
+          <!-- 范围切换:默认仅当前分组,可切全部(有搜索词时隐藏) -->
+          <div v-if="!typeKw.trim() && groupTypes.length > 1" class="ixe-type-scope">
+            <span class="bl-grow">{{ typeShowAll ? '全部对象类型' : '当前分组' }} · {{ typeOptions.length }}</span>
+            <button class="ixe-type-scope-tg" @click.stop="typeShowAll = !typeShowAll">
+              {{ typeShowAll ? '仅当前分组' : '显示全部' }}
+            </button>
+          </div>
           <div class="ixe-type-list">
             <div v-for="t in typeOptions" :key="t.id" class="ixe-type-item" :class="t.id===classId&&'is-on'" @click="selectType(t.id)">
               <span class="ixe-type-ic" :style="{ background:(t.color||'#165DFF')+'1f', color:t.color||'#165DFF' }"
@@ -21,6 +28,7 @@
               <span class="bl-grow bl-truncate">{{ t.display_name }}</span>
               <span class="bl-muted" style="font-size:11px">{{ t.instanceCount }}</span>
             </div>
+            <div v-if="!typeOptions.length" class="ixe-type-empty">无匹配对象类型</div>
           </div>
         </div>
       </div>
@@ -117,10 +125,10 @@
       <!-- maker 顶栏 Teleport 到这里(看板模式,靠右,与布局选择同行) -->
       <div v-show="viewMode==='charts'" id="ixe-maker-tools" class="ixe-maker-tools"></div>
       <div class="ixe-layout-sel" @click.stop="layoutMenu=!layoutMenu" v-click-outside="()=>layoutMenu=false">
-        <span class="bl-truncate">{{ designName }}</span>
+        <span class="bl-truncate">{{ currentDesignId ? designName : defaultLayoutName }}</span>
         <span v-html="BL.icon('chevronDown', 11)"></span>
         <div v-if="layoutMenu" class="ixe-layout-menu" @click.stop>
-          <div class="ixe-layout-item" :class="!currentDesignId && 'is-on'" @click="resetDesign">默认探索布局</div>
+          <div class="ixe-layout-item" :class="!currentDesignId && 'is-on'" @click="resetDesign">{{ defaultLayoutName }}</div>
           <template v-if="designsForType.length">
             <div class="ixe-layout-sep"></div>
             <div v-for="d in designsForType" :key="d.id" class="ixe-layout-item" :class="d.id===currentDesignId && 'is-on'"
@@ -131,7 +139,7 @@
           </template>
           <div class="ixe-layout-sep"></div>
           <div class="ixe-layout-item ixe-layout-new" @click="onSave"
-               v-html="iconText2('plus','另存为新设计…')"></div>
+               v-html="iconText2('plus', saveAsLabel)"></div>
         </div>
       </div>
       <span v-if="viewMode!=='charts'" class="ixe-result-badge">{{ total.toLocaleString() }} 条结果</span>
@@ -262,6 +270,10 @@ function onFsChange () { dashFull.value = !!document.fullscreenElement }
 const searchPanelOpen = ref(false)
 const layoutMenu = ref(false)
 const designName = ref('默认探索布局')
+/* 默认布局的显示名:看板模式叫「默认看板」,列表模式叫「默认列表」(仅展示,内部判定不变) */
+const defaultLayoutName = computed(() => viewMode.value === 'charts' ? '默认看板' : '默认列表')
+/* 「另存为新…」按钮文案:看板→新设计,列表→新列表 */
+const saveAsLabel = computed(() => viewMode.value === 'charts' ? '另存为新设计…' : '另存为新列表…')
 const chartsRef = ref(null)
 function iconText(ic, t) { return `${BL.icon(ic, 13, '#fff')}<span style="margin-left:5px">${t}</span>` }
 function iconText2(ic, t) { return `${BL.icon(ic, 12)}<span style="margin-left:5px">${t}</span>` }
@@ -290,7 +302,7 @@ async function loadDefaultDash() {
   try { savedConfig.value = classId.value ? await getDefault(classId.value) : null }
   catch { savedConfig.value = null }
 }
-/* maker「保存」→ 把完整布局存为该对象类型的默认看板 */
+/* maker「保存」→ 把完整布局存为该对象类型的默认探索布局 */
 async function onSavePage(config) {
   if (!classId.value || !config) return
   try { await saveDefault(classId.value, config); BL.success('看板已保存') }
@@ -373,7 +385,7 @@ function resetDesign() {
   currentDesignId.value = null
   designName.value = '默认探索布局'
   pills.value = []; kw.value = ''; sort.value = ''; page.value = 1
-  // 回到默认看板(若该对象类型存过默认看板则恢复,否则自动生成)
+  // 回到默认探索布局(若该对象类型存过默认探索布局则恢复,否则自动生成)
   loadDefaultDash()
   reload()
 }
@@ -392,6 +404,7 @@ async function removeDesign(d) {
 const classId = ref(props.initialClassId || '')
 const typeMenu = ref(false)
 const typeKw = ref('')
+const typeShowAll = ref(false)   // 对象类型下拉:默认仅当前分组,可切到全部
 const columns = ref([])
 const links = ref([])
 const pills = ref([])          // [{ field, label, dataType, logic, conditions:[...] }]
@@ -405,9 +418,15 @@ const order = ref('asc')
 
 const curType = computed(() => props.types.find(t => t.id === classId.value))
 const totalPages = computed(() => Math.max(1, Math.ceil(total.value / size.value)))
+/* 当前对象类型所属分组(category_code);下拉默认只列同组对象类型 */
+const curGroup = computed(() => curType.value?.category_code || '')
+const groupTypes = computed(() => curGroup.value ? props.types.filter(t => t.category_code === curGroup.value) : [])
 const typeOptions = computed(() => {
   const q = typeKw.value.trim().toLowerCase()
-  return props.types.filter(t => !q || (t.display_name || '').toLowerCase().includes(q) || (t.api_name || '').toLowerCase().includes(q))
+  // 有搜索词:跨全部对象类型匹配;无搜索词:默认仅当前分组(组内 >1 才收窄),可切「显示全部」
+  if (q) return props.types.filter(t => (t.display_name || '').toLowerCase().includes(q) || (t.api_name || '').toLowerCase().includes(q))
+  if (!typeShowAll.value && groupTypes.value.length > 1) return groupTypes.value
+  return props.types
 })
 /* —— 搜索面板:主对象/关联对象的属性列表(由 ② 顶部搜索 kw 统一过滤+统计) —— */
 const panelSel = ref('__main__')                 // '__main__'=主对象 | targetClassId=某关联对象
@@ -458,6 +477,8 @@ function selectType(id) {
   if (classId.value === id) { typeMenu.value = false; return }
   classId.value = id
   typeMenu.value = false
+  typeKw.value = ''
+  typeShowAll.value = false
   pills.value = []
   kw.value = ''
   sort.value = ''
@@ -734,10 +755,14 @@ onBeforeUnmount(() => { document.removeEventListener('fullscreenchange', onFsCha
   background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 8px;
   box-shadow: 0 8px 28px rgba(0,0,0,.14); z-index: 50; padding: 8px;
 }
+.ixe-type-scope { display: flex; align-items: center; gap: 6px; padding: 2px 4px 6px; margin-bottom: 4px; border-bottom: 1px solid var(--bl-divider); font-size: 11px; color: var(--bl-text-3); }
+.ixe-type-scope-tg { flex-shrink: 0; border: 0; background: transparent; color: var(--bl-primary); font-size: 11.5px; cursor: pointer; padding: 2px 4px; border-radius: 4px; }
+.ixe-type-scope-tg:hover { background: var(--bl-primary-soft); }
 .ixe-type-list { max-height: 320px; overflow: auto; }
 .ixe-type-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; cursor: pointer; font-size: 13px; }
 .ixe-type-item:hover { background: var(--bl-bg-hover); }
 .ixe-type-item.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); }
+.ixe-type-empty { font-size: 12px; color: var(--bl-text-3); text-align: center; padding: 16px; }
 
 .ixe-pills {
   flex: 0 1 260px; min-width: 160px; max-width: 260px;
@@ -882,8 +907,17 @@ onBeforeUnmount(() => { document.removeEventListener('fullscreenchange', onFsCha
 /* 深色:自动保存开关后的 label 文字(默认深色文字 → 看不清) */
 :root[data-theme="dark"] .ixe-maker-tools .am-switch .el-switch__label { color: var(--bl-text-2, #C9CDD4) !important; }
 :root[data-theme="dark"] .ixe-maker-tools .am-switch .el-switch__label.is-active { color: var(--bl-text-1, #fff) !important; }
-/* 模式分段(预览/设计):传送后 scoped 失效,这里全局还原 */
-.ixe-maker-tools .mode-seg { display: inline-flex; align-items: center; height: 28px; margin-left: 8px; border: 1px solid var(--bl-border, #e5e6eb); border-radius: 6px; overflow: hidden; }
-.ixe-maker-tools .mode-seg-item { display: inline-flex; align-items: center; height: 100%; padding: 0 12px; font-size: 13px; color: var(--bl-text-2, #4e5969); cursor: pointer; user-select: none; }
-.ixe-maker-tools .mode-seg-item.is-on { background: var(--bl-primary, #1f6aff); color: #fff; }
+/* 模式切换下拉(预览/设计):传送后 scoped 失效,这里全局还原触发器外观 */
+.ixe-maker-tools .mode-dropdown { margin-left: 8px; }
+.ixe-maker-tools .mode-dd-trigger { display: inline-flex; align-items: center; gap: 5px; width: 96px; box-sizing: border-box; height: 28px; padding: 0 8px 0 10px; border: 1px solid var(--bl-border, #e5e6eb); border-radius: 6px; font-size: 13px; color: var(--bl-text-2, #4e5969); cursor: pointer; outline: none; user-select: none; }
+.ixe-maker-tools .mode-dd-trigger:hover { border-color: var(--bl-primary, #1f6aff); color: var(--bl-primary, #1f6aff); }
+.ixe-maker-tools .mode-dd-trigger svg { width: 14px; height: 14px; flex-shrink: 0; }
+.ixe-maker-tools .mode-dd-label { flex: 1; }
+.ixe-maker-tools .mode-dd-caret { margin-left: auto; color: var(--bl-text-3, #86909c); }
+/* 模式下拉菜单 teleport 到 body(popper-class=mode-dd-menu):宽度与触发器一致、项高 28px、当前项高亮 */
+.mode-dd-menu.el-dropdown__popper { /* 容器 */ }
+.mode-dd-menu .el-dropdown-menu { padding: 4px; }
+.mode-dd-menu .el-dropdown-menu__item { width: 96px; box-sizing: border-box; min-height: 0; height: auto; line-height: 1.4; gap: 8px; padding: 7px 10px; margin: 0; border-radius: 6px; font-size: 12.5px; }
+.mode-dd-menu .el-dropdown-menu__item svg { width: 14px; height: 14px; flex-shrink: 0; }
+.mode-dd-menu .el-dropdown-menu__item.is-cur { color: var(--bl-primary, #1f6aff); background: var(--bl-primary-soft, rgba(31,106,255,.08)); }
 </style>
