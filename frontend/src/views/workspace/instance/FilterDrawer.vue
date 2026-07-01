@@ -254,12 +254,12 @@ const floatPos = computed(() => {
   return { left, top: a.top }
 })
 const floatStyle = computed(() => ({ left: floatPos.value.left + 'px', top: floatPos.value.top + 'px' }))
-// 燕尾相对面板左缘的偏移:指向触发点中心,夹在面板内
+// 燕尾相对面板左缘的偏移:指向触发元素真实中心(cx),夹在面板内(可左/中/右)
 const beakLeft = computed(() => {
   const a = props.anchor
   if (!a) return 40
-  const center = a.left + 16
-  return Math.max(14, Math.min(center - floatPos.value.left, PANEL_W - 28))
+  const cx = a.cx != null ? a.cx : (a.left + 16)
+  return Math.max(14, Math.min(cx - floatPos.value.left, PANEL_W - 28))
 })
 /* —— 括号匹配校验(确定前) —— */
 function checkBrackets() {

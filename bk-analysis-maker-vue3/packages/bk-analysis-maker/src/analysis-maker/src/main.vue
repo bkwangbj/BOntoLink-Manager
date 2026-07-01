@@ -278,7 +278,7 @@
       <div
         v-if="!isModal && !isBasicMode"
         :class="['right-setting-container', panelPinned && 'is-pinned']"
-        :style="{width: expand ? (dataMappingVisible && rightTab === 'data' ? '745px' : '330px') : '0' }"
+        :style="{width: expand ? (dataMappingVisible && rightTab === 'data' ? '745px' : '500px') : '0' }"
       >
         <!-- <div class="expand-icon">
           <i

@@ -167,11 +167,11 @@
     <div v-if="saveModal" class="ixe-save-mask" @click.self="saveModal=false">
       <div class="ixe-save-modal">
         <div class="ixe-save-hd">
-          <span>保存查询或列表</span>
+          <span>{{ viewMode==='charts' ? '保存图表' : '保存查询或列表' }}</span>
           <button class="ixe-save-x" @click="saveModal=false" v-html="BL.icon('x', 16)"></button>
         </div>
         <div class="ixe-save-body">
-          <div class="ixe-save-field">
+          <div v-if="viewMode!=='charts'" class="ixe-save-field">
             <span class="ixe-save-label">保存对象为</span>
             <div class="ixe-save-vis">
               <button :class="['ixe-vis-card', sdKind==='query' && 'is-on']" @click="sdKind='query'">
@@ -188,7 +188,7 @@
             <span class="ixe-save-hint">{{ sdKind==='query' ? '将筛选条件保存为动态查询,新数据结果会自动更新' : '将当前结果保存为静态列表' }}</span>
           </div>
           <label class="ixe-save-field">
-            <span class="ixe-save-label">{{ sdKind==='query' ? '查询名称' : '列表名称' }}</span>
+            <span class="ixe-save-label">{{ viewMode==='charts' ? '名称' : (sdKind==='query' ? '查询名称' : '列表名称') }}</span>
             <input class="bl-input" v-model="sdName" placeholder="如「洪水位高级筛选」"
                    @input="sdErr=''" @keyup.enter="confirmSave" autofocus />
             <span v-if="sdErr" class="ixe-save-err">{{ sdErr }}</span>
@@ -541,8 +541,8 @@ function sortBy(f) {
 /* —— 筛选抽屉交互 —— */
 async function openFilter(col, ev) {
   const rect = ev.currentTarget.getBoundingClientRect()
-  // 出现在所点触发元素的正下方
-  filterAnchor.value = { left: Math.max(8, Math.min(rect.left, window.innerWidth - 580)), top: rect.bottom + 6 }
+  // 面板出现在触发元素正下方;cx=触发元素中心 X(供燕尾精确指向,面板被夹边时仍准)
+  filterAnchor.value = { left: rect.left, top: rect.bottom + 6, cx: rect.left + rect.width / 2 }
   filterField.value = { field: col.field, label: col.label, dataType: detectType(col) }
   // 从面板点属性 = 新增独立条件块(model 为空);编辑已有块由 reopenFilter 设置 editingId/model
   filterModel.value = null

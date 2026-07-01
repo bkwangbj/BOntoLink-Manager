@@ -137,7 +137,9 @@
             <!-- 该列备选项 chips(两行,点选切换该列实例) -->
             <div class="ilv-cmp-chips">
               <span v-for="r in selectedRows" :key="r.id" class="ilv-cmp-chip"
-                    :class="side.id===r.id && 'is-on'" @click="setCmpSide(side.key, r.id)" :title="r.title">
+                    :class="[side.id===r.id && 'is-on', otherCmpId(side.key)===r.id && 'is-other']"
+                    @click="setCmpSide(side.key, r.id)"
+                    :title="otherCmpId(side.key)===r.id ? r.title + '（对侧已选,点击交换）' : r.title">
                 <span class="ilv-row-ic" :style="{ background:(r.color||'#165DFF')+'1f', color:r.color||'#165DFF' }"
                       v-html="BL.icon(r.icon||'cube', 12, r.color||'#165DFF')"></span>
                 <span class="bl-truncate">{{ r.title }}</span>
@@ -596,11 +598,28 @@ const cmpSides = computed(() => [
   { key: 'L', id: cmpLeftId.value, row: cmpLeftRow.value },
   { key: 'R', id: cmpRightId.value, row: cmpRightRow.value }
 ])
-function setCmpSide(key, id) { if (key === 'L') cmpLeftId.value = id; else cmpRightId.value = id; cmpPick.value = null }
+/* 对侧当前选中 id(模板用:标注/禁止重复) */
+function otherCmpId(key) { return key === 'L' ? cmpRightId.value : cmpLeftId.value }
+function setCmpSide(key, id) {
+  cmpPick.value = null
+  const isL = key === 'L'
+  const curThis = isL ? cmpLeftId.value : cmpRightId.value
+  const curOther = isL ? cmpRightId.value : cmpLeftId.value
+  // 选了对侧已选的实例 → 两侧交换,避免左右重复
+  if (id === curOther && id !== curThis) {
+    if (isL) cmpRightId.value = curThis; else cmpLeftId.value = curThis
+  }
+  if (isL) cmpLeftId.value = id; else cmpRightId.value = id
+}
 function initCompare() {
   const s = selectedRows.value.length ? selectedRows.value : (focusRow_.value ? [focusRow_.value] : [])
   if (!cmpLeftId.value || !s.some(r => r.id === cmpLeftId.value)) cmpLeftId.value = s[0] ? s[0].id : null
   if (!cmpRightId.value || !s.some(r => r.id === cmpRightId.value)) cmpRightId.value = s[1] ? s[1].id : (s[0] ? s[0].id : null)
+  // 左右不能相同:若重复且有其他备选,右侧换成另一项
+  if (cmpRightId.value && cmpRightId.value === cmpLeftId.value && s.length > 1) {
+    const other = s.find(r => r.id !== cmpLeftId.value)
+    if (other) cmpRightId.value = other.id
+  }
 }
 // 左右值不同的字段高亮
 function cmpDiff(key) {
@@ -816,6 +835,9 @@ thead .ilv-frozen { z-index: 5 !important; }
 .ilv-cmp-chip { flex: 1 1 calc(33.333% - 6px); min-width: 96px; max-width: 100%; box-sizing: border-box; display: inline-flex; align-items: center; gap: 6px; padding: 4px 7px; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 6px; font-size: 12px; cursor: pointer; }
 .ilv-cmp-chip:hover { border-color: var(--bl-primary-border); }
 .ilv-cmp-chip.is-on { border-color: var(--bl-primary); background: var(--bl-primary-soft); color: var(--bl-primary); box-shadow: 0 0 0 1px var(--bl-primary-soft); }
+/* 对侧已选:置灰虚线,提示不可重复(点击则与对侧交换) */
+.ilv-cmp-chip.is-other { opacity: .5; border-style: dashed; background: var(--bl-bg-2); }
+.ilv-cmp-chip.is-other:hover { opacity: .75; }
 .ilv-cmp-chip .bl-truncate { flex: 1; min-width: 0; }
 .ilv-cmp-chip .ilv-row-ic { width: 20px; height: 20px; margin: 0; }
 .ilv-cmp-chip-x { border: 0; background: transparent; color: var(--bl-text-3); cursor: pointer; padding: 0; display: inline-flex; flex-shrink: 0; }

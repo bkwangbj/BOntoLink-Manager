@@ -45,14 +45,14 @@
           </div>
           <div class="gx-legend">
             <button v-if="!legendOpen" class="gx-legend-toggle" @click="legendOpen=true">
-              图例 <span v-html="BL.icon('chevronRight', 12)"></span>
+              图例 <span v-html="BL.icon('chevronUp', 12)"></span>
             </button>
             <template v-else>
               <span v-for="k in ['industry','domain','subdomain','group']" :key="k" class="gx-leg">
                 <span class="gx-dot" :style="{ background: LEFT_STYLE[k].fill, border:'2px solid '+LEFT_STYLE[k].stroke }"></span>{{ KIND_CN[k] }}
               </span>
               <button class="gx-legend-toggle gx-legend-collapse" title="收起图例" @click="legendOpen=false"
-                      v-html="BL.icon('chevronLeft', 12)"></button>
+                      v-html="BL.icon('chevronDown', 12)"></button>
             </template>
           </div>
         </div>
@@ -950,8 +950,8 @@ const vClickOutside = {
 .gx-cv-btn:hover { background: var(--bl-bg-hover); color: var(--bl-primary); }
 .gx-cv-div { height: 1px; background: var(--bl-divider); margin: 2px 4px; }
 
-/* 图形(树布局)下拉选择器:左画布右下角 */
-.gx-cv-sel { position: absolute; left: 12px; bottom: 12px; z-index: 5; width: 80px; }
+/* 图形(树布局)下拉选择器:左画布右下角(向上弹) */
+.gx-cv-sel { position: absolute; right: 12px; bottom: 12px; z-index: 5; width: 80px; }
 .gx-cv-sel-btn { width: 100%; height: 30px; display: flex; align-items: center; gap: 4px; padding: 0 8px; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,.08); color: var(--bl-text-2); cursor: pointer; font-size: 12px; }
 .gx-cv-sel-btn:hover { border-color: var(--bl-primary-border); }
 .gx-cv-sel-menu { position: absolute; left: 0; right: 0; bottom: calc(100% + 4px); background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.14); padding: 4px; }
@@ -1005,11 +1005,12 @@ const vClickOutside = {
 .gx-collapse { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 18px; height: 36px; border: 1px solid var(--bl-border); background: var(--bl-bg-1); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: var(--bl-text-3); z-index: 3; }
 .gx-collapse:hover { color: var(--bl-primary); border-color: var(--bl-primary); }
 
-.gx-legend { position: absolute; bottom: 48px; left: 12px; display: inline-flex; align-items: center; gap: 9px; background: rgba(255,255,255,.85); border: 1px solid var(--bl-border); border-radius: 8px; padding: 5px 9px; backdrop-filter: blur(2px); white-space: nowrap; }
-.gx-leg { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--bl-text-2); }
+/* 图例:左下角,竖排(展开方向朝上:底部固定,内容向上增高) */
+.gx-legend { position: absolute; bottom: 12px; left: 12px; display: inline-flex; flex-direction: column; align-items: flex-start; gap: 6px; background: rgba(255,255,255,.85); border: 1px solid var(--bl-border); border-radius: 8px; padding: 6px 9px; backdrop-filter: blur(2px); }
+.gx-leg { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--bl-text-2); white-space: nowrap; }
 .gx-legend-toggle { display: inline-flex; align-items: center; gap: 4px; border: 0; background: transparent; color: var(--bl-text-2); font-size: 12px; cursor: pointer; padding: 0; }
 .gx-legend-toggle:hover { color: var(--bl-primary); }
-.gx-legend-collapse { margin-left: 2px; color: var(--bl-text-3); }
+.gx-legend-collapse { align-self: center; margin: 0; color: var(--bl-text-3); }
 .gx-dot { width: 11px; height: 11px; border-radius: 50%; }
 .gx-legend-rel { flex-direction: column; gap: 5px; align-items: flex-start; }
 .gx-rel-line { width: 18px; height: 3px; border-radius: 2px; display: inline-block; }

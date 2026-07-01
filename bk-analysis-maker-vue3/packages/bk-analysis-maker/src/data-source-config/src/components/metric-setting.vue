@@ -50,6 +50,19 @@
               :value="o.value"
             />
           </el-select>
+          <label
+            v-for="a in AGGS"
+            :key="a.k"
+            class="ms-agg"
+          >
+            <el-checkbox
+              :model-value="row.aggs.includes(a.k)"
+              :disabled="!setMode || (a.numericOnly && !isNumericField(row.field))"
+              @change="(v) => toggleAgg(row, a.k, v)"
+            >
+              {{ a.label }}
+            </el-checkbox>
+          </label>
           <button
             v-if="setMode"
             class="ms-del"
@@ -58,21 +71,6 @@
           >
             <i-ri-close-line />
           </button>
-          <div class="ms-aggs">
-            <label
-              v-for="a in AGGS"
-              :key="a.k"
-              class="ms-agg"
-            >
-              <el-checkbox
-                :model-value="row.aggs.includes(a.k)"
-                :disabled="!setMode || (a.numericOnly && !isNumericField(row.field))"
-                @change="(v) => toggleAgg(row, a.k, v)"
-              >
-                {{ a.label }}
-              </el-checkbox>
-            </label>
-          </div>
         </div>
       </template>
     </draggable>
@@ -181,24 +179,22 @@ export default {
 }
 .ms-add:hover { background: #4080ff; }
 .ms-list { display: flex; flex-direction: column; gap: 3px; }
-/* 行内三段:① 顶行(拖拽柄左 + 删除右上角) ② 下拉框整行 ③ 聚合勾选整行,与下拉框左对齐 */
 .ms-row {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px;
+  display: flex; align-items: center; gap: 6px;
   padding: 4px 6px; border-radius: 6px; background: #f7f8fa;
   transition: background-color .12s;
 }
 .ms-row:hover { background: #eef3ff; }
-.ms-grip { order: 0; color: #c9cdd4; cursor: grab; display: inline-flex; font-size: 14px; flex-shrink: 0; }
+.ms-grip { color: #c9cdd4; cursor: grab; display: inline-flex; font-size: 14px; flex-shrink: 0; }
 .ms-grip:active { cursor: grabbing; }
+.ms-field { width: 116px; flex-shrink: 0; }
+.ms-agg { display: inline-flex; align-items: center; }
 .ms-del {
-  order: 1; margin-left: auto; width: 22px; height: 22px; border: 0; background: transparent;
+  margin-left: auto; width: 22px; height: 22px; border: 0; background: transparent;
   color: #86909c; cursor: pointer; border-radius: 5px; opacity: 0; flex-shrink: 0;
   display: inline-flex; align-items: center; justify-content: center;
   transition: opacity .12s, background-color .12s, color .12s;
 }
-.ms-field { order: 2; flex: 1 1 100%; }
-.ms-aggs { order: 3; flex: 1 1 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; }
-.ms-agg { display: inline-flex; align-items: center; }
 .ms-row:hover .ms-del { opacity: 1; }
 .ms-del:hover { background: #ffece8; color: #f53f3f; }
 .ms-empty { font-size: 12px; color: #c9cdd4; padding: 10px 0; text-align: center; }

@@ -23624,7 +23624,7 @@ const _hoisted_3$1e = { class: "d-flex-c" };
 const _hoisted_4$14 = { class: "d-flex-c" };
 const _hoisted_5$R = { class: "d-flex-c" };
 const _hoisted_6$J = { class: "d-flex-c" };
-const _hoisted_7$B = { class: "d-flex-c" };
+const _hoisted_7$z = { class: "d-flex-c" };
 const _hoisted_8$r = { class: "d-flex-c" };
 const _hoisted_9$m = { class: "d-flex-c" };
 const _hoisted_10$h = { class: "d-flex-c" };
@@ -23816,7 +23816,7 @@ function _sfc_render$1R(_ctx, _cache, $props, $setup, $data, $options) {
                 default: withCtx(() => [
                   createVNode(_component_el_col, { span: 12 }, {
                     default: withCtx(() => [
-                      createElementVNode("div", _hoisted_7$B, [
+                      createElementVNode("div", _hoisted_7$z, [
                         createVNode(_component_CommonColorPicker, {
                           modelValue: $data.form.splitlineStyle.textColor,
                           "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.splitlineStyle.textColor) = $event)),
@@ -24212,7 +24212,7 @@ const _hoisted_5$Q = {
   class: "d-flex-c"
 };
 const _hoisted_6$I = { class: "d-flex-c" };
-const _hoisted_7$A = { class: "d-flex-c" };
+const _hoisted_7$y = { class: "d-flex-c" };
 
 function _sfc_render$1Q(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_EfRadio = resolveComponent("EfRadio");
@@ -24398,7 +24398,7 @@ function _sfc_render$1Q(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_form_item, { label: "" }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_7$A, [
+                  createElementVNode("div", _hoisted_7$y, [
                     createVNode(_component_el_input_number, {
                       modelValue: $data.form.colMargin,
                       "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.colMargin) = $event)),
@@ -25075,7 +25075,7 @@ const _hoisted_3$1a = {
 const _hoisted_4$10 = { class: "color-view" };
 const _hoisted_5$O = { class: "color-view-dropdown" };
 const _hoisted_6$H = { style: {"position":"relative","width":"100%","padding":"30px 10px 10px 20px","border-bottom":"1px solid #e8eaec"} };
-const _hoisted_7$z = {
+const _hoisted_7$x = {
   class: "down-color-item",
   style: {"margin":"2px 0"}
 };
@@ -25189,7 +25189,7 @@ function _sfc_render$1M(_ctx, _cache, $props, $setup, $data, $options) {
               class: "color-example",
               style: normalizeStyle(`background:${$data.conversionColorList[index].color};`)
             }, null, 4),
-            createElementVNode("div", _hoisted_7$z, [
+            createElementVNode("div", _hoisted_7$x, [
               createVNode(_component_CommonColorPicker, {
                 modelValue: $data.conversionColorList[index].color,
                 "onUpdate:modelValue": $event => (($data.conversionColorList[index].color) = $event),
@@ -25728,7 +25728,7 @@ const _hoisted_3$17 = { class: "d-flex-c" };
 const _hoisted_4$Z = { class: "d-flex-c" };
 const _hoisted_5$L = { class: "d-flex-c" };
 const _hoisted_6$G = { class: "d-flex-c" };
-const _hoisted_7$y = { class: "d-flex-c" };
+const _hoisted_7$w = { class: "d-flex-c" };
 const _hoisted_8$p = { class: "d-flex-c" };
 
 function _sfc_render$1J(_ctx, _cache, $props, $setup, $data, $options) {
@@ -25920,7 +25920,7 @@ function _sfc_render$1J(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_col, { span: 12 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_7$y, [
+                  createElementVNode("div", _hoisted_7$w, [
                     createVNode(_component_el_switch, {
                       modelValue: $data.form.label.show,
                       "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.label.show) = $event)),
@@ -26747,7 +26747,7 @@ const _hoisted_3$13 = { class: "d-flex-c" };
 const _hoisted_4$W = { class: "d-flex-c" };
 const _hoisted_5$J = { class: "d-flex-c" };
 const _hoisted_6$E = { class: "d-flex-c" };
-const _hoisted_7$x = { class: "d-flex-c" };
+const _hoisted_7$v = { class: "d-flex-c" };
 const _hoisted_8$o = { class: "d-flex-c" };
 const _hoisted_9$k = { class: "d-flex-c" };
 const _hoisted_10$f = { class: "d-flex-c" };
@@ -26926,7 +26926,7 @@ function _sfc_render$1D(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_col, { span: 12 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_7$x, [
+                  createElementVNode("div", _hoisted_7$v, [
                     createVNode(_component_el_input_number, {
                       modelValue: $data.styles['--tablecellheight'],
                       "onUpdate:modelValue": _cache[14] || (_cache[14] = $event => (($data.styles['--tablecellheight']) = $event)),
@@ -27483,7 +27483,7 @@ const _hoisted_3$10 = { class: "d-flex" };
 const _hoisted_4$T = ["onClick"];
 const _hoisted_5$I = { class: "d-flex-c" };
 const _hoisted_6$D = { class: "d-flex-c" };
-const _hoisted_7$w = { class: "d-flex-c" };
+const _hoisted_7$u = { class: "d-flex-c" };
 const _hoisted_8$n = { class: "d-flex-c" };
 
 function _sfc_render$1A(_ctx, _cache, $props, $setup, $data, $options) {
@@ -27597,7 +27597,7 @@ function _sfc_render$1A(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_col, { span: 12 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_7$w, [
+                  createElementVNode("div", _hoisted_7$u, [
                     createVNode(_component_el_input_number, {
                       modelValue: $data.form.labelLine.length,
                       "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.labelLine.length) = $event)),
@@ -29217,7 +29217,7 @@ const _hoisted_3$$ = ["onClick"];
 const _hoisted_4$S = { class: "collapse-item" };
 const _hoisted_5$H = { class: "collapse-item" };
 const _hoisted_6$C = { class: "input-number-box" };
-const _hoisted_7$v = { class: "input-number-box" };
+const _hoisted_7$t = { class: "input-number-box" };
 const _hoisted_8$m = { class: "collapse-item" };
 const _hoisted_9$j = { class: "collapse-item layout-collapse-item" };
 const _hoisted_10$e = { class: "collapse-item" };
@@ -29364,7 +29364,7 @@ function _sfc_render$1y(_ctx, _cache, $props, $setup, $data, $options) {
                     }, null, 8, ["modelValue", "disabled"]),
                     _cache[10] || (_cache[10] = createElementVNode("span", { class: "input-label" }, "行间距", -1))
                   ]),
-                  createElementVNode("div", _hoisted_7$v, [
+                  createElementVNode("div", _hoisted_7$t, [
                     createVNode(_component_el_input_number, {
                       modelValue: $data.colSpace,
                       "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.colSpace) = $event)),
@@ -30662,7 +30662,7 @@ const _hoisted_5$G = {
   class: "group-content"
 };
 const _hoisted_6$B = ["onClick"];
-const _hoisted_7$u = { class: "menu-item-tip" };
+const _hoisted_7$s = { class: "menu-item-tip" };
 const _hoisted_8$l = {
   key: 0,
   class: "decorate-tip d-flex ai-c jc-c"
@@ -30763,7 +30763,7 @@ function _sfc_render$1w(_ctx, _cache, $props, $setup, $data, $options) {
                           class: normalizeClass(item.isDecorate ? 'menu-item-decorate' : '')
                         }, {
                           content: withCtx(() => [
-                            createElementVNode("div", _hoisted_7$u, [
+                            createElementVNode("div", _hoisted_7$s, [
                               (item.isDecorate)
                                 ? (openBlock(), createElementBlock("div", _hoisted_8$l, [
                                     createVNode(_component_BKDecorateChart, {
@@ -35900,7 +35900,7 @@ const _hoisted_3$U = {
 const _hoisted_4$M = { class: "text-button" };
 const _hoisted_5$E = { class: "canvas-zoom-ctrl" };
 const _hoisted_6$z = { class: "mode-dd-trigger" };
-const _hoisted_7$t = { class: "mode-dd-label" };
+const _hoisted_7$r = { class: "mode-dd-label" };
 const _hoisted_8$k = { style: {"display":"flex","flex":"1","overflow":"hidden","position":"relative"} };
 const _hoisted_9$h = {
   style: {"position":"relative","display":"flex","flex":"1","flex-direction":"column","height":"100%","overflow":"hidden"},
@@ -36234,7 +36234,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                             ($data.designMode)
                               ? (openBlock(), createBlock(_component_i_ri_pencil_ruler_2_line, { key: 0 }))
                               : (openBlock(), createBlock(_component_i_ri_eye_line, { key: 1 })),
-                            createElementVNode("span", _hoisted_7$t, toDisplayString($data.designMode ? '设计' : '预览'), 1),
+                            createElementVNode("span", _hoisted_7$r, toDisplayString($data.designMode ? '设计' : '预览'), 1),
                             createVNode(_component_i_ri_arrow_down_s_line, { class: "mode-dd-caret" })
                           ])
                         ]),
@@ -36335,7 +36335,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
         ? (openBlock(), createElementBlock("div", {
             key: 0,
             class: normalizeClass(['right-setting-container', $data.panelPinned && 'is-pinned']),
-            style: normalizeStyle({width: $data.expand ? ($data.dataMappingVisible && $data.rightTab === 'data' ? '745px' : '330px') : '0' })
+            style: normalizeStyle({width: $data.expand ? ($data.dataMappingVisible && $data.rightTab === 'data' ? '745px' : '500px') : '0' })
           }, [
             ($data.expand)
               ? (openBlock(), createElementBlock("div", {
@@ -36493,7 +36493,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
       : createCommentVNode("", true)
   ], 2))
 }
-const AnalysisMaker = /*#__PURE__*/_export_sfc(_sfc_main$1s, [['render',_sfc_render$1r],['__scopeId',"data-v-b3794da8"]]);
+const AnalysisMaker = /*#__PURE__*/_export_sfc(_sfc_main$1s, [['render',_sfc_render$1r],['__scopeId',"data-v-83b8e4f2"]]);
 
 AnalysisMaker.install = function (Vue) {
   Vue.component(AnalysisMaker.name, AnalysisMaker);
@@ -38486,7 +38486,7 @@ const _hoisted_3$S = { class: "d-flex-c" };
 const _hoisted_4$K = { class: "d-flex-c" };
 const _hoisted_5$C = { class: "d-flex-c" };
 const _hoisted_6$x = { class: "d-flex-c" };
-const _hoisted_7$s = { class: "d-flex-c" };
+const _hoisted_7$q = { class: "d-flex-c" };
 const _hoisted_8$j = { class: "d-flex-c" };
 
 function _sfc_render$1k(_ctx, _cache, $props, $setup, $data, $options) {
@@ -38699,7 +38699,7 @@ function _sfc_render$1k(_ctx, _cache, $props, $setup, $data, $options) {
                   }),
                   createVNode(_component_el_col, { span: 12 }, {
                     default: withCtx(() => [
-                      createElementVNode("div", _hoisted_7$s, [
+                      createElementVNode("div", _hoisted_7$q, [
                         createVNode(_component_el_select, {
                           modelValue: $data.form['--numfontWeight'],
                           "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form['--numfontWeight']) = $event)),
@@ -39410,7 +39410,7 @@ const _hoisted_3$Q = { class: "d-flex-c" };
 const _hoisted_4$I = { class: "d-flex" };
 const _hoisted_5$A = ["onClick"];
 const _hoisted_6$v = { class: "d-flex-c" };
-const _hoisted_7$r = { class: "d-flex-c" };
+const _hoisted_7$p = { class: "d-flex-c" };
 
 function _sfc_render$1g(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_switch = resolveComponent("el-switch");
@@ -39686,7 +39686,7 @@ function _sfc_render$1g(_ctx, _cache, $props, $setup, $data, $options) {
                       default: withCtx(() => [
                         createVNode(_component_el_col, { span: 12 }, {
                           default: withCtx(() => [
-                            createElementVNode("div", _hoisted_7$r, [
+                            createElementVNode("div", _hoisted_7$p, [
                               createVNode(_component_el_input_number, {
                                 modelValue: $data.form.axisLabel.margin,
                                 "onUpdate:modelValue": _cache[18] || (_cache[18] = $event => (($data.form.axisLabel.margin) = $event)),
@@ -39920,7 +39920,7 @@ const _hoisted_3$P = { class: "d-flex-c" };
 const _hoisted_4$H = { class: "d-flex" };
 const _hoisted_5$z = ["onClick"];
 const _hoisted_6$u = { class: "d-flex-c" };
-const _hoisted_7$q = { class: "d-flex-c" };
+const _hoisted_7$o = { class: "d-flex-c" };
 
 function _sfc_render$1f(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_switch = resolveComponent("el-switch");
@@ -40196,7 +40196,7 @@ function _sfc_render$1f(_ctx, _cache, $props, $setup, $data, $options) {
                       default: withCtx(() => [
                         createVNode(_component_el_col, { span: 12 }, {
                           default: withCtx(() => [
-                            createElementVNode("div", _hoisted_7$q, [
+                            createElementVNode("div", _hoisted_7$o, [
                               createVNode(_component_el_input_number, {
                                 modelValue: $data.form.axisLabel.margin,
                                 "onUpdate:modelValue": _cache[18] || (_cache[18] = $event => (($data.form.axisLabel.margin) = $event)),
@@ -41463,7 +41463,7 @@ const _hoisted_3$M = { class: "d-flex-c" };
 const _hoisted_4$G = { class: "d-flex" };
 const _hoisted_5$y = ["onClick"];
 const _hoisted_6$t = { class: "d-flex-c" };
-const _hoisted_7$p = { class: "d-flex-c" };
+const _hoisted_7$n = { class: "d-flex-c" };
 
 function _sfc_render$1a(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_switch = resolveComponent("el-switch");
@@ -41712,7 +41712,7 @@ function _sfc_render$1a(_ctx, _cache, $props, $setup, $data, $options) {
                       default: withCtx(() => [
                         createVNode(_component_el_col, { span: 12 }, {
                           default: withCtx(() => [
-                            createElementVNode("div", _hoisted_7$p, [
+                            createElementVNode("div", _hoisted_7$n, [
                               createVNode(_component_el_input_number, {
                                 modelValue: $data.form.axisLabel.margin,
                                 "onUpdate:modelValue": _cache[16] || (_cache[16] = $event => (($data.form.axisLabel.margin) = $event)),
@@ -42121,7 +42121,7 @@ const _hoisted_3$K = { class: "d-flex" };
 const _hoisted_4$E = ["onClick"];
 const _hoisted_5$w = { class: "d-flex-c" };
 const _hoisted_6$s = { class: "d-flex" };
-const _hoisted_7$o = ["onClick"];
+const _hoisted_7$m = ["onClick"];
 const _hoisted_8$i = { class: "d-flex-c" };
 const _hoisted_9$g = { class: "d-flex-c" };
 
@@ -42200,7 +42200,7 @@ function _sfc_render$17(_ctx, _cache, $props, $setup, $data, $options) {
                                 key: el.value,
                                 class: normalizeClass(["chart-align-item trigger-btn", {'active':$data.form.triggerOn===el.value,'is-disabled':!$options.saveAble}]),
                                 onClick: $event => ($options.triggerOnChange(el))
-                              }, toDisplayString(el.label), 11, _hoisted_7$o))
+                              }, toDisplayString(el.label), 11, _hoisted_7$m))
                             }), 128))
                           ]),
                           _cache[15] || (_cache[15] = createElementVNode("span", { class: "extra-bottom-text" }, " 触发动作", -1))
@@ -42466,7 +42466,7 @@ const _hoisted_4$D = {
 };
 const _hoisted_5$v = { style: {"position":"relative","width":"100%"} };
 const _hoisted_6$r = { class: "tabs-series" };
-const _hoisted_7$n = ["name", "onClick"];
+const _hoisted_7$l = ["name", "onClick"];
 const _hoisted_8$h = {
   key: 0,
   class: "tabs-series-content"
@@ -42640,7 +42640,7 @@ function _sfc_render$16(_ctx, _cache, $props, $setup, $data, $options) {
                     renderSlot(_ctx.$slots, "title", {
                       index: $props.seriesList.indexOf(series)
                     }, undefined, true)
-                  ], 10, _hoisted_7$n))
+                  ], 10, _hoisted_7$l))
                 ]),
                 _: 3
               }, 8, ["list", "disabled", "onEnd"]),
@@ -42791,7 +42791,7 @@ const _hoisted_3$I = { class: "d-flex-c" };
 const _hoisted_4$C = { class: "d-flex-c" };
 const _hoisted_5$u = { class: "d-flex" };
 const _hoisted_6$q = { style: {"width":"80px"} };
-const _hoisted_7$m = { class: "d-flex-c" };
+const _hoisted_7$k = { class: "d-flex-c" };
 const _hoisted_8$g = { class: "d-flex-c" };
 
 function _sfc_render$15(_ctx, _cache, $props, $setup, $data, $options) {
@@ -42963,7 +42963,7 @@ function _sfc_render$15(_ctx, _cache, $props, $setup, $data, $options) {
                     default: withCtx(() => [
                       createVNode(_component_el_col, { span: 12 }, {
                         default: withCtx(() => [
-                          createElementVNode("div", _hoisted_7$m, [
+                          createElementVNode("div", _hoisted_7$k, [
                             createVNode(_component_CommonColorPicker, {
                               modelValue: series.areaStyle.color,
                               "onUpdate:modelValue": $event => ((series.areaStyle.color) = $event),
@@ -43113,7 +43113,7 @@ const _hoisted_3$H = { class: "d-flex-c" };
 const _hoisted_4$B = { class: "d-flex-c" };
 const _hoisted_5$t = { class: "d-flex-c" };
 const _hoisted_6$p = { class: "d-flex" };
-const _hoisted_7$l = ["onClick"];
+const _hoisted_7$j = ["onClick"];
 const _hoisted_8$f = { class: "d-flex-c" };
 const _hoisted_9$e = { class: "d-flex-c" };
 const _hoisted_10$b = { class: "d-flex-c" };
@@ -43289,7 +43289,7 @@ function _sfc_render$14(_ctx, _cache, $props, $setup, $data, $options) {
                                     createElementVNode("i", {
                                       class: normalizeClass(['icon am-iconfont align-icon', ele.icon])
                                     }, null, 2)
-                                  ], 10, _hoisted_7$l))
+                                  ], 10, _hoisted_7$j))
                                 }), 128))
                               ]),
                               _cache[37] || (_cache[37] = createElementVNode("span", { class: "extra-bottom-text" }, " 角度", -1))
@@ -44640,7 +44640,7 @@ const _hoisted_3$F = { class: "d-flex-c" };
 const _hoisted_4$z = { class: "d-flex-c" };
 const _hoisted_5$s = { class: "d-flex-c" };
 const _hoisted_6$o = { class: "d-flex-c" };
-const _hoisted_7$k = { class: "d-flex-c" };
+const _hoisted_7$i = { class: "d-flex-c" };
 const _hoisted_8$e = { class: "d-flex-c" };
 const _hoisted_9$d = { class: "d-flex" };
 const _hoisted_10$a = ["onClick"];
@@ -44835,7 +44835,7 @@ function _sfc_render$$(_ctx, _cache, $props, $setup, $data, $options) {
                       default: withCtx(() => [
                         createVNode(_component_el_col, { span: 12 }, {
                           default: withCtx(() => [
-                            createElementVNode("div", _hoisted_7$k, [
+                            createElementVNode("div", _hoisted_7$i, [
                               createVNode(_component_el_select, {
                                 modelValue: $data.form.label.formatter,
                                 "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.label.formatter) = $event)),
@@ -45356,7 +45356,7 @@ const _hoisted_3$E = { class: "d-flex-c" };
 const _hoisted_4$y = { class: "d-flex" };
 const _hoisted_5$r = ["onClick"];
 const _hoisted_6$n = { class: "d-flex-c" };
-const _hoisted_7$j = { class: "d-flex-c" };
+const _hoisted_7$h = { class: "d-flex-c" };
 const _hoisted_8$d = { class: "d-flex-c" };
 const _hoisted_9$c = { class: "d-flex-c" };
 const _hoisted_10$9 = { class: "d-flex" };
@@ -45462,7 +45462,7 @@ function _sfc_render$Z(_ctx, _cache, $props, $setup, $data, $options) {
                     }),
                     createVNode(_component_el_col, { span: 12 }, {
                       default: withCtx(() => [
-                        createElementVNode("div", _hoisted_7$j, [
+                        createElementVNode("div", _hoisted_7$h, [
                           createVNode(_component_el_input, {
                             modelValue: $data.form.header[1],
                             "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.header[1]) = $event)),
@@ -45689,7 +45689,7 @@ const _hoisted_3$D = { class: "d-flex-c" };
 const _hoisted_4$x = { class: "plane-inner-bg" };
 const _hoisted_5$q = { class: "d-flex-c" };
 const _hoisted_6$m = { class: "d-flex-c" };
-const _hoisted_7$i = { class: "d-flex-c" };
+const _hoisted_7$g = { class: "d-flex-c" };
 const _hoisted_8$c = { class: "d-flex-c" };
 
 function _sfc_render$Y(_ctx, _cache, $props, $setup, $data, $options) {
@@ -45818,7 +45818,7 @@ function _sfc_render$Y(_ctx, _cache, $props, $setup, $data, $options) {
                         default: withCtx(() => [
                           createVNode(_component_el_col, { span: 12 }, {
                             default: withCtx(() => [
-                              createElementVNode("div", _hoisted_7$i, [
+                              createElementVNode("div", _hoisted_7$g, [
                                 createVNode(_component_el_input_number, {
                                   modelValue: $data.form.polar.center[0],
                                   "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form.polar.center[0]) = $event)),
@@ -46308,7 +46308,7 @@ const _hoisted_6$l = {
   key: 1,
   style: {"padding-top":"10px"}
 };
-const _hoisted_7$h = { class: "d-flex-c" };
+const _hoisted_7$f = { class: "d-flex-c" };
 const _hoisted_8$b = { class: "d-flex-c" };
 const _hoisted_9$b = { class: "d-flex-c" };
 const _hoisted_10$8 = { class: "d-flex-c" };
@@ -46449,7 +46449,7 @@ function _sfc_render$W(_ctx, _cache, $props, $setup, $data, $options) {
                           default: withCtx(() => [
                             createVNode(_component_el_col, { span: 12 }, {
                               default: withCtx(() => [
-                                createElementVNode("div", _hoisted_7$h, [
+                                createElementVNode("div", _hoisted_7$f, [
                                   createVNode(_component_el_input_number, {
                                     modelValue: $data.form.radius[0],
                                     "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.radius[0]) = $event)),
@@ -47078,7 +47078,7 @@ const _hoisted_3$A = { class: "d-flex-c" };
 const _hoisted_4$u = { class: "d-flex-c" };
 const _hoisted_5$n = { class: "d-flex el-form-item" };
 const _hoisted_6$k = { style: {"width":"80px"} };
-const _hoisted_7$g = { style: {"flex":"1"} };
+const _hoisted_7$e = { style: {"flex":"1"} };
 const _hoisted_8$a = { class: "d-flex-c" };
 const _hoisted_9$a = { class: "d-flex-c" };
 const _hoisted_10$7 = { class: "d-flex-c" };
@@ -47228,7 +47228,7 @@ function _sfc_render$U(_ctx, _cache, $props, $setup, $data, $options) {
           }, null, 8, ["modelValue", "onChange"]),
           _cache[19] || (_cache[19] = createElementVNode("span", { class: "chart-config-title" }, " 圆点 ", -1))
         ]),
-        createElementVNode("div", _hoisted_7$g, [
+        createElementVNode("div", _hoisted_7$e, [
           createVNode(_component_el_row, {
             gutter: 10,
             type: "flex"
@@ -47514,7 +47514,7 @@ const _hoisted_4$t = {
 };
 const _hoisted_5$m = { style: {"width":"80px"} };
 const _hoisted_6$j = { class: "d-flex-c" };
-const _hoisted_7$f = {
+const _hoisted_7$d = {
   key: 4,
   class: "d-flex"
 };
@@ -47765,7 +47765,7 @@ function _sfc_render$T(_ctx, _cache, $props, $setup, $data, $options) {
                 }, 1024))
               : createCommentVNode("", true),
             (series.basic.type!=='line')
-              ? (openBlock(), createElementBlock("div", _hoisted_7$f, [
+              ? (openBlock(), createElementBlock("div", _hoisted_7$d, [
                   createElementVNode("div", _hoisted_8$9, [
                     createVNode(_component_el_switch, {
                       modelValue: series.barSeries.showBackground,
@@ -48061,7 +48061,7 @@ const _hoisted_4$s = {
 };
 const _hoisted_5$l = { class: "d-flex-c" };
 const _hoisted_6$i = { class: "d-flex-c" };
-const _hoisted_7$e = { class: "d-flex-c" };
+const _hoisted_7$c = { class: "d-flex-c" };
 const _hoisted_8$8 = { class: "d-flex-c" };
 const _hoisted_9$8 = { style: {"margin-top":"10px"} };
 const _hoisted_10$5 = { class: "copy-button-box" };
@@ -48210,7 +48210,7 @@ function _sfc_render$S(_ctx, _cache, $props, $setup, $data, $options) {
                           default: withCtx(() => [
                             createVNode(_component_el_col, { span: 12 }, {
                               default: withCtx(() => [
-                                createElementVNode("div", _hoisted_7$e, [
+                                createElementVNode("div", _hoisted_7$c, [
                                   createVNode(_component_el_input_number, {
                                     modelValue: $data.borderRadius[2],
                                     "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.borderRadius[2]) = $event)),
@@ -75492,7 +75492,7 @@ const _hoisted_5$j = {
   style: {"width":"100%"}
 };
 const _hoisted_6$h = { style: {"display":"inline-block","width":"90px","padding-left":"20px","text-align":"left"} };
-const _hoisted_7$d = { class: "d-flex-c" };
+const _hoisted_7$b = { class: "d-flex-c" };
 const _hoisted_8$7 = { class: "d-flex-c" };
 const _hoisted_9$7 = { class: "d-flex-c" };
 
@@ -75715,7 +75715,7 @@ function _sfc_render$N(_ctx, _cache, $props, $setup, $data, $options) {
                             default: withCtx(() => [
                               createVNode(_component_el_col, { span: 12 }, {
                                 default: withCtx(() => [
-                                  createElementVNode("div", _hoisted_7$d, [
+                                  createElementVNode("div", _hoisted_7$b, [
                                     createVNode(_component_el_input_number, {
                                       modelValue: ele.gt,
                                       "onUpdate:modelValue": $event => ((ele.gt) = $event),
@@ -75978,7 +75978,7 @@ const _hoisted_3$u = { style: {"width":"80px","margin-bottom":"10px"} };
 const _hoisted_4$p = { class: "d-flex" };
 const _hoisted_5$i = { style: {"width":"80px"} };
 const _hoisted_6$g = { class: "d-flex-c" };
-const _hoisted_7$c = { class: "d-flex-c" };
+const _hoisted_7$a = { class: "d-flex-c" };
 const _hoisted_8$6 = { class: "d-flex-c" };
 const _hoisted_9$6 = { class: "plane-inner-bg" };
 const _hoisted_10$4 = { class: "d-flex" };
@@ -76109,7 +76109,7 @@ function _sfc_render$M(_ctx, _cache, $props, $setup, $data, $options) {
                         default: withCtx(() => [
                           createVNode(_component_el_col, { span: 12 }, {
                             default: withCtx(() => [
-                              createElementVNode("div", _hoisted_7$c, [
+                              createElementVNode("div", _hoisted_7$a, [
                                 createVNode(_component_el_input_number, {
                                   modelValue: $data.form.itemStyle.borderWidth,
                                   "onUpdate:modelValue": _cache[12] || (_cache[12] = $event => (($data.form.itemStyle.borderWidth) = $event)),
@@ -76650,7 +76650,7 @@ const _hoisted_3$t = { class: "d-flex-c" };
 const _hoisted_4$o = { class: "d-flex-c" };
 const _hoisted_5$h = { class: "d-flex-c" };
 const _hoisted_6$f = { class: "d-flex-c" };
-const _hoisted_7$b = { class: "d-flex-c" };
+const _hoisted_7$9 = { class: "d-flex-c" };
 
 function _sfc_render$K(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_switch = resolveComponent("el-switch");
@@ -76839,7 +76839,7 @@ function _sfc_render$K(_ctx, _cache, $props, $setup, $data, $options) {
               }),
               createVNode(_component_el_col, { span: 12 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_7$b, [
+                  createElementVNode("div", _hoisted_7$9, [
                     createVNode(_component_el_input_number, {
                       modelValue: $data.form.symbolOffset[1],
                       "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.symbolOffset[1]) = $event)),
@@ -77689,7 +77689,7 @@ const _hoisted_3$r = { class: "d-flex-c" };
 const _hoisted_4$n = { class: "d-flex-c" };
 const _hoisted_5$g = { class: "d-flex-c" };
 const _hoisted_6$e = { class: "d-flex-c" };
-const _hoisted_7$a = { class: "d-flex-c" };
+const _hoisted_7$8 = { class: "d-flex-c" };
 const _hoisted_8$5 = { class: "d-flex-c" };
 const _hoisted_9$5 = { class: "d-flex-c" };
 const _hoisted_10$3 = { class: "d-flex-c" };
@@ -77846,7 +77846,7 @@ function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
               default: withCtx(() => [
                 createVNode(_component_el_col, { span: 12 }, {
                   default: withCtx(() => [
-                    createElementVNode("div", _hoisted_7$a, [
+                    createElementVNode("div", _hoisted_7$8, [
                       createVNode(_component_el_switch, {
                         modelValue: $data.form.highlightCurrentRow,
                         "onUpdate:modelValue": _cache[13] || (_cache[13] = $event => (($data.form.highlightCurrentRow) = $event)),
@@ -82458,7 +82458,7 @@ const _hoisted_3$m = { class: "d-flex-c" };
 const _hoisted_4$k = { class: "d-flex-c" };
 const _hoisted_5$f = { class: "d-flex-c" };
 const _hoisted_6$d = { class: "d-flex-c" };
-const _hoisted_7$9 = { class: "d-flex-c" };
+const _hoisted_7$7 = { class: "d-flex-c" };
 const _hoisted_8$4 = { class: "d-flex-c" };
 const _hoisted_9$4 = { class: "d-flex-c" };
 const _hoisted_10$2 = { class: "d-flex-c" };
@@ -82641,7 +82641,7 @@ function _sfc_render$x(_ctx, _cache, $props, $setup, $data, $options) {
               default: withCtx(() => [
                 createVNode(_component_el_col, { span: 12 }, {
                   default: withCtx(() => [
-                    createElementVNode("div", _hoisted_7$9, [
+                    createElementVNode("div", _hoisted_7$7, [
                       createVNode(_component_el_input_number, {
                         modelValue: $data.form.splitNumber,
                         "onUpdate:modelValue": _cache[10] || (_cache[10] = $event => (($data.form.splitNumber) = $event)),
@@ -84051,7 +84051,7 @@ const _hoisted_3$k = { class: "copy-button-box" };
 const _hoisted_4$i = { class: "d-flex-c" };
 const _hoisted_5$e = { class: "d-flex-c" };
 const _hoisted_6$c = { class: "d-flex-c" };
-const _hoisted_7$8 = { class: "d-flex-c" };
+const _hoisted_7$6 = { class: "d-flex-c" };
 const _hoisted_8$3 = { class: "d-flex-c" };
 const _hoisted_9$3 = { class: "d-flex-c" };
 const _hoisted_10$1 = { class: "d-flex-c" };
@@ -84295,7 +84295,7 @@ function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
                           ], 512), [
                             [vShow, $data.form.heightType==='custom']
                           ]),
-                          withDirectives(createElementVNode("div", _hoisted_7$8, [
+                          withDirectives(createElementVNode("div", _hoisted_7$6, [
                             createVNode(_component_el_input_number, {
                               modelValue: $data.form.heightNum,
                               "onUpdate:modelValue": _cache[9] || (_cache[9] = $event => (($data.form.heightNum) = $event)),
@@ -85119,7 +85119,7 @@ const _hoisted_3$i = { class: "d-flex-c" };
 const _hoisted_4$g = { class: "d-flex-c" };
 const _hoisted_5$c = { class: "plane-inner-bg" };
 const _hoisted_6$a = { class: "d-flex-c" };
-const _hoisted_7$7 = { class: "d-flex-c" };
+const _hoisted_7$5 = { class: "d-flex-c" };
 
 function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_radio_button = resolveComponent("el-radio-button");
@@ -85319,7 +85319,7 @@ function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
                           }),
                           createVNode(_component_el_col, { span: 12 }, {
                             default: withCtx(() => [
-                              createElementVNode("div", _hoisted_7$7, [
+                              createElementVNode("div", _hoisted_7$5, [
                                 createVNode(_component_el_input_number, {
                                   modelValue: $data.styles.selectspot.height,
                                   "onUpdate:modelValue": _cache[17] || (_cache[17] = $event => (($data.styles.selectspot.height) = $event)),
@@ -87428,7 +87428,7 @@ const _hoisted_6$8 = {
   key: 0,
   class: "code-bg mtk1"
 };
-const _hoisted_7$6 = {
+const _hoisted_7$4 = {
   key: 1,
   class: "code-bg mtk1 code-close"
 };
@@ -87623,7 +87623,7 @@ function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
             "has-table": $props.hasTable
           }), null, 16, ["class", "has-table"]),
           ($props.methodName)
-            ? (openBlock(), createElementBlock("div", _hoisted_7$6, " } "))
+            ? (openBlock(), createElementBlock("div", _hoisted_7$4, " } "))
             : createCommentVNode("", true)
         ])
       ]),
@@ -89450,7 +89450,7 @@ const _hoisted_6$6 = {
   key: 0,
   class: "add-form"
 };
-const _hoisted_7$5 = { style: {"margin-bottom":"5px"} };
+const _hoisted_7$3 = { style: {"margin-bottom":"5px"} };
 const _hoisted_8$2 = ["onClick"];
 const _hoisted_9$2 = { class: "analysis-modal-footer" };
 
@@ -89527,7 +89527,7 @@ function _sfc_render$e(_ctx, _cache, $props, $setup, $data, $options) {
                   key: i,
                   class: "add-form-item"
                 }, [
-                  createElementVNode("div", _hoisted_7$5, [
+                  createElementVNode("div", _hoisted_7$3, [
                     createVNode(_component_el_input, {
                       modelValue: item.field,
                       "onUpdate:modelValue": $event => ((item.field) = $event),
@@ -89941,8 +89941,7 @@ const _hoisted_4$8 = {
   title: "拖拽排序"
 };
 const _hoisted_5$5 = ["onClick"];
-const _hoisted_6$5 = { class: "ms-aggs" };
-const _hoisted_7$4 = {
+const _hoisted_6$5 = {
   key: 0,
   class: "ms-empty"
 };
@@ -89952,8 +89951,8 @@ function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_i_ri_draggable = __unplugin_components_1$1;
   const _component_el_option = resolveComponent("el-option");
   const _component_el_select = resolveComponent("el-select");
-  const _component_i_ri_close_line = __unplugin_components_2$2;
   const _component_el_checkbox = resolveComponent("el-checkbox");
+  const _component_i_ri_close_line = __unplugin_components_2$2;
   const _component_draggable = resolveComponent("draggable");
 
   return (openBlock(), createElementBlock("div", _hoisted_1$d, [
@@ -90008,6 +90007,23 @@ function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
             ]),
             _: 1
           }, 8, ["modelValue", "onUpdate:modelValue", "disabled", "onChange"]),
+          (openBlock(true), createElementBlock(Fragment, null, renderList($data.AGGS, (a) => {
+            return (openBlock(), createElementBlock("label", {
+              key: a.k,
+              class: "ms-agg"
+            }, [
+              createVNode(_component_el_checkbox, {
+                "model-value": row.aggs.includes(a.k),
+                disabled: !$props.setMode || (a.numericOnly && !$options.isNumericField(row.field)),
+                onChange: (v) => $options.toggleAgg(row, a.k, v)
+              }, {
+                default: withCtx(() => [
+                  createTextVNode(toDisplayString(a.label), 1)
+                ]),
+                _: 2
+              }, 1032, ["model-value", "disabled", "onChange"])
+            ]))
+          }), 128)),
           ($props.setMode)
             ? (openBlock(), createElementBlock("button", {
                 key: 1,
@@ -90017,36 +90033,17 @@ function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
               }, [
                 createVNode(_component_i_ri_close_line)
               ], 8, _hoisted_5$5))
-            : createCommentVNode("", true),
-          createElementVNode("div", _hoisted_6$5, [
-            (openBlock(true), createElementBlock(Fragment, null, renderList($data.AGGS, (a) => {
-              return (openBlock(), createElementBlock("label", {
-                key: a.k,
-                class: "ms-agg"
-              }, [
-                createVNode(_component_el_checkbox, {
-                  "model-value": row.aggs.includes(a.k),
-                  disabled: !$props.setMode || (a.numericOnly && !$options.isNumericField(row.field)),
-                  onChange: (v) => $options.toggleAgg(row, a.k, v)
-                }, {
-                  default: withCtx(() => [
-                    createTextVNode(toDisplayString(a.label), 1)
-                  ]),
-                  _: 2
-                }, 1032, ["model-value", "disabled", "onChange"])
-              ]))
-            }), 128))
-          ])
+            : createCommentVNode("", true)
         ])
       ]),
       _: 1
     }, 8, ["list", "disabled", "onEnd"]),
     (!$data.rows.length)
-      ? (openBlock(), createElementBlock("div", _hoisted_7$4, " 点击右上角 + 添加指标 "))
+      ? (openBlock(), createElementBlock("div", _hoisted_6$5, " 点击右上角 + 添加指标 "))
       : createCommentVNode("", true)
   ]))
 }
-const MetricSetting = /*#__PURE__*/_export_sfc(_sfc_main$d, [['render',_sfc_render$c],['__scopeId',"data-v-1430b066"]]);
+const MetricSetting = /*#__PURE__*/_export_sfc(_sfc_main$d, [['render',_sfc_render$c],['__scopeId',"data-v-a2ee102f"]]);
 
 /* unplugin-vue-components disabled */
 
@@ -90113,7 +90110,7 @@ const _hoisted_3$9 = {
 const _hoisted_4$7 = ["title"];
 const _hoisted_5$4 = { class: "gf-val" };
 const _hoisted_6$4 = { class: "gf-bar" };
-const _hoisted_7$3 = {
+const _hoisted_7$2 = {
   key: 1,
   class: "gf-empty"
 };
@@ -90211,7 +90208,7 @@ function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
             ], 2))
           }), 128))
         ]))
-      : (openBlock(), createElementBlock("div", _hoisted_7$3, " 选择维度并保存后,由数据源返回分组取值 "))
+      : (openBlock(), createElementBlock("div", _hoisted_7$2, " 选择维度并保存后,由数据源返回分组取值 "))
   ]))
 }
 const GroupFilter = /*#__PURE__*/_export_sfc(_sfc_main$c, [['render',_sfc_render$b],['__scopeId',"data-v-14adcc0c"]]);
@@ -90281,8 +90278,7 @@ const _hoisted_4$6 = {
   title: "拖拽调整优先级"
 };
 const _hoisted_5$3 = ["onClick"];
-const _hoisted_6$3 = { class: "ss-selects" };
-const _hoisted_7$2 = {
+const _hoisted_6$3 = {
   key: 0,
   class: "ss-empty"
 };
@@ -90290,10 +90286,10 @@ const _hoisted_7$2 = {
 function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_i_ri_add_line = __unplugin_components_0$9;
   const _component_i_ri_draggable = __unplugin_components_1$1;
-  const _component_i_ri_close_line = __unplugin_components_2$2;
   const _component_el_option = resolveComponent("el-option");
   const _component_el_select = resolveComponent("el-select");
   const _component_el_switch = resolveComponent("el-switch");
+  const _component_i_ri_close_line = __unplugin_components_2$2;
   const _component_draggable = resolveComponent("draggable");
 
   return (openBlock(), createElementBlock("div", _hoisted_1$b, [
@@ -90325,6 +90321,57 @@ function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
                 createVNode(_component_i_ri_draggable)
               ]))
             : createCommentVNode("", true),
+          createVNode(_component_el_select, {
+            modelValue: row.field,
+            "onUpdate:modelValue": $event => ((row.field) = $event),
+            size: "small",
+            filterable: "",
+            "allow-create": "",
+            "default-first-option": "",
+            class: "ss-field",
+            placeholder: "字段",
+            disabled: !$props.setMode,
+            onChange: $options.emitChange
+          }, {
+            default: withCtx(() => [
+              (openBlock(true), createElementBlock(Fragment, null, renderList($props.fieldOptions, (o) => {
+                return (openBlock(), createBlock(_component_el_option, {
+                  key: o.value,
+                  label: o.label,
+                  value: o.value
+                }, null, 8, ["label", "value"]))
+              }), 128))
+            ]),
+            _: 1
+          }, 8, ["modelValue", "onUpdate:modelValue", "disabled", "onChange"]),
+          createVNode(_component_el_select, {
+            modelValue: row.agg,
+            "onUpdate:modelValue": $event => ((row.agg) = $event),
+            size: "small",
+            class: "ss-agg",
+            disabled: !$props.setMode,
+            onChange: $options.emitChange
+          }, {
+            default: withCtx(() => [
+              (openBlock(true), createElementBlock(Fragment, null, renderList($data.AGGS, (a) => {
+                return (openBlock(), createBlock(_component_el_option, {
+                  key: a.k,
+                  label: a.label,
+                  value: a.k
+                }, null, 8, ["label", "value"]))
+              }), 128))
+            ]),
+            _: 1
+          }, 8, ["modelValue", "onUpdate:modelValue", "disabled", "onChange"]),
+          createVNode(_component_el_switch, {
+            modelValue: row.desc,
+            "onUpdate:modelValue": $event => ((row.desc) = $event),
+            disabled: !$props.setMode,
+            "active-text": "降序",
+            "inactive-text": "升序",
+            class: "ss-switch",
+            onChange: $options.emitChange
+          }, null, 8, ["modelValue", "onUpdate:modelValue", "disabled", "onChange"]),
           ($props.setMode)
             ? (openBlock(), createElementBlock("button", {
                 key: 1,
@@ -90334,70 +90381,17 @@ function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
               }, [
                 createVNode(_component_i_ri_close_line)
               ], 8, _hoisted_5$3))
-            : createCommentVNode("", true),
-          createElementVNode("div", _hoisted_6$3, [
-            createVNode(_component_el_select, {
-              modelValue: row.field,
-              "onUpdate:modelValue": $event => ((row.field) = $event),
-              size: "small",
-              filterable: "",
-              "allow-create": "",
-              "default-first-option": "",
-              class: "ss-field",
-              placeholder: "字段",
-              disabled: !$props.setMode,
-              onChange: $options.emitChange
-            }, {
-              default: withCtx(() => [
-                (openBlock(true), createElementBlock(Fragment, null, renderList($props.fieldOptions, (o) => {
-                  return (openBlock(), createBlock(_component_el_option, {
-                    key: o.value,
-                    label: o.label,
-                    value: o.value
-                  }, null, 8, ["label", "value"]))
-                }), 128))
-              ]),
-              _: 1
-            }, 8, ["modelValue", "onUpdate:modelValue", "disabled", "onChange"]),
-            createVNode(_component_el_select, {
-              modelValue: row.agg,
-              "onUpdate:modelValue": $event => ((row.agg) = $event),
-              size: "small",
-              class: "ss-agg",
-              disabled: !$props.setMode,
-              onChange: $options.emitChange
-            }, {
-              default: withCtx(() => [
-                (openBlock(true), createElementBlock(Fragment, null, renderList($data.AGGS, (a) => {
-                  return (openBlock(), createBlock(_component_el_option, {
-                    key: a.k,
-                    label: a.label,
-                    value: a.k
-                  }, null, 8, ["label", "value"]))
-                }), 128))
-              ]),
-              _: 1
-            }, 8, ["modelValue", "onUpdate:modelValue", "disabled", "onChange"])
-          ]),
-          createVNode(_component_el_switch, {
-            modelValue: row.desc,
-            "onUpdate:modelValue": $event => ((row.desc) = $event),
-            disabled: !$props.setMode,
-            "active-text": "降序",
-            "inactive-text": "升序",
-            class: "ss-switch",
-            onChange: $options.emitChange
-          }, null, 8, ["modelValue", "onUpdate:modelValue", "disabled", "onChange"])
+            : createCommentVNode("", true)
         ])
       ]),
       _: 1
     }, 8, ["list", "disabled", "onEnd"]),
     (!$data.rows.length)
-      ? (openBlock(), createElementBlock("div", _hoisted_7$2, " 点击右上角 + 添加排序 "))
+      ? (openBlock(), createElementBlock("div", _hoisted_6$3, " 点击右上角 + 添加排序 "))
       : createCommentVNode("", true)
   ]))
 }
-const SortSetting = /*#__PURE__*/_export_sfc(_sfc_main$b, [['render',_sfc_render$a],['__scopeId',"data-v-ba3aefac"]]);
+const SortSetting = /*#__PURE__*/_export_sfc(_sfc_main$b, [['render',_sfc_render$a],['__scopeId',"data-v-b9d9540a"]]);
 
 /* unplugin-vue-components disabled */
 
