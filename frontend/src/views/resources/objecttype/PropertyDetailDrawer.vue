@@ -246,6 +246,12 @@
               <textarea class="bl-textarea bl-mono" rows="3" v-model="form.metadata" placeholder='{"key":"value"}'></textarea>
             </FieldRow>
           </section>
+
+          <!-- 类型类:属性级绑定 -->
+          <section ref="sec_typeclass" data-sec="typeclass">
+            <div class="pd-sec">类型类</div>
+            <BoundTypeClassList :carrier="{ applicableType: 'property', ownerType: 'object', ownerId: classId, propertyId: form.id }" />
+          </section>
         </div>
       </div>
 
@@ -267,6 +273,7 @@
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import FilterableSelect from '@/components/FilterableSelect.vue'
+import BoundTypeClassList from '@/components/typeclass/BoundTypeClassList.vue'
 import { BL } from '@/lib/bl.js'
 import { classMetaApi, valueTypeApi, datasourceApi } from '@/api'
 
@@ -337,7 +344,8 @@ const navItems = computed(() => [
   ...(form.prop_type !== 'annotation' ? [{ k: 'constraint', label: '属性约束', icon: 'sliders' }] : []),
   { k: 'equiv',    label: '等价属性', icon: 'check', badge: equivList.value.length },
   { k: 'disjoint', label: '互斥属性', icon: 'x',     badge: disjointList.value.length },
-  { k: 'note',     label: '属性注释', icon: 'chat' }
+  { k: 'note',     label: '属性注释', icon: 'chat' },
+  { k: 'typeclass', label: '类型类', icon: 'tag' }
 ])
 
 const isNew = computed(() => !props.property || !props.property.id || String(props.property.id).startsWith('new_'))
@@ -538,7 +546,8 @@ const sec_constraint = ref(null)
 const sec_equiv = ref(null)
 const sec_disjoint = ref(null)
 const sec_note = ref(null)
-const secMap = () => ({ basic: sec_basic.value, mapping: sec_mapping.value, owl: sec_owl.value, constraint: sec_constraint.value, equiv: sec_equiv.value, disjoint: sec_disjoint.value, note: sec_note.value })
+const sec_typeclass = ref(null)
+const secMap = () => ({ basic: sec_basic.value, mapping: sec_mapping.value, owl: sec_owl.value, constraint: sec_constraint.value, equiv: sec_equiv.value, disjoint: sec_disjoint.value, note: sec_note.value, typeclass: sec_typeclass.value })
 function onPickNav(k) {
   activeNav.value = k
   const target = secMap()[k]

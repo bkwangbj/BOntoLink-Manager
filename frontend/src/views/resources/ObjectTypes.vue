@@ -278,6 +278,16 @@
               <TabProps :class-id="selected?.id" :class-name="selected?.display_name || selected?.api_name || ''" @navigate-tab="drawerTab = $event" />
             </div>
 
+            <!-- 时序图表 (类型类真实渲染:颜色/线型/左右轴/单位/枚举/倒置/插值) -->
+            <div v-else-if="drawerTab === 'tsChart'" class="ot-tab-content">
+              <TimeseriesChart :class-id="selected?.id" />
+            </div>
+
+            <!-- 事件时间轴 (event 类型类:类型配色/等级/闭环) -->
+            <div v-else-if="drawerTab === 'evTimeline'" class="ot-tab-content">
+              <EventTimeline :class-id="selected?.id" />
+            </div>
+
             <!-- 链接关系 (Canvas: 链接类型可视化) -->
             <div v-else-if="drawerTab === 'graph'" class="ot-tab-content ot-tab-canvas">
               <TabLinkGraph :class-id="selected?.id" />
@@ -537,6 +547,8 @@ import FieldRow from '@/views/config/category/FieldRow.vue'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 import TabOverview from '@/views/resources/objecttype/TabOverview.vue'
 import TabProps from '@/views/resources/objecttype/TabProps.vue'
+import TimeseriesChart from '@/views/resources/objecttype/TimeseriesChart.vue'
+import EventTimeline from '@/views/resources/objecttype/EventTimeline.vue'
 import TabClassGroup from '@/views/resources/objecttype/TabClassGroup.vue'
 import TabLinkGraph from '@/views/resources/objecttype/TabLinkGraph.vue'
 import TabObjectGraph from '@/views/resources/objecttype/TabObjectGraph.vue'
@@ -1122,7 +1134,9 @@ const tabGroups = [
     { key: 'fn', label: '函数' },
     { key: 'refBy', label: '被引用' },
     { key: 'ds', label: '数据源' },
-    { key: 'usage', label: '使用情况' }
+    { key: 'usage', label: '使用情况' },
+    { key: 'tsChart', label: '时序图表' },
+    { key: 'evTimeline', label: '事件时间轴' }
   ]}
 ]
 const collapsedGroups = ref(new Set())

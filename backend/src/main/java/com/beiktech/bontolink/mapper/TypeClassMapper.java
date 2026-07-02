@@ -30,14 +30,14 @@ public interface TypeClassMapper {
         INSERT INTO ont_type_class(
             id, category_code, icon, color, name_prefix, name_template, name_cn_base,
             source_type, group_tag, allow_apply_types, allow_multi_bind, is_array_value,
-            system_protected, param_type, frontend_component, param_options_json, param_validator_json,
+            system_protected, param_type, frontend_component, param_options_json, param_validator_json, param_json,
             param_desc, demo_value, depend_on_meta_ids, description, replacement_meta_id,
             is_deprecated, deprecated_reason, support_version_min, current_version_no, sort_weight,
             create_user, update_user
         ) VALUES (
             #{id}, #{category_code}, #{icon}, #{color}, #{name_prefix}, #{name_template}, #{name_cn_base},
             #{source_type}, #{group_tag}, #{allow_apply_types}, #{allow_multi_bind}, #{is_array_value},
-            #{system_protected}, #{param_type}, #{frontend_component}, #{param_options_json}, #{param_validator_json},
+            #{system_protected}, #{param_type}, #{frontend_component}, #{param_options_json}, #{param_validator_json}, #{param_json},
             #{param_desc}, #{demo_value}, #{depend_on_meta_ids}, #{description}, #{replacement_meta_id},
             #{is_deprecated}, #{deprecated_reason}, #{support_version_min}, #{current_version_no}, #{sort_weight},
             #{create_user}, #{update_user}
@@ -52,7 +52,7 @@ public interface TypeClassMapper {
             source_type = #{source_type}, group_tag = #{group_tag}, allow_apply_types = #{allow_apply_types},
             allow_multi_bind = #{allow_multi_bind}, is_array_value = #{is_array_value}, system_protected = #{system_protected},
             param_type = #{param_type}, frontend_component = #{frontend_component},
-            param_options_json = #{param_options_json}, param_validator_json = #{param_validator_json},
+            param_options_json = #{param_options_json}, param_validator_json = #{param_validator_json}, param_json = #{param_json},
             param_desc = #{param_desc}, demo_value = #{demo_value}, depend_on_meta_ids = #{depend_on_meta_ids},
             description = #{description}, replacement_meta_id = #{replacement_meta_id},
             is_deprecated = #{is_deprecated}, deprecated_reason = #{deprecated_reason},

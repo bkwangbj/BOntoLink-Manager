@@ -79,27 +79,39 @@
               <span class="ixe-sp-n">{{ rightCols.length }}</span>
             </div>
             <div class="ixe-sp-scroll">
-              <div v-if="panelSel!=='__main__'" class="ixe-sp-tip">关联对象属性 · 仅供查看</div>
+              <div v-if="panelSel!=='__main__'" class="ixe-sp-tip ixe-sp-tip-act">点击关联属性 → 加为显示列 / 筛选条件</div>
               <template v-if="rightNormal.length">
-                <div class="ixe-sp-grp">普通属性 <span class="ixe-sp-gn">{{ rightNormal.length }}</span></div>
+                <div class="ixe-sp-grp"><span class="ixe-sp-grp-dot" style="background: var(--bl-primary)"></span>普通属性 <span class="ixe-sp-gn">{{ rightNormal.length }}</span></div>
                 <div v-for="c in rightNormal" :key="c.field" class="ixe-sp-prop"
-                     :class="[panelSel!=='__main__' && 'ixe-sp-prop-static', panelSel==='__main__' && hasPill(c.field) && 'is-filtered']" @click="onPropClick(c, $event)">
+                     :class="panelSel==='__main__' && hasPill(c.field) && 'is-filtered'" @click="onPropClick(c, $event)">
                   <span class="ixe-sp-prop-ic" v-html="BL.icon(typeIcon(c.dataType), 13, 'var(--bl-primary)')"></span>
                   <span class="bl-grow bl-truncate">{{ c.label }}</span>
                   <span v-if="panelSel==='__main__' && hasPill(c.field)" v-html="BL.icon('filter', 11, 'var(--bl-primary)')"></span>
                 </div>
               </template>
               <template v-if="rightObject.length">
-                <div class="ixe-sp-grp">对象属性 <span class="ixe-sp-gn">{{ rightObject.length }}</span></div>
+                <div class="ixe-sp-grp"><span class="ixe-sp-grp-dot" style="background: #ff7d00"></span>对象属性 <span class="ixe-sp-gn">{{ rightObject.length }}</span></div>
                 <div v-for="c in rightObject" :key="c.field" class="ixe-sp-prop ixe-sp-prop-obj"
                      :class="panelSel==='__main__' && hasPill(c.field) && 'is-filtered'" @click="onPropClick(c, $event)">
-                  <span class="ixe-sp-prop-ic" v-html="BL.icon('link', 13, '#8b5cf6')"></span>
+                  <span class="ixe-sp-prop-ic" v-html="BL.icon('link', 13, '#ff7d00')"></span>
                   <span class="bl-grow bl-truncate">{{ c.label }}</span>
                   <span class="ixe-sp-obj-tag">对象</span>
                 </div>
               </template>
               <div v-if="!rightCols.length" class="ixe-sp-empty">无匹配属性</div>
             </div>
+          </div>
+        </div>
+
+        <!-- 关联属性操作菜单:加为显示列 / 加为筛选条件 -->
+        <div v-if="relMenu" class="ixe-relmenu" :style="{ left: relMenu.left+'px', top: relMenu.top+'px' }"
+             v-click-outside="()=>relMenu=null" @click.stop>
+          <div class="ixe-relmenu-hd bl-truncate">{{ relMenu.targetName }}·{{ relMenu.col.label }}</div>
+          <div class="ixe-relmenu-item" @click="addRelColumn()">
+            <span v-html="BL.icon('columns', 13, 'var(--bl-text-2)')"></span>加为显示列
+          </div>
+          <div class="ixe-relmenu-item" @click="addRelFilter($event)">
+            <span v-html="BL.icon('filter', 13, 'var(--bl-text-2)')"></span>加为筛选条件
           </div>
         </div>
 
@@ -151,13 +163,13 @@
     <div class="ixe-main" v-if="classId">
       <!-- 看板模式:内嵌数据可视化设计器(按数据特征自动出图,可增删改) -->
       <MakerEmbed v-if="viewMode==='charts'" ref="chartsRef" class="ixe-dash" :class-id="classId"
-                  :columns="columns" :filter-params="filterParams" :saved-config="savedConfig"
+                  :columns="displayColumns" :filter-params="filterParams" :saved-config="savedConfig"
                   toolbar-target="#ixe-maker-tools"
                   @save-as="onSave" @save-page="onSavePage" />
 
       <!-- 列表模式:列表探索(滚动加载 + 预览/多实例/比较) -->
       <InstanceListView v-else class="ixe-listview" :class-id="classId" :type-name="curType?.display_name"
-                        :columns="columns" :filter-params="filterParams"
+                        :columns="displayColumns" :filter-params="filterParams"
                         @open-instance="(p)=>$emit('open-instance', p)"
                         @selection-change="(ids)=>listSelectedIds=ids" />
     </div>
@@ -454,14 +466,44 @@ const selEntityCols = computed(() => panelSel.value === '__main__' ? columns.val
 const rightCols = computed(() => kwFilter(selEntityCols.value))
 const rightNormal = computed(() => rightCols.value.filter(c => c.propType !== 'object'))
 const rightObject = computed(() => rightCols.value.filter(c => c.propType === 'object'))
+
+/* —— 关联对象属性:加为显示列 / 筛选条件(后端确定性联表 rel::{targetClassId}::{field}) —— */
+const extraCols = ref([])                          // 用户从关联对象加入的显示列
+const relFieldReg = reactive({})                   // 关联字段元数据(供编辑筛选块回填):field -> {field,label,dataType}
+const relMenu = ref(null)                          // {col,targetClassId,targetName,left,top} | null
+const displayColumns = computed(() => [...columns.value, ...extraCols.value])
+function relFieldKey(t, f) { return `rel::${t}::${f}` }
 function onPropClick(c, e) {
-  // 仅主对象属性可点筛选;关联对象属性为展示专用(跨对象筛选需联表,mock 不支持)
-  if (panelSel.value !== '__main__') return
+  if (panelSel.value === '__main__') { editingPillId.value = null; openFilter(c, e); return }
+  // 关联对象属性:弹菜单选择加为显示列 / 筛选条件
+  const l = links.value.find(x => x.targetClassId === panelSel.value)
+  const rect = e.currentTarget.getBoundingClientRect()
+  relMenu.value = { col: c, targetClassId: panelSel.value, targetName: l?.targetClassName || selEntity.value.name, left: rect.left, top: rect.bottom + 4 }
+}
+function addRelColumn() {
+  const rm = relMenu.value; if (!rm) return
+  const field = relFieldKey(rm.targetClassId, rm.col.field)
+  const label = `${rm.targetName}·${rm.col.label}`
+  if (extraCols.value.some(c => c.field === field)) BL.info('该显示列已存在')
+  else {
+    extraCols.value = [...extraCols.value, { field, label, dataType: rm.col.dataType, propType: rm.col.propType }]
+    relFieldReg[field] = { field, label, dataType: rm.col.dataType }
+    BL.success('已加为显示列:' + label)
+  }
+  relMenu.value = null
+}
+function addRelFilter(ev) {
+  const rm = relMenu.value; if (!rm) return
+  const rect = ev.currentTarget.getBoundingClientRect()
+  const field = relFieldKey(rm.targetClassId, rm.col.field)
+  const label = `${rm.targetName}·${rm.col.label}`
+  relFieldReg[field] = { field, label, dataType: rm.col.dataType }
   editingPillId.value = null
-  openFilter(c, e)
+  relMenu.value = null
+  openFilter({ field, label, dataType: rm.col.dataType }, { currentTarget: { getBoundingClientRect: () => rect } })
 }
 /* 打开面板/切换类型时预取关联对象列(供数量统计 + 右侧展示) */
-watch(searchPanelOpen, (v) => { if (v) { panelSel.value = '__main__'; links.value.forEach(l => ensureLinkCols(l.targetClassId)) } })
+watch(searchPanelOpen, (v) => { if (v) { panelSel.value = '__main__'; links.value.forEach(l => ensureLinkCols(l.targetClassId)) } else { relMenu.value = null } })
 watch(links, (ls) => { ls.forEach(l => ensureLinkCols(l.targetClassId)) })
 
 /* —— 筛选抽屉 —— */
@@ -484,6 +526,7 @@ function selectType(id) {
   sort.value = ''
   page.value = 1
   panelSel.value = '__main__'
+  extraCols.value = []
   Object.keys(linkColsCache).forEach(k => delete linkColsCache[k])
   currentDesignId.value = null
   designName.value = '默认探索布局'
@@ -562,7 +605,7 @@ function detectType(col) {
   return col.dataType || 'string'
 }
 function reopenFilter(pill, ev) {
-  const col = columns.value.find(c => c.field === pill.field)
+  const col = columns.value.find(c => c.field === pill.field) || relFieldReg[pill.field]
   if (!col) return
   editingPillId.value = pill.id            // 编辑该块
   openFilter(col, { currentTarget: ev.currentTarget })
@@ -732,16 +775,23 @@ onBeforeUnmount(() => { document.removeEventListener('fullscreenchange', onFsCha
 .ixe-link-tag { font-size: 10.5px; color: var(--bl-text-3); display: flex; align-items: center; gap: 4px; }
 .ixe-link-kind { font-size: 10px; color: var(--bl-primary); background: var(--bl-primary-soft); border-radius: 3px; padding: 0 4px; flex-shrink: 0; }
 /* 右:属性分组 + 属性行 */
-.ixe-sp-grp { font-size: 11px; color: var(--bl-text-3); font-weight: 600; padding: 8px 8px 4px; display: flex; align-items: center; gap: 6px; }
+.ixe-sp-grp { font-size: 11px; color: var(--bl-text-3); font-weight: 600; padding: 8px 8px 4px; display: flex; align-items: center; gap: 5px; }
+.ixe-sp-grp-dot { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; display: inline-block; }
 .ixe-sp-gn { font-size: 10px; color: var(--bl-text-3); background: var(--bl-bg-2); border-radius: 8px; padding: 0 6px; }
 .ixe-sp-prop { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 6px; cursor: pointer; font-size: 12.5px; color: var(--bl-text-1); }
 .ixe-sp-prop:hover { background: var(--bl-bg-hover); }
 .ixe-sp-prop.is-filtered { background: var(--bl-primary-soft); color: var(--bl-primary); }
-.ixe-sp-prop-obj { cursor: default; }
+.ixe-sp-prop-obj { cursor: pointer; }
 .ixe-sp-prop-static { cursor: default; }
 .ixe-sp-prop-static:hover { background: transparent; }
 .ixe-sp-tip { font-size: 11px; color: var(--bl-text-3); background: var(--bl-bg-2); border-radius: 5px; padding: 5px 8px; margin: 4px 4px 2px; }
-.ixe-sp-obj-tag { font-size: 10px; color: #8b5cf6; background: rgba(139,92,246,.1); border-radius: 3px; padding: 0 5px; flex-shrink: 0; }
+.ixe-sp-tip-act { color: var(--bl-primary); background: var(--bl-primary-soft); }
+/* 关联属性操作菜单 */
+.ixe-relmenu { position: fixed; z-index: 60; min-width: 160px; max-width: 240px; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,.14); padding: 4px; }
+.ixe-relmenu-hd { font-size: 11px; color: var(--bl-text-3); padding: 5px 8px; margin-bottom: 4px; border-bottom: 1px solid var(--bl-divider); }
+.ixe-relmenu-item { display: flex; align-items: center; gap: 7px; padding: 7px 8px; border-radius: 6px; font-size: 12.5px; color: var(--bl-text-1); cursor: pointer; }
+.ixe-relmenu-item:hover { background: var(--bl-bg-hover); color: var(--bl-primary); }
+.ixe-sp-obj-tag { font-size: 10px; color: #ff7d00; background: rgba(255,125,0,.12); border-radius: 3px; padding: 0 5px; flex-shrink: 0; }
 .ixe-sp-prop-ic { display: inline-flex; flex-shrink: 0; }
 .ixe-type {
   position: relative; display: flex; align-items: center; gap: 6px;

@@ -67,12 +67,16 @@
                 :class="['ilv-td', frozenSet.has(i) && 'ilv-frozen', c.key==='__name__' && 'ilv-name-td']"
                 :style="frozenSet.has(i) ? { left: leftOffset(i) + 'px' } : null">
               <template v-if="c.key==='__name__'">
-                <span class="ilv-row-ic" :style="{ background:(r.color||'#165DFF')+'1f', color:r.color||'#165DFF' }"
-                      v-html="BL.icon(r.icon||'cube', 12, r.color||'#165DFF')"></span>
+                <span class="ilv-row-ic" :style="{ background:(r.color||'#165DFF')+'1f', color:r.color||'#165DFF' }">
+                  <img v-if="rowImg(r)" :src="rowImg(r)" class="ilv-row-img" alt="" />
+                  <span v-else v-html="BL.icon(rowIcon(r), 12, r.color||'#165DFF')"></span>
+                </span>
                 <span class="ilv-cell" style="font-weight:500">{{ r.title }}</span>
+                <span v-if="rowBreach(r)" class="ilv-breach" :style="{ background: threshold.exceedColor }" :title="threshold.measureName+' 越限'">越限</span>
               </template>
               <span v-else-if="c.key==='__code__'" class="ilv-cell bl-mono bl-muted">{{ r.code }}</span>
-              <span v-else class="ilv-cell">{{ fmt(r[c.key], c.dataType) }}</span>
+              <span v-else class="ilv-cell" :class="threshold && c.key===threshold.measureField && rowBreach(r) && 'is-breach'"
+                    :style="threshold && c.key===threshold.measureField && rowBreach(r) ? { color: threshold.exceedColor } : null">{{ fmt(r[c.key], c.dataType) }}</span>
             </td>
           </tr>
         </tbody>
@@ -186,8 +190,10 @@
 
         <div v-if="focusRow_" class="ilv-detail">
           <div class="ilv-pv-obj">
-            <span class="ilv-pv-obj-ic" :style="{ background:(focusRow_.color||'#165DFF')+'1f', color:focusRow_.color||'#165DFF' }"
-                  v-html="BL.icon(focusRow_.icon||'cube', 18, focusRow_.color||'#165DFF')"></span>
+            <span class="ilv-pv-obj-ic" :style="{ background:(focusRow_.color||'#165DFF')+'1f', color:focusRow_.color||'#165DFF' }">
+              <img v-if="rowImg(focusRow_)" :src="rowImg(focusRow_)" class="ilv-row-img" alt="" />
+              <span v-else v-html="BL.icon(rowIcon(focusRow_), 18, focusRow_.color||'#165DFF')"></span>
+            </span>
             <div class="bl-grow" style="min-width:0">
               <div class="bl-truncate" style="font-weight:600;font-size:14px">{{ focusRow_.title }}</div>
               <div class="bl-truncate bl-mono bl-muted" style="font-size:11.5px">{{ typeName }} · {{ focusRow_.code }}</div>
@@ -309,7 +315,8 @@
 <script setup>
 import { ref, reactive, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { BL } from '@/lib/bl.js'
-import { instanceApi } from '@/api'
+import { instanceApi, tcRenderApi } from '@/api'
+import { resolveHubble, resolveThreshold } from '@/lib/tcResolver.js'
 
 const props = defineProps({
   classId: { type: String, required: true },
@@ -336,6 +343,39 @@ async function fetchAll() {
     total.value = res.total || 0
   } catch { rows.value = []; total.value = 0 }
   loading.value = false
+}
+
+/* —— 类型类渲染指令(一次拉取):hubble 图标来源 + 阈值越限 —— */
+const hubbleField = ref(null)
+const threshold = ref(null)
+async function loadRenderCfg() {
+  hubbleField.value = null; threshold.value = null
+  if (!props.classId) return
+  try {
+    const payload = await tcRenderApi.resolve({ classId: props.classId })
+    hubbleField.value = resolveHubble(payload).iconField
+    threshold.value = resolveThreshold(payload)
+  } catch { hubbleField.value = null; threshold.value = null }
+}
+/* 实例级越限判定:当前测量值 > 高限(逐行/硬限) 或 < 低限 → 越限 */
+function rowBreach(r) {
+  const t = threshold.value; if (!t || !t.measureField || !r) return false
+  const mv = Number(r[t.measureField]); if (!Number.isFinite(mv)) return false
+  const hi = t.highField != null && r[t.highField] != null ? Number(r[t.highField]) : (t.max != null ? Number(t.max) : null)
+  const lo = t.lowField != null && r[t.lowField] != null ? Number(r[t.lowField]) : (t.min != null ? Number(t.min) : null)
+  return (hi != null && Number.isFinite(hi) && mv > hi) || (lo != null && Number.isFinite(lo) && mv < lo)
+}
+function rowImg(r) {
+  if (!hubbleField.value) return ''
+  const v = r[hubbleField.value]
+  return (typeof v === 'string' && /^(https?:|data:image\/)/i.test(v)) ? v : ''
+}
+function rowIcon(r) {
+  if (hubbleField.value) {
+    const v = r[hubbleField.value]
+    if (typeof v === 'string' && v && !/^(https?:|data:)/i.test(v)) return v
+  }
+  return r.icon || 'cube'
 }
 
 /* —— 列模型 —— */
@@ -682,7 +722,7 @@ watch(() => focusRow_.value && focusRow_.value.id, async (id) => {
 watch(() => [props.classId, props.filterParams], () => {
   sel.value = new Set(); focusId.value = null; sorts.value = []
   Object.keys(linksCache).forEach(k => delete linksCache[k])
-  fetchAll()
+  fetchAll(); loadRenderCfg()
 }, { deep: true, immediate: true })
 watch(() => props.columns, buildCols, { immediate: true })
 
@@ -751,7 +791,10 @@ const vFocus = { mounted(el) { setTimeout(() => el.focus && el.focus(), 0) } }
 .ilv-row.is-focus td:first-child { box-shadow: inset 3px 0 0 var(--bl-primary); }
 .ilv-ck-col { width: 44px; text-align: center; }
 .ilv-ck-col input { cursor: pointer; }
-.ilv-row-ic { width: 22px; height: 22px; border-radius: 5px; display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; margin-right: 8px; }
+.ilv-row-ic { width: 22px; height: 22px; border-radius: 5px; display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; margin-right: 8px; overflow: hidden; }
+.ilv-row-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ilv-breach { font-size: 10px; color: #fff; border-radius: 3px; padding: 0 5px; margin-left: 6px; vertical-align: middle; }
+.ilv-cell.is-breach { font-weight: 600; }
 
 /* 冻结列 */
 .ilv-frozen { position: sticky; z-index: 2; }

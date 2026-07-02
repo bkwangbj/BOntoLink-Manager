@@ -162,7 +162,7 @@ const menus = [
     { path: '/tools/import-export', icon: 'upload',   label: '导入导出',  en: 'Import & Export' }
   ]},
   { key: 'config', title: '系统配置', items: [
-    { path: '/config/category',    icon: 'folder', label: '行业分类管理', en: 'Category' },
+    { path: '/config/category',    icon: 'folder', label: '行业分类', en: 'Category' },
     { path: '/config/type-classes', icon: 'tag',    label: '类型类',       en: 'Type classes' },
     { path: '/config/security',     icon: 'user',   label: '权限安全',     en: 'Security' }
   ]}

@@ -157,6 +157,23 @@
                     <span class="gr-flag" :class="drawerClassDetail.status === 1 && 'is-on'">{{ drawerClassDetail.status === 1 ? '启用' : '禁用' }}</span>
                   </div>
                 </div>
+                <!-- 图谱渲染(vertex 类型类真实生效) -->
+                <div v-if="drawerVtx" class="gr-section">
+                  <div class="gr-section-hd">图谱渲染(类型类)</div>
+                  <div class="gr-vtx">
+                    <span v-if="drawerVtx.subtype" class="gr-vtx-chip" :style="{ borderColor: drawerVtx.subtype.group_color, color: drawerVtx.subtype.group_color, background: (drawerVtx.subtype.group_color||'#888')+'18' }">
+                      子类型: {{ drawerVtx.subtype.group_name || drawerVtx.subtype.subtype_code }}
+                    </span>
+                    <span v-if="drawerVtx.intent" class="gr-vtx-chip" :style="{ borderColor: drawerVtx.intent.color, color: drawerVtx.intent.color, background: (drawerVtx.intent.color||'#888')+'18' }">
+                      等级: {{ drawerVtx.intent.intent_type }}<span v-if="drawerVtx.intent.blink"> · 闪烁</span>
+                    </span>
+                    <span v-if="drawerVtx.keyMeasure" class="gr-vtx-chip gr-vtx-plain">核心指标: {{ drawerVtx.keyMeasure.measure_name }}{{ drawerVtx.keyMeasure.unit ? '('+drawerVtx.keyMeasure.unit+')' : '' }}</span>
+                    <span v-if="drawerVtx.thresholds && drawerVtx.thresholds.measure" class="gr-vtx-chip gr-vtx-plain">阈值指标: {{ drawerVtx.thresholds.measure.measure_name }}</span>
+                    <span v-if="drawerVtx.thresholds && (drawerVtx.thresholds.min!=null || drawerVtx.thresholds.max!=null)" class="gr-vtx-chip gr-vtx-plain">硬阈值: {{ drawerVtx.thresholds.min ?? '—' }} ~ {{ drawerVtx.thresholds.max ?? '—' }}</span>
+                    <span v-if="drawerVtx.eventValue" class="gr-vtx-chip gr-vtx-plain">事件数值{{ drawerVtx.eventValue.unit ? '('+(drawerVtx.eventValue.unit.unit_name||'')+')' : '' }}</span>
+                    <span v-if="drawerVtx.eventProps && drawerVtx.eventProps.length" class="gr-vtx-chip gr-vtx-plain">详情字段 ×{{ drawerVtx.eventProps.length }}</span>
+                  </div>
+                </div>
                 <div class="gr-section">
                   <div class="gr-section-hd">关联关系 ({{ nodeRelations(drawerNode.id).length }})</div>
                   <ul class="gr-rels">
@@ -215,10 +232,14 @@ import { ref, reactive, shallowRef, onMounted, onBeforeUnmount, nextTick, comput
 import G6 from '@antv/g6'
 import { useRouter } from 'vue-router'
 import { BL } from '@/lib/bl.js'
-import { graphApi, categoryApi, resourceApi } from '@/api'
+import { graphApi, categoryApi, resourceApi, tcRenderApi } from '@/api'
+import { resolveVertex } from '@/lib/tcResolver.js'
 import { nodeProfile } from '@/lib/domain.js'
 
 const router = useRouter()
+/* 图谱 vertex 类型类渲染指令:classId(=节点 id) → resolveVertex 结果 */
+const vertexMap = ref({})
+const drawerVtx = computed(() => (drawerNode.value && vertexMap.value[drawerNode.value.id]) || null)
 
 function iconText(ic, t) { return `${BL.icon(ic, 12)}<span style="margin-left:4px">${t}</span>` }
 
@@ -622,7 +643,13 @@ function bindFit(g, padding = 30) {
   setTimeout(() => { if (g && !g.get('destroyed')) g.fitView(padding) }, 300)
 }
 
-function cardNode(n) { return { id: n.id, label: n.label, apiName: n.apiName, categoryCode: n.categoryCode, _color: n.color || '#165DFF', _icon: n.icon || 'cube', _agg: !!n._agg, size: [124, 40] } }
+function cardNode(n) {
+  // vertex 类型类:子类型/意图颜色覆盖节点色(真实渲染)
+  const vx = !n._agg ? vertexMap.value[n.id] : null
+  let color = n.color || '#165DFF'
+  if (vx) color = (vx.subtype && vx.subtype.group_color) || (vx.intent && vx.intent.color) || color
+  return { id: n.id, label: n.label, apiName: n.apiName, categoryCode: n.categoryCode, _color: color, _icon: n.icon || 'cube', _agg: !!n._agg, _alarm: !!n._alarm, _vtx: vx || null, size: [124, 40] }
+}
 function edgeStyleOf(kind) {
   const r = RELATION_MAP[kind] || RELATION_MAP.link
   return { stroke: r.color, lineWidth: r.width, lineDash: r.dash, endArrow: kind === 'sub' }
@@ -635,6 +662,45 @@ function mergedEdgeStyle(group) {
   if (allKinds.length === 1) return edgeStyleOf(allKinds[0])
   return { stroke: '#86909c', lineWidth: 2, lineDash: [0], endArrow: false }
 }
+/* vertex 结构级渲染:① link_merge 中介对象类型隐藏并桥接上下游 ② 阈值类型类 → 自动生成告警节点 */
+function applyVertexStructure(data) {
+  const vm = vertexMap.value || {}
+  let nodes = data.nodes.slice()
+  let edges = data.edges.map(e => ({ ...e }))
+
+  // ① 中介节点合并(双向桥接)
+  const mediators = new Set(nodes.filter(n => !n._agg && vm[n.id] && vm[n.id].isMediator).map(n => n.id))
+  if (mediators.size) {
+    for (const mid of mediators) {
+      const partners = new Set()
+      edges.forEach(e => {
+        if (e.source === mid && e.target !== mid && !mediators.has(e.target)) partners.add(e.target)
+        if (e.target === mid && e.source !== mid && !mediators.has(e.source)) partners.add(e.source)
+      })
+      const arr = [...partners]
+      for (let i = 0; i < arr.length; i++)
+        for (let j = i + 1; j < arr.length; j++)
+          edges.push({ source: arr[i], target: arr[j], kind: 'link', label: '', _merged: true })
+    }
+    nodes = nodes.filter(n => !mediators.has(n.id))
+    edges = edges.filter(e => !mediators.has(e.source) && !mediators.has(e.target))
+  }
+
+  // ② 阈值 → 告警节点(类型级:标注该对象类型具备阈值告警能力)
+  const extraNodes = [], extraEdges = []
+  for (const n of nodes) {
+    if (n._agg) continue
+    const th = vm[n.id] && vm[n.id].thresholds
+    const hasTh = th && (th.measure || th.min != null || th.max != null || th.highProperty || th.lowProperty || th.exceedIntent)
+    if (!hasTh) continue
+    const aid = 'alarm:' + n.id
+    const col = (th.exceedIntent && th.exceedIntent.color) || '#ef4444'
+    extraNodes.push({ id: aid, label: '阈值告警', apiName: th.measure ? (th.measure.measure_name || '') : '', categoryCode: n.categoryCode, color: col, icon: 'alert', _alarm: true })
+    extraEdges.push({ source: n.id, target: aid, kind: 'dis', label: '', _alarm: true })
+  }
+  return { nodes: [...nodes, ...extraNodes], edges: [...edges, ...extraEdges] }
+}
+
 /* 右画布:力导向关系图(对象类型卡片 + 5 类关系) */
 function initRight() {
   const el = rightCanvas.value; if (!el) return
@@ -649,7 +715,7 @@ function initRight() {
     edgeStateStyles: { dim: { opacity: 0.07 }, highlight: { lineWidth: 3.4, opacity: 1 } },
     layout: graphCfg2(curGraph.value)
   })
-  const data = rightData()   // 全部 或 当前范围裁剪+聚合后的图
+  const data = applyVertexStructure(rightData())   // vertex 结构级:中介合并 + 告警节点
   // 节点名 + 普通链接按"对象类型对"分组(用于线上计数标注 + 点击查看链接列表)
   nodeNameStore = {}; data.nodes.forEach(n => { nodeNameStore[n.id] = n.label || n.apiName || n.id })
   // 所有关系按"对象类型对"(无向)分组 → 每对只画一条线,数量=该对关系总数(避免多条并排弧线杂乱)
@@ -680,6 +746,7 @@ function initRight() {
   g.render(); bindFit(g, 50)
   g.on('node:click', (evt) => {
     const m = evt.item.getModel()
+    if (m._alarm) return                        // 告警节点无对象类型详情
     if (m._agg) applyScope(m.categoryCode)     // 点聚合方图 → 下钻到该范围
     else openRightDrawer(m)
   })
@@ -777,6 +844,14 @@ async function load() {
   ;(Array.isArray(cat) ? cat : []).forEach(n => indexCat(n, [], 0))
 
   ontData = { nodes: ot.nodes || [], edges: ot.edges || [] }
+
+  // 批量拉取 vertex 类型类渲染指令(classId → resolveVertex)
+  try {
+    const raw = await tcRenderApi.categoryMap('vertex')
+    const m = {}
+    for (const [cid, payload] of Object.entries(raw || {})) m[cid] = resolveVertex(payload)
+    vertexMap.value = m
+  } catch { vertexMap.value = {} }
 
   await nextTick()
   leftTreeData = buildTree(cat)
@@ -1041,6 +1116,9 @@ const vClickOutside = {
 .gr-loading { padding: 8px 0; font-size: 12px; }
 .gr-flags { display: flex; flex-wrap: wrap; gap: 6px; }
 .gr-flag { display: inline-flex; align-items: center; padding: 3px 8px; background: var(--bl-bg-2); color: var(--bl-text-3); border-radius: 3px; font-size: 11px; }
+.gr-vtx { display: flex; flex-wrap: wrap; gap: 6px; }
+.gr-vtx-chip { display: inline-flex; align-items: center; padding: 3px 9px; border: 1px solid var(--bl-border); border-radius: 12px; font-size: 11.5px; }
+.gr-vtx-plain { color: var(--bl-text-2); background: var(--bl-bg-2); }
 .gr-flag.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); font-weight: 500; }
 .gr-goto-btn { width: 100%; margin-top: 16px; justify-content: center; }
 </style>

@@ -113,6 +113,7 @@ public class TypeClassController {
         merged.put("allow_apply_types", toJsonStr(merged.get("allow_apply_types")));
         merged.put("param_options_json", toJsonStr(merged.get("param_options_json")));
         merged.put("param_validator_json", toJsonStr(merged.get("param_validator_json")));
+        merged.put("param_json", toJsonStr(merged.get("param_json")));
         merged.put("depend_on_meta_ids", toJsonStr(merged.getOrDefault("depend_on_meta_ids", "[]")));
         mapper.update(merged);
         return R.ok(mapper.findById(id));
@@ -168,6 +169,7 @@ public class TypeClassController {
         b.put("allow_apply_types", toJsonStr(b.get("allow_apply_types")));
         b.put("param_options_json", toJsonStr(b.get("param_options_json")));
         b.put("param_validator_json", toJsonStr(b.get("param_validator_json")));
+        b.put("param_json", toJsonStr(b.get("param_json")));
         b.put("depend_on_meta_ids", toJsonStr(b.getOrDefault("depend_on_meta_ids", "[]")));
         // 仅插入用到的可空键补 null,避免 MyBatis 取不到键报错
         for (String k : List.of("icon", "color", "name_template", "group_tag", "param_options_json",

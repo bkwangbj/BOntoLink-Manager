@@ -2,9 +2,12 @@ package com.beiktech.bontolink.controller;
 
 import com.beiktech.bontolink.common.R;
 import com.beiktech.bontolink.mapper.TypeClassBindMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /** 类型类绑定实例接口。路径:/api/tc-bind */
@@ -13,6 +16,27 @@ import java.util.*;
 public class TypeClassBindController {
 
     @Autowired private TypeClassBindMapper mapper;
+    private final ObjectMapper om = new ObjectMapper();
+    private static final DateTimeFormatter TS = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private String now() { return LocalDateTime.now().format(TS); }
+    private String toJsonStr(Object v) {
+        if (v == null) return null;
+        if (v instanceof String) return (String) v;
+        try { return om.writeValueAsString(v); } catch (Exception e) { return null; }
+    }
+
+    /**
+     * 按载体反查已绑定类型类(供对象属性/链接详情「已绑定类型类」区)。
+     * property:传 ownerId(所属对象/接口 RID) + propertyId(属性 id);relation:传 linkTypeId。
+     */
+    @GetMapping("/by-carrier")
+    public R<List<Map<String, Object>>> byCarrier(@RequestParam String applicableType,
+                                                  @RequestParam(required = false) String ownerId,
+                                                  @RequestParam(required = false) String propertyId,
+                                                  @RequestParam(required = false) String linkTypeId) {
+        if ("relation".equals(applicableType)) return R.ok(mapper.listByLink(linkTypeId));
+        return R.ok(mapper.listByProperty(ownerId, propertyId));
+    }
 
     /** 某类型类的绑定明细(可按载体类型/关键词过滤) */
     @GetMapping
@@ -57,7 +81,16 @@ public class TypeClassBindController {
         for (String k : List.of("property_owner_type", "property_owner_id", "property_id",
                 "link_type_id", "action_type_id", "suffix_custom", "value", "remark", "create_user", "update_user"))
             body.putIfAbsent(k, null);
+        body.put("value", toJsonStr(body.get("value")));   // 参数值对象 → JSON 字符串
         mapper.insert(body);
+        return R.ok(mapper.findById(id));
+    }
+
+    /** 更新绑定的参数值(参数编辑弹窗保存) */
+    @PutMapping("/{id}")
+    public R<?> updateValue(@PathVariable String id, @RequestBody Map<String, Object> body) {
+        if (mapper.findById(id) == null) return R.error(404, "绑定不存在");
+        mapper.updateValue(id, toJsonStr(body.get("value")), now());
         return R.ok(mapper.findById(id));
     }
 

@@ -372,6 +372,11 @@
             </div>
           </section>
 
+          <!-- 类型类:关系级绑定 -->
+          <section v-if="showTabs && activeTab === 'typeclass'">
+            <BoundTypeClassList :carrier="{ applicableType: 'relation', linkTypeId: form.id }" />
+          </section>
+
         </div>
 
         <!-- 底部 -->
@@ -418,6 +423,7 @@
 import { ref, reactive, computed, watch } from 'vue'
 import { BL } from '@/lib/bl.js'
 import { linkTypeApi, resourceApi, categoryApi } from '@/api'
+import BoundTypeClassList from '@/components/typeclass/BoundTypeClassList.vue'
 
 const props = defineProps({
   open: { type: Boolean, default: false },
@@ -436,7 +442,8 @@ const emit = defineEmits(['update:open', 'saved', 'deleted'])
 
 const tabs = [
   { k: 'basic', label: '基础信息' },
-  { k: 'graph', label: '链接关系图' }
+  { k: 'graph', label: '链接关系图' },
+  { k: 'typeclass', label: '类型类' }
 ]
 const activeTab = ref('basic')
 const editMode = ref(true)

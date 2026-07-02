@@ -26,6 +26,11 @@ public class InstanceMockService {
     private final Map<String, List<Map<String, Object>>> cache = new ConcurrentHashMap<>();
     /** classId -> 属性元数据(api_name/display_name/data_type/prop_type) */
     private final Map<String, List<Map<String, Object>>> propCache = new ConcurrentHashMap<>();
+    /** classId -> 附加了关联对象字段的实例列表(供跨对象显示列/筛选,确定性联表) */
+    private final Map<String, List<Map<String, Object>>> enrichedCache = new ConcurrentHashMap<>();
+
+    /** 关联字段键前缀:rel::{关联对象类型id}::{关联属性api_name} */
+    public static final String REL_PREFIX = "rel::";
 
     /* ——— 中文水利领域词库(用于生成像样的名称/取值) ——— */
     private static final String[] PROVINCES = {
@@ -54,6 +59,50 @@ public class InstanceMockService {
         return all(classId).size();
     }
 
+    /**
+     * 取某对象类型「附加了关联对象字段」的实例列表(确定性联表 + 缓存)。
+     * <p>每条主实例按 id 确定性挑选一条关联实例,把其属性平铺进主行,键为
+     * {@code rel::{关联对象类型id}::{关联属性api_name}}。用于关联属性作显示列/筛选。</p>
+     */
+    public List<Map<String, Object>> allEnriched(String classId) {
+        return enrichedCache.computeIfAbsent(classId, this::enrich);
+    }
+
+    private List<Map<String, Object>> enrich(String classId) {
+        List<Map<String, Object>> base = all(classId);
+        // 相邻对象类型(出/入向去重,排除自身)
+        LinkedHashSet<String> targets = new LinkedHashSet<>();
+        for (Map<String, Object> link : ontologyMapper.listLinksOfClass(classId)) {
+            String src = str(link.get("source_class_id"));
+            String tgt = str(link.get("target_class_id"));
+            String other = classId.equals(src) ? tgt : src;
+            if (!other.isEmpty() && !other.equals(classId)) targets.add(other);
+        }
+        if (targets.isEmpty()) return base;   // 无关联:附加列表 == 基础列表
+        // 预取关联对象的实例池 + 属性
+        Map<String, List<Map<String, Object>>> relRows = new LinkedHashMap<>();
+        Map<String, List<Map<String, Object>>> relProps = new LinkedHashMap<>();
+        for (String t : targets) { relRows.put(t, all(t)); relProps.put(t, properties(t)); }
+
+        List<Map<String, Object>> out = new ArrayList<>(base.size());
+        for (Map<String, Object> row : base) {
+            Map<String, Object> e = new LinkedHashMap<>(row);
+            for (String t : targets) {
+                List<Map<String, Object>> rr = relRows.get(t);
+                if (rr == null || rr.isEmpty()) continue;
+                int idx = Math.floorMod(Objects.hash(row.get("id"), t), rr.size());
+                Map<String, Object> rel = rr.get(idx);
+                for (Map<String, Object> p : relProps.get(t)) {
+                    String f = str(p.get("api_name"));
+                    if (f.isEmpty()) continue;
+                    e.put(REL_PREFIX + t + "::" + f, rel.get(f));
+                }
+            }
+            out.add(e);
+        }
+        return out;
+    }
+
     /** 属性元数据(api_name/display_name/data_type/...)。 */
     public List<Map<String, Object>> properties(String classId) {
         return propCache.computeIfAbsent(classId, ontologyMapper::listProperties);
@@ -67,7 +116,7 @@ public class InstanceMockService {
      * @param filter  结构化筛选 {logic:'AND'|'OR', conditions:[{field,op,value,value2}]}，可为 null
      */
     public List<Map<String, Object>> query(String classId, String q, Map<String, Object> filter) {
-        List<Map<String, Object>> rows = all(classId);
+        List<Map<String, Object>> rows = allEnriched(classId);   // 附加关联对象字段(跨对象显示列/筛选)
         BoolQuery.Node ast = BoolQuery.parse(q);   // 支持 引号短语 / AND·OR / 括号 / 通配符 ?·*
 
         List<Map<String, Object>> out = new ArrayList<>();
@@ -215,6 +264,7 @@ public class InstanceMockService {
     public void evict(String classId) {
         cache.remove(classId);
         propCache.remove(classId);
+        enrichedCache.clear();   // 关联字段可能来自任意类型,一律清空重建
     }
 
     /* ===================== 生成逻辑 ===================== */

@@ -197,12 +197,21 @@ export const tcCategoryApi = {
   remove: (code) => http.delete(`/tc-category/${code}`),
 }
 
-/* 类型类绑定实例(引用页签) */
+/* 类型类绑定实例(引用页签 + 载体详情「已绑定类型类」区) */
 export const tcBindApi = {
   list:   (metaId, params = {}) => http.get('/tc-bind', { params: { metaId, ...params } }),
   stats:  (metaId) => http.get('/tc-bind/stats', { params: { metaId } }),
+  // 按载体反查已绑定(联类型类元数据);property: {applicableType:'property', ownerId, propertyId} / relation: {applicableType:'relation', linkTypeId}
+  byCarrier: (params) => http.get('/tc-bind/by-carrier', { params }),
   create: (data) => http.post('/tc-bind', data),
+  update: (id, value) => http.put(`/tc-bind/${id}`, { value }),   // 只改参数值
   remove: (id) => http.delete(`/tc-bind/${id}`),
+}
+
+/* 类型类渲染解析(图表/图谱真实渲染的地基):按对象类型/链接聚合绑定+参数值 */
+export const tcRenderApi = {
+  resolve: (params) => http.get('/tc-render/resolve', { params }),   // { classId } | { linkTypeId }
+  categoryMap: (categoryCode) => http.get('/tc-render/category-map', { params: { categoryCode } }),  // 批量:classId → {properties}
 }
 
 /* 类型类枚举字典 */

@@ -108,8 +108,9 @@
         </div>
       </section>
 
-      <!-- 右:详情抽屉 -->
-      <aside v-if="current" class="tc-drawer">
+      <!-- 详情:右侧可拉伸/最大化抽屉 + 左右两栏 -->
+      <aside v-if="current" class="tc-drawer" :style="{ width: drawerWidth + 'px' }">
+        <div class="tc-dr-drag" @mousedown="onDragStart" :class="resizing && 'is-resizing'"></div>
         <div class="tc-dr-hd">
           <span class="tc-dr-ic" :style="{ background: editForm.color || catColor(editForm.category_code) || '#165DFF' }"
                 v-html="BL.icon(editForm.icon || catIcon(editForm.category_code) || 'cube', 16, '#fff')"></span>
@@ -118,8 +119,12 @@
             <div class="tc-dr-en bl-mono">{{ editForm.name_template || editForm.name_prefix }}</div>
           </div>
           <span :class="['st-badge', toInt(editForm.is_deprecated) ? 'st-dep' : 'st-ok']">{{ toInt(editForm.is_deprecated) ? '已弃用' : '可用' }}</span>
+          <button class="tc-dr-x" :title="drawerMaxed ? '恢复' : '最大化'" @click="toggleMax" v-html="BL.icon(drawerMaxed ? 'minimize' : 'maximize', 15)"></button>
           <button class="tc-dr-x" @click="closeDetail" v-html="BL.icon('x', 16)"></button>
         </div>
+
+        <div class="tc-dr-main">
+        <div class="tc-dr-col-l">
         <div class="tc-tabs">
           <div v-for="t in ['详情','显示','引用']" :key="t" :class="['tc-tab', activeTab === t && 'is-on']" @click="switchTab(t)">{{ t }}</div>
         </div>
@@ -168,7 +173,14 @@
               <textarea class="bl-input ta" rows="3" v-model="editForm.param_options_json" placeholder='枚举结构化 JSON,如 [{"value":"danger","label_cn":"危险"}]'></textarea>
             </div>
             <div class="fr"><span class="fr-l">参数说明</span><input class="bl-input" v-model="editForm.param_desc" /></div>
-            <div class="fr"><span class="fr-l">示例值</span><input class="bl-input" v-model="editForm.demo_value" /></div>
+            <div class="fr"><span class="fr-l">示例值</span><input class="bl-input" v-model="editForm.demo_value" placeholder='如 {"line_type":"solid"}' /></div>
+
+            <!-- 多字段参数 Schema(param_json);可视化预览见右栏 -->
+            <div class="fr"><span class="fr-l">参数 Schema</span>
+              <textarea class="bl-input ta bl-mono" rows="5" v-model="editForm.param_json"
+                        placeholder='多字段参数 JSON Schema,如 {"line_type":{"type":"enum","enum":["solid","dashed","dotted"],"default":"solid","description":"曲线线型"}}'></textarea>
+            </div>
+
             <div class="fr"><span class="fr-l">业务说明</span><textarea class="bl-input ta" rows="3" v-model="editForm.description"></textarea></div>
 
             <div class="sec">高级配置</div>
@@ -238,6 +250,22 @@
             </div>
           </template>
         </div>
+        </div><!-- /tc-dr-col-l -->
+
+        <!-- 右栏:参数预览(按 Schema 自动生成表单 + 实时预览 + JSON) -->
+        <div class="tc-dr-col-r">
+          <div class="tc-dr-pv-hd">参数预览</div>
+          <template v-if="hasSchema">
+            <div class="tc-pv-sub">按 Schema 自动生成表单</div>
+            <ParamSchemaForm v-model="pvVal" :schema="editForm.param_json" />
+            <div class="tc-pv-sub tc-pv-sub2">实时预览</div>
+            <div class="tc-preview-box"><ParamPreview :name-prefix="editForm.name_prefix" :category="editForm.category_code" :values="pvVal" /></div>
+            <div class="tc-pv-sub tc-pv-sub2">参数 JSON</div>
+            <pre class="tc-preview-json">{{ pvJson }}</pre>
+          </template>
+          <div v-else class="tc-pv-empty">该类型类为纯标记型或未定义参数 Schema,无可配置参数。<br>在左侧「参数 Schema」填入 JSON Schema 即可在此预览动态表单。</div>
+        </div>
+        </div><!-- /tc-dr-main -->
 
         <div class="tc-dr-ft">
           <button v-if="!isProtected" class="tc-dr-del" @click="deleteCurrent"><span v-html="BL.icon('trash', 12)"></span> 删除</button>
@@ -315,6 +343,8 @@ import { ref, reactive, computed, onMounted, watch } from 'vue'
 import PageHeader from '@/components/PageHeader.vue'
 import IconPickerField from '@/components/IconPickerField.vue'
 import ColorPickerField from '@/components/ColorPickerField.vue'
+import ParamSchemaForm from '@/components/typeclass/ParamSchemaForm.vue'
+import ParamPreview from '@/components/typeclass/ParamPreview.vue'
 import { BL } from '@/lib/bl.js'
 import { typeClassApi, tcCategoryApi, tcBindApi, tcEnumApi } from '@/api'
 
@@ -399,18 +429,66 @@ const isProtected = computed(() => !!toInt(editForm.system_protected) && !isNew.
 const depState = ref(0)
 watch(depState, v => { editForm.is_deprecated = v })
 
+/* 抽屉:可拉伸(左缘拖拽)+ 可最大化,与对象类型抽屉一致 */
+const drawerWidth = ref(0)
+const drawerMaxed = ref(false)
+const resizing = ref(false)
+const DR_MIN = 480
+function drDefault() { return Math.max(DR_MIN, Math.floor(window.innerWidth * 0.62)) }
+function drMax() { return Math.floor(window.innerWidth * 0.92) }
+function ensureWidth() { if (!drawerWidth.value) drawerWidth.value = drDefault() }
+function toggleMax() {
+  if (drawerMaxed.value) { drawerWidth.value = drDefault(); drawerMaxed.value = false }
+  else { drawerWidth.value = drMax(); drawerMaxed.value = true }
+}
+let _dragX = 0, _dragW = 0
+function onDragStart (e) {
+  resizing.value = true; _dragX = e.clientX; _dragW = drawerWidth.value
+  document.body.style.cursor = 'col-resize'; document.body.style.userSelect = 'none'
+  window.addEventListener('mousemove', onDragMove); window.addEventListener('mouseup', onDragEnd)
+}
+function onDragMove (e) {
+  drawerWidth.value = Math.max(DR_MIN, Math.min(_dragW + (_dragX - e.clientX), Math.floor(window.innerWidth * 0.95)))
+  drawerMaxed.value = false
+}
+function onDragEnd () {
+  resizing.value = false
+  document.body.style.cursor = ''; document.body.style.userSelect = ''
+  window.removeEventListener('mousemove', onDragMove); window.removeEventListener('mouseup', onDragEnd)
+}
+
+/* 参数 Schema 可视化预览:pvVal 为演示用参数值(从示例值初始化,不入库) */
+const pvVal = ref({})
+const pvJson = computed(() => JSON.stringify(pvVal.value, null, 2))
+const hasSchema = computed(() => {
+  const s = editForm.param_json
+  if (!s) return false
+  try {
+    const o = typeof s === 'string' ? JSON.parse(s) : s
+    const fields = o.properties && typeof o.properties === 'object' ? o.properties : o
+    return fields && typeof fields === 'object' && Object.keys(fields).some(k => !['type', 'required', 'properties', '$schema'].includes(k))
+  } catch { return false }
+})
+function resetPreview () {
+  const d = editForm.demo_value
+  try { pvVal.value = d ? (typeof d === 'string' ? JSON.parse(d) : d) : {} } catch { pvVal.value = {} }
+}
+
 function fillForm (r) {
   Object.keys(editForm).forEach(k => delete editForm[k])
   Object.assign(editForm, JSON.parse(JSON.stringify(r)))
   editForm._apply = parseList(r.allow_apply_types)
   if (editForm.param_options_json && typeof editForm.param_options_json !== 'string') editForm.param_options_json = JSON.stringify(editForm.param_options_json)
+  if (editForm.param_json && typeof editForm.param_json !== 'string') editForm.param_json = JSON.stringify(editForm.param_json, null, 2)
   depState.value = toInt(r.is_deprecated)
+  resetPreview()
 }
 function openDetail (r) {
   isNew.value = false
   current.value = r
   fillForm(r)
   activeTab.value = '详情'
+  ensureWidth(); drawerMaxed.value = false
 }
 function closeDetail () { current.value = null; isNew.value = false }
 function onCatChange () {
@@ -428,6 +506,7 @@ function openCreate () {
     is_array_value: 0, is_deprecated: 0, sort_weight: 999
   })
   activeTab.value = '详情'
+  ensureWidth(); drawerMaxed.value = false
 }
 
 async function saveCurrent () {
@@ -440,6 +519,9 @@ async function saveCurrent () {
   if (payload.param_options_json && typeof payload.param_options_json === 'string' && payload.param_options_json.trim()) {
     try { payload.param_options_json = JSON.parse(payload.param_options_json) } catch { return BL.error('参数可选值不是合法 JSON') }
   } else payload.param_options_json = null
+  if (payload.param_json && typeof payload.param_json === 'string' && payload.param_json.trim()) {
+    try { JSON.parse(payload.param_json) } catch { return BL.error('参数 Schema 不是合法 JSON') }
+  } else payload.param_json = null
   try {
     if (isNew.value) { await typeClassApi.create(payload); BL.success('已创建') }
     else { await typeClassApi.update(editForm.id, payload); BL.success('已保存') }
@@ -594,8 +676,18 @@ onMounted(async () => { await Promise.all([loadCategories(), loadRows(), loadEnu
 .tc-empty { text-align: center; color: var(--bl-text-3); padding: 30px 0; font-size: 13px; }
 
 /* 右:抽屉 */
-.tc-drawer { width: 420px; flex-shrink: 0; display: flex; flex-direction: column; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 8px; overflow: hidden; }
-.tc-dr-hd { display: flex; align-items: center; gap: 10px; padding: 12px; border-bottom: 1px solid var(--bl-divider); }
+/* 详情:右侧可拉伸/最大化侧边抽屉 + 左右两栏(对齐对象类型抽屉行为 + 文档 1.5 布局) */
+.tc-drawer { position: fixed; top: 0; right: 0; bottom: 0; z-index: 1000; display: flex; flex-direction: column; background: var(--bl-bg-1); border-left: 1px solid var(--bl-border-strong); box-shadow: -12px 0 32px rgba(0,0,0,.22), -2px 0 6px rgba(0,0,0,.12); min-width: 480px; overflow: hidden; }
+.tc-dr-drag { position: absolute; left: -2px; top: 0; bottom: 0; width: 5px; cursor: col-resize; background: transparent; transition: background-color .15s; z-index: 3; }
+.tc-dr-drag:hover, .tc-dr-drag.is-resizing { background: var(--bl-primary); }
+.tc-dr-main { flex: 1; min-height: 0; display: flex; }
+.tc-dr-col-l { flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden; }
+.tc-dr-col-r { width: 44%; max-width: 520px; flex-shrink: 0; border-left: 1px solid var(--bl-border); overflow: auto; padding: 14px 16px; background: var(--bl-bg-2); }
+.tc-dr-pv-hd { font-size: 14px; font-weight: 600; color: var(--bl-text-1); margin-bottom: 12px; }
+.tc-pv-sub { font-size: 12px; font-weight: 600; color: var(--bl-text-2); margin-bottom: 8px; }
+.tc-pv-sub2 { margin-top: 14px; }
+.tc-pv-empty { font-size: 12.5px; color: var(--bl-text-3); line-height: 1.8; padding: 20px 10px; background: var(--bl-bg-1); border: 1px dashed var(--bl-border); border-radius: 8px; }
+.tc-dr-hd { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--bl-divider); }
 .tc-dr-ic { width: 36px; height: 36px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .tc-dr-title { flex: 1; min-width: 0; } .tc-dr-cn { font-size: 14px; font-weight: 600; } .tc-dr-en { font-size: 11px; color: var(--bl-text-3); }
 .tc-dr-x { border: 0; background: transparent; cursor: pointer; color: var(--bl-text-3); padding: 4px; border-radius: 4px; }
@@ -610,7 +702,13 @@ onMounted(async () => { await Promise.all([loadCategories(), loadRows(), loadEnu
 .fr-l { font-size: 12px; color: var(--bl-text-2); } .fr-r { display: flex; gap: 14px; align-items: center; }
 .fr2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .fr3 { display: flex; gap: 16px; margin-bottom: 10px; }
-.ta { resize: vertical; font-family: inherit; }
+.ta { resize: vertical; font-family: inherit; min-height: 84px; }
+/* 参数 Schema 可视化预览 */
+.tc-preview { margin: 4px 0 8px; padding: 10px; border: 1px solid var(--bl-border); border-radius: 8px; background: var(--bl-bg-2); }
+.tc-preview-hd { font-size: 12px; font-weight: 600; color: var(--bl-text-2); margin-bottom: 8px; }
+.tc-preview-hd2 { margin-top: 12px; }
+.tc-preview-box { height: 140px; border: 1px solid var(--bl-border); border-radius: 6px; background: var(--bl-bg-1); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.tc-preview-json { margin: 0; padding: 8px 10px; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 6px; font-family: var(--bl-mono, ui-monospace, monospace); font-size: 11.5px; line-height: 1.6; white-space: pre-wrap; max-height: 160px; overflow: auto; }
 .apt-checks { display: flex; gap: 14px; } .apt-ck, .sw, .rd { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; cursor: pointer; }
 .disp-row { margin-bottom: 14px; } .disp-hint { font-size: 12px; color: var(--bl-text-3); margin-top: 6px; }
 .tc-dr-ft { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--bl-divider); }
