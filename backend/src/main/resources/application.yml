@@ -20,6 +20,17 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: Asia/Shanghai
 
+# 动态数据源连接池统一配置（URL/用户名/密码取自 sys_data_source 表）
+bontolink:
+  datasource:
+    pool:
+      max-pool-size: 10
+      min-idle: 2
+      connection-timeout-ms: 30000
+      idle-timeout-ms: 300000
+      max-lifetime-ms: 1800000
+      leak-detection-threshold-ms: 0
+
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
   type-aliases-package: com.beiktech.bontolink.entity

@@ -235,13 +235,22 @@
         </div>
         <template v-else>
           <div class="mon-content">
-          <!-- 第一行：元信息 + 状态图例 -->
+          <!-- 第一行：元信息 + 状态图例 + 池操作 -->
           <div class="mon-metabar">
             <div class="mon-meta-left">
               <span class="bl-tag mon-tag" :style="{ color: typeColor(selected.dsType), background: typeColor(selected.dsType) + '14' }">{{ selected.dsType.toUpperCase() }}</span>
               <span class="bl-mono bl-muted">{{ mon.basic?.host || '—' }}</span>
               <span class="bl-muted" :title="mon.basic?.driver || ''">{{ mon.basic?.product || '—' }} <span class="bl-mono">{{ mon.basic?.version || '—' }}</span></span>
               <span v-if="mon.basic?.probeError" class="bl-tag bl-tag-danger" :title="mon.basic.probeError">探测失败</span>
+              <!-- 池操作 -->
+              <template v-if="poolReady">
+                <button class="bl-btn bl-btn-xs" style="margin-left:8px" @click="doRefreshPool" :disabled="refreshing">
+                  <span v-html="BL.icon('refresh', 12)"></span> 刷新池
+                </button>
+                <input class="bl-input pool-size-input" type="number" min="1" max="999"
+                       :value="mon.basic?.maxConn" @change="doResizePool($event)"
+                       title="调整最大连接数" />
+              </template>
             </div>
             <div class="mon-legend">
               <span class="legend-item"><span class="ld" style="background:#00B42A"></span>正常</span>
@@ -300,7 +309,7 @@
                 <tr><td>已创建总连接</td><td><b>{{ mon.detail?.totalCreated ?? 0 }}</b> <span class="bl-muted">个</span></td></tr>
               </table>
               </template>
-              <div v-else class="mon-na">连接池实时指标需接入采集（Druid/Agent）后可用</div>
+              <div v-else class="mon-na">连接池未启用（非 JDBC 类型或已禁用）</div>
             </div>
 
             <!-- 响应耗时 -->
@@ -323,7 +332,7 @@
           <!-- 健康统计 -->
           <div class="mon-health">
             <div class="mp-hd"><span class="mp-ic" style="color:#00B42A" v-html="BL.icon('check', 14)"></span>健康统计</div>
-            <div v-if="!poolReady" class="mon-na">连接池健康统计需接入采集（Druid/Agent）后可用</div>
+            <div v-if="!poolReady || !mon.health" class="mon-na">连接池健康统计需 HikariCP 指标采集扩展后可用</div>
             <div v-else class="health-grid">
               <div class="health-cell"><div class="hc-lbl">获取成功次数</div><div class="hc-val">{{ fmt(mon.health?.acquireSuccess || 0) }}</div></div>
               <div class="health-cell"><div class="hc-lbl">获取失败次数</div><div class="hc-val" :class="(mon.health?.acquireFail||0) > 0 && 'is-warn'">{{ mon.health?.acquireFail ?? 0 }}</div></div>
@@ -723,6 +732,33 @@ async function select(d) {
 async function loadMonitor() {
   if (!selected.value) return
   mon.value = await datasourceApi.monitor(selected.value.id).catch(() => ({}))
+}
+
+/* 连接池管理 */
+const refreshing = ref(false)
+async function doRefreshPool() {
+  if (!selected.value) return
+  refreshing.value = true
+  try {
+    await datasourceApi.refreshPool(selected.value.id)
+    BL.success('连接池已刷新')
+    await loadMonitor()
+  } catch (e) {
+    BL.error('刷新连接池失败')
+  } finally {
+    refreshing.value = false
+  }
+}
+async function doResizePool(e) {
+  const newMax = parseInt(e.target?.value)
+  if (!newMax || newMax < 1 || !selected.value) return
+  try {
+    await datasourceApi.resizePool(selected.value.id, newMax)
+    BL.success('最大连接数已调整为 ' + newMax)
+    await loadMonitor()
+  } catch (e) {
+    BL.error('调整失败')
+  }
 }
 
 /* 连接池运行时指标是否已接入真实采集 (后端 poolAvailable=false 时为演示占位, 前端提示暂不可用) */
@@ -1243,6 +1279,9 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
 .kv-table td:first-child { color: var(--bl-text-3); }
 .kv-table td:last-child  { text-align: right; }
 .kv-table td b { font-weight: 600; color: var(--bl-text-1); font-feature-settings: "tnum"; }
+
+/* 连接池大小调整输入框 */
+.pool-size-input { width: 60px; margin-left: 4px; padding: 1px 4px; font-size: 11px; text-align: center; }
 
 /* 连接池指标未接入采集时的占位提示 */
 .mon-na {

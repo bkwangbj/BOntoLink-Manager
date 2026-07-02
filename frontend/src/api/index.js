@@ -298,7 +298,10 @@ export const datasourceApi = {
   remove:   (id) => http.delete(`/datasource/${id}`),
   toggle:   (id) => http.post(`/datasource/${id}/toggle`),
   test:     (id) => http.post(`/datasource/${id}/test`),
-  monitor:  (id) => http.get(`/datasource/${id}/monitor`)
+  monitor:  (id) => http.get(`/datasource/${id}/monitor`),
+  pool:     (id) => http.get(`/datasource/${id}/pool`),
+  refreshPool: (id) => http.post(`/datasource/${id}/pool/refresh`),
+  resizePool:  (id, maxPoolSize) => http.post(`/datasource/${id}/pool/resize`, { maxPoolSize })
 }
 
 /* 物理表/视图元数据 — 落库于 ont_physical_table, 同步源为后端自身库 */

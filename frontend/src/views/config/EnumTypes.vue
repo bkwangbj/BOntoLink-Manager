@@ -310,7 +310,10 @@
                         <span v-else class="bl-mono">{{ it.code }}</span>
                       </td>
                       <td>
-                        <input v-if="it._editing" class="bl-input bl-input-xs bl-mono" v-model="it.parent_code" placeholder="NULL" />
+                        <select v-if="it._editing" class="bl-input bl-input-xs" v-model="it.parent_code">
+                          <option value="">NULL（顶级）</option>
+                          <option v-for="p in parentOpts" :key="p.code" :value="p.code" :disabled="p.code === it.code">{{ p.label }} ({{ p.code }})</option>
+                        </select>
                         <span v-else class="bl-mono bl-muted">{{ it.parent_code || 'NULL' }}</span>
                       </td>
                       <td>
@@ -369,7 +372,7 @@
                                         :disabled="!syncForm.data_source_id"
                                         :placeholder="syncForm.data_source_id ? (syncTables.length ? '— 选择数据表 —' : '该数据源暂无已同步物理表') : '请先选择数据源'"
                                         search-placeholder="筛选数据表" @change="onSyncTableChange" />
-                      <input class="bl-input" v-model="syncForm.table_alias" placeholder="备注名 (自动带出, 可改)" />
+                      <input class="bl-input" style='width:50%'  v-model="syncForm.table_alias" placeholder="备注名 (自动带出, 可改)" readOnly />
                     </div>
                   </FieldRow>
                   <FieldRow label="字段配置" inline>
@@ -899,6 +902,15 @@ const pagedItems = computed(() => {
 // 过滤/搜索/分页大小变化导致页码越界时回到首页
 watch([filteredItems, itemPageSize], () => { if (itemPage.value > itemTotalPages.value) itemPage.value = 1 })
 
+/* 上级编码下拉选项：当前枚举的所有项（排除自身） */
+const parentOpts = computed(() => {
+  const all = filteredItems.value || []
+  // 按编码去重 + 排序
+  const seen = new Set()
+  return all.filter(it => { if (seen.has(it.code)) return false; seen.add(it.code); return true })
+             .map(it => ({ code: it.code, label: it.label || it.api_name || it.code }))
+})
+
 function enumTypeLabel(t) {
   return ({ general_single: '一级通用', general_multi: '多级通用', biz_single: '业务一级', biz_multi: '业务多级' })[t] || t
 }
@@ -1066,9 +1078,21 @@ async function loadSyncConfig() {
   if (!current.value) return
   await loadSyncDatasources()
   const cfg = await enumTypeApi.getSyncConfig(current.value.id).catch(() => null)
-  if (cfg && cfg.id) Object.assign(syncForm, cfg)
-  else resetSyncForm()
-  await loadSyncTables(syncForm.data_source_id)   // 回填已选数据源的物理表, 供下拉显示
+  if (cfg && cfg.id) {
+    // 后端 MyBatis mapUnderscoreToCamelCase 返回 camelCase 键，适配为 snake_case
+    const map = {
+      dataSourceId: 'data_source_id', tableAlias: 'table_alias', tableName: 'table_name',
+      fieldCode: 'field_code', fieldName: 'field_name', fieldSort: 'field_sort',
+      fieldStatus: 'field_status', fieldParent: 'field_parent',
+      filterSql: 'filter_sql', syncMode: 'sync_mode', syncStrategy: 'sync_strategy'
+    }
+    for (const [ck, sk] of Object.entries(map)) {
+      if (cfg[ck] !== undefined) syncForm[sk] = cfg[ck]
+    }
+  } else {
+    resetSyncForm()
+  }
+  await loadSyncTables(syncForm.data_source_id)
 }
 async function saveSyncConfig() {
   if (!syncForm.data_source_id || !syncForm.table_name) { BL.warning('数据源、表名为必填'); return }
@@ -1084,8 +1108,11 @@ async function testConnection() {
   else BL.error(r?.msg || '连接测试失败')
 }
 async function runSync() {
+  // 先保存配置，再执行同步
+  if (!syncForm.data_source_id || !syncForm.table_name) { BL.warning('请先配置数据源和数据表'); return }
   syncRunning.value = true
   try {
+    await enumTypeApi.saveSyncConfig(current.value.id, { ...syncForm })
     const r = await enumTypeApi.runSync(current.value.id, { sync_type: 'manual', oper_user: 'admin' })
     BL.success(`同步完成: +${r.add_count || 0} / ~${r.update_count || 0} / -${r.del_count || 0}`)
     await loadDetail(current.value.id)
