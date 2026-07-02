@@ -27,6 +27,12 @@ export function useDesigns () {
     return toDesign(row)
   }
 
+  /* 原地更新命名设计(保存到当前列表);返回带 id 的对象 */
+  const update = async (id, design) => {
+    const row = await exploreDesignApi.update(id, { name: design.name, kind: design.kind || 'query', config: design })
+    return toDesign(row)
+  }
+
   const remove = (id) => exploreDesignApi.remove(id)
 
   /* 默认看板:config 直接是 maker 的 layoutConfig(无则 null) */
@@ -38,5 +44,5 @@ export function useDesigns () {
   const saveDefault = (classId, layoutConfig, kind = 'query') =>
     exploreDesignApi.saveDefault(classId, layoutConfig, kind)
 
-  return { listFor, save, remove, getDefault, saveDefault }
+  return { listFor, save, update, remove, getDefault, saveDefault }
 }

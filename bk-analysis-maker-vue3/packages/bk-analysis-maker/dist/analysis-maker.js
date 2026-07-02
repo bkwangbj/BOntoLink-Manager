@@ -38,7 +38,7 @@ function render$x(_ctx, _cache) {
   ]))]))
 }
 
-const __unplugin_components_14 = { name: 'ri-pushpin2-line', render: render$x };
+const __unplugin_components_15 = { name: 'ri-pushpin2-line', render: render$x };
 /* vite-plugin-components disabled */
 
 const _hoisted_1$2l = {
@@ -56,7 +56,7 @@ function render$w(_ctx, _cache) {
   ]))]))
 }
 
-const __unplugin_components_13 = { name: 'ri-pushpin2-fill', render: render$w };
+const __unplugin_components_14 = { name: 'ri-pushpin2-fill', render: render$w };
 /* vite-plugin-components disabled */
 
 const _hoisted_1$2k = {
@@ -74,7 +74,7 @@ function render$v(_ctx, _cache) {
   ]))]))
 }
 
-const __unplugin_components_12 = { name: 'ri-arrow-down-s-line', render: render$v };
+const __unplugin_components_13 = { name: 'ri-arrow-down-s-line', render: render$v };
 /* vite-plugin-components disabled */
 
 const _hoisted_1$2j = {
@@ -92,7 +92,7 @@ function render$u(_ctx, _cache) {
   ]))]))
 }
 
-const __unplugin_components_11 = { name: 'ri-eye-line', render: render$u };
+const __unplugin_components_12 = { name: 'ri-eye-line', render: render$u };
 /* vite-plugin-components disabled */
 
 const _hoisted_1$2i = {
@@ -110,7 +110,7 @@ function render$t(_ctx, _cache) {
   ]))]))
 }
 
-const __unplugin_components_10 = { name: 'ri-pencil-ruler2-line', render: render$t };
+const __unplugin_components_11 = { name: 'ri-pencil-ruler2-line', render: render$t };
 /* vite-plugin-components disabled */
 
 const _hoisted_1$2h = {
@@ -123,12 +123,12 @@ function render$s(_ctx, _cache) {
   return (openBlock(), createElementBlock("svg", _hoisted_1$2h, [...(_cache[0] || (_cache[0] = [
     createElementVNode("path", {
       fill: "currentColor",
-      d: "M18 21v-8H6v8H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h13l4 4v13a1 1 0 0 1-1 1zm-2 0H8v-6h8z"
+      d: "M7 6V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3v3c0 .552-.45 1-1.007 1H4.007A1 1 0 0 1 3 21l.003-14c0-.552.45-1 1.006-1zm2 0h8v10h2V4H9zm-2 5v2h6v-2zm0 4v2h6v-2z"
     }, null, -1)
   ]))]))
 }
 
-const __unplugin_components_9 = { name: 'ri-save-fill', render: render$s };
+const __unplugin_components_0$9 = { name: 'ri-file-copy2-fill', render: render$s };
 /* vite-plugin-components disabled */
 
 const _hoisted_1$2g = {
@@ -141,12 +141,12 @@ function render$r(_ctx, _cache) {
   return (openBlock(), createElementBlock("svg", _hoisted_1$2g, [...(_cache[0] || (_cache[0] = [
     createElementVNode("path", {
       fill: "currentColor",
-      d: "M6.17 18a3.001 3.001 0 0 1 5.66 0H22v2H11.83a3.001 3.001 0 0 1-5.66 0H2v-2zm6-7a3.001 3.001 0 0 1 5.66 0H22v2h-4.17a3.001 3.001 0 0 1-5.66 0H2v-2zm-6-7a3.001 3.001 0 0 1 5.66 0H22v2H11.83a3.001 3.001 0 0 1-5.66 0H2V4z"
+      d: "M18 21v-8H6v8H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h13l4 4v13a1 1 0 0 1-1 1zm-2 0H8v-6h8z"
     }, null, -1)
   ]))]))
 }
 
-const __unplugin_components_8 = { name: 'ri-equalizer-fill', render: render$r };
+const __unplugin_components_9 = { name: 'ri-save-fill', render: render$r };
 /* vite-plugin-components disabled */
 
 const _hoisted_1$2f = {
@@ -159,12 +159,12 @@ function render$q(_ctx, _cache) {
   return (openBlock(), createElementBlock("svg", _hoisted_1$2f, [...(_cache[0] || (_cache[0] = [
     createElementVNode("path", {
       fill: "currentColor",
-      d: "m16 2l5 5v14.008a.993.993 0 0 1-.993.992H3.993A1 1 0 0 1 3 21.008V2.992C3 2.444 3.445 2 3.993 2zM8.595 12.812l-.992.572l1 1.732l.992-.573c.393.372.873.654 1.405.812V16.5h2v-1.145a3.5 3.5 0 0 0 1.405-.812l.992.573l1-1.732l-.991-.573a3.5 3.5 0 0 0 0-1.623l.991-.572l-1-1.732l-.992.573A3.5 3.5 0 0 0 13 8.645V7.5h-2v1.145a3.5 3.5 0 0 0-1.405.812l-.992-.573l-1 1.732l.992.573a3.5 3.5 0 0 0 0 1.623M12 13.5a1.5 1.5 0 1 1 0-3a1.5 1.5 0 0 1 0 3"
+      d: "M6.17 18a3.001 3.001 0 0 1 5.66 0H22v2H11.83a3.001 3.001 0 0 1-5.66 0H2v-2zm6-7a3.001 3.001 0 0 1 5.66 0H22v2h-4.17a3.001 3.001 0 0 1-5.66 0H2v-2zm-6-7a3.001 3.001 0 0 1 5.66 0H22v2H11.83a3.001 3.001 0 0 1-5.66 0H2V4z"
     }, null, -1)
   ]))]))
 }
 
-const __unplugin_components_7$1 = { name: 'ri-file-settings-fill', render: render$q };
+const __unplugin_components_8 = { name: 'ri-equalizer-fill', render: render$q };
 /* vite-plugin-components disabled */
 
 const _hoisted_1$2e = {
@@ -177,12 +177,12 @@ function render$p(_ctx, _cache) {
   return (openBlock(), createElementBlock("svg", _hoisted_1$2e, [...(_cache[0] || (_cache[0] = [
     createElementVNode("path", {
       fill: "currentColor",
-      d: "M15 21H9V10h6zm2 0V10h5v10a1 1 0 0 1-1 1zM7 21H3a1 1 0 0 1-1-1V10h5zM22 8H2V4a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1z"
+      d: "m16 2l5 5v14.008a.993.993 0 0 1-.993.992H3.993A1 1 0 0 1 3 21.008V2.992C3 2.444 3.445 2 3.993 2zM8.595 12.812l-.992.572l1 1.732l.992-.573c.393.372.873.654 1.405.812V16.5h2v-1.145a3.5 3.5 0 0 0 1.405-.812l.992.573l1-1.732l-.991-.573a3.5 3.5 0 0 0 0-1.623l.991-.572l-1-1.732l-.992.573A3.5 3.5 0 0 0 13 8.645V7.5h-2v1.145a3.5 3.5 0 0 0-1.405.812l-.992-.573l-1 1.732l.992.573a3.5 3.5 0 0 0 0 1.623M12 13.5a1.5 1.5 0 1 1 0-3a1.5 1.5 0 0 1 0 3"
     }, null, -1)
   ]))]))
 }
 
-const __unplugin_components_6$1 = { name: 'ri-table-fill', render: render$p };
+const __unplugin_components_7$1 = { name: 'ri-file-settings-fill', render: render$p };
 /* vite-plugin-components disabled */
 
 const _hoisted_1$2d = {
@@ -195,12 +195,12 @@ function render$o(_ctx, _cache) {
   return (openBlock(), createElementBlock("svg", _hoisted_1$2d, [...(_cache[0] || (_cache[0] = [
     createElementVNode("path", {
       fill: "currentColor",
-      d: "M12 3c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2m0 14c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2m0-7c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2"
+      d: "M15 21H9V10h6zm2 0V10h5v10a1 1 0 0 1-1 1zM7 21H3a1 1 0 0 1-1-1V10h5zM22 8H2V4a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1z"
     }, null, -1)
   ]))]))
 }
 
-const __unplugin_components_5$1 = { name: 'ri-more2-fill', render: render$o };
+const __unplugin_components_6$1 = { name: 'ri-table-fill', render: render$o };
 /* vite-plugin-components disabled */
 
 const _hoisted_1$2c = {
@@ -213,12 +213,12 @@ function render$n(_ctx, _cache) {
   return (openBlock(), createElementBlock("svg", _hoisted_1$2c, [...(_cache[0] || (_cache[0] = [
     createElementVNode("path", {
       fill: "currentColor",
-      d: "M2.131 13.63a10 10 0 0 1 .001-3.26c1.101.026 2.092-.502 2.477-1.431c.385-.93.058-2.003-.74-2.763a10 10 0 0 1 2.306-2.307c.76.798 1.834 1.125 2.763.74c.93-.385 1.458-1.376 1.431-2.477a10 10 0 0 1 3.261 0c-.026 1.102.502 2.092 1.431 2.477c.93.385 2.003.058 2.763-.74a10 10 0 0 1 2.307 2.306c-.798.76-1.125 1.834-.74 2.764s1.376 1.458 2.477 1.43a10 10 0 0 1 0 3.262c-1.102-.027-2.092.501-2.477 1.43c-.385.93-.058 2.004.74 2.764a10 10 0 0 1-2.306 2.306c-.76-.798-1.834-1.125-2.764-.74s-1.458 1.376-1.43 2.478a10 10 0 0 1-3.262-.001c.027-1.101-.502-2.092-1.43-2.477c-.93-.385-2.004-.058-2.764.74a10 10 0 0 1-2.306-2.306c.798-.76 1.125-1.834.74-2.763c-.385-.93-1.376-1.458-2.478-1.431M12 15a3 3 0 1 0 0-6a3 3 0 0 0 0 6"
+      d: "M12 3c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2m0 14c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2m0-7c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2"
     }, null, -1)
   ]))]))
 }
 
-const __unplugin_components_4$1 = { name: 'ri-settings5-fill', render: render$n };
+const __unplugin_components_5$1 = { name: 'ri-more2-fill', render: render$n };
 /* vite-plugin-components disabled */
 
 const _hoisted_1$2b = {
@@ -231,12 +231,12 @@ function render$m(_ctx, _cache) {
   return (openBlock(), createElementBlock("svg", _hoisted_1$2b, [...(_cache[0] || (_cache[0] = [
     createElementVNode("path", {
       fill: "currentColor",
-      d: "m5.636 12.707l1.829 1.829l1.414-1.415l-1.829-1.828l1.415-1.414l1.828 1.828l1.414-1.414L9.88 8.464l1.414-1.414l1.828 1.829l1.415-1.415l-1.829-1.828l2.829-2.828a1 1 0 0 1 1.414 0l4.243 4.242a1 1 0 0 1 0 1.414L8.465 21.192a1 1 0 0 1-1.415 0L2.808 16.95a1 1 0 0 1 0-1.414zm8.485 5.656l4.243-4.242L21 16.756V21h-4.242zM5.636 9.878L2.808 7.05a1 1 0 0 1 0-1.415l2.828-2.828a1 1 0 0 1 1.414 0l2.83 2.828z"
+      d: "M2.131 13.63a10 10 0 0 1 .001-3.26c1.101.026 2.092-.502 2.477-1.431c.385-.93.058-2.003-.74-2.763a10 10 0 0 1 2.306-2.307c.76.798 1.834 1.125 2.763.74c.93-.385 1.458-1.376 1.431-2.477a10 10 0 0 1 3.261 0c-.026 1.102.502 2.092 1.431 2.477c.93.385 2.003.058 2.763-.74a10 10 0 0 1 2.307 2.306c-.798.76-1.125 1.834-.74 2.764s1.376 1.458 2.477 1.43a10 10 0 0 1 0 3.262c-1.102-.027-2.092.501-2.477 1.43c-.385.93-.058 2.004.74 2.764a10 10 0 0 1-2.306 2.306c-.76-.798-1.834-1.125-2.764-.74s-1.458 1.376-1.43 2.478a10 10 0 0 1-3.262-.001c.027-1.101-.502-2.092-1.43-2.477c-.93-.385-2.004-.058-2.764.74a10 10 0 0 1-2.306-2.306c.798-.76 1.125-1.834.74-2.763c-.385-.93-1.376-1.458-2.478-1.431M12 15a3 3 0 1 0 0-6a3 3 0 0 0 0 6"
     }, null, -1)
   ]))]))
 }
 
-const __unplugin_components_3$1 = { name: 'ri-pencil-ruler2-fill', render: render$m };
+const __unplugin_components_4$1 = { name: 'ri-settings5-fill', render: render$m };
 /* vite-plugin-components disabled */
 
 const _hoisted_1$2a = {
@@ -249,12 +249,12 @@ function render$l(_ctx, _cache) {
   return (openBlock(), createElementBlock("svg", _hoisted_1$2a, [...(_cache[0] || (_cache[0] = [
     createElementVNode("path", {
       fill: "currentColor",
-      d: "M7 6V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6zm6.414 8l1.768-1.768l-1.414-1.414L12 12.586l-1.768-1.768l-1.414 1.414L10.586 14l-1.768 1.768l1.414 1.414L12 15.414l1.768 1.768l1.414-1.414zM9 4v2h6V4z"
+      d: "m5.636 12.707l1.829 1.829l1.414-1.415l-1.829-1.828l1.415-1.414l1.828 1.828l1.414-1.414L9.88 8.464l1.414-1.414l1.828 1.829l1.415-1.415l-1.829-1.828l2.829-2.828a1 1 0 0 1 1.414 0l4.243 4.242a1 1 0 0 1 0 1.414L8.465 21.192a1 1 0 0 1-1.415 0L2.808 16.95a1 1 0 0 1 0-1.414zm8.485 5.656l4.243-4.242L21 16.756V21h-4.242zM5.636 9.878L2.808 7.05a1 1 0 0 1 0-1.415l2.828-2.828a1 1 0 0 1 1.414 0l2.83 2.828z"
     }, null, -1)
   ]))]))
 }
 
-const __unplugin_components_2$1 = { name: 'ri-delete-bin2-fill', render: render$l };
+const __unplugin_components_3$1 = { name: 'ri-pencil-ruler2-fill', render: render$l };
 /* vite-plugin-components disabled */
 
 const _hoisted_1$29 = {
@@ -267,12 +267,12 @@ function render$k(_ctx, _cache) {
   return (openBlock(), createElementBlock("svg", _hoisted_1$29, [...(_cache[0] || (_cache[0] = [
     createElementVNode("path", {
       fill: "currentColor",
-      d: "M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"
+      d: "M7 6V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6zm6.414 8l1.768-1.768l-1.414-1.414L12 12.586l-1.768-1.768l-1.414 1.414L10.586 14l-1.768 1.768l1.414 1.414L12 15.414l1.768 1.768l1.414-1.414zM9 4v2h6V4z"
     }, null, -1)
   ]))]))
 }
 
-const __unplugin_components_0$9 = { name: 'ri-add-line', render: render$k };
+const __unplugin_components_2$1 = { name: 'ri-delete-bin2-fill', render: render$k };
 /* vite-plugin-components disabled */
 
 const _hoisted_1$28 = {
@@ -285,12 +285,30 @@ function render$j(_ctx, _cache) {
   return (openBlock(), createElementBlock("svg", _hoisted_1$28, [...(_cache[0] || (_cache[0] = [
     createElementVNode("path", {
       fill: "currentColor",
+      d: "M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"
+    }, null, -1)
+  ]))]))
+}
+
+const __unplugin_components_0$8 = { name: 'ri-add-line', render: render$j };
+/* vite-plugin-components disabled */
+
+const _hoisted_1$27 = {
+  viewBox: "0 0 24 24",
+  width: "1.2em",
+  height: "1.2em"
+};
+
+function render$i(_ctx, _cache) {
+  return (openBlock(), createElementBlock("svg", _hoisted_1$27, [...(_cache[0] || (_cache[0] = [
+    createElementVNode("path", {
+      fill: "currentColor",
       d: "m16 2l5 5v14.008a.993.993 0 0 1-.993.992H3.993A1 1 0 0 1 3 21.008V2.992C3 2.444 3.445 2 3.993 2zm-5 5v10h2V7zm4 4v6h2v-6zm-8 2v4h2v-4z"
     }, null, -1)
   ]))]))
 }
 
-const __unplugin_components_0$8 = { name: 'ri-file-chart-fill', render: render$j };
+const __unplugin_components_0$7 = { name: 'ri-file-chart-fill', render: render$i };
 /* vite-plugin-components disabled */
 
 function mitt(n){return {all:n=n||new Map,on:function(t,e){var i=n.get(t);i?i.push(e):n.set(t,[e]);},off:function(t,e){var i=n.get(t);i&&(e?i.splice(i.indexOf(e)>>>0,1):n.set(t,[]));},emit:function(t,e){var i=n.get(t);i&&i.slice().map(function(n){n(e);}),(i=n.get("*"))&&i.slice().map(function(n){n(t,e);});}}}
@@ -12820,7 +12838,7 @@ const _export_sfc = (sfc, props) => {
   return target;
 };
 
-const _hoisted_1$27 = { class: "query-content" };
+const _hoisted_1$26 = { class: "query-content" };
 const _hoisted_2$1y = { class: "query-panel" };
 const _hoisted_3$1i = { class: "analysis-modal-footer" };
 
@@ -12839,7 +12857,7 @@ function _sfc_render$1Z(_ctx, _cache, $props, $setup, $data, $options) {
     onClose: _cache[2] || (_cache[2] = $event => (_ctx.$emit('close')))
   }, {
     default: withCtx(() => [
-      createElementVNode("div", _hoisted_1$27, [
+      createElementVNode("div", _hoisted_1$26, [
         createElementVNode("div", _hoisted_2$1y, [
           createVNode(_component_EfForm, {
             ref: "form",
@@ -13280,7 +13298,7 @@ const _sfc_main$1Z = {
 
 /* unplugin-vue-components disabled */
 
-const _hoisted_1$26 = { class: "var-content" };
+const _hoisted_1$25 = { class: "var-content" };
 const _hoisted_2$1x = { class: "var-panel" };
 const _hoisted_3$1h = { style: {"position":"relative"} };
 const _hoisted_4$16 = {
@@ -13311,7 +13329,7 @@ function _sfc_render$1Y(_ctx, _cache, $props, $setup, $data, $options) {
     onClose: $options.close
   }, {
     default: withCtx(() => [
-      createElementVNode("div", _hoisted_1$26, [
+      createElementVNode("div", _hoisted_1$25, [
         createElementVNode("div", _hoisted_2$1x, [
           createElementVNode("div", _hoisted_3$1h, [
             createVNode(_component_EfTabs, {
@@ -22754,12 +22772,12 @@ const _sfc_main$1W = {
   }
 };
 
-const _hoisted_1$25 = { class: "padding-box-wrapper" };
+const _hoisted_1$24 = { class: "padding-box-wrapper" };
 
 function _sfc_render$1V(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_EfInput = resolveComponent("EfInput");
 
-  return (openBlock(), createElementBlock("div", _hoisted_1$25, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$24, [
     _cache[12] || (_cache[12] = createElementVNode("div", { class: "inner-box" }, null, -1)),
     createElementVNode("div", {
       class: "value-top value-container-h",
@@ -23015,7 +23033,7 @@ const _sfc_main$1V = {
   }
 };
 
-const _hoisted_1$24 = { class: "padding-config" };
+const _hoisted_1$23 = { class: "padding-config" };
 
 function _sfc_render$1U(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_PaddingBox = resolveComponent("PaddingBox");
@@ -23032,7 +23050,7 @@ function _sfc_render$1U(_ctx, _cache, $props, $setup, $data, $options) {
     onChange: _cache[2] || (_cache[2] = $event => (_ctx.$emit('chartChange')))
   }, {
     default: withCtx(() => [
-      createElementVNode("div", _hoisted_1$24, [
+      createElementVNode("div", _hoisted_1$23, [
         createVNode(_component_el_form, {
           size: "small",
           "label-width": "80px",
@@ -23147,7 +23165,7 @@ const _sfc_main$1U = {
   }
 };
 
-const _hoisted_1$23 = { class: "d-flex-c" };
+const _hoisted_1$22 = { class: "d-flex-c" };
 const _hoisted_2$1w = { class: "d-flex-c" };
 const _hoisted_3$1g = { class: "d-flex-c" };
 
@@ -23180,7 +23198,7 @@ function _sfc_render$1T(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_form_item, { label: "" }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_1$23, [
+                  createElementVNode("div", _hoisted_1$22, [
                     createVNode(_component_el_input_number, {
                       modelValue: $data.form.width,
                       "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.width) = $event)),
@@ -23317,7 +23335,7 @@ const _sfc_main$1T = {
   }
 };
 
-const _hoisted_1$22 = { class: "d-flex-c" };
+const _hoisted_1$21 = { class: "d-flex-c" };
 const _hoisted_2$1v = { class: "d-flex-c" };
 const _hoisted_3$1f = { class: "d-flex-c" };
 const _hoisted_4$15 = { class: "d-flex-c" };
@@ -23352,7 +23370,7 @@ function _sfc_render$1S(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_form_item, { label: "" }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_1$22, [
+                  createElementVNode("div", _hoisted_1$21, [
                     createVNode(_component_el_input_number, {
                       modelValue: $data.form.fontSize,
                       "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.fontSize) = $event)),
@@ -23618,7 +23636,7 @@ const _sfc_main$1S = {
   }
 };
 
-const _hoisted_1$21 = { class: "d-flex-c" };
+const _hoisted_1$20 = { class: "d-flex-c" };
 const _hoisted_2$1u = { class: "d-flex-c" };
 const _hoisted_3$1e = { class: "d-flex-c" };
 const _hoisted_4$14 = { class: "d-flex-c" };
@@ -23672,7 +23690,7 @@ function _sfc_render$1R(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_col, { span: 24 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_1$21, [
+                  createElementVNode("div", _hoisted_1$20, [
                     createVNode(_component_EfRadio, {
                       modelValue: $data.form.type,
                       "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.type) = $event)),
@@ -24200,7 +24218,7 @@ const _sfc_main$1R = {
   }
 };
 
-const _hoisted_1$20 = { class: "d-flex-c" };
+const _hoisted_1$1$ = { class: "d-flex-c" };
 const _hoisted_2$1t = { class: "d-flex-c" };
 const _hoisted_3$1d = { class: "d-flex-c" };
 const _hoisted_4$13 = {
@@ -24245,7 +24263,7 @@ function _sfc_render$1Q(_ctx, _cache, $props, $setup, $data, $options) {
                 class: "radio-item"
               }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_1$20, [
+                  createElementVNode("div", _hoisted_1$1$, [
                     createVNode(_component_EfRadio, {
                       modelValue: $data.form.mergeChildChart,
                       "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.mergeChildChart) = $event)),
@@ -24479,7 +24497,7 @@ const _sfc_main$1Q = {
   }
 };
 
-const _hoisted_1$1$ = { class: "d-flex-c" };
+const _hoisted_1$1_ = { class: "d-flex-c" };
 const _hoisted_2$1s = { class: "d-flex ai-c" };
 const _hoisted_3$1c = { style: {"margin-left":"10px"} };
 const _hoisted_4$12 = { class: "d-flex-c" };
@@ -24513,7 +24531,7 @@ function _sfc_render$1P(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_form_item, null, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_1$1$, [
+                  createElementVNode("div", _hoisted_1$1_, [
                     createElementVNode("div", _hoisted_2$1s, [
                       createVNode(_component_el_input, {
                         modelValue: $data.form.backgroundImage,
@@ -24650,7 +24668,7 @@ const _sfc_main$1P = {
   }
 };
 
-const _hoisted_1$1_ = { class: "d-flex-c" };
+const _hoisted_1$1Z = { class: "d-flex-c" };
 const _hoisted_2$1r = { class: "d-flex-c" };
 const _hoisted_3$1b = { class: "d-flex-c" };
 const _hoisted_4$11 = { class: "d-flex-c" };
@@ -24685,7 +24703,7 @@ function _sfc_render$1O(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_form_item, null, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_1$1_, [
+                  createElementVNode("div", _hoisted_1$1Z, [
                     createVNode(_component_CommonColorPicker, {
                       modelValue: $data.form.backgroundColor,
                       "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.backgroundColor) = $event)),
@@ -24822,24 +24840,6 @@ function _sfc_render$1O(_ctx, _cache, $props, $setup, $data, $options) {
 }
 const QueryStyle = /*#__PURE__*/_export_sfc(_sfc_main$1P, [['render',_sfc_render$1O]]);
 
-const _hoisted_1$1Z = {
-  viewBox: "0 0 24 24",
-  width: "1.2em",
-  height: "1.2em"
-};
-
-function render$i(_ctx, _cache) {
-  return (openBlock(), createElementBlock("svg", _hoisted_1$1Z, [...(_cache[0] || (_cache[0] = [
-    createElementVNode("path", {
-      fill: "currentColor",
-      d: "m22.313 10.175l-1.415 1.414l-.707-.707l-4.242 4.243l-.707 3.536l-1.415 1.414l-4.242-4.243l-4.95 4.95l-1.414-1.414l4.95-4.95l-4.243-4.243l1.414-1.414l3.536-.707l4.242-4.243l-.707-.707l1.414-1.414z"
-    }, null, -1)
-  ]))]))
-}
-
-const __unplugin_components_0$7 = { name: 'ri-pushpin-fill', render: render$i };
-/* vite-plugin-components disabled */
-
 const _hoisted_1$1Y = {
   viewBox: "0 0 24 24",
   width: "1.2em",
@@ -24850,12 +24850,30 @@ function render$h(_ctx, _cache) {
   return (openBlock(), createElementBlock("svg", _hoisted_1$1Y, [...(_cache[0] || (_cache[0] = [
     createElementVNode("path", {
       fill: "currentColor",
+      d: "m22.313 10.175l-1.415 1.414l-.707-.707l-4.242 4.243l-.707 3.536l-1.415 1.414l-4.242-4.243l-4.95 4.95l-1.414-1.414l4.95-4.95l-4.243-4.243l1.414-1.414l3.536-.707l4.242-4.243l-.707-.707l1.414-1.414z"
+    }, null, -1)
+  ]))]))
+}
+
+const __unplugin_components_0$6 = { name: 'ri-pushpin-fill', render: render$h };
+/* vite-plugin-components disabled */
+
+const _hoisted_1$1X = {
+  viewBox: "0 0 24 24",
+  width: "1.2em",
+  height: "1.2em"
+};
+
+function render$g(_ctx, _cache) {
+  return (openBlock(), createElementBlock("svg", _hoisted_1$1X, [...(_cache[0] || (_cache[0] = [
+    createElementVNode("path", {
+      fill: "currentColor",
       d: "M12 2c5.522 0 10 3.978 10 8.889a5.56 5.56 0 0 1-5.556 5.555h-1.966c-.922 0-1.667.745-1.667 1.667c0 .422.167.811.422 1.1c.267.3.434.689.434 1.122C13.667 21.256 12.9 22 12 22C6.478 22 2 17.522 2 12S6.478 2 12 2m-1.189 16.111a3.664 3.664 0 0 1 3.667-3.667h1.966A3.56 3.56 0 0 0 20 10.89C20 7.139 16.468 4 12 4a8 8 0 0 0-.676 15.972a3.65 3.65 0 0 1-.513-1.86M7.5 12a1.5 1.5 0 1 1 0-3a1.5 1.5 0 0 1 0 3m9 0a1.5 1.5 0 1 1 0-3a1.5 1.5 0 0 1 0 3M12 9a1.5 1.5 0 1 1 0-3a1.5 1.5 0 0 1 0 3"
     }, null, -1)
   ]))]))
 }
 
-const __unplugin_components_0$6 = { name: 'ri-palette-line', render: render$h };
+const __unplugin_components_0$5 = { name: 'ri-palette-line', render: render$g };
 /* vite-plugin-components disabled */
 
 /* unplugin-vue-components disabled */
@@ -25063,7 +25081,7 @@ const _sfc_main$1N = {
   }
 };
 
-const _hoisted_1$1X = {
+const _hoisted_1$1W = {
   style: {"width":"100%"},
   class: "d-flex-c"
 };
@@ -25087,16 +25105,16 @@ const _hoisted_11$c = { class: "d-flex-c colors-number-suffix" };
 function _sfc_render$1M(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_option = resolveComponent("el-option");
   const _component_el_select = resolveComponent("el-select");
-  const _component_i_ri_palette_line = __unplugin_components_0$6;
+  const _component_i_ri_palette_line = __unplugin_components_0$5;
   const _component_el_button = resolveComponent("el-button");
-  const _component_i_ri_pushpin_fill = __unplugin_components_0$7;
+  const _component_i_ri_pushpin_fill = __unplugin_components_0$6;
   const _component_CommonColorPicker = resolveComponent("CommonColorPicker");
   const _component_Plus = resolveComponent("Plus");
   const _component_el_icon = resolveComponent("el-icon");
   const _component_Minus = resolveComponent("Minus");
   const _component_Sort = resolveComponent("Sort");
 
-  return (openBlock(), createElementBlock("div", _hoisted_1$1X, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$1W, [
     createElementVNode("div", _hoisted_2$1q, [
       withDirectives(createElementVNode("div", {
         style: {"box-sizing":"border-box","width":"80px","padding-right":"8px","padding-left":"20px"},
@@ -25342,7 +25360,7 @@ const _sfc_main$1M = {
   }
 };
 
-const _hoisted_1$1W = { class: "d-flex-c" };
+const _hoisted_1$1V = { class: "d-flex-c" };
 const _hoisted_2$1p = { class: "d-flex-c" };
 const _hoisted_3$19 = { class: "d-flex-c" };
 const _hoisted_4$$ = { class: "d-flex-c" };
@@ -25368,7 +25386,7 @@ function _sfc_render$1L(_ctx, _cache, $props, $setup, $data, $options) {
     default: withCtx(() => [
       createVNode(_component_el_form_item, { label: "" }, {
         default: withCtx(() => [
-          createElementVNode("div", _hoisted_1$1W, [
+          createElementVNode("div", _hoisted_1$1V, [
             createVNode(_component_el_switch, {
               modelValue: $data.form.show,
               "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.show) = $event)),
@@ -25523,7 +25541,7 @@ const _sfc_main$1L = {
   }
 };
 
-const _hoisted_1$1V = { class: "d-flex-c" };
+const _hoisted_1$1U = { class: "d-flex-c" };
 const _hoisted_2$1o = { class: "d-flex-c" };
 const _hoisted_3$18 = { class: "d-flex-c" };
 const _hoisted_4$_ = { class: "d-flex-c" };
@@ -25553,7 +25571,7 @@ function _sfc_render$1K(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_col, { span: 12 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_1$1V, [
+                  createElementVNode("div", _hoisted_1$1U, [
                     createVNode(_component_el_input_number, {
                       modelValue: $data.form.borderRadius[0],
                       "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.borderRadius[0]) = $event)),
@@ -25722,7 +25740,7 @@ const _sfc_main$1K = {
   }
 };
 
-const _hoisted_1$1U = { class: "d-flex-c" };
+const _hoisted_1$1T = { class: "d-flex-c" };
 const _hoisted_2$1n = { class: "d-flex-c" };
 const _hoisted_3$17 = { class: "d-flex-c" };
 const _hoisted_4$Z = { class: "d-flex-c" };
@@ -25760,7 +25778,7 @@ function _sfc_render$1J(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_col, { span: 12 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_1$1U, [
+                  createElementVNode("div", _hoisted_1$1T, [
                     createVNode(_component_el_input_number, {
                       modelValue: $data.form.lineStyle.width,
                       "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.lineStyle.width) = $event)),
@@ -26010,7 +26028,7 @@ const _sfc_main$1J = {
   }
 };
 
-const _hoisted_1$1T = { class: "d-flex-c" };
+const _hoisted_1$1S = { class: "d-flex-c" };
 const _hoisted_2$1m = { class: "d-flex-c" };
 const _hoisted_3$16 = { class: "d-flex-c" };
 
@@ -26040,7 +26058,7 @@ function _sfc_render$1I(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_col, { span: 12 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_1$1T, [
+                  createElementVNode("div", _hoisted_1$1S, [
                     createVNode(_component_el_switch, {
                       modelValue: $data.form.show,
                       "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.show) = $event)),
@@ -26162,7 +26180,7 @@ const _sfc_main$1I = {
   }
 };
 
-const _hoisted_1$1S = { class: "d-flex-c" };
+const _hoisted_1$1R = { class: "d-flex-c" };
 const _hoisted_2$1l = { class: "d-flex-c" };
 const _hoisted_3$15 = { class: "d-flex-c" };
 const _hoisted_4$Y = { class: "d-flex" };
@@ -26194,7 +26212,7 @@ function _sfc_render$1H(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_col, { span: 12 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_1$1S, [
+                  createElementVNode("div", _hoisted_1$1R, [
                     createVNode(_component_el_switch, {
                       modelValue: $data.form.show,
                       "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.show) = $event)),
@@ -26327,7 +26345,7 @@ const _sfc_main$1H = {
   }
 };
 
-const _hoisted_1$1R = { class: "d-flex-c" };
+const _hoisted_1$1Q = { class: "d-flex-c" };
 
 function _sfc_render$1G(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_switch = resolveComponent("el-switch");
@@ -26353,7 +26371,7 @@ function _sfc_render$1G(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_col, { span: 12 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_1$1R, [
+                  createElementVNode("div", _hoisted_1$1Q, [
                     createVNode(_component_el_switch, {
                       modelValue: $data.form.show,
                       "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.show) = $event)),
@@ -26433,7 +26451,7 @@ const _sfc_main$1G = {
   }
 };
 
-const _hoisted_1$1Q = { class: "d-flex-c" };
+const _hoisted_1$1P = { class: "d-flex-c" };
 const _hoisted_2$1k = { class: "d-flex-c" };
 
 function _sfc_render$1F(_ctx, _cache, $props, $setup, $data, $options) {
@@ -26452,7 +26470,7 @@ function _sfc_render$1F(_ctx, _cache, $props, $setup, $data, $options) {
     default: withCtx(() => [
       createVNode(_component_el_form_item, { label: "" }, {
         default: withCtx(() => [
-          createElementVNode("div", _hoisted_1$1Q, [
+          createElementVNode("div", _hoisted_1$1P, [
             createVNode(_component_el_input_number, {
               modelValue: $data.form.nameGap,
               "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.nameGap) = $event)),
@@ -26543,7 +26561,7 @@ const _sfc_main$1F = {
   }
 };
 
-const _hoisted_1$1P = { class: "d-flex-c" };
+const _hoisted_1$1O = { class: "d-flex-c" };
 const _hoisted_2$1j = { class: "d-flex-c" };
 const _hoisted_3$14 = { class: "d-flex-c" };
 const _hoisted_4$X = { class: "d-flex-c" };
@@ -26573,7 +26591,7 @@ function _sfc_render$1E(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_col, { span: 12 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_1$1P, [
+                  createElementVNode("div", _hoisted_1$1O, [
                     createVNode(_component_el_switch, {
                       modelValue: $data.form.show,
                       "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.show) = $event)),
@@ -26741,7 +26759,7 @@ const _sfc_main$1E = {
   }
 };
 
-const _hoisted_1$1O = { class: "d-flex-c" };
+const _hoisted_1$1N = { class: "d-flex-c" };
 const _hoisted_2$1i = { class: "d-flex-c" };
 const _hoisted_3$13 = { class: "d-flex-c" };
 const _hoisted_4$W = { class: "d-flex-c" };
@@ -26781,7 +26799,7 @@ function _sfc_render$1D(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_col, { span: 12 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_1$1O, [
+                  createElementVNode("div", _hoisted_1$1N, [
                     createVNode(_component_el_switch, {
                       modelValue: $data.form.hasSeq,
                       "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.hasSeq) = $event)),
@@ -27109,7 +27127,7 @@ const _sfc_main$1D = {
   }
 };
 
-const _hoisted_1$1N = { class: "d-flex-c" };
+const _hoisted_1$1M = { class: "d-flex-c" };
 const _hoisted_2$1h = { class: "d-flex-c" };
 const _hoisted_3$12 = { class: "d-flex-c" };
 const _hoisted_4$V = { class: "d-flex-c" };
@@ -27142,7 +27160,7 @@ function _sfc_render$1C(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_col, { span: 12 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_1$1N, [
+                  createElementVNode("div", _hoisted_1$1M, [
                     createVNode(_component_el_switch, {
                       modelValue: $data.form.showHeader,
                       "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.showHeader) = $event)),
@@ -27297,7 +27315,7 @@ const _sfc_main$1C = {
   }
 };
 
-const _hoisted_1$1M = { class: "d-flex-c" };
+const _hoisted_1$1L = { class: "d-flex-c" };
 const _hoisted_2$1g = { class: "d-flex-c" };
 const _hoisted_3$11 = { class: "d-flex-c" };
 const _hoisted_4$U = { class: "d-flex-c" };
@@ -27331,7 +27349,7 @@ function _sfc_render$1B(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_col, { span: 12 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_1$1M, [
+                  createElementVNode("div", _hoisted_1$1L, [
                     createVNode(_component_CommonColorPicker, {
                       modelValue: $data.form.itemStyle.areaColor,
                       "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.itemStyle.areaColor) = $event)),
@@ -27477,7 +27495,7 @@ const _sfc_main$1B = {
   }
 };
 
-const _hoisted_1$1L = { class: "d-flex-c" };
+const _hoisted_1$1K = { class: "d-flex-c" };
 const _hoisted_2$1f = { class: "d-flex-c" };
 const _hoisted_3$10 = { class: "d-flex" };
 const _hoisted_4$T = ["onClick"];
@@ -27512,7 +27530,7 @@ function _sfc_render$1A(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_col, { span: 12 }, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_1$1L, [
+                  createElementVNode("div", _hoisted_1$1K, [
                     createVNode(_component_el_switch, {
                       modelValue: $data.form.label.show,
                       "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.label.show) = $event)),
@@ -29211,7 +29229,7 @@ const _sfc_main$1z = {
 
 /* unplugin-vue-components disabled */
 
-const _hoisted_1$1K = { class: "page-setting-wrapper" };
+const _hoisted_1$1J = { class: "page-setting-wrapper" };
 const _hoisted_2$1e = { class: "title" };
 const _hoisted_3$$ = ["onClick"];
 const _hoisted_4$S = { class: "collapse-item" };
@@ -29243,7 +29261,7 @@ function _sfc_render$1y(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_BKCodeCom = resolveComponent("BKCodeCom");
   const _component_el_collapse = resolveComponent("el-collapse");
 
-  return (openBlock(), createElementBlock("div", _hoisted_1$1K, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$1J, [
     createElementVNode("div", _hoisted_2$1e, [
       _cache[6] || (_cache[6] = createElementVNode("span", { style: {"margin-right":"10px"} }, "页面设置", -1)),
       createVNode(_component_el_button, {
@@ -29830,7 +29848,7 @@ const _sfc_main$1y = {
 
 /* unplugin-vue-components disabled */
 
-const _hoisted_1$1J = { class: "card-setting-wrapper" };
+const _hoisted_1$1I = { class: "card-setting-wrapper" };
 const _hoisted_2$1d = { class: "title" };
 const _hoisted_3$_ = { class: "d-flex ai-c" };
 const _hoisted_4$R = { class: "collapse-item" };
@@ -29845,7 +29863,7 @@ function _sfc_render$1x(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_collapse_item = resolveComponent("el-collapse-item");
   const _component_el_collapse = resolveComponent("el-collapse");
 
-  return (openBlock(), createElementBlock("div", _hoisted_1$1J, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$1I, [
     createElementVNode("div", _hoisted_2$1d, [
       _cache[2] || (_cache[2] = createElementVNode("span", { style: {"margin-right":"10px"} }, "卡片设置", -1)),
       createVNode(_component_el_button, {
@@ -30146,14 +30164,14 @@ const ThemeEvents = {
   }
 };
 
-const _hoisted_1$1I = {
+const _hoisted_1$1H = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 
-function render$g(_ctx, _cache) {
-  return (openBlock(), createElementBlock("svg", _hoisted_1$1I, [...(_cache[0] || (_cache[0] = [
+function render$f(_ctx, _cache) {
+  return (openBlock(), createElementBlock("svg", _hoisted_1$1H, [...(_cache[0] || (_cache[0] = [
     createElementVNode("path", {
       fill: "currentColor",
       d: "M11 2c4.968 0 9 4.032 9 9s-4.032 9-9 9s-9-4.032-9-9s4.032-9 9-9m0 16c3.867 0 7-3.133 7-7s-3.133-7-7-7s-7 3.133-7 7s3.133 7 7 7m8.485.071l2.829 2.828l-1.415 1.415l-2.828-2.829z"
@@ -30161,7 +30179,7 @@ function render$g(_ctx, _cache) {
   ]))]))
 }
 
-const __unplugin_components_0$5 = { name: 'ri-search2-line', render: render$g };
+const __unplugin_components_0$4 = { name: 'ri-search2-line', render: render$f };
 /* vite-plugin-components disabled */
 
 const configs = [
@@ -30653,7 +30671,7 @@ const _sfc_main$1x = {
   }
 };
 
-const _hoisted_1$1H = { class: "toolbar-pannel-wrapper" };
+const _hoisted_1$1G = { class: "toolbar-pannel-wrapper" };
 const _hoisted_2$1c = { class: "title" };
 const _hoisted_3$Z = { class: "icons" };
 const _hoisted_4$Q = { class: "group-name" };
@@ -30695,7 +30713,7 @@ const _hoisted_20$2 = ["src", "title"];
 const _hoisted_21$2 = { class: "menu-card-name" };
 
 function _sfc_render$1w(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_i_ri_search_2_line = __unplugin_components_0$5;
+  const _component_i_ri_search_2_line = __unplugin_components_0$4;
   const _component_el_input = resolveComponent("el-input");
   const _component_BKDecorateChart = resolveComponent("BKDecorateChart");
   const _component_el_tooltip = resolveComponent("el-tooltip");
@@ -30703,7 +30721,7 @@ function _sfc_render$1w(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_collapse_item = resolveComponent("el-collapse-item");
   const _component_el_collapse = resolveComponent("el-collapse");
 
-  return withDirectives((openBlock(), createElementBlock("div", _hoisted_1$1H, [
+  return withDirectives((openBlock(), createElementBlock("div", _hoisted_1$1G, [
     createElementVNode("div", _hoisted_2$1c, [
       withDirectives(createElementVNode("span", null, "工具面板", 512), [
         [vShow, !$data.showSearch]
@@ -31005,7 +31023,7 @@ const _sfc_main$1w = {
   }
 };
 
-const _hoisted_1$1G = { class: "toolbar-wrapper" };
+const _hoisted_1$1F = { class: "toolbar-wrapper" };
 const _hoisted_2$1b = {
   key: 0,
   class: "right-container"
@@ -31027,7 +31045,7 @@ function _sfc_render$1v(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_input_number = resolveComponent("el-input-number");
   const _component_el_button = resolveComponent("el-button");
 
-  return (openBlock(), createElementBlock("div", _hoisted_1$1G, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$1F, [
     _cache[11] || (_cache[11] = createElementVNode("div", { class: "left-container" }, null, -1)),
     ($props.position !== 'left')
       ? (openBlock(), createElementBlock("div", _hoisted_2$1b, [
@@ -31183,7 +31201,7 @@ const _sfc_main$1v = {
   }
 };
 
-const _hoisted_1$1F = { class: "script-panel" };
+const _hoisted_1$1E = { class: "script-panel" };
 const _hoisted_2$1a = { class: "script-content" };
 const _hoisted_3$X = { class: "code-content" };
 const _hoisted_4$O = { class: "analysis-modal-footer" };
@@ -31202,7 +31220,7 @@ function _sfc_render$1u(_ctx, _cache, $props, $setup, $data, $options) {
     onClose: _cache[3] || (_cache[3] = $event => (_ctx.$emit('close')))
   }, {
     default: withCtx(() => [
-      createElementVNode("div", _hoisted_1$1F, [
+      createElementVNode("div", _hoisted_1$1E, [
         createElementVNode("div", _hoisted_2$1a, [
           createElementVNode("div", _hoisted_3$X, [
             createVNode(_component_BKCodeCom, {
@@ -31700,7 +31718,7 @@ const _sfc_main$1u = {
 
 /* unplugin-vue-components disabled */
 
-const _hoisted_1$1E = { class: "query-content" };
+const _hoisted_1$1D = { class: "query-content" };
 const _hoisted_2$19 = { class: "query-panel" };
 const _hoisted_3$W = { class: "analysis-modal-footer" };
 
@@ -31718,7 +31736,7 @@ function _sfc_render$1t(_ctx, _cache, $props, $setup, $data, $options) {
     onClose: _cache[2] || (_cache[2] = $event => (_ctx.$emit('close')))
   }, {
     default: withCtx(() => [
-      createElementVNode("div", _hoisted_1$1E, [
+      createElementVNode("div", _hoisted_1$1D, [
         createElementVNode("div", _hoisted_2$19, [
           createVNode(_component_EfForm, {
             ref: "form",
@@ -31829,7 +31847,7 @@ const _sfc_main$1t = {
   }
 };
 
-const _hoisted_1$1D = { class: "script-panel" };
+const _hoisted_1$1C = { class: "script-panel" };
 const _hoisted_2$18 = { class: "script-content" };
 const _hoisted_3$V = { class: "code-content" };
 const _hoisted_4$N = { class: "analysis-modal-footer" };
@@ -31848,7 +31866,7 @@ function _sfc_render$1s(_ctx, _cache, $props, $setup, $data, $options) {
     onClose: _cache[3] || (_cache[3] = $event => (_ctx.$emit('close')))
   }, {
     default: withCtx(() => [
-      createElementVNode("div", _hoisted_1$1D, [
+      createElementVNode("div", _hoisted_1$1C, [
         createElementVNode("div", _hoisted_2$18, [
           createElementVNode("div", _hoisted_3$V, [
             createVNode(_component_BKCodeCom, {
@@ -34669,6 +34687,16 @@ const _sfc_main$1s = {
     defaultParams: {
       type: Array,
       default: () => []
+    },
+    // 初始是否为设计模式(默认预览);宿主「新建看板」时置 true 直接进设计模式
+    defaultDesignMode: {
+      type: Boolean,
+      default: false
+    },
+    // 嵌入时画布宽度自适应(铺满容器):默认主题强制 pageWidthMode=adaptive(不改 colNum)
+    embedFluidWidth: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['invokeAMakerMethod'],
@@ -34713,7 +34741,7 @@ const _sfc_main$1s = {
       showBodyPannel: false,
       expand: false,
       showGridLine: false,
-      designMode: false, // 设计/预览模式,默认预览;仅设计模式显示编辑类按钮
+      designMode: this.defaultDesignMode, // 设计/预览模式,默认预览(可由 defaultDesignMode 初始为设计)
       rightTab: 'base',
       dataMappingVisible: false,
       autoSave: false,
@@ -35477,7 +35505,9 @@ const _sfc_main$1s = {
       else if (cmd === 'addQuery') this.addQuery();
     },
     onSaveCommand (cmd) {
-      if (cmd === 'saveAs') {
+      if (cmd === 'save') {
+        this.savePageConfig(false);
+      } else if (cmd === 'saveAs') {
         if (this.embedOnSaveAs) this.embedOnSaveAs();
         else this.savePageConfig(true);
       }
@@ -35752,7 +35782,7 @@ const _sfc_main$1s = {
       }
       const deConfig = this.getDefaultTheme(true);
       const configData = utils$1.deepClone(deConfig.config);
-      if (this.isApp) {
+      if (this.isApp || this.embedFluidWidth) {
         configData.pageLayout.pageWidthMode = 'adaptive';
         configData.pageLayout.pageMinWidth = '';
       }
@@ -35887,7 +35917,7 @@ const _sfc_main$1s = {
 };
 
 
-const _hoisted_1$1C = {
+const _hoisted_1$1B = {
   key: 0,
   class: "left",
   style: {"display":"flex","align-items":"center"}
@@ -35927,8 +35957,8 @@ const _hoisted_16$5 = {
 };
 
 function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_i_ri_file_chart_fill = __unplugin_components_0$8;
-  const _component_i_ri_add_line = __unplugin_components_0$9;
+  const _component_i_ri_file_chart_fill = __unplugin_components_0$7;
+  const _component_i_ri_add_line = __unplugin_components_0$8;
   const _component_el_dropdown_item = resolveComponent("el-dropdown-item");
   const _component_el_dropdown_menu = resolveComponent("el-dropdown-menu");
   const _component_el_dropdown = resolveComponent("el-dropdown");
@@ -35941,15 +35971,16 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_i_ri_equalizer_fill = __unplugin_components_8;
   const _component_el_switch = resolveComponent("el-switch");
   const _component_i_ri_save_fill = __unplugin_components_9;
-  const _component_i_ri_pencil_ruler_2_line = __unplugin_components_10;
-  const _component_i_ri_eye_line = __unplugin_components_11;
-  const _component_i_ri_arrow_down_s_line = __unplugin_components_12;
+  const _component_i_ri_file_copy_2_fill = __unplugin_components_0$9;
+  const _component_i_ri_pencil_ruler_2_line = __unplugin_components_11;
+  const _component_i_ri_eye_line = __unplugin_components_12;
+  const _component_i_ri_arrow_down_s_line = __unplugin_components_13;
   const _component_Toolbar = resolveComponent("Toolbar");
   const _component_ToolbarPannel = resolveComponent("ToolbarPannel");
   const _component_BKGridLayoutContent = resolveComponent("BKGridLayoutContent");
   const _component_BKGridLayoutDecorate = resolveComponent("BKGridLayoutDecorate");
-  const _component_i_ri_pushpin_2_fill = __unplugin_components_13;
-  const _component_i_ri_pushpin_2_line = __unplugin_components_14;
+  const _component_i_ri_pushpin_2_fill = __unplugin_components_14;
+  const _component_i_ri_pushpin_2_line = __unplugin_components_15;
   const _component_i_ri_close_line = __unplugin_components_2$2;
   const _component_PageSetting = resolveComponent("PageSetting");
   const _component_CardSetting = resolveComponent("CardSetting");
@@ -35974,7 +36005,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
             class: normalizeClass(["top-header", [$props.isModal ? 'query-header':'', $props.embedToolbarTarget ? 'is-embed-tools' : '']])
           }, [
             (!$props.isModal)
-              ? (openBlock(), createElementBlock("div", _hoisted_1$1C, [
+              ? (openBlock(), createElementBlock("div", _hoisted_1$1B, [
                   createElementVNode("div", _hoisted_2$17, [
                     createVNode(_component_i_ri_file_chart_fill)
                   ]),
@@ -36126,7 +36157,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                               _: 1
                             }, 8, ["onCommand"]))
                           : createCommentVNode("", true),
-                        _cache[40] || (_cache[40] = createElementVNode("span", { class: "tb-divider" }, null, -1)),
+                        _cache[41] || (_cache[41] = createElementVNode("span", { class: "tb-divider" }, null, -1)),
                         createElementVNode("div", _hoisted_5$E, [
                           createElementVNode("span", {
                             class: "cz-btn",
@@ -36166,17 +36197,27 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                               type: "primary",
                               size: "small",
                               trigger: "click",
+                              placement: "bottom-end",
                               class: "save-dropdown",
+                              "popper-class": "save-dd-menu",
                               onClick: _cache[10] || (_cache[10] = $event => ($options.savePageConfig(false))),
                               onCommand: $options.onSaveCommand
                             }, {
                               dropdown: withCtx(() => [
                                 createVNode(_component_el_dropdown_menu, null, {
                                   default: withCtx(() => [
+                                    createVNode(_component_el_dropdown_item, { command: "save" }, {
+                                      default: withCtx(() => [
+                                        createVNode(_component_i_ri_save_fill),
+                                        _cache[38] || (_cache[38] = createElementVNode("span", null, "保存", -1))
+                                      ]),
+                                      _: 1
+                                    }),
                                     createVNode(_component_el_dropdown_item, { command: "saveAs" }, {
-                                      default: withCtx(() => [...(_cache[38] || (_cache[38] = [
-                                        createTextVNode("另存为探索布局", -1)
-                                      ]))]),
+                                      default: withCtx(() => [
+                                        createVNode(_component_i_ri_file_copy_2_fill),
+                                        _cache[39] || (_cache[39] = createElementVNode("span", null, "另存为", -1))
+                                      ]),
                                       _: 1
                                     })
                                   ]),
@@ -36185,12 +36226,12 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                               ]),
                               default: withCtx(() => [
                                 createVNode(_component_i_ri_save_fill),
-                                _cache[39] || (_cache[39] = createElementVNode("span", { style: {"margin-left":"3px"} }, "保存", -1))
+                                _cache[40] || (_cache[40] = createElementVNode("span", { style: {"margin-left":"3px"} }, "保存", -1))
                               ]),
                               _: 1
                             }, 8, ["onCommand"]))
                           : createCommentVNode("", true),
-                        _cache[41] || (_cache[41] = createElementVNode("span", { class: "tb-divider" }, null, -1))
+                        _cache[42] || (_cache[42] = createElementVNode("span", { class: "tb-divider" }, null, -1))
                       ], 64))
                     : createCommentVNode("", true),
                   ($props.setMode)
@@ -36211,7 +36252,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                               }, {
                                 default: withCtx(() => [
                                   createVNode(_component_i_ri_eye_line),
-                                  _cache[42] || (_cache[42] = createElementVNode("span", { style: {"margin-left":"6px"} }, "预览", -1))
+                                  _cache[43] || (_cache[43] = createElementVNode("span", { style: {"margin-left":"6px"} }, "预览", -1))
                                 ]),
                                 _: 1
                               }, 8, ["class"]),
@@ -36221,7 +36262,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                               }, {
                                 default: withCtx(() => [
                                   createVNode(_component_i_ri_pencil_ruler_2_line),
-                                  _cache[43] || (_cache[43] = createElementVNode("span", { style: {"margin-left":"6px"} }, "设计", -1))
+                                  _cache[44] || (_cache[44] = createElementVNode("span", { style: {"margin-left":"6px"} }, "设计", -1))
                                 ]),
                                 _: 1
                               }, 8, ["class"])
@@ -36374,7 +36415,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
                         onChangeTab: _cache[16] || (_cache[16] = $event => ($data.rightTab = $event)),
                         onChangeDataMappingVisible: _cache[17] || (_cache[17] = $event => ($data.dataMappingVisible = $event))
                       }), null, 16, ["configs", "page-config", "save-able", "init-tab", "onSaveChartCfg"]))
-                    : (openBlock(), createElementBlock("div", _hoisted_16$5, [...(_cache[44] || (_cache[44] = [
+                    : (openBlock(), createElementBlock("div", _hoisted_16$5, [...(_cache[45] || (_cache[45] = [
                         createElementVNode("img", {
                           src: _imports_0$2,
                           alt: ""
@@ -36493,7 +36534,7 @@ function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
       : createCommentVNode("", true)
   ], 2))
 }
-const AnalysisMaker = /*#__PURE__*/_export_sfc(_sfc_main$1s, [['render',_sfc_render$1r],['__scopeId',"data-v-83b8e4f2"]]);
+const AnalysisMaker = /*#__PURE__*/_export_sfc(_sfc_main$1s, [['render',_sfc_render$1r],['__scopeId',"data-v-4672f3c6"]]);
 
 AnalysisMaker.install = function (Vue) {
   Vue.component(AnalysisMaker.name, AnalysisMaker);
@@ -36686,7 +36727,7 @@ const _sfc_main$1r = {
   }
 };
 
-const _hoisted_1$1B = ["label", "onClick"];
+const _hoisted_1$1A = ["label", "onClick"];
 
 function _sfc_render$1q(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_Close = resolveComponent("Close");
@@ -36745,7 +36786,7 @@ function _sfc_render$1q(_ctx, _cache, $props, $setup, $data, $options) {
                             ]),
                             _: 1
                           }, 8, ["onClick"])
-                        ], 10, _hoisted_1$1B))
+                        ], 10, _hoisted_1$1A))
                       }), 128))
                     ]),
                     _: 1
@@ -37881,7 +37922,7 @@ const _sfc_main$1o = {
   }
 };
 
-const _hoisted_1$1A = { style: {"display":"flex","justify-content":"space-between"} };
+const _hoisted_1$1z = { style: {"display":"flex","justify-content":"space-between"} };
 const _hoisted_2$16 = ["onClick"];
 const _hoisted_3$T = { class: "rank-image" };
 const _hoisted_4$L = { class: "f-14 title" };
@@ -37905,7 +37946,7 @@ function _sfc_render$1n(_ctx, _cache, $props, $setup, $data, $options) {
             key: i,
             class: normalizeClass(["rank-item", i===0?'first-bg':i===1?'second-bg':i===2?'third-bg':'other-bg'])
           }, [
-            createElementVNode("div", _hoisted_1$1A, [
+            createElementVNode("div", _hoisted_1$1z, [
               createElementVNode("div", {
                 style: {"display":"flex","align-items":"center"},
                 onClick: $event => ($options.itemClick(item))
@@ -37999,7 +38040,7 @@ const _sfc_main$1n = {
   }
 };
 
-const _hoisted_1$1z = {
+const _hoisted_1$1y = {
   ref: "rootRef",
   class: "full-box",
   style: {"position":"relative"}
@@ -38008,7 +38049,7 @@ const _hoisted_1$1z = {
 function _sfc_render$1m(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_AmRankList = resolveComponent("AmRankList");
 
-  return (openBlock(), createElementBlock("div", _hoisted_1$1z, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$1y, [
     renderSlot(_ctx.$slots, "content", {}, () => [
       (_ctx.contentConfig && _ctx.contentConfig.component)
         ? (openBlock(), createBlock(resolveDynamicComponent(_ctx.contentConfig.component), normalizeProps(mergeProps({ key: 0 }, _ctx.contentConfig.props || {})), null, 16))
@@ -38163,7 +38204,7 @@ const _sfc_main$1m = {
   }
 };
 
-const _hoisted_1$1y = { style: {"width":"100%","margin-bottom":"10px"} };
+const _hoisted_1$1x = { style: {"width":"100%","margin-bottom":"10px"} };
 const _hoisted_2$15 = {
   class: "label-title",
   size: "small"
@@ -38176,7 +38217,7 @@ function _sfc_render$1l(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_form_item = resolveComponent("el-form-item");
   const _component_el_form = resolveComponent("el-form");
 
-  return (openBlock(), createElementBlock("div", _hoisted_1$1y, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$1x, [
     createVNode(_component_el_form, {
       ref: "form",
       size: "small",
@@ -38480,7 +38521,7 @@ const _sfc_main$1l = {
   }
 };
 
-const _hoisted_1$1x = { class: "copy-button-box" };
+const _hoisted_1$1w = { class: "copy-button-box" };
 const _hoisted_2$14 = { class: "d-flex-c" };
 const _hoisted_3$S = { class: "d-flex-c" };
 const _hoisted_4$K = { class: "d-flex-c" };
@@ -38526,7 +38567,7 @@ function _sfc_render$1k(_ctx, _cache, $props, $setup, $data, $options) {
         style: {"padding-right":"10px","margin-top":"10px"}
       }, {
         default: withCtx(() => [
-          createElementVNode("div", _hoisted_1$1x, [
+          createElementVNode("div", _hoisted_1$1w, [
             createVNode(_component_el_button, {
               type: "primary",
               size: "small",
@@ -38869,7 +38910,7 @@ const _sfc_main$1k = {
   }
 };
 
-const _hoisted_1$1w = {
+const _hoisted_1$1v = {
   ref: "rootRef",
   class: "full-box",
   style: {"position":"relative"}
@@ -38883,7 +38924,7 @@ const _hoisted_2$13 = {
 function _sfc_render$1j(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_BKChart = resolveComponent("BKChart");
 
-  return (openBlock(), createElementBlock("div", _hoisted_1$1w, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$1v, [
     renderSlot(_ctx.$slots, "content", {}, () => [
       (_ctx.contentConfig && _ctx.contentConfig.component)
         ? (openBlock(), createBlock(resolveDynamicComponent(_ctx.contentConfig.component), normalizeProps(mergeProps({ key: 0 }, _ctx.contentConfig.props || {})), null, 16))
@@ -38938,11 +38979,11 @@ const _sfc_main$1j = {
 
 };
 
-const _hoisted_1$1v = { class: "chart-sidebar" };
+const _hoisted_1$1u = { class: "chart-sidebar" };
 const _hoisted_2$12 = ["onClick"];
 
 function _sfc_render$1i(_ctx, _cache, $props, $setup, $data, $options) {
-  return (openBlock(), createElementBlock("div", _hoisted_1$1v, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$1u, [
     (openBlock(true), createElementBlock(Fragment, null, renderList($props.menu, (m) => {
       return (openBlock(), createElementBlock("div", {
         key: m.key,
@@ -39081,7 +39122,7 @@ const _sfc_main$1i = {
   }
 };
 
-const _hoisted_1$1u = { class: "d-flex-c" };
+const _hoisted_1$1t = { class: "d-flex-c" };
 const _hoisted_2$11 = { class: "d-flex-c" };
 const _hoisted_3$R = { class: "d-flex-c" };
 const _hoisted_4$J = { class: "d-flex-c" };
@@ -39117,7 +39158,7 @@ function _sfc_render$1h(_ctx, _cache, $props, $setup, $data, $options) {
             default: withCtx(() => [
               createVNode(_component_el_form_item, null, {
                 default: withCtx(() => [
-                  createElementVNode("div", _hoisted_1$1u, [
+                  createElementVNode("div", _hoisted_1$1t, [
                     createVNode(_component_el_select, {
                       modelValue: $data.form.fontWeight,
                       "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.fontWeight) = $event)),
@@ -39401,7 +39442,7 @@ const _sfc_main$1h = {
   }
 };
 
-const _hoisted_1$1t = { class: "xAix-cofig" };
+const _hoisted_1$1s = { class: "xAix-cofig" };
 const _hoisted_2$10 = {
   class: "plane-inner-bg",
   style: {"margin-bottom":"10px"}
@@ -39429,7 +39470,7 @@ function _sfc_render$1g(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_lineStyle = resolveComponent("lineStyle");
   const _component_el_form = resolveComponent("el-form");
 
-  return (openBlock(), createElementBlock("div", _hoisted_1$1t, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$1s, [
     createVNode(_component_el_form, {
       ref: 'form-xAix',
       model: $data.basic,
@@ -39911,7 +39952,7 @@ const _sfc_main$1g = {
   }
 };
 
-const _hoisted_1$1s = { class: "yAix-cofig" };
+const _hoisted_1$1r = { class: "yAix-cofig" };
 const _hoisted_2$$ = {
   class: "plane-inner-bg",
   style: {"margin-bottom":"10px"}
@@ -39939,7 +39980,7 @@ function _sfc_render$1f(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_lineStyle = resolveComponent("lineStyle");
   const _component_el_form = resolveComponent("el-form");
 
-  return (openBlock(), createElementBlock("div", _hoisted_1$1s, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$1r, [
     createVNode(_component_el_form, {
       ref: 'form-yAix',
       size: "small",
@@ -40383,7 +40424,7 @@ const _sfc_main$1f = {
   }
 };
 
-const _hoisted_1$1r = { class: "axis-config-view" };
+const _hoisted_1$1q = { class: "axis-config-view" };
 const _hoisted_2$_ = { style: {"width":"100px"} };
 const _hoisted_3$O = { class: "axis-header" };
 
@@ -40394,7 +40435,7 @@ function _sfc_render$1e(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_YaxisConfig = resolveComponent("YaxisConfig");
   const _component_XaxisConfig = resolveComponent("XaxisConfig");
 
-  return (openBlock(), createElementBlock("div", _hoisted_1$1r, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$1q, [
     createElementVNode("div", _hoisted_2$_, [
       createVNode(_component_el_switch, {
         modelValue: $data.isTransposition,
@@ -40515,7 +40556,7 @@ const _sfc_main$1e = {
   }
 };
 
-const _hoisted_1$1q = { class: "grid-config" };
+const _hoisted_1$1p = { class: "grid-config" };
 const _hoisted_2$Z = { style: {"width":"80px"} };
 
 function _sfc_render$1d(_ctx, _cache, $props, $setup, $data, $options) {
@@ -40525,7 +40566,7 @@ function _sfc_render$1d(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_row = resolveComponent("el-row");
   const _component_el_form = resolveComponent("el-form");
 
-  return (openBlock(), createElementBlock("div", _hoisted_1$1q, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$1p, [
     createElementVNode("div", _hoisted_2$Z, [
       createVNode(_component_el_switch, {
         modelValue: $data.form.show,
@@ -40951,13 +40992,13 @@ const _sfc_main$1d = {
 
 /* unplugin-vue-components disabled */
 
-const _hoisted_1$1p = { class: "legend-config" };
+const _hoisted_1$1o = { class: "legend-config" };
 
 function _sfc_render$1c(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_EfForm = resolveComponent("EfForm");
   const _component_CollapseItem = resolveComponent("CollapseItem");
 
-  return (openBlock(), createElementBlock("div", _hoisted_1$1p, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$1o, [
     createVNode(_component_CollapseItem, {
       modelValue: $data.form.show,
       "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.form.show) = $event)),
@@ -41078,7 +41119,7 @@ const _sfc_main$1c = {
   }
 };
 
-const _hoisted_1$1o = { class: "xAix-cofig" };
+const _hoisted_1$1n = { class: "xAix-cofig" };
 const _hoisted_2$Y = { class: "d-flex-c" };
 const _hoisted_3$N = { class: "d-flex-c" };
 
@@ -41097,7 +41138,7 @@ function _sfc_render$1b(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_collapse = resolveComponent("el-collapse");
   const _component_el_form = resolveComponent("el-form");
 
-  return (openBlock(), createElementBlock("div", _hoisted_1$1o, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$1n, [
     createVNode(_component_el_form, {
       ref: 'form-xAix',
       model: $data.basic,
@@ -41454,7 +41495,7 @@ const _sfc_main$1b = {
   }
 };
 
-const _hoisted_1$1n = { class: "yAix-cofig" };
+const _hoisted_1$1m = { class: "yAix-cofig" };
 const _hoisted_2$X = {
   class: "plane-inner-bg",
   style: {"margin-bottom":"10px"}
@@ -41482,7 +41523,7 @@ function _sfc_render$1a(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_lineStyle = resolveComponent("lineStyle");
   const _component_el_form = resolveComponent("el-form");
 
-  return (openBlock(), createElementBlock("div", _hoisted_1$1n, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$1m, [
     createVNode(_component_el_form, {
       ref: 'form-yAix',
       size: "small",
@@ -41889,7 +41930,7 @@ const _sfc_main$1a = {
   }
 };
 
-const _hoisted_1$1m = { class: "axis-config-view" };
+const _hoisted_1$1l = { class: "axis-config-view" };
 const _hoisted_2$W = { class: "axis-header" };
 
 function _sfc_render$19(_ctx, _cache, $props, $setup, $data, $options) {
@@ -41898,7 +41939,7 @@ function _sfc_render$19(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_YaxisConfig = resolveComponent("YaxisConfig");
   const _component_XaxisConfig = resolveComponent("XaxisConfig");
 
-  return (openBlock(), createElementBlock("div", _hoisted_1$1m, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$1l, [
     createElementVNode("div", _hoisted_2$W, [
       createVNode(_component_el_tabs, {
         modelValue: $data.axisActive,
@@ -42002,7 +42043,7 @@ const _sfc_main$19 = {
   }
 };
 
-const _hoisted_1$1l = { class: "filter-panel" };
+const _hoisted_1$1k = { class: "filter-panel" };
 const _hoisted_2$V = { class: "filter-content" };
 const _hoisted_3$L = {
   key: 0,
@@ -42017,7 +42058,7 @@ const _hoisted_5$x = {
 function _sfc_render$18(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_BKCodeCom = resolveComponent("BKCodeCom");
 
-  return (openBlock(), createElementBlock("div", _hoisted_1$1l, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$1k, [
     createElementVNode("div", _hoisted_2$V, [
       (!$props.type)
         ? (openBlock(), createElementBlock("div", _hoisted_3$L, [
@@ -42115,7 +42156,7 @@ const _sfc_main$18 = {
   }
 };
 
-const _hoisted_1$1k = { class: "tooltip-config" };
+const _hoisted_1$1j = { class: "tooltip-config" };
 const _hoisted_2$U = { class: "d-flex-c" };
 const _hoisted_3$K = { class: "d-flex" };
 const _hoisted_4$E = ["onClick"];
@@ -42138,7 +42179,7 @@ function _sfc_render$17(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_CollapseItem = resolveComponent("CollapseItem");
   const _component_InterfaceFilterConfig = resolveComponent("InterfaceFilterConfig");
 
-  return (openBlock(), createElementBlock("div", _hoisted_1$1k, [
+  return (openBlock(), createElementBlock("div", _hoisted_1$1j, [
     createVNode(_component_CollapseItem, {
       modelValue: $data.form.show,
       "onUpdate:modelValue": _cache[10] || (_cache[10] = $event => (($data.form.show) = $event)),
@@ -42351,24 +42392,6 @@ const baseChartComponents = Object.keys(requireComponent).reduce((preModule, cur
   return preModule
 }, {});
 
-const _hoisted_1$1j = {
-  viewBox: "0 0 24 24",
-  width: "1.2em",
-  height: "1.2em"
-};
-
-function render$f(_ctx, _cache) {
-  return (openBlock(), createElementBlock("svg", _hoisted_1$1j, [...(_cache[0] || (_cache[0] = [
-    createElementVNode("path", {
-      fill: "currentColor",
-      d: "M7 6V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3v3c0 .552-.45 1-1.007 1H4.007A1 1 0 0 1 3 21l.003-14c0-.552.45-1 1.006-1zm2 0h8v10h2V4H9zm-2 5v2h6v-2zm0 4v2h6v-2z"
-    }, null, -1)
-  ]))]))
-}
-
-const __unplugin_components_0$4 = { name: 'ri-file-copy2-fill', render: render$f };
-/* vite-plugin-components disabled */
-
 const _hoisted_1$1i = {
   viewBox: "0 0 24 24",
   width: "1.2em",
@@ -42479,7 +42502,7 @@ function _sfc_render$16(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_button = resolveComponent("el-button");
   const _component_List = resolveComponent("List");
   const _component_i_ri_layout_left_fill = __unplugin_components_0$3;
-  const _component_i_ri_file_copy_2_fill = __unplugin_components_0$4;
+  const _component_i_ri_file_copy_2_fill = __unplugin_components_0$9;
   const _component_DeleteFilled = resolveComponent("DeleteFilled");
   const _component_el_collapse_item = resolveComponent("el-collapse-item");
   const _component_draggable = resolveComponent("draggable");
@@ -75508,7 +75531,7 @@ function _sfc_render$N(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_CirclePlus = resolveComponent("CirclePlus");
   const _component_el_icon = resolveComponent("el-icon");
   const _component_el_button = resolveComponent("el-button");
-  const _component_i_ri_file_copy_2_fill = __unplugin_components_0$4;
+  const _component_i_ri_file_copy_2_fill = __unplugin_components_0$9;
   const _component_DeleteFilled = resolveComponent("DeleteFilled");
   const _component_el_collapse_item = resolveComponent("el-collapse-item");
   const _component_el_collapse = resolveComponent("el-collapse");
@@ -81763,7 +81786,7 @@ function _sfc_render$z(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_QueryArea = resolveComponent("QueryArea");
   const _component_BKTabLayout = resolveComponent("BKTabLayout");
   const _component_BKGridLayoutContent = resolveComponent("BKGridLayoutContent");
-  const _component_i_ri_pushpin_fill = __unplugin_components_0$7;
+  const _component_i_ri_pushpin_fill = __unplugin_components_0$6;
   const _component_Plus = resolveComponent("Plus");
   const _component_el_icon = resolveComponent("el-icon");
   const _component_el_dropdown_item = resolveComponent("el-dropdown-item");
@@ -84091,7 +84114,7 @@ function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_form = resolveComponent("el-form");
   const _component_CirclePlusFilled = resolveComponent("CirclePlusFilled");
   const _component_el_icon = resolveComponent("el-icon");
-  const _component_i_ri_file_copy_2_fill = __unplugin_components_0$4;
+  const _component_i_ri_file_copy_2_fill = __unplugin_components_0$9;
   const _component_DeleteFilled = resolveComponent("DeleteFilled");
   const _component_BKBasicChartConfig = resolveComponent("BKBasicChartConfig");
 
@@ -89947,7 +89970,7 @@ const _hoisted_6$5 = {
 };
 
 function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_i_ri_add_line = __unplugin_components_0$9;
+  const _component_i_ri_add_line = __unplugin_components_0$8;
   const _component_i_ri_draggable = __unplugin_components_1$1;
   const _component_el_option = resolveComponent("el-option");
   const _component_el_select = resolveComponent("el-select");
@@ -90284,7 +90307,7 @@ const _hoisted_6$3 = {
 };
 
 function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_i_ri_add_line = __unplugin_components_0$9;
+  const _component_i_ri_add_line = __unplugin_components_0$8;
   const _component_i_ri_draggable = __unplugin_components_1$1;
   const _component_el_option = resolveComponent("el-option");
   const _component_el_select = resolveComponent("el-select");

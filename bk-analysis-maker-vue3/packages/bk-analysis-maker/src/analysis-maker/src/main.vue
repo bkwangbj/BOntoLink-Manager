@@ -106,21 +106,24 @@
             class="am-switch"
             size="small"
           />
-          <!-- 保存(split:保存 / 另存为探索布局) -->
+          <!-- 保存(split:主按钮=保存;下拉=保存 / 另存为,均带图标) -->
           <el-dropdown
             v-if="setMode"
             split-button
             type="primary"
             size="small"
             trigger="click"
+            placement="bottom-end"
             class="save-dropdown"
+            popper-class="save-dd-menu"
             @click="savePageConfig(false)"
             @command="onSaveCommand"
           >
             <i-ri-save-fill /><span style="margin-left:3px">保存</span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item command="saveAs">另存为探索布局</el-dropdown-item>
+                <el-dropdown-item command="save"><i-ri-save-fill /><span>保存</span></el-dropdown-item>
+                <el-dropdown-item command="saveAs"><i-ri-file-copy-2-fill /><span>另存为</span></el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -561,6 +564,16 @@ export default {
     defaultParams: {
       type: Array,
       default: () => []
+    },
+    // 初始是否为设计模式(默认预览);宿主「新建看板」时置 true 直接进设计模式
+    defaultDesignMode: {
+      type: Boolean,
+      default: false
+    },
+    // 嵌入时画布宽度自适应(铺满容器):默认主题强制 pageWidthMode=adaptive(不改 colNum)
+    embedFluidWidth: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['invokeAMakerMethod'],
@@ -605,7 +618,7 @@ export default {
       showBodyPannel: false,
       expand: false,
       showGridLine: false,
-      designMode: false, // 设计/预览模式,默认预览;仅设计模式显示编辑类按钮
+      designMode: this.defaultDesignMode, // 设计/预览模式,默认预览(可由 defaultDesignMode 初始为设计)
       rightTab: 'base',
       dataMappingVisible: false,
       autoSave: false,
@@ -1369,7 +1382,9 @@ export default {
       else if (cmd === 'addQuery') this.addQuery()
     },
     onSaveCommand (cmd) {
-      if (cmd === 'saveAs') {
+      if (cmd === 'save') {
+        this.savePageConfig(false)
+      } else if (cmd === 'saveAs') {
         if (this.embedOnSaveAs) this.embedOnSaveAs()
         else this.savePageConfig(true)
       }
@@ -1656,7 +1671,7 @@ export default {
       }
       const deConfig = this.getDefaultTheme(true)
       const configData = utils.deepClone(deConfig.config)
-      if (this.isApp) {
+      if (this.isApp || this.embedFluidWidth) {
         configData.pageLayout.pageWidthMode = 'adaptive'
         configData.pageLayout.pageMinWidth = ''
       }

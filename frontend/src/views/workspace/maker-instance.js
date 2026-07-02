@@ -135,6 +135,11 @@ export function buildPageConfig (classId, columns, baseQuery = {}, linkGroups = 
   return { layout, decorateLayout: [], colNum: 12, rowHeight: 30, autoRowHeight: 30, maxRows: Infinity, varConfig: [], margin: [10, 10] }
 }
 
+/** 空白看板配置:layout 为空,用于「新建看板」打开全空设计画布(区别于按数据自动出图) */
+export function buildBlankPageConfig () {
+  return { layout: [], decorateLayout: [], colNum: 12, rowHeight: 30, autoRowHeight: 30, maxRows: Infinity, varConfig: [], margin: [10, 10] }
+}
+
 // 可绑实例数据的图表类型(数据形态 = 分组 + 计数,{name,value});其它(地图/仪表盘/排名/代码…)跳过
 const EMBED_BINDABLE = ['BKBarChart', 'BKPieChart']
 

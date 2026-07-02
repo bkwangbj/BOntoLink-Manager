@@ -60,6 +60,10 @@ public interface SysDataSourceMapper {
                       @Param("responseMs") int responseMs,
                       @Param("activeConn") int activeConn);
 
+    // 单独更新数据源最大连接数（连接池 resize 时使用）
+    @Update("UPDATE sys_data_source SET max_conn=#{maxConn} WHERE id=#{id}")
+    int updateMaxConn(@Param("id") String id, @Param("maxConn") int maxConn);
+
     // 删除数据源
     @Delete("DELETE FROM sys_data_source WHERE id = #{id}")
     int delete(@Param("id") String id);

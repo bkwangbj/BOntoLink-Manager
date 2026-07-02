@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 外部数据源管理接口：支持数据源的 CRUD、连通性测试及运行状态监控
+ * 外部数据源管理接口：支持数据源的 CRUD、连通性测试、运行状态监控及连接池管理。
  */
 @RestController
 @RequestMapping("/api/datasource")
@@ -69,5 +69,31 @@ public class DataSourceController {
     @GetMapping("/{id}/monitor")
     public R<Map<String, Object>> monitor(@PathVariable String id) {
         return R.ok(service.monitor(id));
+    }
+
+    // ========== 连接池管理端点 ==========
+
+    /** 获取数据源连接池实时运行时指标（MXBean 数据） */
+    @GetMapping("/{id}/pool")
+    public R<Map<String, Object>> poolMetrics(@PathVariable String id) {
+        return R.ok(service.getPoolMetrics(id));
+    }
+
+    /** 热刷新连接池（销毁 + 用当前配置重建） */
+    @PostMapping("/{id}/pool/refresh")
+    public R<?> refreshPool(@PathVariable String id) {
+        service.refreshPool(id);
+        return R.ok();
+    }
+
+    /** 动态调整连接池最大大小，body 格式: {"maxPoolSize": 20} */
+    @PostMapping("/{id}/pool/resize")
+    public R<?> resizePool(@PathVariable String id, @RequestBody Map<String, Integer> body) {
+        Integer newMax = body.get("maxPoolSize");
+        if (newMax == null || newMax <= 0) {
+            return R.error(400, "maxPoolSize 必须 > 0");
+        }
+        service.resizePool(id, newMax);
+        return R.ok();
     }
 }
