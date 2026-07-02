@@ -59,7 +59,9 @@ const props = defineProps({
   // 宿主工具栏插槽选择器:设置后 maker 顶栏 Teleport 到该处(看板与子头工具栏合并成一行)
   toolbarTarget: { type: String, default: '' },
   // 已保存的看板配置(整个 layoutConfig);有则用它恢复存档,无则按数据特征自动生成
-  savedConfig: { type: Object, default: null }
+  savedConfig: { type: Object, default: null },
+  // 初始以设计模式挂载(宿主「新建看板」用:预览态点新建直接进设计)
+  startInDesign: { type: Boolean, default: false }
 })
 const emit = defineEmits(['save-as', 'save-page'])
 
@@ -134,6 +136,8 @@ async function mount () {
         layoutTools: ['addItem', 'addTabLayout'],
         isBasicMode: false,
         defaultThemeKey: themeKey,
+        defaultDesignMode: props.startInDesign,
+        embedFluidWidth: true,
         embedToolbarTarget: props.toolbarTarget,
         embedOnSaveAs: () => emit('save-as'),
         // maker「保存」→ 合并图表配置后把完整 layoutConfig 抛给宿主入库
@@ -142,7 +146,7 @@ async function mount () {
           if (method === 'savePageConfig') {
             const merged = JSON.parse(JSON.stringify(data))
             mergeFinal(merged, finalConfig)
-            emit('save-page', merged)
+            emit('save-page', merged, isAuto)
             if (typeof cb === 'function') cb()
           }
         }

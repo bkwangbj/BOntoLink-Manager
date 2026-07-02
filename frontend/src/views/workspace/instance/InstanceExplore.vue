@@ -110,7 +110,7 @@
           <div class="ixe-relmenu-item" @click="addRelColumn()">
             <span v-html="BL.icon('columns', 13, 'var(--bl-text-2)')"></span>加为显示列
           </div>
-          <div class="ixe-relmenu-item" @click="addRelFilter($event)">
+          <div class="ixe-relmenu-item" @click="addRelFilter()">
             <span v-html="BL.icon('filter', 13, 'var(--bl-text-2)')"></span>加为筛选条件
           </div>
         </div>
@@ -119,8 +119,17 @@
         <FilterDrawer v-if="filterField" :field="filterField" :options="filterOptions" :model="filterModel" :anchor="filterAnchor"
                       @confirm="onFilterConfirm" @cancel="filterField=null" />
       </div>
-      <!-- 保存整合实例探索(查询条件 + 显示形式 + 表格) -->
-      <button v-if="classId" class="ixe-save" @click="onSave" v-html="iconText('save','保存')"></button>
+      <!-- 保存 split-button:仅列表模式(看板模式由 maker 自带「保存 ▾」走单独一套) -->
+      <div v-if="classId && viewMode!=='charts'" class="ixe-savegrp" v-click-outside="()=>saveMenu=false">
+        <button class="ixe-savegrp-main" @click="doSave" v-html="iconText('save','保存')"></button>
+        <button class="ixe-savegrp-caret" title="更多" @click.stop="saveMenu=!saveMenu"
+                v-html="BL.icon('chevronDown', 13, '#fff')"></button>
+        <div v-if="saveMenu" class="ixe-savegrp-menu" @click.stop>
+          <div class="ixe-savegrp-item" @click="doSave"><span v-html="BL.icon('save', 13, 'var(--bl-text-2)')"></span>保存</div>
+          <div class="ixe-savegrp-item" @click="saveAs"><span v-html="BL.icon('copy', 13, 'var(--bl-text-2)')"></span>另存为</div>
+          <div class="ixe-savegrp-item" @click="newDesign"><span v-html="BL.icon('file', 13, 'var(--bl-text-2)')"></span>新建</div>
+        </div>
+      </div>
     </div>
 
     <!-- 子头:视图页签(前) + 布局名 + 结果数 -->
@@ -137,21 +146,26 @@
       <!-- maker 顶栏 Teleport 到这里(看板模式,靠右,与布局选择同行) -->
       <div v-show="viewMode==='charts'" id="ixe-maker-tools" class="ixe-maker-tools"></div>
       <div class="ixe-layout-sel" @click.stop="layoutMenu=!layoutMenu" v-click-outside="()=>layoutMenu=false">
-        <span class="bl-truncate">{{ currentDesignId ? designName : defaultLayoutName }}</span>
+        <span class="bl-truncate">{{ currentDesignId ? designName : (draftName || defaultLayoutName) }}</span>
         <span v-html="BL.icon('chevronDown', 11)"></span>
         <div v-if="layoutMenu" class="ixe-layout-menu" @click.stop>
           <div class="ixe-layout-item" :class="!currentDesignId && 'is-on'" @click="resetDesign">{{ defaultLayoutName }}</div>
-          <template v-if="designsForType.length">
+          <template v-if="designsForMode.length">
             <div class="ixe-layout-sep"></div>
-            <div v-for="d in designsForType" :key="d.id" class="ixe-layout-item" :class="d.id===currentDesignId && 'is-on'"
+            <div v-for="d in designsForMode" :key="d.id" class="ixe-layout-item" :class="d.id===currentDesignId && 'is-on'"
                  @click="applyDesign(d)">
               <span class="bl-grow bl-truncate">{{ d.name }}</span>
               <button class="ixe-layout-del" title="删除" @click.stop="removeDesign(d)" v-html="BL.icon('trash', 12)"></button>
             </div>
           </template>
-          <div class="ixe-layout-sep"></div>
-          <div class="ixe-layout-item ixe-layout-new" @click="onSave"
-               v-html="iconText2('plus', saveAsLabel)"></div>
+          <div v-else class="ixe-layout-empty">{{ viewMode==='charts' ? '暂无保存的看板' : '暂无保存的列表' }}</div>
+          <!-- 看板模式:新建看板(保存/另存为由 maker 自带按钮承担) -->
+          <template v-if="viewMode==='charts'">
+            <div class="ixe-layout-sep"></div>
+            <div class="ixe-layout-item ixe-layout-new" @click="newDashboard">
+              <span v-html="BL.icon('file', 13, 'var(--bl-primary)')"></span><span>新建看板</span>
+            </div>
+          </template>
         </div>
       </div>
       <span v-if="viewMode!=='charts'" class="ixe-result-badge">{{ total.toLocaleString() }} 条结果</span>
@@ -164,8 +178,9 @@
       <!-- 看板模式:内嵌数据可视化设计器(按数据特征自动出图,可增删改) -->
       <MakerEmbed v-if="viewMode==='charts'" ref="chartsRef" class="ixe-dash" :class-id="classId"
                   :columns="displayColumns" :filter-params="filterParams" :saved-config="savedConfig"
+                  :start-in-design="dashStartDesign"
                   toolbar-target="#ixe-maker-tools"
-                  @save-as="onSave" @save-page="onSavePage" />
+                  @save-as="saveAs" @save-page="onSavePage" />
 
       <!-- 列表模式:列表探索(滚动加载 + 预览/多实例/比较) -->
       <InstanceListView v-else class="ixe-listview" :class-id="classId" :type-name="curType?.display_name"
@@ -179,7 +194,7 @@
     <div v-if="saveModal" class="ixe-save-mask" @click.self="saveModal=false">
       <div class="ixe-save-modal">
         <div class="ixe-save-hd">
-          <span>{{ viewMode==='charts' ? '保存图表' : '保存查询或列表' }}</span>
+          <span>{{ sdMode==='new' ? '新建图表' : (viewMode==='charts' ? '保存图表' : '保存查询或列表') }}</span>
           <button class="ixe-save-x" @click="saveModal=false" v-html="BL.icon('x', 16)"></button>
         </div>
         <div class="ixe-save-body">
@@ -258,6 +273,7 @@ import { instanceApi } from '@/api'
 import FilterDrawer from './FilterDrawer.vue'
 import MakerEmbed from '../MakerEmbed.vue'
 import InstanceListView from './InstanceListView.vue'
+import { buildBlankPageConfig } from '../maker-instance'
 import { useDesigns } from './designs.js'
 
 const props = defineProps({
@@ -284,11 +300,8 @@ const layoutMenu = ref(false)
 const designName = ref('默认探索布局')
 /* 默认布局的显示名:看板模式叫「默认看板」,列表模式叫「默认列表」(仅展示,内部判定不变) */
 const defaultLayoutName = computed(() => viewMode.value === 'charts' ? '默认看板' : '默认列表')
-/* 「另存为新…」按钮文案:看板→新设计,列表→新列表 */
-const saveAsLabel = computed(() => viewMode.value === 'charts' ? '另存为新设计…' : '另存为新列表…')
 const chartsRef = ref(null)
 function iconText(ic, t) { return `${BL.icon(ic, 13, '#fff')}<span style="margin-left:5px">${t}</span>` }
-function iconText2(ic, t) { return `${BL.icon(ic, 12)}<span style="margin-left:5px">${t}</span>` }
 function iconText3(ic, t) { return `${BL.icon(ic, 12, 'var(--bl-text-3)')}<span style="margin-left:3px">${t}</span>` }
 
 /* 跳转到可视化制作(大屏),带上当前对象类型 + 筛选 */
@@ -301,10 +314,16 @@ function openMaker() {
 }
 
 /* —— 保存设计 / 模版(后端入库) —— */
-const { listFor, save: saveDesign, remove: removeDesignStore, getDefault, saveDefault } = useDesigns()
+const { listFor, save: saveDesign, update: updateDesign, remove: removeDesignStore, getDefault, saveDefault } = useDesigns()
 const currentDesignId = ref(null)
 const designsForType = ref([])              // 当前对象类型的命名设计列表(异步加载)
+/* 布局下拉只列当前模式的设计:看板模式列看板设计,列表模式列列表设计 */
+const designsForMode = computed(() => designsForType.value.filter(d => (d.viewMode || 'charts') === viewMode.value))
+/* 记住每个模式各自选中的设计 id,切换模式时恢复(避免切走再切回丢失所选看板) */
+const lastByMode = reactive({ charts: null, list: null })
 const savedConfig = ref(null)               // 当前看板的存档(layoutConfig);null=按数据特征自动生成
+const dashStartDesign = ref(false)          // 下一次看板挂载是否直接进设计模式(新建看板用)
+const draftName = ref('')                    // 新建看板/列表的草稿名(未保存时用于选择器标签显示)
 
 async function loadDesigns() {
   try { designsForType.value = classId.value ? await listFor(classId.value) : [] }
@@ -314,18 +333,36 @@ async function loadDefaultDash() {
   try { savedConfig.value = classId.value ? await getDefault(classId.value) : null }
   catch { savedConfig.value = null }
 }
-/* maker「保存」→ 把完整布局存为该对象类型的默认探索布局 */
-async function onSavePage(config) {
+/* maker「保存」→ 选中命名看板则原地更新该看板;默认看板保持自动生成不被覆盖(手动保存转另存为) */
+async function onSavePage(config, isAuto) {
   if (!classId.value || !config) return
-  try { await saveDefault(classId.value, config); BL.success('看板已保存') }
-  catch { /* http 拦截器已弹错误 */ }
+  if (currentDesignId.value) {
+    const orig = designsForType.value.find(d => d.id === currentDesignId.value) || {}
+    const { id, savedAt, ...rest } = orig
+    try {
+      await updateDesign(currentDesignId.value, {
+        ...rest, name: designName.value, kind: orig.kind || 'query', viewMode: 'charts',
+        classId: classId.value, className: curType.value?.display_name || '',
+        icon: curType.value?.icon || 'search', color: curType.value?.color || '#165DFF',
+        layoutConfig: config
+      })
+      await loadDesigns()
+      BL.success(`已保存到「${designName.value}」`)
+    } catch { /* http 拦截器已弹错误 */ }
+  } else if (!isAuto) {
+    // 默认看板是系统自动生成视图,不覆盖:手动保存 → 另存为命名看板
+    saveAs()
+  }
 }
 
 /* 列表模式下勾选的实例 id */
 const listSelectedIds = ref([])
 
+/* 保存 split-button 菜单开合 */
+const saveMenu = ref(false)
 /* 保存弹框表单 */
 const saveModal = ref(false)
+const sdMode = ref('save')            // save(保存/另存为当前) | new(新建空看板)
 const sdKind = ref('query')           // query(动态查询) | list(静态列表)
 const sdScope = ref('all')            // all(全部) | selected(已选)
 const sdName = ref('')
@@ -334,23 +371,52 @@ const sdVisibility = ref('private')   // private | public
 const sdProject = ref('')
 const sdErr = ref('')
 
-function onSave() {
-  layoutMenu.value = false
+/* 另存为新列表:打开命名弹框,始终创建新设计 */
+function saveAs() {
+  layoutMenu.value = false; saveMenu.value = false
+  sdMode.value = 'save'
   sdKind.value = viewMode.value === 'list' ? 'list' : 'query'
   sdScope.value = listSelectedIds.value.length ? 'selected' : 'all'
-  sdName.value = designName.value === '默认探索布局' ? '' : designName.value
+  const base = (designName.value && !['默认探索布局', '新列表', '新看板'].includes(designName.value)) ? designName.value : ''
+  sdName.value = base ? base + ' 副本' : ''
   sdDesc.value = ''
   sdVisibility.value = 'private'
   sdProject.value = ''
   sdErr.value = ''
   saveModal.value = true
 }
+/* 保存(主按钮):当前是已命名列表 → 原地覆盖;否则(默认/新建未命名)→ 转另存为需命名 */
+async function doSave() {
+  saveMenu.value = false
+  if (!classId.value) return
+  if (!currentDesignId.value) { saveAs(); return }
+  const orig = designsForType.value.find(d => d.id === currentDesignId.value) || {}
+  const { id, savedAt, ...rest } = orig
+  const payload = {
+    ...rest,
+    name: designName.value,
+    kind: orig.kind || (viewMode.value === 'list' ? 'list' : 'query'),
+    classId: classId.value, className: curType.value?.display_name || '',
+    icon: curType.value?.icon || 'search', color: curType.value?.color || '#165DFF',
+    kw: kw.value, pills: JSON.parse(JSON.stringify(pills.value)),
+    sort: sort.value, order: order.value, viewMode: viewMode.value,
+    layoutConfig: (viewMode.value === 'charts' && chartsRef.value) ? chartsRef.value.getConfig() : (orig.layoutConfig || null)
+  }
+  try {
+    const d = await updateDesign(currentDesignId.value, payload)
+    designName.value = d.name
+    await loadDesigns()
+    BL.success('已保存')
+  } catch { /* http 拦截器已弹错误 */ }
+}
 async function confirmSave() {
   const name = sdName.value.trim()
   if (!name) { sdErr.value = '请输入名称'; return }
-  const useSel = sdKind.value === 'list' && sdScope.value === 'selected' && listSelectedIds.value.length
-  // 命名设计同时存当前看板布局(layoutConfig),应用时可整盘恢复
-  const layoutConfig = (viewMode.value === 'charts' && chartsRef.value) ? chartsRef.value.getConfig() : null
+  const isNew = sdMode.value === 'new'
+  const useSel = !isNew && sdKind.value === 'list' && sdScope.value === 'selected' && listSelectedIds.value.length
+  // 新建:空白布局 + 清空上下文;保存/另存为:存当前布局与筛选
+  const layoutConfig = isNew ? buildBlankPageConfig()
+    : ((viewMode.value === 'charts' && chartsRef.value) ? chartsRef.value.getConfig() : null)
   try {
     const d = await saveDesign({
       name,
@@ -364,21 +430,30 @@ async function confirmSave() {
       icon: curType.value?.icon || 'search',
       color: curType.value?.color || '#165DFF',
       fixedTitle: props.fixedTitle || '',
-      kw: kw.value,
-      pills: JSON.parse(JSON.stringify(pills.value)),
-      sort: sort.value, order: order.value,
+      kw: isNew ? '' : kw.value,
+      pills: isNew ? [] : JSON.parse(JSON.stringify(pills.value)),
+      sort: isNew ? '' : sort.value, order: isNew ? 'asc' : order.value,
       viewMode: viewMode.value,
       layoutConfig
     })
     currentDesignId.value = d.id
     designName.value = d.name
+    draftName.value = ''
     saveModal.value = false
+    if (isNew) {
+      pills.value = []; kw.value = ''; sort.value = ''; order.value = 'asc'; page.value = 1; extraCols.value = []
+      if (viewMode.value === 'charts') { dashStartDesign.value = true; savedConfig.value = buildBlankPageConfig() }
+    }
     await loadDesigns()
-    BL.success(`已保存设计「${d.name}」`)
+    reload()
+    BL.success(isNew ? `已新建「${d.name}」` : `已保存设计「${d.name}」`)
   } catch { /* http 拦截器已弹错误 */ }
+  finally { sdMode.value = 'save' }
 }
 function applyDesign(d) {
   layoutMenu.value = false
+  dashStartDesign.value = false
+  draftName.value = ''
   currentDesignId.value = d.id
   designName.value = d.name
   kw.value = d.kw || ''
@@ -394,12 +469,39 @@ function applyDesign(d) {
 }
 function resetDesign() {
   layoutMenu.value = false
+  dashStartDesign.value = false
+  draftName.value = ''
   currentDesignId.value = null
   designName.value = '默认探索布局'
   pills.value = []; kw.value = ''; sort.value = ''; page.value = 1
-  // 回到默认探索布局(若该对象类型存过默认探索布局则恢复,否则自动生成)
-  loadDefaultDash()
+  // 默认看板 = 按数据自动生成(不加载/覆盖存档)
+  savedConfig.value = null
   reload()
+}
+/* 新建:全新空白列表/看板(清空筛选/关联列/排序,不加载默认布局,未保存) */
+function newDesign() {
+  layoutMenu.value = false
+  currentDesignId.value = null
+  designName.value = viewMode.value === 'charts' ? '新看板' : '新列表'
+  pills.value = []; kw.value = ''; sort.value = ''; order.value = 'asc'; page.value = 1
+  extraCols.value = []
+  // 看板:打开全空设计画布(而非按数据自动出图)且直接进设计模式;列表:无需 savedConfig
+  dashStartDesign.value = viewMode.value === 'charts'
+  savedConfig.value = viewMode.value === 'charts' ? buildBlankPageConfig() : null
+  reload()
+}
+/* 新建看板:打开命名弹框(名称/描述/可见性,与保存图表同款),确认后入库空看板并进设计模式空白画布 */
+function newDashboard() {
+  layoutMenu.value = false
+  sdMode.value = 'new'
+  sdKind.value = 'query'
+  sdScope.value = 'all'
+  sdName.value = ''
+  sdDesc.value = ''
+  sdVisibility.value = 'private'
+  sdProject.value = ''
+  sdErr.value = ''
+  saveModal.value = true
 }
 async function removeDesign(d) {
   const ok = await BL.confirm({ title: '删除设计', content: `确定删除「${d.name}」?`, danger: true, okText: '删除' })
@@ -478,7 +580,12 @@ function onPropClick(c, e) {
   // 关联对象属性:弹菜单选择加为显示列 / 筛选条件
   const l = links.value.find(x => x.targetClassId === panelSel.value)
   const rect = e.currentTarget.getBoundingClientRect()
-  relMenu.value = { col: c, targetClassId: panelSel.value, targetName: l?.targetClassName || selEntity.value.name, left: rect.left, top: rect.bottom + 4 }
+  // 记住属性行 rect:菜单挂其下方,筛选浮窗(燕尾)也锚定到属性行而非菜单项
+  relMenu.value = {
+    col: c, targetClassId: panelSel.value, targetName: l?.targetClassName || selEntity.value.name,
+    left: rect.left, top: rect.bottom + 4,
+    anchor: { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom, width: rect.width }
+  }
 }
 function addRelColumn() {
   const rm = relMenu.value; if (!rm) return
@@ -492,15 +599,15 @@ function addRelColumn() {
   }
   relMenu.value = null
 }
-function addRelFilter(ev) {
+function addRelFilter() {
   const rm = relMenu.value; if (!rm) return
-  const rect = ev.currentTarget.getBoundingClientRect()
+  const anchor = rm.anchor
   const field = relFieldKey(rm.targetClassId, rm.col.field)
   const label = `${rm.targetName}·${rm.col.label}`
   relFieldReg[field] = { field, label, dataType: rm.col.dataType }
   editingPillId.value = null
   relMenu.value = null
-  openFilter({ field, label, dataType: rm.col.dataType }, { currentTarget: { getBoundingClientRect: () => rect } })
+  openFilter({ field, label, dataType: rm.col.dataType }, { currentTarget: { getBoundingClientRect: () => anchor } })
 }
 /* 打开面板/切换类型时预取关联对象列(供数量统计 + 右侧展示) */
 watch(searchPanelOpen, (v) => { if (v) { panelSel.value = '__main__'; links.value.forEach(l => ensureLinkCols(l.targetClassId)) } else { relMenu.value = null } })
@@ -530,6 +637,7 @@ function selectType(id) {
   Object.keys(linkColsCache).forEach(k => delete linkColsCache[k])
   currentDesignId.value = null
   designName.value = '默认探索布局'
+  draftName.value = ''
   savedConfig.value = null
   loadMeta()
 }
@@ -545,7 +653,7 @@ async function loadMeta() {
     links.value = lk || []
   } catch { columns.value = []; links.value = [] }
   loadDesigns()
-  loadDefaultDash()
+  savedConfig.value = null   // 默认看板 = 按数据自动生成
   reload()
 }
 
@@ -670,6 +778,19 @@ const vClickOutside = {
   unmounted(el) { document.removeEventListener('mousedown', el.__h) }
 }
 
+/* 切换看板/列表模式:保存旧模式所选设计,恢复新模式上次所选(无则回到该模式默认) */
+watch(viewMode, (nv, ov) => {
+  if (ov) lastByMode[ov] = currentDesignId.value
+  const targetId = lastByMode[nv]
+  const d = targetId ? designsForType.value.find(x => x.id === targetId) : null
+  if (d) { applyDesign(d); return }              // 恢复该模式上次所选设计(含其布局/筛选)
+  // 该模式无历史选中 → 默认
+  currentDesignId.value = null
+  designName.value = '默认探索布局'
+  draftName.value = ''
+  dashStartDesign.value = false
+  savedConfig.value = null   // 默认看板/列表默认:看板按数据自动生成
+})
 watch(() => props.initialClassId, (v) => { if (v && v !== classId.value) selectType(v) })
 onMounted(() => { if (classId.value) loadMeta(); document.addEventListener('fullscreenchange', onFsChange) })
 onBeforeUnmount(() => { document.removeEventListener('fullscreenchange', onFsChange) })
@@ -691,9 +812,14 @@ onBeforeUnmount(() => { document.removeEventListener('fullscreenchange', onFsCha
 .ixe-fixed-title { display: flex; align-items: center; gap: 6px; flex-shrink: 0; font-size: 14px; color: var(--bl-text-1); padding: 4px 2px; }
 .ixe-maker { flex-shrink: 0; height: 34px; padding: 0 14px; border: 1px solid var(--bl-primary); border-radius: 6px; background: var(--bl-bg-1); color: var(--bl-primary); font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; }
 .ixe-maker:hover { background: var(--bl-primary-soft); }
-.ixe-save { flex-shrink: 0; height: 34px; padding: 0 16px; border: 0; border-radius: 6px; background: var(--bl-primary); color: #fff; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; }
-.ixe-save:hover { background: var(--bl-primary-hover, #0e42d2); }
-.ixe-save-sm { height: 28px; box-sizing: border-box; padding: 0 14px; font-size: 12.5px; }
+/* 保存 split-button:主按钮 + 右侧 caret,共用蓝底 */
+.ixe-savegrp { position: relative; flex-shrink: 0; display: inline-flex; height: 34px; border-radius: 6px; overflow: visible; }
+.ixe-savegrp-main { height: 34px; padding: 0 14px; border: 0; border-radius: 6px 0 0 6px; background: var(--bl-primary); color: #fff; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; }
+.ixe-savegrp-caret { height: 34px; width: 28px; border: 0; border-left: 1px solid rgba(255,255,255,.28); border-radius: 0 6px 6px 0; background: var(--bl-primary); color: #fff; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.ixe-savegrp-main:hover, .ixe-savegrp-caret:hover { background: var(--bl-primary-hover, #0e42d2); }
+.ixe-savegrp-menu { position: absolute; top: calc(100% + 6px); right: 0; min-width: 150px; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 8px; box-shadow: 0 8px 28px rgba(0,0,0,.14); z-index: 60; padding: 5px; }
+.ixe-savegrp-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 6px; font-size: 13px; color: var(--bl-text-1); cursor: pointer; }
+.ixe-savegrp-item:hover { background: var(--bl-bg-hover); color: var(--bl-primary); }
 
 /* 保存为探索设计 弹框 */
 .ixe-save-mask { position: fixed; inset: 0; z-index: 1300; background: rgba(0,0,0,.32); display: flex; align-items: center; justify-content: center; }
@@ -723,7 +849,7 @@ onBeforeUnmount(() => { document.removeEventListener('fullscreenchange', onFsCha
 .ixe-subhead { flex-shrink: 0; display: flex; align-items: center; gap: 10px; padding: 6px 16px; background: var(--bl-bg-1); border-bottom: 1px solid var(--bl-border); }
 .ixe-layout-sel { position: relative; display: flex; align-items: center; gap: 4px; height: 28px; box-sizing: border-box; padding: 0 10px; border: 1px solid var(--bl-border); border-radius: 6px; cursor: pointer; font-size: 13px; flex-shrink: 0; max-width: 200px; }
 .ixe-layout-sel:hover { border-color: var(--bl-primary-border); }
-.ixe-layout-menu { position: absolute; top: 100%; left: 0; margin-top: 6px; width: 200px; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 8px; box-shadow: 0 8px 28px rgba(0,0,0,.14); z-index: 50; padding: 6px; }
+.ixe-layout-menu { position: absolute; top: 100%; right: 0; left: auto; margin-top: 6px; width: 200px; max-width: min(200px, calc(100vw - 24px)); background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 8px; box-shadow: 0 8px 28px rgba(0,0,0,.14); z-index: 50; padding: 6px; }
 .ixe-layout-item { display: flex; align-items: center; gap: 6px; padding: 7px 8px; border-radius: 6px; cursor: pointer; font-size: 12.5px; }
 .ixe-layout-item:hover { background: var(--bl-bg-hover); }
 .ixe-layout-item.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); }
@@ -732,6 +858,7 @@ onBeforeUnmount(() => { document.removeEventListener('fullscreenchange', onFsCha
 .ixe-layout-item:hover .ixe-layout-del { display: inline-flex; }
 .ixe-layout-del:hover { color: #f53f3f; background: #fff1f0; }
 .ixe-layout-new { color: var(--bl-primary); }
+.ixe-layout-empty { font-size: 12px; color: var(--bl-text-3); padding: 8px; text-align: center; }
 .ixe-result-badge { font-size: 12px; color: var(--bl-primary); background: var(--bl-primary-soft); border-radius: 4px; padding: 3px 8px; flex-shrink: 0; }
 .ixe-pills-bar { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-width: 0; }
 
@@ -970,4 +1097,8 @@ onBeforeUnmount(() => { document.removeEventListener('fullscreenchange', onFsCha
 .mode-dd-menu .el-dropdown-menu__item { width: 96px; box-sizing: border-box; min-height: 0; height: auto; line-height: 1.4; gap: 8px; padding: 7px 10px; margin: 0; border-radius: 6px; font-size: 12.5px; }
 .mode-dd-menu .el-dropdown-menu__item svg { width: 14px; height: 14px; flex-shrink: 0; }
 .mode-dd-menu .el-dropdown-menu__item.is-cur { color: var(--bl-primary, #1f6aff); background: var(--bl-primary-soft, rgba(31,106,255,.08)); }
+/* maker 保存下拉(保存/另存为):与「设计/预览」下拉同款宽度+行高,统一 UI */
+.save-dd-menu .el-dropdown-menu { padding: 4px; }
+.save-dd-menu .el-dropdown-menu__item { width: 96px; box-sizing: border-box; min-height: 0; height: auto; line-height: 1.4; gap: 8px; padding: 7px 10px; margin: 0; border-radius: 6px; font-size: 12.5px; }
+.save-dd-menu .el-dropdown-menu__item svg { width: 14px; height: 14px; flex-shrink: 0; }
 </style>
