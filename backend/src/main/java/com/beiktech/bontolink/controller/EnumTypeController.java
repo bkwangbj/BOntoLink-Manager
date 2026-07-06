@@ -15,6 +15,7 @@ import java.util.*;
 public class EnumTypeController {
 
     @Autowired private EnumTypeMapper mapper;
+    @Autowired private com.beiktech.bontolink.mapper.BizGroupMapper groupMapper;
     @Autowired private com.beiktech.bontolink.service.EnumSyncService syncService;
 
     /* ===== 分组 ===== */
@@ -94,6 +95,7 @@ public class EnumTypeController {
     /** 删除枚举类型（级联删除枚举项和编码规则由 Mapper/数据库负责） */
     @DeleteMapping("/{id}")
     public R<?> deleteType(@PathVariable String id) {
+        groupMapper.deleteRefsByRefId(id, "enum_types");
         mapper.deleteType(id);
         return R.ok();
     }

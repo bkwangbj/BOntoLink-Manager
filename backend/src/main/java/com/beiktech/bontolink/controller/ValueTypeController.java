@@ -15,6 +15,7 @@ import java.util.*;
 public class ValueTypeController {
 
     @Autowired private ValueTypeMapper mapper;
+    @Autowired private com.beiktech.bontolink.mapper.BizGroupMapper groupMapper;
 
     /** 查询所有值类型列表 */
     @GetMapping
@@ -49,6 +50,7 @@ public class ValueTypeController {
     /** 删除值类型 */
     @DeleteMapping("/{id}")
     public R<?> delete(@PathVariable String id) {
+        groupMapper.deleteRefsByRefId(id, "value_types");
         mapper.delete(id);
         return R.ok();
     }

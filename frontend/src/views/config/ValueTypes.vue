@@ -165,6 +165,12 @@
                     <option v-for="d in domainOpts" :key="d.code" :value="d.code">{{ d.name }}</option>
                   </select>
                 </FieldRow>
+                <FieldRow label="所属分组" inline>
+                  <select class="bl-input" v-model="form.group_id">
+                    <option value="">— 未分组 —</option>
+                    <option v-for="g in filteredGroups" :key="g.id" :value="g.id">{{ g.group_name }}</option>
+                  </select>
+                </FieldRow>
                 <FieldRow label="状态" inline>
                   <div class="radio-group">
                     <label class="radio-item"><input type="radio" :value="1" v-model.number="form.status" /> 启用</label>
@@ -361,7 +367,7 @@ import { ref, computed, reactive, watch, onMounted, onBeforeUnmount, nextTick, h
 import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
-import { valueTypeApi, enumTypeApi, categoryApi } from '@/api'
+import { valueTypeApi, enumTypeApi, categoryApi, groupApi, groupRefApi } from '@/api'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 import EnumPickerModal from '@/components/EnumPickerModal.vue'
 import Pager from '@/components/Pager.vue'
@@ -420,6 +426,14 @@ function enumColor(e) {
   return '#165DFF'
 }
 const domainOpts = ref([])
+const groups = ref([])  // 全部分组（含 category_code）
+const vtGroupRef = ref(null)  // 当前值类型的分组绑定记录
+
+/* 按当前值类型的所属领域过滤分组（系统级跨领域分组始终显示） */
+const filteredGroups = computed(() => {
+  const domain = form.category_code || form.categoryCode || ''
+  return groups.value.filter(g => !g.domain_code || g.domain_code === domain)
+})
 const usageConfigsCache = ref([])  // 缓存 ont_valuetypes_usage_config,用于 openEdit 时回填 usageCfg
 const q = ref('')
 const filterStatus = ref('all')
@@ -516,6 +530,17 @@ async function load() {
   rows.value = await valueTypeApi.list().catch(() => [])
   enumTypes.value = await enumTypeApi.list().catch(() => [])
   usageConfigsCache.value = await valueTypeApi.listUsageConfigs().catch(() => [])
+  // 所有分组
+  if (!groups.value.length) {
+    const bizGroups = await groupApi.listAll().catch(() => [])
+    groups.value = (bizGroups || []).map(g => ({
+      id: g.id, parent_id: g.parentId || g.parent_id,
+      group_name: g.gname || g.gName || g.g_name || g.group_name || '',
+      category_code: g.categoryCode || g.category_code,
+      domain_code: g.domainCode || g.domain_code || '',
+      status: g.status || 'active'
+    }))
+  }
   // 业务领域候选
   if (!domainOpts.value.length) {
     const tree = await categoryApi.tree().catch(() => [])
@@ -537,6 +562,17 @@ onMounted(async () => {
 })
 watch(() => route.query.openId, applyOpenId)
 
+/* 切换领域时重置分组 */
+/** 加载当前值类型的分组绑定到 form.group_id */
+async function findVtGroupRef(id) {
+  try {
+    const refs = await groupRefApi.list('value_types').catch(() => [])
+    const ref = (refs || []).find(r => r.ref_id === id)
+    vtGroupRef.value = ref || null
+    form.group_id = ref ? (ref.groupId || ref.group_id || '') : ''
+  } catch { form.group_id = '' }
+}
+
 function deriveApi(label) {
   if (!label) return ''
   // 简化版:中文 → 取拼音首字母(无库支持时回退到英文/数字+下划线)
@@ -553,7 +589,8 @@ function onLabelInput() {
 
 function openCreate() {
   Object.keys(form).forEach(k => delete form[k])
-  Object.assign(form, { base_type: 'String', constraint_type: 'Length', status: 1, enum_id: '', category_code: selectedCategoryCode.value || '', default_usage_config_id: null, _apiTouched: false })
+  Object.assign(form, { base_type: 'String', constraint_type: 'Length', status: 1, enum_id: '', category_code: selectedCategoryCode.value || '', group_id: '', default_usage_config_id: null, _apiTouched: false })
+  vtGroupRef.value = null
   Object.keys(cfg).forEach(k => delete cfg[k]); cfg.min = 0; cfg.max = 255
   Object.assign(usageCfg, { max_select_level: 0, allow_non_leaf: 0, display_format: 'label' })
   testValue.value = ''
@@ -567,6 +604,8 @@ function openEdit(r) {
   Object.keys(form).forEach(k => delete form[k])
   Object.assign(form, r, { _apiTouched: true })
   form.status = Number(form.status ?? 1)
+  // 加载当前值类型的分组绑定
+  findVtGroupRef(r.id)
   Object.keys(cfg).forEach(k => delete cfg[k])
   try {
     const parsed = r.constraint_config ? (typeof r.constraint_config === 'string' ? JSON.parse(r.constraint_config) : r.constraint_config) : {}
@@ -644,8 +683,27 @@ async function submitForm() {
     rdfs_defined_by: form.rdfs_defined_by
   }
   // 失败时 http 拦截器已统一弹 BL.error 并 reject, 此处 await 抛出后不会执行下面的成功流程
-  if (form.id) await valueTypeApi.update(form.id, payload)
-  else         await valueTypeApi.create(payload)
+  let savedId = form.id
+  if (savedId) await valueTypeApi.update(savedId, payload)
+  else {
+    const created = await valueTypeApi.create(payload)
+    savedId = created?.id || null
+  }
+
+  // 同步分组绑定
+  try {
+    if (form.group_id && form.group_id !== (vtGroupRef.value?.groupId || vtGroupRef.value?.group_id || '')) {
+      if (vtGroupRef.value) {
+        await groupRefApi.removeByRef(savedId, 'value_types')
+        vtGroupRef.value = null
+      }
+      await groupRefApi.create({ ref_id: savedId, group_id: form.group_id, group_type: 'value_types' })
+    } else if (!form.group_id && vtGroupRef.value) {
+      await groupRefApi.removeByRef(savedId, 'value_types')
+      vtGroupRef.value = null
+    }
+  } catch (e) { /* 分组绑定失败不影响主流程 */ }
+
   BL.success('已保存')
   drawerOpen.value = false
   await load()

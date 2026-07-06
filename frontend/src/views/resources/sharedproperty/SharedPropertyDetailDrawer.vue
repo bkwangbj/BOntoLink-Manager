@@ -48,6 +48,12 @@
             <FieldRow label="名称" inline>
               <input class="bl-input" v-model="form.rdfs_label" :disabled="!editMode" />
             </FieldRow>
+            <FieldRow label="所属分组" inline>
+              <select class="bl-input" v-model="form.group_id" :disabled="!editMode">
+                <option value="">— 未分组 —</option>
+                <option v-for="g in filteredGroups" :key="g.id" :value="g.id">{{ g.group_name }}</option>
+              </select>
+            </FieldRow>
             <FieldRow label="属性编码" inline hint="snake_case · 全局唯一 · 创建后不可修改">
               <input class="bl-input bl-mono" :value="form.prop_code" disabled />
             </FieldRow>
@@ -246,9 +252,9 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { BL } from '@/lib/bl.js'
-import { sharedPropertyApi, propertyFormatApi } from '@/api'
+import { sharedPropertyApi, propertyFormatApi, groupApi, groupRefApi } from '@/api'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import ValueTypePickerModal from '@/components/ValueTypePickerModal.vue'
 import PropertyFormatModal from '@/components/PropertyFormatModal.vue'
@@ -272,9 +278,37 @@ const editMode = ref(localStorage.getItem('bontolink.sp.editMode') === '1')
 watch(editMode, v => localStorage.setItem('bontolink.sp.editMode', v ? '1' : '0'))
 
 const form = reactive({})
+const groups = ref([])
+const spGroupRef = ref(null)
+const filteredGroups = computed(() => {
+  const domain = form.category_code || form.categoryCode || ''
+  return groups.value.filter(g => !g.domain_code || g.domain_code === domain)
+})
+async function loadSpGroups() {
+  if (groups.value.length) return
+  const bizGroups = await groupApi.listAll().catch(() => [])
+  groups.value = (bizGroups || []).map(g => ({
+    id: g.id, parent_id: g.parentId || g.parent_id,
+    group_name: g.gname || g.gName || g.g_name || g.group_name || '',
+    category_code: g.categoryCode || g.category_code,
+    domain_code: g.domainCode || g.domain_code || '',
+    status: g.status || 'active'
+  }))
+}
+async function loadSpGroupRef(id) {
+  try {
+    const refs = await groupRefApi.list('shared_props').catch(() => [])
+    const ref = (refs || []).find(r => r.ref_id === id)
+    spGroupRef.value = ref || null
+    form.group_id = ref ? (ref.groupId || ref.group_id || '') : ''
+  } catch { form.group_id = '' }
+}
+onMounted(() => loadSpGroups())
+
 function resetForm(src) {
   Object.keys(form).forEach(k => delete form[k])
   Object.assign(form, src || {})
+  if (form.id) loadSpGroupRef(form.id)
 }
 
 /* refs/refQ 提前声明以避免 immediate watch 触发 TDZ */
@@ -384,6 +418,17 @@ async function loadRefs() {
 async function onSave() {
   try {
     await sharedPropertyApi.update(form.id, { ...form })
+    // 同步分组绑定
+    try {
+      const curRef = spGroupRef.value
+      if (form.group_id && form.group_id !== (curRef?.groupId || curRef?.group_id || '')) {
+        if (curRef) { await groupRefApi.removeByRef(form.id, 'shared_props'); spGroupRef.value = null }
+        await groupRefApi.create({ ref_id: form.id, group_id: form.group_id, group_type: 'shared_props' })
+      } else if (!form.group_id && curRef) {
+        await groupRefApi.removeByRef(form.id, 'shared_props')
+        spGroupRef.value = null
+      }
+    } catch (e) { /* 分组绑定失败不影响主流程 */ }
     BL.success('已保存')
     emit('saved')
   } catch (e) { BL.error(e?.msg || '保存失败') }

@@ -8,6 +8,7 @@ public class BizGroup {
     private String id;
     private String parentId;
     private String categoryCode;
+    private String domainCode;      // 所属领域 (关联 ont_biz_category.category_code)
     private String gName;
     private Integer gSort;
     private String icon;

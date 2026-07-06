@@ -25,15 +25,15 @@ public interface BizGroupMapper {
 
     /** 新增分组节点 */
     @Insert("""
-        INSERT INTO ont_biz_group(id, parent_id, category_code, g_name, g_sort, icon, color, description)
-        VALUES(#{id}, #{parentId}, #{categoryCode}, #{gName}, #{gSort}, #{icon}, #{color}, #{description})
+        INSERT INTO ont_biz_group(id, parent_id, category_code, domain_code, g_name, g_sort, icon, color, description)
+        VALUES(#{id}, #{parentId}, #{categoryCode}, #{domainCode}, #{gName}, #{gSort}, #{icon}, #{color}, #{description})
     """)
     int insert(BizGroup g);
 
     /** 更新分组基本信息（不修改 parent_id / category_code） */
     @Update("""
         UPDATE ont_biz_group SET
-            g_name=#{gName}, g_sort=#{gSort}, icon=#{icon}, color=#{color}, description=#{description}
+            g_name=#{gName}, g_sort=#{gSort}, icon=#{icon}, color=#{color}, description=#{description}, domain_code=#{domainCode}
         WHERE id=#{id}
     """)
     int update(BizGroup g);

@@ -14,6 +14,12 @@
         <FieldRow label="标准名" inline hint="rdfs:label · 本体标准展示标签"><input class="bl-input" v-model="form.rdfs_label" /></FieldRow>
         <FieldRow label="命名空间" inline hint="ns_code · 绑定的命名空间编码"><input class="bl-input bl-mono" v-model="form.ns_code" /></FieldRow>
         <FieldRow label="领域" inline hint="category_code · 所属业务领域"><span class="bl-tag">{{ form.categoryLabel || form.category_code || '—' }}</span></FieldRow>
+        <FieldRow label="所属分组" inline>
+          <select class="bl-input" v-model="form.group_id">
+            <option value="">— 未分组 —</option>
+            <option v-for="g in filteredGroups" :key="g.id" :value="g.id">{{ g.group_name }}</option>
+          </select>
+        </FieldRow>
         <FieldRow label="父类" inline hint="parent_class_id · 本体继承父类 ID (类层次中维护)"><span>{{ form.parent_class_id ? (parentLabel || form.parent_class_id) : '—' }}</span></FieldRow>
       </div>
 
@@ -113,9 +119,9 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, reactive } from 'vue'
+import { ref, computed, watch, reactive, onMounted } from 'vue'
 import { BL } from '@/lib/bl.js'
-import { classMetaApi } from '@/api'
+import { classMetaApi, groupApi, groupRefApi } from '@/api'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import IconPickerField from '@/components/IconPickerField.vue'
 import ColorPickerField from '@/components/ColorPickerField.vue'
@@ -141,6 +147,34 @@ const exprTypes = [
 const form = reactive({})
 const parentLabel = ref('')
 
+/* 分组管理 */
+const groups = ref([])
+const objGroupRef = ref(null)
+const filteredGroups = computed(() => {
+  const domain = form.category_code || form.categoryCode || ''
+  return groups.value.filter(g => !g.domain_code || g.domain_code === domain)
+})
+async function loadGroups() {
+  if (groups.value.length) return
+  const bizGroups = await groupApi.listAll().catch(() => [])
+  groups.value = (bizGroups || []).map(g => ({
+    id: g.id, parent_id: g.parentId || g.parent_id,
+    group_name: g.gname || g.gName || g.g_name || g.group_name || '',
+    category_code: g.categoryCode || g.category_code,
+    domain_code: g.domainCode || g.domain_code || '',
+    status: g.status || 'active'
+  }))
+}
+async function loadObjGroupRef(id) {
+  try {
+    const refs = await groupRefApi.list('object_types').catch(() => [])
+    const ref = (refs || []).find(r => r.ref_id === id)
+    objGroupRef.value = ref || null
+    form.group_id = ref ? (ref.groupId || ref.group_id || '') : ''
+  } catch { form.group_id = '' }
+}
+onMounted(() => loadGroups())
+
 function loadFromDetail() {
   Object.keys(form).forEach(k => delete form[k])
   Object.assign(form, props.detail || {})
@@ -148,6 +182,7 @@ function loadFromDetail() {
   form.is_nothing= Number(form.is_nothing?? 0)
   form.is_common = Number(form.is_common ?? 0)
   form.status    = Number(form.status    ?? 1)
+  if (form.id) loadObjGroupRef(form.id)
 }
 watch(() => props.detail, loadFromDetail, { immediate: true, deep: true })
 
@@ -174,6 +209,16 @@ async function onSave() {
   if (!form.id) { BL.warning('未选中对象'); return }
   try {
     await classMetaApi.updateClass(form.id, { ...form })
+    // 同步分组绑定
+    try {
+      if (form.group_id && form.group_id !== (objGroupRef.value?.groupId || objGroupRef.value?.group_id || '')) {
+        if (objGroupRef.value) { await groupRefApi.removeByRef(form.id, 'object_types'); objGroupRef.value = null }
+        await groupRefApi.create({ ref_id: form.id, group_id: form.group_id, group_type: 'object_types' })
+      } else if (!form.group_id && objGroupRef.value) {
+        await groupRefApi.removeByRef(form.id, 'object_types')
+        objGroupRef.value = null
+      }
+    } catch (e) { /* 分组绑定失败不影响主流程 */ }
     BL.success('已保存')
     emit('saved', form.id)
   } catch (e) {

@@ -509,8 +509,8 @@
             </FieldRow>
             <FieldRow label="所属分组" inline>
               <select class="bl-input" v-model="typeForm.group_id">
-                <option value="">— 顶级 —</option>
-                <option v-for="g in groups" :key="g.id" :value="g.id">{{ g.group_name }}</option>
+                <option value="">— 未分组 —</option>
+                <option v-for="g in filteredGroups" :key="g.id" :value="g.id">{{ g.group_name }}</option>
               </select>
             </FieldRow>
             <FieldRow label="枚举类型" inline>
@@ -547,10 +547,16 @@
 
     <!-- 新建分组弹窗 -->
     <div v-if="groupFormOpen" class="bl-modal-mask" @click.self="groupFormOpen=false">
-      <div class="bl-modal" style="width:420px">
+      <div class="bl-modal" style="width:440px">
         <div class="bl-modal-hd">新建分组</div>
         <div class="bl-modal-body bl-col" style="gap:10px">
           <FieldRow label="分组名称 *" inline><input class="bl-input" v-model="groupForm.group_name" /></FieldRow>
+          <FieldRow label="所属领域" inline>
+            <select class="bl-input" v-model="groupForm.domain_code">
+              <option value="">— 不限 —</option>
+              <option v-for="d in domainOpts" :key="d.code" :value="d.code">{{ d.name }}</option>
+            </select>
+          </FieldRow>
           <FieldRow label="父分组" inline>
             <select class="bl-input" v-model="groupForm.parent_id">
               <option value="">— 顶级 —</option>
@@ -792,6 +798,11 @@ function enumMatchesQ(e) {
 }
 
 const topGroups = computed(() => groups.value.filter(g => !g.parent_id && groupMatchesQ(g)))
+/* 按当前枚举的所属领域过滤分组（系统级跨领域分组始终显示） */
+const filteredGroups = computed(() => {
+  const domain = typeForm.category_code || typeForm.categoryCode || ''
+  return groups.value.filter(g => !g.domain_code || g.domain_code === domain)
+})
 function childrenOf(id) { return groups.value.filter(g => g.parent_id === id) }
 function childrenOfFiltered(id) {
   return groups.value.filter(g => g.parent_id === id && groupMatchesQ(g))
@@ -902,6 +913,7 @@ const pagedItems = computed(() => {
 // 过滤/搜索/分页大小变化导致页码越界时回到首页
 watch([filteredItems, itemPageSize], () => { if (itemPage.value > itemTotalPages.value) itemPage.value = 1 })
 
+/* 切换领域时重置分组（当前分组不属于新领域则清空） */
 /* 上级编码下拉选项：当前枚举的所有项（排除自身） */
 const parentOpts = computed(() => {
   const all = filteredItems.value || []
@@ -1305,11 +1317,17 @@ const groupForm = reactive({})
 function openCreateGroup() {
   Object.keys(groupForm).forEach(k => delete groupForm[k])
   Object.assign(groupForm, { status: 'active' })
+  loadDomainOpts()
   groupFormOpen.value = true
 }
 async function submitGroup() {
   if (!groupForm.group_name) { BL.warning('分组名称必填'); return }
-  await enumTypeApi.createGroup(groupForm)
+  // 使用统一业务分组 API 写入 ont_biz_group
+  await groupApi.create({
+    gName: groupForm.group_name,
+    parentId: groupForm.parent_id || null,
+    domainCode: groupForm.domain_code || null
+  }).catch(e => { BL.error('创建失败: ' + (e.msg || e.message)); throw e })
   BL.success('已保存')
   groupFormOpen.value = false
   await loadAll()
