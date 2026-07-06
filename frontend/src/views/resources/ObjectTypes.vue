@@ -542,7 +542,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watch, h } from 'vue'
 import { BL } from '@/lib/bl.js'
-import { resourceApi, categoryApi, classMetaApi } from '@/api'
+import { resourceApi, categoryApi, classMetaApi, groupApi } from '@/api'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 import TabOverview from '@/views/resources/objecttype/TabOverview.vue'
@@ -640,13 +640,29 @@ function sortArrow(key) {
 
 /* —— 左侧行业分类树 (统一组件,按 category_code 子树过滤) —— */
 const selectedCategoryCodes = ref(null)  // null = 全部, Set<string> = 当前分类及子分类的 category_code 集合
-function onCategoryChange({ codes }) {
+const groupClassIds = ref(null)          // null = 非分组过滤态; Set<string> = 选中分组关联的对象类 id
+async function onCategoryChange({ codes, node }) {
   selectedCategoryCodes.value = codes || null
+  // 选中分组节点(type=3): 对象类归属分组走 ont_biz_group_class 关联,不能靠 category_code(那是领域)。
+  // 分组节点 id 与 ont_biz_group.id 已统一,可直接按 group id 取关联对象类。
+  if (node && node.categoryType === 3) {
+    try {
+      const list = await groupApi.classes(node.id)
+      groupClassIds.value = new Set((list || []).map(c => c.id))
+    } catch { groupClassIds.value = new Set() }
+  } else {
+    groupClassIds.value = null
+  }
 }
 
 const filtered = computed(() => {
   let list = rows.value
-  if (selectedCategoryCodes.value) list = list.filter(r => selectedCategoryCodes.value.has(r.category_code))
+  if (groupClassIds.value) {
+    // 分组过滤态: 只显示该分组关联的对象类(走 ont_biz_group_class)
+    list = list.filter(r => groupClassIds.value.has(r.id))
+  } else if (selectedCategoryCodes.value) {
+    list = list.filter(r => selectedCategoryCodes.value.has(r.category_code))
+  }
   // 行业过滤: 命中该行业下所有后代 codes
   if (filterIndustry.value) {
     const codes = descendantCodesOfIndustry(filterIndustry.value)

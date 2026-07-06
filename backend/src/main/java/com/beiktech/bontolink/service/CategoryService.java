@@ -99,6 +99,18 @@ public class CategoryService {
                 && c.getParentId() != null && !"0".equals(c.getParentId())) {
             throw new IllegalArgumentException("行业只能是第一级分类");
         }
+        // 领域最多只能再建一级子领域:父级若本身已是子领域(其父也是领域),则拒绝
+        if (c.getCategoryType() != null && c.getCategoryType() == 2
+                && c.getParentId() != null && !"0".equals(c.getParentId())) {
+            BizCategory p = categoryMapper.findById(c.getParentId());
+            if (p != null && p.getCategoryType() != null && p.getCategoryType() == 2
+                    && p.getParentId() != null && !"0".equals(p.getParentId())) {
+                BizCategory pp = categoryMapper.findById(p.getParentId());
+                if (pp != null && pp.getCategoryType() != null && pp.getCategoryType() == 2) {
+                    throw new IllegalArgumentException("领域最多只能再建一级子领域");
+                }
+            }
+        }
         if (c.getId() == null || c.getId().isEmpty()) {
             // 分组(type=3)与 ont_biz_group 复用同一 id,统一走 "group-" 规则;其余走 "category-"
             String prefix = (c.getCategoryType() != null && c.getCategoryType() == 3) ? "group-" : "category-";
@@ -127,8 +139,24 @@ public class CategoryService {
                 BizNamespace ns = new BizNamespace();
                 ns.setNsCode(code);
                 ns.setNsName(c.getRdfsLabel() != null ? c.getRdfsLabel() : code);
-                ns.setNsUri("http://ont.beiktech.com/ns/" + code);
-                ns.setHierarchyPath(code);
+                // 子领域(父级为领域):命名空间在父领域基础上再加一层;顶级领域:独立一层
+                BizNamespace parentNs = null;
+                if (c.getParentId() != null && !"0".equals(c.getParentId())) {
+                    BizCategory parentCat = categoryMapper.findById(c.getParentId());
+                    if (parentCat != null && parentCat.getCategoryType() != null
+                            && parentCat.getCategoryType() == 2 && parentCat.getNsCode() != null) {
+                        parentNs = namespaceMapper.findByCode(parentCat.getNsCode());
+                    }
+                }
+                if (parentNs != null) {
+                    String basePath = parentNs.getHierarchyPath() != null ? parentNs.getHierarchyPath() : parentNs.getNsCode();
+                    String baseUri = parentNs.getNsUri() != null ? parentNs.getNsUri() : ("http://ont.beiktech.com/ns/" + parentNs.getNsCode());
+                    ns.setHierarchyPath(basePath + "." + code);
+                    ns.setNsUri(baseUri + "/" + code);
+                } else {
+                    ns.setHierarchyPath(code);
+                    ns.setNsUri("http://ont.beiktech.com/ns/" + code);
+                }
                 // 通过 NamespaceService 创建，自动生成版本记录 v1.0
                 namespaceService.create(ns);
             }

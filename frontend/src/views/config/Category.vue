@@ -27,11 +27,11 @@
               </div>
             </div>
             <div class="create-menu-divider" v-if="selected && selected.categoryType <= 3"></div>
-            <div class="create-menu-item" @click="openCreateDomain" v-if="selected?.categoryType === 1">
+            <div class="create-menu-item" @click="openCreateDomain" v-if="canCreateDomain">
               <span v-html="BL.icon('folder', 12)"></span>
               <div class="create-menu-text">
-                <span>新建领域</span>
-                <span class="create-menu-sub">在所选行业下新增领域</span>
+                <span>{{ selected.categoryType === 2 ? '新建子领域' : '新建领域' }}</span>
+                <span class="create-menu-sub">在所选{{ catTypeText(selected.categoryType) }}下新增{{ selected.categoryType === 2 ? '子领域' : '领域' }}</span>
               </div>
             </div>
             <div class="create-menu-item" @click="openCreateGroup" v-if="selected && selected.categoryType <= 3">
@@ -442,7 +442,7 @@
             <select class="bl-input" v-model="formData.categoryType"
                     :disabled="formMode==='edit' || formParent?.categoryType !== 1">
               <option v-if="formMode==='create' && !formParent" :value="1">行业 (Industry)</option>
-              <option v-if="formMode==='edit' || formParent?.categoryType===1" :value="2">领域 (Domain)</option>
+              <option v-if="formMode==='edit' || formParent?.categoryType===1 || formParent?.categoryType===2" :value="2">领域 (Domain)</option>
               <option v-if="formMode==='edit' || formParent?.categoryType===2" :value="3">分组 (Group)</option>
             </select>
           </FieldRow>
@@ -726,6 +726,29 @@ const childStatsMap = ref({})
 const discoverStats = ref({})
 const industryStatsMap = ref({})
 const industries = computed(() => tree.value.filter(n => n.categoryType === 1))
+
+// 找节点在树中的父节点(顶级节点返回 null)
+function findParentNode(id, nodes = tree.value) {
+  for (const n of nodes) {
+    if (n.children?.length) {
+      if (n.children.some(c => c.id === id)) return n
+      const r = findParentNode(id, n.children)
+      if (r) return r
+    }
+  }
+  return null
+}
+// 新建「领域/子领域」入口是否可用:行业下建顶级领域;顶级领域下建一级子领域(仅一层)
+const canCreateDomain = computed(() => {
+  const s = selected.value
+  if (!s) return false
+  if (s.categoryType === 1) return true
+  if (s.categoryType === 2) {
+    const p = findParentNode(s.id)
+    return !p || p.categoryType === 1   // 父是行业=顶级领域可建子领域;父是领域=子领域不可再建
+  }
+  return false
+})
 
 const globalStats = computed(() => {
   const s = discoverStats.value || {}
