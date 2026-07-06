@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown转换文档</title>
+  <style>
+    body { 
+      font-family: 'Microsoft YaHei', 'SimSun', sans-serif; 
+      margin: 0 auto; 
+      max-width: 960px; 
+      padding: 20px; 
+      line-height: 1.6;
+    }
+    pre { 
+      background-color: #f8f8f8; 
+      border: 1px solid #ddd; 
+      padding: 10px; 
+      border-radius: 3px; 
+      overflow: auto; 
+    }
+    code { 
+      font-family: Consolas, Monaco, monospace; 
+      background-color: #f8f8f8; 
+      padding: 2px 5px; 
+      border-radius: 3px; 
+    }
+    table { 
+      border-collapse: collapse; 
+      width: 100%; 
+      margin-bottom: 20px;
+    }
+    th, td { 
+      border: 1px solid #ddd; 
+      padding: 8px; 
+    }
+    th { 
+      background-color: #f2f2f2; 
+      text-align: left; 
+    }
+    tr:nth-child(even) { 
+      background-color: #f9f9f9; 
+    }
+    img { 
+      max-width: 100%; 
+      height: auto; 
+    }
+    .toc-placeholder { 
+      margin: 20px 0; 
+      padding: 10px; 
+      background-color: #f0f0f0; 
+      border: 1px dashed #ccc; 
+      text-align: center; 
+      color: #666; 
+    }
+  </style>
+</head>
+<body>
+  <h1>UI 协作速查卡(一页)</h1>
+<blockquote>
+<p>提需求前扫一眼。完整版见 <a href="UI%E5%8D%8F%E4%BD%9C%E8%A7%84%E8%8C%83%E7%94%A8%E8%AF%AD.md">UI协作规范用语.md</a></p>
+</blockquote>
+<h2>🎯 三原则</h2>
+<ol>
+<li><strong>组件 + 部位 + 状态</strong>(下拉菜单 · 选中项 · 悬停态)</li>
+<li><strong>三段式</strong>:现状 → 期望 → 触发条件</li>
+<li><strong>给期望值</strong>,不只说“不对”</li>
+</ol>
+<h2>🧩 常用组件(别叫错)</h2>
+<ul>
+<li>居中带蒙层阻断 = <strong>模态弹框 modal</strong></li>
+<li>边缘滑出 = <strong>抽屉 drawer</strong></li>
+<li>依附触发点不阻断 = <strong>浮层 popover</strong></li>
+<li>悬停轻提示 = <strong>tooltip</strong></li>
+<li>自动消失提示 = <strong>Toast</strong></li>
+<li>主操作+右侧下拉 = <strong>分裂按钮 split button</strong></li>
+<li>整块=<strong>看板 dashboard</strong>;单个=<strong>图表 chart</strong></li>
+</ul>
+<h2>🔩 常用部位</h2>
+<p>指示箭头 <strong>caret/arrow</strong>(≠燕尾) · 触发器 <strong>trigger</strong> · 浮层 <strong>popper</strong> · 拖拽手柄 <strong>handle</strong> · 菜单项高度 <strong>item height</strong>(≠line-height) · 画布 <strong>canvas</strong> · 蒙层 <strong>mask</strong></p>
+<h2>🖱 交互 / 定位</h2>
+<p>对齐:左/右对齐 start/end · <strong>同宽 same-width</strong> · 方向 bottom-start/bottom-end · 溢出 <strong>翻转 flip / 贴边 shift</strong><br />
+时机:防抖 debounce · 回车 on enter · 失焦 on blur<br />
+尺寸:固定 fixed / <strong>自适应铺满 fluid</strong> / min-max-width<br />
+数据:拉取 fetch · 失效重取 invalidate · 持久化 persist · 脏检查 dirty<br />
+浮层被裁:挂 body <strong>teleport</strong>;被遮:提 <strong>z-index</strong></p>
+<h2>🧭 状态</h2>
+<p>default / hover / active / focus / selected / disabled / readonly / loading / error / empty / dimmed</p>
+<h2>✍️ 四个万能句式</h2>
+<ul>
+<li><strong>样式</strong>:把〔组件·部位〕的〔属性〕从〔现状〕改成〔期望〕</li>
+<li><strong>交互</strong>:〔点击/悬停〕〔组件〕时应〔期望〕,当前是〔现状〕</li>
+<li><strong>数据</strong>:〔触发〕下应〔拉取/刷新/持久化〕,边界〔空/错误〕如何处理</li>
+<li><strong>定位</strong>:〔浮层〕相对〔触发器〕〔对齐〕,宽度〔固定N/同宽/自适应〕,溢出〔翻转/贴边〕</li>
+</ul>
+<h2>🚫 别这么说 → 这么说</h2>
+<p>那个东西→组件名 · 不好看→现状+期望 · 大一点→具体数值/与X一致 · 弹的框→modal/drawer/popover · 行高→项高/line-height · 适配→自适应/响应式/溢出(指明) · 燕尾→caret</p>
+
+</body>
+</html>

@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown转换文档</title>
+  <style>
+    body { 
+      font-family: 'Microsoft YaHei', 'SimSun', sans-serif; 
+      margin: 0 auto; 
+      max-width: 960px; 
+      padding: 20px; 
+      line-height: 1.6;
+    }
+    pre { 
+      background-color: #f8f8f8; 
+      border: 1px solid #ddd; 
+      padding: 10px; 
+      border-radius: 3px; 
+      overflow: auto; 
+    }
+    code { 
+      font-family: Consolas, Monaco, monospace; 
+      background-color: #f8f8f8; 
+      padding: 2px 5px; 
+      border-radius: 3px; 
+    }
+    table { 
+      border-collapse: collapse; 
+      width: 100%; 
+      margin-bottom: 20px;
+    }
+    th, td { 
+      border: 1px solid #ddd; 
+      padding: 8px; 
+    }
+    th { 
+      background-color: #f2f2f2; 
+      text-align: left; 
+    }
+    tr:nth-child(even) { 
+      background-color: #f9f9f9; 
+    }
+    img { 
+      max-width: 100%; 
+      height: auto; 
+    }
+    .toc-placeholder { 
+      margin: 20px 0; 
+      padding: 10px; 
+      background-color: #f0f0f0; 
+      border: 1px dashed #ccc; 
+      text-align: center; 
+      color: #666; 
+    }
+  </style>
+</head>
+<body>
+  <h1>UI 术语中英对照词表</h1>
+<blockquote>
+<p>便于直接喂给英文组件库(Element/Ant/MUI…)或英文 prompt。完整版见 <a href="UI%E5%8D%8F%E4%BD%9C%E8%A7%84%E8%8C%83%E7%94%A8%E8%AF%AD.md">UI协作规范用语.md</a></p>
+</blockquote>
+<h2>容器 / 布局 Layout</h2>
+<table>
+<thead>
+<tr>
+<th>中文</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>页面 / 视图</td>
+<td>page / view</td>
+</tr>
+<tr>
+<td>区块 / 面板</td>
+<td>panel / section</td>
+</tr>
+<tr>
+<td>卡片</td>
+<td>card</td>
+</tr>
+<tr>
+<td>栅格 / 网格</td>
+<td>grid</td>
+</tr>
+<tr>
+<td>分栏 / 分割视图</td>
+<td>split view</td>
+</tr>
+<tr>
+<td>侧边栏</td>
+<td>sidebar</td>
+</tr>
+<tr>
+<td>抽屉</td>
+<td>drawer</td>
+</tr>
+<tr>
+<td>模态弹框</td>
+<td>modal / dialog</td>
+</tr>
+<tr>
+<td>非模态浮层</td>
+<td>popover</td>
+</tr>
+<tr>
+<td>气泡提示</td>
+<td>tooltip</td>
+</tr>
+<tr>
+<td>折叠面板</td>
+<td>accordion / collapse</td>
+</tr>
+<tr>
+<td>标签页</td>
+<td>tabs</td>
+</tr>
+<tr>
+<td>页头 / 页脚</td>
+<td>header / footer</td>
+</tr>
+</tbody>
+</table>
+<h2>导航 Navigation</h2>
+<table>
+<thead>
+<tr>
+<th>中文</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>面包屑</td>
+<td>breadcrumb</td>
+</tr>
+<tr>
+<td>分页器</td>
+<td>pagination</td>
+</tr>
+<tr>
+<td>步骤条</td>
+<td>stepper</td>
+</tr>
+<tr>
+<td>锚点导航</td>
+<td>anchor</td>
+</tr>
+<tr>
+<td>菜单</td>
+<td>menu</td>
+</tr>
+<tr>
+<td>下拉菜单</td>
+<td>dropdown</td>
+</tr>
+</tbody>
+</table>
+<h2>表单 / 录入 Form</h2>
+<table>
+<thead>
+<tr>
+<th>中文</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>输入框</td>
+<td>text input</td>
+</tr>
+<tr>
+<td>文本域</td>
+<td>textarea</td>
+</tr>
+<tr>
+<td>下拉选择</td>
+<td>select</td>
+</tr>
+<tr>
+<td>可搜索下拉</td>
+<td>combobox / filterable select</td>
+</tr>
+<tr>
+<td>多选</td>
+<td>multi-select</td>
+</tr>
+<tr>
+<td>单选组 / 复选组</td>
+<td>radio group / checkbox group</td>
+</tr>
+<tr>
+<td>开关</td>
+<td>switch / toggle</td>
+</tr>
+<tr>
+<td>分段控制器</td>
+<td>segmented control</td>
+</tr>
+<tr>
+<td>步进器</td>
+<td>number stepper</td>
+</tr>
+<tr>
+<td>滑块</td>
+<td>slider</td>
+</tr>
+<tr>
+<td>日期 / 时间选择器</td>
+<td>date / time picker</td>
+</tr>
+<tr>
+<td>颜色选择器</td>
+<td>color picker</td>
+</tr>
+<tr>
+<td>上传</td>
+<td>uploader</td>
+</tr>
+<tr>
+<td>表单项</td>
+<td>form field / form item</td>
+</tr>
+<tr>
+<td>标签 / 控件 / 校验提示</td>
+<td>label / control / hint(error)</td>
+</tr>
+</tbody>
+</table>
+<h2>反馈 / 浮层 Feedback</h2>
+<table>
+<thead>
+<tr>
+<th>中文</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>轻提示(自动消失)</td>
+<td>toast</td>
+</tr>
+<tr>
+<td>通知(可停留)</td>
+<td>notification</td>
+</tr>
+<tr>
+<td>确认框</td>
+<td>confirm</td>
+</tr>
+<tr>
+<td>加载态</td>
+<td>loading / spinner</td>
+</tr>
+<tr>
+<td>骨架屏</td>
+<td>skeleton</td>
+</tr>
+<tr>
+<td>空状态</td>
+<td>empty state</td>
+</tr>
+<tr>
+<td>进度条</td>
+<td>progress</td>
+</tr>
+<tr>
+<td>徽标</td>
+<td>badge</td>
+</tr>
+<tr>
+<td>标签(色块)</td>
+<td>tag / chip</td>
+</tr>
+</tbody>
+</table>
+<h2>数据展示 Data Display</h2>
+<table>
+<thead>
+<tr>
+<th>中文</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>表格</td>
+<td>table</td>
+</tr>
+<tr>
+<td>列表</td>
+<td>list</td>
+</tr>
+<tr>
+<td>树</td>
+<td>tree</td>
+</tr>
+<tr>
+<td>时间轴</td>
+<td>timeline</td>
+</tr>
+<tr>
+<td>描述列表(键值对)</td>
+<td>descriptions</td>
+</tr>
+<tr>
+<td>统计卡</td>
+<td>stat / KPI card</td>
+</tr>
+<tr>
+<td>图表</td>
+<td>chart</td>
+</tr>
+<tr>
+<td>看板 / 仪表盘</td>
+<td>dashboard</td>
+</tr>
+</tbody>
+</table>
+<h2>操作 Action</h2>
+<table>
+<thead>
+<tr>
+<th>中文</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>按钮</td>
+<td>button</td>
+</tr>
+<tr>
+<td>图标按钮</td>
+<td>icon button</td>
+</tr>
+<tr>
+<td>分裂按钮</td>
+<td>split button</td>
+</tr>
+<tr>
+<td>链接按钮</td>
+<td>text / link button</td>
+</tr>
+<tr>
+<td>悬浮按钮</td>
+<td>FAB</td>
+</tr>
+<tr>
+<td>按钮组</td>
+<td>button group</td>
+</tr>
+</tbody>
+</table>
+<h2>部位 / 解剖 Anatomy</h2>
+<table>
+<thead>
+<tr>
+<th>中文</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>指示箭头 / 尖角</td>
+<td>arrow / caret</td>
+</tr>
+<tr>
+<td>触发器</td>
+<td>trigger</td>
+</tr>
+<tr>
+<td>浮层</td>
+<td>popper / overlay</td>
+</tr>
+<tr>
+<td>拖拽手柄</td>
+<td>handle / grip</td>
+</tr>
+<tr>
+<td>可操作暗示</td>
+<td>affordance</td>
+</tr>
+<tr>
+<td>占位符</td>
+<td>placeholder</td>
+</tr>
+<tr>
+<td>前缀 / 后缀</td>
+<td>prefix / suffix / addon</td>
+</tr>
+<tr>
+<td>菜单项</td>
+<td>menu item</td>
+</tr>
+<tr>
+<td>项高 / 条目高度</td>
+<td>item height</td>
+</tr>
+<tr>
+<td>表头 / 表体 / 单元格</td>
+<td>header / body / cell</td>
+</tr>
+<tr>
+<td>吸顶表头</td>
+<td>sticky header</td>
+</tr>
+<tr>
+<td>冻结列</td>
+<td>frozen / pinned column</td>
+</tr>
+<tr>
+<td>蒙层 / 遮罩</td>
+<td>mask / backdrop / scrim</td>
+</tr>
+<tr>
+<td>图例 / 坐标轴 / 网格线</td>
+<td>legend / axis / grid line</td>
+</tr>
+<tr>
+<td>画布</td>
+<td>canvas</td>
+</tr>
+</tbody>
+</table>
+<h2>状态 States</h2>
+<table>
+<thead>
+<tr>
+<th>中文</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>默认</td>
+<td>default</td>
+</tr>
+<tr>
+<td>悬停</td>
+<td>hover</td>
+</tr>
+<tr>
+<td>按下</td>
+<td>active / pressed</td>
+</tr>
+<tr>
+<td>聚焦</td>
+<td>focus</td>
+</tr>
+<tr>
+<td>选中</td>
+<td>selected / checked</td>
+</tr>
+<tr>
+<td>禁用</td>
+<td>disabled</td>
+</tr>
+<tr>
+<td>只读</td>
+<td>readonly</td>
+</tr>
+<tr>
+<td>加载中</td>
+<td>loading</td>
+</tr>
+<tr>
+<td>错误</td>
+<td>error</td>
+</tr>
+<tr>
+<td>校验通过</td>
+<td>valid</td>
+</tr>
+<tr>
+<td>展开 / 收起</td>
+<td>expanded / collapsed</td>
+</tr>
+<tr>
+<td>空</td>
+<td>empty</td>
+</tr>
+<tr>
+<td>高亮</td>
+<td>highlighted</td>
+</tr>
+<tr>
+<td>置灰 / 弱化</td>
+<td>dimmed / muted</td>
+</tr>
+</tbody>
+</table>
+<h2>交互 / 定位 Interaction</h2>
+<table>
+<thead>
+<tr>
+<th>中文</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>点击 / 悬停 / 右键 / 长按 / 拖拽</td>
+<td>click / hover / context menu / long press / drag</td>
+</tr>
+<tr>
+<td>即时 / 防抖 / 节流</td>
+<td>immediate / debounce / throttle</td>
+</tr>
+<tr>
+<td>失焦触发 / 回车提交 / 挂载时</td>
+<td>on blur / on enter / on mount</td>
+</tr>
+<tr>
+<td>锚定 / 跟随光标 / 固定</td>
+<td>anchored / follow cursor / fixed</td>
+</tr>
+<tr>
+<td>左对齐 / 右对齐 / 居中 / 同宽</td>
+<td>align start / align end / center / same-width</td>
+</tr>
+<tr>
+<td>放置方向</td>
+<td>bottom-start / bottom-end / top / right</td>
+</tr>
+<tr>
+<td>自动翻转 / 贴边收拢</td>
+<td>flip / shift</td>
+</tr>
+<tr>
+<td>层级 / 层叠上下文 / 传送到 body</td>
+<td>z-index / stacking context / teleport(portal)</td>
+</tr>
+</tbody>
+</table>
+<h2>尺寸 / 自适应 Sizing</h2>
+<table>
+<thead>
+<tr>
+<th>中文</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>固定宽</td>
+<td>fixed width</td>
+</tr>
+<tr>
+<td>流式 / 自适应(铺满)</td>
+<td>fluid / adaptive</td>
+</tr>
+<tr>
+<td>最小 / 最大宽</td>
+<td>min / max-width</td>
+</tr>
+<tr>
+<td>撑满</td>
+<td>fill</td>
+</tr>
+<tr>
+<td>等比适应</td>
+<td>fit / contain</td>
+</tr>
+<tr>
+<td>铺满裁剪</td>
+<td>cover</td>
+</tr>
+<tr>
+<td>间距 / 内边距 / 外边距</td>
+<td>gap / padding / margin</td>
+</tr>
+<tr>
+<td>圆角 / 描边 / 阴影</td>
+<td>radius / border(stroke) / shadow(elevation)</td>
+</tr>
+<tr>
+<td>断点 / 响应式 / 密度</td>
+<td>breakpoint / responsive / density</td>
+</tr>
+</tbody>
+</table>
+<h2>数据流 Data Flow</h2>
+<table>
+<thead>
+<tr>
+<th>中文</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>拉取 / 刷新</td>
+<td>fetch / reload(refetch)</td>
+</tr>
+<tr>
+<td>乐观更新</td>
+<td>optimistic update</td>
+</tr>
+<tr>
+<td>缓存 / 失效</td>
+<td>cache / invalidate</td>
+</tr>
+<tr>
+<td>主从联动 / 级联</td>
+<td>master-detail / cascade</td>
+</tr>
+<tr>
+<td>受控 / 非受控</td>
+<td>controlled / uncontrolled</td>
+</tr>
+<tr>
+<td>持久化 / 草稿 / 脏检查</td>
+<td>persist / draft / dirty check</td>
+</tr>
+</tbody>
+</table>
+<h2>编辑器 / 设计器 Editor</h2>
+<table>
+<thead>
+<tr>
+<th>中文</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>设计模式 / 预览模式</td>
+<td>design mode / preview mode</td>
+</tr>
+<tr>
+<td>空白画布</td>
+<td>blank canvas</td>
+</tr>
+<tr>
+<td>拖拽布局</td>
+<td>drag layout</td>
+</tr>
+<tr>
+<td>自动保存 / 另存为</td>
+<td>autosave / save as</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>

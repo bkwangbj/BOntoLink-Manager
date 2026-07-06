@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UI 术语活字典 · Live Component Glossary</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --bg1:#ffffff; --bg2:#eef0f3; --hover:#f2f3f5;
+    --text1:#1d2129; --text2:#4e5969; --text3:#86909c;
+    --border:#e5e6eb; --divider:#f0f1f3;
+    --primary:#165dff; --primary-soft:#e8f3ff; --primary-hover:#0e42d2;
+    --green:#00b42a; --gray:#86909c; --red:#f53f3f; --orange:#ff7d00; --purple:#8b5cf6;
+    --radius:8px; --shadow:0 6px 24px rgba(0,0,0,.10);
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1115; --bg1:#181a20; --bg2:#20232b; --hover:#232730;
+    --text1:#e8eaed; --text2:#b0b6c0; --text3:#7a828e;
+    --border:#2c3038; --divider:#23262e;
+    --primary:#3b7bff; --primary-soft:#12233f; --primary-hover:#5a91ff; --shadow:0 6px 24px rgba(0,0,0,.5);
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#0f1115; --bg1:#181a20; --bg2:#20232b; --hover:#232730;
+    --text1:#e8eaed; --text2:#b0b6c0; --text3:#7a828e;
+    --border:#2c3038; --divider:#23262e;
+    --primary:#3b7bff; --primary-soft:#12233f; --primary-hover:#5a91ff; --shadow:0 6px 24px rgba(0,0,0,.5);
+  }}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text1);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+  a{color:var(--primary)}
+  /* topbar */
+  .top{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;padding:12px 22px;background:var(--bg1);border-bottom:1px solid var(--border)}
+  .top h1{font-size:16px;margin:0;font-weight:700;white-space:nowrap}
+  .top .sub{font-size:12px;color:var(--text3);white-space:nowrap}
+  .grow{flex:1}
+  .search{position:relative;width:min(340px,40vw)}
+  .search input{width:100%;height:34px;padding:0 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text1);font-size:13px;outline:none}
+  .search input:focus{border-color:var(--primary)}
+  .btn-ghost{height:34px;padding:0 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text2);cursor:pointer;font-size:13px}
+  .btn-ghost:hover{border-color:var(--primary);color:var(--primary)}
+  /* layout */
+  .wrap{display:grid;grid-template-columns:200px 1fr;gap:0;max-width:1280px;margin:0 auto}
+  nav.toc{position:sticky;top:59px;align-self:start;height:calc(100vh - 59px);overflow:auto;padding:16px 10px;border-right:1px solid var(--border)}
+  nav.toc a{display:block;padding:7px 10px;border-radius:6px;color:var(--text2);text-decoration:none;font-size:13px}
+  nav.toc a:hover{background:var(--hover);color:var(--text1)}
+  main{padding:20px 26px 120px;min-width:0}
+  section{margin-bottom:14px;padding-top:26px;margin-top:22px;border-top:1px solid var(--border)}
+  section:first-of-type{margin-top:0;padding-top:4px;border-top:0}
+  section>h2{font-size:16.5px;font-weight:700;margin:0 0 5px;display:flex;align-items:center;gap:9px;padding-left:13px;position:relative}
+  section>h2::before{content:"";position:absolute;left:0;top:3px;bottom:3px;width:4px;border-radius:3px;background:var(--primary)}
+  /* 每个分组一个专属色标,便于区分 */
+  section:nth-of-type(1)>h2::before{background:#165dff}
+  section:nth-of-type(2)>h2::before{background:#00b42a}
+  section:nth-of-type(3)>h2::before{background:#8b5cf6}
+  section:nth-of-type(4)>h2::before{background:#ff7d00}
+  section:nth-of-type(5)>h2::before{background:#14b8a6}
+  section:nth-of-type(6)>h2::before{background:#f5319d}
+  section:nth-of-type(7)>h2::before{background:#6366f1}
+  section:nth-of-type(8)>h2::before{background:#86909c}
+  section>h2 .en{font-size:12px;color:var(--text3);font-weight:500}
+  section>.desc{font-size:12.5px;color:var(--text3);margin:0 0 16px;padding-left:13px}
+  section>.grid{margin-bottom:24px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+  /* term card */
+  .card{border:1px solid var(--border);border-radius:var(--radius);background:var(--bg1);overflow:hidden;display:flex;flex-direction:column}
+  .card.ov{overflow:visible}            /* 含浮层的卡片:允许下拉溢出不被裁 */
+  .stage.ov{overflow:visible}
+  .pop-anchor{position:relative;display:inline-block}  /* 浮层锚点:紧贴触发器定位 */
+  .stage{padding:20px 16px;min-height:92px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;background:
+      linear-gradient(0deg,var(--bg1),var(--bg1)) padding-box;position:relative}
+  .stage.tint{background:var(--bg2)}
+  .meta{border-top:1px solid var(--divider);padding:9px 12px;background:var(--bg1)}
+  .meta .nm{font-size:13px;font-weight:600}
+  .meta .en{font-size:11.5px;color:var(--text3);margin-left:6px;font-weight:500}
+  .meta .note{font-size:11.5px;color:var(--text2);margin-top:2px}
+  .full{grid-column:1/-1}
+  /* ---- demo components ---- */
+  .b{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 14px;border-radius:6px;font-size:13px;cursor:pointer;border:1px solid transparent;user-select:none}
+  .b.primary{background:var(--primary);color:#fff}
+  .b.primary:hover{background:var(--primary-hover)}
+  .b.default{background:var(--bg1);border-color:var(--border);color:var(--text1)}
+  .b.default:hover{border-color:var(--primary);color:var(--primary)}
+  .b.text{background:transparent;color:var(--primary);padding:0 6px}
+  .b.icon{width:32px;padding:0;justify-content:center}
+  .b.disabled{opacity:.5;cursor:not-allowed}
+  .b.sm{height:26px;font-size:12px;padding:0 10px}
+  .bg-grp{display:inline-flex;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+  .bg-grp .b{border-radius:0;border:0;background:var(--bg1);color:var(--text2)}
+  .bg-grp .b+ .b{border-left:1px solid var(--border)}
+  .bg-grp .b{cursor:pointer;user-select:none}
+  .bg-grp .b.on{background:var(--primary-soft);color:var(--primary);font-weight:500}
+  .inp.sel{cursor:pointer;user-select:none}
+  .inp.sel .addon{transition:.2s}
+  .inp.sel.open .addon{transform:rotate(180deg)}
+  .pop .mi.on{background:var(--primary-soft);color:var(--primary)}
+  /* 分裂按钮:内部两块一律直角,外圆角由父级 overflow:hidden 统一裁切,接缝处才是直角 */
+  .split{display:inline-flex;border-radius:6px;overflow:hidden;line-height:0}
+  .split .b{border-radius:0}
+  .split .caret{width:30px;padding:0;justify-content:center;font-size:11px;border-left:1px solid rgba(255,255,255,.4)}
+  .inp{display:inline-flex;align-items:center;height:32px;border:1px solid var(--border);border-radius:6px;background:var(--bg1);padding:0 10px;gap:6px;min-width:180px}
+  .inp input{border:0;outline:none;background:transparent;color:var(--text1);flex:1;font-size:13px;min-width:0}
+  .inp .addon{color:var(--text3);font-size:12px}
+  .ph{color:var(--text3)}
+  .switch{width:40px;height:22px;border-radius:11px;background:var(--border);position:relative;cursor:pointer;transition:.2s;flex:none}
+  .switch::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+  .switch.on{background:var(--primary)}
+  .switch.on::after{left:20px}
+  .seg{display:inline-flex;background:var(--bg2);border-radius:7px;padding:3px}
+  .seg span{padding:5px 12px;border-radius:5px;font-size:12.5px;color:var(--text2);cursor:pointer}
+  .seg span.on{background:var(--bg1);color:var(--primary);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+  .chk{display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer}
+  .box{width:16px;height:16px;border:1px solid var(--border);border-radius:4px;display:inline-flex;align-items:center;justify-content:center;color:#fff}
+  .box.on{background:var(--primary);border-color:var(--primary)}
+  .radio{width:16px;height:16px;border:1px solid var(--border);border-radius:50%;position:relative}
+  .radio.on{border-color:var(--primary)}
+  .radio.on::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--primary)}
+  .slider{width:160px;height:4px;border-radius:2px;background:var(--bg2);position:relative}
+  .slider::before{content:"";position:absolute;left:0;top:0;height:100%;width:55%;background:var(--primary);border-radius:2px}
+  .slider::after{content:"";position:absolute;left:calc(55% - 7px);top:-5px;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--primary)}
+  .stepper{display:inline-flex;align-items:center;height:32px;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+  .stepper .sbtn{width:30px;height:100%;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;color:var(--text2);font-size:17px;line-height:1;background:var(--bg1)}
+  .stepper .sbtn:hover{background:var(--primary-soft);color:var(--primary)}
+  .stepper .sval{width:54px;height:100%;text-align:center;border:0;border-left:1px solid var(--border);border-right:1px solid var(--border);outline:none;background:var(--bg1);color:var(--text1);font-size:13px;-moz-appearance:textfield}
+  .stepper .sval::-webkit-outer-spin-button,.stepper .sval::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .badge{position:relative;display:inline-flex;width:30px;height:30px;border-radius:7px;background:var(--bg2);align-items:center;justify-content:center;color:var(--text2)}
+  .badge .dot{position:absolute;top:-5px;right:-5px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--red);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center}
+  .tag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:12px}
+  .tag.blue{color:var(--primary);background:var(--primary-soft)}
+  .tag.green{color:var(--green);background:rgba(0,180,42,.12)}
+  .tag.orange{color:var(--orange);background:rgba(255,125,0,.12)}
+  .chip{display:inline-flex;align-items:center;gap:5px;padding:3px 8px 3px 4px;border-radius:14px;background:var(--bg2);font-size:12px}
+  .chip .av{width:18px;height:18px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px}
+  .prog{width:170px;height:6px;border-radius:3px;background:var(--bg2);overflow:hidden}
+  .prog i{display:block;height:100%;width:62%;background:var(--primary)}
+  .spin{width:22px;height:22px;border-radius:50%;border:2.5px solid var(--bg2);border-top-color:var(--primary);animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .skel{width:170px}
+  .skel i{display:block;height:11px;border-radius:6px;background:linear-gradient(90deg,var(--bg2),var(--hover),var(--bg2));background-size:200% 100%;animation:sh 1.3s infinite;margin:7px 0}
+  .skel i.s{width:60%}
+  @keyframes sh{to{background-position:-200% 0}}
+  .empty{text-align:center;color:var(--text3);font-size:12.5px}
+  .empty .ic{font-size:26px;opacity:.5}
+  .tabs{display:flex;gap:20px;border-bottom:1px solid var(--border);width:100%}
+  .tabs span{padding:8px 2px;font-size:13px;color:var(--text2);cursor:pointer;position:relative}
+  .tabs span.on{color:var(--primary);font-weight:600}
+  .tabs span.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--primary)}
+  .acc{width:100%;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+  .acc .hd{padding:9px 12px;display:flex;justify-content:space-between;cursor:pointer;font-size:13px}
+  .acc .bd{padding:0 12px;max-height:0;overflow:hidden;color:var(--text2);font-size:12.5px;transition:.2s}
+  .acc.open .bd{max-height:80px;padding:0 12px 10px}
+  .acc .arw{transition:.2s;color:var(--text3)}
+  .acc.open .arw{transform:rotate(90deg)}
+  table.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px}
+  table.tbl th,table.tbl td{padding:7px 10px;border-bottom:1px solid var(--divider);text-align:left;white-space:nowrap}
+  table.tbl th{background:var(--bg2);color:var(--text2);position:sticky;top:0}
+  table.tbl .frozen{position:sticky;left:0;background:var(--bg1);box-shadow:1px 0 0 var(--divider)}
+  table.tbl th.frozen{background:var(--bg2);z-index:1}
+  .crumb{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--text3)}
+  .crumb a{text-decoration:none}
+  .crumb .cur{color:var(--text1)}
+  .page{display:flex;gap:4px}
+  .page span{min-width:28px;height:28px;padding:0 6px;border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12.5px;cursor:pointer;color:var(--text2)}
+  .page span.on{border-color:var(--primary);color:var(--primary);background:var(--primary-soft)}
+  .steps{display:flex;align-items:center;gap:8px;font-size:12.5px}
+  .steps .st{display:flex;align-items:center;gap:6px;color:var(--text3)}
+  .steps .st .n{width:20px;height:20px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:11px}
+  .steps .st.on{color:var(--primary)}
+  .steps .st.on .n{background:var(--primary);color:#fff}
+  .steps .line{width:26px;height:1px;background:var(--border)}
+  .stat{width:100%;padding:4px}
+  .stat .lb{font-size:12px;color:var(--text3)}
+  .stat .vl{font-size:24px;font-weight:700;margin-top:2px}
+  .stat .tr{font-size:11.5px;color:var(--green)}
+  .tl{width:100%}
+  .tl .it{display:flex;gap:10px;padding-bottom:12px;position:relative}
+  .tl .it::before{content:"";position:absolute;left:5px;top:14px;bottom:0;width:1px;background:var(--border)}
+  .tl .it:last-child::before{display:none}
+  .tl .d{width:11px;height:11px;border-radius:50%;background:var(--primary);margin-top:3px;flex:none;z-index:1}
+  .tl .tx{font-size:12.5px}
+  .tl .tm{font-size:11px;color:var(--text3)}
+  .desc-l{width:100%;font-size:12.5px}
+  .desc-l div{display:flex;padding:5px 0;border-bottom:1px solid var(--divider)}
+  .desc-l .k{width:78px;color:var(--text3);flex:none}
+  /* tooltip / popover with caret */
+  .tip-wrap{position:relative}
+  .tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--text1);color:var(--bg1);padding:5px 9px;border-radius:5px;font-size:12px;white-space:nowrap;opacity:0;pointer-events:none;transition:.15s}
+  .tip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--text1)}
+  .tip-wrap:hover .tip{opacity:1}
+  .pop{position:absolute;top:calc(100% + 8px);left:0;background:var(--bg1);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow);padding:6px;min-width:130px;z-index:20;display:none}
+  .pop.show{display:block}
+  .pop::before{content:"";position:absolute;bottom:100%;left:18px;border:6px solid transparent;border-bottom-color:var(--bg1);filter:drop-shadow(0 -1px 0 var(--border))}
+  .pop .mi{padding:7px 10px;border-radius:6px;font-size:12.5px;cursor:pointer;display:flex;gap:8px;align-items:center}
+  .pop .mi:hover{background:var(--hover);color:var(--primary)}
+  /* modal + drawer + toast (fixed) */
+  .mask{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:.2s}
+  .mask.show{opacity:1;pointer-events:auto}
+  .modal{width:400px;max-width:92vw;background:var(--bg1);border-radius:12px;box-shadow:var(--shadow);transform:translateY(10px);transition:.2s;overflow:hidden}
+  .mask.show .modal{transform:none}
+  .modal .mh{padding:16px 18px 6px;font-size:16px;font-weight:600;display:flex;justify-content:space-between}
+  .modal .mb{padding:6px 18px 14px;color:var(--text2);font-size:13px}
+  .modal .mf{padding:12px 18px;display:flex;justify-content:flex-end;gap:10px;background:var(--bg2)}
+  .drawer{position:fixed;top:0;right:0;bottom:0;width:340px;max-width:90vw;background:var(--bg1);box-shadow:var(--shadow);z-index:100;transform:translateX(100%);transition:.25s;display:flex;flex-direction:column}
+  .drawer.show{transform:none}
+  .drawer .dh{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-weight:600}
+  .drawer .db{padding:16px;color:var(--text2);font-size:13px;flex:1}
+  .drawer .grip{position:absolute;left:0;top:0;bottom:0;width:5px;cursor:ew-resize;background:transparent}
+  .drawer:hover .grip{background:var(--primary-soft)}
+  .toasts{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center}
+  .toast{background:var(--bg1);border:1px solid var(--border);box-shadow:var(--shadow);border-radius:8px;padding:9px 14px;font-size:13px;display:flex;gap:8px;align-items:center;animation:tin .2s}
+  @keyframes tin{from{transform:translateY(-8px);opacity:0}}
+  /* states row */
+  .states{display:flex;gap:8px;flex-wrap:wrap;width:100%;justify-content:center}
+  .st-chip{padding:5px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--bg1)}
+  .st-chip.hover{background:var(--hover)}
+  .st-chip.focus{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary-soft)}
+  .st-chip.selected{background:var(--primary-soft);color:var(--primary);border-color:var(--primary)}
+  .st-chip.disabled{opacity:.45}
+  .st-chip.error{border-color:var(--red);color:var(--red)}
+  .st-chip.dimmed{opacity:.4}
+  /* anatomy callout */
+  .callout .tag-lbl{position:absolute;font-size:10.5px;color:#fff;background:var(--primary);padding:1px 6px;border-radius:4px;white-space:nowrap}
+  .hidden{display:none!important}
+  .no-result{padding:40px;text-align:center;color:var(--text3)}
+  code{background:var(--bg2);padding:1px 5px;border-radius:4px;font-size:12px}
+  .foot{max-width:1280px;margin:0 auto;padding:16px 26px;color:var(--text3);font-size:12px;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+  <div class="top">
+    <h1>UI 术语活字典</h1>
+    <span class="sub">Live Component Glossary · 单文件零依赖</span>
+    <span class="grow"></span>
+    <div class="search"><input id="q" placeholder="搜索术语 / component… (中/英)"></div>
+    <button class="btn-ghost" id="theme">🌓 主题</button>
+  </div>
+
+  <div class="wrap">
+    <nav class="toc">
+      <a href="#buttons">按钮 Buttons</a>
+      <a href="#forms">表单控件 Form</a>
+      <a href="#overlays">浮层 Overlays</a>
+      <a href="#feedback">反馈 Feedback</a>
+      <a href="#data">数据展示 Data</a>
+      <a href="#nav">导航 Navigation</a>
+      <a href="#anatomy">部位 Anatomy</a>
+      <a href="#states">状态 States</a>
+    </nav>
+
+    <main id="main">
+      <!-- BUTTONS -->
+      <section id="buttons">
+        <h2>按钮 <span class="en">Buttons</span></h2>
+        <p class="desc">操作触发类。区分主/次/文字按钮、图标按钮、分裂按钮、按钮组。</p>
+        <div class="grid">
+          <div class="card"><div class="stage"><span class="b primary">主按钮</span></div><div class="meta"><span class="nm">主按钮</span><span class="en">primary button</span><div class="note">页面主操作,一屏一个为宜</div></div></div>
+          <div class="card"><div class="stage"><span class="b default">次按钮</span></div><div class="meta"><span class="nm">次按钮</span><span class="en">default / secondary</span><div class="note">次要操作,描边样式</div></div></div>
+          <div class="card"><div class="stage"><span class="b text">文字按钮</span></div><div class="meta"><span class="nm">链接/文字按钮</span><span class="en">text / link button</span><div class="note">最弱操作,无边框</div></div></div>
+          <div class="card"><div class="stage"><span class="b default icon">＋</span></div><div class="meta"><span class="nm">图标按钮</span><span class="en">icon button</span><div class="note">仅图标,需 tooltip 说明</div></div></div>
+          <div class="card ov"><div class="stage ov"><span class="pop-anchor"><span class="split"><span class="b primary">保存</span><span class="b primary caret" data-act="pop" data-pop="p-split">▾</span></span><div class="pop" id="p-split"><div class="mi">💾 保存</div><div class="mi">📋 另存为</div></div></span></div><div class="meta"><span class="nm">分裂按钮</span><span class="en">split button</span><div class="note">主操作 + 右侧下拉更多操作</div></div></div>
+          <div class="card"><div class="stage"><span class="bg-grp" data-act="btngrp"><span class="b on">日</span><span class="b">周</span><span class="b">月</span></span></div><div class="meta"><span class="nm">按钮组</span><span class="en">button group</span><div class="note">一组同类互斥操作(点我切换)</div></div></div>
+          <div class="card"><div class="stage"><span class="b default disabled">禁用</span></div><div class="meta"><span class="nm">禁用态</span><span class="en">disabled</span><div class="note">不可点,置灰 + not-allowed</div></div></div>
+        </div>
+      </section>
+
+      <!-- FORMS -->
+      <section id="forms">
+        <h2>表单控件 <span class="en">Form Controls</span></h2>
+        <p class="desc">录入类。注意「前缀/后缀 addon」「占位符 placeholder」「表单项=标签+控件+校验提示」。</p>
+        <div class="grid">
+          <div class="card"><div class="stage"><span class="inp"><span class="addon">🔍</span><input placeholder="请输入关键字"><span class="addon">.com</span></span></div><div class="meta"><span class="nm">输入框 + 前后缀</span><span class="en">input + prefix/suffix</span><div class="note">灰字是占位符 placeholder</div></div></div>
+          <div class="card ov"><div class="stage ov"><span class="pop-anchor"><span class="inp sel" style="min-width:180px" data-act="pop" data-pop="p-sel"><span class="ph selval" style="flex:1">请选择</span><span class="addon">▾</span></span><div class="pop" id="p-sel" style="min-width:180px"><div class="mi" data-val="选项一 · Option A">选项一 · Option A</div><div class="mi" data-val="选项二 · Option B">选项二 · Option B</div><div class="mi" data-val="选项三 · Option C">选项三 · Option C</div></div></span></div><div class="meta"><span class="nm">下拉选择</span><span class="en">select</span><div class="note">点开选值;可搜索则为 combobox</div></div></div>
+          <div class="card"><div class="stage"><span class="switch on" data-act="switch"></span></div><div class="meta"><span class="nm">开关</span><span class="en">switch / toggle</span><div class="note">点我切换</div></div></div>
+          <div class="card"><div class="stage"><span class="seg" data-act="seg"><span class="on">列表</span><span>看板</span></span></div><div class="meta"><span class="nm">分段控制器</span><span class="en">segmented control</span><div class="note">同区少量互斥视图</div></div></div>
+          <div class="card"><div class="stage" style="gap:16px"><span class="chk" data-act="chk"><span class="box on">✓</span>复选</span><span class="chk"><span class="radio on"></span>单选</span></div><div class="meta"><span class="nm">复选 / 单选</span><span class="en">checkbox / radio</span><div class="note">多选用复选,互斥用单选</div></div></div>
+          <div class="card"><div class="stage"><span class="slider"></span></div><div class="meta"><span class="nm">滑块</span><span class="en">slider</span><div class="note">连续数值,带拖拽手柄</div></div></div>
+          <div class="card"><div class="stage"><span class="stepper"><span class="sbtn" data-step="-1">−</span><input class="sval" type="number" value="3"><span class="sbtn" data-step="1">＋</span></span></div><div class="meta"><span class="nm">步进器</span><span class="en">number stepper</span><div class="note">带 −/＋ 的数字输入,点按加减(≥0)</div></div></div>
+        </div>
+      </section>
+
+      <!-- OVERLAYS -->
+      <section id="overlays">
+        <h2>浮层 <span class="en">Overlays</span></h2>
+        <p class="desc">按「是否带蒙层/是否阻断背景/是否依附触发点」区分。悬停/点击试试。</p>
+        <div class="grid">
+          <div class="card ov"><div class="stage ov"><span class="tip-wrap"><span class="b default">悬停我</span><span class="tip">这是气泡提示</span></span></div><div class="meta"><span class="nm">气泡提示</span><span class="en">tooltip</span><div class="note">悬停轻提示,不可交互</div></div></div>
+          <div class="card ov"><div class="stage ov"><span class="pop-anchor"><span class="b default" data-act="pop" data-pop="p-menu">点击 ▾</span><div class="pop" id="p-menu"><div class="mi">编辑</div><div class="mi">复制</div><div class="mi">删除</div></div></span></div><div class="meta"><span class="nm">下拉菜单 / 浮层</span><span class="en">dropdown / popover</span><div class="note">依附触发点,带指示箭头 caret,不阻断背景</div></div></div>
+          <div class="card"><div class="stage"><span class="b primary" data-act="modal">打开弹框</span></div><div class="meta"><span class="nm">模态弹框</span><span class="en">modal / dialog</span><div class="note">居中 + 蒙层 mask,阻断背景</div></div></div>
+          <div class="card"><div class="stage"><span class="b default" data-act="drawer">打开抽屉</span></div><div class="meta"><span class="nm">抽屉</span><span class="en">drawer</span><div class="note">边缘滑出,左缘有拖拽手柄 handle</div></div></div>
+        </div>
+      </section>
+
+      <!-- FEEDBACK -->
+      <section id="feedback">
+        <h2>反馈 <span class="en">Feedback</span></h2>
+        <p class="desc">Toast(自动消失)vs 通知(可停留);加载/骨架/空状态是三种「无数据」表达。</p>
+        <div class="grid">
+          <div class="card"><div class="stage"><span class="b default" data-act="toast">触发 Toast</span></div><div class="meta"><span class="nm">轻提示</span><span class="en">toast</span><div class="note">短暂、自动消失、不阻断</div></div></div>
+          <div class="card"><div class="stage"><span class="badge">🔔<span class="dot">9</span></span></div><div class="meta"><span class="nm">徽标</span><span class="en">badge</span><div class="note">角标计数/红点</div></div></div>
+          <div class="card"><div class="stage" style="gap:8px"><span class="tag blue">标签</span><span class="tag green">启用</span><span class="tag orange">对象</span></div><div class="meta"><span class="nm">标签</span><span class="en">tag</span><div class="note">状态/分类色块</div></div></div>
+          <div class="card"><div class="stage"><span class="chip"><span class="av">G</span>Gary ×</span></div><div class="meta"><span class="nm">可移除标签</span><span class="en">chip</span><div class="note">带头像/可关闭的实体标签</div></div></div>
+          <div class="card"><div class="stage"><span class="prog"><i></i></span></div><div class="meta"><span class="nm">进度条</span><span class="en">progress</span></div></div>
+          <div class="card"><div class="stage"><span class="spin"></span></div><div class="meta"><span class="nm">加载态</span><span class="en">loading / spinner</span></div></div>
+          <div class="card"><div class="stage"><span class="skel"><i></i><i class="s"></i></span></div><div class="meta"><span class="nm">骨架屏</span><span class="en">skeleton</span><div class="note">加载占位,优于纯 spinner</div></div></div>
+          <div class="card"><div class="stage"><span class="empty"><div class="ic">📭</div>暂无数据</span></div><div class="meta"><span class="nm">空状态</span><span class="en">empty state</span><div class="note">无数据时的引导</div></div></div>
+        </div>
+      </section>
+
+      <!-- DATA -->
+      <section id="data">
+        <h2>数据展示 <span class="en">Data Display</span></h2>
+        <p class="desc">看板=整块 dashboard,图表=单个 chart。表格注意「吸顶表头 sticky header」「冻结列 frozen column」。</p>
+        <div class="grid">
+          <div class="card full"><div class="stage tint" style="padding:0;display:block;max-height:150px;overflow:auto"><table class="tbl"><thead><tr><th class="frozen">名称</th><th>编码</th><th>状态</th><th>地区</th><th>年份</th></tr></thead><tbody>
+            <tr><td class="frozen">水文测站01</td><td>HS-001</td><td>预警</td><td>华北</td><td>2000</td></tr>
+            <tr><td class="frozen">水文测站02</td><td>HS-002</td><td>正常</td><td>华东</td><td>2019</td></tr>
+            <tr><td class="frozen">水文测站03</td><td>HS-003</td><td>检修</td><td>华南</td><td>2016</td></tr>
+          </tbody></table></div><div class="meta"><span class="nm">表格</span><span class="en">table</span><div class="note">左列冻结 frozen · 表头吸顶 sticky(横向滚动看效果)</div></div></div>
+          <div class="card"><div class="stage"><div class="stat"><div class="lb">测站总数</div><div class="vl">1,284</div><div class="tr">↑ 12% 环比</div></div></div><div class="meta"><span class="nm">统计卡</span><span class="en">stat / KPI card</span></div></div>
+          <div class="card"><div class="stage"><div class="tabs" data-act="tabs"><span class="on">概览</span><span>属性</span><span>关系</span></div></div><div class="meta"><span class="nm">标签页</span><span class="en">tabs</span><div class="note">选中项有下划线指示</div></div></div>
+          <div class="card"><div class="stage"><div class="acc" data-act="acc"><div class="hd">基础信息 <span class="arw">▸</span></div><div class="bd">名称、编码、命名空间…</div></div></div><div class="meta"><span class="nm">折叠面板</span><span class="en">accordion / collapse</span></div></div>
+          <div class="card"><div class="stage"><div class="tl"><div class="it"><span class="d"></span><div><div class="tx">创建对象类型</div><div class="tm">08:12</div></div></div><div class="it"><span class="d" style="background:var(--orange)"></span><div><div class="tx">绑定数据源</div><div class="tm">09:40</div></div></div></div></div><div class="meta"><span class="nm">时间轴</span><span class="en">timeline</span></div></div>
+          <div class="card"><div class="stage"><div class="desc-l"><div><span class="k">名称</span>汉江测站</div><div><span class="k">编码</span>HS-001</div><div><span class="k">状态</span>启用</div></div></div><div class="meta"><span class="nm">描述列表</span><span class="en">descriptions</span><div class="note">键值对展示</div></div></div>
+        </div>
+      </section>
+
+      <!-- NAV -->
+      <section id="nav">
+        <h2>导航 <span class="en">Navigation</span></h2>
+        <div class="grid">
+          <div class="card"><div class="stage"><span class="crumb"><a href="#">首页</a><span>/</span><a href="#">资源</a><span>/</span><span class="cur">对象类型</span></span></div><div class="meta"><span class="nm">面包屑</span><span class="en">breadcrumb</span></div></div>
+          <div class="card"><div class="stage"><span class="page"><span>‹</span><span class="on">1</span><span>2</span><span>3</span><span>›</span></span></div><div class="meta"><span class="nm">分页器</span><span class="en">pagination</span></div></div>
+          <div class="card"><div class="stage"><div class="steps"><span class="st on"><span class="n">1</span>填写</span><span class="line"></span><span class="st"><span class="n">2</span>确认</span><span class="line"></span><span class="st"><span class="n">3</span>完成</span></div></div><div class="meta"><span class="nm">步骤条</span><span class="en">stepper / steps</span></div></div>
+        </div>
+      </section>
+
+      <!-- ANATOMY -->
+      <section id="anatomy">
+        <h2>部位 / 解剖 <span class="en">Anatomy</span></h2>
+        <p class="desc">描述局部时用这些词,一步命中。</p>
+        <div class="grid">
+          <div class="card"><div class="stage" style="overflow:visible"><span style="position:relative"><span class="pop show" style="position:static;box-shadow:none;display:inline-block"><div class="mi">菜单项</div></span></span></div><div class="meta"><span class="nm">指示箭头 / 尖角</span><span class="en">arrow / caret</span><div class="note">浮层顶部那个小三角(≠“燕尾”)</div></div></div>
+          <div class="card"><div class="stage"><span class="inp"><span class="ph" style="flex:1">占位符文字</span></span></div><div class="meta"><span class="nm">占位符</span><span class="en">placeholder</span><div class="note">未填时的灰字提示</div></div></div>
+          <div class="card"><div class="stage"><span style="width:5px;height:44px;border-radius:3px;background:var(--primary)"></span></div><div class="meta"><span class="nm">拖拽手柄</span><span class="en">handle / grip</span><div class="note">拖动/调宽的把手</div></div></div>
+          <div class="card"><div class="stage tint"><span style="position:relative;display:inline-flex"><span class="b default">按钮</span></span></div><div class="meta"><span class="nm">触发器 / 浮层</span><span class="en">trigger / popper</span><div class="note">触发器=点开浮层的元素;浮层=被弹出的层</div></div></div>
+        </div>
+      </section>
+
+      <!-- STATES -->
+      <section id="states">
+        <h2>状态 <span class="en">States</span></h2>
+        <p class="desc">同一元素在不同状态下的样式约定。</p>
+        <div class="grid">
+          <div class="card full"><div class="stage"><div class="states">
+            <span class="st-chip">默认 default</span>
+            <span class="st-chip hover">悬停 hover</span>
+            <span class="st-chip focus">聚焦 focus</span>
+            <span class="st-chip selected">选中 selected</span>
+            <span class="st-chip disabled">禁用 disabled</span>
+            <span class="st-chip error">错误 error</span>
+            <span class="st-chip dimmed">弱化 dimmed</span>
+          </div></div><div class="meta"><span class="nm">状态一览</span><span class="en">states</span><div class="note">描述时说清「哪个状态」</div></div></div>
+        </div>
+      </section>
+
+      <div class="no-result hidden" id="noresult">没有匹配「<b id="qword"></b>」的术语</div>
+    </main>
+  </div>
+
+  <div class="foot">单文件 · 零依赖 · 双击即开 · 可直接拷入团队 wiki。配套文字规范见 <code>UI协作规范用语.md</code> / <code>UI术语中英对照.md</code>。</div>
+
+  <!-- overlays roots -->
+  <div class="mask" id="modal-mask"><div class="modal"><div class="mh">模态弹框 <span style="cursor:pointer;color:var(--text3)" data-close>×</span></div><div class="mb">居中显示、带蒙层、阻断背景操作。点蒙层或 × 关闭。</div><div class="mf"><span class="b default" data-close>取消</span><span class="b primary" data-close>确定</span></div></div></div>
+  <div class="mask" id="drawer-mask"></div>
+  <div class="drawer" id="drawer"><span class="grip"></span><div class="dh">侧边抽屉 <span style="cursor:pointer;color:var(--text3)" data-close>×</span></div><div class="db">从边缘滑出,左缘有拖拽手柄(hover 高亮)。可覆盖或挤压背景。</div></div>
+  <div class="toasts" id="toasts"></div>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  // theme
+  document.getElementById('theme').onclick=function(){
+    var cur=root.getAttribute('data-theme');
+    var next=cur==='dark'?'light':(cur==='light'?'dark':(matchMedia('(prefers-color-scheme:dark)').matches?'light':'dark'));
+    root.setAttribute('data-theme',next);
+  };
+  // delegation
+  document.addEventListener('click',function(e){
+    // 步进器 +/−:调整相邻数字输入(下限 0)
+    var st=e.target.closest('[data-step]');
+    if(st){ var inp=st.parentNode.querySelector('.sval'); var v=(parseInt(inp.value,10)||0)+parseInt(st.getAttribute('data-step'),10); if(v<0)v=0; inp.value=v; return; }
+    // 选择下拉里的某一项:回填值、高亮、收起
+    var opt=e.target.closest('.pop .mi[data-val]');
+    if(opt){ var pp=opt.closest('.pop'); var val=pp.parentNode.querySelector('.selval'); if(val){ val.textContent=opt.getAttribute('data-val'); val.classList.remove('ph'); } pp.querySelectorAll('.mi').forEach(function(m){m.classList.remove('on')}); opt.classList.add('on'); closePops(); return; }
+    var t=e.target.closest('[data-act],[data-close]');
+    // 点浮层外部:收起
+    if(!e.target.closest('.pop')&&!e.target.closest('[data-pop]')) closePops();
+    if(!t){ return; }
+    var act=t.getAttribute('data-act');
+    if(act==='pop'){ var id=t.getAttribute('data-pop'); var p=document.getElementById(id); var open=p.classList.contains('show'); closePops(); if(!open){ p.classList.add('show'); if(t.classList.contains('sel'))t.classList.add('open'); } e.stopPropagation(); }
+    else if(act==='btngrp'){ if(e.target.classList.contains('b')){ t.querySelectorAll('.b').forEach(function(b){b.classList.remove('on')}); e.target.classList.add('on'); } }
+    else if(act==='switch'){ t.classList.toggle('on'); }
+    else if(act==='chk'){ var b=t.querySelector('.box'); if(b)b.classList.toggle('on'), b.textContent=b.classList.contains('on')?'✓':''; }
+    else if(act==='seg'){ if(e.target.tagName==='SPAN'&&e.target.parentNode===t){ t.querySelectorAll('span').forEach(function(s){s.classList.remove('on')}); e.target.classList.add('on'); } }
+    else if(act==='tabs'){ if(e.target.tagName==='SPAN'){ t.querySelectorAll('span').forEach(function(s){s.classList.remove('on')}); e.target.classList.add('on'); } }
+    else if(act==='acc'){ t.classList.toggle('open'); }
+    else if(act==='modal'){ show('modal-mask'); }
+    else if(act==='drawer'){ show('drawer-mask'); document.getElementById('drawer').classList.add('show'); }
+    else if(act==='toast'){ toast(); }
+    if(t.hasAttribute('data-close')){ hide('modal-mask'); hide('drawer-mask'); document.getElementById('drawer').classList.remove('show'); }
+  });
+  function closePops(){ document.querySelectorAll('.pop.show').forEach(function(p){p.classList.remove('show')}); document.querySelectorAll('.inp.sel.open').forEach(function(s){s.classList.remove('open')}); }
+  function show(id){ document.getElementById(id).classList.add('show'); }
+  function hide(id){ document.getElementById(id).classList.remove('show'); }
+  document.getElementById('modal-mask').addEventListener('click',function(e){ if(e.target===this)hide('modal-mask'); });
+  document.getElementById('drawer-mask').addEventListener('click',function(){ hide('drawer-mask'); document.getElementById('drawer').classList.remove('show'); });
+  var tn=0;
+  function toast(){ var box=document.getElementById('toasts'); var el=document.createElement('div'); el.className='toast'; el.innerHTML='✅ 操作成功 (自动消失)'; box.appendChild(el); setTimeout(function(){ el.style.transition='.3s'; el.style.opacity=0; el.style.transform='translateY(-8px)'; setTimeout(function(){el.remove()},300); },1800); }
+  // search filter
+  var q=document.getElementById('q');
+  q.addEventListener('input',function(){
+    var kw=q.value.trim().toLowerCase();
+    var any=false;
+    document.querySelectorAll('section').forEach(function(sec){
+      var hit=false;
+      sec.querySelectorAll('.card').forEach(function(c){
+        var txt=c.textContent.toLowerCase();
+        var m=!kw||txt.indexOf(kw)>=0; c.classList.toggle('hidden',!m); if(m)hit=true;
+      });
+      sec.classList.toggle('hidden',!hit); if(hit)any=true;
+    });
+    document.getElementById('noresult').classList.toggle('hidden',any||!kw);
+    document.getElementById('qword').textContent=kw;
+  });
+})();
+</script>
+</body>
+</html>
