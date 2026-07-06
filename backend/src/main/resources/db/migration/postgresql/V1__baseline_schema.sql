@@ -3,7 +3,7 @@
 -- =============================================================
 
 CREATE TABLE IF NOT EXISTS ont_biz_category (
-  id              VARCHAR(45)  PRIMARY KEY,
+  id              VARCHAR(45)  PRIMARY KEY,          -- "category-" + UUID；type=3 分组用 "group-" 前缀,与 ont_biz_group 共用同一 id
   parent_id       VARCHAR(45)  NOT NULL DEFAULT '0',
   rid             VARCHAR(128),
   category_code   VARCHAR(64)  NOT NULL UNIQUE,

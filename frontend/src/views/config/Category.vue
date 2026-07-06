@@ -2133,6 +2133,12 @@ async function submitForm() {
     BL.warning('行业只能是第一级分类')
     return
   }
+  // 新增时校验编码全局唯一(编辑时编码不可改,跳过)
+  if (formMode.value === 'create'
+      && flatten(tree.value).some(n => n.categoryCode === formData.categoryCode)) {
+    BL.warning('分类编码已存在:' + formData.categoryCode)
+    return
+  }
   // 创建领域时自动创建命名空间，nsCode = categoryCode
   if (formMode.value === 'create' && formData.categoryType === 2) {
     formData.nsCode = formData.categoryCode

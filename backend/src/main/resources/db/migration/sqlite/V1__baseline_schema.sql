@@ -6,7 +6,7 @@
 
 -- 行业/领域分类表
 CREATE TABLE IF NOT EXISTS ont_biz_category (
-  id              TEXT PRIMARY KEY,                 -- "category-" + UUID
+  id              TEXT PRIMARY KEY,                 -- "category-" + UUID；type=3 分组用 "group-" 前缀,与 ont_biz_group 共用同一 id
   parent_id       TEXT NOT NULL DEFAULT '0',        -- 自关联上级；'0' 顶级
   rid             TEXT,                             -- ri.ont.biz.category.<uuid>
   category_code   TEXT NOT NULL UNIQUE,             -- 小写+下划线 全局唯一

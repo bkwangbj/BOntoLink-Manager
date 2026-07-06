@@ -90,16 +90,22 @@ public class CategoryService {
      * - 分组(type=3)的 nsCode 强制继承父级领域，前端传入值被忽略。
      */
     public BizCategory create(BizCategory c) {
+        // 编码全局唯一(DB 有 UNIQUE 约束,这里提前拦截给友好提示)
+        if (c.getCategoryCode() != null && categoryMapper.findByCode(c.getCategoryCode()) != null) {
+            throw new IllegalArgumentException("分类编码已存在:" + c.getCategoryCode());
+        }
         // 行业只能是第一级
         if (c.getCategoryType() != null && c.getCategoryType() == 1
                 && c.getParentId() != null && !"0".equals(c.getParentId())) {
             throw new IllegalArgumentException("行业只能是第一级分类");
         }
         if (c.getId() == null || c.getId().isEmpty()) {
-            c.setId("category-" + UUID.randomUUID());
+            // 分组(type=3)与 ont_biz_group 复用同一 id,统一走 "group-" 规则;其余走 "category-"
+            String prefix = (c.getCategoryType() != null && c.getCategoryType() == 3) ? "group-" : "category-";
+            c.setId(prefix + UUID.randomUUID());
         }
         if (c.getRid() == null) {
-            c.setRid("ri.ont.biz.category." + c.getId().replaceFirst("^category-", ""));
+            c.setRid("ri.ont.biz.category." + c.getId().replaceFirst("^(category|group)-", ""));
         }
         if (c.getStatus() == null) c.setStatus(1);
         if (c.getSort() == null) c.setSort(0);
@@ -202,7 +208,7 @@ public class CategoryService {
         g.setDescription(c.getDescription());
         g.setDomainCode(domainCode);
         if (existingGid == null || existingGid.isEmpty()) {
-            g.setId("group-" + UUID.randomUUID());
+            g.setId(c.getId());   // 与分类节点复用同一 id(type=3 的 id 已是 "group-" 规则)
             g.setParentId(parentGroupId);
             g.setCategoryCode(c.getCategoryCode());
             groupMapper.insert(g);
