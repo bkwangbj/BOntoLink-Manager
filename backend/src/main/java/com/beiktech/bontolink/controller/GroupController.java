@@ -29,6 +29,12 @@ public class GroupController {
         return R.ok(service.listAll());
     }
 
+    /** 按领域返回分组 (domain_code 或 category_code 命中);供资源详情抽屉的"所属分组"下拉按需加载 */
+    @GetMapping("/by-domain")
+    public R<List<BizGroup>> listByDomain(@RequestParam("domain") String domain) {
+        return R.ok(service.listByDomain(domain));
+    }
+
     /** 新建分组节点，返回带 id 的完整分组对象 */
     @PostMapping
     public R<BizGroup> create(@RequestBody BizGroup g) { return R.ok(service.create(g)); }

@@ -53,6 +53,7 @@ export const namespaceApi = {
 export const groupApi = {
   listByParent: (parentId) => http.get('/group', { params: { parentId } }),
   listAll:      () => http.get('/group/all'),
+  byDomain:     (domain) => http.get('/group/by-domain', { params: { domain } }),
   create: (data) => http.post('/group', data),
   update: (id, data) => http.put(`/group/${id}`, data),
   remove: (id) => http.delete(`/group/${id}`),

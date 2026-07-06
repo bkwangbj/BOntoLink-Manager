@@ -289,9 +289,18 @@ const filteredGroups = computed(() => {
     (spGroupIds.value.has(g.id) && (g.domain_code ? g.domain_code === domain : g.category_code ? g.category_code === domain : true))
   )
 })
-async function loadSpGroups() {
-  if (groups.value.length) return
-  const bizGroups = await groupApi.listAll().catch(() => [])
+const loadedDomain = ref('')  // 已加载分组的领域,避免同领域重复请求
+// 共享属性的分组集合(group_type='shared_props'),全量加载一次
+async function loadSpGroupIds() {
+  if (spGroupIds.value.size) return
+  const spRefs = await groupRefApi.list('shared_props').catch(() => [])
+  spGroupIds.value = new Set((spRefs || []).map(r => r.groupId || r.group_id))
+}
+// 按当前共享属性所属领域加载分组(不再一次性拉取全部)
+async function loadSpGroupsByDomain(domain) {
+  if (!domain) { groups.value = []; loadedDomain.value = ''; return }
+  if (loadedDomain.value === domain) return
+  const bizGroups = await groupApi.byDomain(domain).catch(() => [])
   groups.value = (bizGroups || []).map(g => ({
     id: g.id, parent_id: g.parentId || g.parent_id,
     group_name: g.gname || g.gName || g.g_name || g.group_name || '',
@@ -299,9 +308,7 @@ async function loadSpGroups() {
     domain_code: g.domainCode || g.domain_code || '',
     status: g.status || 'active'
   }))
-  // 共享属性的分组集合(用于"所属分组"下拉按资源类型过滤)
-  const spRefs = await groupRefApi.list('shared_props').catch(() => [])
-  spGroupIds.value = new Set((spRefs || []).map(r => r.groupId || r.group_id))
+  loadedDomain.value = domain
 }
 async function loadSpGroupRef(id) {
   try {
@@ -311,12 +318,13 @@ async function loadSpGroupRef(id) {
     form.group_id = ref ? (ref.groupId || ref.group_id || '') : ''
   } catch { form.group_id = '' }
 }
-onMounted(() => loadSpGroups())
+onMounted(() => loadSpGroupIds())
 
 function resetForm(src) {
   Object.keys(form).forEach(k => delete form[k])
   Object.assign(form, src || {})
   if (form.id) loadSpGroupRef(form.id)
+  loadSpGroupsByDomain(form.category_code || form.categoryCode || '')
 }
 
 /* refs/refQ 提前声明以避免 immediate watch 触发 TDZ */

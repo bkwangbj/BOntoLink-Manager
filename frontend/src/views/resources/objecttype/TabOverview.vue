@@ -159,9 +159,18 @@ const filteredGroups = computed(() => {
     (objGroupIds.value.has(g.id) && (g.domain_code ? g.domain_code === domain : g.category_code ? g.category_code === domain : true))
   )
 })
-async function loadGroups() {
-  if (groups.value.length) return
-  const bizGroups = await groupApi.listAll().catch(() => [])
+const loadedDomain = ref('')  // 已加载分组的领域,避免同领域重复请求
+// 对象类型的分组集合(group_type='object_types'),全量加载一次
+async function loadObjGroupIds() {
+  if (objGroupIds.value.size) return
+  const objRefs = await groupRefApi.list('object_types').catch(() => [])
+  objGroupIds.value = new Set((objRefs || []).map(r => r.groupId || r.group_id))
+}
+// 按当前对象所属领域加载分组(不再一次性拉取全部)
+async function loadGroupsByDomain(domain) {
+  if (!domain) { groups.value = []; loadedDomain.value = ''; return }
+  if (loadedDomain.value === domain) return
+  const bizGroups = await groupApi.byDomain(domain).catch(() => [])
   groups.value = (bizGroups || []).map(g => ({
     id: g.id, parent_id: g.parentId || g.parent_id,
     group_name: g.gname || g.gName || g.g_name || g.group_name || '',
@@ -169,9 +178,7 @@ async function loadGroups() {
     domain_code: g.domainCode || g.domain_code || '',
     status: g.status || 'active'
   }))
-  // 对象类型的分组集合(用于"所属分组"下拉按资源类型过滤)
-  const objRefs = await groupRefApi.list('object_types').catch(() => [])
-  objGroupIds.value = new Set((objRefs || []).map(r => r.groupId || r.group_id))
+  loadedDomain.value = domain
 }
 async function loadObjGroupRef(id) {
   try {
@@ -181,7 +188,7 @@ async function loadObjGroupRef(id) {
     form.group_id = ref ? (ref.groupId || ref.group_id || '') : ''
   } catch { form.group_id = '' }
 }
-onMounted(() => loadGroups())
+onMounted(() => loadObjGroupIds())
 
 function loadFromDetail() {
   Object.keys(form).forEach(k => delete form[k])
@@ -191,6 +198,7 @@ function loadFromDetail() {
   form.is_common = Number(form.is_common ?? 0)
   form.status    = Number(form.status    ?? 1)
   if (form.id) loadObjGroupRef(form.id)
+  loadGroupsByDomain(form.category_code || form.categoryCode || '')
 }
 watch(() => props.detail, loadFromDetail, { immediate: true, deep: true })
 

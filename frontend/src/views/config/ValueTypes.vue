@@ -430,6 +430,7 @@ const groups = ref([])  // 全部分组（含 category_code）
 const vtGroupRef = ref(null)  // 当前值类型的分组绑定记录
 
 const vtGroupIds = ref(new Set())  // 值类型的分组 id 集合(group_type='value_types')
+const loadedDomain = ref('')       // 已加载分组的领域,避免同领域重复请求
 /* 只显示值类型的分组;领域相关组按当前领域收窄;已选分组始终保留兜底 */
 const filteredGroups = computed(() => {
   const domain = form.category_code || form.categoryCode || ''
@@ -530,21 +531,27 @@ function constraintTagCls(t) {
 }
 function clearFilters() { filterStatus.value = 'all'; filterCategory.value = ''; q.value = '' }
 
+// 按当前值类型所属领域加载分组(不再一次性拉取全部)
+async function loadGroupsByDomain(domain) {
+  if (!domain) { groups.value = []; loadedDomain.value = ''; return }
+  if (loadedDomain.value === domain) return
+  const bizGroups = await groupApi.byDomain(domain).catch(() => [])
+  groups.value = (bizGroups || []).map(g => ({
+    id: g.id, parent_id: g.parentId || g.parent_id,
+    group_name: g.gname || g.gName || g.g_name || g.group_name || '',
+    category_code: g.categoryCode || g.category_code,
+    domain_code: g.domainCode || g.domain_code || '',
+    status: g.status || 'active'
+  }))
+  loadedDomain.value = domain
+}
+
 async function load() {
   rows.value = await valueTypeApi.list().catch(() => [])
   enumTypes.value = await enumTypeApi.list().catch(() => [])
   usageConfigsCache.value = await valueTypeApi.listUsageConfigs().catch(() => [])
-  // 所有分组
-  if (!groups.value.length) {
-    const bizGroups = await groupApi.listAll().catch(() => [])
-    groups.value = (bizGroups || []).map(g => ({
-      id: g.id, parent_id: g.parentId || g.parent_id,
-      group_name: g.gname || g.gName || g.g_name || g.group_name || '',
-      category_code: g.categoryCode || g.category_code,
-      domain_code: g.domainCode || g.domain_code || '',
-      status: g.status || 'active'
-    }))
-    // 值类型的分组集合(用于"所属分组"下拉按资源类型过滤)
+  // 值类型的分组集合(group_type='value_types'),全量加载一次;分组本身改为按领域懒加载
+  if (!vtGroupIds.value.size) {
     const vtRefs = await groupRefApi.list('value_types').catch(() => [])
     vtGroupIds.value = new Set((vtRefs || []).map(r => r.groupId || r.group_id))
   }
@@ -598,6 +605,7 @@ function openCreate() {
   Object.keys(form).forEach(k => delete form[k])
   Object.assign(form, { base_type: 'String', constraint_type: 'Length', status: 1, enum_id: '', category_code: selectedCategoryCode.value || '', group_id: '', default_usage_config_id: null, _apiTouched: false })
   vtGroupRef.value = null
+  loadGroupsByDomain(form.category_code)
   Object.keys(cfg).forEach(k => delete cfg[k]); cfg.min = 0; cfg.max = 255
   Object.assign(usageCfg, { max_select_level: 0, allow_non_leaf: 0, display_format: 'label' })
   testValue.value = ''
@@ -611,8 +619,9 @@ function openEdit(r) {
   Object.keys(form).forEach(k => delete form[k])
   Object.assign(form, r, { _apiTouched: true })
   form.status = Number(form.status ?? 1)
-  // 加载当前值类型的分组绑定
+  // 加载当前值类型的分组绑定 + 按所属领域加载分组
   findVtGroupRef(r.id)
+  loadGroupsByDomain(form.category_code)
   Object.keys(cfg).forEach(k => delete cfg[k])
   try {
     const parsed = r.constraint_config ? (typeof r.constraint_config === 'string' ? JSON.parse(r.constraint_config) : r.constraint_config) : {}

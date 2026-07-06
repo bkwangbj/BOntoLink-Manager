@@ -26,7 +26,7 @@
                 <span class="create-menu-sub">新增一个顶级行业</span>
               </div>
             </div>
-            <div class="create-menu-divider" v-if="selected && selected.categoryType <= 2"></div>
+            <div class="create-menu-divider" v-if="selected && selected.categoryType <= 3"></div>
             <div class="create-menu-item" @click="openCreateDomain" v-if="selected?.categoryType === 1">
               <span v-html="BL.icon('folder', 12)"></span>
               <div class="create-menu-text">
@@ -34,10 +34,10 @@
                 <span class="create-menu-sub">在所选行业下新增领域</span>
               </div>
             </div>
-            <div class="create-menu-item" @click="openCreateGroup" v-if="selected && selected.categoryType <= 2">
+            <div class="create-menu-item" @click="openCreateGroup" v-if="selected && selected.categoryType <= 3">
               <span v-html="BL.icon('layers', 12)"></span>
               <div class="create-menu-text">
-                <span>新建分组</span>
+                <span>{{ selected.categoryType === 3 ? '新建子分组' : '新建分组' }}</span>
                 <span class="create-menu-sub">在所选{{ catTypeText(selected.categoryType) }}下新增分组</span>
               </div>
             </div>

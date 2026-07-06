@@ -25,6 +25,9 @@ public class GroupService {
     /** 查询所有分组（不分层级）。 */
     public List<BizGroup> listAll() { return mapper.listAll(); }
 
+    /** 查询归属指定领域的分组（供各资源"所属分组"下拉按领域按需加载）。 */
+    public List<BizGroup> listByDomain(String domain) { return mapper.listByDomain(domain); }
+
     /**
      * 创建分组。ID 为空时自动生成（格式 "group-" + UUID），gSort 为空时默认 0。
      */

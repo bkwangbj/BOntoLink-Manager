@@ -1,8 +1,10 @@
 package com.beiktech.bontolink.service;
 
 import com.beiktech.bontolink.entity.BizCategory;
+import com.beiktech.bontolink.entity.BizGroup;
 import com.beiktech.bontolink.entity.BizNamespace;
 import com.beiktech.bontolink.mapper.BizCategoryMapper;
+import com.beiktech.bontolink.mapper.BizGroupMapper;
 import com.beiktech.bontolink.mapper.BizNamespaceMapper;
 import com.beiktech.bontolink.mapper.OntologyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ public class CategoryService {
     @Autowired private OntologyMapper ontologyMapper;
     @Autowired private BizNamespaceMapper namespaceMapper;
     @Autowired private NamespaceService namespaceService;
+    @Autowired private BizGroupMapper groupMapper;
 
     /**
      * 查询所有分类并组装为嵌套树（parentId=null/"0" 的节点为根）。
@@ -128,6 +131,8 @@ public class CategoryService {
             categoryMapper.update(c);
         }
 
+        // 分组(type=3)双写一条 ont_biz_group,供资源"所属分组"下拉使用
+        syncGroupForCategory(c);
         return c;
     }
 
@@ -143,6 +148,8 @@ public class CategoryService {
             c.setNsCode(parent != null ? parent.getNsCode() : null);
         }
         categoryMapper.update(c);
+        // 分组(type=3)同步维护对应 ont_biz_group
+        syncGroupForCategory(c);
         return categoryMapper.findById(c.getId());
     }
 
@@ -152,7 +159,69 @@ public class CategoryService {
     public void delete(String id) {
         int children = categoryMapper.countByParent(id);
         if (children > 0) throw new IllegalArgumentException("存在下级节点，无法删除");
+        BizCategory c = categoryMapper.findById(id);
         categoryMapper.delete(id);
+        // 分组(type=3)同步删除对应 ont_biz_group 及其资源关联
+        if (c != null && c.getCategoryType() != null && c.getCategoryType() == 3) {
+            String gid = groupMapper.findGroupIdByCategoryCode(c.getCategoryCode());
+            if (gid != null && !gid.isEmpty()) {
+                groupMapper.deleteRefsByGroupId(gid);
+                groupMapper.delete(gid);
+            }
+        }
+    }
+
+    /**
+     * 双写:把 type=3 分组分类节点同步为一条 ont_biz_group(供各资源"所属分组"下拉使用)。
+     * - parent_id:父级为领域(type=2)时取领域分类 id,为上级分组(type=3)时取上级分组的 group_id;
+     * - domain_code:沿 parent 链向上找到 type=2 领域的 category_code;
+     * - 按 category_code 判定已存在则更新名称/图标等,否则新建。
+     * 非 type=3 节点直接跳过。
+     */
+    private void syncGroupForCategory(BizCategory c) {
+        if (c == null || c.getCategoryType() == null || c.getCategoryType() != 3) return;
+        String parentGroupId = null;
+        String domainCode = null;
+        if (c.getParentId() != null && !"0".equals(c.getParentId())) {
+            BizCategory parent = categoryMapper.findById(c.getParentId());
+            if (parent != null && parent.getCategoryType() != null) {
+                parentGroupId = (parent.getCategoryType() == 3)
+                        ? groupMapper.findGroupIdByCategoryCode(parent.getCategoryCode())
+                        : parent.getId();
+            }
+            domainCode = deriveDomainCode(c);
+        }
+        String label = (c.getRdfsLabel() != null && !c.getRdfsLabel().isEmpty())
+                ? c.getRdfsLabel() : c.getCategoryCode();
+        String existingGid = groupMapper.findGroupIdByCategoryCode(c.getCategoryCode());
+        BizGroup g = new BizGroup();
+        g.setGName(label);
+        g.setGSort(c.getSort() != null ? c.getSort() : 0);
+        g.setIcon(c.getIcon());
+        g.setColor(c.getColor());
+        g.setDescription(c.getDescription());
+        g.setDomainCode(domainCode);
+        if (existingGid == null || existingGid.isEmpty()) {
+            g.setId("group-" + UUID.randomUUID());
+            g.setParentId(parentGroupId);
+            g.setCategoryCode(c.getCategoryCode());
+            groupMapper.insert(g);
+        } else {
+            g.setId(existingGid);
+            groupMapper.update(g);   // update 仅改 g_name/g_sort/icon/color/description/domain_code
+        }
+    }
+
+    /** 沿 parent 链向上找到 type=2 领域的 category_code,作为分组的所属领域。 */
+    private String deriveDomainCode(BizCategory node) {
+        BizCategory cur = node;
+        int guard = 0;
+        while (cur != null && guard++ < 20) {
+            if (cur.getCategoryType() != null && cur.getCategoryType() == 2) return cur.getCategoryCode();
+            if (cur.getParentId() == null || "0".equals(cur.getParentId())) break;
+            cur = categoryMapper.findById(cur.getParentId());
+        }
+        return null;
     }
 
     /** 中间统计区：基于 category_code 聚合直属下级 / 关联资源 */

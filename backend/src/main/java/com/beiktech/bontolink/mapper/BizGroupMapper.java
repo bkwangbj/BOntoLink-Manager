@@ -23,6 +23,10 @@ public interface BizGroupMapper {
     @Select("SELECT * FROM ont_biz_group ORDER BY COALESCE(parent_id,''), g_sort")
     List<BizGroup> listAll();
 
+    /** 查询归属指定领域的分组（domain_code 或 category_code 命中当前领域），供各资源"所属分组"下拉按需加载 */
+    @Select("SELECT * FROM ont_biz_group WHERE domain_code = #{domain} OR category_code = #{domain} ORDER BY COALESCE(parent_id,''), g_sort")
+    List<BizGroup> listByDomain(@Param("domain") String domain);
+
     /** 新增分组节点 */
     @Insert("""
         INSERT INTO ont_biz_group(id, parent_id, category_code, domain_code, g_name, g_sort, icon, color, description)
@@ -133,4 +137,8 @@ public interface BizGroupMapper {
     /** 删除某资源在所有分组中的关联（资源删除时级联清理） */
     @Delete("DELETE FROM ont_biz_group_class WHERE ref_id = #{refId} AND group_type = #{type}")
     int deleteRefsByRefId(@Param("refId") String refId, @Param("type") String type);
+
+    /** 删除某分组下的所有资源关联（分组删除时级联清理） */
+    @Delete("DELETE FROM ont_biz_group_class WHERE group_id = #{groupId}")
+    int deleteRefsByGroupId(@Param("groupId") String groupId);
 }
