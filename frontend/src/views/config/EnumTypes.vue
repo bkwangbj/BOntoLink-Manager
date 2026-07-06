@@ -803,7 +803,7 @@ const filteredGroups = computed(() => {
   const domain = typeForm.category_code || typeForm.categoryCode || ''
   return groups.value.filter(g =>
     g.id === typeForm.group_id ||
-    !g.domain_code || g.domain_code === domain
+    (g.domain_code ? g.domain_code === domain : g.category_code ? g.category_code === domain : true)
   )
 })
 function childrenOf(id) { return groups.value.filter(g => g.parent_id === id) }

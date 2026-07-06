@@ -286,7 +286,7 @@ const filteredGroups = computed(() => {
   const domain = form.category_code || form.categoryCode || ''
   return groups.value.filter(g =>
     g.id === form.group_id ||
-    (spGroupIds.value.has(g.id) && (!g.domain_code || g.domain_code === domain))
+    (spGroupIds.value.has(g.id) && (g.domain_code ? g.domain_code === domain : g.category_code ? g.category_code === domain : true))
   )
 })
 async function loadSpGroups() {
