@@ -429,10 +429,14 @@ const domainOpts = ref([])
 const groups = ref([])  // 全部分组（含 category_code）
 const vtGroupRef = ref(null)  // 当前值类型的分组绑定记录
 
-/* 按当前值类型的所属领域过滤分组（系统级跨领域分组始终显示） */
+const vtGroupIds = ref(new Set())  // 值类型的分组 id 集合(group_type='value_types')
+/* 只显示值类型的分组;领域相关组按当前领域收窄;已选分组始终保留兜底 */
 const filteredGroups = computed(() => {
   const domain = form.category_code || form.categoryCode || ''
-  return groups.value.filter(g => !g.domain_code || g.domain_code === domain)
+  return groups.value.filter(g =>
+    g.id === form.group_id ||
+    (vtGroupIds.value.has(g.id) && (!g.domain_code || g.domain_code === domain))
+  )
 })
 const usageConfigsCache = ref([])  // 缓存 ont_valuetypes_usage_config,用于 openEdit 时回填 usageCfg
 const q = ref('')
@@ -540,6 +544,9 @@ async function load() {
       domain_code: g.domainCode || g.domain_code || '',
       status: g.status || 'active'
     }))
+    // 值类型的分组集合(用于"所属分组"下拉按资源类型过滤)
+    const vtRefs = await groupRefApi.list('value_types').catch(() => [])
+    vtGroupIds.value = new Set((vtRefs || []).map(r => r.groupId || r.group_id))
   }
   // 业务领域候选
   if (!domainOpts.value.length) {

@@ -150,9 +150,14 @@ const parentLabel = ref('')
 /* 分组管理 */
 const groups = ref([])
 const objGroupRef = ref(null)
+const objGroupIds = ref(new Set())  // 对象类型的分组 id 集合(group_type='object_types')
+/* 只显示对象类型的分组;领域相关组按当前领域收窄;已选分组始终保留兜底 */
 const filteredGroups = computed(() => {
   const domain = form.category_code || form.categoryCode || ''
-  return groups.value.filter(g => !g.domain_code || g.domain_code === domain)
+  return groups.value.filter(g =>
+    g.id === form.group_id ||
+    (objGroupIds.value.has(g.id) && (!g.domain_code || g.domain_code === domain))
+  )
 })
 async function loadGroups() {
   if (groups.value.length) return
@@ -164,6 +169,9 @@ async function loadGroups() {
     domain_code: g.domainCode || g.domain_code || '',
     status: g.status || 'active'
   }))
+  // 对象类型的分组集合(用于"所属分组"下拉按资源类型过滤)
+  const objRefs = await groupRefApi.list('object_types').catch(() => [])
+  objGroupIds.value = new Set((objRefs || []).map(r => r.groupId || r.group_id))
 }
 async function loadObjGroupRef(id) {
   try {

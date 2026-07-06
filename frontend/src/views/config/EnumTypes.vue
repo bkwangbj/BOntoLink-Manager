@@ -798,10 +798,13 @@ function enumMatchesQ(e) {
 }
 
 const topGroups = computed(() => groups.value.filter(g => !g.parent_id && groupMatchesQ(g)))
-/* 按当前枚举的所属领域过滤分组（系统级跨领域分组始终显示） */
+/* groups 已按 enum_types 过滤;此处再按当前领域收窄(领域相关组只在本领域显示),已选分组兜底 */
 const filteredGroups = computed(() => {
   const domain = typeForm.category_code || typeForm.categoryCode || ''
-  return groups.value.filter(g => !g.domain_code || g.domain_code === domain)
+  return groups.value.filter(g =>
+    g.id === typeForm.group_id ||
+    !g.domain_code || g.domain_code === domain
+  )
 })
 function childrenOf(id) { return groups.value.filter(g => g.parent_id === id) }
 function childrenOfFiltered(id) {
@@ -951,6 +954,7 @@ async function loadAll() {
     group_name: g.gname || g.gName || g.g_name || g.group_name || '',
     sort_num: g.gsort || g.gSort || g.g_sort || g.sort_num || 0,
     category_code: g.categoryCode || g.category_code,
+    domain_code: g.domainCode || g.domain_code || '',
     status: g.status || 'active'
   }))
   // 只保留与枚举类型相关的分组 (有 enum_types 引用的分组 + 其父级链)

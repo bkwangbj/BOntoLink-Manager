@@ -280,9 +280,14 @@ watch(editMode, v => localStorage.setItem('bontolink.sp.editMode', v ? '1' : '0'
 const form = reactive({})
 const groups = ref([])
 const spGroupRef = ref(null)
+const spGroupIds = ref(new Set())  // 共享属性的分组 id 集合(group_type='shared_props')
+/* 只显示共享属性的分组;领域相关组按当前领域收窄;已选分组始终保留兜底 */
 const filteredGroups = computed(() => {
   const domain = form.category_code || form.categoryCode || ''
-  return groups.value.filter(g => !g.domain_code || g.domain_code === domain)
+  return groups.value.filter(g =>
+    g.id === form.group_id ||
+    (spGroupIds.value.has(g.id) && (!g.domain_code || g.domain_code === domain))
+  )
 })
 async function loadSpGroups() {
   if (groups.value.length) return
@@ -294,6 +299,9 @@ async function loadSpGroups() {
     domain_code: g.domainCode || g.domain_code || '',
     status: g.status || 'active'
   }))
+  // 共享属性的分组集合(用于"所属分组"下拉按资源类型过滤)
+  const spRefs = await groupRefApi.list('shared_props').catch(() => [])
+  spGroupIds.value = new Set((spRefs || []).map(r => r.groupId || r.group_id))
 }
 async function loadSpGroupRef(id) {
   try {
