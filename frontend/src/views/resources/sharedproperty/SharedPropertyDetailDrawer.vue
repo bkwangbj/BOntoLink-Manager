@@ -286,7 +286,7 @@ const filteredGroups = computed(() => {
   const domain = form.category_code || form.categoryCode || ''
   return groups.value.filter(g =>
     g.id === form.group_id ||
-    (spGroupIds.value.has(g.id) && (g.domain_code ? g.domain_code === domain : g.category_code ? g.category_code === domain : true))
+    (g.domain_code ? g.domain_code === domain : g.category_code ? g.category_code === domain : true)
   )
 })
 const loadedDomain = ref('')  // 已加载分组的领域,避免同领域重复请求

@@ -436,7 +436,7 @@ const filteredGroups = computed(() => {
   const domain = form.category_code || form.categoryCode || ''
   return groups.value.filter(g =>
     g.id === form.group_id ||
-    (vtGroupIds.value.has(g.id) && (g.domain_code ? g.domain_code === domain : g.category_code ? g.category_code === domain : true))
+    (g.domain_code ? g.domain_code === domain : g.category_code ? g.category_code === domain : true)
   )
 })
 const usageConfigsCache = ref([])  // 缓存 ont_valuetypes_usage_config,用于 openEdit 时回填 usageCfg
