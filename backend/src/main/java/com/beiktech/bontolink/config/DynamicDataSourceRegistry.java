@@ -174,8 +174,14 @@ public class DynamicDataSourceRegistry {
         config.setPoolName("pool-" + ds.getDsCode());
 
         // maxPoolSize: 数据源记录的 max_conn 可覆盖统一配置
-        int maxConn = (ds.getMaxConn() != null && ds.getMaxConn() > 0)
+        int baseMax = (ds.getMaxConn() != null && ds.getMaxConn() > 0)
                 ? ds.getMaxConn() : poolProperties.getMaxPoolSize();
+        // 硬上限: 不超过统一配置的 2 倍(至少 20)，防止 DB 默认值 100 导致连接池过大
+        int hardCap = Math.max(poolProperties.getMaxPoolSize() * 2, 20);
+        int maxConn = Math.min(baseMax, hardCap);
+        if (maxConn != baseMax) {
+            log.warn("数据源 [{}] max_conn={} 超过硬上限 {}, 已裁剪为 {}", ds.getDsName(), baseMax, hardCap, maxConn);
+        }
         config.setMaximumPoolSize(maxConn);
         config.setMinimumIdle(Math.min(poolProperties.getMinIdle(), maxConn));
         config.setConnectionTimeout(poolProperties.getConnectionTimeoutMs());
