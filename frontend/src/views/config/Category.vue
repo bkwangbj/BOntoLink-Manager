@@ -442,7 +442,7 @@
             <select class="bl-input" v-model="formData.categoryType"
                     :disabled="formMode==='edit'">
               <option v-if="formMode==='create' && !formParent" :value="1">行业 (Industry)</option>
-              <option v-if="formMode==='edit' || formParent?.categoryType===1 || formParent?.categoryType===2" :value="2">领域 (Domain)</option>
+              <option v-if="formMode==='edit' || canPickDomainType" :value="2">领域 (Domain)</option>
               <option v-if="formMode==='edit' || formParent?.categoryType===2 || formParent?.categoryType===3" :value="3">分组 (Group)</option>
             </select>
           </FieldRow>
@@ -748,6 +748,18 @@ const canCreateDomain = computed(() => {
     if (p && p.categoryType !== 1) return false        // 父是领域=子领域,不可再建
     const hasSubDomain = (s.children || []).some(c => c.categoryType === 2)
     return !hasSubDomain                                // 顶级领域已有子领域则不可再建
+  }
+  return false
+})
+// 类型下拉中「领域」是否可选:行业下,或顶级领域下且尚无子领域(子领域下/已满则不可)
+const canPickDomainType = computed(() => {
+  const p = formParent.value
+  if (!p) return false
+  if (p.categoryType === 1) return true
+  if (p.categoryType === 2) {
+    const gp = findParentNode(p.id)
+    if (gp && gp.categoryType !== 1) return false      // 父本身是子领域
+    return !(p.children || []).some(c => c.categoryType === 2)  // 已有子领域则不可
   }
   return false
 })
