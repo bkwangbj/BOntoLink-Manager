@@ -218,6 +218,7 @@
 
           <div class="cfg-section">扩展信息</div>
           <FieldRow label="备注"><textarea class="bl-textarea" rows="3" v-model="form.remark"></textarea></FieldRow>
+          <FieldRow label="最大连接数" inline hint="连接池上限，留空默认 100"><input class="bl-input" type="number" min="1" max="999" v-model.number="form.maxConn" placeholder="100" /></FieldRow>
           <FieldRow label="状态" inline>
             <div class="radio-group">
               <label class="radio-item"><input type="radio" :value="1" v-model="form.status" /> 启用</label>
@@ -242,15 +243,14 @@
               <span class="bl-mono bl-muted">{{ mon.basic?.host || '—' }}</span>
               <span class="bl-muted" :title="mon.basic?.driver || ''">{{ mon.basic?.product || '—' }} <span class="bl-mono">{{ mon.basic?.version || '—' }}</span></span>
               <span v-if="mon.basic?.probeError" class="bl-tag bl-tag-danger" :title="mon.basic.probeError">探测失败</span>
-              <!-- 池操作 -->
-              <template v-if="poolReady">
-                <button class="bl-btn bl-btn-xs" style="margin-left:8px" @click="doRefreshPool" :disabled="refreshing">
-                  <span v-html="BL.icon('refresh', 12)"></span> 刷新池
-                </button>
-                <input class="bl-input pool-size-input" type="number" min="1" max="999"
-                       :value="mon.basic?.maxConn" @change="doResizePool($event)"
-                       title="调整最大连接数" />
-              </template>
+              <!-- 池操作: 刷新池需池就绪; 最大连接数是配置项, 连不上也可设置(改配置 + 尝试重建池, 下次连接生效) -->
+              <button v-if="poolReady" class="bl-btn bl-btn-xs" style="margin-left:8px" @click="doRefreshPool" :disabled="refreshing">
+                <span v-html="BL.icon('refresh', 12)"></span> 刷新池
+              </button>
+              <span class="bl-muted" style="font-size:12px;margin-left:8px">最大连接数</span>
+              <input class="bl-input pool-size-input" type="number" min="1" max="999" style="margin-left:4px"
+                     :value="mon.basic?.maxConn" @change="doResizePool($event)"
+                     title="配置最大连接数(连不上也可设置,下次连接生效)" />
             </div>
             <div class="mon-legend">
               <span class="legend-item"><span class="ld" style="background:#00B42A"></span>正常</span>
@@ -838,7 +838,7 @@ function trendPoints(key) {
 
 function openCreate() {
   Object.keys(form).forEach(k => delete form[k])
-  Object.assign(form, { dsType:'mysql', status:1, refCount:0, categoryCode: selectedCategoryCode.value || '' })
+  Object.assign(form, { dsType:'mysql', status:1, refCount:0, maxConn:100, categoryCode: selectedCategoryCode.value || '' })
   selected.value = null
   drawerTab.value = 'config'
   drawerOpen.value = true

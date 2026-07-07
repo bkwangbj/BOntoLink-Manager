@@ -39,12 +39,13 @@ public interface SysDataSourceMapper {
     """)
     int insert(SysDataSource d);
 
-    // 更新数据源基本配置（不更新监控字段）
+    // 更新数据源基本配置（不更新探活类监控字段；max_conn 为用户可配置项，随表单更新，null 时保留原值）
     @Update("""
         UPDATE sys_data_source SET
             category_code=#{categoryCode}, ds_code=#{dsCode}, ds_name=#{dsName}, ds_type=#{dsType},
             jdbc_driver=#{jdbcDriver}, jdbc_url=#{jdbcUrl}, username=#{username}, password=#{password},
-            mongo_url=#{mongoUrl}, status=#{status}, remark=#{remark}
+            mongo_url=#{mongoUrl}, status=#{status}, remark=#{remark},
+            max_conn=COALESCE(#{maxConn}, max_conn)
         WHERE id=#{id}
     """)
     int update(SysDataSource d);
