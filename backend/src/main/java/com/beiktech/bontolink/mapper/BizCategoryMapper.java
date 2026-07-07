@@ -27,6 +27,10 @@ public interface BizCategoryMapper {
     @Select("SELECT COUNT(1) FROM ont_biz_category WHERE parent_id = #{parentId}")
     int countByParent(@Param("parentId") String parentId);
 
+    // 统计指定父节点下 type=2 领域子节点数量（限制每个领域只能有 1 个子领域）
+    @Select("SELECT COUNT(1) FROM ont_biz_category WHERE parent_id = #{parentId} AND category_type = 2")
+    int countDomainChildren(@Param("parentId") String parentId);
+
     // 新增行业分类节点
     @Insert("""
         INSERT INTO ont_biz_category(

@@ -440,10 +440,10 @@
         <div class="bl-drawer-body bl-col" style="gap:12px">
           <FieldRow label="类型">
             <select class="bl-input" v-model="formData.categoryType"
-                    :disabled="formMode==='edit' || formParent?.categoryType !== 1">
+                    :disabled="formMode==='edit'">
               <option v-if="formMode==='create' && !formParent" :value="1">行业 (Industry)</option>
               <option v-if="formMode==='edit' || formParent?.categoryType===1 || formParent?.categoryType===2" :value="2">领域 (Domain)</option>
-              <option v-if="formMode==='edit' || formParent?.categoryType===2" :value="3">分组 (Group)</option>
+              <option v-if="formMode==='edit' || formParent?.categoryType===2 || formParent?.categoryType===3" :value="3">分组 (Group)</option>
             </select>
           </FieldRow>
           <FieldRow label="父级"><input class="bl-input" :value="formParentLabel" disabled /></FieldRow>
@@ -738,14 +738,16 @@ function findParentNode(id, nodes = tree.value) {
   }
   return null
 }
-// 新建「领域/子领域」入口是否可用:行业下建顶级领域;顶级领域下建一级子领域(仅一层)
+// 新建「领域/子领域」入口是否可用:行业下建顶级领域;顶级领域下建一级子领域(仅一层且每个领域最多 1 个子领域)
 const canCreateDomain = computed(() => {
   const s = selected.value
   if (!s) return false
   if (s.categoryType === 1) return true
   if (s.categoryType === 2) {
     const p = findParentNode(s.id)
-    return !p || p.categoryType === 1   // 父是行业=顶级领域可建子领域;父是领域=子领域不可再建
+    if (p && p.categoryType !== 1) return false        // 父是领域=子领域,不可再建
+    const hasSubDomain = (s.children || []).some(c => c.categoryType === 2)
+    return !hasSubDomain                                // 顶级领域已有子领域则不可再建
   }
   return false
 })
@@ -2154,6 +2156,12 @@ async function submitForm() {
   // 行业只能是第一级
   if (formData.categoryType === 1 && parentId !== '0') {
     BL.warning('行业只能是第一级分类')
+    return
+  }
+  // 每个领域下只能有 1 个子领域(新建子领域时校验)
+  if (formMode.value === 'create' && formData.categoryType === 2 && formParent.value?.categoryType === 2
+      && (formParent.value.children || []).some(c => c.categoryType === 2)) {
+    BL.warning('每个领域下只能有 1 个子领域')
     return
   }
   // 新增时校验编码全局唯一(编辑时编码不可改,跳过)

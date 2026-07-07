@@ -99,15 +99,19 @@ public class CategoryService {
                 && c.getParentId() != null && !"0".equals(c.getParentId())) {
             throw new IllegalArgumentException("行业只能是第一级分类");
         }
-        // 领域最多只能再建一级子领域:父级若本身已是子领域(其父也是领域),则拒绝
+        // 子领域约束:父级为领域时(建子领域)——① 每个领域下只能有 1 个子领域;② 最多一层(父领域自身不能已是子领域)
         if (c.getCategoryType() != null && c.getCategoryType() == 2
                 && c.getParentId() != null && !"0".equals(c.getParentId())) {
             BizCategory p = categoryMapper.findById(c.getParentId());
-            if (p != null && p.getCategoryType() != null && p.getCategoryType() == 2
-                    && p.getParentId() != null && !"0".equals(p.getParentId())) {
-                BizCategory pp = categoryMapper.findById(p.getParentId());
-                if (pp != null && pp.getCategoryType() != null && pp.getCategoryType() == 2) {
-                    throw new IllegalArgumentException("领域最多只能再建一级子领域");
+            if (p != null && p.getCategoryType() != null && p.getCategoryType() == 2) {
+                if (categoryMapper.countDomainChildren(c.getParentId()) > 0) {
+                    throw new IllegalArgumentException("每个领域下只能有 1 个子领域");
+                }
+                if (p.getParentId() != null && !"0".equals(p.getParentId())) {
+                    BizCategory pp = categoryMapper.findById(p.getParentId());
+                    if (pp != null && pp.getCategoryType() != null && pp.getCategoryType() == 2) {
+                        throw new IllegalArgumentException("领域最多只能再建一级子领域");
+                    }
                 }
             }
         }
