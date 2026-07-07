@@ -47,6 +47,7 @@
                           title="行业分类"
                           total-label="全部对象"
                           store-key="object-types"
+                          :custom-counts="groupNodeCounts"
                           @change="onCategoryChange" />
       <!-- 左侧 TAB 页签 -->
       <div class="ot-pane" :style="paneStyle">
@@ -641,6 +642,7 @@ function sortArrow(key) {
 /* —— 左侧行业分类树 (统一组件,按 category_code 子树过滤) —— */
 const selectedCategoryCodes = ref(null)  // null = 全部, Set<string> = 当前分类及子分类的 category_code 集合
 const groupClassIds = ref(null)          // null = 非分组过滤态; Set<string> = 选中分组关联的对象类 id
+const groupNodeCounts = ref({})          // 分组节点真实计数覆盖,传给 CategoryTreeFilter customCounts
 async function onCategoryChange({ codes, node }) {
   selectedCategoryCodes.value = codes || null
   // 选中分组节点(type=3): 对象类归属分组走 ont_biz_group_class 关联,不能靠 category_code(那是领域)。
@@ -649,9 +651,11 @@ async function onCategoryChange({ codes, node }) {
     try {
       const list = await groupApi.classes(node.id)
       groupClassIds.value = new Set((list || []).map(c => c.id))
-    } catch { groupClassIds.value = new Set() }
+      groupNodeCounts.value = { [node.id]: (list || []).length }
+    } catch { groupClassIds.value = new Set(); groupNodeCounts.value = { [node.id]: 0 } }
   } else {
     groupClassIds.value = null
+    groupNodeCounts.value = {}
   }
 }
 

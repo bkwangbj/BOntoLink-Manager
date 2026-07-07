@@ -46,14 +46,16 @@ import { BL } from '@/lib/bl.js'
 import { categoryApi } from '@/api'
 
 const props = defineProps({
-  /** 上层数据列表 (用于按 category_code 计数 + 过滤). 字段名: category_code */
+  /** 选项列表 rows (用于按 category_code 计数 + 过滤). 字段名: category_code */
   rows: { type: Array, default: () => [] },
   /** 顶部标题 */
   title: { type: String, default: '行业分类' },
   /** "全部" 行的文案 */
   totalLabel: { type: String, default: '全部' },
   /** localStorage 键名,用于记忆宽度 */
-  storeKey: { type: String, default: '' }
+  storeKey: { type: String, default: '' },
+  /** 自定义节点计数覆盖 (key=node.id, value=count); 优先级高于 rows 自动计算 */
+  customCounts: { type: Object, default: () => ({}) }
 })
 const emit = defineEmits(['change'])
 
@@ -94,13 +96,13 @@ const subtreeCodesMap = computed(() => {
   tree.value.forEach(walk)
   return map
 })
-/* 每个节点的计数: rows 中 category_code 落在该节点子树的数量 (兼容 snake/camel) */
+/* 每个节点的计数: 优先取 customCounts, 否则按 rows 中 category_code 落在子树的数量 */
 const rowCategoryCode = (r) => r.category_code || r.categoryCode || ''
 const countMap = computed(() => {
   const m = {}
   const rowCodes = props.rows.map(rowCategoryCode).filter(Boolean)
   for (const [id, codes] of subtreeCodesMap.value) {
-    m[id] = rowCodes.filter(c => codes.has(c)).length
+    m[id] = props.customCounts[id] ?? rowCodes.filter(c => codes.has(c)).length
   }
   return m
 })
