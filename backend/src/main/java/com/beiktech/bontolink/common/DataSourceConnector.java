@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -70,20 +72,28 @@ public class DataSourceConnector {
         Properties props = new Properties();
         if (ds.getUsername() != null) props.setProperty("user", ds.getUsername());
         if (ds.getPassword() != null) props.setProperty("password", ds.getPassword());
-        applyRemarksProps(url, props);
+        remarksProps(url).forEach(props::setProperty);
 
         DriverManager.setLoginTimeout(LOGIN_TIMEOUT);
         return DriverManager.getConnection(url, props);
     }
 
-    /** 按 JDBC 方言开启"注释上报"，让 DatabaseMetaData 能读到表/字段注释(REMARKS) */
-    private static void applyRemarksProps(String url, Properties props) {
+    /**
+     * 按 JDBC 方言返回"注释上报"所需的连接属性，让 DatabaseMetaData 能读到表/字段注释(REMARKS)。
+     * <p>MySQL/MariaDB 需 useInformationSchema=true；Oracle/达梦 需 remarksReporting=true；
+     * PostgreSQL/KingbaseES 默认即返回注释，SQLite 无表注释，均无需额外参数。</p>
+     * <p>供连接池({@link com.beiktech.bontolink.config.DynamicDataSourceRegistry})与直连共用，
+     * 否则物理表同步走连接池时读不到注释，中文名只能退回物理表名。</p>
+     */
+    public static Map<String, String> remarksProps(String url) {
+        Map<String, String> m = new HashMap<>();
+        if (url == null) return m;
         String u = url.toLowerCase();
         if (u.startsWith("jdbc:mysql") || u.startsWith("jdbc:mariadb")) {
-            props.setProperty("useInformationSchema", "true");
+            m.put("useInformationSchema", "true");
         } else if (u.startsWith("jdbc:oracle") || u.startsWith("jdbc:dm")) {
-            props.setProperty("remarksReporting", "true");
+            m.put("remarksReporting", "true");
         }
-        // PostgreSQL/KingbaseES 默认即返回注释; SQLite 无表注释, 均无需额外参数
+        return m;
     }
 }

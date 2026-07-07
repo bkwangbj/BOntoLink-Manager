@@ -1,5 +1,6 @@
 package com.beiktech.bontolink.config;
 
+import com.beiktech.bontolink.common.DataSourceConnector;
 import com.beiktech.bontolink.common.PoolMetrics;
 import com.beiktech.bontolink.entity.SysDataSource;
 import com.beiktech.bontolink.mapper.SysDataSourceMapper;
@@ -168,6 +169,8 @@ public class DynamicDataSourceRegistry {
         if (ds.getJdbcDriver() != null && !ds.getJdbcDriver().isBlank()) {
             config.setDriverClassName(ds.getJdbcDriver());
         }
+        // 开启注释上报,让物理表同步经连接池也能读到表/字段注释(REMARKS),中文名优先取注释
+        DataSourceConnector.remarksProps(ds.getJdbcUrl()).forEach(config::addDataSourceProperty);
         config.setPoolName("pool-" + ds.getDsCode());
 
         // maxPoolSize: 数据源记录的 max_conn 可覆盖统一配置
