@@ -55,6 +55,13 @@ public class CategoryController {
         return R.ok(service.statsBatch(list));
     }
 
+    /** 根据任意分类编码解析其父级领域编码（分组→领域，领域→自身，缓存结果） */
+    @GetMapping("/resolve-domain")
+    public R<String> resolveDomain(@RequestParam("code") String code) {
+        String domain = service.resolveDomainCode(code);
+        return R.ok(domain);
+    }
+
     /** 新建行业分类节点 */
     @PostMapping
     public R<BizCategory> create(@RequestBody BizCategory c) {

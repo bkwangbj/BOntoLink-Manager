@@ -1,6 +1,7 @@
 package com.beiktech.bontolink.config;
 
 import com.beiktech.bontolink.common.DataSourceConnector;
+import com.beiktech.bontolink.common.DictCacheHelper;
 import com.beiktech.bontolink.common.PoolMetrics;
 import com.beiktech.bontolink.entity.SysDataSource;
 import com.beiktech.bontolink.mapper.SysDataSourceMapper;
@@ -35,6 +36,9 @@ public class DynamicDataSourceRegistry {
     @Autowired
     private DynamicPoolProperties poolProperties;
 
+    @Autowired
+    private DictCacheHelper dictHelper;
+
     /** dsId → HikariDataSource */
     private final ConcurrentHashMap<String, HikariDataSource> poolMap = new ConcurrentHashMap<>();
 
@@ -47,7 +51,7 @@ public class DynamicDataSourceRegistry {
         for (SysDataSource ds : all) {
             if (ds.getStatus() != null && ds.getStatus() == 1
                     && ds.getJdbcUrl() != null && !ds.getJdbcUrl().isBlank()
-                    && !"mongodb".equalsIgnoreCase(ds.getDsType())) {
+                    && dictHelper.exists("sys_ds_type", ds.getDsType())) {
                 try {
                     HikariDataSource hds = createDataSource(ds);
                     poolMap.put(ds.getId(), hds);
@@ -102,7 +106,7 @@ public class DynamicDataSourceRegistry {
         SysDataSource ds = sysDataSourceMapper.findById(dsId);
         if (ds != null && ds.getStatus() != null && ds.getStatus() == 1
                 && ds.getJdbcUrl() != null && !ds.getJdbcUrl().isBlank()
-                && !"mongodb".equalsIgnoreCase(ds.getDsType())) {
+                && !"mongodb".equalsIgnoreCase(ds.getDsType()) && dictHelper.exists("sys_ds_type", ds.getDsType())) {
             try {
                 HikariDataSource hds = createDataSource(ds);
                 poolMap.put(dsId, hds);

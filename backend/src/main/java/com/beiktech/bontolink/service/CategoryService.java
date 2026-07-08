@@ -10,6 +10,8 @@ import com.beiktech.bontolink.mapper.OntologyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import java.util.*;
 
 /**
@@ -82,6 +84,25 @@ public class CategoryService {
 
     /** 按 id 查单条分类。 */
     public BizCategory get(String id) { return categoryMapper.findById(id); }
+
+    /**
+     * 根据任意分类编码解析其父级领域编码。
+     * 如果编码本身是领域(type=2)，返回自身；
+     * 如果是分组(type=3)，沿 parent 链向上找到 type=2 领域；
+     * 如果是行业(type=1)，返回自身。
+     * 结果通过 JetCache 双级缓存加速（本地 Caffeine + 远程 Redis）。
+     */
+    @Cached(name = "cat:resolveDomain", expire = 1800, cacheType = CacheType.BOTH)
+    public String resolveDomainCode(String categoryCode) {
+        if (categoryCode == null || categoryCode.isEmpty()) return null;
+        BizCategory node = categoryMapper.findByCode(categoryCode);
+        if (node == null) return null;
+        if (node.getCategoryType() != null && node.getCategoryType() == 2) return categoryCode;
+        if (node.getCategoryType() != null && node.getCategoryType() == 3) {
+            return deriveDomainCode(node);
+        }
+        return categoryCode; // 行业(type=1)返回自身
+    }
 
     /**
      * 新建分类节点。

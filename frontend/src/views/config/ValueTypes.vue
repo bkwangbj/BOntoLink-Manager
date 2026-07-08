@@ -71,7 +71,7 @@
                 <td class="bl-truncate" style="max-width:220px" :title="r.rdfs_comment">{{ r.rdfs_comment || '—' }}</td>
                 <td><span class="bl-mono bl-muted bl-truncate" :title="r.rid" style="max-width:140px;display:inline-block">{{ r.rid }}</span></td>
                 <td>
-                  <span :class="['bl-tag', r.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']">{{ r.status === 1 ? '启用' : '禁用' }}</span>
+                  <span :class="['bl-tag', r.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']"><StatusTag :status="r.status" /></span>
                 </td>
                 <td @click.stop class="t-actions">
                   <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" :title="r.status===1?'禁用':'启用'" @click="toggleOne(r)" v-html="BL.icon('zap', 12)"></button>
@@ -367,6 +367,7 @@ import { ref, computed, reactive, watch, onMounted, onBeforeUnmount, nextTick, h
 import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
+import StatusTag from '@/components/StatusTag.vue'
 import { valueTypeApi, enumTypeApi, categoryApi, groupApi, groupRefApi } from '@/api'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 import EnumPickerModal from '@/components/EnumPickerModal.vue'

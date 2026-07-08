@@ -4,7 +4,7 @@
       <header class="gr-drawer-hd">
         <div class="gr-drawer-title">
           <div class="gr-drawer-cn">{{ node.label }}
-            <span v-if="detail" class="bl-tag bl-tag-success" style="margin-left:8px;font-size:11px">{{ detail.status === 1 ? '启用' : '禁用' }}</span>
+            <span v-if="detail" class="bl-tag bl-tag-success" style="margin-left:8px;font-size:11px"><StatusTag :status="detail.status" /></span>
           </div>
           <div class="gr-drawer-en bl-mono">{{ node.apiName || node.id }}</div>
         </div>
@@ -30,7 +30,7 @@
             <span class="gr-flag" :class="detail.is_thing && 'is-on'">顶层类: {{ detail.is_thing ? '是' : '否' }}</span>
             <span class="gr-flag" :class="detail.is_nothing && 'is-on'">底层类: {{ detail.is_nothing ? '是' : '否' }}</span>
             <span class="gr-flag" :class="detail.is_common && 'is-on'">公共类: {{ detail.is_common ? '是' : '否' }}</span>
-            <span class="gr-flag" :class="detail.status === 1 && 'is-on'">{{ detail.status === 1 ? '启用' : '禁用' }}</span>
+            <span class="gr-flag" :class="detail.status === 1 && 'is-on'"><StatusTag :status="detail.status" /></span>
           </div>
         </div>
         <div class="gr-section">
@@ -60,6 +60,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { BL } from '@/lib/bl.js'
+import StatusTag from '@/components/StatusTag.vue'
 import { resourceApi } from '@/api'
 
 const props = defineProps({
