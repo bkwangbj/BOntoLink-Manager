@@ -24,7 +24,7 @@ spring:
 bontolink:
   datasource:
     pool:
-      max-pool-size: 10
+      max-pool-size: 5
       min-idle: 2
       connection-timeout-ms: 30000
       idle-timeout-ms: 300000
