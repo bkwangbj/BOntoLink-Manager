@@ -25,7 +25,7 @@
 
       <FieldRow label="注释" hint="rdfs:comment"><textarea class="bl-textarea" rows="2" v-model="form.rdfs_comment"></textarea></FieldRow>
       <FieldRow label="元数据公理" hint="JSON · 机器可读：查询约束 / 推理规则">
-        <textarea class="bl-textarea bl-mono" rows="3" v-model="form.metadata" placeholder='{"query":"...","unit_normalization":true}'></textarea>
+        <CodeEditor v-model="form.metadata" :rows="3" placeholder='{"query":"...","unit_normalization":true}' />
         <div class="bl-muted" style="font-size:11px;margin-top:4px">示例: {"reasoner":"hermit","cache_ttl":300}</div>
       </FieldRow>
 
@@ -83,7 +83,7 @@
         </button>
       </div>
       <FieldRow label="表达式内容" hint="JSON · 与表达式类型严格对应">
-        <textarea class="bl-textarea bl-mono" rows="6" v-model="form.class_expr_content" :placeholder="exprPlaceholder"></textarea>
+        <CodeEditor v-model="form.class_expr_content" :rows="6" :placeholder="exprPlaceholder" />
         <div class="bl-muted" style="font-size:11px;margin-top:4px">{{ exprHint }}</div>
       </FieldRow>
     </div>
@@ -121,6 +121,7 @@
 <script setup>
 import { ref, computed, watch, reactive, onMounted } from 'vue'
 import { BL } from '@/lib/bl.js'
+import CodeEditor from '@/components/CodeEditor.vue'
 import { classMetaApi, groupApi, groupRefApi } from '@/api'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import IconPickerField from '@/components/IconPickerField.vue'

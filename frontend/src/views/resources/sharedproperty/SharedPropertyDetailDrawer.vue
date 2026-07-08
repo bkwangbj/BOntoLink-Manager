@@ -214,7 +214,7 @@
 
             <div class="sec">业务元数据公理</div>
             <FieldRow label="元数据 (JSON)" hint="机器可读:接口规则 / 查询约束 / 语义配置">
-              <textarea class="bl-textarea bl-mono" rows="8" v-model="form.metadata" :disabled="!editMode" placeholder='{"approval":"strict","query":"indexed"}'></textarea>
+              <CodeEditor v-model="form.metadata" :rows="8" :disabled="!editMode" placeholder='{"approval":"strict","query":"indexed"}' />
             </FieldRow>
           </div>
         </div>
@@ -254,6 +254,7 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { BL } from '@/lib/bl.js'
+import CodeEditor from '@/components/CodeEditor.vue'
 import { sharedPropertyApi, propertyFormatApi, groupApi, groupRefApi } from '@/api'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import ValueTypePickerModal from '@/components/ValueTypePickerModal.vue'

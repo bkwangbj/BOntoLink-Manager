@@ -1,11 +1,13 @@
 <template>
-  <div class="cpf">
+  <div class="cpf" :class="{ 'cpf-compact': !swatches }">
     <div class="cpf-swatches">
-      <span v-for="c in palette" :key="c"
-            :class="['cpf-dot', isSame(c) && 'is-active']"
-            :style="{ background: c }"
-            :title="c"
-            @click="pick(c)"></span>
+      <template v-if="swatches">
+        <span v-for="c in palette" :key="c"
+              :class="['cpf-dot', isSame(c) && 'is-active']"
+              :style="{ background: c }"
+              :title="c"
+              @click="pick(c)"></span>
+      </template>
       <span class="cpf-tail">
         <input class="bl-input bl-mono cpf-hex" :value="modelValue" @input="onHex" @change="onHexChange" placeholder="#RRGGBB" />
         <input type="color" class="cpf-native" :value="normalized" @input="onNative" title="自定义颜色" />
@@ -19,6 +21,7 @@ import { computed } from 'vue'
 
 const props = defineProps({
   modelValue: { type: String, default: '' },
+  swatches: { type: Boolean, default: true },   // 是否显示预设色板;false=仅 hex 输入 + 取色块(简洁)
   // 预设色板（铺满 2 行,小方块）
   palette: {
     type: Array,
@@ -57,6 +60,9 @@ function onNative(e) { emit('update:modelValue', e.target.value); emit('change',
 }
 .cpf-dot.is-active { border-color: var(--bl-bg-1); box-shadow: 0 0 0 2px var(--bl-primary); }
 .cpf-tail { margin-left: auto; display: inline-flex; align-items: center; flex-shrink: 0; }
+.cpf-compact .cpf-swatches { max-width: none; }
+.cpf-compact .cpf-tail { margin-left: 0; }
+.cpf-compact .cpf-hex { width: 108px; }
 .cpf-hex {
   width: 92px; height: 26px;
   border-top-right-radius: 0; border-bottom-right-radius: 0;

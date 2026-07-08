@@ -10,14 +10,14 @@
              placeholder="编码" @change="renameCode(i, $event.target.value)" />
       <div class="sme-fields">
         <template v-for="f in subFields" :key="f.key">
-          <ColorPickerField v-if="f.control === 'color'" :model-value="entry.obj[f.key]"
+          <ColorPickerField v-if="f.control === 'color'" :swatches="false" :model-value="entry.obj[f.key]"
                             @update:model-value="setField(i, f.key, $event)" />
-          <input v-else-if="f.control === 'number'" class="bl-input bl-input-sm" type="number"
+          <input v-else-if="f.control === 'number'" class="bl-input bl-input-sm sme-num" type="number"
                  :value="entry.obj[f.key]" :disabled="disabled" :title="f.key"
                  @input="setField(i, f.key, num($event.target.value))" />
           <button v-else-if="f.control === 'boolean'" type="button" class="sme-sw" :class="entry.obj[f.key] && 'is-on'"
                   :disabled="disabled" :title="f.key" @click="setField(i, f.key, !entry.obj[f.key])"><span></span></button>
-          <input v-else class="bl-input bl-input-sm" :value="entry.obj[f.key]" :disabled="disabled" :placeholder="f.key"
+          <input v-else class="bl-input bl-input-sm sme-txt" :value="entry.obj[f.key]" :disabled="disabled" :placeholder="f.key"
                  @input="setField(i, f.key, $event.target.value)" />
         </template>
       </div>
@@ -79,7 +79,11 @@ function delRow(i) { emitMap(rows.value.filter((_, k) => k !== i)) }
 .sme-row { display: flex; align-items: center; gap: 6px; }
 .sme-code { width: 110px; flex-shrink: 0; }
 .sme-fields { flex: 1; display: flex; align-items: center; gap: 6px; min-width: 0; }
-.sme-fields > * { flex: 1; min-width: 0; }
+/* 按控件类型给合理宽度,不再等宽拉伸 */
+.sme-fields > * { flex: 0 0 auto; min-width: 0; }
+.sme-fields .cpf { flex: 0 0 auto; width: 148px; }
+.sme-fields .sme-num { flex: 0 0 60px; width: 60px; }
+.sme-fields .sme-txt { flex: 0 0 132px; width: 132px; }
 .sme-del { width: 24px; height: 24px; flex-shrink: 0; border: 0; background: transparent; color: var(--bl-text-3); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
 .sme-del:hover { background: #fff1f0; color: #f53f3f; }
 .sme-add { width: 100%; padding: 5px; border: 1px dashed var(--bl-border); background: transparent; border-radius: 6px; color: var(--bl-text-2); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; }

@@ -345,7 +345,7 @@
                 <FieldRow label="当前版本"><span class="bl-tag bl-tag-primary">{{ nsInfo.currVersion }}</span></FieldRow>
               </template>
               <FieldRow label="元数据 (JSON)">
-                <textarea class="bl-textarea bl-mono" rows="8" v-model="nsMetadata" placeholder='{ "timeResolution": "..." }'></textarea>
+                <CodeEditor v-model="nsMetadata" :rows="8" placeholder='{ "timeResolution": "..." }' />
               </FieldRow>
               <div class="bl-flex-end" style="margin-top:8px">
                 <button class="bl-btn bl-btn-primary" @click="saveNsMetadata">保存命名空间元数据</button>
@@ -680,6 +680,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, reactive, nextTick } from 'vue'
 import PageHeader from '@/components/PageHeader.vue'
+import CodeEditor from '@/components/CodeEditor.vue'
 import TreeNode from './category/TreeNode.vue'
 import FieldRow from './category/FieldRow.vue'
 import GroupGraph from './category/GroupGraph.vue'

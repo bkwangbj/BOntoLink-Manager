@@ -54,7 +54,7 @@
                 <label class="pd-switch"><input type="checkbox" :checked="form.is_derived" :disabled="form.prop_type!=='data'" @change="form.is_derived = $event.target.checked ? 1 : 0" />计算派生</label>
               </FieldRow>
               <FieldRow v-if="form.is_derived" label="计算函数" :inline="false" style="grid-column:1/-1">
-                <textarea class="bl-textarea bl-mono" rows="3" v-model="form.computeExpr" placeholder="例: lng * 100 + lat"></textarea>
+                <CodeEditor v-model="form.computeExpr" language="text" :rows="3" placeholder="例: lng * 100 + lat" />
               </FieldRow>
               <FieldRow label="数据类型" inline>
                 <select class="bl-input" v-model="form.data_type" :disabled="form.prop_type==='object'">
@@ -243,7 +243,7 @@
               <FieldRow label="定义来源" inline><input class="bl-input" v-model="form.rdfs_defined_by" placeholder="rdfs:isDefinedBy" /></FieldRow>
             </div>
             <FieldRow label="元数据 JSON" hint="自由扩展字段,需为合法 JSON">
-              <textarea class="bl-textarea bl-mono" rows="3" v-model="form.metadata" placeholder='{"key":"value"}'></textarea>
+              <CodeEditor v-model="form.metadata" :rows="3" placeholder='{"key":"value"}' />
             </FieldRow>
           </section>
 
@@ -272,6 +272,7 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
+import CodeEditor from '@/components/CodeEditor.vue'
 import FilterableSelect from '@/components/FilterableSelect.vue'
 import BoundTypeClassList from '@/components/typeclass/BoundTypeClassList.vue'
 import { BL } from '@/lib/bl.js'

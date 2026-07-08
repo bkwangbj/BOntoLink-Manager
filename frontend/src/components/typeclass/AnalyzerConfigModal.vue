@@ -73,7 +73,7 @@
           </div>
 
           <div class="acm-sec acm-sec2">参数 JSON</div>
-          <pre class="acm-json">{{ jsonText }}</pre>
+          <CodeEditor :model-value="jsonText" disabled :rows="6" />
         </div>
       </div>
 
@@ -87,6 +87,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { BL } from '@/lib/bl.js'
+import CodeEditor from '@/components/CodeEditor.vue'
 import { CORES, FILTERS, byEn, CORE_GROUPS, FILTER_GROUPS, SAMPLE_TEXT, tokenize } from '@/lib/analyzers.js'
 
 const props = defineProps({ value: { type: Object, default: () => ({}) } })

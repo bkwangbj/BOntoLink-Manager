@@ -21,7 +21,7 @@
       <FilterableSelect v-if="f.control === 'enum'" :model-value="val(f.key)" :options="enumOpts(f)"
                         :disabled="disabled" placeholder="请选择" @update:model-value="set(f.key, $event)" />
       <!-- 颜色 -->
-      <ColorPickerField v-else-if="f.control === 'color'" :model-value="val(f.key)"
+      <ColorPickerField v-else-if="f.control === 'color'" :swatches="false" :model-value="val(f.key)"
                         @update:model-value="set(f.key, $event)" />
       <!-- 数字 -->
       <input v-else-if="f.control === 'number'" class="bl-input bl-input-sm" type="number"
@@ -36,8 +36,8 @@
       <StyleMapEditor v-else-if="f.control === 'stylemap'" :model-value="objVal(f.key)" :schema="f.additionalProperties"
                       :disabled="disabled" @update:model-value="set(f.key, $event)" />
       <!-- 对象/兜底:JSON -->
-      <textarea v-else-if="f.control === 'json'" class="bl-input bl-mono psf-json" rows="3" :disabled="disabled"
-                :value="jsonText(f.key)" @change="setJson(f.key, $event.target.value)"></textarea>
+      <CodeEditor v-else-if="f.control === 'json'" :model-value="jsonDraft(f.key)" :rows="3" :disabled="disabled"
+                  @update:model-value="onJson(f.key, $event)" />
       <!-- 文本 -->
       <input v-else class="bl-input bl-input-sm" :value="val(f.key)" :disabled="disabled"
              :placeholder="f.demo || ''" @input="set(f.key, $event.target.value)" />
@@ -48,7 +48,8 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, reactive } from 'vue'
+import CodeEditor from '@/components/CodeEditor.vue'
 import FilterableSelect from '../FilterableSelect.vue'
 import ColorPickerField from '../ColorPickerField.vue'
 import UnitAutoConfig from './UnitAutoConfig.vue'
@@ -156,6 +157,10 @@ function setJson(key, text) {
   if (!t) { set(key, undefined); return }
   try { set(key, JSON.parse(t)) } catch { set(key, t) }
 }
+/* json 控件本地草稿:避免受控组件在「刚好合法」时被 jsonText 重排、跳格 */
+const jsonDrafts = reactive({})
+function jsonDraft(key) { return jsonDrafts[key] !== undefined ? jsonDrafts[key] : jsonText(key) }
+function onJson(key, v) { jsonDrafts[key] = v; setJson(key, v) }
 </script>
 
 <style scoped>

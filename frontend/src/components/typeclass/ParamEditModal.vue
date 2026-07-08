@@ -24,7 +24,7 @@
             <ParamPreview :name-prefix="bind.name_prefix" :category="bind.category_code" :values="values" />
           </div>
           <div class="pem-sec" style="margin-top:12px">参数 JSON</div>
-          <pre class="pem-json">{{ jsonText }}</pre>
+          <CodeEditor :model-value="jsonText" disabled :rows="6" />
         </div>
       </div>
 
@@ -39,6 +39,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { BL } from '@/lib/bl.js'
+import CodeEditor from '@/components/CodeEditor.vue'
 import ParamSchemaForm from './ParamSchemaForm.vue'
 import ParamPreview from './ParamPreview.vue'
 

@@ -203,7 +203,7 @@
 
             <div class="sec">规则配置</div>
             <FieldRow label="元数据 (JSON)" hint="机器可读：接口规则、查询约束、语义配置">
-              <textarea class="bl-textarea bl-mono" rows="5" v-model="form.metadata" placeholder='{ "query": "...", "unit_normalization": true }'></textarea>
+              <CodeEditor v-model="form.metadata" :rows="5" placeholder='{ "query": "...", "unit_normalization": true }' />
             </FieldRow>
           </div>
 
@@ -382,6 +382,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import CodeEditor from '@/components/CodeEditor.vue'
 import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import IconPickerField from '@/components/IconPickerField.vue'

@@ -169,16 +169,21 @@
                 </select>
               </div>
             </div>
-            <div class="fr"><span class="fr-l">参数可选值</span>
-              <textarea class="bl-input ta" rows="3" v-model="editForm.param_options_json" placeholder='枚举结构化 JSON,如 [{"value":"danger","label_cn":"危险"}]'></textarea>
+            <div v-if="showOptionsField" class="fr"><span class="fr-l">参数可选值</span>
+              <div class="tc-editor-wrap">
+                <CodeEditor v-model="editForm.param_options_json" :rows="4" placeholder='可留空;枚举结构化 JSON' />
+                <div class="tc-editor-hint">示例:[{"value":"danger","label_cn":"危险"}]</div>
+              </div>
             </div>
             <div class="fr"><span class="fr-l">参数说明</span><input class="bl-input" v-model="editForm.param_desc" /></div>
             <div class="fr"><span class="fr-l">示例值</span><input class="bl-input" v-model="editForm.demo_value" placeholder='如 {"line_type":"solid"}' /></div>
 
             <!-- 多字段参数 Schema(param_json);可视化预览见右栏 -->
-            <div class="fr"><span class="fr-l">参数 Schema</span>
-              <textarea class="bl-input ta bl-mono" rows="5" v-model="editForm.param_json"
-                        placeholder='多字段参数 JSON Schema,如 {"line_type":{"type":"enum","enum":["solid","dashed","dotted"],"default":"solid","description":"曲线线型"}}'></textarea>
+            <div v-if="showSchemaField" class="fr"><span class="fr-l">参数 Schema</span>
+              <div class="tc-editor-wrap">
+                <CodeEditor v-model="editForm.param_json" :rows="9" placeholder='可留空;多字段参数 JSON Schema' />
+                <div class="tc-editor-hint">示例:{"line_type":{"type":"enum","enum":["solid","dashed"],"default":"solid","description":"曲线线型"}}</div>
+              </div>
             </div>
 
             <div class="fr"><span class="fr-l">业务说明</span><textarea class="bl-input ta" rows="3" v-model="editForm.description"></textarea></div>
@@ -261,7 +266,7 @@
             <div class="tc-pv-sub tc-pv-sub2">实时预览</div>
             <div class="tc-preview-box"><ParamPreview :name-prefix="editForm.name_prefix" :category="editForm.category_code" :values="pvVal" /></div>
             <div class="tc-pv-sub tc-pv-sub2">参数 JSON</div>
-            <pre class="tc-preview-json">{{ pvJson }}</pre>
+            <CodeEditor :model-value="pvJson" disabled :rows="6" />
           </template>
           <div v-else class="tc-pv-empty">该类型类为纯标记型或未定义参数 Schema,无可配置参数。<br>在左侧「参数 Schema」填入 JSON Schema 即可在此预览动态表单。</div>
         </div>
@@ -344,6 +349,7 @@ import PageHeader from '@/components/PageHeader.vue'
 import IconPickerField from '@/components/IconPickerField.vue'
 import ColorPickerField from '@/components/ColorPickerField.vue'
 import ParamSchemaForm from '@/components/typeclass/ParamSchemaForm.vue'
+import CodeEditor from '@/components/CodeEditor.vue'
 import ParamPreview from '@/components/typeclass/ParamPreview.vue'
 import { BL } from '@/lib/bl.js'
 import { typeClassApi, tcCategoryApi, tcBindApi, tcEnumApi } from '@/api'
@@ -456,6 +462,11 @@ function onDragEnd () {
   document.body.style.cursor = ''; document.body.style.userSelect = ''
   window.removeEventListener('mousemove', onDragMove); window.removeEventListener('mouseup', onDragEnd)
 }
+
+/* 「参数可选值 / 参数 Schema」条件显隐:内容感知,绝不隐藏已有内容的字段 */
+function ceNonEmpty (s) { const t = String(s || '').trim(); return !!t && !['{}', '[]', 'null'].includes(t) }
+const showOptionsField = computed(() => ceNonEmpty(editForm.param_options_json) || (editForm.param_type === 'enum' && !ceNonEmpty(editForm.param_json)))
+const showSchemaField = computed(() => ceNonEmpty(editForm.param_json) || editForm.param_type === 'json')
 
 /* 参数 Schema 可视化预览:pvVal 为演示用参数值(从示例值初始化,不入库) */
 const pvVal = ref({})
@@ -703,6 +714,8 @@ onMounted(async () => { await Promise.all([loadCategories(), loadRows(), loadEnu
 .fr2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .fr3 { display: flex; gap: 16px; margin-bottom: 10px; }
 .ta { resize: vertical; font-family: inherit; min-height: 84px; }
+.tc-editor-wrap { display: flex; flex-direction: column; gap: 3px; }
+.tc-editor-hint { font-size: 11px; color: var(--bl-text-3); line-height: 1.5; word-break: break-all; }
 /* 参数 Schema 可视化预览 */
 .tc-preview { margin: 4px 0 8px; padding: 10px; border: 1px solid var(--bl-border); border-radius: 8px; background: var(--bl-bg-2); }
 .tc-preview-hd { font-size: 12px; font-weight: 600; color: var(--bl-text-2); margin-bottom: 8px; }
