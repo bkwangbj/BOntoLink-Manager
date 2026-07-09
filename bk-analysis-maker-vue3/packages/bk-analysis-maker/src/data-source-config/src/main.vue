@@ -838,11 +838,19 @@ export default {
     },
     // 分组与筛选变化:写回 configs.dataSourceConfig.grouping;维度变化则重新拉取分组取值
     onGroupingChange (g) {
-      const fieldChanged = g.field !== (this.grouping && this.grouping.field)
+      const oldField = this.grouping && this.grouping.field
+      const fieldChanged = g.field !== oldField
       this.grouping = g
       if (!this.configs.dataSourceConfig) this.configs.dataSourceConfig = {}
       this.configs.dataSourceConfig.grouping = utils.deepClone(g)
-      if (fieldChanged) this.loadGroupValues()
+      if (fieldChanged) {
+        // 排序默认跟随分组:原本按旧分组字段排序的项,自动改到新分组字段(用户排到其他字段的保持不动)
+        if (g.field && Array.isArray(this.sorts) && this.sorts.some(s => s && s.field === oldField)) {
+          this.sorts = this.sorts.map(s => (s && s.field === oldField) ? { ...s, field: g.field } : s)
+          this.configs.dataSourceConfig.sorts = utils.deepClone(this.sorts)
+        }
+        this.loadGroupValues()
+      }
       this.applyToChart()
     },
     // 用图表接口按当前分组维度拉取取值列表 [{name,value}] → 填充分组值列表(勾选/数值/进度条)

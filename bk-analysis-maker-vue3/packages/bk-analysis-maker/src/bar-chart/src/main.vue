@@ -137,6 +137,16 @@ export default {
         if (this.$refs.chart && this.$refs.chart.setOption) this.$refs.chart.setOption(option, true)
         return
       }
+      // 气泡图:直角坐标 + 散点,x/y 为数值轴,气泡大小按 size 字段映射(10~50)
+      if (config.branchType === 'bubbleChart') {
+        await this.renderBubble(option)
+        return
+      }
+      // 日历热力图:日历坐标系 + heatmap,按 date 落格、value 定色深
+      if (config.branchType === 'calendarHeatmap') {
+        await this.renderCalendar(option)
+        return
+      }
       // 配置特殊处理
       if (option.legend.alignPosition) {
         const alignList = {
@@ -183,6 +193,14 @@ export default {
         })
       }
 
+      // Y轴单位随聚合类型:计数→「次」,求和/平均等→留空;仅当用户未自定义轴名(默认"次"/空)时生效,不覆盖自定义
+      const _agg = config.dataSourceConfig?.metrics?.[0]?.aggs?.[0]
+      if (_agg) {
+        const _unit = _agg === 'count' ? '次' : ''
+        const _applyUnit = (ax) => { if (ax && (ax.name === '次' || ax.name === '' || ax.name == null)) ax.name = _unit }
+        if (Array.isArray(option.yAxis)) { _applyUnit(option.yAxis[0]) } else { _applyUnit(option.yAxis) }
+      }
+
       let xData = this.relList.map(item => item.x).filter(ele => { return ele })
       xData = Array.from(new Set(xData))
       option.xAxis.data = xData
@@ -190,6 +208,8 @@ export default {
       if (option.autoSeries) {
         option.series = this.addSeris(option)
       }
+      // 正负柱图:渲染时对每个数据点按正负着色(正=绿,负=红),写在 data[].itemStyle,不经序列化
+      const isPosNeg = config.branchType === 'posNegBarChart'
       for (let i = 0; i < option.series.length; i++) {
         let yData = this.relList.filter(item => item.colorField === option.series[i].dataId)
         yData = xData.map(item => {
@@ -205,7 +225,11 @@ export default {
 
             }
           }
-          return value || null
+          const v = value || null
+          if (isPosNeg && v != null && !isNaN(Number(v))) {
+            return { value: Number(v), itemStyle: { color: Number(v) < 0 ? '#F56C6C' : '#3ED848' } }
+          }
+          return v
         })
         if (option.series[i]?.legendConfig && option.series[i]?.legendConfig.show) {
           legendData.push({
@@ -286,6 +310,55 @@ export default {
       // } else {
       //   this.$refs.chart.setOption(option, true)
       // }
+    },
+    // 气泡图渲染:relList 每项 { x, y, size, colorField } → 散点 [x, y, size],气泡大小按 size 线性映射
+    async renderBubble (option) {
+      const pts = (this.relList || []).map(it => {
+        const x = Number(it.x); const y = Number(it.y)
+        const size = (it.size === '' || it.size == null) ? null : Number(it.size)
+        return { value: [x, y, (size == null || isNaN(size)) ? null : size], name: it.colorField || it.name || '' }
+      }).filter(p => !isNaN(p.value[0]) && !isNaN(p.value[1]))
+      const ss = pts.map(p => p.value[2]).filter(v => v != null && !isNaN(v))
+      const minS = ss.length ? Math.min(...ss) : 0
+      const maxS = ss.length ? Math.max(...ss) : 1
+      const symbolSize = (val) => {
+        const s = Array.isArray(val) ? val[2] : null
+        if (s == null || isNaN(s) || maxS === minS) return 22
+        return 12 + ((s - minS) / (maxS - minS)) * 42 // 12~54
+      }
+      const color = (option.color && option.color[0]) || '#00E4BF'
+      option.series = [{ type: 'scatter', symbolSize, data: pts, itemStyle: { color, opacity: 0.75, borderColor: '#fff', borderWidth: 1 } }]
+      const toValueAxis = (ax) => { if (ax) { ax.type = 'value'; ax.data = undefined; ax.scale = true } }
+      toValueAxis(option.xAxis)
+      if (Array.isArray(option.yAxis)) toValueAxis(option.yAxis[0]); else toValueAxis(option.yAxis)
+      option.tooltip = { trigger: 'item', formatter: (p) => `${p.name ? p.name + '<br/>' : ''}X: ${p.value[0]}<br/>Y: ${p.value[1]}` + (p.value[2] != null ? `<br/>大小: ${p.value[2]}` : '') }
+      this.option = option
+      await this.$nextTick()
+      if (this.$refs.chart && this.$refs.chart.setOption) this.$refs.chart.setOption(option, true)
+    },
+    async renderCalendar (option) {
+      // relList: { date: 'YYYY-MM-DD', value }。落到日历坐标系,颜色深浅按 value
+      const pts = (this.relList || []).map(it => {
+        const d = String(it.date || '').trim()
+        const v = (it.value === '' || it.value == null) ? null : Number(it.value)
+        return [d, (v == null || isNaN(v)) ? 0 : v]
+      }).filter(p => /^\d{4}-\d{1,2}-\d{1,2}$/.test(p[0]))
+      const vals = pts.map(p => p[1])
+      const maxV = vals.length ? Math.max(...vals) : 100
+      // range 自动取数据所在年份(取最早一条),无数据回退默认
+      const year = pts.length ? pts[0][0].slice(0, 4) : (option.calendar && option.calendar.range) || '2026'
+      if (!option.calendar) option.calendar = { top: 50, left: 40, right: 20, cellSize: ['auto', 16], itemStyle: { borderWidth: 1, borderColor: '#fff', color: '#F2F3F5' }, dayLabel: { firstDay: 1 } }
+      option.calendar.range = year
+      if (!option.visualMap) option.visualMap = { show: true, orient: 'horizontal', left: 'center', bottom: 0, inRange: { color: ['#E8F3FF', '#4080FF', '#0E42D2'] } }
+      option.visualMap.min = 0
+      option.visualMap.max = maxV || 100
+      // 日历坐标系不用直角轴/图例
+      option.xAxis = undefined; option.yAxis = undefined; option.grid = undefined
+      option.series = [{ type: 'heatmap', coordinateSystem: 'calendar', data: pts }]
+      option.tooltip = { trigger: 'item', formatter: (p) => `${p.value[0]}<br/>数值: ${p.value[1]}` }
+      this.option = option
+      await this.$nextTick()
+      if (this.$refs.chart && this.$refs.chart.setOption) this.$refs.chart.setOption(option, true)
     },
     addSeris (option) {
       const colorList = option?.color || this.pageConfig?.themeConfigs?.chartConfig?.chart?.colorList

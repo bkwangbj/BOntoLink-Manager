@@ -14,16 +14,16 @@ import { use, registerMap, graphic } from 'echarts/core'
 import 'echarts-gl'
 import { CanvasRenderer } from 'echarts/renderers'
 import {
-  BarChart, LineChart, ScatterChart, PieChart, MapChart, RadarChart, GaugeChart
+  BarChart, LineChart, ScatterChart, PieChart, MapChart, RadarChart, GaugeChart, HeatmapChart
 } from 'echarts/charts'
 import {
-  GridComponent, TooltipComponent, LegendComponent, TitleComponent, VisualMapComponent, PolarComponent
+  GridComponent, TooltipComponent, LegendComponent, TitleComponent, VisualMapComponent, PolarComponent, CalendarComponent
 } from 'echarts/components'
 
 use([
   CanvasRenderer,
-  LineChart, BarChart, PieChart, MapChart, RadarChart, GaugeChart, ScatterChart,
-  GridComponent, TooltipComponent, LegendComponent, TitleComponent, VisualMapComponent, PolarComponent
+  LineChart, BarChart, PieChart, MapChart, RadarChart, GaugeChart, ScatterChart, HeatmapChart,
+  GridComponent, TooltipComponent, LegendComponent, TitleComponent, VisualMapComponent, PolarComponent, CalendarComponent
 ])
 
 export default {

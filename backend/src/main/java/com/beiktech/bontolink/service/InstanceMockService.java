@@ -105,7 +105,18 @@ public class InstanceMockService {
 
     /** 属性元数据(api_name/display_name/data_type/...)。 */
     public List<Map<String, Object>> properties(String classId) {
-        return propCache.computeIfAbsent(classId, ontologyMapper::listProperties);
+        return propCache.computeIfAbsent(classId, cid -> {
+            List<Map<String, Object>> list = new ArrayList<>(ontologyMapper.listProperties(cid));
+            // 演示:给「水文测站」注入一个可正可负的度量,便于测试正负柱图(净蓄水/水位变化)
+            if ("class-00000000-0000-0000-0000-000000000001".equals(cid)) {
+                Map<String, Object> p = new LinkedHashMap<>();
+                p.put("api_name", "waterLevelDelta");
+                p.put("display_name", "水位变化量");
+                p.put("data_type", "decimal");
+                list.add(p);
+            }
+            return list;
+        });
     }
 
     /**
@@ -374,6 +385,12 @@ public class InstanceMockService {
     private Object decimalByName(String field, String display, Random r) {
         String s = (field + display).toLowerCase();
         double v;
+        // 变化/增减/净值/差值类度量:生成可正可负的值(供正负柱图演示)
+        if (display.contains("变化") || display.contains("增减") || display.contains("净") || display.contains("差")
+                || s.contains("delta") || s.contains("change")) {
+            v = r.nextDouble() * 100 - 50;   // -50 ~ +50
+            return Math.round(v * 100.0) / 100.0;
+        }
         if (s.contains("lng") || s.contains("longitude") || display.contains("经度")) v = 73 + r.nextDouble() * 62;        // 73~135
         else if (s.contains("lat") || s.contains("latitude") || display.contains("纬度")) v = 18 + r.nextDouble() * 35;   // 18~53
         else if (display.contains("水位") || s.contains("level")) v = r.nextDouble() * 200;

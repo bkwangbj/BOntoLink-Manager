@@ -10099,6 +10099,79 @@
 
         }
       }]
+    }], ['roundPieChart', {
+      color: ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399', '#909399'],
+      tooltip: { trigger: 'item' },
+      legend: { show: true, alignPosition: 'topCenter' },
+      series: [{
+        type: 'pie', center: [50, 50], radius: [0, 45], clockwise: true, avoidLabelOverlap: true, hoverOffset: 15,
+        itemStyle: { borderRadius: 8, borderColor: '#fff', borderWidth: 2 },
+        label: { show: true, position: 'outside', formatter: '{d}%' },
+        labelLine: { show: true, length: 20, length2: 30, lineStyle: { width: 1 } }
+      }]
+    }], ['roundRingChart', {
+      color: ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399', '#909399'],
+      tooltip: { trigger: 'item' },
+      legend: { show: true, alignPosition: 'topCenter' },
+      series: [{
+        type: 'pie', center: [50, 50], radius: [30, 48], clockwise: true, avoidLabelOverlap: true, hoverOffset: 15,
+        itemStyle: { borderRadius: 8, borderColor: '#fff', borderWidth: 2 },
+        label: { show: true, position: 'outside', formatter: '{d}%' },
+        labelLine: { show: true, length: 20, length2: 30, lineStyle: { width: 1 } }
+      }]
+    }], ['posNegBarChart', {
+      showBorderRadius: false,
+      tooltip: { trigger: 'axis' },
+      legend: { show: true, alignPosition: 'topCenter' },
+      grid: { top: 50, left: 50, right: 50, bottom: 20, containLabel: true },
+      xAxis: {
+        show: true, type: 'category', axisLabel: { show: true },
+        axisTick: { show: true, lineStyle: { width: 1, color: '#DDD' } },
+        axisLine: { show: true, lineStyle: { color: '#999' } }
+      },
+      yAxis: {
+        show: true, type: 'value', alignTicks: true,
+        splitLine: { show: true, lineStyle: { width: 1, type: 'dashed', color: '#DDD' } },
+        axisLabel: { show: true },
+        axisTick: { show: false, lineStyle: { width: 1, color: '#DDD' } },
+        axisLine: { show: false, lineStyle: { color: '#333' } },
+        nameTextStyle: { color: '#999' }, splitArea: { show: false }
+      },
+      series: [
+        { type: 'bar', itemStyle: { color: null }, backgroundStyle: {} },
+        { type: 'bar', itemStyle: { color: null }, backgroundStyle: {} }
+      ]
+    }], ['bubbleChart', {
+      color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],
+      tooltip: { trigger: 'item' },
+      legend: { show: false, alignPosition: 'topCenter' },
+      grid: { top: 40, left: 50, right: 40, bottom: 40, containLabel: true },
+      xAxis: {
+        show: true, type: 'value', scale: true, name: '',
+        axisLabel: { show: true }, axisLine: { show: true, lineStyle: { color: '#999' } },
+        splitLine: { show: true, lineStyle: { color: '#eee', type: 'dashed' } }
+      },
+      yAxis: {
+        show: true, type: 'value', scale: true, name: '',
+        axisLabel: { show: true }, axisLine: { show: false },
+        splitLine: { show: true, lineStyle: { color: '#eee', type: 'dashed' } }
+      },
+      series: [{ type: 'scatter', symbolSize: 22, data: [] }]
+    }], ['calendarHeatmap', {
+      color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],
+      tooltip: { trigger: 'item' },
+      legend: { show: false, alignPosition: 'topCenter' },
+      visualMap: {
+        show: true, min: 0, max: 100, orient: 'horizontal', left: 'center', bottom: 0,
+        inRange: { color: ['#E8F3FF', '#4080FF', '#0E42D2'] }
+      },
+      calendar: {
+        top: 50, left: 40, right: 20, cellSize: ['auto', 16], range: '2026',
+        itemStyle: { borderWidth: 1, borderColor: '#fff', color: '#F2F3F5' },
+        splitLine: { show: true, lineStyle: { color: '#C9CDD4', width: 1 } },
+        yearLabel: { show: true }, dayLabel: { firstDay: 1 }, monthLabel: { show: true }
+      },
+      series: [{ type: 'heatmap', coordinateSystem: 'calendar', data: [] }]
     }], ['ringChart2', {
       color: ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399', '#909399'],
       position: {
@@ -11441,6 +11514,197 @@
       value: 'colorField'
     }]
   }, {
+    title: '正负柱图',
+    type: 'BKBarChart',
+    branchType: 'posNegBarChart',
+    img: 'bar.png',
+    chartComId: '39',
+    explainConfig: {
+      show: false,
+      text: '',
+      position: 'topLeft',
+      x: 0,
+      y: 0
+    },
+    eventConfig: [{
+      title: '当数据项被点击时',
+      event: 'click',
+      isActive: false,
+      items: [{
+        field: 'x',
+        varField: ''
+      }, {
+        field: 'y',
+        varField: ''
+      }]
+    }],
+    items: [{
+      label: 'x',
+      field: 'x',
+      value: 'x'
+    }, {
+      label: 'y',
+      field: 'y',
+      value: 'y'
+    }, {
+      label: '颜色映射',
+      field: 'colorField',
+      value: 'colorField'
+    }]
+  }, {
+    title: '气泡图',
+    type: 'BKBarChart',
+    branchType: 'bubbleChart',
+    img: 'bar.png',
+    chartComId: '40',
+    explainConfig: {
+      show: false,
+      text: '',
+      position: 'topLeft',
+      x: 0,
+      y: 0
+    },
+    eventConfig: [{
+      title: '当数据项被点击时',
+      event: 'click',
+      isActive: false,
+      items: [{
+        field: 'x',
+        varField: ''
+      }, {
+        field: 'y',
+        varField: ''
+      }]
+    }],
+    items: [{
+      label: 'x轴',
+      field: 'x',
+      value: 'x'
+    }, {
+      label: 'y轴',
+      field: 'y',
+      value: 'y'
+    }, {
+      label: '气泡大小',
+      field: 'size',
+      value: 'size'
+    }, {
+      label: '颜色映射',
+      field: 'colorField',
+      value: 'colorField'
+    }],
+    dataSourceConfig: {
+      type: 'static',
+      data: [{
+        x: 5,
+        y: 20,
+        size: 30,
+        colorField: 'A'
+      }, {
+        x: 12,
+        y: 35,
+        size: 60,
+        colorField: 'A'
+      }, {
+        x: 20,
+        y: 15,
+        size: 45,
+        colorField: 'B'
+      }, {
+        x: 28,
+        y: 42,
+        size: 80,
+        colorField: 'B'
+      }, {
+        x: 35,
+        y: 25,
+        size: 20,
+        colorField: 'C'
+      }, {
+        x: 42,
+        y: 38,
+        size: 55,
+        colorField: 'C'
+      }],
+      value: '[{"x":5,"y":20,"size":30},{"x":12,"y":35,"size":60},{"x":20,"y":15,"size":45},{"x":28,"y":42,"size":80},{"x":35,"y":25,"size":20},{"x":42,"y":38,"size":55}]',
+      paramsType: 'json',
+      interfaceFilterVisible: false,
+      interfaceTempParamsVisible: false,
+      paramHandlerVisible: false,
+      dataMapping: {}
+    }
+  }, {
+    title: '日历热力图',
+    type: 'BKBarChart',
+    branchType: 'calendarHeatmap',
+    img: 'bar.png',
+    chartComId: '41',
+    explainConfig: {
+      show: false,
+      text: '',
+      position: 'topLeft',
+      x: 0,
+      y: 0
+    },
+    eventConfig: [{
+      title: '当数据项被点击时',
+      event: 'click',
+      isActive: false,
+      items: [{
+        field: 'date',
+        varField: ''
+      }, {
+        field: 'value',
+        varField: ''
+      }]
+    }],
+    items: [{
+      label: '日期',
+      field: 'date',
+      value: 'date'
+    }, {
+      label: '数值',
+      field: 'value',
+      value: 'value'
+    }],
+    dataSourceConfig: {
+      type: 'static',
+      data: [{
+        date: '2026-01-05',
+        value: 12
+      }, {
+        date: '2026-01-18',
+        value: 30
+      }, {
+        date: '2026-02-03',
+        value: 8
+      }, {
+        date: '2026-02-20',
+        value: 45
+      }, {
+        date: '2026-03-11',
+        value: 22
+      }, {
+        date: '2026-04-06',
+        value: 60
+      }, {
+        date: '2026-05-15',
+        value: 18
+      }, {
+        date: '2026-06-09',
+        value: 37
+      }, {
+        date: '2026-07-01',
+        value: 52
+      }],
+      value: '[{"date":"2026-01-05","value":12},{"date":"2026-02-20","value":45},{"date":"2026-04-06","value":60}]',
+      paramsType: 'json',
+      interfaceFilterVisible: false,
+      interfaceTempParamsVisible: false,
+      paramHandlerVisible: false,
+      dataMapping: {}
+    }
+  }, {
     title: '折线图',
     type: 'BKBarChart',
     explainConfig: {
@@ -11921,6 +12185,74 @@
       },
       //  field 值字段   varField 更新值变量
       {
+        field: 'value',
+        varField: ''
+      }]
+    }],
+    items: [{
+      label: 'name',
+      field: 'name',
+      value: 'name'
+    }, {
+      label: 'value',
+      field: 'value',
+      value: 'value'
+    }]
+  }, {
+    title: '圆角饼图',
+    type: 'BKPieChart',
+    img: 'pie.png',
+    explainConfig: {
+      show: false,
+      text: '',
+      position: 'topLeft',
+      x: 0,
+      y: 0
+    },
+    chartComId: '37',
+    branchType: 'roundPieChart',
+    eventConfig: [{
+      title: '当数据项被点击时',
+      event: 'click',
+      isActive: false,
+      items: [{
+        field: 'name',
+        varField: ''
+      }, {
+        field: 'value',
+        varField: ''
+      }]
+    }],
+    items: [{
+      label: 'name',
+      field: 'name',
+      value: 'name'
+    }, {
+      label: 'value',
+      field: 'value',
+      value: 'value'
+    }]
+  }, {
+    title: '圆角环图',
+    type: 'BKPieChart',
+    img: 'ring-pie.png',
+    explainConfig: {
+      show: false,
+      text: '',
+      position: 'topLeft',
+      x: 0,
+      y: 0
+    },
+    chartComId: '38',
+    branchType: 'roundRingChart',
+    eventConfig: [{
+      title: '当数据项被点击时',
+      event: 'click',
+      isActive: false,
+      items: [{
+        field: 'name',
+        varField: ''
+      }, {
         field: 'value',
         varField: ''
       }]
@@ -44011,6 +44343,13 @@
           this.legendConfig.show = false;
           return
         }
+        // 气泡图(散点 x/y/size)/日历热力图(date/value)不走"名称/数值"图例,直接跳过,避免渲染报错
+        if (config.branchType === 'bubbleChart' || config.branchType === 'calendarHeatmap') {
+          this.legendConfig.show = false;
+          this.data = [];
+          this.colors = [];
+          return
+        }
         Object.assign(this.$data, this.$options.data());
         if (config.configOption?.legendConfig) {
           this.legendConfig = { ...config.configOption.legendConfig };
@@ -44154,7 +44493,7 @@
         ], 4))
       : vue.createCommentVNode("", true)
   }
-  const LegendContent = /*#__PURE__*/_export_sfc(_sfc_main$13, [['render',_sfc_render$12],['__scopeId',"data-v-54865d32"]]);
+  const LegendContent = /*#__PURE__*/_export_sfc(_sfc_main$13, [['render',_sfc_render$12],['__scopeId',"data-v-bbe78b81"]]);
 
   /* unplugin-vue-components disabled */
   // import { colorList } from '../../configs/chart-cfg'
@@ -44355,6 +44694,10 @@
               };
             } else {
               option.series[0].data = formData;
+              // 圆角饼图/圆角环图:强制给饼图 series 上圆角(默认配置已带,这里兜底,避免配置面板剥离)
+              if (config.branchType === 'roundPieChart' || config.branchType === 'roundRingChart') {
+                option.series.forEach(s => { if (s && s.type === 'pie') s.itemStyle = { ...(s.itemStyle || {}), borderRadius: 8, borderColor: '#fff', borderWidth: 2 }; });
+              }
               if (option.title) {
                 let sum = 0;
                 for (let i = 0; i < formData.length; i++) {
@@ -46755,6 +47098,16 @@
           if (this.$refs.chart && this.$refs.chart.setOption) this.$refs.chart.setOption(option, true);
           return
         }
+        // 气泡图:直角坐标 + 散点,x/y 为数值轴,气泡大小按 size 字段映射(10~50)
+        if (config.branchType === 'bubbleChart') {
+          await this.renderBubble(option);
+          return
+        }
+        // 日历热力图:日历坐标系 + heatmap,按 date 落格、value 定色深
+        if (config.branchType === 'calendarHeatmap') {
+          await this.renderCalendar(option);
+          return
+        }
         // 配置特殊处理
         if (option.legend.alignPosition) {
           const alignList = {
@@ -46801,6 +47154,14 @@
           });
         }
 
+        // Y轴单位随聚合类型:计数→「次」,求和/平均等→留空;仅当用户未自定义轴名(默认"次"/空)时生效,不覆盖自定义
+        const _agg = config.dataSourceConfig?.metrics?.[0]?.aggs?.[0];
+        if (_agg) {
+          const _unit = _agg === 'count' ? '次' : '';
+          const _applyUnit = (ax) => { if (ax && (ax.name === '次' || ax.name === '' || ax.name == null)) ax.name = _unit; };
+          if (Array.isArray(option.yAxis)) { _applyUnit(option.yAxis[0]); } else { _applyUnit(option.yAxis); }
+        }
+
         let xData = this.relList.map(item => item.x).filter(ele => { return ele });
         xData = Array.from(new Set(xData));
         option.xAxis.data = xData;
@@ -46808,6 +47169,8 @@
         if (option.autoSeries) {
           option.series = this.addSeris(option);
         }
+        // 正负柱图:渲染时对每个数据点按正负着色(正=绿,负=红),写在 data[].itemStyle,不经序列化
+        const isPosNeg = config.branchType === 'posNegBarChart';
         for (let i = 0; i < option.series.length; i++) {
           let yData = this.relList.filter(item => item.colorField === option.series[i].dataId);
           yData = xData.map(item => {
@@ -46823,7 +47186,11 @@
 
               }
             }
-            return value || null
+            const v = value || null;
+            if (isPosNeg && v != null && !isNaN(Number(v))) {
+              return { value: Number(v), itemStyle: { color: Number(v) < 0 ? '#F56C6C' : '#3ED848' } }
+            }
+            return v
           });
           if (option.series[i]?.legendConfig && option.series[i]?.legendConfig.show) {
             legendData.push({
@@ -46904,6 +47271,55 @@
         // } else {
         //   this.$refs.chart.setOption(option, true)
         // }
+      },
+      // 气泡图渲染:relList 每项 { x, y, size, colorField } → 散点 [x, y, size],气泡大小按 size 线性映射
+      async renderBubble (option) {
+        const pts = (this.relList || []).map(it => {
+          const x = Number(it.x); const y = Number(it.y);
+          const size = (it.size === '' || it.size == null) ? null : Number(it.size);
+          return { value: [x, y, (size == null || isNaN(size)) ? null : size], name: it.colorField || it.name || '' }
+        }).filter(p => !isNaN(p.value[0]) && !isNaN(p.value[1]));
+        const ss = pts.map(p => p.value[2]).filter(v => v != null && !isNaN(v));
+        const minS = ss.length ? Math.min(...ss) : 0;
+        const maxS = ss.length ? Math.max(...ss) : 1;
+        const symbolSize = (val) => {
+          const s = Array.isArray(val) ? val[2] : null;
+          if (s == null || isNaN(s) || maxS === minS) return 22
+          return 12 + ((s - minS) / (maxS - minS)) * 42 // 12~54
+        };
+        const color = (option.color && option.color[0]) || '#00E4BF';
+        option.series = [{ type: 'scatter', symbolSize, data: pts, itemStyle: { color, opacity: 0.75, borderColor: '#fff', borderWidth: 1 } }];
+        const toValueAxis = (ax) => { if (ax) { ax.type = 'value'; ax.data = undefined; ax.scale = true; } };
+        toValueAxis(option.xAxis);
+        if (Array.isArray(option.yAxis)) toValueAxis(option.yAxis[0]); else toValueAxis(option.yAxis);
+        option.tooltip = { trigger: 'item', formatter: (p) => `${p.name ? p.name + '<br/>' : ''}X: ${p.value[0]}<br/>Y: ${p.value[1]}` + (p.value[2] != null ? `<br/>大小: ${p.value[2]}` : '') };
+        this.option = option;
+        await this.$nextTick();
+        if (this.$refs.chart && this.$refs.chart.setOption) this.$refs.chart.setOption(option, true);
+      },
+      async renderCalendar (option) {
+        // relList: { date: 'YYYY-MM-DD', value }。落到日历坐标系,颜色深浅按 value
+        const pts = (this.relList || []).map(it => {
+          const d = String(it.date || '').trim();
+          const v = (it.value === '' || it.value == null) ? null : Number(it.value);
+          return [d, (v == null || isNaN(v)) ? 0 : v]
+        }).filter(p => /^\d{4}-\d{1,2}-\d{1,2}$/.test(p[0]));
+        const vals = pts.map(p => p[1]);
+        const maxV = vals.length ? Math.max(...vals) : 100;
+        // range 自动取数据所在年份(取最早一条),无数据回退默认
+        const year = pts.length ? pts[0][0].slice(0, 4) : (option.calendar && option.calendar.range) || '2026';
+        if (!option.calendar) option.calendar = { top: 50, left: 40, right: 20, cellSize: ['auto', 16], itemStyle: { borderWidth: 1, borderColor: '#fff', color: '#F2F3F5' }, dayLabel: { firstDay: 1 } };
+        option.calendar.range = year;
+        if (!option.visualMap) option.visualMap = { show: true, orient: 'horizontal', left: 'center', bottom: 0, inRange: { color: ['#E8F3FF', '#4080FF', '#0E42D2'] } };
+        option.visualMap.min = 0;
+        option.visualMap.max = maxV || 100;
+        // 日历坐标系不用直角轴/图例
+        option.xAxis = undefined; option.yAxis = undefined; option.grid = undefined;
+        option.series = [{ type: 'heatmap', coordinateSystem: 'calendar', data: pts }];
+        option.tooltip = { trigger: 'item', formatter: (p) => `${p.value[0]}<br/>数值: ${p.value[1]}` };
+        this.option = option;
+        await this.$nextTick();
+        if (this.$refs.chart && this.$refs.chart.setOption) this.$refs.chart.setOption(option, true);
       },
       addSeris (option) {
         const colorList = option?.color || this.pageConfig?.themeConfigs?.chartConfig?.chart?.colorList;
@@ -91046,11 +91462,19 @@ onDestroy(function () {
       },
       // 分组与筛选变化:写回 configs.dataSourceConfig.grouping;维度变化则重新拉取分组取值
       onGroupingChange (g) {
-        const fieldChanged = g.field !== (this.grouping && this.grouping.field);
+        const oldField = this.grouping && this.grouping.field;
+        const fieldChanged = g.field !== oldField;
         this.grouping = g;
         if (!this.configs.dataSourceConfig) this.configs.dataSourceConfig = {};
         this.configs.dataSourceConfig.grouping = efficientSuite.utils.deepClone(g);
-        if (fieldChanged) this.loadGroupValues();
+        if (fieldChanged) {
+          // 排序默认跟随分组:原本按旧分组字段排序的项,自动改到新分组字段(用户排到其他字段的保持不动)
+          if (g.field && Array.isArray(this.sorts) && this.sorts.some(s => s && s.field === oldField)) {
+            this.sorts = this.sorts.map(s => (s && s.field === oldField) ? { ...s, field: g.field } : s);
+            this.configs.dataSourceConfig.sorts = efficientSuite.utils.deepClone(this.sorts);
+          }
+          this.loadGroupValues();
+        }
         this.applyToChart();
       },
       // 用图表接口按当前分组维度拉取取值列表 [{name,value}] → 填充分组值列表(勾选/数值/进度条)
@@ -91354,7 +91778,7 @@ onDestroy(function () {
         : vue.createCommentVNode("", true)
     ]))
   }
-  const DataSourceConfig = /*#__PURE__*/_export_sfc(_sfc_main$a, [['render',_sfc_render$9],['__scopeId',"data-v-8bfe56bb"]]);
+  const DataSourceConfig = /*#__PURE__*/_export_sfc(_sfc_main$a, [['render',_sfc_render$9],['__scopeId',"data-v-084bb4b8"]]);
 
   DataSourceConfig.install = function (Vue) {
     Vue.component(libPrefix + DataSourceConfig.name, DataSourceConfig);

@@ -744,6 +744,79 @@ export const chartDefaultConfig = new Map([
 
       }
     }]
+  }], ['roundPieChart', {
+    color: ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399', '#909399'],
+    tooltip: { trigger: 'item' },
+    legend: { show: true, alignPosition: 'topCenter' },
+    series: [{
+      type: 'pie', center: [50, 50], radius: [0, 45], clockwise: true, avoidLabelOverlap: true, hoverOffset: 15,
+      itemStyle: { borderRadius: 8, borderColor: '#fff', borderWidth: 2 },
+      label: { show: true, position: 'outside', formatter: '{d}%' },
+      labelLine: { show: true, length: 20, length2: 30, lineStyle: { width: 1 } }
+    }]
+  }], ['roundRingChart', {
+    color: ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399', '#909399'],
+    tooltip: { trigger: 'item' },
+    legend: { show: true, alignPosition: 'topCenter' },
+    series: [{
+      type: 'pie', center: [50, 50], radius: [30, 48], clockwise: true, avoidLabelOverlap: true, hoverOffset: 15,
+      itemStyle: { borderRadius: 8, borderColor: '#fff', borderWidth: 2 },
+      label: { show: true, position: 'outside', formatter: '{d}%' },
+      labelLine: { show: true, length: 20, length2: 30, lineStyle: { width: 1 } }
+    }]
+  }], ['posNegBarChart', {
+    showBorderRadius: false,
+    tooltip: { trigger: 'axis' },
+    legend: { show: true, alignPosition: 'topCenter' },
+    grid: { top: 50, left: 50, right: 50, bottom: 20, containLabel: true },
+    xAxis: {
+      show: true, type: 'category', axisLabel: { show: true },
+      axisTick: { show: true, lineStyle: { width: 1, color: '#DDD' } },
+      axisLine: { show: true, lineStyle: { color: '#999' } }
+    },
+    yAxis: {
+      show: true, type: 'value', alignTicks: true,
+      splitLine: { show: true, lineStyle: { width: 1, type: 'dashed', color: '#DDD' } },
+      axisLabel: { show: true },
+      axisTick: { show: false, lineStyle: { width: 1, color: '#DDD' } },
+      axisLine: { show: false, lineStyle: { color: '#333' } },
+      nameTextStyle: { color: '#999' }, splitArea: { show: false }
+    },
+    series: [
+      { type: 'bar', itemStyle: { color: null }, backgroundStyle: {} },
+      { type: 'bar', itemStyle: { color: null }, backgroundStyle: {} }
+    ]
+  }], ['bubbleChart', {
+    color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],
+    tooltip: { trigger: 'item' },
+    legend: { show: false, alignPosition: 'topCenter' },
+    grid: { top: 40, left: 50, right: 40, bottom: 40, containLabel: true },
+    xAxis: {
+      show: true, type: 'value', scale: true, name: '',
+      axisLabel: { show: true }, axisLine: { show: true, lineStyle: { color: '#999' } },
+      splitLine: { show: true, lineStyle: { color: '#eee', type: 'dashed' } }
+    },
+    yAxis: {
+      show: true, type: 'value', scale: true, name: '',
+      axisLabel: { show: true }, axisLine: { show: false },
+      splitLine: { show: true, lineStyle: { color: '#eee', type: 'dashed' } }
+    },
+    series: [{ type: 'scatter', symbolSize: 22, data: [] }]
+  }], ['calendarHeatmap', {
+    color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],
+    tooltip: { trigger: 'item' },
+    legend: { show: false, alignPosition: 'topCenter' },
+    visualMap: {
+      show: true, min: 0, max: 100, orient: 'horizontal', left: 'center', bottom: 0,
+      inRange: { color: ['#E8F3FF', '#4080FF', '#0E42D2'] }
+    },
+    calendar: {
+      top: 50, left: 40, right: 20, cellSize: ['auto', 16], range: '2026',
+      itemStyle: { borderWidth: 1, borderColor: '#fff', color: '#F2F3F5' },
+      splitLine: { show: true, lineStyle: { color: '#C9CDD4', width: 1 } },
+      yearLabel: { show: true }, dayLabel: { firstDay: 1 }, monthLabel: { show: true }
+    },
+    series: [{ type: 'heatmap', coordinateSystem: 'calendar', data: [] }]
   }], ['ringChart2', {
     color: ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399', '#909399'],
     position: {

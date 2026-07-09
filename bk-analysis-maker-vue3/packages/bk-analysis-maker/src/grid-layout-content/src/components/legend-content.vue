@@ -72,6 +72,13 @@ export default {
         this.legendConfig.show = false
         return
       }
+      // 气泡图(散点 x/y/size)/日历热力图(date/value)不走"名称/数值"图例,直接跳过,避免渲染报错
+      if (config.branchType === 'bubbleChart' || config.branchType === 'calendarHeatmap') {
+        this.legendConfig.show = false
+        this.data = []
+        this.colors = []
+        return
+      }
       Object.assign(this.$data, this.$options.data())
       if (config.configOption?.legendConfig) {
         this.legendConfig = { ...config.configOption.legendConfig }

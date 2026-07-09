@@ -27,6 +27,35 @@ const chartComponents = [
       { label: '颜色映射', field: 'colorField', value: 'colorField' }
     ]
   }, {
+    title: '正负柱图',
+    type: 'BKBarChart',
+    branchType: 'posNegBarChart',
+    img: 'bar.png',
+    chartComId: '39',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
+    items: [{ label: 'x', field: 'x', value: 'x' }, { label: 'y', field: 'y', value: 'y' }, { label: '颜色映射', field: 'colorField', value: 'colorField' }]
+  }, {
+    title: '气泡图',
+    type: 'BKBarChart',
+    branchType: 'bubbleChart',
+    img: 'bar.png',
+    chartComId: '40',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
+    items: [{ label: 'x轴', field: 'x', value: 'x' }, { label: 'y轴', field: 'y', value: 'y' }, { label: '气泡大小', field: 'size', value: 'size' }, { label: '颜色映射', field: 'colorField', value: 'colorField' }],
+    dataSourceConfig: { type: 'static', data: [{ x: 5, y: 20, size: 30, colorField: 'A' }, { x: 12, y: 35, size: 60, colorField: 'A' }, { x: 20, y: 15, size: 45, colorField: 'B' }, { x: 28, y: 42, size: 80, colorField: 'B' }, { x: 35, y: 25, size: 20, colorField: 'C' }, { x: 42, y: 38, size: 55, colorField: 'C' }], value: '[{"x":5,"y":20,"size":30},{"x":12,"y":35,"size":60},{"x":20,"y":15,"size":45},{"x":28,"y":42,"size":80},{"x":35,"y":25,"size":20},{"x":42,"y":38,"size":55}]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '日历热力图',
+    type: 'BKBarChart',
+    branchType: 'calendarHeatmap',
+    img: 'bar.png',
+    chartComId: '41',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'date', varField: '' }, { field: 'value', varField: '' }] }],
+    items: [{ label: '日期', field: 'date', value: 'date' }, { label: '数值', field: 'value', value: 'value' }],
+    dataSourceConfig: { type: 'static', data: [{ date: '2026-01-05', value: 12 }, { date: '2026-01-18', value: 30 }, { date: '2026-02-03', value: 8 }, { date: '2026-02-20', value: 45 }, { date: '2026-03-11', value: 22 }, { date: '2026-04-06', value: 60 }, { date: '2026-05-15', value: 18 }, { date: '2026-06-09', value: 37 }, { date: '2026-07-01', value: 52 }], value: '[{"date":"2026-01-05","value":12},{"date":"2026-02-20","value":45},{"date":"2026-04-06","value":60}]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
     title: '折线图',
     type: 'BKBarChart',
     explainConfig: {
@@ -270,6 +299,24 @@ const ringComponents = [{
     { label: 'name', field: 'name', value: 'name' },
     { label: 'value', field: 'value', value: 'value' }
   ]
+}, {
+  title: '圆角饼图',
+  type: 'BKPieChart',
+  img: 'pie.png',
+  explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+  chartComId: '37',
+  branchType: 'roundPieChart',
+  eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }, { field: 'value', varField: '' }] }],
+  items: [{ label: 'name', field: 'name', value: 'name' }, { label: 'value', field: 'value', value: 'value' }]
+}, {
+  title: '圆角环图',
+  type: 'BKPieChart',
+  img: 'ring-pie.png',
+  explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+  chartComId: '38',
+  branchType: 'roundRingChart',
+  eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }, { field: 'value', varField: '' }] }],
+  items: [{ label: 'name', field: 'name', value: 'name' }, { label: 'value', field: 'value', value: 'value' }]
 }, {
   title: '圆环图',
   type: 'BKPieChart',

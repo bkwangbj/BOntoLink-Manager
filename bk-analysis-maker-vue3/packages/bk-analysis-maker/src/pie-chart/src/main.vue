@@ -233,6 +233,10 @@ export default {
             }
           } else {
             option.series[0].data = formData
+            // 圆角饼图/圆角环图:强制给饼图 series 上圆角(默认配置已带,这里兜底,避免配置面板剥离)
+            if (config.branchType === 'roundPieChart' || config.branchType === 'roundRingChart') {
+              option.series.forEach(s => { if (s && s.type === 'pie') s.itemStyle = { ...(s.itemStyle || {}), borderRadius: 8, borderColor: '#fff', borderWidth: 2 } })
+            }
             if (option.title) {
               let sum = 0
               for (let i = 0; i < formData.length; i++) {

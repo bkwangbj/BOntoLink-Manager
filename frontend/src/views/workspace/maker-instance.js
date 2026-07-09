@@ -155,6 +155,37 @@ export function buildEmbedDefaultDataSource (classId, columns, filterParams = {}
   const fieldOptions = (columns || []).map(o => ({ label: o.label || o.field, value: o.field, dataType: o.dataType })).filter(o => o.value)
   return (chartConfig) => {
     if (!chartConfig || !EMBED_BINDABLE.includes(chartConfig.type)) return null
+    // 气泡图需要 x/y/size 三维,实例聚合(name/value)喂不了 → 直接给一份静态演示数据源
+    if (chartConfig.branchType === 'bubbleChart') {
+      const demo = [
+        { x: 73, y: 20, size: 30, colorField: '华北' }, { x: 90, y: 35, size: 60, colorField: '华东' },
+        { x: 105, y: 28, size: 45, colorField: '华中' }, { x: 118, y: 42, size: 80, colorField: '东北' },
+        { x: 100, y: 25, size: 20, colorField: '西南' }, { x: 112, y: 38, size: 55, colorField: '华南' }
+      ]
+      return {
+        dataSourceConfig: { type: 'static', data: demo, value: JSON.stringify(demo), paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {}, fieldOptions },
+        items: [{ label: 'x轴', field: 'x', value: 'x' }, { label: 'y轴', field: 'y', value: 'y' }, { label: '气泡大小', field: 'size', value: 'size' }, { label: '颜色映射', field: 'colorField', value: 'colorField' }]
+      }
+    }
+    // 日历热力图需要 date/value:优先绑实例里的日期字段(分组+计数),否则给一份静态演示
+    if (chartConfig.branchType === 'calendarHeatmap') {
+      const dateCol = (columns || []).find(c => c.dataType === 'date' || /日期|时间|date|time/i.test((c.label || '') + ' ' + (c.field || '')))
+      if (dateCol && dateCol.field) {
+        const ds = dataSource(classId, dateCol.field, filterParams)
+        ds.fieldOptions = fieldOptions
+        ds.sorts = [{ field: dateCol.field, agg: 'count', desc: false }]
+        return { dataSourceConfig: ds, items: [{ label: '日期', field: 'name', value: 'date' }, { label: '数值', field: 'value', value: 'value' }] }
+      }
+      const demo = [
+        { date: '2026-01-05', value: 12 }, { date: '2026-01-18', value: 30 }, { date: '2026-02-03', value: 8 },
+        { date: '2026-02-20', value: 45 }, { date: '2026-03-11', value: 22 }, { date: '2026-04-06', value: 60 },
+        { date: '2026-05-15', value: 18 }, { date: '2026-06-09', value: 37 }, { date: '2026-07-01', value: 52 }
+      ]
+      return {
+        dataSourceConfig: { type: 'static', data: demo, value: JSON.stringify(demo), paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {}, fieldOptions },
+        items: [{ label: '日期', field: 'date', value: 'date' }, { label: '数值', field: 'value', value: 'value' }]
+      }
+    }
     const ds = dataSource(classId, dim.field, filterParams)
     ds.fieldOptions = fieldOptions
     if (chartConfig.type === 'BKPieChart') {
