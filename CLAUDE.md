@@ -284,6 +284,7 @@ PageHeader (标题 + 统计 + 筛选 + 搜索 + 新建按钮)
 | `frontend/src/api/index.js` | 所有 API 客户端定义 |
 | `backend/src/main/resources/db/migration/sqlite/V1__baseline_schema.sql` | SQLite 表结构(Flyway baseline) |
 | `backend/src/main/resources/db/migration/common/V2__baseline_seed.sql` | 种子数据(两方言共用) |
+| [`_idx/`](_idx/README.md) | 模块预索引(10 文件,AI 快速定位各模块 API/页面/数据库) |
 
 ---
 
