@@ -119,7 +119,7 @@
                       <td class="t-left"><span class="bl-truncate" :title="domainLabel(p.category_code)">{{ domainLabel(p.category_code) || '通用' }}</span></td>
                       <td class="t-center"><span class="bl-tag">{{ p.data_type || '—' }}</span></td>
                       <td class="t-center">
-                        <span :class="['bl-tag', p.status === 1 ? 'bl-tag-success' : 'bl-tag-muted']">{{ p.status === 1 ? '启用' : '禁用' }}</span>
+                        <span :class="['bl-tag', p.status === 1 ? 'bl-tag-success' : 'bl-tag-muted']"><StatusTag :status="p.status" /></span>
                       </td>
                       <td class="t-left"><span class="bl-muted bl-truncate" :title="p.rdfs_comment">{{ p.rdfs_comment || '—' }}</span></td>
                     </tr>
@@ -156,6 +156,7 @@
 <script setup>
 import { ref, computed, watch, h } from 'vue'
 import { BL } from '@/lib/bl.js'
+import StatusTag from '@/components/StatusTag.vue'
 import { sharedPropertyApi, categoryApi } from '@/api'
 import { useDraggableModal } from '@/lib/useDraggableModal.js'
 import DraggableHandles from '@/components/DraggableHandles.vue'

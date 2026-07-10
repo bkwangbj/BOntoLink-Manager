@@ -164,7 +164,8 @@ const menus = [
   { key: 'config', title: '系统配置', items: [
     { path: '/config/category',    icon: 'folder', label: '行业分类', en: 'Category' },
     { path: '/config/type-classes', icon: 'tag',    label: '类型类',       en: 'Type classes' },
-    { path: '/config/security',     icon: 'user',   label: '权限安全',     en: 'Security' }
+    { path: '/config/security',     icon: 'user',   label: '权限安全',     en: 'Security' },
+    { path: '/config/dict-manager', icon: 'book',   label: '字典管理',     en: 'Dictionary' }
   ]}
 ]
 

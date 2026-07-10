@@ -40,6 +40,27 @@ mybatis:
     default-statement-timeout: 30
     cache-enabled: true
 
+jetcache:
+  statIntervalMinutes: 15
+  areaInCacheName: false
+  local:
+    default:
+      type: caffeine
+      limit: 500
+      keyConvertor: fastjson2
+      expireAfterWriteInMillis: 1800000
+  remote:
+    default:
+      type: redis.springdata
+      keyConvertor: fastjson2
+      valueEncoder: java
+      valueDecoder: java
+      expireAfterWriteInMillis: 1800000
+      poolConfig:
+        minIdle: 5
+        maxIdle: 20
+        maxTotal: 50
+
 logging:
   level:
     root: INFO

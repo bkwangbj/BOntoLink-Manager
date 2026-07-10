@@ -25,6 +25,7 @@
         <!-- 与 Spring Boot 3.3.5 BOM 管理的 flyway-core 版本保持一致 -->
         <flyway.version>10.10.0</flyway.version>
         <mysql-connector-java.version>8.3.0</mysql-connector-java.version>
+        <jetcache.version>2.7.7</jetcache.version>
     </properties>
 
     <dependencies>
@@ -81,6 +82,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alicp.jetcache</groupId>
+            <artifactId>jetcache-starter-redis-springdata</artifactId>
+            <version>${jetcache.version}</version>
         </dependency>
     </dependencies>
 

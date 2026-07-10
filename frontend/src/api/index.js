@@ -27,6 +27,7 @@ http.interceptors.response.use(
 export const categoryApi = {
   tree:   () => http.get('/category/tree'),
   get:    (id) => http.get(`/category/${id}`),
+  resolveDomain: (code) => http.get('/category/resolve-domain', { params: { code } }),
   stats:  (id) => http.get(`/category/${id}/stats`),
   statsBatch: (ids) => http.get('/category/stats-batch', { params: { ids: ids.join(',') } }),
   graph:  (id) => http.get(`/category/${id}/graph`),
@@ -346,6 +347,23 @@ export const exploreDesignApi = {
   create:      (data) => http.post('/explore-design', data),
   update:      (id, data) => http.put(`/explore-design/${id}`, data),
   remove:      (id) => http.delete(`/explore-design/${id}`)
+}
+
+/* 字典管理 */
+export const dictApi = {
+  list:       () => http.get('/dict'),
+  get:        (id) => http.get(`/dict/${id}`),
+  create:     (data) => http.post('/dict', data),
+  update:     (id, data) => http.put(`/dict/${id}`, data),
+  remove:     (id) => http.delete(`/dict/${id}`),
+  listItems:  (dictId) => http.get(`/dict/${dictId}/items`),
+  treeItems:  (dictId) => http.get(`/dict/${dictId}/items/tree`),
+  addItem:    (data) => http.post('/dict/items', data),
+  updateItem: (id, data) => http.put(`/dict/items/${id}`, data),
+  removeItem: (id) => http.delete(`/dict/items/${id}`),
+  getByCode:  (code) => http.get(`/dict/code/${code}`),
+  refreshCache: () => http.post('/dict/refresh-cache'),
+  refreshCacheByCode: (code) => http.post(`/dict/refresh-cache/${code}`),
 }
 
 export default http

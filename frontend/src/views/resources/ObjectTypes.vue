@@ -123,7 +123,7 @@
                     </td>
                     <td>
                       <span :class="['bl-tag', row.data.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']">
-                        {{ row.data.status === 1 ? '启用' : '禁用' }}
+                        <StatusTag :status="row.data.status" />
                       </span>
                     </td>
                     <td @click.stop>
@@ -193,7 +193,7 @@
                 <div class="ot-card-title bl-truncate">{{ r.display_name || r.rdfs_label || r.api_name }}</div>
                 <div class="ot-card-api bl-mono bl-muted bl-truncate">{{ r.api_name }}</div>
               </div>
-              <span :class="['bl-tag', r.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']">{{ r.status === 1 ? '启用' : '禁用' }}</span>
+              <StatusTag :status="r.status" />
             </div>
             <div class="ot-card-stats">
               <div class="ot-card-stat"><span class="bl-muted">属性</span><b>{{ r.propTotal ?? 0 }}</b></div>
@@ -232,7 +232,7 @@
               <div class="ot-drawer-title">
                 <span class="bl-truncate">{{ selected?.display_name || selected?.rdfs_label || selected?.api_name }}</span>
                 <span class="bl-mono bl-muted" style="font-size:12px">({{ selected?.api_name }})</span>
-                <span :class="['bl-tag', selected?.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']">{{ selected?.status === 1 ? '启用' : '禁用' }}</span>
+                <StatusTag :status="selected?.status" />
               </div>
             </div>
           </div>
@@ -379,7 +379,7 @@
                     <td>{{ a.display_name || a.rdfs_label || a.api_name }}</td>
                     <td class="bl-mono">{{ a.api_name }}</td>
                     <td><span class="bl-tag">{{ a.action_kind || '—' }}</span></td>
-                    <td><span :class="['bl-tag', a.status === 1 ? 'bl-tag-success' : 'bl-tag-warning']">{{ a.status === 1 ? '启用' : '禁用' }}</span></td>
+                    <td><StatusTag :status="a.status" /></td>
                   </tr>
                 </tbody>
               </table>
@@ -491,7 +491,7 @@
               <div class="ot-drawer-title">
                 <span class="bl-truncate">{{ tabLabel(nestedSelected) }}</span>
                 <span class="bl-mono bl-muted" style="font-size:12px">({{ nestedSelected?.api_name }})</span>
-                <span :class="['bl-tag', nestedSelected?.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']">{{ nestedSelected?.status === 1 ? '启用' : '禁用' }}</span>
+                <StatusTag :status="nestedSelected?.status" />
               </div>
             </div>
           </div>
@@ -536,14 +536,14 @@
     </section>
 
     <!-- 新建对象类型向导 -->
-    <NewObjectTypeWizard v-model:open="wizardOpen" @next="onWizardNext" />
+    <NewObjectTypeWizard v-model:open="wizardOpen" :initial-group-id="initialGroupId" @next="onWizardNext" />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watch, h } from 'vue'
 import { BL } from '@/lib/bl.js'
-import { resourceApi, categoryApi, classMetaApi, groupApi } from '@/api'
+import { resourceApi, categoryApi, classMetaApi, groupApi, groupRefApi } from '@/api'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 import TabOverview from '@/views/resources/objecttype/TabOverview.vue'
@@ -556,6 +556,7 @@ import TabObjectGraph from '@/views/resources/objecttype/TabObjectGraph.vue'
 import TabDisjointUnion from '@/views/resources/objecttype/TabDisjointUnion.vue'
 import TabPropertyRelation from '@/views/resources/objecttype/TabPropertyRelation.vue'
 import NewObjectTypeWizard from '@/views/resources/objecttype/NewObjectTypeWizard.vue'
+import StatusTag from '@/components/StatusTag.vue'
 
 // 占位组件（内嵌 functional 风格）
 const Placeholder = {
@@ -643,8 +644,15 @@ function sortArrow(key) {
 const selectedCategoryCodes = ref(null)  // null = 全部, Set<string> = 当前分类及子分类的 category_code 集合
 const groupClassIds = ref(null)          // null = 非分组过滤态; Set<string> = 选中分组关联的对象类 id
 const groupNodeCounts = ref({})          // 分组节点真实计数覆盖,传给 CategoryTreeFilter customCounts
+const selectedTreeNode = ref(null)       // 当前选中的分类树节点,用于新建向导上下文
+const initialGroupId = computed(() => {
+  // 如果当前选中了分组节点(type=3), 新建对象时默认归属该分组
+  const node = selectedTreeNode.value
+  return node && node.categoryType === 3 ? (node.id || '') : ''
+})
 async function onCategoryChange({ codes, node }) {
   selectedCategoryCodes.value = codes || null
+  selectedTreeNode.value = node || null
   // 选中分组节点(type=3): 对象类归属分组走 ont_biz_group_class 关联,不能靠 category_code(那是领域)。
   // 分组节点 id 与 ont_biz_group.id 已统一,可直接按 group id 取关联对象类。
   if (node && node.categoryType === 3) {
@@ -1199,6 +1207,12 @@ async function onWizardNext(payload) {
       props: payload.props || []
     }
     const created = await classMetaApi.createClass(body)
+    // 如果有分组, 创建后绑定分组关联
+    if (payload.group_id) {
+      try {
+        await groupRefApi.create({ ref_id: created.id, group_id: payload.group_id, group_type: 'object_types' })
+      } catch (e) { /* 分组绑定失败不影响主流程 */ }
+    }
     BL.success(`对象类型「${created.display_name || created.api_name}」已创建，可在详情中继续完善`)
     rows.value = await resourceApi.classes({ aggregate: true }).catch(() => rows.value)
     const row = rows.value.find(r => r.id === created.id) || created

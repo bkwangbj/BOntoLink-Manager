@@ -125,7 +125,7 @@
                       </td>
                       <td class="t-left"><span class="bl-mono bl-truncate" :title="r.api_name">{{ r.api_name }}</span></td>
                       <td class="t-center">
-                        <span :class="['bl-tag', r.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']">{{ r.status === 1 ? '启用' : '禁用' }}</span>
+                        <span :class="['bl-tag', r.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']"><StatusTag :status="r.status" /></span>
                       </td>
                       <td class="t-left"><span class="bl-muted vtp-time">{{ shortTime(r.update_time) }}</span></td>
                     </tr>
@@ -160,6 +160,7 @@
 <script setup>
 import { ref, reactive, computed, watch, h } from 'vue'
 import { BL } from '@/lib/bl.js'
+import StatusTag from '@/components/StatusTag.vue'
 import { valueTypeApi, categoryApi } from '@/api'
 import { useDraggableModal } from '@/lib/useDraggableModal.js'
 import DraggableHandles from '@/components/DraggableHandles.vue'

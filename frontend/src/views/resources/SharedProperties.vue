@@ -132,7 +132,7 @@
                     <span :class="['bl-tag', (row.data.ref_count || 0) > 0 && 'bl-tag-primary']">{{ row.data.ref_count || 0 }}</span>
                   </td>
                   <td class="t-center">
-                    <span :class="['bl-tag', row.data.status === 1 ? 'bl-tag-success' : 'bl-tag-muted']">{{ row.data.status === 1 ? '启用' : '禁用' }}</span>
+                    <span :class="['bl-tag', row.data.status === 1 ? 'bl-tag-success' : 'bl-tag-muted']">{{ row.data.g }}</span>
                   </td>
                   <td class="t-center" @click.stop>
                     <div class="bl-row" style="gap:0;justify-content:center">
@@ -211,6 +211,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { BL } from '@/lib/bl.js'
+import StatusTag from '@/components/StatusTag.vue'
 import { sharedPropertyApi, categoryApi, structTypeApi } from '@/api'
 import PageHeader from '@/components/PageHeader.vue'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'

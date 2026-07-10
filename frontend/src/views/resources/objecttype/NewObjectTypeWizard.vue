@@ -54,7 +54,15 @@
               </div>
 
               <div v-if="!form.dsId" class="bl-empty" style="padding:40px;font-size:13px">请先选择数据源</div>
-              <div v-else class="ds-area">
+              <template v-else>
+                <!-- 所属分组（数据源确定后按领域加载） -->
+                <FieldRow label="所属分组" inline style="flex-shrink:0">
+                  <select class="bl-input" v-model="form.group_id">
+                    <option value="">— 未分组 —</option>
+                    <option v-for="g in filteredGroups" :key="g.id" :value="g.id">{{ g.group_name }}</option>
+                  </select>
+                </FieldRow>
+                <div class="ds-area">
                 <!-- 左：主表 -->
                 <div class="ds-panel">
                   <div class="ds-panel-hd">
@@ -125,45 +133,58 @@
                       <span v-html="BL.icon('plus', 12)"></span><span style="margin-left:4px">添加附表</span>
                     </button>
                   </div>
-                  <div class="ds-panel-body">
-                    <table class="bl-table sub-table">
-                      <thead>
-                        <tr><th style="width:30px">#</th><th>物理表</th><th>表名称</th><th>关联字段</th><th>连接</th><th></th></tr>
-                      </thead>
-                      <tbody>
-                        <tr v-for="(s, i) in form.subs" :key="s.physical_table"
-                            draggable="true"
-                            @dragstart="dragIdx=i" @dragover.prevent
-                            @drop="dropSub(i)">
-                          <td class="t-center bl-muted" style="cursor:grab" :title="`拖拽调整顺序 #${i+1}`">{{ i+1 }}</td>
-                          <td><span class="bl-mono bl-tag">{{ s.physical_table }}</span></td>
-                          <td>
-                            <input class="bl-input bl-input-xs" v-model="s.alias_name" :list="'alias-list-'+i" placeholder="表中文名" />
+                  <div class="ds-panel-body ds-sub-body">
+                    <!-- 附表卡片容器：横向排列，溢出滚动 -->
+                    <div v-if="form.subs.length" class="sub-card-container">
+                      <div v-for="(s, i) in form.subs" :key="s.physical_table"
+                           class="sub-card"
+                           draggable="true"
+                           @dragstart="dragIdx=i" @dragover.prevent
+                           @drop="dropSub(i)">
+                        <!-- 卡片头部 -->
+                        <div class="sub-card-hd">
+                          <span class="sub-card-seq" :title="`拖拽调整顺序 #${i+1}`">{{ i+1 }}</span>
+                          <span class="bl-mono bl-tag">{{ s.physical_table }}</span>
+                          <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" style="margin-left:auto" @click="form.subs.splice(i,1)" title="移除" v-html="BL.icon('x', 11)"></button>
+                        </div>
+                        <!-- 卡片内容 -->
+                        <div class="sub-card-body">
+                          <FieldRow label="表名称" inline>
+                            <input class="bl-input" v-model="s.alias_name" :list="'alias-list-'+i" placeholder="输入表中文名" />
                             <datalist :id="'alias-list-'+i">
                               <option v-for="o in subAliasOptions(s.physical_table)" :key="'alias-'+i+'-'+o.value" :value="o.value">{{ o.label }}</option>
                             </datalist>
-                          </td>
-                          <td>
-                            <select class="bl-input bl-input-xs bl-mono" v-model="s.join_on_keys">
-                              <option value="">— 关联字段 —</option>
-                              <option v-for="c in subColumns(s.physical_table)" :key="'join-'+i+'-'+c.name" :value="c.name">{{ c.name }}</option>
-                            </select>
-                          </td>
-                          <td>
-                            <select class="bl-input bl-input-xs" v-model="s.join_type">
+                          </FieldRow>
+                          <FieldRow label="连接" inline>
+                            <select class="bl-input" v-model="s.join_type">
                               <option value="LEFT">LEFT</option>
                               <option value="INNER">INNER</option>
                               <option value="RIGHT">RIGHT</option>
                               <option value="FULL">FULL</option>
                             </select>
-                          </td>
-                          <td @click.stop>
-                            <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="form.subs.splice(i,1)" title="移除" v-html="BL.icon('x', 12)"></button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <div v-if="!form.subs.length" class="bl-empty" style="padding:24px;font-size:12px">未关联附表（最多建议 ≤ 3 个）</div>
+                          </FieldRow>
+                          <FieldRow label="关联字段" inline>
+                            <div class="pk-list">
+                              <div v-for="(k, j) in s.pk_keys" :key="'sub-pk-'+i+'-'+j" class="pk-row">
+                                <span class="pk-seq">{{ j+1 }}</span>
+                                <select class="bl-input bl-input-sm bl-mono pk-select" v-model="s.pk_keys[j]">
+                                  <option value="">— 关联字段 —</option>
+                                  <option v-for="c in subColumns(s.physical_table)" :key="'sub-pk-opt-'+i+'-'+j+'-'+c.name" :value="c.name">{{ c.name }}</option>
+                                </select>
+                                <button v-if="s.pk_keys.length > 1" class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon"
+                                        title="移除该关联字段"
+                                        @click="s.pk_keys.splice(j, 1)" v-html="BL.icon('x', 10)"></button>
+                              </div>
+                              <button class="bl-btn bl-btn-text bl-btn-sm pk-add" @click="s.pk_keys.push('')"
+                                      title="添加关联字段 (复合关联)">
+                                <span v-html="BL.icon('plus', 11)"></span><span style="margin-left:4px">添加字段</span>
+                              </button>
+                            </div>
+                          </FieldRow>
+                        </div>
+                      </div>
+                    </div>
+                    <div v-else class="bl-empty" style="padding:24px;font-size:12px">未关联附表（最多建议 ≤ 3 个）</div>
                   </div>
                 </div>
               </div>
@@ -240,6 +261,7 @@
                 </div>
               </div>
             </template>
+            </template>
 
             <!-- 不使用数据源 -->
             <div v-else class="empty-mode">
@@ -294,11 +316,12 @@
 <script setup>
 import { ref, computed, watch, reactive } from 'vue'
 import { BL } from '@/lib/bl.js'
-import { physicalTableApi, datasourceApi } from '@/api'
+import { physicalTableApi, datasourceApi, groupApi, categoryApi } from '@/api'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 
 const props = defineProps({
-  open: { type: Boolean, default: false }
+  open: { type: Boolean, default: false },
+  initialGroupId: { type: String, default: '' }
 })
 const emit = defineEmits(['update:open', 'next', 'cancel'])
 
@@ -342,6 +365,7 @@ async function loadTables(dsId) {
   if (!dsId) { tables.value = []; return }
   tables.value = await physicalTableApi.list(dsId).catch(() => [])
 }
+
 function onDsChange() {
   // 切换数据源: 清空已选主表/附表/属性, 重新按数据源加载物理表
   form.main = { physical_table: '', alias_name: '', pk_keys: [''] }
@@ -353,12 +377,63 @@ function onDsChange() {
 const xsdTypes = ['xsd:string','xsd:decimal','xsd:integer','xsd:boolean','xsd:dateTime','xsd:date','xsd:anyURI']
 
 const step = ref(1)
+
+/* 分组管理 */
+const groups = ref([])
+const loadedDomain = ref('')
+const filteredGroups = computed(() => {
+  const domain = form.categoryCode || ''
+  return groups.value.filter(g =>
+    g.id === form.group_id ||
+    (g.domain_code ? g.domain_code === domain : g.category_code ? g.category_code === domain : true)
+  )
+})
+/** 调后台接口解析分类编码的父级领域编码（后台有缓存） */
+async function resolveDomainCode(code) {
+  if (!code) return ''
+  const domain = await categoryApi.resolveDomain(code).catch(() => null)
+  return domain || ''
+}
+
+async function loadGroupsByDomain(domain) {
+  if (!domain) { groups.value = []; loadedDomain.value = ''; return }
+  if (loadedDomain.value === domain) return
+  const bizGroups = await groupApi.byDomain(domain).catch(() => [])
+  groups.value = (bizGroups || []).map(g => ({
+    id: g.id, parent_id: g.parentId || g.parent_id,
+    group_name: g.gname || g.gName || g.g_name || g.group_name || '',
+    category_code: g.categoryCode || g.category_code,
+    domain_code: g.domainCode || g.domain_code || '',
+    status: g.status || 'active'
+  }))
+  loadedDomain.value = domain
+  // 初始分组 ID 若在当前分组列表中则选中
+  if (props.initialGroupId && groups.value.some(g => g.id === props.initialGroupId)) {
+    form.group_id = props.initialGroupId
+  }
+}
+
 const form = reactive({
   mode: 'exist',
   dsId: '',
+  categoryCode: '',
+  group_id: '',
   main: { physical_table: '', alias_name: '', pk_keys: [''] },
   subs: [],
   props: []   // { _key, physical_table, physical_column, api_name, display_name, data_type, is_key, is_required, is_multi_valued_prop, is_range_constraint_prop }
+})
+
+// 监听数据源变更: 解析领域并重载分组 (需在 form 声明之后)
+watch(() => form.dsId, async (dsId) => {
+  if (!dsId) { groups.value = []; loadedDomain.value = ''; return }
+  const ds = datasources.value.find(d => d.id === dsId)
+  const rawCode = ds?.categoryCode || ds?.category_code || ''
+  if (rawCode) {
+    // 数据源的 categoryCode 可能是分组编码，通过后台接口解析为父级领域编码（后台缓存）
+    const domain = await resolveDomainCode(rawCode) || rawCode
+    form.categoryCode = domain
+    loadGroupsByDomain(domain)
+  }
 })
 
 // 重置（每次打开时）
@@ -366,9 +441,13 @@ function resetAll() {
   step.value = 1
   form.mode = 'exist'
   form.dsId = ''
+  form.categoryCode = ''
+  form.group_id = ''
   form.main = { physical_table: '', alias_name: '', pk_keys: [''] }
   form.subs = []
   form.props = []
+  groups.value = []
+  loadedDomain.value = ''
   tables.value = []
   propChecked.value = new Set()
   propFilterTable.value = ''
@@ -429,6 +508,7 @@ function confirmSubs() {
     form.subs.push({
       physical_table: tname,
       alias_name: meta?.display_name || tname,    // 默认用中文友好名 (可下拉切回物理名)
+      pk_keys: [(meta?.columns?.[0]?.name) || ''],
       join_on_keys: (meta?.columns?.[0]?.name) || '',
       join_type: 'LEFT'
     })
@@ -567,7 +647,8 @@ function goNext() {
   const ds = datasources.value.find(d => d.id === form.dsId)
   const payload = JSON.parse(JSON.stringify(form))
   payload.dsCode = ds?.dsCode || ds?.ds_code || ''
-  payload.categoryCode = ds?.categoryCode || ds?.category_code || ''
+  // categoryCode 已在 watch 中解析为父级领域编码, 如有兜底取数据源
+  if (!payload.categoryCode) payload.categoryCode = ds?.categoryCode || ds?.category_code || ''
   emit('next', payload)
   emit('update:open', false)
 }
@@ -639,9 +720,9 @@ function goNext() {
 
 /* 数据源配置区: 限高, 内部内容超出时各 panel 内部独立滚动 (不影响下方映射表空间) */
 .ds-area {
-  display: grid; grid-template-columns: 360px 1fr; gap: 12px;
+  display: flex; gap: 12px;
   flex: 0 0 auto;            /* 不参与剩余空间分配 */
-  max-height: 300px;         /* 配置区总高度上限, 主键字段加再多也不会撑高 */
+  max-height: 380px;         /* 配置区总高度上限, 主键字段加再多也不会撑高 */
   min-height: 200px;
 }
 .ds-panel {
@@ -649,6 +730,8 @@ function goNext() {
   overflow: hidden;
   display: flex; flex-direction: column;     /* 让 body 区可 flex:1 接 panel 高度 */
 }
+.ds-panel:first-child { flex: 0 0 360px; }  /* 主表面板固定宽度 */
+.ds-sub-panel { flex: 1; min-width: 0; }     /* 附表面板自适应 */
 .ds-panel-hd {
   display: flex; align-items: center; justify-content: space-between;
   padding: 8px 12px; background: var(--bl-bg-2); border-bottom: 1px solid var(--bl-divider);
@@ -686,10 +769,58 @@ function goNext() {
   display: inline-flex; align-items: center; justify-content: center; }
 .main-pick-btn:hover { background: var(--bl-primary-soft); border-color: var(--bl-primary); }
 
-.sub-table { width: 100%; font-size: 12px; }
-.sub-table th { background: var(--bl-bg-2); padding: 6px 8px; }
-.sub-table td { padding: 4px 6px; }
-.sub-table .bl-input.bl-input-xs { height: 26px; padding: 0 6px; font-size: 12px; }
+/* 附表卡片容器 — 横向排列，支持滚动 */
+.sub-card-container {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 0 8px;
+  flex: 1;
+  min-height: 0;
+  align-items: flex-start;
+}
+
+/* 附表卡片 — 与主表卡片视觉一致 */
+.sub-card {
+  flex: 0 0 320px;          /* 固定宽度，允许多卡横向排列 */
+  background: var(--bl-bg-1);
+  border: 1px solid var(--bl-border);
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.sub-card-hd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: var(--bl-bg-2);
+  border-bottom: 1px solid var(--bl-divider);
+  flex-shrink: 0;
+}
+.sub-card-seq {
+  width: 20px; height: 20px; line-height: 20px;
+  text-align: center; background: var(--bl-primary-soft); color: var(--bl-primary);
+  font-size: 10px; font-weight: 600; border-radius: 50%; flex-shrink: 0;
+  cursor: grab; user-select: none;
+}
+.sub-card-seq:active { cursor: grabbing; }
+.sub-card-body {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+/* 附表卡片内的 FieldRow 和输入框缩小适配 */
+.sub-card-body .bl-input { height: 28px; font-size: 12px; padding: 0 8px; }
+.sub-card-body .pk-row { gap: 4px; }
+.sub-card-body .pk-seq { width: 18px; height: 18px; line-height: 18px; font-size: 9px; }
+.sub-card-body .pk-select { height: 26px; font-size: 11px; }
+
+/* 附表面板 body 内禁止纵向滚动（由卡片容器横向滚动接管） */
+.ds-sub-body { overflow: hidden; }
 
 /* 映射区: flex:1 自动占据上方配置区之外的所有剩余高度 */
 .map-area {
