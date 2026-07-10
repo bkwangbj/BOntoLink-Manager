@@ -210,6 +210,7 @@ export default {
 // @import "../../styles/index.css";
 .table-config-content {
   display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
 

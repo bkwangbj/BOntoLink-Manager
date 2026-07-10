@@ -1,3 +1,18 @@
+// 日历热力图演示数据:2026 全年每 2~3 天一个点、值 5~95(确定性生成,色块明显)
+const CAL_DEMO = (() => {
+  const out = []
+  const pad = (n) => String(n).padStart(2, '0')
+  const days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+  let seed = 7
+  const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280 }
+  for (let m = 1; m <= 12; m++) {
+    for (let d = 1; d <= days[m - 1]; d += 2 + Math.floor(rnd() * 2)) {
+      out.push({ date: `2026-${pad(m)}-${pad(d)}`, value: 5 + Math.floor(rnd() * 90) })
+    }
+  }
+  return out
+})()
+
 const chartComponents = [
   {
     title: '柱状图',
@@ -30,7 +45,7 @@ const chartComponents = [
     title: '正负柱图',
     type: 'BKBarChart',
     branchType: 'posNegBarChart',
-    img: 'bar.png',
+    img: 'bar-posneg.svg',
     chartComId: '39',
     explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
     eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
@@ -39,7 +54,7 @@ const chartComponents = [
     title: '气泡图',
     type: 'BKBarChart',
     branchType: 'bubbleChart',
-    img: 'bar.png',
+    img: 'bubble.svg',
     chartComId: '40',
     explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
     eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
@@ -49,12 +64,12 @@ const chartComponents = [
     title: '日历热力图',
     type: 'BKBarChart',
     branchType: 'calendarHeatmap',
-    img: 'bar.png',
+    img: 'calendar-heatmap.svg',
     chartComId: '41',
     explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
     eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'date', varField: '' }, { field: 'value', varField: '' }] }],
     items: [{ label: '日期', field: 'date', value: 'date' }, { label: '数值', field: 'value', value: 'value' }],
-    dataSourceConfig: { type: 'static', data: [{ date: '2026-01-05', value: 12 }, { date: '2026-01-18', value: 30 }, { date: '2026-02-03', value: 8 }, { date: '2026-02-20', value: 45 }, { date: '2026-03-11', value: 22 }, { date: '2026-04-06', value: 60 }, { date: '2026-05-15', value: 18 }, { date: '2026-06-09', value: 37 }, { date: '2026-07-01', value: 52 }], value: '[{"date":"2026-01-05","value":12},{"date":"2026-02-20","value":45},{"date":"2026-04-06","value":60}]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+    dataSourceConfig: { type: 'static', data: CAL_DEMO, value: JSON.stringify(CAL_DEMO.slice(0, 3)), paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
   }, {
     title: '折线图',
     type: 'BKBarChart',
@@ -140,7 +155,7 @@ const chartComponents = [
     title: '圆角柱状图',
     type: 'BKBarChart',
     branchType: 'barRadiusChart',
-    img: 'radius-bar.png',
+    img: 'bar-radius.svg',
     chartComId: '22',
     explainConfig: {
       show: false,
@@ -167,7 +182,7 @@ const chartComponents = [
     title: '渐变柱状图',
     type: 'BKBarChart',
     branchType: 'barLineargradientChart',
-    img: 'bar.png',
+    img: 'bar-gradient.svg',
     chartComId: '23',
     explainConfig: {
       show: false,
@@ -228,7 +243,7 @@ const chartComponents = [
       y: 0
     },
     branchType: 'stackedChart',
-    img: 'stack-bar.png',
+    img: 'bar-stacked.svg',
     chartComId: '9',
     eventConfig: [
       {
@@ -248,7 +263,7 @@ const chartComponents = [
     title: '风玫瑰图',
     type: 'BKPolarChart',
     branchType: 'polarChart',
-    img: 'bar.png',
+    img: 'wind-rose.svg',
     chartComId: '24',
     explainConfig: {
       show: false,
@@ -755,7 +770,7 @@ const decorateComponents = [
 ]
 
 const allComponents = chartComponents.concat(mapComponents, customComponents, ringComponents, tableComponents)
-const req = import.meta.glob('../analysis-maker/src/components/toolbar/images/*.png', { eager: true })
+const req = import.meta.glob('../analysis-maker/src/components/toolbar/images/*.{png,svg}', { eager: true })
 // const req = require.context('../analysis-maker/src/components/toolbar/images', false, /\.png$/)
 const path = Object.keys(req).map(key => req[key])
 const imgObject = {}

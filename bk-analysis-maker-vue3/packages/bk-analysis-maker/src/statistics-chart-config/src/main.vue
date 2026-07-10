@@ -12,7 +12,7 @@
     @config-option-init="configOptionInit"
     @save-chart-config="saveChartCfg"
   >
-    <div style="display: flex;height: 100%;">
+    <div style="display: flex;flex-direction: column;height: 100%;">
       <SidebarTabs
         v-model="activeConfig"
         :menu="chartMenu"

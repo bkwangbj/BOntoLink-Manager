@@ -31,39 +31,75 @@
         <template v-if="designMode">
           <!-- 添加区域(split:区域/布局/页签/查询) -->
           <el-dropdown
+            ref="addAreaDropdown"
             split-button
             size="small"
             trigger="click"
             class="add-area-dropdown"
+            popper-class="add-area-dd"
             @click="addItem(true)"
-            @command="onAddCommand"
           >
             <i-ri-add-line /><span style="margin-left:3px">添加区域</span>
             <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item command="addItem">添加区域</el-dropdown-item>
-                <el-dropdown-item command="addLayout">添加布局</el-dropdown-item>
-                <el-dropdown-item command="addTabLayout">页签布局</el-dropdown-item>
-                <el-dropdown-item command="addQuery">添加查询</el-dropdown-item>
-              </el-dropdown-menu>
+              <div class="aac-panel">
+                <div class="aac-group-name">布局</div>
+                <div class="aac-grid">
+                  <div
+                    v-for="it in addAreaCards.layout"
+                    :key="it.key"
+                    class="aac-card"
+                    @click="onAddCardClick(it)"
+                  >
+                    <img
+                      :src="it.img"
+                      :title="it.name"
+                      class="aac-img"
+                    >
+                    <span class="aac-name">{{ it.name }}</span>
+                  </div>
+                </div>
+                <div
+                  v-if="addAreaCards.tpl.length"
+                  class="aac-group-name"
+                >模板</div>
+                <div
+                  v-if="addAreaCards.tpl.length"
+                  class="aac-grid"
+                >
+                  <div
+                    v-for="(it, i) in addAreaCards.tpl"
+                    :key="'tpl' + i"
+                    class="aac-card"
+                    @click="onAddCardClick(it)"
+                  >
+                    <img
+                      :src="it.img"
+                      :title="it.name"
+                      class="aac-img"
+                    >
+                    <span class="aac-name">{{ it.name }}</span>
+                  </div>
+                </div>
+              </div>
             </template>
           </el-dropdown>
           <div class="text-button" @click="clearConfig">
             <i-ri-delete-bin-2-fill /><span>清空</span>
           </div>
           <div :class="['text-button', showBodyPannel && 'is-on']" @click="showLeftPanel">
-            <i-ri-pencil-ruler-2-fill /><span>工具面板</span>
+            <i-ri-bar-chart-2-fill /><span>图表</span>
           </div>
-          <div v-if="!isBasicMode" :class="['text-button', pageSettingVisible && 'is-on']" @click="openPageSetting">
-            <i-ri-settings-5-fill /><span>页面设置</span>
-          </div>
+          <!-- 图表配置按钮暂时隐藏(单击图表标题即可打开配置面板) -->
           <div
+            v-if="false"
             :class="['fold-icon', (expand && !pageSettingVisible && !cardSettingVisible) ? 'active' : '']"
             title="图表配置"
             @click="toggleChartConfig"
           >
-            <i style="font-size: 13px;" class="am-iconfont icon-youceyincang" />
-            <span style="margin-left:4px">图表配置</span>
+            <i-ri-pencil-ruler-2-fill /><span style="margin-left:4px">图表配置</span>
+          </div>
+          <div v-if="!isBasicMode" :class="['text-button', pageSettingVisible && 'is-on']" @click="openPageSetting">
+            <i-ri-settings-5-fill /><span>页面设置</span>
           </div>
           <el-dropdown
             v-if="!isBasicMode"
@@ -129,32 +165,18 @@
           </el-dropdown>
           <span class="tb-divider"></span>
         </template>
-        <!-- 模式切换(下拉,与列表「预览/对比」一致):预览(只读) / 设计(可编辑),互斥单选 -->
-        <el-dropdown
+        <!-- 模式切换(单按钮):显示「要切换过去」的目标模式,点击直接切换 -->
+        <button
           v-if="setMode"
-          trigger="click"
-          size="small"
-          class="mode-dropdown"
-          popper-class="mode-dd-menu"
-          @command="onModeCommand"
+          type="button"
+          class="mode-toggle"
+          :title="designMode ? '切换到预览' : '切换到设计'"
+          @click="onModeCommand(designMode ? 'preview' : 'design')"
         >
-          <span class="mode-dd-trigger">
-            <i-ri-pencil-ruler-2-line v-if="designMode" />
-            <i-ri-eye-line v-else />
-            <span class="mode-dd-label">{{ designMode ? '设计' : '预览' }}</span>
-            <i-ri-arrow-down-s-line class="mode-dd-caret" />
-          </span>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item command="preview" :class="!designMode && 'is-cur'">
-                <i-ri-eye-line /><span style="margin-left:6px">预览</span>
-              </el-dropdown-item>
-              <el-dropdown-item command="design" :class="designMode && 'is-cur'">
-                <i-ri-pencil-ruler-2-line /><span style="margin-left:6px">设计</span>
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+          <i-ri-eye-line v-if="designMode" />
+          <i-ri-pencil-ruler-2-line v-else />
+          <span>{{ designMode ? '预览' : '设计' }}</span>
+        </button>
       </div>
     </div>
     </Teleport>
@@ -441,7 +463,9 @@ import emitter from '../../configs/emitter'
 import { defaultThemeList } from '../../configs/pre-page-setting'
 import { chartDefaultConfig } from '../../configs/chart-default-config'
 import { v4 as uuidv4 } from 'uuid'
-import { allComponents } from '../../configs/chart-com'
+import { allComponents, imgObject } from '../../configs/chart-com'
+import { menuList as sidebarMenuList } from './configs'
+import gridLayoutTemplates from '../../configs/grid-layout-cfg'
 import VarConfig from './components/var-config.vue'
 import OpenPageModal from './components/open-page-modal.vue'
 import PreviewPageModal from './components/preview-page-modal.vue'
@@ -644,6 +668,15 @@ export default {
     }
   },
   computed: {
+    // 「添加区域」下拉卡片:布局(区域/布局/页签/查询)+ 模板(左右/上下),形式同左侧工具面板
+    addAreaCards () {
+      const layoutGroup = (sidebarMenuList.find(m => m.key === 'layout')?.children) || []
+      const layout = layoutGroup.map(c => ({ name: c.name, key: c.key, payload: c.payload, img: c.img }))
+      const tpl = (gridLayoutTemplates || []).map(item => ({
+        name: item.title, key: 'setLayout', payload: item.configs, img: item.img ? imgObject[item.img] : ''
+      }))
+      return { layout, tpl }
+    },
     layoutWrapperWidth () {
       if (this.layoutConfig?.themeConfigs?.pageLayout?.pageWidthMode === 'custom' && this.layoutConfig?.themeConfigs?.pageLayout?.pageWidth) {
         if (this.widthScale !== '100%') {
@@ -1381,6 +1414,11 @@ export default {
       else if (cmd === 'addTabLayout') this.addTabLayout()
       else if (cmd === 'addQuery') this.addQuery()
     },
+    // 「添加区域」下拉卡片点击:复用左侧工具面板的 toggleEvent(key → 对应方法),然后关闭下拉
+    onAddCardClick (it) {
+      this.toggleEvent({ key: it.key, payload: it.payload })
+      this.$refs.addAreaDropdown && this.$refs.addAreaDropdown.handleClose && this.$refs.addAreaDropdown.handleClose()
+    },
     onSaveCommand (cmd) {
       if (cmd === 'save') {
         this.savePageConfig(false)
@@ -1430,6 +1468,10 @@ export default {
         this.expand = !this.expand
       } else {
         this.expand = value
+      }
+      // 面板收起时通知图表卡片重置选中态,否则再次单击同一图表打不开配置面板
+      if (!this.expand) {
+        emitter.emit('resetChartFocus')
       }
     },
     // —— 画布缩放(仅设计模式)——

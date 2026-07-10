@@ -968,33 +968,42 @@
 
     .chart-sidebar {
       display: flex;
-      flex-direction: column;
-      width: 36px;
-      padding-top: 10px;
-      background: #f7f7f7;
+      flex-direction: row;
+      width: auto;
+      margin: 10px 16px 8px 24px;
+      padding: 3px;
+      gap: 3px;
+      background: #eef0f3;
+      border-radius: 7px;
 
       .menu-item {
         display: flex;
+        flex-direction: row;
+        gap: 4px;
         align-items: center;
         justify-content: center;
-        height: 76px;
-        padding: 5px 12px;
-        margin-left: 5px;
+        flex: 1;
+        height: 26px;
+        padding: 0 6px;
+        margin-left: 0;
         font-size: 12px;
         font-weight: 400;
-        color: #a3a3a3;
-        text-align: left;
+        color: #8a8f99;
+        text-align: center;
         cursor: pointer;
-        writing-mode: vertical-lr;
+        writing-mode: horizontal-tb;
+        border-radius: 5px;
 
         &.active {
-          color: #1a1a1a;
-          background: #fffefe;
-          border-radius: 4px 4px 0 0;
+          color: #1f6aff;
+          font-weight: 500;
+          background: #fff;
+          border-radius: 5px;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
         }
 
         .sidebar-icon {
-          margin-bottom: 2px;
+          margin-bottom: 0;
           font-size: 14px;
         }
       }
@@ -1005,7 +1014,7 @@
     }
 
     .bar-basic-config {
-      padding: 10px;
+      padding: 12px 16px 12px 24px;
       // padding: 12px 0 12px 12px;
     }
 
@@ -1275,4 +1284,74 @@
       }
     }
   }
+}
+
+/* 「添加区域」下拉:卡片式布局 + 模板(搬运自左侧工具面板的布局分组,teleport 到 body 需全局样式) */
+.add-area-dd .aac-panel {
+  width: 208px;
+  padding: 8px 10px 4px;
+  box-sizing: border-box;
+}
+.add-area-dd .aac-group-name {
+  padding: 2px 2px 6px;
+  font-size: 12px;
+  color: #8a8f99;
+}
+.add-area-dd .aac-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.add-area-dd .aac-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 4px 6px;
+  border: 1px solid #eceef1;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.add-area-dd .aac-card:hover {
+  border-color: #1f6aff;
+  background: rgba(31, 106, 255, .05);
+}
+.add-area-dd .aac-img {
+  width: 100%;
+  height: 40px;
+  object-fit: contain;
+}
+.add-area-dd .aac-name {
+  font-size: 12px;
+  color: #4e5969;
+}
+
+/* 所有可展开配置项(CollapseItem:说明/内边距/Hook/轴标签/轴线/图例/系列…)+ 查询:
+   底部浅分隔线(左16/右16 让出边距、不通栏,用 background 画线避免破坏 el-form-item 的 clearfix 伪元素) */
+.analysis-maker-wrapper .chart-cfg-wrap .bk-cfg-collapse,
+.analysis-maker-wrapper .chart-cfg-wrap .query-item {
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+  background-image: linear-gradient(90deg, transparent 0, transparent 16px, #f2f3f5 16px, #f2f3f5 calc(100% - 16px), transparent calc(100% - 16px), transparent 100%);
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 100% 1px;
+}
+/* 折叠头统一压低行高(min-height 强制,否则 element 默认 48 撑着) */
+.analysis-maker-wrapper .chart-cfg-wrap .bk-cfg-collapse .el-collapse-item__header {
+  height: 32px !important;
+  min-height: 32px !important;
+  line-height: 32px !important;
+}
+.analysis-maker-wrapper .chart-cfg-wrap .bk-cfg-collapse .collapse-item-title {
+  height: 32px;
+}
+.analysis-maker-wrapper .chart-cfg-wrap .bk-cfg-collapse .el-collapse-item__arrow {
+  height: 32px;
+}
+/* 展开的内容区左侧让出边距,层级更清晰 */
+.analysis-maker-wrapper .chart-cfg-wrap .bk-cfg-collapse .el-collapse-item__content {
+  padding-left: 20px;
 }

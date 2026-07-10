@@ -64,6 +64,13 @@ const menuList = [
     children: []
   },
   {
+    name: '高级图表',
+    key: 'advanced',
+    hasParent: true,
+    draggable: true,
+    children: []
+  },
+  {
     name: '表格',
     key: 'table',
     hasParent: true,

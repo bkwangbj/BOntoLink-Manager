@@ -14,7 +14,7 @@
   >
     <div
       class="d-flex"
-      style="height: 100%;overflow: auto;"
+      style="flex-direction: column;height: 100%;overflow: auto;"
     >
       <SidebarTabs
         v-model="activeConfig"
@@ -287,8 +287,8 @@ export default {
 <style lang="scss" scoped>
 // @import "../../styles/index.css";
 .radar-basic-config {
-  width: calc(100% - 36px);
-  padding: 10px;
+  width: 100%;
+  padding: 10px 16px 10px 24px;
   overflow: auto;
 }
 

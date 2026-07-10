@@ -4,7 +4,7 @@
     class="toolbar-pannel-wrapper"
   >
     <div class="title">
-      <span v-show="!showSearch">工具面板</span>
+      <span v-show="!showSearch">图表资源</span>
       <div
         v-show="!showSearch"
         class="icons"
@@ -233,10 +233,12 @@ export default {
   },
   computed: {
     finalMenus () {
+      // 布局/模板分组已搬到顶部「添加区域」下拉,左侧面板隐藏这两个分组
+      const hidden = ['layout', 'template']
       if (this.keywords) {
-        return this.searchResult
+        return this.searchResult.filter(m => !hidden.includes(m.key))
       } else {
-        return this.menus
+        return this.menus.filter(m => !hidden.includes(m.key))
       }
     },
     customChartList () {
@@ -359,14 +361,26 @@ export default {
           pKey: lineMenu.key
         }))
       }
-      // 柱状图(其余 BKBarChart / 极坐标,排除折线类)
+      // 高级图表(气泡图/日历热力图等,虽为 BKBarChart 但单独归组)
+      const ADVANCED_TYPES = ['bubbleChart', 'calendarHeatmap', 'polarChart']
+      // 柱状图(其余 BKBarChart / 极坐标,排除折线类与高级图表)
       const barMenu = this.menus.find(c => c.key === 'chart')
       if (barMenu) {
-        barMenu.children = this.chartData.filter(item => (item.type === 'BKBarChart' || item.type === 'BKPolarChart') && LINE_TYPES.indexOf(item.branchType) === -1).map(item => ({
+        barMenu.children = this.chartData.filter(item => (item.type === 'BKBarChart' || item.type === 'BKPolarChart') && LINE_TYPES.indexOf(item.branchType) === -1 && ADVANCED_TYPES.indexOf(item.branchType) === -1).map(item => ({
           name: item.title,
           img: item.img ? imgObject[item.img] : '',
           payload: item,
           pKey: barMenu.key
+        }))
+      }
+      // 高级图表
+      const advancedMenu = this.menus.find(c => c.key === 'advanced')
+      if (advancedMenu) {
+        advancedMenu.children = this.chartData.filter(item => ADVANCED_TYPES.indexOf(item.branchType) !== -1).map(item => ({
+          name: item.title,
+          img: item.img ? imgObject[item.img] : '',
+          payload: item,
+          pKey: advancedMenu.key
         }))
       }
       // 饼形图

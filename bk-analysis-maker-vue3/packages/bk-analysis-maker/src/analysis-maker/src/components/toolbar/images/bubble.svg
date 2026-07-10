@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180" viewBox="0 0 320 180">
+  <!-- 坐标轴 -->
+  <path d="M72 30 V150 H262" fill="none" stroke="#D6E4FF" stroke-width="4" stroke-linecap="round"/>
+  <!-- 气泡 -->
+  <circle cx="128" cy="104" r="40" fill="#4080FF" fill-opacity="0.85"/>
+  <circle cx="206" cy="74" r="26" fill="#6AA1FF" fill-opacity="0.9"/>
+  <circle cx="228" cy="126" r="17" fill="#A9C9FF" fill-opacity="0.95"/>
+  <circle cx="160" cy="52" r="11" fill="#0E42D2" fill-opacity="0.75"/>
+</svg>

@@ -14,7 +14,7 @@
     @config-option-init="configOptionInit"
     @build-chart-series-data="buildChartData"
   >
-    <div style="display: flex;height: 100%;">
+    <div style="display: flex;flex-direction: column;height: 100%;">
       <SidebarTabs
         v-model="activeConfig"
         :menu="chartMenu"
@@ -413,8 +413,8 @@ export default {
   }
 
   .bar-basic-config {
-    width: calc(100% - 36px);
-    padding-right: 10px;
+    width: 100%;
+    padding: 0 16px 0 24px;
     overflow: auto;
   }
 </style>

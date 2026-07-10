@@ -381,6 +381,7 @@ export default {
       this.processSetp = 1
     }
     emitter.on('savePage', this.savePage)
+    emitter.on('resetChartFocus', this.resetChartFocus)
     if (this.tabList.length > 0) {
       this.currentTab = this.tabList[0].chartId
     }
@@ -391,6 +392,7 @@ export default {
     emitter.off('saveChartCfg', this.saveChartCfg)
     emitter.off('savePage', this.savePage)
     emitter.off('varConfigChange', this.varConfigChange)
+    emitter.off('resetChartFocus', this.resetChartFocus)
   },
   methods: {
     getChartObject (obj) {
@@ -467,6 +469,13 @@ export default {
       if (!this.isModal) {
         this.currentConfigId = configs.id
         this.focusFlag = this.configs.id === configs.id
+      }
+    },
+    // 右侧配置面板收起时,重置选中态,否则再次单击同一图表(focusFlag 仍为 true)不会重新弹出面板
+    resetChartFocus () {
+      if (!this.isModal) {
+        this.focusFlag = false
+        this.currentConfigId = ''
       }
     },
     clickChart () {

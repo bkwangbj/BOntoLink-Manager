@@ -347,7 +347,7 @@ export default {
       const maxV = vals.length ? Math.max(...vals) : 100
       // range 自动取数据所在年份(取最早一条),无数据回退默认
       const year = pts.length ? pts[0][0].slice(0, 4) : (option.calendar && option.calendar.range) || '2026'
-      if (!option.calendar) option.calendar = { top: 50, left: 40, right: 20, cellSize: ['auto', 16], itemStyle: { borderWidth: 1, borderColor: '#fff', color: '#F2F3F5' }, dayLabel: { firstDay: 1 } }
+      if (!option.calendar) option.calendar = { top: 45, bottom: 55, left: 55, right: 25, cellSize: 'auto', itemStyle: { borderWidth: 1, borderColor: '#fff', color: '#F2F3F5' }, yearLabel: { show: false }, dayLabel: { firstDay: 1, margin: 10, nameMap: ['日', '一', '二', '三', '四', '五', '六'] }, monthLabel: { show: true, nameMap: 'cn' } }
       option.calendar.range = year
       if (!option.visualMap) option.visualMap = { show: true, orient: 'horizontal', left: 'center', bottom: 0, inRange: { color: ['#E8F3FF', '#4080FF', '#0E42D2'] } }
       option.visualMap.min = 0

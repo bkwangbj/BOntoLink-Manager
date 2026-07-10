@@ -807,14 +807,17 @@ export const chartDefaultConfig = new Map([
     tooltip: { trigger: 'item' },
     legend: { show: false, alignPosition: 'topCenter' },
     visualMap: {
-      show: true, min: 0, max: 100, orient: 'horizontal', left: 'center', bottom: 0,
+      show: true, min: 0, max: 100, orient: 'horizontal', left: 'center', bottom: 8,
+      itemWidth: 12, itemHeight: 90, text: ['高', '低'], textStyle: { fontSize: 11 },
       inRange: { color: ['#E8F3FF', '#4080FF', '#0E42D2'] }
     },
     calendar: {
-      top: 50, left: 40, right: 20, cellSize: ['auto', 16], range: '2026',
+      top: 45, bottom: 55, left: 55, right: 25, cellSize: 'auto', range: '2026',
       itemStyle: { borderWidth: 1, borderColor: '#fff', color: '#F2F3F5' },
       splitLine: { show: true, lineStyle: { color: '#C9CDD4', width: 1 } },
-      yearLabel: { show: true }, dayLabel: { firstDay: 1 }, monthLabel: { show: true }
+      yearLabel: { show: false },
+      dayLabel: { firstDay: 1, margin: 10, nameMap: ['日', '一', '二', '三', '四', '五', '六'] },
+      monthLabel: { show: true, nameMap: 'cn' }
     },
     series: [{ type: 'heatmap', coordinateSystem: 'calendar', data: [] }]
   }], ['ringChart2', {

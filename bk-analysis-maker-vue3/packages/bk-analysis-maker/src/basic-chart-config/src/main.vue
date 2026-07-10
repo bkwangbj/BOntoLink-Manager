@@ -30,30 +30,25 @@
             />基础</span>
           </template>
 
-          <EfMutableContainer
-            vertical
-            top-height="auto"
-          >
-            <template #top>
-              <EfForm
-                ref="baseForm"
-                class="base-form"
-                size="small"
-                label-width="80px"
-                :rules="rules"
-                :items="finalFormItems"
-                :has-reset="false"
-                :has-submit="false"
-                :disabled="!saveAble"
-              />
-            </template>
+          <div class="base-flow">
+            <EfForm
+              ref="baseForm"
+              class="base-form"
+              size="small"
+              label-width="80px"
+              :rules="rules"
+              :items="finalFormItems"
+              :has-reset="false"
+              :has-submit="false"
+              :disabled="!saveAble"
+            />
             <div
               class="custom-group inline-col-form"
-              style="width: 100%;height: 100%;"
+              style="width: 100%;"
             >
               <slot />
             </div>
-          </EfMutableContainer>
+          </div>
         </el-tab-pane>
         <el-tab-pane
           name="data"
@@ -829,8 +824,8 @@ export default {
           height: 100%;
 
           .el-collapse-item__header {
-            height: 40px;
-            line-height: 40px;
+            height: 32px;
+            line-height: 32px;
           }
 
           .el-col {
@@ -884,6 +879,35 @@ export default {
               }
             }
           }
+        }
+      }
+
+      // 单容器顺排:表单 + 插槽按内容高度堆叠,由 .base-flow 统一滚动(去掉原分割容器的 height:100% 链)
+      .base-flow {
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        box-sizing: border-box;
+
+        .base-form.ef-form-wrapper {
+          height: auto;
+
+          & > .el-form > .el-row {
+            height: auto;
+
+            > .el-col:last-child > .el-form-item {
+              height: auto;
+
+              > .el-form-item__content {
+                height: auto;
+                overflow: visible;
+              }
+            }
+          }
+        }
+
+        .custom-group {
+          height: auto;
         }
       }
     }

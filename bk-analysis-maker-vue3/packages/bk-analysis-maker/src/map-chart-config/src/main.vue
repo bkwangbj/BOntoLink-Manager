@@ -284,6 +284,7 @@ export default {
 // @import "../../styles/index.css";
 .map-config-container {
   display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
 

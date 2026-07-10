@@ -1084,19 +1084,12 @@ onBeforeUnmount(() => { document.removeEventListener('fullscreenchange', onFsCha
 /* 深色:自动保存开关后的 label 文字(默认深色文字 → 看不清) */
 :root[data-theme="dark"] .ixe-maker-tools .am-switch .el-switch__label { color: var(--bl-text-2, #C9CDD4) !important; }
 :root[data-theme="dark"] .ixe-maker-tools .am-switch .el-switch__label.is-active { color: var(--bl-text-1, #fff) !important; }
-/* 模式切换下拉(预览/设计):传送后 scoped 失效,这里全局还原触发器外观 */
-.ixe-maker-tools .mode-dropdown { margin-left: 8px; }
-.ixe-maker-tools .mode-dd-trigger { display: inline-flex; align-items: center; gap: 5px; width: 96px; box-sizing: border-box; height: 28px; padding: 0 8px 0 10px; border: 1px solid var(--bl-border, #e5e6eb); border-radius: 6px; font-size: 13px; color: var(--bl-text-2, #4e5969); cursor: pointer; outline: none; user-select: none; }
-.ixe-maker-tools .mode-dd-trigger:hover { border-color: var(--bl-primary, #1f6aff); color: var(--bl-primary, #1f6aff); }
-.ixe-maker-tools .mode-dd-trigger svg { width: 14px; height: 14px; flex-shrink: 0; }
-.ixe-maker-tools .mode-dd-label { flex: 1; }
-.ixe-maker-tools .mode-dd-caret { margin-left: auto; color: var(--bl-text-3, #86909c); }
-/* 模式下拉菜单 teleport 到 body(popper-class=mode-dd-menu):宽度与触发器一致、项高 28px、当前项高亮 */
-.mode-dd-menu.el-dropdown__popper { /* 容器 */ }
-.mode-dd-menu .el-dropdown-menu { padding: 4px; }
-.mode-dd-menu .el-dropdown-menu__item { width: 96px; box-sizing: border-box; min-height: 0; height: auto; line-height: 1.4; gap: 8px; padding: 7px 10px; margin: 0; border-radius: 6px; font-size: 12.5px; }
-.mode-dd-menu .el-dropdown-menu__item svg { width: 14px; height: 14px; flex-shrink: 0; }
-.mode-dd-menu .el-dropdown-menu__item.is-cur { color: var(--bl-primary, #1f6aff); background: var(--bl-primary-soft, rgba(31,106,255,.08)); }
+/* 模式切换单按钮(预览/设计):显示要切换到的目标模式,点击直接切换(传送后 scoped 失效,这里全局定义) */
+.ixe-maker-tools .mode-toggle { display: inline-flex; align-items: center; gap: 5px; margin-left: 8px; height: 28px; padding: 0 12px; box-sizing: border-box; border: 1px solid var(--bl-border, #e5e6eb); border-radius: 6px; background: var(--bl-bg-1, #fff); font-size: 13px; color: var(--bl-text-2, #4e5969); cursor: pointer; outline: none; user-select: none; transition: color .15s, border-color .15s; }
+.ixe-maker-tools .mode-toggle svg { width: 14px; height: 14px; flex-shrink: 0; }
+.ixe-maker-tools .mode-toggle:hover { border-color: var(--bl-primary, #1f6aff); color: var(--bl-primary, #1f6aff); }
+:root[data-theme="dark"] .ixe-maker-tools .mode-toggle { background: transparent; border-color: rgba(255, 255, 255, .14); color: var(--bl-text-2, #C9CDD4); }
+:root[data-theme="dark"] .ixe-maker-tools .mode-toggle:hover { border-color: var(--bl-primary, #4d8bff); color: var(--bl-primary, #4d8bff); }
 /* maker 保存下拉(保存/另存为):与「设计/预览」下拉同款宽度+行高,统一 UI */
 .save-dd-menu .el-dropdown-menu { padding: 4px; }
 .save-dd-menu .el-dropdown-menu__item { width: 96px; box-sizing: border-box; min-height: 0; height: auto; line-height: 1.4; gap: 8px; padding: 7px 10px; margin: 0; border-radius: 6px; font-size: 12.5px; }

@@ -14,7 +14,7 @@
     @config-option-init="configOptionInit"
     @build-chart-series-data="buildChartData"
   >
-    <div style="display: flex;height: 100%;">
+    <div style="display: flex;flex-direction: column;height: 100%;">
       <SidebarTabs
         v-model="activeConfig"
         :menu="chartMenu"
@@ -297,8 +297,8 @@ export default {
   }
 
   .polar-basic-config {
-    width: calc(100% - 36px);
-    padding: 10px;
+    width: 100%;
+    padding: 10px 16px 10px 24px;
     overflow: auto;
   }
 </style>
