@@ -1,8 +1,9 @@
 <template>
   <div class="app-shell">
-    <AppTopBar />
+    <!-- 全屏页面(meta.fullscreen,如实例探索):隐藏全局头部与侧栏,主视区最大化 -->
+    <AppTopBar v-if="!chromeless" />
     <div class="app-body">
-      <AppSidebar />
+      <AppSidebar v-if="!chromeless" />
       <main class="app-main">
         <router-view v-slot="{ Component }">
           <component :is="Component" />
@@ -16,10 +17,15 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import AppTopBar from '@/components/AppTopBar.vue'
 import AppSidebar from '@/components/AppSidebar.vue'
 import SettingsModal from '@/components/SettingsModal.vue'
 import DomainSelectorModal from '@/components/DomainSelectorModal.vue'
+
+const route = useRoute()
+const chromeless = computed(() => !!route.meta?.fullscreen)
 </script>
 
 <style scoped>

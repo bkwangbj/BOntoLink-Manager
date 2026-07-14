@@ -765,6 +765,7 @@ export const chartDefaultConfig = new Map([
       labelLine: { show: true, length: 20, length2: 30, lineStyle: { width: 1 } }
     }]
   }], ['posNegBarChart', {
+    color: ['#3ED848', '#F56C6C'],
     showBorderRadius: false,
     tooltip: { trigger: 'axis' },
     legend: { show: true, alignPosition: 'topCenter' },

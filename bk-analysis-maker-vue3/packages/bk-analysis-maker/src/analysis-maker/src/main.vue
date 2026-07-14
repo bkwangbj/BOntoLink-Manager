@@ -29,19 +29,28 @@
       >
         <!-- 设计模式:工具按钮组(顺序严格按设计稿) -->
         <template v-if="designMode">
-          <!-- 添加区域(split:区域/布局/页签/查询) -->
+          <!-- 添加(单「+」图标):弹出完整资源浮窗(布局/模板/各类图表分组) -->
           <el-dropdown
             ref="addAreaDropdown"
-            split-button
             size="small"
             trigger="click"
             class="add-area-dropdown"
             popper-class="add-area-dd"
-            @click="addItem(true)"
+            @visible-change="addPanelOpen = $event"
           >
-            <i-ri-add-line /><span style="margin-left:3px">添加区域</span>
+            <button :class="['add-area-trigger', addPanelOpen && 'is-active']" title="添加">
+              <i-ri-add-line />
+            </button>
             <template #dropdown>
               <div class="aac-panel">
+                <div class="aac-head">
+                  <span class="aac-head-title">看板组件</span>
+                  <label class="aac-head-toggle">
+                    <span>固定面板</span>
+                    <el-switch v-model="showBodyPannel" size="small" />
+                  </label>
+                </div>
+                <div class="aac-body">
                 <div class="aac-group-name">布局</div>
                 <div class="aac-grid">
                   <div
@@ -50,44 +59,45 @@
                     class="aac-card"
                     @click="onAddCardClick(it)"
                   >
-                    <img
-                      :src="it.img"
-                      :title="it.name"
-                      class="aac-img"
-                    >
+                    <img :src="it.img" :title="it.name" class="aac-img">
                     <span class="aac-name">{{ it.name }}</span>
                   </div>
                 </div>
-                <div
-                  v-if="addAreaCards.tpl.length"
-                  class="aac-group-name"
-                >模板</div>
-                <div
-                  v-if="addAreaCards.tpl.length"
-                  class="aac-grid"
-                >
-                  <div
-                    v-for="(it, i) in addAreaCards.tpl"
-                    :key="'tpl' + i"
-                    class="aac-card"
-                    @click="onAddCardClick(it)"
-                  >
-                    <img
-                      :src="it.img"
-                      :title="it.name"
-                      class="aac-img"
+                <template v-if="addAreaCards.tpl.length">
+                  <div class="aac-group-name">布局模版</div>
+                  <div class="aac-grid">
+                    <div
+                      v-for="(it, i) in addAreaCards.tpl"
+                      :key="'tpl' + i"
+                      class="aac-card"
+                      @click="onAddCardClick(it)"
                     >
-                    <span class="aac-name">{{ it.name }}</span>
+                      <img :src="it.img" :title="it.name" class="aac-img">
+                      <span class="aac-name">{{ it.name }}</span>
+                    </div>
                   </div>
+                </template>
+                <template v-for="g in addAreaCards.charts" :key="g.name">
+                  <div class="aac-group-name">{{ g.name }}</div>
+                  <div class="aac-grid">
+                    <div
+                      v-for="(it, i) in g.items"
+                      :key="g.name + i"
+                      class="aac-card"
+                      :title="it.name"
+                      @click="onAddChartCard(it)"
+                    >
+                      <img v-if="it.img" :src="it.img" class="aac-img">
+                      <span class="aac-name">{{ it.name }}</span>
+                    </div>
+                  </div>
+                </template>
                 </div>
               </div>
             </template>
           </el-dropdown>
-          <div class="text-button" @click="clearConfig">
-            <i-ri-delete-bin-2-fill /><span>清空</span>
-          </div>
-          <div :class="['text-button', showBodyPannel && 'is-on']" @click="showLeftPanel">
-            <i-ri-bar-chart-2-fill /><span>图表</span>
+          <div class="text-button" title="清空" @click="clearConfig">
+            <i-ri-delete-bin-2-fill />
           </div>
           <!-- 图表配置按钮暂时隐藏(单击图表标题即可打开配置面板) -->
           <div
@@ -98,43 +108,21 @@
           >
             <i-ri-pencil-ruler-2-fill /><span style="margin-left:4px">图表配置</span>
           </div>
-          <div v-if="!isBasicMode" :class="['text-button', pageSettingVisible && 'is-on']" @click="openPageSetting">
-            <i-ri-settings-5-fill /><span>页面设置</span>
+          <div v-if="!isBasicMode" :class="['text-button', pageSettingVisible && 'is-on']" title="页面设置" @click="openPageSetting">
+            <i-ri-settings-5-fill />
           </div>
-          <el-dropdown
-            v-if="!isBasicMode"
-            trigger="click"
-            class="more-dropdown"
-            @command="onMoreCommand"
-          >
-            <div class="text-button">
-              <i-ri-more-2-fill /><span>更多</span>
-            </div>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item command="grid">
-                  <i-ri-table-fill style="margin-right:6px" />栅格
-                </el-dropdown-item>
-                <el-dropdown-item command="vars">
-                  <i-ri-file-settings-fill style="margin-right:6px" />全局参数
-                </el-dropdown-item>
-                <el-dropdown-item v-if="hasThemeConfigPermission" command="theme">
-                  <i-ri-equalizer-fill style="margin-right:6px" />主题设置
-                </el-dropdown-item>
-                <el-dropdown-item v-if="hasCardConfigPermission" command="card">
-                  <i-ri-equalizer-fill style="margin-right:6px" />卡片设置
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
+          <div v-if="!isBasicMode" :class="['text-button', gridSettingActive && 'is-on']" title="栅格" @click="showGridSetting">
+            <i-ri-table-fill />
+          </div>
           <span class="tb-divider"></span>
           <!-- 画布缩放(仅设计模式):−/百分比/+/适应 -->
           <div class="canvas-zoom-ctrl">
             <span class="cz-btn" title="缩小" @click="zoomOut">−</span>
             <span class="cz-val" title="重置 100%" @click="zoomReset">{{ designScale }}%</span>
             <span class="cz-btn" title="放大" @click="zoomIn">+</span>
-            <span class="cz-fit" title="适应窗口" @click="zoomFit">适应</span>
+            <span v-if="false" class="cz-fit" title="适应窗口" @click="zoomFit">适应</span>
           </div>
+          <span class="tb-divider"></span>
           <el-switch
             v-if="setMode"
             v-model="autoSave"
@@ -163,6 +151,14 @@
               </el-dropdown-menu>
             </template>
           </el-dropdown>
+          <div
+            v-if="setMode && embedOnNewDashboard"
+            class="text-button"
+            title="新建看板"
+            @click="embedOnNewDashboard()"
+          >
+            <i-ri-add-box-line />
+          </div>
           <span class="tb-divider"></span>
         </template>
         <!-- 模式切换(单按钮):显示「要切换过去」的目标模式,点击直接切换 -->
@@ -362,8 +358,8 @@
           </div>
         </div>
         <PageSetting
-          v-else-if="pageSettingVisible"
-          v-show="expand"
+          v-if="pageSettingMounted"
+          v-show="pageSettingVisible && expand"
           ref="pageSetting"
           :oper-permission="operPermission"
           :theme="layoutConfig.themeConfigs"
@@ -388,7 +384,7 @@
           @open-save-as="themeEditVisible=true"
         />
         <CardSetting
-          v-else-if="cardSettingVisible"
+          v-if="cardSettingVisible"
           v-show="expand"
           ref="cardSetting"
           :theme="layoutConfig.themeConfigs"
@@ -463,7 +459,7 @@ import emitter from '../../configs/emitter'
 import { defaultThemeList } from '../../configs/pre-page-setting'
 import { chartDefaultConfig } from '../../configs/chart-default-config'
 import { v4 as uuidv4 } from 'uuid'
-import { allComponents, imgObject } from '../../configs/chart-com'
+import { allComponents, imgObject, chartComponents, ringComponents, tableComponents, mapComponents, customComponents } from '../../configs/chart-com'
 import { menuList as sidebarMenuList } from './configs'
 import gridLayoutTemplates from '../../configs/grid-layout-cfg'
 import VarConfig from './components/var-config.vue'
@@ -473,7 +469,7 @@ import PageSetting from './components/page-setting.vue'
 import CardSetting from './components/card-setting.vue'
 import ThemeEvents from './theme-events'
 import Toolbar from './components/toolbar/index.vue'
-import { getConfigTheme, getInitValue, hasPermission } from '../../configs/common-func'
+import { getConfigTheme, getInitValue, hasPermission, getDefaultConfig } from '../../configs/common-func'
 import ToolbarPannel from './components/toolbar/pannel.vue'
 import ThemeConfig from './components/theme-config.vue'
 import ThemeEdit from './components/theme-edit.vue'
@@ -526,6 +522,10 @@ export default {
     },
     // 宿主"另存为探索布局"回调(保存下拉);未提供则回退 maker 自身另存
     embedOnSaveAs: {
+      type: Function,
+      default: null
+    },
+    embedOnNewDashboard: {
       type: Function,
       default: null
     },
@@ -636,7 +636,10 @@ export default {
       previewVisible: false,
       previewModalConfig: null,
       openPageModalVisible: false,
+      addPanelOpen: false,         // 顶部「+」看板组件浮窗是否打开(用于按钮激活态)
+      gridSettingActive: false,    // 栅格设置栏是否打开(用于栅格按钮激活态)
       pageSettingVisible: false,
+      pageSettingMounted: false,   // 首次打开后常驻挂载,避免每次重建 monaco 编辑器导致卡顿
       cardSettingVisible: false,
       cardItem: null,
       showBodyPannel: false,
@@ -671,11 +674,26 @@ export default {
     // 「添加区域」下拉卡片:布局(区域/布局/页签/查询)+ 模板(左右/上下),形式同左侧工具面板
     addAreaCards () {
       const layoutGroup = (sidebarMenuList.find(m => m.key === 'layout')?.children) || []
-      const layout = layoutGroup.map(c => ({ name: c.name, key: c.key, payload: c.payload, img: c.img }))
+      // 顶部下拉不含「添加查询」
+      const layout = layoutGroup.filter(c => c.key !== 'addQuery').map(c => ({ name: c.name, key: c.key, payload: c.payload, img: c.img }))
       const tpl = (gridLayoutTemplates || []).map(item => ({
         name: item.title, key: 'setLayout', payload: item.configs, img: item.img ? imgObject[item.img] : ''
       }))
-      return { layout, tpl }
+      // 图表分组(与左侧图表资源同源、同分组)
+      const LINE = ['lineChart', 'smoothLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap']
+      const ADV = ['bubbleChart', 'calendarHeatmap', 'polarChart']
+      const toCard = c => ({ name: c.title, img: c.img ? imgObject[c.img] : '', chart: c })
+      const bars = chartComponents.filter(c => (c.type === 'BKBarChart' || c.type === 'BKPolarChart') && !LINE.includes(c.branchType) && !ADV.includes(c.branchType))
+      const charts = [
+        { name: '折线图', items: chartComponents.filter(c => LINE.includes(c.branchType)).map(toCard) },
+        { name: '柱状图', items: bars.map(toCard) },
+        { name: '饼形图', items: (ringComponents || []).map(toCard) },
+        { name: '高级图表', items: chartComponents.filter(c => ADV.includes(c.branchType)).map(toCard) },
+        { name: '表格', items: (tableComponents || []).map(toCard) },
+        { name: '地图', items: (mapComponents || []).map(toCard) },
+        { name: '组件', items: (customComponents || []).map(toCard) }
+      ].filter(g => g.items.length)
+      return { layout, tpl, charts }
     },
     layoutWrapperWidth () {
       if (this.layoutConfig?.themeConfigs?.pageLayout?.pageWidthMode === 'custom' && this.layoutConfig?.themeConfigs?.pageLayout?.pageWidth) {
@@ -1417,6 +1435,23 @@ export default {
     // 「添加区域」下拉卡片点击:复用左侧工具面板的 toggleEvent(key → 对应方法),然后关闭下拉
     onAddCardClick (it) {
       this.toggleEvent({ key: it.key, payload: it.payload })
+      this.closeAddDropdown()
+    },
+    // 图表卡片点击:构建带默认配置的图表 tab,新建一个图表区域并放入(一步到位)
+    async onAddChartCard (card) {
+      this.closeAddDropdown()
+      const payload = utils.deepClone(card.chart)
+      const tab = { ...payload, chartId: uuidv4(), varListener: [] }
+      const chartStyle = utils.deepClone(this.layoutConfig?.themeConfigs?.chartStyle || {})
+      try {
+        const defaultConfig = await getDefaultConfig(tab, chartStyle)
+        Object.assign(tab, defaultConfig, { isShowTitle: '1' })
+      } catch (e) { /* 用默认 */ }
+      this.pageSettingVisible = false
+      this.cardSettingVisible = false
+      this.$refs.gridLayout && this.$refs.gridLayout.addItem(true, false, false, null, [tab])
+    },
+    closeAddDropdown () {
       this.$refs.addAreaDropdown && this.$refs.addAreaDropdown.handleClose && this.$refs.addAreaDropdown.handleClose()
     },
     onSaveCommand (cmd) {
@@ -1433,8 +1468,13 @@ export default {
     openPageSetting () {
       // 再次点击关闭:收起整个右侧面板,不要回落到空的「图表配置」占位
       if (this.pageSettingVisible) { this.pageSettingVisible = false; this.setRightExpand(false); return }
-      emitter.emit('chartClick', { configs: {}, expand: true })
+      // 直接置状态(不广播 chartClick,避免触发全部图表);首次挂载 PageSetting 后常驻缓存
+      this.configs = {}
+      this.cardSettingVisible = false
+      this.pageSettingMounted = true
       this.pageSettingVisible = true
+      this.setRightExpand(true)
+      emitter.emit('resetChartFocus')
     },
     toggleEvent ({ key, payload }) {
       this[key] && this[key](payload)
@@ -1514,6 +1554,7 @@ export default {
     },
     toggleGridLine (value) {
       this.showGridLine = value
+      this.gridSettingActive = value   // 栅格栏开/关同步栅格按钮激活态
       this.$refs.gridLineContainer.style.gap = `${this.layoutConfig.margin ? this.layoutConfig.margin[1] : 10}px`
     },
     updateGridSetting (event) {
@@ -1878,8 +1919,11 @@ export default {
 .canvas-zoom-ctrl {
   display: inline-flex;
   align-items: center;
-  height: 26px;
+  height: 28px;
   margin-left: 4px;
+  padding: 0 2px;
+  border: 1px solid #e5e6eb;
+  border-radius: 6px;
 }
 .canvas-zoom-ctrl .cz-btn {
   display: inline-flex; align-items: center; justify-content: center;
@@ -2047,41 +2091,33 @@ export default {
         position: relative;
         display: flex;
         align-items: center;
+        justify-content: center;
+        min-width: 28px;
+        height: 28px;
         padding: 4px;
-        color: #1a1a1a;
+        color: #4e5969;
         cursor: pointer;
-        border-radius: 4px;
-
-        &::after {
-          position: absolute;
-          top: 50%;
-          right: -4px;
-          width: 1px;
-          height: 14px;
-          margin-top: -7px;
-          content: "";
-          background: #c4c4c4;
-        }
+        border-radius: 6px;
 
         >svg {
-          width: 16px;
-          height: 16px;
-          margin-right: 3px;
+          width: 18px;
+          height: 18px;
         }
 
         &:hover {
-          background: rgb(0 0 0 / 10%);
+          background: rgb(0 0 0 / 6%);
+          color: #1f6aff;
         }
 
         > img {
           width: 16px;
           height: 16px;
-          margin-right: 2px;
         }
 
         > span {
-          font-size: 14px;
+          font-size: 13px;
           color: #1a1a1a;
+          margin-left: 3px;
         }
       }
 

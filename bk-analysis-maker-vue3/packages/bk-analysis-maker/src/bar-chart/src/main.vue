@@ -208,8 +208,10 @@ export default {
       if (option.autoSeries) {
         option.series = this.addSeris(option)
       }
-      // 正负柱图:渲染时对每个数据点按正负着色(正=绿,负=红),写在 data[].itemStyle,不经序列化
+      // 正负柱图:渲染时对每个数据点按正负着色,颜色取色系配置前两色(正=color[0],负=color[1]),可自定义
       const isPosNeg = config.branchType === 'posNegBarChart'
+      const posColor = (isPosNeg && option.color && option.color[0]) || '#3ED848'
+      const negColor = (isPosNeg && option.color && option.color[1]) || '#F56C6C'
       for (let i = 0; i < option.series.length; i++) {
         let yData = this.relList.filter(item => item.colorField === option.series[i].dataId)
         yData = xData.map(item => {
@@ -227,7 +229,7 @@ export default {
           }
           const v = value || null
           if (isPosNeg && v != null && !isNaN(Number(v))) {
-            return { value: Number(v), itemStyle: { color: Number(v) < 0 ? '#F56C6C' : '#3ED848' } }
+            return { value: Number(v), itemStyle: { color: Number(v) < 0 ? negColor : posColor } }
           }
           return v
         })
@@ -253,6 +255,15 @@ export default {
         // series.push({ ...utils.deepClone(seriesConfig[i]), data: yData })
       }
       option.legend.data = legendData
+      // 正负柱图:图例改成「正值(绿)/负值(红)」两项,与柱子按符号着色对应(加两个空系列承载图例)
+      if (isPosNeg) {
+        option.series.push(
+          { type: 'bar', name: '正值', data: [], itemStyle: { color: posColor }, tooltip: { show: false }, silent: true },
+          { type: 'bar', name: '负值', data: [], itemStyle: { color: negColor }, tooltip: { show: false }, silent: true }
+        )
+        option.legend.data = [{ name: '正值' }, { name: '负值' }]
+        option.legend.show = true
+      }
       //  const yAxisNames = seriesConfig.filter(c => c.measureName).map(item => { return item.measureName })
       // let x = 'x'
       // if (config.dataSourceConfig.dataMapping && config.dataSourceConfig.dataMapping.x) {

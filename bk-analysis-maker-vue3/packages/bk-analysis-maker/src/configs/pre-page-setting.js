@@ -670,7 +670,10 @@ export const defaultThemeList = [
               defaultColors: [
                 '#409EFF,#67C23A,#E6A23C,#F56C6C,#39D895,#ba55d3',
                 '#E6A23C,#F56C6C,#909399,#E6A23C,#409EFF,#67C23A',
-                '#ff7f50,#87cefa,#da70d6,#32cd32,#6495ed,#ff69b4,#ba55d3,#cd5c5c,#ffa500,#40e0d0'
+                '#ff7f50,#87cefa,#da70d6,#32cd32,#6495ed,#ff69b4,#ba55d3,#cd5c5c,#ffa500,#40e0d0',
+                '#F5A3A3,#F7C685,#85AEEA,#6FD2C3,#BBA0E2,#A8D5A2',
+                '#516b91,#59c4e6,#edafda,#93b7e3,#a5e7f0,#cbb0e3',
+                '#3fb1e3,#6be6c1,#626c91,#a0a7e6,#c4ebad,#96dee8'
               ],
               themeStyle: {
                 textColor: '#7A7A7A',
@@ -1211,7 +1214,10 @@ export const defaultThemeList = [
               defaultColors: [
                 '#409EFF,#67C23A,#E6A23C,#F56C6C,#39D895,#ba55d3',
                 '#E6A23C,#F56C6C,#909399,#E6A23C,#409EFF,#67C23A',
-                '#ff7f50,#87cefa,#da70d6,#32cd32,#6495ed,#ff69b4,#ba55d3,#cd5c5c,#ffa500,#40e0d0'
+                '#ff7f50,#87cefa,#da70d6,#32cd32,#6495ed,#ff69b4,#ba55d3,#cd5c5c,#ffa500,#40e0d0',
+                '#F5A3A3,#F7C685,#85AEEA,#6FD2C3,#BBA0E2,#A8D5A2',
+                '#516b91,#59c4e6,#edafda,#93b7e3,#a5e7f0,#cbb0e3',
+                '#3fb1e3,#6be6c1,#626c91,#a0a7e6,#c4ebad,#96dee8'
               ],
               themeStyle: {
                 textColor: '#FFF',
@@ -1707,7 +1713,10 @@ export const defaultThemeList = [
               defaultColors: [
                 '#409EFF,#67C23A,#E6A23C,#F56C6C,#39D895,#ba55d3',
                 '#E6A23C,#F56C6C,#909399,#E6A23C,#409EFF,#67C23A',
-                '#ff7f50,#87cefa,#da70d6,#32cd32,#6495ed,#ff69b4,#ba55d3,#cd5c5c,#ffa500,#40e0d0'
+                '#ff7f50,#87cefa,#da70d6,#32cd32,#6495ed,#ff69b4,#ba55d3,#cd5c5c,#ffa500,#40e0d0',
+                '#F5A3A3,#F7C685,#85AEEA,#6FD2C3,#BBA0E2,#A8D5A2',
+                '#516b91,#59c4e6,#edafda,#93b7e3,#a5e7f0,#cbb0e3',
+                '#3fb1e3,#6be6c1,#626c91,#a0a7e6,#c4ebad,#96dee8'
               ],
               themeStyle: {
                 textColor: '#7A7A7A',
@@ -2248,7 +2257,10 @@ export const defaultThemeList = [
               defaultColors: [
                 '#409EFF,#67C23A,#E6A23C,#F56C6C,#39D895,#ba55d3',
                 '#E6A23C,#F56C6C,#909399,#E6A23C,#409EFF,#67C23A',
-                '#ff7f50,#87cefa,#da70d6,#32cd32,#6495ed,#ff69b4,#ba55d3,#cd5c5c,#ffa500,#40e0d0'
+                '#ff7f50,#87cefa,#da70d6,#32cd32,#6495ed,#ff69b4,#ba55d3,#cd5c5c,#ffa500,#40e0d0',
+                '#F5A3A3,#F7C685,#85AEEA,#6FD2C3,#BBA0E2,#A8D5A2',
+                '#516b91,#59c4e6,#edafda,#93b7e3,#a5e7f0,#cbb0e3',
+                '#3fb1e3,#6be6c1,#626c91,#a0a7e6,#c4ebad,#96dee8'
               ],
               themeStyle: {
                 textColor: '#FFF',

@@ -35,8 +35,7 @@ const menuList = [
     children: [
       { name: '添加区域', isBasic: true, key: 'addItem', img: addAreaImg, payload: true, pKey: 'layout' },
       { name: '添加布局', key: 'addLayout', img: addItemImg, payload: false, pKey: 'layout' },
-      { name: '页签布局', isBasic: true, key: 'addTabLayout', img: addTabLayoutImg, pKey: 'layout' },
-      { name: '添加查询', key: 'addQuery', img: addQuery, pKey: 'layout' }
+      { name: '页签布局', isBasic: true, key: 'addTabLayout', img: addTabLayoutImg, pKey: 'layout' }
     ]
   },
   {

@@ -2,6 +2,7 @@
   <div class="ix-root" :class="{ 'is-max': maximized }" ref="rootEl">
     <!-- 顶部浏览器风格页签栏 -->
     <div class="ix-tabs">
+      <button class="ix-back" title="返回" @click="goBack" v-html="BL.icon('arrowLeft', 16)"></button>
       <div class="ix-tabs-list">
         <div v-for="t in tabs" :key="t.id" :class="['ix-tab', t.id===activeId && 'is-active']" @click="activeId=t.id">
           <span class="ix-tab-ic" v-html="BL.icon(t.icon, 13, t.id===activeId ? (t.color||'var(--bl-primary)') : 'var(--bl-text-3)')"></span>
@@ -9,10 +10,6 @@
           <button v-if="tabs.length>1" class="ix-tab-x" @click.stop="closeTab(t.id)" v-html="BL.icon('x', 17)"></button>
         </div>
         <button class="ix-tab-add" title="新建探索" @click="addTab()" v-html="BL.icon('plus', 14)"></button>
-      </div>
-      <div class="ix-tabs-actions">
-        <button class="ix-gbtn" :title="maximized ? '退出全屏' : '全屏'" @click="toggleMax"
-                v-html="BL.icon(maximized ? 'minimize' : 'maximize', 15)"></button>
       </div>
     </div>
 
@@ -158,6 +155,11 @@ function toggleMax() {
   else document.exitFullscreen?.()
 }
 function onFsChange() { maximized.value = document.fullscreenElement === rootEl.value }
+/* 返回:全屏页无侧栏/头部,提供返回入口(有历史则后退,否则回首页) */
+function goBack() {
+  if (window.history.length > 1) router.back()
+  else router.push('/')
+}
 
 /* —— 页签会话 —— */
 let seq = 1
@@ -305,6 +307,8 @@ onBeforeUnmount(() => document.removeEventListener('fullscreenchange', onFsChang
 .ix-root.is-max { position: fixed; inset: 0; z-index: 200; height: 100vh; }
 
 .ix-tabs-actions { display: flex; align-items: center; gap: 2px; padding-left: 8px; flex-shrink: 0; margin-left: auto; }
+.ix-back { width: 28px; height: 28px; margin: 0 6px 0 6px; border: 0; background: transparent; color: var(--bl-text-2); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ix-back:hover { background: var(--bl-bg-hover); color: var(--bl-primary); }
 .ix-gbtn { width: 28px; height: 28px; border: 0; background: transparent; color: var(--bl-text-3); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
 .ix-gbtn:hover { background: var(--bl-bg-hover); color: var(--bl-primary); }
 

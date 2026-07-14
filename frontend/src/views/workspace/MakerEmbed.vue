@@ -63,7 +63,7 @@ const props = defineProps({
   // 初始以设计模式挂载(宿主「新建看板」用:预览态点新建直接进设计)
   startInDesign: { type: Boolean, default: false }
 })
-const emit = defineEmits(['save-as', 'save-page'])
+const emit = defineEmits(['save-as', 'save-page', 'new-dashboard'])
 
 const host = ref(null)
 let childApp = null
@@ -140,6 +140,7 @@ async function mount () {
         embedFluidWidth: true,
         embedToolbarTarget: props.toolbarTarget,
         embedOnSaveAs: () => emit('save-as'),
+        embedOnNewDashboard: () => emit('new-dashboard'),
         // maker「保存」→ 合并图表配置后把完整 layoutConfig 抛给宿主入库
         // (savePageConfig 给的 data 已删 tabList,图表在 finalConfig 里,需合并回去)
         onInvokeAMakerMethod: (method, data, finalConfig, isAuto, cb) => {

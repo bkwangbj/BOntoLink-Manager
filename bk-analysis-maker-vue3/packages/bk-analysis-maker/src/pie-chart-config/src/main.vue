@@ -190,7 +190,7 @@
           @pie-series-change="getChartBasicConfigData"
         />
         <PieSeriesConfig
-          v-if="configs.branchType==='ringChart'||configs.branchType==='pieChart'"
+          v-if="configs.branchType==='ringChart'||configs.branchType==='pieChart'||configs.branchType==='roundPieChart'||configs.branchType==='roundRingChart'"
           v-show="activeConfig==='basic'"
           ref="singleSeries"
           style="padding-top: 10px;"

@@ -4,7 +4,7 @@
     class="toolbar-pannel-wrapper"
   >
     <div class="title">
-      <span v-show="!showSearch">图表资源</span>
+      <span v-show="!showSearch">看板组件</span>
       <div
         v-show="!showSearch"
         class="icons"
@@ -233,12 +233,10 @@ export default {
   },
   computed: {
     finalMenus () {
-      // 布局/模板分组已搬到顶部「添加区域」下拉,左侧面板隐藏这两个分组
-      const hidden = ['layout', 'template']
       if (this.keywords) {
-        return this.searchResult.filter(m => !hidden.includes(m.key))
+        return this.searchResult
       } else {
-        return this.menus.filter(m => !hidden.includes(m.key))
+        return this.menus
       }
     },
     customChartList () {

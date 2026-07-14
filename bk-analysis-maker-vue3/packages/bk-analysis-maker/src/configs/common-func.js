@@ -765,6 +765,8 @@ function getDataTypeFormat (type, sourceType = 'value') {
 }
 // css转echarts渐变
 function convertCssColorToEChartsColor (cssColor) {
+  // 已是 echarts 渐变对象(非字符串)则原样返回,避免 .match 报错
+  if (typeof cssColor !== 'string') return cssColor
   const matches = cssColor.match(/linear-gradient\((.*)\)/)
   // 不是渐变色直接返回
   if (!matches) return cssColor

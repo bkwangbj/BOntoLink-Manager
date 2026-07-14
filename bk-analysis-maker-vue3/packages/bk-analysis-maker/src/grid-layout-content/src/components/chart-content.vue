@@ -171,6 +171,10 @@
                 class="empty-img"
               />
               <span>拖拽左侧组件到此区域</span>
+              <button
+                class="bk-add-chart-btn"
+                @click.stop="openPicker"
+              >＋ 添加图表</button>
             </div>
           </template>
         </draggable>
@@ -183,6 +187,42 @@
       :show-clear="chartParamsFlag[currentTabData.chartId]"
       @clear-parmas="clearParmas"
     />
+    <!-- 就近添加图表:图表选择弹层(Teleport 到 body、固定居中,避免被小区域裁剪) -->
+    <teleport to="body">
+      <div
+        v-if="pickerOpen"
+        class="bk-chart-picker-mask"
+        @click.self="pickerOpen=false"
+      >
+        <div class="bk-chart-picker">
+          <div class="bcp-head">
+            <span>选择图表</span>
+            <button class="bcp-x" @click="pickerOpen=false">✕</button>
+          </div>
+          <div class="bcp-body">
+            <div v-for="g in pickerGroups" :key="g.key" class="bcp-group">
+              <div class="bcp-title">{{ g.name }}</div>
+              <div class="bcp-grid">
+                <div
+                  v-for="it in g.items"
+                  :key="it.chartComId"
+                  class="bcp-card"
+                  :title="it.title"
+                  @click="pickChart(it)"
+                >
+                  <img
+                    v-if="chartImg(it)"
+                    :src="chartImg(it)"
+                    class="bcp-img"
+                  >
+                  <span class="bcp-name">{{ it.title }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </teleport>
   </div>
 </template>
 
@@ -191,6 +231,7 @@ import draggable from 'vuedraggable'
 import { v4 as uuidv4 } from 'uuid'
 import emitter from '../../../configs/emitter'
 import { getVarAndEvent, getDefaultConfig } from '../../../configs/common-func'
+import { chartComponents, ringComponents, imgObject } from '../../../configs/chart-com'
 import OperatorContent from './operator-content.vue'
 import ExplainContent from './explain-content.vue'
 import QueryArea from './query-area.vue'
@@ -252,6 +293,7 @@ export default {
   emits: ['updateCurrentConfigId', 'sortPartChart', 'restorePartChart'],
   data () {
     return {
+      pickerOpen: false,
       focusFlag: false,
       currentTab: '',
       tabList: [],
@@ -268,6 +310,20 @@ export default {
     }
   },
   computed: {
+    // 就近添加图表:图表选择弹层的分组数据(与左侧图表资源同源)
+    pickerGroups () {
+      const LINE = ['lineChart', 'smoothLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap']
+      const ADV = ['bubbleChart', 'calendarHeatmap', 'polarChart']
+      const bars = chartComponents.filter(c => (c.type === 'BKBarChart' || c.type === 'BKPolarChart') && !LINE.includes(c.branchType) && !ADV.includes(c.branchType))
+      const lines = chartComponents.filter(c => LINE.includes(c.branchType))
+      const adv = chartComponents.filter(c => ADV.includes(c.branchType))
+      return [
+        { key: 'bar', name: '柱状图', items: bars },
+        { key: 'line', name: '折线图', items: lines },
+        { key: 'pie', name: '饼形图', items: ringComponents || [] },
+        { key: 'adv', name: '高级图表', items: adv }
+      ].filter(g => g.items && g.items.length)
+    },
     mergeChild () {
       return this.pageConfig?.themeConfigs?.globalCss?.childConfig?.mergeChildChart === 'merge'
     },
@@ -569,6 +625,22 @@ export default {
       }
       return true
     },
+    // —— 就近添加图表 ——
+    chartImg (it) { return it && it.img ? imgObject[it.img] : '' },
+    openPicker () { this.pickerOpen = true },
+    // 从弹层选中图表 → 加入本区域(等效拖入),并打开其配置
+    pickChart (item) {
+      this.pickerOpen = false
+      const beforeData = utils.deepClone(this.chartList)
+      const chart = utils.deepClone(item.payload || item)
+      if (chart.initChartId) {
+        chart.chartId = uuidv4()
+        chart.initChartId = 'init'
+      }
+      this.updateTabContent(chart)
+      this.dragState = false
+      emitter.emit('changeChart', beforeData)
+    },
     changeChart (data) {
       if (this.dragState) {
         if (data.length > 0) {
@@ -739,6 +811,19 @@ export default {
     height: 100%;
   }
 
+  .bk-add-chart-btn {
+    margin-top: 12px;
+    padding: 6px 16px;
+    border: 1px solid #1f6aff;
+    border-radius: 6px;
+    background: #fff;
+    color: #1f6aff;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .bk-add-chart-btn:hover { background: #1f6aff; color: #fff; }
+
   .empty-container {
     display: flex;
     flex-direction: column;
@@ -761,6 +846,56 @@ export default {
     }
   }
 }
+
+/* 就近添加图表:图表选择弹层(teleport 到 body,顶层规则以匹配传送后的元素) */
+.bk-chart-picker-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 2400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, .35);
+}
+.bk-chart-picker {
+  width: 520px;
+  max-height: 72vh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, .18);
+  overflow: hidden;
+}
+.bcp-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  border-bottom: 1px solid #f0f2f5;
+}
+.bcp-x { border: 0; background: transparent; color: #86909c; font-size: 14px; cursor: pointer; }
+.bcp-x:hover { color: #1f6aff; }
+.bcp-body { padding: 8px 16px 16px; overflow-y: auto; }
+.bcp-title { margin: 12px 0 8px; font-size: 12px; color: #8a8f99; }
+.bcp-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.bcp-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 4px;
+  border: 1px solid #eceef1;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color .15s, box-shadow .15s;
+}
+.bcp-card:hover { border-color: #1f6aff; box-shadow: 0 2px 8px rgba(31, 106, 255, .15); }
+.bcp-img { width: 100%; height: 46px; object-fit: contain; }
+.bcp-name { font-size: 12px; color: #4e5969; text-align: center; }
 
 .chart-content {
   flex-direction: column;

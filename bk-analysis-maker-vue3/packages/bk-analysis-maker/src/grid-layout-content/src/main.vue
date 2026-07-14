@@ -457,7 +457,7 @@ export default {
       }
       return null
     },
-    addItem (isChart, isChild, isTabLayout, copyItem) {
+    addItem (isChart, isChild, isTabLayout, copyItem, initTabs) {
       const coordinates = this.calculateContainer(!isChart || isChild || isTabLayout, copyItem)
       let item = {
         isChart,
@@ -482,6 +482,9 @@ export default {
           const tab = { chartId: uuidv4(), title: '页签1', isEdit: false, id: item.id, layout: [], colNum: 12, rowHeight: 30, autoRowHeight: 30, draggable: this.setMode, resizable: this.setMode }
           item.tabList = [tab]
         }
+      } else if (initTabs && initTabs.length) {
+        // 新建图表区域时直接放入指定图表(顶部「+」就近添加)
+        item.tabList = initTabs.map(t => ({ ...t, id: item.id }))
       }
       // else {
       //   if (this.mergeChild) {
@@ -686,6 +689,17 @@ export default {
     .item-oper-list {
       display: flex;
       align-items: center;
+    }
+
+    /* 仅规整 el-button(关闭 ×)的内边距为紧凑方形,el-dropdown(复制/添加)保持默认避免错位 */
+    .el-button.oper-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      min-height: 0;
+      padding: 0;
     }
   }
 

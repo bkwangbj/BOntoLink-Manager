@@ -1,5 +1,5 @@
 <template>
-  <div class="ixe-root" ref="rootEl">
+  <div class="ixe-root" :class="{ 'is-dashfull': dashFull }" ref="rootEl">
     <!-- 头部:对象名/类型(标题) + 搜索(含菜单面板) + 保存 -->
     <div class="ixe-head">
       <!-- 从某实例进入:固定标题(不可选择) -->
@@ -155,6 +155,7 @@
             <div v-for="d in designsForMode" :key="d.id" class="ixe-layout-item" :class="d.id===currentDesignId && 'is-on'"
                  @click="applyDesign(d)">
               <span class="bl-grow bl-truncate">{{ d.name }}</span>
+              <button class="ixe-layout-edit" title="重命名/编辑" @click.stop="editDesign(d)" v-html="BL.icon('edit', 12)"></button>
               <button class="ixe-layout-del" title="删除" @click.stop="removeDesign(d)" v-html="BL.icon('trash', 12)"></button>
             </div>
           </template>
@@ -169,8 +170,8 @@
         </div>
       </div>
       <span v-if="viewMode!=='charts'" class="ixe-result-badge">{{ total.toLocaleString() }} 条结果</span>
-      <button v-if="viewMode==='charts'" class="ixe-full-btn" :title="dashFull ? '退出全屏' : '全屏'"
-              @click="toggleDashFull" v-html="BL.icon(dashFull ? 'minimize' : 'maximize', 15)"></button>
+      <button v-if="classId" class="ixe-full-btn" :title="dashFull ? '还原' : '最大化'"
+              @click="toggleDashFull" v-html="BL.icon(dashFull ? 'winRestore' : 'winMax', 18)"></button>
     </div>
 
     <!-- 主体:图表看板 + 右结果列 -->
@@ -180,7 +181,7 @@
                   :columns="displayColumns" :filter-params="filterParams" :saved-config="savedConfig"
                   :start-in-design="dashStartDesign"
                   toolbar-target="#ixe-maker-tools"
-                  @save-as="saveAs" @save-page="onSavePage" />
+                  @save-as="saveAs" @save-page="onSavePage" @new-dashboard="newDashboard" />
 
       <!-- 列表模式:列表探索(滚动加载 + 预览/多实例/比较) -->
       <InstanceListView v-else class="ixe-listview" :class-id="classId" :type-name="curType?.display_name"
@@ -194,7 +195,7 @@
     <div v-if="saveModal" class="ixe-save-mask" @click.self="saveModal=false">
       <div class="ixe-save-modal">
         <div class="ixe-save-hd">
-          <span>{{ sdMode==='new' ? '新建图表' : (viewMode==='charts' ? '保存图表' : '保存查询或列表') }}</span>
+          <span>{{ sdMode==='new' ? '新建图表' : (sdMode==='edit' ? '编辑看板' : (viewMode==='charts' ? '保存图表' : '保存查询或列表')) }}</span>
           <button class="ixe-save-x" @click="saveModal=false" v-html="BL.icon('x', 16)"></button>
         </div>
         <div class="ixe-save-body">
@@ -285,16 +286,15 @@ defineEmits(['open-instance'])
 
 const viewMode = ref('list')   // list(列表,默认) | charts(看板/可视化设计器)
 
-/* 看板全屏(整块实例探索区,工具栏一并全屏) */
+/* 看板全屏(整块实例探索区,工具栏一并全屏)
+   用 CSS 全屏(position:fixed 铺满)而非浏览器 requestFullscreen:
+   后者会让工具栏下拉/颜色选择等 teleport 到 body 的弹层落在全屏元素之外被遮挡 */
 const rootEl = ref(null)
 const dashFull = ref(false)
 function toggleDashFull () {
-  const el = rootEl.value
-  if (!el) return
-  if (!document.fullscreenElement) el.requestFullscreen?.().catch(() => {})
-  else document.exitFullscreen?.()
+  dashFull.value = !dashFull.value
 }
-function onFsChange () { dashFull.value = !!document.fullscreenElement }
+function onEscExit (e) { if (e.key === 'Escape' && dashFull.value) dashFull.value = false }
 const searchPanelOpen = ref(false)
 const layoutMenu = ref(false)
 const designName = ref('默认探索布局')
@@ -372,6 +372,20 @@ const sdProject = ref('')
 const sdErr = ref('')
 
 /* 另存为新列表:打开命名弹框,始终创建新设计 */
+const sdEditId = ref('')              // edit 模式下正在编辑的看板 id
+/* 编辑已保存看板:复用保存弹框(edit 模式),预填名称/描述/可见性,确认后原地更新 */
+function editDesign(d) {
+  layoutMenu.value = false; saveMenu.value = false
+  sdMode.value = 'edit'
+  sdEditId.value = d.id
+  sdKind.value = d.kind || (viewMode.value === 'list' ? 'list' : 'query')
+  sdName.value = d.name || ''
+  sdDesc.value = d.desc || ''
+  sdVisibility.value = d.visibility || 'private'
+  sdProject.value = d.project || ''
+  sdErr.value = ''
+  saveModal.value = true
+}
 function saveAs() {
   layoutMenu.value = false; saveMenu.value = false
   sdMode.value = 'save'
@@ -412,6 +426,23 @@ async function doSave() {
 async function confirmSave() {
   const name = sdName.value.trim()
   if (!name) { sdErr.value = '请输入名称'; return }
+  // 编辑模式:仅更新名称/描述/可见性,保留原布局与筛选
+  if (sdMode.value === 'edit') {
+    try {
+      const orig = designsForType.value.find(d => d.id === sdEditId.value) || {}
+      const { id, savedAt, ...rest } = orig
+      const d = await updateDesign(sdEditId.value, {
+        ...rest, name, desc: sdDesc.value.trim(), visibility: sdVisibility.value,
+        project: sdVisibility.value === 'public' ? sdProject.value.trim() : ''
+      })
+      if (currentDesignId.value === sdEditId.value) designName.value = d.name
+      saveModal.value = false
+      await loadDesigns()
+      BL.success('已更新')
+    } catch { /* http 拦截器已弹错误 */ }
+    finally { sdMode.value = 'save' }
+    return
+  }
   const isNew = sdMode.value === 'new'
   const useSel = !isNew && sdKind.value === 'list' && sdScope.value === 'selected' && listSelectedIds.value.length
   // 新建:空白布局 + 清空上下文;保存/另存为:存当前布局与筛选
@@ -792,12 +823,16 @@ watch(viewMode, (nv, ov) => {
   savedConfig.value = null   // 默认看板/列表默认:看板按数据自动生成
 })
 watch(() => props.initialClassId, (v) => { if (v && v !== classId.value) selectType(v) })
-onMounted(() => { if (classId.value) loadMeta(); document.addEventListener('fullscreenchange', onFsChange) })
-onBeforeUnmount(() => { document.removeEventListener('fullscreenchange', onFsChange) })
+onMounted(() => { if (classId.value) loadMeta(); document.addEventListener('keydown', onEscExit) })
+onBeforeUnmount(() => { document.removeEventListener('keydown', onEscExit) })
 </script>
 
 <style scoped>
 .ixe-root { flex: 1; display: flex; flex-direction: column; min-height: 0; background: var(--bl-bg-2); }
+/* CSS 全屏:铺满视口;z-index 适中(低于 element-plus 弹层默认 2000),保证下拉/颜色选择等弹层仍显示在其上 */
+.ixe-root.is-dashfull { position: fixed; inset: 0; z-index: 1000; background: var(--bl-bg-2); }
+/* 全屏时隐藏搜索/类型行,看板/列表内容铺满 */
+.ixe-root.is-dashfull .ixe-head { display: none; }
 
 /* —— 头部:对象类型 + 搜索 + 保存 —— */
 .ixe-head { flex-shrink: 0; display: flex; align-items: center; gap: 10px; padding: 8px 16px; background: var(--bl-bg-1); border-bottom: 1px solid var(--bl-border); }
@@ -857,6 +892,9 @@ onBeforeUnmount(() => { document.removeEventListener('fullscreenchange', onFsCha
 .ixe-layout-del { border: 0; background: transparent; color: var(--bl-text-3); cursor: pointer; padding: 2px; border-radius: 4px; display: none; flex-shrink: 0; }
 .ixe-layout-item:hover .ixe-layout-del { display: inline-flex; }
 .ixe-layout-del:hover { color: #f53f3f; background: #fff1f0; }
+.ixe-layout-edit { border: 0; background: transparent; color: var(--bl-text-3); cursor: pointer; padding: 2px; border-radius: 4px; display: none; flex-shrink: 0; }
+.ixe-layout-item:hover .ixe-layout-edit { display: inline-flex; }
+.ixe-layout-edit:hover { color: var(--bl-primary); background: var(--bl-primary-soft, rgba(31,106,255,.08)); }
 .ixe-layout-new { color: var(--bl-primary); }
 .ixe-layout-empty { font-size: 12px; color: var(--bl-text-3); padding: 8px; text-align: center; }
 .ixe-result-badge { font-size: 12px; color: var(--bl-primary); background: var(--bl-primary-soft); border-radius: 4px; padding: 3px 8px; flex-shrink: 0; }
@@ -1029,20 +1067,24 @@ onBeforeUnmount(() => { document.removeEventListener('fullscreenchange', onFsCha
 .ixe-code-col { width: 90px; }
 .ixe-pager { display: flex; align-items: center; gap: 12px; justify-content: center; padding: 8px; border-top: 1px solid var(--bl-divider); }
 .ixe-pick { flex: 1; padding: 80px 20px; }
-.ixe-full-btn { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; margin-left: 10px; border: 0; background: transparent; color: var(--bl-text-2); cursor: pointer; border-radius: 5px; }
+.ixe-full-btn { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; margin-left: 0px; border: 0; background: transparent; color: var(--bl-text-2); cursor: pointer; border-radius: 5px; }
 .ixe-full-btn:hover { background: var(--bl-bg-hover); color: var(--bl-primary); }
 </style>
 
 <!-- 非 scoped:maker 顶栏 Teleport 到看板子头后,子 app 的 scoped 样式失效,这里全局还原工具栏外观 -->
 <style>
-.ixe-maker-tools { display: flex; align-items: center; min-width: 0; margin-right: 12px; }
+.ixe-maker-tools { display: flex; align-items: center; min-width: 0; margin-right: 0px; }
 .ixe-maker-tools .top-header { height: auto !important; min-height: 0 !important; padding: 0 !important; margin: 0 !important; border: 0 !important; background: transparent !important; box-shadow: none !important; }
 .ixe-maker-tools .top-header .left { display: none !important; }
 .ixe-maker-tools .top-header .right { display: flex; align-items: center; gap: 4px; }
-.ixe-maker-tools .text-button { display: inline-flex; align-items: center; gap: 3px; padding: 0 8px; height: 28px; font-size: 13px; line-height: 1; color: var(--bl-text-2, #4e5969); cursor: pointer; border-radius: 4px; white-space: nowrap; }
+.ixe-maker-tools .text-button { display: inline-flex; align-items: center; gap: 2px; padding: 0 6px; height: 26px; font-size: 13px; line-height: 1; color: var(--bl-text-2, #4e5969); cursor: pointer; border-radius: 4px; white-space: nowrap; }
 .ixe-maker-tools .text-button:hover { background: var(--bl-bg-hover, #f2f3f5); color: var(--bl-primary, #1f6aff); }
 .ixe-maker-tools .text-button.is-on { background: rgba(31,106,255,.1); color: var(--bl-primary, #1f6aff); }
-.ixe-maker-tools .text-button svg { width: 14px; height: 14px; }
+.ixe-maker-tools .text-button svg { width: 16px; height: 16px; }
+/* 「+」触发按钮:颜色/hover 背景与其它图标按钮统一 */
+.ixe-maker-tools .add-area-trigger { color: var(--bl-text-2, #4e5969); }
+.ixe-maker-tools .add-area-trigger:hover,
+.ixe-maker-tools .add-area-trigger.is-active { background: var(--bl-bg-hover, #f2f3f5); color: var(--bl-primary, #1f6aff); }
 .ixe-maker-tools .mode-toggle.is-design { color: var(--bl-primary, #1f6aff); }
 .ixe-maker-tools .fold-icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; height: 28px; padding: 0 9px; cursor: pointer; color: var(--bl-text-2, #4e5969); border-radius: 4px; white-space: nowrap; font-size: 13px; }
 .ixe-maker-tools .fold-icon > span { white-space: nowrap; }
@@ -1077,9 +1119,9 @@ onBeforeUnmount(() => { document.removeEventListener('fullscreenchange', onFsCha
 :root[data-theme="dark"] .ixe-maker-tools .add-area-dropdown .el-dropdown__caret-button {
   border-left-color: var(--bl-border-strong, #4A5060) !important;
 }
-.ixe-maker-tools .top-header .right > * + * { margin-left: 2px; }
+.ixe-maker-tools .top-header .right > * + * { margin-left: 4px; }
 /* 分隔竖线 / 自动保存开关 */
-.ixe-maker-tools .tb-divider { width: 1px; height: 18px; background: var(--bl-divider, #e5e6eb); margin: 0 6px; flex-shrink: 0; }
+.ixe-maker-tools .tb-divider { width: 1px; height: 18px; background: var(--bl-divider, #e5e6eb); margin: 0 2px; flex-shrink: 0; }
 .ixe-maker-tools .am-switch { margin: 0 6px; flex-shrink: 0; }
 /* 深色:自动保存开关后的 label 文字(默认深色文字 → 看不清) */
 :root[data-theme="dark"] .ixe-maker-tools .am-switch .el-switch__label { color: var(--bl-text-2, #C9CDD4) !important; }

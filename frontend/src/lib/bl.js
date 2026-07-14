@@ -153,6 +153,8 @@ const ICONS = {
   moon:     'M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z',
   maximize: 'M3 9V3h6 M21 9V3h-6 M3 15v6h6 M21 15v6h-6',
   minimize: 'M9 3v6H3 M15 3v6h6 M9 21v-6H3 M15 21v-6h6',
+  winMax: 'M5 5h14v14H5z',
+  winRestore: 'M4 8h12v12H4z M8 4h12v12',
 
   /* —— 标记/收藏 —— */
   star:  'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z',
