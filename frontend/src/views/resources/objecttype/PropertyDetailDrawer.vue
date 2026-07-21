@@ -63,10 +63,43 @@
                 </select>
               </FieldRow>
               <FieldRow label="值类型" inline>
-                <select class="bl-input" v-model="form.value_type">
-                  <option value="">— 无 —</option>
-                  <option v-for="vt in valueTypeOptions" :key="vt.id" :value="vt.id">{{ vt.rdfs_label || vt.api_name }}</option>
-                </select>
+                <div style="flex:1;position:relative">
+                  <div class="pd-vt-selector" @click="vtDropdownOpen = !vtDropdownOpen">
+                    <span class="pd-vt-sel-text">{{ selectedValueTypeLabel }}</span>
+                    <span class="pd-vt-sel-arrow" v-html="BL.icon('chevron-down', 12)"></span>
+                  </div>
+                  <!-- 下拉面板 -->
+                  <transition name="pd-vt-dropdown">
+                    <div v-if="vtDropdownOpen" class="pd-vt-dropdown" @click.stop>
+                      <!-- 搜索框 + 领域开关 -->
+                      <div class="pd-vt-toolbar">
+                        <div class="pd-vt-search">
+                          <span class="pd-vt-search-icon" v-html="BL.icon('search', 12)"></span>
+                          <input class="bl-input bl-input-sm" v-model="vtSearchQuery" placeholder="搜索值类型..." />
+                          <button v-if="vtSearchQuery" class="pd-vt-clear" @click="vtSearchQuery=''" v-html="BL.icon('x', 10)"></button>
+                        </div>
+                        <label class="pd-vt-switch" :title="vtShowAllDomains ? '仅显示本领域' : '显示所有领域'">
+                          <input type="checkbox" v-model="vtShowAllDomains" />
+                          <span>全部领域</span>
+                        </label>
+                      </div>
+                      <!-- 选项列表 -->
+                      <div class="pd-vt-list">
+                        <div class="pd-vt-item" :class="{ 'is-selected': !form.value_type }" @click="selectValueType('')">
+                          <span class="pd-vt-item-label">— 无 —</span>
+                        </div>
+                        <div v-for="vt in filteredValueTypeOptions" :key="vt.id"
+                             class="pd-vt-item"
+                             :class="{ 'is-selected': form.value_type === vt.id }"
+                             @click="selectValueType(vt.id)">
+                          <span class="pd-vt-item-label">{{ vt.rdfs_label || vt.api_name }}</span>
+                          <span class="pd-vt-item-domain bl-muted" v-if="vt.category_label">{{ vt.category_label }}</span>
+                        </div>
+                        <div v-if="!filteredValueTypeOptions.length" class="pd-vt-empty">无匹配结果</div>
+                      </div>
+                    </div>
+                  </transition>
+                </div>
               </FieldRow>
               <FieldRow label="是否主键" inline>
                 <label class="pd-switch"><input type="checkbox" :checked="form.is_key" :disabled="form.prop_type!=='data'" @change="form.is_key = $event.target.checked ? 1 : 0" />主键</label>
@@ -376,6 +409,46 @@ const classCandidates = ref([])
 const equivList = ref([])
 const disjointList = ref([])
 
+// 值类型选择器状态
+const vtDropdownOpen = ref(false)
+const vtSearchQuery = ref('')
+const vtShowAllDomains = ref(false)
+const currentClassCategoryCode = ref('') // 当前对象类的领域代码
+
+// 值类型选择器: 当前选中的显示文本
+const selectedValueTypeLabel = computed(() => {
+  if (!form.value_type) return '— 无 —'
+  const vt = valueTypeOptions.value.find(v => v.id === form.value_type)
+  return vt ? (vt.rdfs_label || vt.api_name) : '— 无 —'
+})
+
+// 值类型选择器: 过滤后的选项
+const filteredValueTypeOptions = computed(() => {
+  let list = valueTypeOptions.value
+
+  // 领域过滤：默认只显示本领域，开关打开后显示所有
+  if (!vtShowAllDomains.value && currentClassCategoryCode.value) {
+    list = list.filter(vt => vt.category_code === currentClassCategoryCode.value)
+  }
+
+  // 搜索过滤
+  const k = vtSearchQuery.value.trim().toLowerCase()
+  if (k) {
+    list = list.filter(vt => {
+      return [vt.rdfs_label, vt.api_name, vt.category_label]
+        .filter(Boolean).some(s => String(s).toLowerCase().includes(k))
+    })
+  }
+
+  return list
+})
+
+function selectValueType(id) {
+  form.value_type = id
+  vtDropdownOpen.value = false
+  vtSearchQuery.value = ''
+}
+
 /* —— 表映射: 数据源 → 物理表 → 物理字段 三级联动 ——
    数据来源为类已绑定的物理数据集 (props.datasources / ont_class_ds):
    每行含 id(=class_ds_id) / ds_code / physical_table / physical_fields[]。
@@ -504,9 +577,33 @@ async function reloadForm() {
   // 初始化表单
   Object.assign(form, defaultForm())
   if (props.property) Object.assign(form, props.property)
-  // 加载值类型 / 类候选 (仅首次)
+
+  // 加载当前对象类的领域信息 (用于值类型过滤)
+  if (props.classId && !currentClassCategoryCode.value) {
+    const classDetail = await classMetaApi.get(props.classId).catch(() => null)
+    if (classDetail) {
+      currentClassCategoryCode.value = classDetail.category_code || ''
+    }
+  }
+
+  // 加载值类型 / 类候选 (仅首次)，并附加 category_label
   if (!valueTypeOptions.value.length) {
-    valueTypeOptions.value = (await valueTypeApi.list().catch(() => [])).filter(v => v.status === 1)
+    const vtList = (await valueTypeApi.list().catch(() => [])).filter(v => v.status === 1)
+    // 加载领域映射
+    const catTree = await categoryApi.tree().catch(() => [])
+    const catLabelMap = {}
+    const walkCat = (nodes) => {
+      for (const n of nodes) {
+        if (n.categoryCode) catLabelMap[n.categoryCode] = n.label
+        if (n.children) walkCat(n.children)
+      }
+    }
+    walkCat(catTree)
+    // 附加 category_label
+    valueTypeOptions.value = vtList.map(vt => ({
+      ...vt,
+      category_label: catLabelMap[vt.category_code] || ''
+    }))
   }
   if (!classCandidates.value.length) {
     classCandidates.value = await classMetaApi.candidates().catch(() => [])
@@ -603,8 +700,22 @@ function onDragEnd() {
   window.removeEventListener('mousemove', onDragMove); window.removeEventListener('mouseup', onDragEnd)
 }
 watch(() => props.open, (v) => { if (v) ensureSize() })
+
+// 点击外部关闭值类型下拉框
+function onClickOutsideVtDropdown(e) {
+  if (!vtDropdownOpen.value) return
+  const dropdown = e.target.closest('.pd-vt-dropdown')
+  const selector = e.target.closest('.pd-vt-selector')
+  if (!dropdown && !selector) {
+    vtDropdownOpen.value = false
+  }
+}
+onMounted(() => {
+  document.addEventListener('click', onClickOutsideVtDropdown)
+})
 onBeforeUnmount(() => {
   window.removeEventListener('mousemove', onDragMove); window.removeEventListener('mouseup', onDragEnd)
+  document.removeEventListener('click', onClickOutsideVtDropdown)
 })
 
 /* —— 保存 / 取消 —— */
@@ -782,4 +893,82 @@ function onCancel() { emit('update:open', false) }
 .pp-status { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 500; }
 .pp-status.is-on  { background: #e8fff4; color: #00b42a; }
 .pp-status.is-off { background: #f2f3f5; color: #666; }
+
+/* 值类型选择器 */
+.pd-vt-selector {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 5px 10px; border: 1px solid var(--bl-border); border-radius: 4px;
+  background: var(--bl-bg-1); cursor: pointer; transition: all .15s;
+}
+.pd-vt-selector:hover { border-color: var(--bl-primary); }
+.pd-vt-sel-text { flex: 1; font-size: 13px; color: var(--bl-text-1); }
+.pd-vt-sel-arrow { color: var(--bl-text-3); transition: transform .2s; }
+.pd-vt-selector:hover .pd-vt-sel-arrow { color: var(--bl-primary); }
+
+/* 值类型下拉面板 */
+.pd-vt-dropdown {
+  position: absolute; top: 100%; left: 0; right: 0; margin-top: 4px;
+  background: var(--bl-bg-1); border: 1px solid var(--bl-border);
+  border-radius: 6px; box-shadow: 0 4px 16px rgba(0,0,0,.12);
+  z-index: 1020; max-height: 400px; display: flex; flex-direction: column;
+}
+.pd-vt-toolbar {
+  display: flex; gap: 8px; padding: 8px 10px;
+  border-bottom: 1px solid var(--bl-divider);
+  flex-shrink: 0;
+}
+.pd-vt-search {
+  flex: 1; position: relative; display: flex; align-items: center;
+}
+.pd-vt-search-icon {
+  position: absolute; left: 8px; color: var(--bl-text-3);
+  pointer-events: none;
+}
+.pd-vt-search .bl-input { padding-left: 28px; padding-right: 24px; }
+.pd-vt-clear {
+  position: absolute; right: 6px; background: none; border: 0;
+  padding: 2px; cursor: pointer; color: var(--bl-text-3);
+  display: flex; align-items: center; justify-content: center;
+}
+.pd-vt-clear:hover { color: var(--bl-text-1); }
+.pd-vt-switch {
+  display: flex; align-items: center; gap: 4px; font-size: 12px;
+  color: var(--bl-text-2); cursor: pointer; white-space: nowrap;
+  user-select: none;
+}
+.pd-vt-switch input[type="checkbox"] { cursor: pointer; }
+.pd-vt-switch:hover { color: var(--bl-primary); }
+
+.pd-vt-list {
+  overflow-y: auto; max-height: 340px; padding: 4px;
+}
+.pd-vt-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 10px; border-radius: 4px; cursor: pointer;
+  transition: background .15s;
+}
+.pd-vt-item:hover { background: var(--bl-bg-2); }
+.pd-vt-item.is-selected {
+  background: #e8f3ff; color: #1677ff; font-weight: 500;
+}
+.pd-vt-item-label { flex: 1; font-size: 13px; }
+.pd-vt-item-domain {
+  font-size: 11px; color: var(--bl-text-3);
+  padding: 1px 6px; background: var(--bl-bg-2); border-radius: 3px;
+}
+.pd-vt-item.is-selected .pd-vt-item-domain {
+  background: rgba(22, 119, 255, 0.15); color: #1677ff;
+}
+.pd-vt-empty {
+  text-align: center; padding: 32px; color: var(--bl-text-3);
+  font-size: 13px;
+}
+
+.pd-vt-dropdown-enter-active, .pd-vt-dropdown-leave-active {
+  transition: opacity .15s, transform .15s;
+}
+.pd-vt-dropdown-enter-from, .pd-vt-dropdown-leave-to {
+  opacity: 0; transform: translateY(-8px);
+}
+
 </style>
