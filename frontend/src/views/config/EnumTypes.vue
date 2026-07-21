@@ -2016,6 +2016,14 @@ async function confirmPasteImport() {
     BL.success(`成功导入 ${successCount} 条${failCount > 0 ? `，失败 ${failCount} 条` : ''}`)
     pasteDialogOpen.value = false
     await loadDetail(current.value.id)
+    // 更新列表中该枚举的项数统计
+    const updated = await enumTypeApi.get(current.value.id).catch(() => null)
+    if (updated) {
+      const idx = enumTypes.value.findIndex(e => e.id === current.value.id)
+      if (idx !== -1) {
+        enumTypes.value[idx] = { ...enumTypes.value[idx], item_count: updated.item_count }
+      }
+    }
   } else {
     BL.error('全部导入失败')
   }
