@@ -34,6 +34,7 @@
 
     <div class="vt-body">
       <CategoryTreeFilter :rows="rows"
+                          :custom-counts="customCategoryCounts"
                           title="行业分类"
                           total-label="全部值类型"
                           store-key="value-types"
@@ -359,6 +360,32 @@
                      :required="true"
                      subtitle="为当前值类型选择关联枚举"
                      @confirm="onEnumConfirm" />
+
+    <!-- 新建分组弹窗 -->
+    <div v-if="groupFormOpen" class="bl-modal-mask" @click.self="groupFormOpen=false">
+      <div class="bl-modal" style="width:440px">
+        <div class="bl-modal-hd">新建分组</div>
+        <div class="bl-modal-body bl-col" style="gap:10px">
+          <FieldRow label="分组名称 *" inline><input class="bl-input" v-model="groupForm.group_name" /></FieldRow>
+          <FieldRow label="所属领域" inline>
+            <select class="bl-input" v-model="groupForm.domain_code">
+              <option value="">— 不限 —</option>
+              <option v-for="d in domainOpts" :key="d.code" :value="d.code">{{ d.name }}</option>
+            </select>
+          </FieldRow>
+          <FieldRow label="父分组" inline>
+            <select class="bl-input" v-model="groupForm.parent_id">
+              <option value="">— 顶级 —</option>
+              <option v-for="g in groups.filter(g => !g.parent_id)" :key="g.id" :value="g.id">{{ g.group_name }}</option>
+            </select>
+          </FieldRow>
+        </div>
+        <div class="bl-modal-ft">
+          <button class="bl-btn" @click="groupFormOpen=false">取消</button>
+          <button class="bl-btn bl-btn-primary" @click="submitGroup">保存</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -374,6 +401,7 @@ import EnumPickerModal from '@/components/EnumPickerModal.vue'
 import Pager from '@/components/Pager.vue'
 import { usePagination } from '@/lib/usePagination'
 import { useRouter, useRoute } from 'vue-router'
+import { useCategoryGroupFilter } from '@/composables/useCategoryGroupFilter'
 
 const router = useRouter()
 const route = useRoute()
@@ -444,6 +472,7 @@ const usageConfigsCache = ref([])  // 缓存 ont_valuetypes_usage_config,用于 
 const q = ref('')
 const filterStatus = ref('all')
 const filterCategory = ref('')
+const activeGroupId = ref(null)  // 当前选中的分组ID（用于过滤）
 const selected = ref(null)
 const drawerOpen = ref(false)
 const form = reactive({})
@@ -472,16 +501,61 @@ function sortArrow(key) {
 }
 
 /* —— 左侧行业分类树 (统一组件, 按 category_code 子树过滤) —— */
-const selectedCategoryCodes = ref(null)
-const selectedCategoryCode = ref('')   // 当前选中的领域 code (null/全部 → '')
-function onCategoryChange({ codes, categoryCode }) {
-  selectedCategoryCodes.value = codes || null
-  selectedCategoryCode.value = categoryCode || ''
+// 使用 composable 处理分组节点的特殊过滤逻辑
+const {
+  customCategoryCounts,
+  onCategoryChange,
+  loadCategoryTree,
+  filterByCategory
+} = useCategoryGroupFilter({ items: rows, groups })
+
+/* 分组树变更回调 */
+function onGroupChange(groupId) {
+  activeGroupId.value = groupId
+  selected.value = null
+  drawerOpen.value = false
+}
+
+/* 新建分组 */
+const groupFormOpen = ref(false)
+const groupForm = reactive({})
+function openCreateGroup() {
+  Object.keys(groupForm).forEach(k => delete groupForm[k])
+  Object.assign(groupForm, { group_name: '', status: 'active' })
+  groupFormOpen.value = true
+}
+async function submitGroup() {
+  if (!groupForm.group_name) { BL.warning('分组名称必填'); return }
+  await groupApi.create({
+    gName: groupForm.group_name,
+    parentId: groupForm.parent_id || null,
+    domainCode: groupForm.domain_code || null
+  }).catch(e => { BL.error('创建失败: ' + (e.msg || e.message)); throw e })
+  BL.success('已保存')
+  groupFormOpen.value = false
+  await load()
 }
 
 const filtered = computed(() => {
   let list = rows.value
-  if (selectedCategoryCodes.value) list = list.filter(r => selectedCategoryCodes.value.has(r.category_code))
+
+  // 分组过滤：选中分组时只显示该分组及子分组下的值类型
+  if (activeGroupId.value) {
+    const groupIds = new Set([activeGroupId.value])
+    // 递归收集子分组 ID
+    const collectChildren = (pid) => {
+      groups.value.filter(g => g.parent_id === pid).forEach(g => {
+        groupIds.add(g.id)
+        collectChildren(g.id)
+      })
+    }
+    collectChildren(activeGroupId.value)
+    list = list.filter(r => r.group_id && groupIds.has(r.group_id))
+  }
+
+  // 行业分类过滤：使用 composable 的 filterByCategory（会自动处理分组节点）
+  list = filterByCategory(list)
+
   if (filterStatus.value === 'on')  list = list.filter(r => r.status === 1)
   if (filterStatus.value === 'off') list = list.filter(r => r.status === 0)
   if (filterCategory.value) list = list.filter(r => r.category_code === filterCategory.value)
@@ -548,14 +622,36 @@ async function loadGroupsByDomain(domain) {
 }
 
 async function load() {
-  rows.value = await valueTypeApi.list().catch(() => [])
+  const [valueTypes, refs] = await Promise.all([
+    valueTypeApi.list().catch(() => []),
+    groupRefApi.list('value_types').catch(() => [])
+  ])
+
+  // 把 group_id 注入值类型对象 (前端继续用 r.group_id 渲染)
+  const groupMap = new Map()
+  ;(refs || []).forEach(r => groupMap.set(r.ref_id || r.refId, r.group_id || r.groupId))
+  rows.value = (valueTypes || []).map(t => ({ ...t, group_id: groupMap.get(t.id) || null }))
+
+  // 加载所有分组（用于过滤树）
+  const allGroups = await groupApi.listAll().catch(() => [])
+  groups.value = (allGroups || []).map(g => ({
+    id: g.id,
+    parent_id: g.parentId || g.parent_id || null,
+    group_name: g.gname || g.gName || g.g_name || g.group_name || '',
+    sort_num: g.gsort || g.gSort || g.g_sort || g.sort_num || 0,
+    category_code: g.categoryCode || g.category_code,
+    domain_code: g.domainCode || g.domain_code || '',
+    status: g.status || 'active'
+  }))
+
   enumTypes.value = await enumTypeApi.list().catch(() => [])
   usageConfigsCache.value = await valueTypeApi.listUsageConfigs().catch(() => [])
-  // 值类型的分组集合(group_type='value_types'),全量加载一次;分组本身改为按领域懒加载
+
+  // 值类型的分组集合(group_type='value_types'),全量加载一次
   if (!vtGroupIds.value.size) {
-    const vtRefs = await groupRefApi.list('value_types').catch(() => [])
-    vtGroupIds.value = new Set((vtRefs || []).map(r => r.groupId || r.group_id))
+    vtGroupIds.value = new Set((refs || []).map(r => r.groupId || r.group_id))
   }
+
   // 业务领域候选
   if (!domainOpts.value.length) {
     const tree = await categoryApi.tree().catch(() => [])
@@ -572,7 +668,7 @@ function applyOpenId(id) {
   if (row) { openEdit(row); router.replace({ query: {} }) }
 }
 onMounted(async () => {
-  await load()
+  await Promise.all([load(), loadCategoryTree()])
   applyOpenId(route.query.openId)
 })
 watch(() => route.query.openId, applyOpenId)

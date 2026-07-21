@@ -218,6 +218,7 @@ import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 import SharedPropertyDetailDrawer from './sharedproperty/SharedPropertyDetailDrawer.vue'
 import NewSharedPropertyWizard from './sharedproperty/NewSharedPropertyWizard.vue'
 import StructTypesView from './sharedproperty/StructTypesView.vue'
+import { useCategoryGroupFilter } from '@/composables/useCategoryGroupFilter'
 
 const rows = ref([])
 const structCount = ref(0)  // 结构属性数量(由 StructTypesView 通过 @counts 回传)
@@ -235,7 +236,27 @@ const groupByDomain = ref(false)
 const sortKey = ref('')
 const sortDir = ref('')
 
-const selectedCategoryCodes = ref(null)  // null=全部, Set<string>=当前分类子树的 category_code 集合
+// 使用 composable 处理分组节点的特殊过滤逻辑
+const groups = computed(() => {
+  const buckets = new Map()
+  rows.value.forEach(d => {
+    const code = d.category_code || '__none__'
+    if (!buckets.has(code)) buckets.set(code, [])
+    buckets.get(code).push(d)
+  })
+  return Array.from(buckets.entries()).map(([code, items]) => ({
+    key: code,
+    label: code === '__none__' ? '通用 (未分配领域)' : (categoryMap.value[code] || code),
+    items
+  }))
+})
+
+const {
+  customCategoryCounts,
+  onCategoryChange,
+  loadCategoryTree,
+  filterByCategory
+} = useCategoryGroupFilter({ items: rows, groups })
 
 const drawerOpen = ref(false)
 const drawerProperty = ref(null)
