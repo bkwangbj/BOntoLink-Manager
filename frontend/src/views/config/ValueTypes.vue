@@ -560,7 +560,7 @@ async function load() {
   if (!domainOpts.value.length) {
     const tree = await categoryApi.tree().catch(() => [])
     const list = []
-    const walk = (ns) => ns.forEach(n => { if (n.categoryCode) list.push({ code: n.categoryCode, name: n.label }); if (n.children) walk(n.children) })
+    const walk = (ns) => ns.forEach(n => { if (n.categoryCode && n.categoryType === 2) list.push({ code: n.categoryCode, name: n.label }); if (n.children) walk(n.children) })
     walk(tree)
     domainOpts.value = list
   }

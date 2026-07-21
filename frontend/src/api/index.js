@@ -142,6 +142,7 @@ export const valueTypeApi = {
   listUsageConfigs: () => http.get('/value-types/usage-configs'),
   createUsageConfig: (data) => http.post('/value-types/usage-configs', data),
   updateUsageConfig: (id, data) => http.put(`/value-types/usage-configs/${id}`, data),
+  syncFromEnums: () => http.post('/value-types/sync-from-enums'),
 }
 
 /* 共享属性 (Shared properties) */
@@ -244,11 +245,12 @@ export const enumTypeApi = {
   listLevelRules:(enumId) => http.get(`/enum-types/${enumId}/level-rules`),
   saveLevelRules:(enumId, rules) => http.post(`/enum-types/${enumId}/level-rules`, rules),
   /* 同步规则 */
-  getSyncConfig: (enumId) => http.get(`/enum-types/${enumId}/sync-config`),
-  saveSyncConfig:(enumId, data) => http.post(`/enum-types/${enumId}/sync-config`, data),
-  listSyncLogs: (enumId) => http.get(`/enum-types/${enumId}/sync-logs`),
-  runSync:      (enumId, body) => http.post(`/enum-types/${enumId}/sync-run`, body || {}),
-  testSync:     (enumId, body) => http.post(`/enum-types/${enumId}/sync-test`, body || {}),
+  getSyncConfig:  (enumId) => http.get(`/enum-types/${enumId}/sync-config`),
+  saveSyncConfig: (enumId, data) => http.post(`/enum-types/${enumId}/sync-config`, data),
+  listSyncLogs:   (enumId) => http.get(`/enum-types/${enumId}/sync-logs`),
+  runSync:        (enumId, body) => http.post(`/enum-types/${enumId}/sync-run`, body || {}),
+  testSync:       (enumId, body) => http.post(`/enum-types/${enumId}/sync-test`, body || {}),
+  previewSql:     (body) => http.post(`/enum-types/sync-preview-sql`, body),
   /* 被引用查询 */
   listReferences:(enumId) => http.get(`/enum-types/${enumId}/references`),
 }

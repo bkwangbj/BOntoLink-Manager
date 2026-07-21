@@ -2,6 +2,7 @@ package com.beiktech.bontolink.controller;
 
 import com.beiktech.bontolink.common.R;
 import com.beiktech.bontolink.mapper.ValueTypeMapper;
+import com.beiktech.bontolink.mapper.EnumTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ public class ValueTypeController {
 
     @Autowired private ValueTypeMapper mapper;
     @Autowired private com.beiktech.bontolink.mapper.BizGroupMapper groupMapper;
+    @Autowired private EnumTypeMapper enumTypeMapper;
 
     /** 查询所有值类型列表 */
     @GetMapping
@@ -83,5 +85,71 @@ public class ValueTypeController {
         body.putIfAbsent("is_system_default", 0);
         mapper.updateUsageConfig(body);
         return R.ok();
+    }
+
+    /**
+     * 同步枚举到值类型：为所有枚举类型创建对应的值类型（如果尚不存在）
+     * 返回创建的数量和跳过的数量
+     */
+    @PostMapping("/sync-from-enums")
+    public R<Map<String, Object>> syncFromEnums() {
+        // 查询所有枚举类型
+        List<Map<String, Object>> enumTypes = enumTypeMapper.listTypes();
+
+        // 查询所有现有值类型（constraint_type = 'Enum'）
+        List<Map<String, Object>> existingValueTypes = mapper.listAll();
+        Set<String> existingEnumIds = new HashSet<>();
+        for (Map<String, Object> vt : existingValueTypes) {
+            if ("Enum".equals(vt.get("constraint_type")) || "Enum".equals(vt.get("constraintType"))) {
+                String enumId = vt.get("enum_id") != null ? String.valueOf(vt.get("enum_id")) : String.valueOf(vt.get("enumId"));
+                if (enumId != null && !"null".equals(enumId)) {
+                    existingEnumIds.add(enumId);
+                }
+            }
+        }
+
+        int createdCount = 0;
+        int skippedCount = 0;
+        List<String> createdApiNames = new ArrayList<>();
+
+        for (Map<String, Object> enumType : enumTypes) {
+            String enumId = String.valueOf(enumType.get("id"));
+
+            // 如果已存在对应的值类型，跳过
+            if (existingEnumIds.contains(enumId)) {
+                skippedCount++;
+                continue;
+            }
+
+            // 创建值类型
+            String valueTypeId = "value-types-" + UUID.randomUUID();
+            Map<String, Object> valueType = new HashMap<>();
+            valueType.put("id", valueTypeId);
+            valueType.put("rid", "ri.ont.value.types." + valueTypeId.replaceFirst("^value-types-", ""));
+            valueType.put("api_name", enumType.get("api_name") != null ? enumType.get("api_name") : enumType.get("apiName"));
+            valueType.put("rdfs_label", enumType.get("rdfs_label") != null ? enumType.get("rdfs_label") : enumType.get("rdfsLabel"));
+            valueType.put("category_code", enumType.get("category_code") != null ? enumType.get("category_code") : enumType.get("categoryCode"));
+            valueType.put("base_type", "String");
+            valueType.put("constraint_type", "Enum");
+            valueType.put("enum_id", enumId);
+            valueType.put("status", 1);
+
+            try {
+                mapper.insert(valueType);
+                createdCount++;
+                createdApiNames.add(String.valueOf(valueType.get("api_name")));
+            } catch (Exception e) {
+                // 可能是 api_name 重复等，记录但不中断
+                System.err.println("创建值类型失败 (enumId=" + enumId + "): " + e.getMessage());
+            }
+        }
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("total_enums", enumTypes.size());
+        result.put("created_count", createdCount);
+        result.put("skipped_count", skippedCount);
+        result.put("created_api_names", createdApiNames);
+
+        return R.ok(result);
     }
 }

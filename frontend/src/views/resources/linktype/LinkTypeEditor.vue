@@ -483,7 +483,7 @@ async function loadDomainOpts() {
   const tree = await categoryApi.tree().catch(() => [])
   const list = []
   const walk = (ns, depth) => (ns || []).forEach(n => {
-    if (n.categoryCode) list.push({ code: n.categoryCode, label: n.label || n.rdfsLabel || n.categoryCode, indent: '　'.repeat(depth) })
+    if (n.categoryCode && n.categoryType === 2) list.push({ code: n.categoryCode, label: n.label || n.rdfsLabel || n.categoryCode, indent: '　'.repeat(depth) })
     if (n.children) walk(n.children, depth + 1)
   })
   walk(tree, 0)

@@ -270,6 +270,12 @@
                   <button class="bl-btn bl-btn-sm bl-btn-primary" @click="addItemRow">
                     <span v-html="BL.icon('plus', 12, '#fff')"></span><span style="margin-left:4px">新增项</span>
                   </button>
+                  <button v-if="editingItems.length" class="bl-btn bl-btn-sm" @click="saveAllItems">
+                    <span v-html="BL.icon('save', 12)"></span><span style="margin-left:4px">批量保存 ({{ editingItems.length }})</span>
+                  </button>
+                  <button v-if="current" class="bl-btn bl-btn-sm" @click="openPasteDialog">
+                    <span v-html="BL.icon('clipboard', 12)"></span><span style="margin-left:4px">粘贴数据</span>
+                  </button>
                 </div>
 
                 <!-- 树视图 -->
@@ -361,53 +367,124 @@
               <!-- 同步规则 -->
               <div v-if="activeTab === 'sync'">
                 <div class="sync-form">
+                  <!-- 数据来源模式切换 -->
+                  <FieldRow label="数据来源" inline>
+                    <div class="bl-row" style="gap:0">
+                      <button :class="['sync-mode-btn', syncForm.sync_source_type !== 'sql' ? 'active' : '']"
+                              @click="syncForm.sync_source_type = 'table'">表模式</button>
+                      <button :class="['sync-mode-btn', syncForm.sync_source_type === 'sql' ? 'active' : '']"
+                              @click="syncForm.sync_source_type = 'sql'">SQL模式</button>
+                    </div>
+                  </FieldRow>
+
                   <FieldRow label="数据源 *" inline>
                     <FilterableSelect v-model="syncForm.data_source_id" :options="dsSelectOpts"
                                       placeholder="— 请选择数据源 —" search-placeholder="筛选数据源"
                                       @change="onSyncDsChange" />
                   </FieldRow>
-                  <FieldRow label="数据表 *" inline>
-                    <div class="bl-row" style="gap:8px;flex:1">
-                      <FilterableSelect v-model="syncForm.table_name" :options="tableSelectOpts" mono
-                                        :disabled="!syncForm.data_source_id"
-                                        :placeholder="syncForm.data_source_id ? (syncTables.length ? '— 选择数据表 —' : '该数据源暂无已同步物理表') : '请先选择数据源'"
-                                        search-placeholder="筛选数据表" @change="onSyncTableChange" />
-                      <input class="bl-input" style='width:50%'  v-model="syncForm.table_alias" placeholder="备注名 (自动带出, 可改)" readOnly />
-                    </div>
-                  </FieldRow>
-                  <FieldRow label="字段配置" inline>
-                    <div class="bl-row" style="gap:8px;flex:1">
-                      <select class="bl-input bl-mono" v-model="syncForm.field_code" :disabled="!syncForm.table_name">
-                        <option value="">— 选择编码字段 —</option>
-                        <option v-for="c in colOpts(syncForm.field_code)" :key="c" :value="c">{{ c }}</option>
+
+                  <!-- 表模式 -->
+                  <template v-if="syncForm.sync_source_type !== 'sql'">
+                    <FieldRow label="数据表 *" inline>
+                      <div class="bl-row" style="gap:8px;flex:1">
+                        <FilterableSelect v-model="syncForm.table_name" :options="tableSelectOpts" mono
+                                          :disabled="!syncForm.data_source_id"
+                                          :placeholder="syncForm.data_source_id ? (syncTables.length ? '— 选择数据表 —' : '该数据源暂无已同步物理表') : '请先选择数据源'"
+                                          search-placeholder="筛选数据表" @change="onSyncTableChange" />
+                        <input class="bl-input" style='width:50%' v-model="syncForm.table_alias" placeholder="备注名 (自动带出, 可改)" readOnly />
+                      </div>
+                    </FieldRow>
+                    <FieldRow label="字段配置" inline>
+                      <div class="bl-row" style="gap:8px;flex:1">
+                        <select class="bl-input bl-mono" v-model="syncForm.field_code" :disabled="!syncForm.table_name">
+                          <option value="">— 选择编码字段 —</option>
+                          <option v-for="c in colOpts(syncForm.field_code)" :key="c" :value="c">{{ c }}</option>
+                        </select>
+                        <select class="bl-input bl-mono" v-model="syncForm.field_name" :disabled="!syncForm.table_name">
+                          <option value="">— 选择名称字段 —</option>
+                          <option v-for="c in colOpts(syncForm.field_name)" :key="c" :value="c">{{ c }}</option>
+                        </select>
+                      </div>
+                    </FieldRow>
+                    <FieldRow label="排序字段" inline>
+                      <select class="bl-input bl-mono" v-model="syncForm.field_sort" :disabled="!syncForm.table_name">
+                        <option value="">— 选择排序字段 (默认按编码) —</option>
+                        <option v-for="c in colOpts(syncForm.field_sort)" :key="c" :value="c">{{ c }}</option>
                       </select>
-                      <select class="bl-input bl-mono" v-model="syncForm.field_name" :disabled="!syncForm.table_name">
-                        <option value="">— 选择名称字段 —</option>
-                        <option v-for="c in colOpts(syncForm.field_name)" :key="c" :value="c">{{ c }}</option>
+                    </FieldRow>
+                    <FieldRow label="状态字段" inline>
+                      <select class="bl-input bl-mono" v-model="syncForm.field_status" :disabled="!syncForm.table_name">
+                        <option value="">— 选择状态字段 (可选) —</option>
+                        <option v-for="c in colOpts(syncForm.field_status)" :key="c" :value="c">{{ c }}</option>
                       </select>
-                    </div>
-                  </FieldRow>
-                  <FieldRow label="排序字段" inline>
-                    <select class="bl-input bl-mono" v-model="syncForm.field_sort" :disabled="!syncForm.table_name">
-                      <option value="">— 选择排序字段 (默认按编码) —</option>
-                      <option v-for="c in colOpts(syncForm.field_sort)" :key="c" :value="c">{{ c }}</option>
-                    </select>
-                  </FieldRow>
-                  <FieldRow label="状态字段" inline>
-                    <select class="bl-input bl-mono" v-model="syncForm.field_status" :disabled="!syncForm.table_name">
-                      <option value="">— 选择状态字段 (可选) —</option>
-                      <option v-for="c in colOpts(syncForm.field_status)" :key="c" :value="c">{{ c }}</option>
-                    </select>
-                  </FieldRow>
-                  <FieldRow label="上级编码" inline hint="源表中的父级编码字段, 用于建立层级 (可选, 留空则按编码长度规则推导)">
-                    <select class="bl-input bl-mono" v-model="syncForm.field_parent" :disabled="!syncForm.table_name">
-                      <option value="">— 选择上级编码字段 (可选) —</option>
-                      <option v-for="c in colOpts(syncForm.field_parent)" :key="c" :value="c">{{ c }}</option>
-                    </select>
-                  </FieldRow>
-                  <FieldRow label="顶级筛选表达式" inline>
-                    <input class="bl-input bl-mono" v-model="syncForm.filter_sql" placeholder="例: parent_code IS NULL" />
-                  </FieldRow>
+                    </FieldRow>
+                    <FieldRow label="上级编码" inline hint="源表中的父级编码字段, 用于建立层级 (可选, 留空则按编码长度规则推导)">
+                      <select class="bl-input bl-mono" v-model="syncForm.field_parent" :disabled="!syncForm.table_name">
+                        <option value="">— 选择上级编码字段 (可选) —</option>
+                        <option v-for="c in colOpts(syncForm.field_parent)" :key="c" :value="c">{{ c }}</option>
+                      </select>
+                    </FieldRow>
+                    <FieldRow label="顶级筛选表达式" inline>
+                      <input class="bl-input bl-mono" v-model="syncForm.filter_sql" placeholder="例: parent_code IS NULL" />
+                    </FieldRow>
+                  </template>
+
+                  <!-- SQL 模式 -->
+                  <template v-else>
+                    <FieldRow label="自定义 SQL *" inline>
+                      <div style="flex:1">
+                        <textarea class="bl-input bl-mono" v-model="syncForm.custom_sql" rows="5"
+                                  style="width:100%;resize:vertical;font-size:12px"
+                                  placeholder="SELECT code, name, parent_code FROM t_dict WHERE status=1"></textarea>
+                        <div class="bl-row" style="gap:8px;margin-top:4px">
+                          <button class="bl-btn" :disabled="sqlPreviewing" @click="previewSqlCols">
+                            <span v-html="BL.icon('search', 12)"></span>
+                            <span style="margin-left:4px">{{ sqlPreviewing ? '查询中...' : '预览列' }}</span>
+                          </button>
+                          <span v-if="sqlPreviewCols.length" class="bl-muted" style="font-size:11px">
+                            已获取 {{ sqlPreviewCols.length }} 个列: {{ sqlPreviewCols.join(', ') }}
+                          </span>
+                          <span v-if="sqlPreviewError" class="bl-danger" style="font-size:11px">{{ sqlPreviewError }}</span>
+                        </div>
+                      </div>
+                    </FieldRow>
+                    <FieldRow label="字段配置" inline>
+                      <div class="bl-row" style="gap:8px;flex:1">
+                        <select v-if="sqlPreviewCols.length" class="bl-input bl-mono" v-model="syncForm.field_code">
+                          <option value="">— 选择编码字段 —</option>
+                          <option v-for="c in sqlPreviewCols" :key="c" :value="c">{{ c }}</option>
+                        </select>
+                        <input v-else class="bl-input bl-mono" v-model="syncForm.field_code" placeholder="编码字段名 (如: code)" />
+                        <select v-if="sqlPreviewCols.length" class="bl-input bl-mono" v-model="syncForm.field_name">
+                          <option value="">— 选择名称字段 —</option>
+                          <option v-for="c in sqlPreviewCols" :key="c" :value="c">{{ c }}</option>
+                        </select>
+                        <input v-else class="bl-input bl-mono" v-model="syncForm.field_name" placeholder="名称字段名 (如: name)" />
+                      </div>
+                    </FieldRow>
+                    <FieldRow label="排序字段" inline>
+                      <select v-if="sqlPreviewCols.length" class="bl-input bl-mono" v-model="syncForm.field_sort">
+                        <option value="">— 排序字段 (可选) —</option>
+                        <option v-for="c in sqlPreviewCols" :key="c" :value="c">{{ c }}</option>
+                      </select>
+                      <input v-else class="bl-input bl-mono" v-model="syncForm.field_sort" placeholder="排序字段名 (可选)" />
+                    </FieldRow>
+                    <FieldRow label="状态字段" inline>
+                      <select v-if="sqlPreviewCols.length" class="bl-input bl-mono" v-model="syncForm.field_status">
+                        <option value="">— 状态字段 (可选) —</option>
+                        <option v-for="c in sqlPreviewCols" :key="c" :value="c">{{ c }}</option>
+                      </select>
+                      <input v-else class="bl-input bl-mono" v-model="syncForm.field_status" placeholder="状态字段名 (可选)" />
+                    </FieldRow>
+                    <FieldRow label="上级编码" inline hint="SQL 结果中的父级编码列名，用于建立层级">
+                      <select v-if="sqlPreviewCols.length" class="bl-input bl-mono" v-model="syncForm.field_parent">
+                        <option value="">— 上级编码字段 (可选) —</option>
+                        <option v-for="c in sqlPreviewCols" :key="c" :value="c">{{ c }}</option>
+                      </select>
+                      <input v-else class="bl-input bl-mono" v-model="syncForm.field_parent" placeholder="上级编码字段名 (可选)" />
+                    </FieldRow>
+                  </template>
+
                   <FieldRow label="同步模式" inline>
                     <select class="bl-input" v-model="syncForm.sync_mode">
                       <option value="level_diff">逐级对比同步,以业务系统数据为准</option>
@@ -480,6 +557,116 @@
         </aside>
       </transition>
      </div>
+
+      <!-- 粘贴数据对话框 -->
+      <Teleport to="body">
+        <transition name="et-paste-fade">
+          <div v-if="pasteDialogOpen" :class="['et-paste-mask', pasteDm.state.free && 'is-free']" @click.self="pasteDialogOpen = false">
+            <div class="et-paste-modal" :class="{ 'is-max': pasteDm.state.maximized }" :style="pasteDm.modalStyle.value" data-dm-root>
+
+              <!-- 标题栏 -->
+              <div class="et-paste-hd" :class="{ 'is-draggable': !pasteDm.state.maximized }" @mousedown="pasteDm.startDrag">
+                <div class="et-paste-hd-l">
+                  <span v-html="BL.icon('clipboard', 18, '#165dff')"></span>
+                  <span class="et-paste-title">粘贴数据批量导入</span>
+                </div>
+                <div class="et-paste-hd-r" @mousedown.stop>
+                  <button class="et-paste-hd-btn" @click="pasteDm.toggleMax" :title="pasteDm.state.maximized ? '还原' : '最大化'">
+                    <span v-html="BL.icon(pasteDm.state.maximized ? 'minimize' : 'maximize', 14)"></span>
+                  </button>
+                  <button class="et-paste-hd-btn" @click="pasteDialogOpen = false" title="关闭">
+                    <span v-html="BL.icon('x', 14)"></span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 主体 -->
+              <div class="et-paste-body">
+                <!-- 步骤 1: 粘贴原始数据 -->
+                <div v-if="pasteRows.length === 0" class="et-paste-input-area">
+                  <div class="et-paste-tip">
+                    <span v-html="BL.icon('info-circle', 16, '#4e5969')"></span>
+                    <span>从 Excel 或其他表格软件复制数据后，粘贴到下方文本框（支持制表符分隔的 TSV 格式）</span>
+                  </div>
+                  <textarea
+                    v-model="pasteRawText"
+                    class="et-paste-textarea"
+                    placeholder="在此粘贴数据...&#10;&#10;示例：&#10;项目名称&#9;CODE001&#9;001&#9;&#9;1&#10;子项目&#9;CODE002&#9;002&#9;001&#9;2"
+                    @paste="() => { setTimeout(parsePasteText, 100) }"
+                  ></textarea>
+                  <div class="et-paste-actions">
+                    <button class="bl-btn bl-btn-primary" @click="parsePasteText">
+                      <span v-html="BL.icon('check', 14, '#fff')"></span>
+                      <span style="margin-left:6px">解析数据</span>
+                    </button>
+                    <button class="bl-btn" @click="pasteDialogOpen = false">取消</button>
+                  </div>
+                </div>
+
+                <!-- 步骤 2: 预览和编辑表格 -->
+                <div v-else class="et-paste-preview-area">
+                  <div class="et-paste-preview-toolbar">
+                    <span class="et-paste-preview-info">
+                      已解析 <strong>{{ pasteRows.length }}</strong> 行 × <strong>{{ pasteColMappings.length }}</strong> 列
+                    </span>
+                    <button class="bl-btn bl-btn-sm" @click="pasteRows = []; pasteRawText = ''">
+                      <span v-html="BL.icon('arrow-left', 12)"></span>
+                      <span style="margin-left:4px">重新粘贴</span>
+                    </button>
+                  </div>
+
+                  <div class="et-paste-table-wrap">
+                    <table class="et-paste-table">
+                      <colgroup>
+                        <col style="width:50px" />
+                        <col v-for="(w, idx) in pasteColWidths" :key="idx" :style="{ width: w + 'px' }" />
+                      </colgroup>
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th v-for="(mapping, colIdx) in pasteColMappings" :key="colIdx">
+                            <div class="et-paste-th-cell">
+                              <select v-model="mapping.field" class="et-paste-field-select" @change="updateMappingLabel(colIdx)">
+                                <option v-for="opt in PASTE_FIELD_OPTIONS" :key="opt.value" :value="opt.value">
+                                  {{ opt.label }}
+                                </option>
+                              </select>
+                              <div class="et-paste-resize-handle" @mousedown="startColResize(colIdx, $event)"></div>
+                            </div>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="(row, rowIdx) in pasteRows" :key="row._id">
+                          <td class="et-paste-row-num">{{ rowIdx + 1 }}</td>
+                          <td v-for="(col, colIdx) in row.cols" :key="colIdx">
+                            <input
+                              v-model="row.cols[colIdx]"
+                              class="et-paste-cell-input"
+                              type="text"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div class="et-paste-preview-ft">
+                    <button class="bl-btn bl-btn-primary" @click="confirmPasteImport">
+                      <span v-html="BL.icon('upload', 14, '#fff')"></span>
+                      <span style="margin-left:6px">确认导入</span>
+                    </button>
+                    <button class="bl-btn" @click="pasteDialogOpen = false">取消</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 缩放把手 -->
+              <DraggableHandles v-if="!pasteDm.state.maximized" :on="pasteDm.startResize" />
+            </div>
+          </div>
+        </transition>
+      </Teleport>
 
       <!-- 枚举类型新建/编辑抽屉 (浮在右侧主区上方，上下贴边) -->
       <transition name="et-drawer">
@@ -625,11 +812,13 @@ import { useRoute, useRouter } from 'vue-router'
 import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
-import { enumTypeApi, groupApi, groupRefApi, datasourceApi, physicalTableApi, categoryApi } from '@/api'
+import { enumTypeApi, groupApi, groupRefApi, datasourceApi, physicalTableApi, categoryApi, valueTypeApi } from '@/api'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 import Pager from '@/components/Pager.vue'
 import { usePagination } from '@/lib/usePagination'
 import FilterableSelect from '@/components/FilterableSelect.vue'
+import { useDraggableModal } from '@/lib/useDraggableModal.js'
+import DraggableHandles from '@/components/DraggableHandles.vue'
 
 /* —— 数据 Tab 树节点 (递归) —— */
 const ItemTreeNode = {
@@ -668,6 +857,23 @@ const filterStatus = ref('')
 const itemQ = ref('')
 const itemFilterStatus = ref('')
 
+// 粘贴对话框状态
+const pasteDialogOpen = ref(false)
+const pasteRawText = ref('')
+const pasteRows = ref([])
+const pasteColMappings = ref([])
+const pasteColWidths = ref([])
+
+// 可选字段选项
+const PASTE_FIELD_OPTIONS = [
+  { value: '', label: '（忽略）' },
+  { value: 'label', label: '名称' },
+  { value: 'api_name', label: 'API代码' },
+  { value: 'code', label: '编码' },
+  { value: 'parent_code', label: '上级编码' },
+  { value: 'level', label: '层级' }
+]
+
 const activeGroupId = ref(null)   // 保留: 用于新建表单 group_id 默认值
 const activeId = ref(null)        // 选中的枚举 id (右侧详情)
 const current = ref(null)
@@ -688,7 +894,12 @@ async function loadDomainOpts() {
   if (domainOpts.value.length) return
   const tree = await categoryApi.tree().catch(() => [])
   const list = []
-  const walk = (ns) => (ns || []).forEach(n => { if (n.categoryCode) list.push({ code: n.categoryCode, name: n.label || n.rdfsLabel || n.categoryCode }); if (n.children) walk(n.children) })
+  const walk = (ns) => (ns || []).forEach(n => {
+    if (n.categoryCode && n.categoryType === 2) {
+      list.push({ code: n.categoryCode, name: n.label || n.rdfsLabel || n.categoryCode })
+    }
+    if (n.children) walk(n.children)
+  })
   walk(tree)
   domainOpts.value = list
 }
@@ -710,13 +921,36 @@ const dataView = ref('table')              // 'table' | 'tree'
 
 /* —— 同步规则 表单 + 日志 —— */
 const syncForm = reactive({
+  sync_source_type: 'table',
   data_source_id: '', table_alias: '', table_name: '',
+  custom_sql: '',
   field_code: '', field_name: '', field_sort: '', field_status: '', field_parent: '',
   filter_sql: '', sync_mode: 'level_diff', sync_strategy: 'once'
 })
 const syncLogs = ref([])
 const syncLogsOpen = ref(false)
 const syncRunning = ref(false)
+
+/* SQL 模式预览 */
+const sqlPreviewing = ref(false)
+const sqlPreviewCols = ref([])
+const sqlPreviewError = ref('')
+async function previewSqlCols() {
+  if (!syncForm.data_source_id) { BL.warning('请先选择数据源'); return }
+  if (!syncForm.custom_sql.trim()) { BL.warning('请填写 SQL'); return }
+  sqlPreviewing.value = true
+  sqlPreviewError.value = ''
+  try {
+    const res = await enumTypeApi.previewSql({ data_source_id: syncForm.data_source_id, custom_sql: syncForm.custom_sql })
+    sqlPreviewCols.value = res.columns || []
+    if (!sqlPreviewCols.value.length) sqlPreviewError.value = 'SQL 执行成功但未返回任何列'
+  } catch (e) {
+    sqlPreviewError.value = e?.message || 'SQL 执行失败'
+    sqlPreviewCols.value = []
+  } finally {
+    sqlPreviewing.value = false
+  }
+}
 
 /* —— 同步规则: 数据源 → 物理表 → 字段 联动 —— */
 const syncDatasources = ref([])   // 真实数据源 (sys_data_source)
@@ -798,12 +1032,35 @@ function enumMatchesQ(e) {
 }
 
 const topGroups = computed(() => groups.value.filter(g => !g.parent_id && groupMatchesQ(g)))
+
+/* 表单专用：当前选中领域的分组（按需从后端加载） */
+const domainGroups = ref([])
+async function loadDomainGroups(domain) {
+  if (!domain) {
+    domainGroups.value = []
+    return
+  }
+  const list = await groupApi.byDomain(domain).catch(() => [])
+  domainGroups.value = list.map(g => ({
+    id: g.id,
+    parent_id: g.parentId || g.parent_id || null,
+    group_name: g.gname || g.gName || g.g_name || g.group_name || '',
+    sort_num: g.gsort || g.gSort || g.g_sort || g.sort_num || 0,
+    category_code: g.categoryCode || g.category_code,
+    domain_code: g.domainCode || g.domain_code || '',
+    status: g.status || 'active'
+  }))
+}
+
 /* groups 已按 enum_types 过滤;此处再按当前领域收窄(领域相关组只在本领域显示),已选分组兜底 */
 const filteredGroups = computed(() => {
   const domain = typeForm.category_code || typeForm.categoryCode || ''
+  if (!domain) return groups.value  // 无领域时显示全部分组
+
+  // 有领域时：只显示该领域的分组（domain_code 匹配），或已选分组（兜底回显）
   return groups.value.filter(g =>
-    g.id === typeForm.group_id ||
-    (g.domain_code ? g.domain_code === domain : g.category_code ? g.category_code === domain : true)
+    g.id === typeForm.group_id ||  // 已选分组：始终显示
+    g.domain_code === domain        // domain_code 严格匹配当前领域
   )
 })
 function childrenOf(id) { return groups.value.filter(g => g.parent_id === id) }
@@ -852,6 +1109,21 @@ function itemSortArrow(key) {
 
 const filteredTypes = computed(() => {
   let list = enumTypes.value
+
+  // 分组过滤：选中分组时只显示该分组及子分组下的枚举
+  if (activeGroupId.value) {
+    const groupIds = new Set([activeGroupId.value])
+    // 递归收集子分组 ID
+    const collectChildren = (pid) => {
+      groups.value.filter(g => g.parent_id === pid).forEach(g => {
+        groupIds.add(g.id)
+        collectChildren(g.id)
+      })
+    }
+    collectChildren(activeGroupId.value)
+    list = list.filter(e => e.group_id && groupIds.has(e.group_id))
+  }
+
   // 行业分类过滤 (统一组件传入的 codes Set)
   if (selectedCategoryCodes.value) list = list.filter(e => selectedCategoryCodes.value.has(e.category_code))
   if (filterStatus.value) list = list.filter(e => e.status === filterStatus.value)
@@ -879,6 +1151,9 @@ const filteredTypes = computed(() => {
 
 /* —— 枚举类型分页 (封装在 usePagination) —— */
 const { page: typePage, pageSize: typePageSize, totalPages: typeTotalPages, paged: pagedTypes } = usePagination(filteredTypes)
+
+/* —— 粘贴对话框拖拽/缩放 —— */
+const pasteDm = useDraggableModal({ minWidth: 800, minHeight: 500 })
 
 const filteredItems = computed(() => {
   let list = items.value
@@ -916,7 +1191,6 @@ const pagedItems = computed(() => {
 // 过滤/搜索/分页大小变化导致页码越界时回到首页
 watch([filteredItems, itemPageSize], () => { if (itemPage.value > itemTotalPages.value) itemPage.value = 1 })
 
-/* 切换领域时重置分组（当前分组不属于新领域则清空） */
 /* 上级编码下拉选项：当前枚举的所有项（排除自身） */
 const parentOpts = computed(() => {
   const all = filteredItems.value || []
@@ -980,6 +1254,9 @@ async function loadDetail(id) {
   current.value = d
   items.value = d.items || []
   levelRules.value = d.levelRules || []
+  // 加载分组绑定
+  const refs = await groupRefApi.list('enum_types').catch(() => [])
+  current.value.groupRef = refs.find(r => r.ref_id === id || r.refId === id) || null
 }
 
 // URL 带 ?openId=<id> 时打开详情;消费后清 query,避免刷新自动弹、并支持同页再次点击
@@ -1085,10 +1362,13 @@ const itemTree = computed(() => {
 /* —— 同步规则 —— */
 function resetSyncForm() {
   Object.assign(syncForm, {
-    data_source_id: '', table_alias: '', table_name: '',
-    field_code: '', field_name: '', field_sort: '', field_status: '',
+    sync_source_type: 'table',
+    data_source_id: '', table_alias: '', table_name: '', custom_sql: '',
+    field_code: '', field_name: '', field_sort: '', field_status: '', field_parent: '',
     filter_sql: '', sync_mode: 'level_diff', sync_strategy: 'once'
   })
+  sqlPreviewCols.value = []
+  sqlPreviewError.value = ''
 }
 async function loadSyncConfig() {
   if (!current.value) return
@@ -1097,7 +1377,9 @@ async function loadSyncConfig() {
   if (cfg && cfg.id) {
     // 后端 MyBatis mapUnderscoreToCamelCase 返回 camelCase 键，适配为 snake_case
     const map = {
+      syncSourceType: 'sync_source_type',
       dataSourceId: 'data_source_id', tableAlias: 'table_alias', tableName: 'table_name',
+      customSql: 'custom_sql',
       fieldCode: 'field_code', fieldName: 'field_name', fieldSort: 'field_sort',
       fieldStatus: 'field_status', fieldParent: 'field_parent',
       filterSql: 'filter_sql', syncMode: 'sync_mode', syncStrategy: 'sync_strategy'
@@ -1105,13 +1387,17 @@ async function loadSyncConfig() {
     for (const [ck, sk] of Object.entries(map)) {
       if (cfg[ck] !== undefined) syncForm[sk] = cfg[ck]
     }
+    syncForm.sync_source_type = syncForm.sync_source_type || 'table'
   } else {
     resetSyncForm()
   }
   await loadSyncTables(syncForm.data_source_id)
 }
 async function saveSyncConfig() {
-  if (!syncForm.data_source_id || !syncForm.table_name) { BL.warning('数据源、表名为必填'); return }
+  const isSqlMode = syncForm.sync_source_type === 'sql'
+  if (!syncForm.data_source_id) { BL.warning('数据源为必填'); return }
+  if (isSqlMode && !syncForm.custom_sql?.trim()) { BL.warning('SQL 模式下自定义 SQL 为必填'); return }
+  if (!isSqlMode && !syncForm.table_name) { BL.warning('表模式下数据表为必填'); return }
   await enumTypeApi.saveSyncConfig(current.value.id, { ...syncForm })
   BL.success('同步配置已保存')
   await loadSyncConfig()
@@ -1157,15 +1443,38 @@ function refTypeLabel(t) {
 /* —— 类型抽屉 —— */
 const typeFormOpen = ref(false)
 const typeForm = reactive({})
-function openCreateType() {
+
+/* 切换领域时重置分组（当前分组不属于新领域则清空）并重新加载该领域的分组 */
+watch(() => typeForm.category_code, async (newDomain, oldDomain) => {
+  if (newDomain === oldDomain) return
+
+  // 加载新领域的分组
+  await loadDomainGroups(newDomain)
+
+  // 检查当前选中的分组是否属于新领域
+  const currentGroup = domainGroups.value.find(g => g.id === typeForm.group_id)
+  if (!currentGroup && typeForm.group_id) {
+    // 当前分组不在新领域的分组列表中，清空
+    typeForm.group_id = ''
+  }
+})
+
+async function openCreateType() {
   Object.keys(typeForm).forEach(k => delete typeForm[k])
-  Object.assign(typeForm, { enum_type: 'general_single', max_level: 1, status: 'active', group_id: activeGroupId.value || '', category_code: selectedCategoryCode.value || '' })
+  const domain = selectedCategoryCode.value || ''
+  Object.assign(typeForm, { enum_type: 'general_single', max_level: 1, status: 'active', group_id: activeGroupId.value || '', category_code: domain })
+  await loadDomainGroups(domain)
   ensureDrawerSize()
   typeFormOpen.value = true
 }
-function openEditType(e) {
+async function openEditType(e) {
   Object.keys(typeForm).forEach(k => delete typeForm[k])
   Object.assign(typeForm, e)
+  // 从 groupRef 提取 group_id
+  if (e.groupRef) {
+    typeForm.group_id = e.groupRef.group_id || e.groupRef.groupId || ''
+  }
+  await loadDomainGroups(e.category_code || e.categoryCode || '')
   ensureDrawerSize()
   typeFormOpen.value = true
 }
@@ -1239,12 +1548,68 @@ function toggleDetailMax() {
 async function submitType() {
   if (!typeForm.rdfs_label || !typeForm.api_name) { BL.warning('名称 / API 为必填'); return }
   if (!typeForm.category_code) { BL.warning('请选择所属领域'); return }
-  if (typeForm.id) await enumTypeApi.update(typeForm.id, typeForm)
-  else             await enumTypeApi.create(typeForm)
+
+  const isNew = !typeForm.id
+  let savedId = typeForm.id
+
+  if (isNew) {
+    const created = await enumTypeApi.create(typeForm)
+    savedId = created.id || typeForm.id
+  } else {
+    await enumTypeApi.update(savedId, typeForm)
+  }
+
+  // 处理分组绑定
+  try {
+    const newGroupId = typeForm.group_id
+
+    if (isNew) {
+      // 新建：直接创建绑定（如果选了分组）
+      if (newGroupId) {
+        await groupRefApi.create({ ref_id: savedId, group_id: newGroupId, group_type: 'enum_types' })
+      }
+    } else {
+      // 编辑：比较新旧分组
+      const oldGroupId = current.value?.groupRef?.group_id || current.value?.groupRef?.groupId
+
+      if (newGroupId && newGroupId !== oldGroupId) {
+        // 有新分组且变化：先删旧再建新
+        if (oldGroupId) await groupRefApi.removeByRef(savedId, 'enum_types').catch(() => {})
+        await groupRefApi.create({ ref_id: savedId, group_id: newGroupId, group_type: 'enum_types' })
+      } else if (!newGroupId && oldGroupId) {
+        // 清空分组：删除绑定
+        await groupRefApi.removeByRef(savedId, 'enum_types').catch(() => {})
+      }
+    }
+  } catch (e) { console.warn('分组绑定失败:', e) }
+
+  // 新建枚举时自动创建对应的值类型
+  if (isNew) {
+    try {
+      const valueTypePayload = {
+        api_name: typeForm.api_name,
+        rdfs_label: typeForm.rdfs_label,
+        category_code: typeForm.category_code,
+        base_type: 'String',
+        constraint_type: 'Enum',
+        enum_id: savedId,
+        status: 1
+      }
+      await valueTypeApi.create(valueTypePayload)
+      console.log('已自动创建对应的值类型:', valueTypePayload.api_name)
+    } catch (e) {
+      console.warn('自动创建值类型失败:', e)
+      // 不阻塞主流程，只是警告
+    }
+  }
+
   BL.success('已保存')
   typeFormOpen.value = false
   await loadAll()
-  if (current.value && typeForm.id === current.value.id) await loadDetail(current.value.id)
+  if (savedId) {
+    const row = enumTypes.value.find(t => t.id === savedId)
+    if (row) selectEnum(row)
+  }
 }
 async function removeType(e) {
   const ok = await BL.confirm({ title: '删除枚举', content: `确定删除「${e.rdfs_label || e.api_name}」及其全部枚举项？`, danger: true, okText: '删除' })
@@ -1338,8 +1703,10 @@ async function submitGroup() {
 }
 
 /* —— 枚举项行内编辑 —— */
+const editingItems = computed(() => items.value.filter(it => it._editing))
+
 function addItemRow() {
-  items.value.unshift({
+  items.value.push({
     id: 'new_' + Date.now(),
     label: '', api_name: '', code: '', parent_code: '',
     level: 1, sort_num: items.value.length, status: 'active',
@@ -1369,15 +1736,60 @@ async function saveItemRow(it) {
   try {
     if (it._isNew) {
       delete payload.id
-      await enumTypeApi.addItem(current.value.id, payload)
+      const saved = await enumTypeApi.addItem(current.value.id, payload)
+      // 用服务端返回的 id 更新本行，退出编辑状态
+      Object.assign(it, saved, { _editing: false, _isNew: false })
+      delete it._backup
     } else {
       await enumTypeApi.updateItem(it.id, payload)
+      // 退出编辑状态，清除备份
+      it._editing = false
+      delete it._backup
     }
     BL.success('已保存')
-    await loadDetail(current.value.id)
-    await loadAll()
-  } catch (e) { BL.error(e?.msg || '保存失败') }
+  } catch (e) {
+    BL.error(e?.msg || '保存失败')
+  }
 }
+
+async function saveAllItems() {
+  const toSave = editingItems.value
+  if (!toSave.length) return
+
+  // 验证必填
+  for (const it of toSave) {
+    if (!it.label || !it.code) {
+      BL.warning(`第 ${items.value.indexOf(it) + 1} 行：名称、编码必填`)
+      return
+    }
+  }
+
+  try {
+    // 分批保存：新增项、更新项
+    const newItems = toSave.filter(it => it._isNew)
+    const updItems = toSave.filter(it => !it._isNew)
+
+    for (const it of newItems) {
+      const { _editing, _isNew, _backup, id, ...payload } = it
+      const saved = await enumTypeApi.addItem(current.value.id, payload)
+      Object.assign(it, saved, { _editing: false, _isNew: false })
+      delete it._backup
+    }
+    for (const it of updItems) {
+      const { _editing, _isNew, _backup, ...payload } = it
+      await enumTypeApi.updateItem(it.id, payload)
+      it._editing = false
+      delete it._backup
+    }
+
+    BL.success(`已保存 ${toSave.length} 项`)
+    // 只刷新枚举类型列表的计数，不重新加载明细
+    await loadAll()
+  } catch (e) {
+    BL.error(e?.msg || '批量保存失败')
+  }
+}
+
 async function removeItem(it) {
   const ok = await BL.confirm({ title: '删除枚举项', content: `确定删除「${it.label}」？`, danger: true, okText: '删除' })
   if (!ok) return
@@ -1385,6 +1797,168 @@ async function removeItem(it) {
   BL.success('已删除')
   await loadDetail(current.value.id)
   await loadAll()
+}
+
+/* —— 粘贴数据功能 —— */
+function openPasteDialog() {
+  if (!current.value) {
+    BL.warning('请先选择枚举类型')
+    return
+  }
+  pasteRawText.value = ''
+  pasteRows.value = []
+  pasteColMappings.value = []
+  pasteColWidths.value = []
+  pasteDm.reset()
+  pasteDialogOpen.value = true
+}
+
+function parsePasteText() {
+  const text = pasteRawText.value.trim()
+  if (!text) {
+    BL.warning('请先粘贴数据')
+    return
+  }
+
+  // 按行分割，支持 \r\n 和 \n
+  const lines = text.split(/\r?\n/).filter(line => line.trim())
+  if (lines.length === 0) {
+    BL.warning('没有有效数据')
+    return
+  }
+
+  // 解析成列数组（制表符分割，兼容多空格）
+  const rows = lines.map(line => {
+    // 优先按制表符分割（Excel 复制是 TSV）
+    let cols = line.split('\t')
+    // 如果只有一列且包含多个空格，尝试按空格分割
+    if (cols.length === 1 && line.includes('  ')) {
+      cols = line.split(/\s{2,}/).map(c => c.trim())
+    }
+    return cols.map(c => c.trim())
+  })
+
+  // 找出最大列数
+  const maxCols = Math.max(...rows.map(r => r.length))
+
+  // 补齐不足的列（填空字符串）
+  const normalizedRows = rows.map(row => {
+    const padded = [...row]
+    while (padded.length < maxCols) padded.push('')
+    return padded
+  })
+
+  // 初始化列映射和列宽
+  pasteColMappings.value = Array.from({ length: maxCols }, () => ({
+    field: '',
+    label: '（忽略）'
+  }))
+  pasteColWidths.value = Array.from({ length: maxCols }, () => 140)
+
+  // 转换成对象数组（便于编辑）
+  pasteRows.value = normalizedRows.map((row, idx) => ({
+    _id: idx,
+    cols: row
+  }))
+
+  BL.success(`已解析 ${pasteRows.value.length} 行 ${maxCols} 列`)
+}
+
+function updateMappingLabel(colIdx) {
+  const field = pasteColMappings.value[colIdx].field
+  const opt = PASTE_FIELD_OPTIONS.find(o => o.value === field)
+  if (opt) {
+    pasteColMappings.value[colIdx].label = opt.label
+  }
+}
+
+// 列宽拖拽
+const resizingCol = ref(-1)
+const resizeStartX = ref(0)
+const resizeStartWidth = ref(0)
+
+function startColResize(colIndex, e) {
+  resizingCol.value = colIndex
+  resizeStartX.value = e.clientX
+  resizeStartWidth.value = pasteColWidths.value[colIndex]
+
+  const onMove = (ev) => {
+    const delta = ev.clientX - resizeStartX.value
+    const newWidth = Math.max(60, resizeStartWidth.value + delta)
+    pasteColWidths.value[colIndex] = newWidth
+  }
+
+  const onUp = () => {
+    resizingCol.value = -1
+    document.removeEventListener('mousemove', onMove)
+    document.removeEventListener('mouseup', onUp)
+  }
+
+  document.addEventListener('mousemove', onMove)
+  document.addEventListener('mouseup', onUp)
+}
+
+async function confirmPasteImport() {
+  if (pasteRows.value.length === 0) {
+    BL.warning('没有数据可导入')
+    return
+  }
+
+  // 检查必填字段是否映射（至少要有 label 和 code）
+  const hasLabel = pasteColMappings.value.some(m => m.field === 'label')
+  const hasCode = pasteColMappings.value.some(m => m.field === 'code')
+  if (!hasLabel || !hasCode) {
+    BL.warning('请至少映射"名称"和"编码"字段')
+    return
+  }
+
+  const confirmed = await BL.confirm({
+    title: '确认导入',
+    content: `将导入 ${pasteRows.value.length} 条枚举项数据，是否继续？`,
+    okText: '确认导入'
+  })
+  if (!confirmed) return
+
+  let successCount = 0
+  let failCount = 0
+
+  for (const row of pasteRows.value) {
+    const payload = { status: 'active', sort_num: 0 }
+
+    // 按列映射提取字段
+    pasteColMappings.value.forEach((mapping, colIndex) => {
+      if (mapping.field) {
+        let value = row.cols[colIndex] || ''
+        // level 字段转数字
+        if (mapping.field === 'level') {
+          value = parseInt(value) || 1
+        }
+        payload[mapping.field] = value
+      }
+    })
+
+    // 必填字段校验
+    if (!payload.label || !payload.code) {
+      failCount++
+      continue
+    }
+
+    try {
+      await enumTypeApi.addItem(current.value.id, payload)
+      successCount++
+    } catch (e) {
+      console.error('导入失败:', e)
+      failCount++
+    }
+  }
+
+  if (successCount > 0) {
+    BL.success(`成功导入 ${successCount} 条${failCount > 0 ? `，失败 ${failCount} 条` : ''}`)
+    pasteDialogOpen.value = false
+    await loadDetail(current.value.id)
+  } else {
+    BL.error('全部导入失败')
+  }
 }
 </script>
 
@@ -1640,6 +2214,166 @@ async function removeItem(it) {
 .sync-form :deep(.fr.fr-inline .fr-label) { width: 110px; }
 .sync-actions { display: flex; gap: 8px; align-items: center; margin-top: 16px;
   padding-top: 14px; border-top: 1px dashed var(--bl-divider); }
+.sync-mode-btn { height: 30px; padding: 0 14px; font-size: 13px; border: 1px solid var(--bl-border);
+  background: #fff; color: var(--bl-text-secondary); cursor: pointer; transition: all .15s; }
+.sync-mode-btn:first-child { border-radius: 4px 0 0 4px; }
+.sync-mode-btn:last-child  { border-radius: 0 4px 4px 0; border-left: none; }
+.sync-mode-btn.active { background: var(--bl-primary); color: #fff; border-color: var(--bl-primary); }
+.sync-mode-btn:not(.active):hover { border-color: var(--bl-primary); color: var(--bl-primary); }
+
+/* ===== 粘贴数据对话框 ===== */
+.et-paste-mask {
+  position: fixed; inset: 0; z-index: 9000;
+  background: rgba(0,0,0,.45);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.et-paste-modal {
+  background: var(--bl-bg-1); border-radius: 8px;
+  display: flex; flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0,0,0,.15);
+  width: 1000px; height: 650px; max-width: 92vw; max-height: 88vh;
+  position: relative;
+}
+
+.et-paste-modal.is-max {
+  width: 95vw; height: 92vh; max-width: none; max-height: none;
+}
+
+/* 标题栏 */
+.et-paste-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; border-bottom: 1px solid var(--bl-divider);
+  flex-shrink: 0; background: #fafbfc;
+}
+.et-paste-hd.is-draggable { cursor: move; }
+
+.et-paste-hd-l { display: flex; align-items: center; gap: 10px; }
+.et-paste-title { font-size: 15px; font-weight: 500; color: var(--bl-text-1); }
+
+.et-paste-hd-r { display: flex; gap: 6px; }
+.et-paste-hd-btn {
+  width: 28px; height: 28px; border: none; background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 4px; cursor: pointer; transition: background .15s;
+}
+.et-paste-hd-btn:hover { background: rgba(0,0,0,.05); }
+
+/* 主体 */
+.et-paste-body {
+  flex: 1; overflow: hidden; display: flex; flex-direction: column;
+}
+
+/* 步骤 1: 粘贴输入区 */
+.et-paste-input-area {
+  display: flex; flex-direction: column; height: 100%; padding: 20px;
+}
+
+.et-paste-tip {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px; background: #f7f8fa; border-radius: 6px;
+  font-size: 13px; color: var(--bl-text-2); margin-bottom: 16px;
+}
+
+.et-paste-textarea {
+  flex: 1; padding: 12px; font-size: 13px; font-family: 'Consolas', monospace;
+  border: 1px solid var(--bl-divider); border-radius: 6px;
+  resize: none; outline: none; transition: border-color .2s;
+}
+.et-paste-textarea:focus { border-color: #165dff; }
+
+.et-paste-actions {
+  display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end;
+}
+
+/* 步骤 2: 预览区 */
+.et-paste-preview-area {
+  display: flex; flex-direction: column; height: 100%;
+}
+
+.et-paste-preview-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 20px; border-bottom: 1px solid var(--bl-divider);
+  background: #fafbfc; flex-shrink: 0;
+}
+
+.et-paste-preview-info {
+  font-size: 13px; color: var(--bl-text-2);
+}
+.et-paste-preview-info strong { color: #165dff; font-weight: 600; }
+
+.et-paste-table-wrap {
+  flex: 1; overflow: auto; padding: 0;
+}
+
+.et-paste-table {
+  width: 100%; border-collapse: collapse; table-layout: fixed;
+}
+
+.et-paste-table thead th {
+  position: sticky; top: 0; z-index: 2;
+  background: #f7f8fa; border-bottom: 1px solid var(--bl-divider);
+  padding: 0; height: 44px; text-align: left; font-size: 13px; font-weight: 500;
+}
+
+.et-paste-th-cell {
+  position: relative; display: flex; align-items: center; height: 100%; padding: 0 8px;
+}
+
+.et-paste-field-select {
+  flex: 1; height: 32px; border: 1px solid #d0d5dd; border-radius: 4px;
+  padding: 0 8px; font-size: 13px; outline: none; cursor: pointer;
+  background: white; transition: border-color .2s;
+}
+.et-paste-field-select:hover { border-color: #165dff; }
+.et-paste-field-select:focus { border-color: #165dff; }
+
+.et-paste-resize-handle {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 5px;
+  cursor: col-resize; background: transparent;
+  transition: background .2s;
+}
+.et-paste-resize-handle:hover { background: #165dff; }
+
+.et-paste-table tbody td {
+  border-bottom: 1px solid #e5e6eb; padding: 4px; height: 40px;
+}
+
+.et-paste-row-num {
+  text-align: center; font-size: 12px; color: var(--bl-text-3);
+  background: #fafbfc; font-weight: 500;
+}
+
+.et-paste-cell-input {
+  width: 100%; height: 32px; border: 1px solid transparent;
+  border-radius: 4px; padding: 0 8px; font-size: 13px;
+  outline: none; transition: border-color .2s, background .2s;
+}
+.et-paste-cell-input:hover { background: #f7f8fa; }
+.et-paste-cell-input:focus {
+  border-color: #165dff; background: white;
+}
+
+.et-paste-preview-ft {
+  display: flex; gap: 8px; padding: 14px 20px;
+  border-top: 1px solid var(--bl-divider); justify-content: flex-end;
+  flex-shrink: 0; background: #fafbfc;
+}
+
+/* 动画 */
+.et-paste-fade-enter-active, .et-paste-fade-leave-active {
+  transition: opacity .18s ease;
+}
+.et-paste-fade-enter-from, .et-paste-fade-leave-to {
+  opacity: 0;
+}
+.et-paste-fade-enter-active .et-paste-modal,
+.et-paste-fade-leave-active .et-paste-modal {
+  transition: transform .18s ease;
+}
+.et-paste-fade-enter-from .et-paste-modal {
+  transform: translateY(8px) scale(.99);
+}
 </style>
 
 <!-- 非 scoped: 树视图通过 h() 渲染,子组件不继承父级 data-v-xxx,需用全局选择器 (.item-tree 前缀避免泄漏) -->

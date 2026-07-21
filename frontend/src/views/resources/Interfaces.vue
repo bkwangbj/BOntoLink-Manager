@@ -888,7 +888,7 @@ onMounted(async () => {
   const info = {}
   const walk = (ns, ancestors) => ns.forEach(n => {
     const chain = [...ancestors, n]
-    if (n.categoryCode) {
+    if (n.categoryCode && n.categoryType === 2) {
       list.push({ code: n.categoryCode, name: n.label })
       const industry = chain.find(x => x.categoryType === 1)
       info[n.categoryCode] = {

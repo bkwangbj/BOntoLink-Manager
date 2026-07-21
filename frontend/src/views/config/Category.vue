@@ -2165,6 +2165,10 @@ async function submitForm() {
     BL.warning('编码、中文名为必填')
     return
   }
+  if (!/^[a-z0-9_]+$/.test(formData.categoryCode)) {
+    BL.warning('编码只允许小写字母、数字和下划线')
+    return
+  }
   const parentId = formParent.value?.id || '0'
   // 行业只能是第一级
   if (formData.categoryType === 1 && parentId !== '0') {

@@ -19,9 +19,18 @@ spring:
     default-property-inclusion: non_null
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: Asia/Shanghai
+  # Redis 连接配置（仅当 bontolink.cache.type=remote 时生效）
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
 
-# 动态数据源连接池统一配置（URL/用户名/密码取自 sys_data_source 表）
+# 缓存配置开关
 bontolink:
+  cache:
+    # 缓存类型: local(仅本地Caffeine) / remote(本地+Redis二级缓存) / none(禁用)
+    type: local
   datasource:
     pool:
       max-pool-size: 5
@@ -41,7 +50,7 @@ mybatis:
     cache-enabled: true
 
 jetcache:
-  statIntervalMinutes: 15
+  statIntervalMinutes: 0
   areaInCacheName: false
   local:
     default:
@@ -49,17 +58,18 @@ jetcache:
       limit: 500
       keyConvertor: fastjson2
       expireAfterWriteInMillis: 1800000
-  remote:
-    default:
-      type: redis.springdata
-      keyConvertor: fastjson2
-      valueEncoder: java
-      valueDecoder: java
-      expireAfterWriteInMillis: 1800000
-      poolConfig:
-        minIdle: 5
-        maxIdle: 20
-        maxTotal: 50
+  # 启用 Redis 二级缓存：将 bontolink.cache.type 改为 remote，并取消下方注释
+  # remote:
+  #   default:
+  #     type: redis.springdata
+  #     keyConvertor: fastjson2
+  #     valueEncoder: java
+  #     valueDecoder: java
+  #     expireAfterWriteInMillis: 1800000
+  #     poolConfig:
+  #       minIdle: 5
+  #       maxIdle: 20
+  #       maxTotal: 50
 
 logging:
   level:

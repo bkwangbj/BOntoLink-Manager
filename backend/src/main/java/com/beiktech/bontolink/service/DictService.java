@@ -1,8 +1,5 @@
 package com.beiktech.bontolink.service;
 
-import com.alicp.jetcache.anno.CacheInvalidate;
-import com.alicp.jetcache.anno.CacheType;
-import com.alicp.jetcache.anno.Cached;
 import com.beiktech.bontolink.mapper.DictMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +8,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 字典管理服务：业务逻辑 + 长效缓存管理。
+ * 字典管理服务：业务逻辑 + 缓存管理（委托给 DictCacheService）。
  * 供其他模块通过 getItemsByCode() 获取字典条目（走 JetCache 缓存）。
  */
 @Service
@@ -19,6 +16,9 @@ public class DictService {
 
     @Autowired
     private DictMapper dictMapper;
+
+    @Autowired
+    private DictCacheService dictCacheService;
 
     // ==================== 字典定义 ====================
 
@@ -105,24 +105,25 @@ public class DictService {
         }
     }
 
-    // ==================== 公开查询（长效缓存） ====================
+    // ==================== 公开查询（长效缓存 - 委托给 DictCacheService） ====================
 
     /**
      * 按 dict_code 查启用条目。
-     * JetCache 长效缓存（expire=0 不过期），页面手动刷新。
+     * 根据 bontolink.cache.type 配置自动使用 LOCAL 或 BOTH 缓存策略。
      */
-    @Cached(name = "dict:items", key = "#code", expire = 0, cacheType = CacheType.BOTH)
     public List<Map<String, Object>> getItemsByCode(String code) {
-        return dictMapper.getItemsByCode(code);
+        return dictCacheService.getItemsByCode(code);
     }
 
     /** 清空指定字典编码的缓存 */
-    @CacheInvalidate(name = "dict:items", key = "#code")
-    public void evictDictCacheByCode(String code) {}
+    public void evictDictCacheByCode(String code) {
+        dictCacheService.evictDictCacheByCode(code);
+    }
 
     /**
      * 清空 dict:items 缓存（增删改或手动刷新时调用）。
      */
-    @CacheInvalidate(name = "dict:items")
-    public void evictDictCache() {}
+    public void evictDictCache() {
+        dictCacheService.evictDictCache();
+    }
 }

@@ -225,6 +225,24 @@ public class EnumTypeController {
         return R.ok(result);
     }
 
+    /**
+     * SQL 模式预览：执行自定义 SQL (LIMIT 5)，返回列名 + 示例行，供前端字段映射使用。
+     */
+    @PostMapping("/sync-preview-sql")
+    public R<Map<String, Object>> previewSql(@RequestBody Map<String, Object> body) {
+        String dsId = body.get("data_source_id") == null ? "" : String.valueOf(body.get("data_source_id"));
+        String sql  = body.get("custom_sql") == null ? "" : String.valueOf(body.get("custom_sql"));
+        if (dsId.isBlank() || sql.isBlank()) {
+            return R.error(400, "data_source_id 和 custom_sql 不能为空");
+        }
+        try {
+            Map<String, Object> preview = syncService.previewSql(dsId, sql);
+            return R.ok(preview);
+        } catch (Exception e) {
+            return R.error(500, "SQL 预览失败: " + e.getMessage());
+        }
+    }
+
     /* ===== 被引用查询 ===== */
 
     /** 查询枚举类型被哪些对象属性/共享属性引用，用于删除前的引用检查 */

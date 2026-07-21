@@ -73,6 +73,19 @@ public interface EnumTypeMapper {
     """)
     int insertItem(Map<String, Object> row);
 
+    /** 批量新增枚举项 (同步专用) */
+    @Insert("""
+        <script>
+        INSERT INTO ont_enum_items(id, enum_id, code, api_name, label, parent_code, level, sort_num, status)
+        VALUES
+        <foreach collection="list" item="r" separator=",">
+          (#{r.id}, #{r.enum_id}, #{r.code}, #{r.api_name}, #{r.label},
+           #{r.parent_code}, #{r.level}, #{r.sort_num}, #{r.status})
+        </foreach>
+        </script>
+    """)
+    int batchInsertItems(@Param("list") List<Map<String, Object>> list);
+
     /** 更新枚举项信息 */
     @Update("""
         UPDATE ont_enum_items SET label=#{label}, api_name=#{api_name}, parent_code=#{parent_code},
@@ -85,6 +98,10 @@ public interface EnumTypeMapper {
     /** 删除单条枚举项 */
     @Delete("DELETE FROM ont_enum_items WHERE id = #{id}")
     int deleteItem(@Param("id") String id);
+
+    /** 批量删除枚举项（全量覆盖同步专用：一次性删除 enumId 下所有非锁定项） */
+    @Delete("DELETE FROM ont_enum_items WHERE enum_id = #{enumId} AND is_sync_locked = 0")
+    int deleteUnlockedItemsByEnum(@Param("enumId") String enumId);
 
     /* ---- 层次编码规则 ---- */
     /** 查询指定枚举的所有层次编码规则, 按层级升序 */
@@ -112,10 +129,11 @@ public interface EnumTypeMapper {
     /** 新增数据库同步配置 */
     @Insert("""
         INSERT INTO ont_enum_sync_config(id, enum_id, data_source_id, table_alias, table_name,
-            field_code, field_name, field_sort, field_status, field_parent, filter_sql, sync_mode, sync_strategy)
+            field_code, field_name, field_sort, field_status, field_parent, filter_sql, sync_mode, sync_strategy,
+            sync_source_type, custom_sql)
         VALUES (#{id}, #{enum_id}, #{data_source_id}, #{table_alias}, #{table_name},
             #{field_code}, #{field_name}, #{field_sort}, #{field_status}, #{field_parent}, #{filter_sql},
-            #{sync_mode}, #{sync_strategy})
+            #{sync_mode}, #{sync_strategy}, #{sync_source_type}, #{custom_sql})
     """)
     int insertSyncConfig(Map<String, Object> row);
 
@@ -126,6 +144,7 @@ public interface EnumTypeMapper {
           field_code=#{field_code}, field_name=#{field_name}, field_sort=#{field_sort},
           field_status=#{field_status}, field_parent=#{field_parent}, filter_sql=#{filter_sql},
           sync_mode=#{sync_mode}, sync_strategy=#{sync_strategy},
+          sync_source_type=#{sync_source_type}, custom_sql=#{custom_sql},
           update_time = datetime('now','localtime')
         WHERE id=#{id}
     """)

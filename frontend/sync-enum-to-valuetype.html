@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>同步枚举到值类型</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.1);
+      padding: 32px;
+      max-width: 600px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    .desc {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    button {
+      width: 100%;
+      height: 44px;
+      background: #165dff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    button:hover {
+      background: #4080ff;
+    }
+    button:disabled {
+      background: #c9cdd4;
+      cursor: not-allowed;
+    }
+    .result {
+      margin-top: 24px;
+      padding: 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      line-height: 1.8;
+      display: none;
+    }
+    .result.success {
+      background: #e8ffea;
+      border: 1px solid #00b42a;
+      color: #00b42a;
+      display: block;
+    }
+    .result.error {
+      background: #ffece8;
+      border: 1px solid #f53f3f;
+      color: #f53f3f;
+      display: block;
+    }
+    .result strong {
+      font-weight: 600;
+    }
+    .result ul {
+      margin-top: 8px;
+      padding-left: 20px;
+    }
+    .result ul li {
+      margin: 4px 0;
+    }
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>同步枚举到值类型</h1>
+    <p class="desc">
+      此操作会扫描所有枚举类型，为还没有对应值类型的枚举自动创建值类型。<br>
+      值类型的 <code>constraint_type</code> 为 <code>Enum</code>，<code>enum_id</code> 关联到枚举 ID。
+    </p>
+    <button id="syncBtn" onclick="runSync()">开始同步</button>
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:8088/bontolink/api';
+
+    async function runSync() {
+      const btn = document.getElementById('syncBtn');
+      const resultDiv = document.getElementById('result');
+
+      // 禁用按钮
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>同步中...';
+      resultDiv.className = 'result';
+      resultDiv.style.display = 'none';
+
+      try {
+        const response = await fetch(`${API_BASE}/value-types/sync-from-enums`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        const json = await response.json();
+
+        if (json.code === 200 && json.data) {
+          const data = json.data;
+          resultDiv.className = 'result success';
+          resultDiv.innerHTML = `
+            <strong>✓ 同步完成</strong><br>
+            共扫描 <strong>${data.total_enums}</strong> 个枚举类型<br>
+            新建值类型 <strong>${data.created_count}</strong> 个<br>
+            跳过已存在 <strong>${data.skipped_count}</strong> 个
+            ${data.created_api_names && data.created_api_names.length > 0
+              ? `<br><br>新建的值类型：<ul>${data.created_api_names.map(name => `<li>${name}</li>`).join('')}</ul>`
+              : ''
+            }
+          `;
+        } else {
+          throw new Error(json.msg || '同步失败');
+        }
+      } catch (error) {
+        resultDiv.className = 'result error';
+        resultDiv.innerHTML = `<strong>✗ 同步失败</strong><br>${error.message}`;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '开始同步';
+      }
+    }
+  </script>
+</body>
+</html>
