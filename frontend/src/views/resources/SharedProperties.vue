@@ -44,6 +44,7 @@
     <div class="sp-main">
       <!-- 左侧行业分类树 (统一组件) -->
       <CategoryTreeFilter :rows="rows"
+                          :custom-counts="customCategoryCounts"
                           title="行业分类"
                           total-label="全部共享属性"
                           store-key="sharedProps"
@@ -252,6 +253,7 @@ const groups = computed(() => {
 })
 
 const {
+  selectedCategoryCodes,
   customCategoryCounts,
   onCategoryChange,
   loadCategoryTree,
@@ -298,17 +300,12 @@ function applyOpenId(id) {
   if (row) { onRowClick(row); router.replace({ query: {} }) }
 }
 onMounted(async () => {
-  await load(); loadCategoryMap(); loadStructCount()
+  await Promise.all([load(), loadCategoryTree()])
+  loadCategoryMap()
+  loadStructCount()
   applyOpenId(route.query.openId)
 })
 watch(() => route.query.openId, applyOpenId)
-
-/* —— 行业分类筛选 (左树) —— */
-const selectedCategoryCode = ref('')   // 当前选中的领域 code (null/全部 → '')
-function onCategoryChange({ codes, categoryCode }) {
-  selectedCategoryCodes.value = codes || null
-  selectedCategoryCode.value = categoryCode || ''
-}
 
 /* —— 排序 —— */
 function toggleSort(key) {
@@ -324,7 +321,7 @@ function sortArrow(key) {
 /* —— 过滤后扁平列表 (用于统计 + 分页) —— */
 const flatList = computed(() => {
   let list = rows.value
-  if (selectedCategoryCodes.value) list = list.filter(r => selectedCategoryCodes.value.has(r.category_code))
+  list = filterByCategory(list)
   if (filterDomain.value) list = list.filter(r => (r.category_code || '') === filterDomain.value)
   if (filterStatus.value !== '') list = list.filter(r => String(r.status) === filterStatus.value)
   const k = q.value.trim().toLowerCase()

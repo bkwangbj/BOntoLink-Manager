@@ -36,6 +36,7 @@
 
     <div class="two-pane">
       <CategoryTreeFilter :rows="rows"
+                          :custom-counts="customCategoryCounts"
                           title="行业分类"
                           total-label="全部接口"
                           store-key="interfaces"
@@ -391,10 +392,12 @@ import { BL } from '@/lib/bl.js'
 import { interfaceApi, resourceApi, categoryApi, valueTypeApi, propertyFormatApi } from '@/api'
 import PropertyFormatModal from '@/components/PropertyFormatModal.vue'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
+import { useCategoryGroupFilter } from '@/composables/useCategoryGroupFilter'
 
 const route = useRoute()
 const router = useRouter()
 const rows = ref([])
+const groups = ref([]) // 接口没有分组节点，使用空数组
 const statusFilter = ref('all')
 const domainFilter = ref('')
 const industryFilter = ref('')
@@ -402,6 +405,14 @@ const q = ref('')
 const checked = ref(new Set())
 const page = ref(1)
 const pageSize = ref(10)
+
+// 使用 composable 处理分组节点的特殊过滤逻辑
+const {
+  customCategoryCounts,
+  onCategoryChange,
+  loadCategoryTree,
+  filterByCategory
+} = useCategoryGroupFilter({ items: rows, groups })
 
 const drawerOpen = ref(false)
 const drawerTab = ref('overview')
@@ -505,16 +516,9 @@ const industryFilterOptions = computed(() => {
 })
 
 /* —— 左侧行业分类树 —— */
-const selectedCategoryCodes = ref(null)
-const selectedCategoryCode = ref('')   // 当前选中的领域 code (null/全部 → '')
-function onCategoryChange({ codes, categoryCode }) {
-  selectedCategoryCodes.value = codes || null
-  selectedCategoryCode.value = categoryCode || ''
-}
-
 const filtered = computed(() => {
   let list = rows.value
-  if (selectedCategoryCodes.value) list = list.filter(r => selectedCategoryCodes.value.has(r.category_code))
+  list = filterByCategory(list)
   if (statusFilter.value !== 'all') list = list.filter(r => String(r.status) === statusFilter.value)
   if (industryFilter.value)        list = list.filter(r => ifIndustry(r) === industryFilter.value)
   if (domainFilter.value)          list = list.filter(r => r.category_code === domainFilter.value)
@@ -881,7 +885,7 @@ async function copyText(t) {
 }
 
 onMounted(async () => {
-  await load()
+  await Promise.all([load(), loadCategoryTree()])
   // 业务领域候选 + 所属行业解析
   const tree = await categoryApi.tree().catch(() => [])
   const list = []

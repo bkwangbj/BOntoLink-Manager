@@ -34,6 +34,7 @@
 
     <div class="lk-main">
       <CategoryTreeFilter :rows="rows"
+                          :custom-counts="customCategoryCounts"
                           title="行业领域分组"
                           total-label="全部链接"
                           store-key="link-types"
@@ -158,6 +159,7 @@ import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 import LinkTypeEditor from './linktype/LinkTypeEditor.vue'
 import Pager from '@/components/Pager.vue'
 import { usePagination } from '@/lib/usePagination'
+import { useCategoryGroupFilter } from '@/composables/useCategoryGroupFilter'
 
 const MiniSwitch = {
   name: 'MiniSwitch',
@@ -173,6 +175,7 @@ const MiniSwitch = {
 }
 
 const rows = ref([])
+const groups = ref([]) // 链接类型没有分组节点，使用空数组
 const allClasses = ref([])
 const checked = ref(new Set())
 const selectedId = ref(null)
@@ -180,12 +183,13 @@ const q = ref('')
 const filterStatus = ref('')
 const filterCardinality = ref('')
 
-const selectedCategoryCodes = ref(null)
-const selectedCategoryCode = ref('')   // 当前选中的领域 code (null/全部 → '')
-function onCategoryChange({ codes, categoryCode }) {
-  selectedCategoryCodes.value = codes || null
-  selectedCategoryCode.value = categoryCode || ''
-}
+// 使用 composable 处理分组节点的特殊过滤逻辑
+const {
+  customCategoryCounts,
+  onCategoryChange,
+  loadCategoryTree,
+  filterByCategory
+} = useCategoryGroupFilter({ items: rows, groups })
 
 const editorOpen = ref(false)
 const editorLinkId = ref('')
@@ -207,7 +211,7 @@ function applyOpenId(id) {
   if (row) { onRowClick(row); router.replace({ query: {} }) }
 }
 onMounted(async () => {
-  await load()
+  await Promise.all([load(), loadCategoryTree()])
   loadClasses()
   applyOpenId(route.query.openId)
 })
@@ -226,7 +230,7 @@ function cardKey(r) {
 }
 const filtered = computed(() => {
   let list = rows.value
-  if (selectedCategoryCodes.value) list = list.filter(r => selectedCategoryCodes.value.has(r.category_code))
+  list = filterByCategory(list)
   if (filterStatus.value) list = list.filter(r => r.status === filterStatus.value)
   if (filterCardinality.value) list = list.filter(r => cardKey(r) === filterCardinality.value)
   const k = q.value.trim().toLowerCase()

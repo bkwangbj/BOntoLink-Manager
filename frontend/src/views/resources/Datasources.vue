@@ -39,6 +39,7 @@
 
     <div class="ds-main">
       <CategoryTreeFilter :rows="rows"
+                          :custom-counts="customCategoryCounts"
                           title="行业分类"
                           total-label="全部数据源"
                           store-key="datasources"
@@ -423,10 +424,12 @@ import { datasourceApi, namespaceApi, categoryApi, physicalTableApi } from '@/ap
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 import Pager from '@/components/Pager.vue'
 import { usePagination } from '@/lib/usePagination'
+import { useCategoryGroupFilter } from '@/composables/useCategoryGroupFilter'
 
 const route = useRoute()
 const router = useRouter()
 const rows = ref([])
+const groups = ref([]) // 数据源没有分组节点，使用空数组
 const overview = ref({})
 const q = ref('')
 const selected = ref(null)
@@ -435,6 +438,14 @@ const cfgOpen = ref(false)   // 兼容旧字段(用于其他历史代码引用)
 const driverMap = ref({})
 const monTab = ref('basic')
 const mon = ref({})
+
+// 使用 composable 处理分组节点的特殊过滤逻辑
+const {
+  customCategoryCounts,
+  onCategoryChange,
+  loadCategoryTree,
+  filterByCategory
+} = useCategoryGroupFilter({ items: rows, groups })
 
 /* 全局抽屉: 数据源 (编辑) / 监控 双页签 */
 const drawerOpen = ref(false)
@@ -617,16 +628,9 @@ const industryFilterOptions = computed(() => {
 })
 
 /* —— 左侧行业分类树 (统一组件) —— */
-const selectedCategoryCodes = ref(null)
-const selectedCategoryCode = ref('')   // 当前选中的领域 code (null/全部 → '')
-function onCategoryChange({ codes, categoryCode }) {
-  selectedCategoryCodes.value = codes || null
-  selectedCategoryCode.value = categoryCode || ''
-}
-
 const filtered = computed(() => {
   let list = rows.value
-  if (selectedCategoryCodes.value) list = list.filter(r => selectedCategoryCodes.value.has(r.categoryCode))
+  list = filterByCategory(list)
   const k = q.value.trim().toLowerCase()
   if (k) {
     list = list.filter(r =>
@@ -949,7 +953,7 @@ function applyOpenId(id) {
 }
 
 onMounted(async () => {
-  await loadAll()
+  await Promise.all([loadAll(), loadCategoryTree()])
   // 进入页面不自动选中也不自动打开抽屉 — 由用户主动点击行或"新建"打开
   // URL 带 ?openId=<id> 时自动打开对应行的详情抽屉
   applyOpenId(route.query.openId)
