@@ -29,14 +29,25 @@ $classesResp = Invoke-RestMethod -Uri "$BaseUrl/class-meta/classes"
 $allClasses = $classesResp.data | Where-Object { $_.status -eq 1 }
 Write-Host "    $($allClasses.Count) 个启用类" -ForegroundColor Gray
 
-# ========== 2. 加载数据源映射 ==========
+# ========== 2. 加载命名空间 ==========
+Write-Host "==> 加载命名空间..." -ForegroundColor Cyan
+$nsResp = Invoke-RestMethod -Uri "$BaseUrl/namespaces" -ErrorAction SilentlyContinue
+$nsMap = @{}  # ns_code -> namespace
+if ($nsResp.data) {
+    foreach ($ns in $nsResp.data) {
+        $nsMap[$ns.ns_code] = $ns
+    }
+    Write-Host "    $($nsMap.Count) 个命名空间" -ForegroundColor Gray
+}
+
+# ========== 3. 加载数据源映射 ==========
 $dsResp = Invoke-RestMethod -Uri "$BaseUrl/datasources"
 $dsMap = @{}
 foreach ($ds in $dsResp.data) {
     $dsMap[$ds.ds_code] = $ds
 }
 
-# ========== 3. 加载枚举(作为字典) ==========
+# ========== 4. 加载枚举(作为字典) ==========
 Write-Host "==> 加载枚举类型..." -ForegroundColor Cyan
 $enumsResp = Invoke-RestMethod -Uri "$BaseUrl/enum-types"
 $enumTypes = $enumsResp.data | Where-Object { $_.status -eq "active" }
@@ -61,7 +72,7 @@ foreach ($et in $enumTypes) {
 }
 Write-Host "    $($dictMap.Count) 个字典" -ForegroundColor Gray
 
-# ========== 4. 转换实体 ==========
+# ========== 5. 转换实体 ==========
 Write-Host "==> 转换实体..." -ForegroundColor Cyan
 $entities = @()
 $classIdMap = @{}  # class_id -> entity_name
@@ -131,14 +142,25 @@ foreach ($cls in $allClasses) {
     $entityName = $cls.display_name ?? $cls.rdfs_label ?? $cls.api_name
     $classIdMap[$cls.id] = $entityName
 
+    # 构建实体定义
     $entity = @{
         name = $entityName
         table = $primaryTable
         dataSource = $primaryDs
         description = $cls.rdfs_comment ?? ""
         fields = $fields
-        owlClass = $cls.api_name  # 保留 OWL 类名
+        owlClass = $cls.api_name  # OWL 类名
         owlPrefix = $cls.api_name.Substring(0,1).ToLower() + $cls.api_name.Substring(1)
+    }
+
+    # 添加命名空间信息(如果存在)
+    if ($cls.ns_code -and $nsMap.ContainsKey($cls.ns_code)) {
+        $ns = $nsMap[$cls.ns_code]
+        $entity.namespace = @{
+            code = $ns.ns_code
+            name = $ns.ns_name
+            uri = $ns.ns_uri
+        }
     }
 
     $entities += $entity
@@ -224,10 +246,26 @@ foreach ($ds in $dsList) {
 # ========== 8. 组装最终 JSON ==========
 $ontology = [ordered]@{
     promptHints = $promptHints
-    entities = $entities
-    relationships = $relationships
-    dictionaries = $dictionaries
 }
+
+# 添加命名空间定义(顶层)
+if ($nsMap.Count -gt 0) {
+    $namespaces = @()
+    foreach ($ns in $nsMap.Values) {
+        $namespaces += @{
+            code = $ns.ns_code
+            name = $ns.ns_name
+            uri = $ns.ns_uri
+            label = $ns.rdfs_label
+            comment = $ns.rdfs_comment
+        }
+    }
+    $ontology.namespaces = $namespaces
+}
+
+$ontology.entities = $entities
+$ontology.relationships = $relationships
+$ontology.dictionaries = $dictionaries
 
 # ========== 9. 输出文件 ==========
 if (-not (Test-Path $OutputPath)) {
