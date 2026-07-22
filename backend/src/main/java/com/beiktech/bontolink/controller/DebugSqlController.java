@@ -1,6 +1,6 @@
 package com.beiktech.bontolink.controller;
 
-import com.beiktech.bontolink.model.R;
+import com.beiktech.bontolink.common.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
