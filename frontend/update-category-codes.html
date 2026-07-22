@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>批量更新枚举分类代码</title>
+  <style>
+    body { font-family: system-ui; padding: 40px; max-width: 900px; margin: 0 auto; }
+    h1 { margin-bottom: 30px; }
+    .section { background: #f5f5f5; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+    button { padding: 10px 20px; margin: 10px 10px 10px 0; background: #165DFF; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #0E42D2; }
+    button.danger { background: #F53F3F; }
+    pre { background: white; padding: 15px; border-radius: 4px; overflow: auto; max-height: 400px; }
+    .result { margin-top: 20px; padding: 15px; background: white; border-radius: 4px; }
+    .success { color: #00B42A; font-weight: bold; }
+    .error { color: #F53F3F; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>批量更新枚举的分类代码</h1>
+  
+  <div class="section">
+    <h3>1. 查看当前状态</h3>
+    <button onclick="checkStatus()">检查枚举分类代码</button>
+    <div id="checkResult"></div>
+  </div>
+
+  <div class="section">
+    <h3>2. 批量更新</h3>
+    <p>将 category_code 从 <code>dom_water_statistics</code> 更新为 <code>slfwy</code></p>
+    <button onclick="updateToSlfwy()">更新为 slfwy（服务业统计）</button>
+    <button class="danger" onclick="revertToDom()">恢复为 dom_water_statistics</button>
+    <div id="updateResult"></div>
+  </div>
+
+  <script>
+    const API = 'http://localhost:8088/bontolink/api';
+
+    async function checkStatus() {
+      const div = document.getElementById('checkResult');
+      div.innerHTML = '<p>正在检查...</p>';
+      try {
+        const res = await fetch(API + '/enum-types');
+        const { data } = await res.json();
+        const byCode = {};
+        data.forEach(e => {
+          const code = e.category_code || '未设置';
+          if (!byCode[code]) byCode[code] = [];
+          byCode[code].push(e);
+        });
+        let html = '<div class="result"><p>共 ' + data.length + ' 个枚举：</p>';
+        for (const code in byCode) {
+          html += '<h4>' + code + ' (' + byCode[code].length + '个)</h4><pre>';
+          html += byCode[code].map(e => e.rdfs_label + ' (' + e.api_name + ')').join('\n');
+          html += '</pre>';
+        }
+        html += '</div>';
+        div.innerHTML = html;
+      } catch (err) {
+        div.innerHTML = '<div class="result error">错误: ' + err.message + '</div>';
+      }
+    }
+
+    async function updateToSlfwy() {
+      const div = document.getElementById('updateResult');
+      div.innerHTML = '<p>正在更新...</p>';
+      try {
+        const listRes = await fetch(API + '/enum-types');
+        const { data } = await listRes.json();
+        const toUpdate = data.filter(e => e.category_code === 'dom_water_statistics');
+        if (toUpdate.length === 0) {
+          div.innerHTML = '<div class="result">没有需要更新的记录</div>';
+          return;
+        }
+        const results = [];
+        for (const item of toUpdate) {
+          const res = await fetch(API + '/enum-types/' + item.id, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...item, category_code: 'slfwy' })
+          });
+          const result = await res.json();
+          results.push({ name: item.rdfs_label, ok: result.code === 0 });
+        }
+        const ok = results.filter(r => r.ok).length;
+        let html = '<div class="result"><p class="success">✓ 已更新 ' + ok + ' / ' + toUpdate.length + ' 个枚举</p><pre>';
+        html += results.map(r => (r.ok ? '✓' : '✗') + ' ' + r.name).join('\n');
+        html += '</pre></div>';
+        div.innerHTML = html;
+      } catch (err) {
+        div.innerHTML = '<div class="result error">错误: ' + err.message + '</div>';
+      }
+    }
+
+    async function revertToDom() {
+      if (!confirm('确定要恢复？')) return;
+      const div = document.getElementById('updateResult');
+      div.innerHTML = '<p>正在恢复...</p>';
+      try {
+        const listRes = await fetch(API + '/enum-types');
+        const { data } = await listRes.json();
+        const toRevert = data.filter(e => e.category_code === 'slfwy');
+        if (toRevert.length === 0) {
+          div.innerHTML = '<div class="result">没有需要恢复的记录</div>';
+          return;
+        }
+        const results = [];
+        for (const item of toRevert) {
+          const res = await fetch(API + '/enum-types/' + item.id, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...item, category_code: 'dom_water_statistics' })
+          });
+          const result = await res.json();
+          results.push({ name: item.rdfs_label, ok: result.code === 0 });
+        }
+        const ok = results.filter(r => r.ok).length;
+        let html = '<div class="result"><p class="success">✓ 已恢复 ' + ok + ' / ' + toRevert.length + ' 个枚举</p><pre>';
+        html += results.map(r => (r.ok ? '✓' : '✗') + ' ' + r.name).join('\n');
+        html += '</pre></div>';
+        div.innerHTML = html;
+      } catch (err) {
+        div.innerHTML = '<div class="result error">错误: ' + err.message + '</div>';
+      }
+    }
+  </script>
+</body>
+</html>

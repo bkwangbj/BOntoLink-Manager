@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>批量更新枚举的分类代码</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 40px; max-width: 900px; margin: 0 auto; background: #f5f7fa; }
+    h1 { font-size: 24px; margin-bottom: 10px; color: #1d2129; }
+    .subtitle { color: #86909c; margin-bottom: 30px; font-size: 14px; }
+    .section { background: white; padding: 24px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .section h3 { margin-top: 0; font-size: 16px; font-weight: 600; color: #1d2129; }
+    button {
+      padding: 10px 20px;
+      font-size: 14px;
+      background: #165DFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    button:hover { background: #0E42D2; transform: translateY(-1px); }
+    button:disabled { background: #c9cdd4; cursor: not-allowed; transform: none; }
+    button.secondary { background: #f5f5f5; color: #4e5969; border: 1px solid #e5e6eb; }
+    button.secondary:hover { background: #e8e8e8; }
+    button.danger { background: #F53F3F; }
+    button.danger:hover { background: #CB2634; }
+    pre {
+      background: #f7f8fa;
+      padding: 15px;
+      border-radius: 4px;
+      overflow: auto;
+      max-height: 400px;
+      font-size: 13px;
+      line-height: 1.6;
+      border: 1px solid #e5e6eb;
+    }
+    .result { margin-top: 20px; padding: 16px; background: #f7f8fa; border-radius: 4px; border-left: 3px solid #165DFF; }
+    .success { color: #00B42A; font-weight: 600; }
+    .error { color: #F53F3F; font-weight: 600; }
+    .warning { color: #FF7D00; font-weight: 600; }
+    .mapping { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 16px 0; }
+    .mapping-item { background: #f7f8fa; padding: 12px; border-radius: 4px; font-size: 13px; border: 1px solid #e5e6eb; }
+    .mapping-item strong { display: block; margin-bottom: 5px; color: #165DFF; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .mapping-item .code { font-family: 'Courier New', monospace; color: #1d2129; }
+    .info-box { background: #e8f3ff; border-left: 3px solid #165DFF; padding: 12px; border-radius: 4px; margin: 16px 0; font-size: 13px; line-height: 1.6; }
+    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #f3f3f3; border-top: 2px solid #165DFF; border-radius: 50%; animation: spin 1s linear infinite; margin-right: 8px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <h1>📊 批量更新枚举的分类代码</h1>
+  <p class="subtitle">将水利统计领域下的枚举更新为更具体的子分类（服务业统计）</p>
+
+  <div class="section">
+    <h3>1. 查看当前枚举的分类代码</h3>
+    <div class="info-box">
+      💡 检查当前所有枚举的 category_code 字段值，按分类分组显示
+    </div>
+    <button onclick="checkCurrentCategories()">🔍 检查当前状态</button>
+    <div id="checkResult"></div>
+  </div>
+
+  <div class="section">
+    <h3>2. 更新分类代码映射</h3>
+    <div class="mapping">
+      <div class="mapping-item">
+        <strong>原分类代码</strong>
+        <div class="code">dom_water_statistics</div>
+        <div style="color: #86909c; font-size: 12px; margin-top: 4px;">水利统计（父分类）</div>
+      </div>
+      <div class="mapping-item">
+        <strong>新分类代码</strong>
+        <div class="code">slfwy</div>
+        <div style="color: #86909c; font-size: 12px; margin-top: 4px;">服务业统计（子分类）</div>
+      </div>
+    </div>
+    <div class="info-box">
+      ℹ️ 更新后，点击"服务业统计"节点时，将显示所有相关枚举。<br>
+      此操作会修改所有 category_code 为 "dom_water_statistics" 的枚举记录。
+    </div>
+    <button onclick="updateCategories()">✅ 执行更新</button>
+    <button class="danger" onclick="revertCategories()">↩️ 恢复为 dom_water_statistics</button>
+    <div id="updateResult"></div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:8088/bontolink/api';
+
+    async function checkCurrentCategories() {
+      const result = document.getElementById('checkResult');
+      result.innerHTML = '<p><span class="spinner"></span>正在检查...</p>';
+
+      try {
+        const res = await fetch(`${API_BASE}/enum-types`);
+        const json = await res.json();
+
+        if (json.code !== 0) {
+          throw new Error(json.msg || '请求失败');
+        }
+
+        const data = json.data || [];
+        const groups = {};
+
+        data.forEach(item => {
+          const code = item.category_code || '未设置';
+          if (!groups[code]) groups[code] = [];
+          groups[code].push(item);
+        });
+
+        let html = '<div class="result">';
+        html += `<p><strong>共 ${data.length} 个枚举</strong>，按分类代码分组如下：</p>`;
+
+        for (const [code, items] of Object.entries(groups)) {
+          const countClass = items.length === 0 ? 'warning' : 'success';
+          html += `<h4 style="margin:16px 0 8px 0; color: #1d2129;">${code} <span class="${countClass}">(${items.length}个)</span></h4>`;
+          html += '<pre>' + items.map(it => `${it.rdfs_label || it.api_name} (${it.api_name})`).join('\n') + '</pre>';
+        }
+
+        html += '</div>';
+        result.innerHTML = html;
+
+      } catch (err) {
+        result.innerHTML = `<div class="result"><p class="error">❌ 错误: ${err.message}</p></div>`;
+      }
+    }
+
+    async function updateCategories() {
+      const result = document.getElementById('updateResult');
+      result.innerHTML = '<p><span class="spinner"></span>正在更新...</p>';
+
+      try {
+        // 1. 获取所有枚举
+        const listRes = await fetch(`${API_BASE}/enum-types`);
+        const listJson = await listRes.json();
+
+        if (listJson.code !== 0) {
+          throw new Error(listJson.msg || '获取枚举列表失败');
+        }
+
+        const enumTypes = listJson.data || [];
+        const toUpdate = enumTypes.filter(e => e.category_code === 'dom_water_statistics');
+
+        if (toUpdate.length === 0) {
+          result.innerHTML = '<div class="result"><p class="warning">⚠️ 没有需要更新的枚举（已经全部更新过）</p></div>';
+          return;
+        }
+
+        // 2. 批量更新
+        const updates = [];
+        for (const item of toUpdate) {
+          const updateRes = await fetch(`${API_BASE}/enum-types/${item.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ...item,
+              category_code: 'slfwy'
+            })
+          });
+
+          const updateResult = await updateRes.json();
+          updates.push({
+            name: item.rdfs_label || item.api_name,
+            success: updateResult.code === 0,
+            error: updateResult.msg
+          });
+        }
+
+        const successCount = updates.filter(u => u.success).length;
+        const failedCount = updates.length - successCount;
+
+        let html = '<div class="result">';
+        html += `<p class="success">✅ 已更新 ${successCount} / ${toUpdate.length} 个枚举</p>`;
+
+        if (failedCount > 0) {
+          html += `<p class="error">❌ 失败 ${failedCount} 个</p>`;
+        }
+
+        html += '<h4 style="margin-top: 16px;">更新详情：</h4><pre>';
+        html += updates.map(u => {
+          const icon = u.success ? '✅' : '❌';
+          const error = u.success ? '' : ` (${u.error})`;
+          return `${icon} ${u.name}${error}`;
+        }).join('\n');
+        html += '</pre>';
+        html += '<p style="margin-top: 16px; color: #86909c; font-size: 13px;">💡 刷新前端页面即可看到更新后的效果</p>';
+        html += '</div>';
+
+        result.innerHTML = html;
+
+      } catch (err) {
+        result.innerHTML = `<div class="result"><p class="error">❌ 错误: ${err.message}</p></div>`;
+      }
+    }
+
+    async function revertCategories() {
+      if (!confirm('⚠️ 确定要恢复所有枚举的分类代码为 dom_water_statistics？\n\n此操作会将所有 slfwy 的枚举改回父分类。')) {
+        return;
+      }
+
+      const result = document.getElementById('updateResult');
+      result.innerHTML = '<p><span class="spinner"></span>正在恢复...</p>';
+
+      try {
+        const listRes = await fetch(`${API_BASE}/enum-types`);
+        const listJson = await listRes.json();
+
+        if (listJson.code !== 0) {
+          throw new Error(listJson.msg || '获取枚举列表失败');
+        }
+
+        const enumTypes = listJson.data || [];
+        const toRevert = enumTypes.filter(e => e.category_code === 'slfwy');
+
+        if (toRevert.length === 0) {
+          result.innerHTML = '<div class="result"><p class="warning">⚠️ 没有需要恢复的枚举</p></div>';
+          return;
+        }
+
+        const updates = [];
+        for (const item of toRevert) {
+          const updateRes = await fetch(`${API_BASE}/enum-types/${item.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ...item,
+              category_code: 'dom_water_statistics'
+            })
+          });
+
+          const updateResult = await updateRes.json();
+          updates.push({
+            name: item.rdfs_label || item.api_name,
+            success: updateResult.code === 0,
+            error: updateResult.msg
+          });
+        }
+
+        const successCount = updates.filter(u => u.success).length;
+        const failedCount = updates.length - successCount;
+
+        let html = '<div class="result">';
+        html += `<p class="success">✅ 已恢复 ${successCount} / ${toRevert.length} 个枚举</p>`;
+
+        if (failedCount > 0) {
+          html += `<p class="error">❌ 失败 ${failedCount} 个</p>`;
+        }
+
+        html += '<h4 style="margin-top: 16px;">恢复详情：</h4><pre>';
+        html += updates.map(u => {
+          const icon = u.success ? '✅' : '❌';
+          const error = u.success ? '' : ` (${u.error})`;
+          return `${icon} ${u.name}${error}`;
+        }).join('\n');
+        html += '</pre>';
+        html += '</div>';
+
+        result.innerHTML = html;
+
+      } catch (err) {
+        result.innerHTML = `<div class="result"><p class="error">❌ 错误: ${err.message}</p></div>`;
+      }
+    }
+
+    // 页面加载时自动检查
+    window.addEventListener('load', checkCurrentCategories);
+  </script>
+</body>
+</html>
