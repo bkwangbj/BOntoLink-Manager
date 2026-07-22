@@ -527,19 +527,8 @@ const typeClass = computed(() => {
 /* —— 重新装载: 打开时 OR 切换 property 时 —— */
 async function reloadForm() {
   if (!props.open) return
-  // 初始化表单
-  Object.assign(form, defaultForm())
-  if (props.property) Object.assign(form, props.property)
 
-  // 加载当前对象类的领域信息 (用于值类型过滤)
-  if (props.classId && !currentClassCategoryCode.value) {
-    const classDetail = await classMetaApi.get(props.classId).catch(() => null)
-    if (classDetail) {
-      currentClassCategoryCode.value = classDetail.category_code || ''
-    }
-  }
-
-  // 加载值类型 / 类候选 (仅首次)，并附加 category_label
+  // 加载值类型 / 类候选 (仅首次)，并附加 category_label — 必须在 form 赋值之前完成
   if (!valueTypeOptions.value.length) {
     const vtList = (await valueTypeApi.list().catch(() => [])).filter(v => v.status === 1)
     // 加载领域映射
@@ -567,6 +556,19 @@ async function reloadForm() {
     const m = {}; list.forEach(x => { if (x.ds_code) m[x.ds_code] = x.ds_name || x.ds_code })
     dsNameMap.value = m
   }
+
+  // 初始化表单 (在 valueTypeOptions 加载完成后)
+  Object.assign(form, defaultForm())
+  if (props.property) Object.assign(form, props.property)
+
+  // 加载当前对象类的领域信息 (用于值类型过滤)
+  if (props.classId && !currentClassCategoryCode.value) {
+    const classDetail = await classMetaApi.get(props.classId).catch(() => null)
+    if (classDetail) {
+      currentClassCategoryCode.value = classDetail.category_code || ''
+    }
+  }
+
   // 依据已存 class_ds_id 回填所选数据源 (编辑模式); 新建则为空
   selDsCode.value = props.datasources.find(d => d.id === form.class_ds_id)?.ds_code || ''
   // 加载当前属性的等价 / 互斥关系
