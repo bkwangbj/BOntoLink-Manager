@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/bontolink
+    url: jdbc:postgresql://dev.beiktech.com:9523/swc_wx_dev?currentSchema=bonto_link_manager
     username: postgres
     password: postgres
     hikari:
@@ -9,3 +9,6 @@ spring:
       minimum-idle: 2
       pool-name: BontoLinkPGPool
       connection-test-query: SELECT 1
+  flyway:
+    # 仅建表，种子数据从 SQLite 迁移
+    locations: classpath:db/migration/postgresql
