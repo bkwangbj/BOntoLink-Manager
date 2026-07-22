@@ -294,8 +294,8 @@
                   <thead>
                     <tr>
                       <th><span class="th-sort" @click="toggleItemSort('label')">名称<span class="th-arrow">{{ itemSortArrow('label') }}</span></span></th>
-                      <th><span class="th-sort" @click="toggleItemSort('api')">代码<span class="th-arrow">{{ itemSortArrow('api') }}</span></span></th>
-                      <th><span class="th-sort" @click="toggleItemSort('code')">编码<span class="th-arrow">{{ itemSortArrow('code') }}</span></span></th>
+                      <th><span class="th-sort" @click="toggleItemSort('code')">代码<span class="th-arrow">{{ itemSortArrow('code') }}</span></span></th>
+                      <th><span class="th-sort" @click="toggleItemSort('api')">API-NAME<span class="th-arrow">{{ itemSortArrow('api') }}</span></span></th>
                       <th><span class="th-sort" @click="toggleItemSort('parent')">上级编码<span class="th-arrow">{{ itemSortArrow('parent') }}</span></span></th>
                       <th style="width:60px"><span class="th-sort" @click="toggleItemSort('level')">层级<span class="th-arrow">{{ itemSortArrow('level') }}</span></span></th>
                       <th style="width:90px"><span class="th-sort" @click="toggleItemSort('status')">状态<span class="th-arrow">{{ itemSortArrow('status') }}</span></span></th>
@@ -309,12 +309,12 @@
                         <span v-else>{{ it.label }}</span>
                       </td>
                       <td>
-                        <input v-if="it._editing" class="bl-input bl-input-xs bl-mono" v-model="it.api_name" placeholder="snake_case" />
-                        <span v-else class="bl-mono">{{ it.api_name || '—' }}</span>
-                      </td>
-                      <td>
                         <input v-if="it._editing" class="bl-input bl-input-xs bl-mono" v-model="it.code" placeholder="编码" />
                         <span v-else class="bl-mono">{{ it.code }}</span>
+                      </td>
+                      <td>
+                        <input v-if="it._editing" class="bl-input bl-input-xs bl-mono" v-model="it.api_name" placeholder="snake_case" />
+                        <span v-else class="bl-mono">{{ it.api_name || '—' }}</span>
                       </td>
                       <td>
                         <select v-if="it._editing" class="bl-input bl-input-xs" v-model="it.parent_code">
