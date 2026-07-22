@@ -4,15 +4,39 @@
       class="left-container"
       :style="{flex: dataMappingVisible ? '0 0 500px' : '1'}"
     >
+      <!-- 散点地图:逐点经纬度,不做聚合/分组/排序;只需选"大小/颜色数值字段" -->
+      <div
+        v-if="!dataMappingVisible && isScatterMap"
+        class="geo-value-setting"
+      >
+        <div class="gvs-title">大小 / 颜色 数值字段</div>
+        <el-select
+          :model-value="geoValueField"
+          placeholder="选择数值字段(散点大小/深浅随其变化)"
+          size="small"
+          clearable
+          style="width: 100%;"
+          :disabled="!saveAble"
+          @change="onGeoValueChange"
+        >
+          <el-option
+            v-for="o in geoNumericFields"
+            :key="o.value"
+            :label="o.label"
+            :value="o.value"
+          />
+        </el-select>
+        <div class="gvs-hint">按每个实例的经纬度打点;大小与深浅随所选数值变化。散点无需聚合/分组。</div>
+      </div>
       <MetricSetting
-        v-if="!dataMappingVisible"
+        v-if="!dataMappingVisible && !isScatterMap"
         :metrics="metrics"
         :field-options="metricFieldOptions"
         :set-mode="saveAble"
         @update:metrics="onMetricsChange"
       />
       <GroupFilter
-        v-if="!dataMappingVisible"
+        v-if="!dataMappingVisible && !isScatterMap"
         :grouping="grouping"
         :dimension-options="metricFieldOptions"
         :group-values="groupValues"
@@ -20,7 +44,7 @@
         @update:grouping="onGroupingChange"
       />
       <SortSetting
-        v-if="!dataMappingVisible"
+        v-if="!dataMappingVisible && !isScatterMap"
         :sorts="sorts"
         :field-options="metricFieldOptions"
         :set-mode="saveAble"
@@ -325,6 +349,22 @@ export default {
         if (v && !seen.has(v)) { seen.add(v); opts.push({ label: c.label || v, value: v }) }
       })
       return opts
+    },
+    // 散点地图(逐点经纬度)判定:隐藏聚合/分组/排序,只留"大小/颜色数值字段"
+    isScatterMap () {
+      const bt = this.configs && this.configs.branchType
+      return bt === 'scatterMap' || /\/geo-points/.test(this.interfacePath || '')
+    },
+    // 可作散点大小/颜色的数值字段(排除经纬度)
+    geoNumericFields () {
+      return (this.metricFieldOptions || []).filter(o =>
+        ['int', 'decimal', 'number'].includes(o.dataType) &&
+        !/经度|纬度|lng|lat|longitude|latitude/i.test((o.value || '') + ' ' + (o.label || '')))
+    },
+    // 当前散点数值字段(从 geo-points URL 的 valueField 解析)
+    geoValueField () {
+      const m = /[?&]valueField=([^&]*)/.exec(this.interfacePath || '')
+      return m ? decodeURIComponent(m[1]) : ''
     }
   },
   watch: {
@@ -836,6 +876,19 @@ export default {
       this.configs.dataSourceConfig.metrics = utils.deepClone(list)
       this.applyToChart()
     },
+    // 散点地图:切换数值字段 → 重建 geo-points 的 valueField 并重新取数
+    onGeoValueChange (field) {
+      let path = this.interfacePath || ''
+      if (/[?&]valueField=/.test(path)) {
+        path = path.replace(/([?&]valueField=)[^&]*/, `$1${field ? encodeURIComponent(field) : ''}`)
+      } else if (field) {
+        path += (path.includes('?') ? '&' : '?') + 'valueField=' + encodeURIComponent(field)
+      }
+      this.interfacePath = path
+      if (!this.configs.dataSourceConfig) this.configs.dataSourceConfig = {}
+      this.configs.dataSourceConfig.interfacePath = path
+      this.getData(true)
+    },
     // 分组与筛选变化:写回 configs.dataSourceConfig.grouping;维度变化则重新拉取分组取值
     onGroupingChange (g) {
       const oldField = this.grouping && this.grouping.field
@@ -957,6 +1010,24 @@ export default {
     background: #f5f5f5;
     border: 1px solid #e6e6e6;
     border-right: none;
+  }
+
+  .geo-value-setting {
+    padding: 2px 4px 14px;
+
+    .gvs-title {
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .gvs-hint {
+      margin-top: 6px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #a3a3a3;
+    }
   }
 
   .left-container {

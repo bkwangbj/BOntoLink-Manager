@@ -105,7 +105,8 @@ export const chartDefaultConfig = new Map([
     }
     ]
   }],
-  ['smoothLineChart', { ..._lineBaseOption(), series: _lineSeries({ smooth: true }) }],
+  ['smoothLineChart', { ..._lineBaseOption(), series: _lineSeries({ smooth: 0.6, smoothMonotone: 'none' }) }],
+  ['markLineChart', { ..._lineBaseOption(), series: _lineSeries({ smooth: 0.6, smoothMonotone: 'none', symbol: 'circle', symbolSize: 8, lineStyle: { width: 3, color: null }, areaStyle: { opacity: 0.3 }, label: { show: true, position: 'top', color: '#4e5969', fontSize: 12, fontWeight: 'bold', formatter: '{c}' } }) }],
   ['areaChart', { ..._lineBaseOption(), series: _lineSeries({ areaStyle: {}, smooth: true }) }],
   ['stackAreaChart', { ..._lineBaseOption(), series: _lineSeries({ areaStyle: {}, stack: 'total', smooth: false }) }],
   ['stepLineChart', { ..._lineBaseOption(), series: _lineSeries({ step: 'end', showSymbol: true }) }],
@@ -763,6 +764,30 @@ export const chartDefaultConfig = new Map([
       itemStyle: { borderRadius: 8, borderColor: '#fff', borderWidth: 2 },
       label: { show: true, position: 'outside', formatter: '{d}%' },
       labelLine: { show: true, length: 20, length2: 30, lineStyle: { width: 1 } }
+    }]
+  }], ['carouselPieChart', {
+    color: ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399', '#9B59B6'],
+    tooltip: { trigger: 'item' },
+    legend: { show: true, alignPosition: 'bottomCenter' },
+    series: [{
+      type: 'pie', center: [50, 50], radius: [38, 62], clockwise: true, avoidLabelOverlap: false, hoverOffset: 8,
+      itemStyle: { borderRadius: 4, borderColor: '#fff', borderWidth: 2 },
+      label: { show: false, position: 'center' },
+      emphasis: {
+        scale: true, scaleSize: 8,
+        label: { show: true, position: 'center', formatter: '{d}%\n{b}', fontSize: 16, fontWeight: 'bold', lineHeight: 22, color: '#303133' }
+      },
+      labelLine: { show: false }
+    }]
+  }], ['petalPieChart', {
+    color: ['#409EFF', '#67C23A', '#9B59B6', '#F5B041', '#F56C6C', '#5DADE2'],
+    tooltip: { trigger: 'item' },
+    legend: { show: true, alignPosition: 'bottomCenter' },
+    series: [{
+      type: 'pie', center: [50, 50], radius: [0, 62], clockwise: true, avoidLabelOverlap: true, hoverOffset: 12, padAngle: 4,
+      itemStyle: { borderRadius: 24, borderColor: '#fff', borderWidth: 4 },
+      label: { show: false },
+      labelLine: { show: false }
     }]
   }], ['posNegBarChart', {
     color: ['#3ED848', '#F56C6C'],

@@ -35,14 +35,14 @@ export function useDesigns () {
 
   const remove = (id) => exploreDesignApi.remove(id)
 
-  /* 默认看板:config 直接是 maker 的 layoutConfig(无则 null) */
-  const getDefault = async (classId) => {
+  /* 默认(config 直接是配置对象):kind=query 图表默认板 / kind=list 列表默认;无则 null */
+  const getDefault = async (classId, kind = 'query') => {
     if (!classId) return null
-    const row = await exploreDesignApi.getDefault(classId)
+    const row = await exploreDesignApi.getDefault(classId, kind)
     return row && row.config ? row.config : null
   }
-  const saveDefault = (classId, layoutConfig, kind = 'query') =>
-    exploreDesignApi.saveDefault(classId, layoutConfig, kind)
+  const saveDefault = (classId, config, kind = 'query') =>
+    exploreDesignApi.saveDefault(classId, config, kind)
 
   return { listFor, save, update, remove, getDefault, saveDefault }
 }

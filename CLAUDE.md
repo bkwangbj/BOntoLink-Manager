@@ -224,6 +224,7 @@ PageHeader (标题 + 统计 + 筛选 + 搜索 + 新建按钮)
 | 模板 `@event="(n) => ref = n"` 不生效 | ref 是 const 不可在模板表达式重新指向 | 改用 `function setX(n) { x.value = n }` |
 | `Datasources` 用 `r.categoryCode` 其他用 `r.category_code` | Jackson 配置不一致 | 组件内适配 `r.category_code \|\| r.categoryCode` |
 | 改 router 后页面空白 | HMR 缓存旧 lazy import | 浏览器硬刷新(Ctrl+Shift+R) |
+| 改 `bk-analysis-maker` 源码 + rebuild dist 后前端看不到效果 | `analysis-maker-vue3` 是 `file:` 依赖,Vite 把它预打包进 `node_modules/.vite/deps` 后不再随 dist 变化重新预构建,浏览器刷新也没用 | 删 `frontend/node_modules/.vite` + dev server `--force` 重启(`npm run dev -- --force`) |
 
 ---
 

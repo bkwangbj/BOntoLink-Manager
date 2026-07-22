@@ -332,9 +332,8 @@ function statusTagCls(s) {
 .lk-table { width: 100%; min-width: 1300px; }
 .lk-table thead th {
   position: sticky; top: 0; z-index: 2;
-  background: var(--bl-bg-2);
-  box-shadow: inset 0 -1px 0 var(--bl-divider);
-  font-weight: 600; font-size: 12px; height: 34px; padding: 0 8px;
+  background: var(--bl-thead-bg);
+  font-weight: 600; font-size: 12px; height: 40px; padding: 0 8px;
   color: var(--bl-text-1); white-space: nowrap;
 }
 .lk-table thead th.t-left { text-align: left; }

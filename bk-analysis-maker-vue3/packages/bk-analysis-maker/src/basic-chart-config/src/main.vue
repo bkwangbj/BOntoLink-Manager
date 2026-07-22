@@ -908,6 +908,18 @@ export default {
 
         .custom-group {
           height: auto;
+          position: relative;
+          /* 仅当插槽里有左侧锚点栏(.cfg-anchor-wrap)时才画整高背景条;单面板配置无锚点则不显示 */
+          &:has(.cfg-anchor-wrap)::after{
+            position: absolute;
+       content: "";
+    height: 100%;
+    width: 61px;
+    background-color: rgb(250 251 252);
+    left: 0;
+    bottom: 0px;
+    border-right: 1px #eee solid;
+          }
         }
       }
     }
@@ -982,5 +994,14 @@ export default {
       padding: 0;
     }
   }
+}
+// .analysis-maker-wrapper .chart-cfg-wrap .d-flex.ai-c.collapse-item-title span.chart-config-title{
+//   padding-left: 18px;
+// }
+.analysis-maker-wrapper .chart-cfg-wrap .custom-group.inline-col-form .d-flex.ai-c.collapse-item-title span.chart-config-title {
+  padding-left: 18px;
+}
+.analysis-maker-wrapper .chart-cfg-wrap .custom-group.inline-col-form .full-box[type="BKBarChart"]{
+  padding-left: 20px;
 }
 </style>

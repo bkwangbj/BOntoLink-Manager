@@ -16,9 +16,9 @@ public interface ExploreDesignMapper {
     @Select("SELECT * FROM ont_explore_design WHERE class_id = #{classId} AND name <> '' ORDER BY updated_at DESC")
     List<Map<String, Object>> listNamedByClass(@Param("classId") String classId);
 
-    /** 某对象类型的默认看板(name='') */
-    @Select("SELECT * FROM ont_explore_design WHERE class_id = #{classId} AND name = '' LIMIT 1")
-    Map<String, Object> getDefault(@Param("classId") String classId);
+    /** 某对象类型指定 kind 的默认(name=''):kind=query 图表默认板 / kind=list 列表默认 */
+    @Select("SELECT * FROM ont_explore_design WHERE class_id = #{classId} AND name = '' AND kind = #{kind} LIMIT 1")
+    Map<String, Object> getDefault(@Param("classId") String classId, @Param("kind") String kind);
 
     // 按 id 查单条看板/设计记录
     @Select("SELECT * FROM ont_explore_design WHERE id = #{id}")

@@ -122,8 +122,13 @@ export default {
       this.layoutConfig = { ...this.layoutConfig, themeConfigs: { ...this.layoutConfig.themeConfigs, innerPaddingConfig: e } }
     },
     changePreTheme (preTheme) {
-      const chartStyle = preTheme.chartStyle
+      const chartStyle = utils.deepClone(preTheme.chartStyle)
       delete preTheme.chartStyle
+      // 切换主题时保留用户当前选定的图表配色模版(不重置为新主题内置色系)
+      const prevColorList = this.layoutConfig?.themeConfigs?.chartStyle?.themeStyle?.colorList
+      if (prevColorList && prevColorList.length && chartStyle?.themeStyle) {
+        chartStyle.themeStyle.colorList = utils.deepClone(prevColorList)
+      }
       this.layoutConfig = {
         ...this.layoutConfig,
         themeConfigs: { ...utils.deepClone(preTheme), chartStyle },

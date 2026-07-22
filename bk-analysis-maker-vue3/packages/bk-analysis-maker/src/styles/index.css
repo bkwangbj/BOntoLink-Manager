@@ -256,6 +256,9 @@
   font-size: 12px;
   color: #1a1a1a;
 }
+:deep(.analysis-maker-wrapper .chart-cfg-wrap .custom-group.inline-col-form .d-flex.ai-c.collapse-item-title .chart-config-title) {
+  padding-left: 18px;
+}
 
 /* 折叠项标题行:标题左对齐到 24px(与普通项 label 一致),开关移到右侧靠近箭头 */
 :deep(.analysis-maker-wrapper .chart-cfg-wrap .collapse-item-title) {
@@ -403,7 +406,7 @@
 }
 
 :deep(.analysis-maker-wrapper .chart-cfg-wrap .bar-basic-config) {
-  padding: 12px 16px 12px 24px;
+  padding: 12px 16px 12px 12px;
 }
 
 .tip_popper {
@@ -418,4 +421,7 @@
 
 .vxe-context-menu--link .vxe-context-menu--link-prefix {
   top: 0;
+}
+.analysis-maker-wrapper .chart-cfg-wrap .pie-basic-config.cfg-scroll  .d-flex.ai-c.collapse-item-title span.chart-config-title{
+  padding-left: 18px;
 }

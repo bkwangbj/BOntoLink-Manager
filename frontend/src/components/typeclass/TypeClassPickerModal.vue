@@ -159,7 +159,7 @@ onMounted(async () => {
 .tcp-sel { width: 130px; }
 .tcp-tblwrap { flex: 1; overflow: auto; }
 .tcp-tbl { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12.5px; }
-.tcp-tbl thead th { position: sticky; top: 0; z-index: 1; background: var(--bl-bg-2); color: var(--bl-text-2); font-weight: 500; text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--bl-border); white-space: nowrap; }
+.tcp-tbl thead th { position: sticky; top: 0; z-index: 1; background: var(--bl-thead-bg); color: var(--bl-text-2); font-weight: 500; text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--bl-thead-border); white-space: nowrap; }
 .tcp-tbl tbody td { padding: 9px 12px; border-bottom: 1px solid var(--bl-divider); vertical-align: middle; }
 .tcp-tbl tbody tr { cursor: pointer; }
 .tcp-tbl tbody tr:hover { background: var(--bl-bg-hover); }

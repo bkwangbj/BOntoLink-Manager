@@ -171,8 +171,9 @@ button { font-family: inherit; }
   text-align: left;
 }
 .bl-table thead th {
-  font-weight: 500; color: var(--bl-text-2);
-  background: var(--bl-bg-2);
+  font-weight: 600; color: var(--bl-text-2);
+  background: var(--bl-thead-bg);
+  border-bottom: 1px solid var(--bl-thead-border);
 }
 .bl-table tbody tr:hover { background: var(--bl-bg-hover); }
 

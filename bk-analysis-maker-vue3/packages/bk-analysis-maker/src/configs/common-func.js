@@ -397,6 +397,13 @@ async function getDefaultOption (tab, data, theme) {
   }
   // 读取主题
   const { configOption, chartTheme } = getConfigTheme(option, theme, tab.type, tab.branchType)
+  // 新增图表:默认整体取用看板当前选定的图表配色模版(themeStyle.colorList),与看板保持一致。
+  // 用整体替换而非按索引合并(getConfigTheme 内是 merge,默认色比 palette 长时会残留旧色)。
+  // 仅作用于以 color 数组取色的图表类型;用户后续可在图表配置里单独改色。
+  const boardColors = theme?.themeStyle?.colorList
+  if (Array.isArray(boardColors) && boardColors.length && chartItemList.includes(tab.type)) {
+    configOption.color = XEUtils.clone(boardColors, true)
+  }
   explainConfig.textStyle = { color: chartTheme.textColor, fontSize: chartTheme.fontSize }
 
   return { configOption, chartTheme, explainConfig }

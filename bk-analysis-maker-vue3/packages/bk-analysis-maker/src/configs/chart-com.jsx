@@ -107,6 +107,15 @@ const chartComponents = [
     eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
     items: [{ label: 'x', field: 'x', value: 'x' }, { label: 'y', field: 'y', value: 'y' }, { label: '颜色映射', field: 'colorField', value: 'colorField' }]
   }, {
+    title: '标点折线',
+    type: 'BKBarChart',
+    branchType: 'markLineChart',
+    img: 'mark-line.svg',
+    chartComId: '25',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
+    items: [{ label: 'x', field: 'x', value: 'x' }, { label: 'y', field: 'y', value: 'y' }, { label: '颜色映射', field: 'colorField', value: 'colorField' }]
+  }, {
     title: '面积图',
     type: 'BKBarChart',
     branchType: 'areaChart',
@@ -317,7 +326,7 @@ const ringComponents = [{
 }, {
   title: '圆角饼图',
   type: 'BKPieChart',
-  img: 'pie.png',
+  img: 'round-pie.svg',
   explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
   chartComId: '37',
   branchType: 'roundPieChart',
@@ -326,7 +335,7 @@ const ringComponents = [{
 }, {
   title: '圆角环图',
   type: 'BKPieChart',
-  img: 'ring-pie.png',
+  img: 'round-ring.svg',
   explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
   chartComId: '38',
   branchType: 'roundRingChart',
@@ -463,6 +472,24 @@ const ringComponents = [{
     { label: 'name', field: 'name', value: 'name' },
     { label: 'value', field: 'value', value: 'value' }
   ]
+}, {
+  title: '轮播饼图',
+  type: 'BKPieChart',
+  img: 'carousel-pie.svg',
+  explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+  chartComId: '42',
+  branchType: 'carouselPieChart',
+  eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }, { field: 'value', varField: '' }] }],
+  items: [{ label: 'name', field: 'name', value: 'name' }, { label: 'value', field: 'value', value: 'value' }]
+}, {
+  title: '花瓣饼图',
+  type: 'BKPieChart',
+  img: 'petal-pie.svg',
+  explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+  chartComId: '43',
+  branchType: 'petalPieChart',
+  eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }, { field: 'value', varField: '' }] }],
+  items: [{ label: 'name', field: 'name', value: 'name' }, { label: 'value', field: 'value', value: 'value' }]
 }]
 const mapComponents = [
   {

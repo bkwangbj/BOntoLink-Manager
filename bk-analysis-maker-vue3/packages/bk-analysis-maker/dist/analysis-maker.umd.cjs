@@ -23,24 +23,6 @@
 
   const T__namespace = /*#__PURE__*/_interopNamespaceDefault(T$2);
 
-  const _hoisted_1$2k = {
-    viewBox: "0 0 24 24",
-    width: "1.2em",
-    height: "1.2em"
-  };
-
-  function render$v(_ctx, _cache) {
-    return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2k, [...(_cache[0] || (_cache[0] = [
-      vue.createElementVNode("path", {
-        fill: "currentColor",
-        d: "m12 10.587l4.95-4.95l1.414 1.414l-4.95 4.95l4.95 4.95l-1.415 1.414l-4.95-4.95l-4.949 4.95l-1.414-1.415l4.95-4.95l-4.95-4.95L7.05 5.638z"
-      }, null, -1)
-    ]))]))
-  }
-
-  const __unplugin_components_2$2 = { name: 'ri-close-line', render: render$v };
-  /* vite-plugin-components disabled */
-
   const _hoisted_1$2j = {
     viewBox: "0 0 24 24",
     width: "1.2em",
@@ -51,12 +33,12 @@
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2j, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
-        d: "M18 3v2h-1v6l2 3v2h-6v7h-2v-7H5v-2l2-3V5H6V3zM9 5v6.606L7.404 14h9.192L15 11.606V5z"
+        d: "m12 10.587l4.95-4.95l1.414 1.414l-4.95 4.95l4.95 4.95l-1.415 1.414l-4.95-4.95l-4.949 4.95l-1.414-1.415l4.95-4.95l-4.95-4.95L7.05 5.638z"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_12 = { name: 'ri-pushpin2-line', render: render$u };
+  const __unplugin_components_2$2 = { name: 'ri-close-line', render: render$u };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$2i = {
@@ -69,12 +51,12 @@
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2i, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
-        d: "M18 3v2h-1v6l2 3v2h-6v7h-2v-7H5v-2l2-3V5H6V3z"
+        d: "M18 3v2h-1v6l2 3v2h-6v7h-2v-7H5v-2l2-3V5H6V3zM9 5v6.606L7.404 14h9.192L15 11.606V5z"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_11 = { name: 'ri-pushpin2-fill', render: render$t };
+  const __unplugin_components_11 = { name: 'ri-pushpin2-line', render: render$t };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$2h = {
@@ -87,12 +69,12 @@
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2h, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
-        d: "m7.05 14.121l-2.12 2.122l2.828 2.828L19.071 7.757L16.243 4.93L14.12 7.05l1.415 1.414L14.12 9.88l-1.414-1.415l-1.414 1.415l1.414 1.414l-1.414 1.414l-1.414-1.414l-1.414 1.414l1.414 1.414l-1.414 1.415zm9.9-11.313l4.243 4.242a1 1 0 0 1 0 1.414L8.465 21.192a1 1 0 0 1-1.415 0L2.808 16.95a1 1 0 0 1 0-1.414L15.536 2.808a1 1 0 0 1 1.414 0m-2.83 15.555l1.415-1.414l2.242 2.243h1.414v-1.414l-2.242-2.243l1.414-1.414L21 16.756V21h-4.242zM5.636 9.878L2.808 7.05a1 1 0 0 1 0-1.415l2.828-2.828a1 1 0 0 1 1.414 0l2.83 2.828L8.464 7.05l-2.12-2.122l-1.415 1.415l2.121 2.12z"
+        d: "M18 3v2h-1v6l2 3v2h-6v7h-2v-7H5v-2l2-3V5H6V3z"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_10 = { name: 'ri-pencil-ruler2-line', render: render$s };
+  const __unplugin_components_10 = { name: 'ri-pushpin2-fill', render: render$s };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$2g = {
@@ -105,12 +87,12 @@
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2g, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
-        d: "M12 3c5.392 0 9.878 3.88 10.819 9c-.94 5.12-5.427 9-10.819 9s-9.878-3.88-10.818-9C2.122 6.88 6.608 3 12 3m0 16a9.005 9.005 0 0 0 8.778-7a9.005 9.005 0 0 0-17.555 0A9.005 9.005 0 0 0 12 19m0-2.5a4.5 4.5 0 1 1 0-9a4.5 4.5 0 0 1 0 9m0-2a2.5 2.5 0 1 0 0-5a2.5 2.5 0 0 0 0 5"
+        d: "m7.05 14.121l-2.12 2.122l2.828 2.828L19.071 7.757L16.243 4.93L14.12 7.05l1.415 1.414L14.12 9.88l-1.414-1.415l-1.414 1.415l1.414 1.414l-1.414 1.414l-1.414-1.414l-1.414 1.414l1.414 1.414l-1.414 1.415zm9.9-11.313l4.243 4.242a1 1 0 0 1 0 1.414L8.465 21.192a1 1 0 0 1-1.415 0L2.808 16.95a1 1 0 0 1 0-1.414L15.536 2.808a1 1 0 0 1 1.414 0m-2.83 15.555l1.415-1.414l2.242 2.243h1.414v-1.414l-2.242-2.243l1.414-1.414L21 16.756V21h-4.242zM5.636 9.878L2.808 7.05a1 1 0 0 1 0-1.415l2.828-2.828a1 1 0 0 1 1.414 0l2.83 2.828L8.464 7.05l-2.12-2.122l-1.415 1.415l2.121 2.12z"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_9 = { name: 'ri-eye-line', render: render$r };
+  const __unplugin_components_9 = { name: 'ri-pencil-ruler2-line', render: render$r };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$2f = {
@@ -123,12 +105,12 @@
     return (vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2f, [...(_cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "currentColor",
-        d: "M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1m1 2v14h14V5zm6 6V7h2v4h4v2h-4v4h-2v-4H7v-2z"
+        d: "M12 3c5.392 0 9.878 3.88 10.819 9c-.94 5.12-5.427 9-10.819 9s-9.878-3.88-10.818-9C2.122 6.88 6.608 3 12 3m0 16a9.005 9.005 0 0 0 8.778-7a9.005 9.005 0 0 0-17.555 0A9.005 9.005 0 0 0 12 19m0-2.5a4.5 4.5 0 1 1 0-9a4.5 4.5 0 0 1 0 9m0-2a2.5 2.5 0 1 0 0-5a2.5 2.5 0 0 0 0 5"
       }, null, -1)
     ]))]))
   }
 
-  const __unplugin_components_8 = { name: 'ri-add-box-line', render: render$q };
+  const __unplugin_components_8 = { name: 'ri-eye-line', render: render$q };
   /* vite-plugin-components disabled */
 
   const _hoisted_1$2e = {
@@ -6241,6 +6223,36 @@
 
   const XEUtils = /*@__PURE__*/getDefaultExportFromCjs(xeUtils);
 
+  // 图表配色模版(单一数据源):
+  // - 页面设置「图表配色模版」网格选择器用 CHART_PALETTES(带名称)
+  // - 单图表「色系配置」备选下拉用 paletteColorStrings(逗号拼接字符串,与主题 defaultColors 同格式)
+  const CHART_PALETTES = [
+    { key: 'app', name: '默认', colors: ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#39D895', '#ba55d3'] },
+    { key: 'classic', name: '经典', colors: ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'] },
+    { key: 'tech', name: '科技蓝', colors: ['#4992ff', '#7cffb2', '#fddd60', '#ff6e76', '#58d9f9', '#05c091', '#ff8a45', '#8d48e3', '#dd79ff'] },
+    { key: 'gbi', name: '缤纷', colors: ['#4a90f0', '#37cfc0', '#9b6cff', '#f5c15b', '#f56a6a', '#4a90f0', '#f89f8c', '#6cd06c', '#4b4bf0', '#ffd84d'] },
+    { key: 'colorui', name: '亮彩', colors: ['#f37b1d', '#39b54a', '#0081ff', '#6739b6', '#e54d42', '#8dc63f', '#1cbbb4', '#9c27b0', '#fbbd08', '#e03997'] },
+    { key: 'modi', name: '雅致', colors: ['#5b8a72', '#8a6d3b', '#b23a48', '#5e3a5e', '#3f7fd6', '#c9a84a', '#8e6fb0', '#5ec9c9', '#6cbf6c', '#f2a08e'] },
+    { key: 'aipage', name: '清朗', colors: ['#17a2a2', '#e94b6b', '#3f8cff', '#4caf50', '#f5a623', '#7b5cd6', '#e0563a'] },
+    { key: 'macarons', name: '马卡龙', colors: ['#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80', '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa'] },
+    { key: 'infographic', name: '信息图', colors: ['#c1232b', '#27727b', '#fcce10', '#e87c25', '#b5c334', '#fe8463', '#9bca63', '#fad860', '#f3a43b', '#60c0dd'] },
+    { key: 'vintage', name: '复古', colors: ['#d87c7c', '#919e8b', '#d7ab82', '#6e7074', '#61a0a8', '#efa18d', '#787464', '#cc7e63', '#724e58', '#4b565b'] },
+    { key: 'roma', name: '罗马', colors: ['#e01f54', '#001852', '#f5e8c8', '#b8d2c7', '#c6b38e', '#a4d8c2', '#f3d999', '#d3758f', '#dcc392', '#2e4783'] },
+    { key: 'westeros', name: '西境', colors: ['#516b91', '#59c4e6', '#edafda', '#93b7e3', '#a5e7f0', '#cbb0e3'] },
+    { key: 'walden', name: '瓦尔登', colors: ['#3fb1e3', '#6be6c1', '#626c91', '#a0a7e6', '#c4ebad', '#96dee8'] },
+    { key: 'wonderland', name: '仙境', colors: ['#4ea397', '#22c3aa', '#7bd9a5', '#d0648a', '#f58db2', '#f2b3c9'] },
+    { key: 'chalk', name: '粉笔', colors: ['#fc97af', '#87f7cf', '#f7f494', '#72ccff', '#f7c5a0', '#d4a4eb', '#d2f5a6', '#76f2f2'] },
+    { key: 'morandi', name: '莫兰迪', colors: ['#f5a3a3', '#f7c685', '#85aeea', '#6fd2c3', '#bba0e2', '#a8d5a2'] },
+    { key: 'sugar', name: '低饱和', colors: ['#b03b48', '#1b2b45', '#5b8a8f', '#9cbcae', '#7a9a8e', '#c48d3f', '#8a8f78', '#5e6b6b', '#3f4b4b'] },
+    { key: 'purple', name: '紫韵', colors: ['#9b8bba', '#e098c7', '#8fd3e8', '#71669e', '#cc70af', '#7cb4cc'] },
+    { key: 'dark', name: '暗夜', colors: ['#dd6b66', '#759aa0', '#e69d87', '#8dc1a9', '#ea7e53', '#eedd78', '#73a373', '#73b9bc', '#7289ab', '#91ca8c'] },
+    { key: 'warm', name: '暖色', colors: ['#c98a5e', '#8a5638', '#e8843c', '#e2543a', '#d24a4a', '#3fa89a', '#9e6cae', '#6f57a0', '#e0a860', '#c9b07e'] },
+    { key: 'cold', name: '冷色', colors: ['#57d6a0', '#3fc4c4', '#2f7f92', '#43b7a6', '#4aa590', '#4a7ac8', '#5b5cc8', '#3fc4d6', '#6ad6c6', '#4a95c8'] }
+  ];
+
+  // 与主题 chartStyle.defaultColors 同格式:每套用逗号拼接
+  const paletteColorStrings = CHART_PALETTES.map(p => p.colors.join(','));
+
   // import Vue from 'vue'
 
   // const themeModeConfig = {
@@ -6574,19 +6586,19 @@
   //       tabStyle: {
   //         type: 'underline', // underline 下划线, splitline 分割线,block 选中块, custom 自定义
   //         underlineStyle: {
-  //           textColor: '#1f6aff', // 选中文字颜色
+  //           textColor: '#303133', // 选中文字颜色
   //           lineColor: '#1f6aff', // 选中下划线颜色
   //           lineWidth: '2' // 选中下划线宽度
   //         },
   //         splitlineStyle: {
   //           lineWidth: '1', // 分割线宽度
   //           lineColor: '#d2d3d9', // 分割线颜色
-  //           textColor: '#1f6aff' // 选中文字颜色
+  //           textColor: '#303133' // 选中文字颜色
   //         },
   //         blockStyle: {
   //           radius: '4', // 圆角
   //           padding: '0', // 间距
-  //           textColor: '#1f6aff', // 选中文字颜色
+  //           textColor: '#303133', // 选中文字颜色
   //           backgroundColor: 'rgba(31,106,255,0.1)', // 选中背景颜色
   //           borderWidth: 0, // 边框
   //           borderColor: '#d2d3d9',
@@ -6803,19 +6815,19 @@
                 tabStyle: {
                   type: 'underline', // underline 下划线, splitline 分割线,block 选中块, custom 自定义
                   underlineStyle: {
-                    textColor: '#1f6aff', // 选中文字颜色
+                    textColor: '#303133', // 选中文字颜色
                     lineColor: '#1f6aff', // 选中下划线颜色
                     lineWidth: 2 // 选中下划线宽度
                   },
                   splitlineStyle: {
                     lineWidth: 1, // 分割线宽度
                     lineColor: '#d2d3d9', // 分割线颜色
-                    textColor: '#1f6aff' // 选中文字颜色
+                    textColor: '#303133' // 选中文字颜色
                   },
                   blockStyle: {
                     radius: 4, // 圆角
                     padding: 0, // 间距
-                    textColor: '#1f6aff', // 选中文字颜色
+                    textColor: '#303133', // 选中文字颜色
                     backgroundColor: 'rgba(31,106,255,0.1)', // 选中背景颜色
                     borderWidth: 0, // 边框
                     borderColor: '#d2d3d9',
@@ -6909,26 +6921,19 @@
             }
           }`,
               chartStyle: {
-                defaultColors: [
-                  '#409EFF,#67C23A,#E6A23C,#F56C6C,#39D895,#ba55d3',
-                  '#E6A23C,#F56C6C,#909399,#E6A23C,#409EFF,#67C23A',
-                  '#ff7f50,#87cefa,#da70d6,#32cd32,#6495ed,#ff69b4,#ba55d3,#cd5c5c,#ffa500,#40e0d0',
-                  '#F5A3A3,#F7C685,#85AEEA,#6FD2C3,#BBA0E2,#A8D5A2',
-                  '#516b91,#59c4e6,#edafda,#93b7e3,#a5e7f0,#cbb0e3',
-                  '#3fb1e3,#6be6c1,#626c91,#a0a7e6,#c4ebad,#96dee8'
-                ],
+                defaultColors: paletteColorStrings,
                 themeStyle: {
                   textColor: '#7A7A7A',
                   backgroundColor: '#fff',
                   borderColor: '#333',
                   fontSize: 12,
                   colorList: [
-                    '#00E4BF',
-                    '#FFC72F',
-                    '#008FFF',
-                    '#3ED848',
-                    '#C96765',
-                    '#D8E5FA'
+                    '#409EFF',
+                    '#67C23A',
+                    '#E6A23C',
+                    '#F56C6C',
+                    '#39D895',
+                    '#ba55d3'
                   ]
                 },
                 BKGaugeChart: {
@@ -7453,14 +7458,7 @@
             }
           }`,
               chartStyle: {
-                defaultColors: [
-                  '#409EFF,#67C23A,#E6A23C,#F56C6C,#39D895,#ba55d3',
-                  '#E6A23C,#F56C6C,#909399,#E6A23C,#409EFF,#67C23A',
-                  '#ff7f50,#87cefa,#da70d6,#32cd32,#6495ed,#ff69b4,#ba55d3,#cd5c5c,#ffa500,#40e0d0',
-                  '#F5A3A3,#F7C685,#85AEEA,#6FD2C3,#BBA0E2,#A8D5A2',
-                  '#516b91,#59c4e6,#edafda,#93b7e3,#a5e7f0,#cbb0e3',
-                  '#3fb1e3,#6be6c1,#626c91,#a0a7e6,#c4ebad,#96dee8'
-                ],
+                defaultColors: paletteColorStrings,
                 themeStyle: {
                   textColor: '#FFF',
                   backgroundColor: 'rgba(0, 54, 176, 0.5)',
@@ -7846,19 +7844,19 @@
                 tabStyle: {
                   type: 'underline', // underline 下划线, splitline 分割线,block 选中块, custom 自定义
                   underlineStyle: {
-                    textColor: '#1f6aff', // 选中文字颜色
+                    textColor: '#303133', // 选中文字颜色
                     lineColor: '#1f6aff', // 选中下划线颜色
                     lineWidth: 2 // 选中下划线宽度
                   },
                   splitlineStyle: {
                     lineWidth: 1, // 分割线宽度
                     lineColor: '#d2d3d9', // 分割线颜色
-                    textColor: '#1f6aff' // 选中文字颜色
+                    textColor: '#303133' // 选中文字颜色
                   },
                   blockStyle: {
                     radius: 4, // 圆角
                     padding: 0, // 间距
-                    textColor: '#1f6aff', // 选中文字颜色
+                    textColor: '#303133', // 选中文字颜色
                     backgroundColor: 'rgba(31,106,255,0.1)', // 选中背景颜色
                     borderWidth: 0, // 边框
                     borderColor: '#d2d3d9',
@@ -7952,26 +7950,19 @@
             }
           }`,
               chartStyle: {
-                defaultColors: [
-                  '#409EFF,#67C23A,#E6A23C,#F56C6C,#39D895,#ba55d3',
-                  '#E6A23C,#F56C6C,#909399,#E6A23C,#409EFF,#67C23A',
-                  '#ff7f50,#87cefa,#da70d6,#32cd32,#6495ed,#ff69b4,#ba55d3,#cd5c5c,#ffa500,#40e0d0',
-                  '#F5A3A3,#F7C685,#85AEEA,#6FD2C3,#BBA0E2,#A8D5A2',
-                  '#516b91,#59c4e6,#edafda,#93b7e3,#a5e7f0,#cbb0e3',
-                  '#3fb1e3,#6be6c1,#626c91,#a0a7e6,#c4ebad,#96dee8'
-                ],
+                defaultColors: paletteColorStrings,
                 themeStyle: {
                   textColor: '#7A7A7A',
                   backgroundColor: '#fff',
                   borderColor: '#333',
                   fontSize: 12,
                   colorList: [
-                    '#00E4BF',
-                    '#FFC72F',
-                    '#008FFF',
-                    '#3ED848',
-                    '#C96765',
-                    '#D8E5FA'
+                    '#409EFF',
+                    '#67C23A',
+                    '#E6A23C',
+                    '#F56C6C',
+                    '#39D895',
+                    '#ba55d3'
                   ]
                 },
                 BKGaugeChart: {
@@ -8496,14 +8487,7 @@
             }
           }`,
               chartStyle: {
-                defaultColors: [
-                  '#409EFF,#67C23A,#E6A23C,#F56C6C,#39D895,#ba55d3',
-                  '#E6A23C,#F56C6C,#909399,#E6A23C,#409EFF,#67C23A',
-                  '#ff7f50,#87cefa,#da70d6,#32cd32,#6495ed,#ff69b4,#ba55d3,#cd5c5c,#ffa500,#40e0d0',
-                  '#F5A3A3,#F7C685,#85AEEA,#6FD2C3,#BBA0E2,#A8D5A2',
-                  '#516b91,#59c4e6,#edafda,#93b7e3,#a5e7f0,#cbb0e3',
-                  '#3fb1e3,#6be6c1,#626c91,#a0a7e6,#c4ebad,#96dee8'
-                ],
+                defaultColors: paletteColorStrings,
                 themeStyle: {
                   textColor: '#FFF',
                   backgroundColor: 'rgba(0, 54, 176, 0.5)',
@@ -9418,7 +9402,8 @@
       }
       ]
     }],
-    ['smoothLineChart', { ..._lineBaseOption(), series: _lineSeries({ smooth: true }) }],
+    ['smoothLineChart', { ..._lineBaseOption(), series: _lineSeries({ smooth: 0.6, smoothMonotone: 'none' }) }],
+    ['markLineChart', { ..._lineBaseOption(), series: _lineSeries({ smooth: 0.6, smoothMonotone: 'none', symbol: 'circle', symbolSize: 8, lineStyle: { width: 3, color: null }, areaStyle: { opacity: 0.3 }, label: { show: true, position: 'top', color: '#4e5969', fontSize: 12, fontWeight: 'bold', formatter: '{c}' } }) }],
     ['areaChart', { ..._lineBaseOption(), series: _lineSeries({ areaStyle: {}, smooth: true }) }],
     ['stackAreaChart', { ..._lineBaseOption(), series: _lineSeries({ areaStyle: {}, stack: 'total', smooth: false }) }],
     ['stepLineChart', { ..._lineBaseOption(), series: _lineSeries({ step: 'end', showSymbol: true }) }],
@@ -10076,6 +10061,30 @@
         itemStyle: { borderRadius: 8, borderColor: '#fff', borderWidth: 2 },
         label: { show: true, position: 'outside', formatter: '{d}%' },
         labelLine: { show: true, length: 20, length2: 30, lineStyle: { width: 1 } }
+      }]
+    }], ['carouselPieChart', {
+      color: ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399', '#9B59B6'],
+      tooltip: { trigger: 'item' },
+      legend: { show: true, alignPosition: 'bottomCenter' },
+      series: [{
+        type: 'pie', center: [50, 50], radius: [38, 62], clockwise: true, avoidLabelOverlap: false, hoverOffset: 8,
+        itemStyle: { borderRadius: 4, borderColor: '#fff', borderWidth: 2 },
+        label: { show: false, position: 'center' },
+        emphasis: {
+          scale: true, scaleSize: 8,
+          label: { show: true, position: 'center', formatter: '{d}%\n{b}', fontSize: 16, fontWeight: 'bold', lineHeight: 22, color: '#303133' }
+        },
+        labelLine: { show: false }
+      }]
+    }], ['petalPieChart', {
+      color: ['#409EFF', '#67C23A', '#9B59B6', '#F5B041', '#F56C6C', '#5DADE2'],
+      tooltip: { trigger: 'item' },
+      legend: { show: true, alignPosition: 'bottomCenter' },
+      series: [{
+        type: 'pie', center: [50, 50], radius: [0, 62], clockwise: true, avoidLabelOverlap: true, hoverOffset: 12, padAngle: 4,
+        itemStyle: { borderRadius: 24, borderColor: '#fff', borderWidth: 4 },
+        label: { show: false },
+        labelLine: { show: false }
       }]
     }], ['posNegBarChart', {
       color: ['#3ED848', '#F56C6C'],
@@ -11260,226 +11269,261 @@
     default: calendarHeatmap
   }, Symbol.toStringTag, { value: 'Module' }));
 
-  const grid = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAU9JREFUSEvtlLFKxEAQhv/JwknAJqXiExgLwcrO6my1UA7EdzCIRbIXCOR2rxCJ7yCCaKGtVnZWgoXnExxaphGCB5vVhBSeXDjYcMWB28wuy3ww3wxDmNGhGXExp+AoihZHo9EDgOWGat5brVY7iqLPUkUYhq5S6vXnqgB8GcIXADDG2Focx4MxMBHdCCH2TcCc82ut9d5EMIAhET2ZgLXWmwBW6sAmzLGcOvA9Y+zYhK6UOgOwPdVxEASeZVmDXq9XTAs45wdFFEJcFrHb7bbzPHellEn1X+/4d/M45y9a60cp5VGRGATBXRGllDvV+5yItoQQ6/9gYxWnlmU9x3F8VTn1Ksdls8Iw7OR5viGEOJnqGMCt4ziHJuOWpukFgN2xcfN9f5WIBibAvzlaa7ff77+Vu8LzPNu27aLkpYbwjyzLOkmSZHO66BuWPzH9G+CdIybUVAs/AAAAAElFTkSuQmCC";
+  const carouselPie = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMjAiIGhlaWdodD0iMTgwIiB2aWV3Qm94PSIwIDAgMzIwIDE4MCI+CiAgPCEtLSDlnIbnjq/lkITmiYfljLoo55m95o+P6L655YiG6ZqUKSAtLT4KICA8ZyBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8IS0tIOmrmOS6ruaJh+WMuijlvZPliY3ova7mkq3pobkpIC0tPgogICAgPHBhdGggZD0iTTE2MCAyNiBBNjQgNjQgMCAwIDEgMjExLjggMTI3LjYgTDE5Mi40IDExMy41IEE0MCA0MCAwIDAgMCAxNjAgNTAgWiIgZmlsbD0iIzFDNUNFNiIvPgogICAgPHBhdGggZD0iTTIxMS44IDEyNy42IEE2NCA2NCAwIDAgMSAxMTMuMyAxMzMuOCBMMTMwLjggMTE3LjQgQTQwIDQwIDAgMCAwIDE5Mi40IDExMy41IFoiIGZpbGw9IiM2QUExRkYiLz4KICAgIDxwYXRoIGQ9Ik0xMTMuMyAxMzMuOCBBNjQgNjQgMCAwIDEgMTA4LjIgNTIuNCBMMTI3LjYgNjYuNSBBNDAgNDAgMCAwIDAgMTMwLjggMTE3LjQgWiIgZmlsbD0iI0E5QzlGRiIvPgogICAgPHBhdGggZD0iTTEwOC4yIDUyLjQgQTY0IDY0IDAgMCAxIDE2MCAyNiBMMTYwIDUwIEE0MCA0MCAwIDAgMCAxMjcuNiA2Ni41IFoiIGZpbGw9IiNDN0RCRkYiLz4KICA8L2c+CiAgPCEtLSDkuK3lv4PlvZPliY3pobnljaDmr5QgLS0+CiAgPHRleHQgeD0iMTYwIiB5PSI5NiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE3IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzFDNUNFNiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+MzUlPC90ZXh0Pgo8L3N2Zz4K";
 
   const __vite_glob_0_13 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+    __proto__: null,
+    default: carouselPie
+  }, Symbol.toStringTag, { value: 'Module' }));
+
+  const grid = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAU9JREFUSEvtlLFKxEAQhv/JwknAJqXiExgLwcrO6my1UA7EdzCIRbIXCOR2rxCJ7yCCaKGtVnZWgoXnExxaphGCB5vVhBSeXDjYcMWB28wuy3ww3wxDmNGhGXExp+AoihZHo9EDgOWGat5brVY7iqLPUkUYhq5S6vXnqgB8GcIXADDG2Focx4MxMBHdCCH2TcCc82ut9d5EMIAhET2ZgLXWmwBW6sAmzLGcOvA9Y+zYhK6UOgOwPdVxEASeZVmDXq9XTAs45wdFFEJcFrHb7bbzPHellEn1X+/4d/M45y9a60cp5VGRGATBXRGllDvV+5yItoQQ6/9gYxWnlmU9x3F8VTn1Ksdls8Iw7OR5viGEOJnqGMCt4ziHJuOWpukFgN2xcfN9f5WIBibAvzlaa7ff77+Vu8LzPNu27aLkpYbwjyzLOkmSZHO66BuWPzH9G+CdIybUVAs/AAAAAElFTkSuQmCC";
+
+  const __vite_glob_0_14 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: grid
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const guage = "data:image/png;base64,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kAgkDgGz70DXxClmeEmSwgPEMLOI3ftBFIps9vKDanRBBBKVANoAzb4D5AHG84vHOoCYwG9y6Dazl28SkUREIGEImH0HgothJExpawuSFB4g5oKa7vvglM2XWk+0l07lIQJ1CaCdz1U3LOTepAcxRCsOL5PCAOqcmfZ2y22tr3ZSXFxsw4dFwR+Lw/dNWU4yAuJzKpYMs/B5Dc6TjoAoYQ2gqWGIACIugzD307Scdsm6AaxUO5/CYFOs6iRJWAQVJzGflG1PiI3Q4/LtUqZDCSx87rkLdZd68KzBY1JBaQV+qJn07oflq6B3Z6hu6LXD4fDU1PgXyQ4N9l8jLXxFEvMwNQyJU2RzA/jjSZL7DYuFnZMxKaGXCLeIgdRaKYHcKVPEeL6YP6MeHEZFQgcJGUAjOPEQ7vCe2u/QzkQcze5V2x+Zx1KwkjgdRCB5CXTp0qXm2LFjLxoQMDSOBvoUTASIABEgAkSACBABIkAEiAARIAJEgAgQASJABIgAESACRIAIEAEiQASIABEgAkSACBABIkAEiAARIAJEgAgQASJABIgAESACRIAIEAEiQASIABEgAkSACBABIkAEiAARIAJEgAgQASJABIgAESACRIAIEAEiQASIABEgAkSACBABIkAEiAARIAJEgAgQASJABIgAESACRIAIEAEiQASIABEgAkSACBABIkAEiAARIAJEgAgQASJABIgAESACRIAIEAEiQASIABEgAkSACBABIkAEiAARIAJEgAgQASJABIgAESACRIAIEAEiQASIABEgAkSACBABIkAEiAARIAJEgAgQASJABIgAESACRIAIEAEiQASIABEgAkSACBABIkAEiAARIAJEgAgQgaYl8P8kBrSlN3LVWQAAAABJRU5ErkJggg==";
 
-  const __vite_glob_0_14 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_15 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: guage
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const html = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAC0CAYAAADl5PURAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAABQKADAAQAAAABAAAAtAAAAAAUtwLMAAAy1ElEQVR4Ae2dB3wUZfrH553Z9FCkRhQFpCRwCkII9nYqJIgKnogIf/Q8UkBUFEnAwnJKtWAjjfNOBYGTO0CRgHpesN2RhOopCUURgVBOQoDU3Z15/793ksltNpvKZnYTnuEzzMw777zlOztPnrc9jyTRRgSIABEgAkSACBABIkAEiAARIAJEgAgQASJABIgAESACRIAIEAEiQASIABEgAkSACBABIkAEiAARIAJEgAgQASJABIgAEWhhBJi3yrty5coRnPOChx56KLs5y7B72rRLNbvdYuQx6LbbDrOxY1Xjmo5EgAhcuASqBINZCD788MPONpvtDVVVH2SMJSLfZhWAZbayr5BHT6N+O7/8sgfODxnXdCQCRODCJWCaAFy1alUkhF4ChN+D0PyCTEXO2H4m84dFnm1k+bipeVNmRIAI+CwB0wQghN+nEHwdoPV9jX0Xzqdh52aQQTu/KCp52b/MyIvyIAJEoOUQkE0s6npFUaLR53czBOABE/OlrIgAESACbgmYJgAnTJjw6Pjx4zdD+Jmi9bmtLQUSASJABJwImCYAnfKkUyJABIiATxAgAegTr4EKQQSIgDcIkAD0BnXKkwgQAZ8gQALQJ14DFYIIEAFvECAB6A3qlCcRIAI+QYAEoE+8BioEESAC3iBAAtAb1ClPIkAEfIIACUCfeA1UCCJABLxBgASgN6hTnkSACPgEARKAPvEaqBBEgAh4g4BpxhCcK4f1wG/iWuy0EQEiQAS8RoA0QK+hp4yJABHwNgGvaIBmVxrWF67Mio89IfIN9AsYMvCtt46YXQbKjwgQAd8j0OoFIJPlFyVNa2ugDwgKOmOc05EIEAEiQASIABEgAkSACBABIkAEiAARIAJEgAgQASJABIgAEWi9BEz1CwyXmIqmaX0dDscAWZYLAgMDvx8zZsxJX8RrtXL5x5ATQcufCSv2xfJRmYgAETh/AqYJwBUrVtyF4v4JjuC6GsWGfxAb9rf79euXFBkZaTfCvXmMfnN/gHTUvoRL7BGJSws3L46Y683yUN5EgAg0HwFTJkLDJ/DVEHwbUI1DEHjCGfpdOIqVIKegET6Vl5c3r/mq2MiUj6gz4KwzAcLv34osfdLIpyk6ESACLYiAKRogBOAw+AW+C0vg5kDwaQYfaIVDIRizcW0PCAgIHTt2rM24561jdOKeryXOrg0IDuy03tqz0FvloHyJABFofgKmCMC6qrF8+fJduD8QgnEAXGfuqSuuGfdGzMz9CZ47Szct6j/AjPwoDyJABLxHwJQmcD3VE6s0yv39/Q/WE8+c20yC42LmE/2R5lSYciECFy4BrwrA1atX/wboe0L7+xeav6UX7mugmhMBIuANAl4TgJmZmYGYDpNcWel13qi8a57oj0Trl7dHOE19cYVD10SgFRLwigDEfMBLjh49mgmBcyOY/h2DI2/7AtuYWQcGwXJMeybxHF8oD5WBCBCB5iVgugBcuXLlHeXl5Tsg/K7BZOjXMPr7AJrAkDve3UYk7RnNuSMTZdmn+AUs9W5pKHciQATMIGCqOSxMe5mFeX/zIGROY78Pmt9aMyrZkDxkjYVrEm+HAZCMThb5cEOeoThEgAi0bAKmaYCY7vIMtL75wLUVI75X+ZLwE68wY3HEAiazOEniD54sK0tq2a+VSk8EiEBDCJgiADHaG4HCvAitb1fnzp3vwIjv0YYUzuw4XQMD38csmHKsBLnW7LwpPyJABMwnYIoAtNvtk1G1APT5zR0+fLjPjrC+a+1Zxpl0DMvgwsx/FZQjESACZhMwqw9QaICwTK9NRz/go7VU8lusBFlYyz1TgyEEvT4oY2qFKTMicIESMEUAoul7Gfr/JOw31cG5vI57pt4SS0FMzZAyIwJEwCsE6EN3wT4iMRdrk/kVbYZEtF8zlqkut+mSCBCBVkTAlD7AFsZrJxrAocU79k7WbQO2sMJTcYkAEWg4ARKALqxkS4BVkthB9FemSEcdwnYhbUSACLRSAiQAXV5sxrxeh8KCA/szpsRYFE4GUV340CURIAJEgAgQASJABIgAESACRIAIEAEiQASIQIsjQNNgWtwr870Cc6tV3nHyZK9ASTo+IDm5qKElPDx9etCxkqJn/JnyzqDUVJ9cHtnQulC8lknAlInQBhqsArkUy+EiMCG6I46/hIaG7ho1alSJcb+lHe9P/LFdqZ/UxU+1FWiyX7DKWGC37r1+To9rvEl9T6a1LTG2nVLIutgslgIYeA32U9VAdTD/OTIuvVZT/z9Mn96hpLR4/NDU9Gq2GfGumDR3rts/lMxq1R1cbS/Nb6OqfH+xIo/bHR+fWdt7vCos7FfjGRHneGnxNCy5mWuT+fe4XJuVEDsJo3IX1fa8CEeGRcNS0v/kGicnIaGXRdMUuU2bfO3cuW52RTkXlZx83DUeXRMBZwKmCEB8RDKE32ZkfDu8w+kfE6aZSGfOnDmB8CewBO6vzoVqKedFzH4ft2nvOBibJam2GJT7xvxf9l2KY6O1GU+mxc/w+2wSf4ep9llYfxMDV3s3BuxUai1XTvzk+4pKipZKjAn/LNUEYE5CXDre3x/cvZOsqXHXDVua9u+qexrjZVzNx7VSFeZ0sr0wvxsuj4mgnU8+2d5WVpKENTcZUclpulk0rMB5AgKuD5YMhSJKGXZXgR2MMgqhVkMAcq5uQZ07W4qKRjok7QumcRFHrEGnjQjUSsAUAbhlyxYZy+GGoBQvYs+G9tcBH5VwlD4GO2TgikMQgltx3qI2WeOFYqkIY1IBNJkCsYKY+bU53ZRKeDItLsuFkqqhXKwAnAtEeRxhWrVy/TBlSmix5piIMidonF9ZWeaaflkUtpo5dA1NVO8F1PU7nKwX8WU//nPlc/oB2qYmy+x3KsfrlrReyPsVlOEFLslCw5M6tg+rKoO9vHQmggJlZpkm7h20WgN7Wq2Dtz0Re5laJh2SJTluaFra++Ke2CoF5iGc/ksPcP2PS4Ww5GNRZblAUlXIUKkqL9eodE0EDAKmCMBbbrlFhSXo3rAB6PyjhInA5etQkHuxP4S9xQlAycJOSw7oWBKOkgQjr9y2wdqtaU16D6YlS/y0EMww8Hoa6rYomy3Sml6tXEVcfQRS4k0IjRLEeRKiey4q4oe41baopWlfIEDsUlZ8LOJJ26PS0t8Q1znxsdMR1sv/rPJCqeSQuCJpQ5PTdeGYEx9/NZdQCsa/GpaS+qWIb2w74uL62zl/UmbSnKEpKT9tS4gd+d9j+e9Co7xbdljyVQk6K1Q4I744QlucivK29ZPkec7hTuen0VhX/GBsV6iNsGfh/FtzikanROB/BEyZCA0tgLsIP6MEq8QJ7rczAlrSEZpNxUcmM6Flib3JH50n09Iki14OGHhFH6CundYol8y1fGhrz8pBUu+otGVvQHjo/XmN4Q8J1QeCpocSGAgZCo0QGmB9z/9gtfrbGV+Jcu2K7Nrt1f3TpgWonL+O9ddHlKv4NoUx/TepMRZgpCUGS5DPE1ArPxmclrbbCHc+cgaBh7oGh4ToGi+04Bp1do5P50RAEDBFA6wNtRB8aCbhD3vLXHERwNXDZUx+3aJa9muS7TM0Ok8ZdY1OyruNa/xlaECHrwmKGGO1sirhMCIxbwIqPR0f9EebFkX8UTxTV1rifnRi7gwInCTGWfymxeF/E2G1bfBtdxia3euyhe9XVeUzmWlV5TKeGZq67O/G+Xkc/aD9lpbKxbrQ4ugDrC+tkuP5T6LuA/FX7+/bjh19HYK3L566TJEtQ4fEpdgxmOGvp6HpLQO9rw+DJY/iZ9JZlqU3RNNd3O9/yy2lbOxYoejqG5S/NVD7gsMXLz4HrXSJRZLJsZUBh461EvCaAISV6CtgKPU5lOwkBKEYIGlx27oFEUKwTK8s+C84fmpUYtPC8H/CssxZaCX3bC3Jm4jw98S9e60H25eXlr2GD1/2UwLSjPh1pVUZ5yYIjo54TlirrlMADlu6tNZyGfl54gityx8CucSvWJZVNHdFE7jedDkT/YGZ4OKAoO6NP37DIQyfG5KS8p14FpI0tCIRPiJ7ypQwMZIL4TdY3MO42edFleMiOzIzb0LQ1yJcbFGpqR9UnEnSsNT0p4xzOhKBugiYJgDhCjPUZrO9hh98MAp0OYTfMAi+ZSEhIc+OHj36bF2FbKn3LH7+sQ677Tu0D+eNsuavEf2DZWVl6GvjnTFM8NDH83udaGjdAoP8/lBWpt4aGnjRxoY+44l46OeLwzt7U6SFoz+E1fTsuMnTILzyodNmib42e5CmSBg+EU3gbU/HdtJKLRYMRHTS82dyRyHIxLkQZhjYyMBpxra0WD91J/83tLatUbfdvlBKTdejq7IWUilGFUm1T0DgK5LCU5imVPyR5NoDaDOM0Qc79CfoPyLQdAKmCUA4QQ/EB/QwhJ4FR9FnVIJjt5KSkmE4r9Kcml4V33vyk5eu2B8zM/ePGIyY7ygpfHrk7D3rMF9uCj76jzIWRaxsTInXWXufRHwvTBeSszEgMUeUFaO8idDGvsc73IgBjHOoVwyawPmKKok/ahL67VSpSPuWS/a+RluYqxqa2tDpGHMgStUgi7ZTQtOf9Qm0+A+q1pR1SF3Es+geyIaW+DBOX4lKXiaas3qTNjsudi74bY9auvQHhNFGBM6LgGkCcPz48b+ipP6ZmZkWOEUPw0d0OwTg85gPuBnTYB7DNJhW6Ys3Kjj85aySvHGo+zOqQ4qGHnVWDg6KP6+3ZuLDQ1NTdyI7sYtR4Dj85cqKSk1fqF/HxY6DICxR7XJvCU1gGQMRmkWeIjukUEjLXphe8xok2XOyaPY6jermxMX9H5TFRFjcmYj7dowYXw/18rLIiy9ek3MccwV1CSjNhLDdgrj3QGv8SOS3PSHhRofmCMczk8U1bUTgfAnondfnm0hjnr/11lsdEHZHMCr8Ltxj3o5nyyAIF2/YsEHXIhqTVkuIi8EPByTDdDTb2kD4XYum77wMa8/jLaHs9ZaR8bbQ7UoZV8P1uLL0q5g2UyGw5C0iDBMAvhHXQ1OWfSyuxbI5jJUshYzD2If2bpmt7LDG1W/Qn7gIq0SgJbJ+eOhsVMqyL3Euwt/aPWNGiHjWwR1WCODCwJC2+uwBEUYbETgfAqYLQOfCwj3mQVyLaQ3BZ8+e7et8r1Wdcz4Jo7JYKSea/dKk2DRe1RRsyfUMtATci5l3qRBKugBsJwX8t776VC6FWwgh9xzGgR5SLGxIB//AdtAqL6t4lg9Fv+J/xLmiSC/gj2P38qKzc7FMbjw0w9swveWFga+84rOeBeurP933LQKmNYHrqHZbcS8oKCi/jjgt9tbImbljMM/t/7CyIRldn/nQel46/FOeGP2e02IrVVnwgW+/Lf6ASdnxk4UAPNDnrbcaNJiFUdp5lUlUO2RNndqXO2xDhXAUNyKT0zOz42Pfg7b4BAZcChG+c+itv02WUqoGz6s9TxdEoLEETBGA6OO7Bs3d3dD4qi21wuqQ+7A2OAL9gXvGjBkjOvlb1RZjPRimlZTha2Un/YMDni3v4ChlR7RH0ByeHTN737qM+X13NbTCViuXdzj29vn4pfC9DX3GvHgsHO3ZTY3JTzSFc06evApreG9jXLsVz/6KUd/jEHZC86tKy6L4zXGo9olg1gkCcIbzgElj8rsrce9A9EnerDDliw2L+tAASmPgteK4pghA8Pt9eXl5DJa+fQhhl4tr0dy5B8LvShzLECaWwrW6TSst+xN6vTqh6TtpvbVnoajgiFl7H8cUkY2aqr6LpvDQhlqOySrL+zMmVk/CqPLsjMURC8yCJfrfyktLezCH43I0R0PRJ3dHVvzkjZj/109hcqyDad1RrjBouJ83pEwY1IjhTPtD9rGjNyN+Bwi1IvyB+Ccm0fwDAymL8VvIiVyavkOkJdb/2ktLVkH4yYiHtXbS21g292tkSvrGhuTlHAcGEhLwLuK4rAxwDqfzC5uAKX2A+FH/E7sDqKfjIxLWRZ7DPgBhn2AfggGRBmtCLeV1RSflxmJkcyT6/r7ctKj/+0a5Ny/oh3lw7GPcG3jkYN6zRni9R6hKIg7m31Wtfqj3GQ9EKC86swTN0u81Sduoa2FcuhR1ao+JTF9iAOQ0mqYweCDls8G8zsnZRlEwWRqDQawPk+U/W5jy29Cwbh3R/3cPhN/N6B/thiWBfxRxMXewu62s+EtMeRmMuL9nCvsttExV1fhHmJs4RyyhM9Js2JHfgHz3blrQZ0/D4lOsC4EA+q/N2SDw5A8++KAbBF43Bbba2rZt+1NMTEy5Obm3/FzAj939/N4eG14K1/vdzKpR9tS43zKV9+YKyw1QWd7A1NSqrgr0/f0FQuthrCmeOTQl/eXshLi5KOeDomwQVgEQmELTPwLtTe/6wETpDUPTlj3tWvbsKXEPYL7gagjSLUjnNlw/Cm3vVfyROMsUaUzlPEAxDeYqlaufII/u+OHukxUWL/oJXdNzvR6ZdOgiVSs5hWUmCzcvjJjtep+uL1wCZjWB8Q1AVxAfQ8V+4RJvYs3BT3SPmSr8RFGdrcE4F33btNgrNJs+uv1vNkiCMQMh9LTvUEp9ra5+bTwAKSk2zhS9aWsEG0euaVNRv+OSbHlwW0Kc0JxTofl9HRwYfP+Vb7xRtVpGLJdDs/gqe1lxGhIbzVXWsN8vL74OeTFZkdcaedKRCBABInBeBLLj48cK+33nlQgezps5s40wnyXS4R9+qGDkN0Eslasr3e1TpvSu677zPRim+H30zD2N7jd0ToPOiQARIAJEgAgQASJABIgAESACRIAIEAEiQASIABEgAkSACBABIkAEiECLIWDaPEB3RGAk9TKsBpHHjRv3S+U0GXfRfDbMk758RSVHJu3rxSyKclG7kPzTZ4q7wbTUuaZajhHzBnclJFxeG7xBKSmHKqfWVIuyzRobzI/LUZizFKC007ZGLko/Uy2C04UYsd2xZUtfrGoZACs3BZiT8r3zPEGnqHRKBHySgCkrQdzVHJOih2N53CEYSj24Zs2aju7i+HqY8OXrsJXvK9WkyeV22wfiHH6BuzS13Krm2CIsSP96qnCYSEsrKRduRJu0ZT/2WAcbVw/Wtm+fGxfkmnBO3OSF2jGpEOapMiWubtbOSAXZ8XGvC2HqGjcrPv6u7C8+P4p1unuwSmSNg6tflMNHCtJ4tb4pLK5p0TUR8BaBhk0k9XDpMjIyAk6dOvW2h5M1PTlP+vIVhYdGVogpwxYs/SrA5GCEVPfl25gK+jscHeBcUqS5E5acM2s8e3Glc43KG0LQaVx7ArOZv8ZfxWQuKYGwXPOMhLCcKfHC0+QzRhpizh6E5Aas3MjGsrjXcPwBTizvxOqN+2El+ilph/CHKc004tORCPgqAa8IQAg/8XH0xsdZCu2ihibiq7BqlMuDvnwr0tb9+Crw7w2XjrCjWuFvuEa2DQmAh/KOwosQVlVsxPKz5+t6Rqy7lTTHNKy+yA2V/WIGJCfDQAEMNT722JfQbHfiHU3F2tsXDXNXTNH8sbL7paFhl8yptO8nom/MnjJ5BUQfhKL0JNxfPjfAahUymDYi4LMETG8Co9+vJ2jMhvATM/N1IwhoBleslfJZTO4L5klfviIHQIDgkwosbW0Feo6y7nBdP23sf3A10EE8A9/Ap+p7lmmO30PIweskSzaEn3hG2PtD41cYbggqtNnuN9KBtZYs+BJ+3kn46bf0NbuM7cYaYL/yY8cavFLDSJeORMBsAqZrgPAM9yaEH4d9wGnoA1xhdoU9mV9dvnzhx/dNLIG9HoMDf8xYFK77tHDOG0uznodDoXtliSdlLO6vm5KCT/A1EDbBHyeGn4tJzF0Cy8i6IyDx3OhZuR3LVN2L2onQIRG3rBlbj1UYpnUUEhWeiiqEqXPmLudoto7Sg5iS4XJLNKE/g3CcCDP2Yj3tO673a1xz3hbPlHcOCj5Y4x4FEAEfI2CqAIQB1Ecw6nsXGDwrzOHDPqCP4Whccery5Qvhlg3pMw0y6FGkWk0ACpP4h3/Mexx9Z/5KUPtvjVzhS/gD4xxe454yzsXRwfjlSKsPhFoPx8689giqU7OD8NU1QPTptYUVlSE8QM2PfD39mHOaxjls+8EMFVcjk5MPSikpRnDFkWk/6Sdc6lr9Rs0r9A3+Bn2DPZF3ZvclS3QLMDVjUQgR8B0CpjWBMeo7CMIvGVXfFhER8bLvIGiekoQFBfwNfWGFaNgOF+aYnHM58nPecAicTtD2Vgpfwc73ajvfML//DjRnh8t+8nWVgre2qBXhjOkj67CC/BY8qW1TS3l+VtzkszA0sAD9eW2Nh4VlZpSlCwYzTgvN3Ag3jorkJ5rl0ASlLkaYu+NBqzVQk/T3C9umbJ27OBRGBHyNgCkCcN26de3RjPq7aBrJsvxAZGSkGFVs1du71p5lEAQroA35c6n4PufKahqfKK7hPnyZc3h955sWRnyWMS98W33x9Psyy4EAniPJ8tMYVX4eEmw5duGTOanAXvYpBJ+u/e88dUoISgW72/l+mJZ4Tk+PC0Om7rdd8fGXnDx+NBPa6Y14x3+PSk5t8SP87mtKoa2NQLM3gfHBMWh/y3HsBeE3FtafK5pUrY2km/pwmS2TNP4YEAgjoTCPL0li8vQ5yXY3TndsmB+xQ4Q1xxaVnLYB6Yq9atvx2GNJdoftW2ie12w7kR+HG0s7WyxF+fp8GSmkKqLTiUNVDcFXZQjV6bYEE/d3lEvaCgi/Lvhr+lrkbbfPdKdJOj9D50TAVwg0uwYI4Tcbwk/0+62HJegdq1evvsLY8aEEChAYsewpwjBCXGVM01cAnU85Ns8P/w51FAMZt4yZvedikZaYPA0BFAgryo3S/s6nHMazg99+Ox9TXZ4V13gn14qj6KtD8/cMAir6DEWg02aMJuO5Gl77suMmz8JcwU/xLKzby/cJa89NdVrklCWdEgHTCDS7AERNxlfW5l673X7AecdHOFjcwzG7MlwIyta2LUP95DJVHisqhnPR/C3mgcpKb1RUkaU8vRySpAvkyjIcQ+efv2jK1igT51foYYwdcb6XkxD7DJ6Zj97BrQFMuQoa51rn+3ROBFoCgWZvAgPCYjR93WoXEAaPY++BOC8gThG0jZ0tAVpjyujXga22FfDXoCk9OCrxx3V2brsZWuG7m6x9zjYmHU/FVbUKJ+YY+c11SvMLnIfbJU38AUpzCkfLlseIa/hlqxJwsMYcgWV7L6KPcVdAm7Z3kKNyZ2J03pIINLsAnDBhwnu1AcE0mN/hXg80jVPGjx//a23xWnJ4xZy+PX/FUrFH7bLtaaiAaC02rfkrmtGaf1Cp4WKzLi5CmxuUmnrUOc53CQkXlXLHXD1MYZ8Y9xRZScdI8VTMB3wCI8SrjBUfO+LiBsIX5SgMnuwetjTt30Z8xJ2MegSgHnMbIvyEhzyuMXXz4vD65xEamdCRCJhAoNkFoAl18P0sZMsySXU8igGRBPSl/fDJgogqYdLQwt+ddKB3iWrLZaWl5ya+fLz78mfCiut61sa19VlxsSewvEO4rzwJVa5vGReCS+qMKS3L0GTdbDwvnA1lJUx+X9Kk/zttL98Ct5PL8Uw7+NIV8aH8KU8accURk2UixHwZrLSbDs9wYp6jm419C3eXCyucw5emod5rEIkEoBtSFOQ9AiQATWCfsaBvFlaG/AfN/SvhQLxJgx92TGBhaKPCG5rawCL/B4JuEqbcjKyKr3tekyYP7drtz1VhlSdRXS95JOd4vjDGIJbFvYbmLTJEM9nCfhe1NLWawMbyuMsgGIVsvEkc3W3Iu1yE85Jy+OPVz6qa0BXX9D8R8D4B/M5pa24CECgsJikvD8Li8tDg0G5rrN0LmpJn9Kz9nUMD2pWusXbRjRXUl0bW1KkdYQmmuyTZg4P8gn90djFZ27O6jb/MzAEOWT46bOnSOleb1JaGc3h0Yt4SiNIEv46ss+gOcL5H50TA2wRIAJrwBkYm5g5XOd8sM2lFxqL+E03I0meyiJ6ZmwON8cTmRRGtcYTfZzhTQZpGwIxpME0rWSt56mHrwUAMgLwies6wrGxhK6lWg6phtXILql0Cwf+XBj1AkYiAyQRIA2wm4DGJeWPRYXcbmr23oCesH6a+vLJpUUSVUdFmypaSJQJEoBEESANsBKzGRMXYQA/0fcVh9DMMqz7mDgsKT2zM8xSXCBABItCiCWC6SogYAGnRlaDCEwEiQASIABEgAkSACBABIlAHgZ3x8T2yp8SNOTx9ejVfN2LtNMJHGI/unjHDrfUd4z4dzSFg2kRoWIW5COt927mrFtYAn4GZLN3wprv7vhrmab/AjannyMQ9IzXOPkIf458xuBLbmGcbE1cYc/WTSty+N5FOeTfLsU2P9ykXPo1hDfp1WML+cPOi8BWNycOI25Q6YZrNbjw/QFIsF29a0Oe/VWl50MfytsTYdkoh62KzWAowrzLYT1UD1cH858i4dLuRn3G0Mz6Vq9qM46WlYgJ4lbVvrknzMCIuTKJt3jY1dnDZuTOfZ8fHJ0WlprqdGJ+TkNDLommK3KZNvnbuXDc77DJGJScfN/Kho2cImDYIAiH3R+ED2N2OfrJZnqmOual42i9wY0oPW4NYkcYV+A1p1neo8ZLZZRo/WNvOjvJhotycO6LxHkdBQDzRmHo4x21KnThmFwkOzumIc0/6WOZn+H02SdvHVPtkrtk/EOeWnXINC9nwhOcPN6KT0Om7a2hqapXwqygbTIYBkn7eWcqDCbLPOVfTsZRwrZiwXhHnf//j3hbk852jqGiYyA9e+17831068xQB0zRATAPpgA8E6+rZUuz6MimjEgj/yjhvSUdP+wX25brjg/0WIlc3pVWtnLKqayUhUsAK/EEIkRn/otp9L13gN+YxH8vwl1cIiSp+uwX4reqreBxhNX02F53IvwfTnjpjuWO1P+jC7UD2saMwwANnotgirenCDcI4NIu3Y6niAqY6juF6qrhXtXGpEMwtKnxES6qKPzC6x8Cq23TiGQKmCUAUtyN+QPySSy558tZbb634S+iZOngvFY/7BfZeVerLGWt7l2MVS1pt8dYsukKY1F9c233zwz3nYxme+06LBdiY13ka2p3oqrFVCrFq1YKGNxnTnwrCgoOr2Xo8cOqUnx6Rw9mz0zY0Jf3l7KlxWQFBbbY7BRunpzF/QPFj7LRoZ0PTb3FdREZFfPlopgAUNgHPthrhh8pU+AWG3RQZridVXTOo90d6/4dcqdelJdIWqyis1gqN4Xx+QJ5K53zK4PxsQ+vv/IzzOeojgwug171BEAlhJQsfyzaxovl8fCxLwlG9XfhYLmAOXoDMa7xn4REPzdbb4X/l1f86HKFZ8fE3GSWET+VAcY6//5cjfLgRLo4ckrWsqOgGhCN9ebfRz4em/WkYvpCDQ0IKzpyxoaNDrpGnczp03jQCZgrAjkbzoWlF9b2n6vIL7FzaygGCeWjHDCnanncFfAIfxteQE6Twx9fO7y+aP/o2avaewQ6VWfFZDNxaktcdFmSOoumzw49ZZm9Y1OeHymj1HhqTTvSsvOu5yt9Eoh/7y34fOLhtDhp70dBmXtq0uP/r9WZWGWHkrL03qqr2OjSV9XiuWn/VKGt+sKO0UFiPjkb9e4v6ozm42b8De6ahBhJGzswdA8Hz1NaS3EEjEnPLwOgbi0WZ6nAI3azm5kkfyyjrYTRHX5ctfL+qKp/JTKtmJAK/a5YdH5eCUkDGsRxYNx8GyVblj8WQ1niXsAqu6pbBa5YYIZr0AP7/UNyD8rcG/wWHL158Lis+dolFknNEOG2eJWCaAMSPpAOawPnCPSbObXCMfhC+gUs9Wx1zU6vLL7BRErEkDh3yf8ZPOhgf0Vf4UX8K7UR0oA8vkeTOOOoCMGZm3uN2VXsVIxv4otnnTJY+BqdwnI9ycMfw6Jl5EzYtDv+bkW5tx8amg17ZdvjyBuPdfG/j9vfwAfdFGf9bEV5bLjXDYfEa6XCkI+10vnv37J+62koLv4C6PAD3PkOc9RATg8QqGWhmt2Ct9CDdg57zQy7nI2bmzkEvmBXlghUc9imE7AnInNsg/LZASwpGmi5PSJInfSxXWsWZXpnJLzh+6pwhRmwnoQw3GGGBoaGZGLnta1zbGOunC0TGnsP7vRKDNr/zl+QI475x9Jflqj+GGB3+wAgflpr+lHFOR88SMEUAwtmRYrPZ2uGDFu4x9Q8E13zFihU5+PCSMAUm07PV8o3UhAXnUpXr0xygkYzctKjfJqNk91sPdyiSyvQ+oVGz9obbVfUVNNlOMYsyImN+311GPJjRGsE1/gk+mqWYdvN5ZV+bcbva8bzS4fxuvIvNoZHhN4kmumg6V1lMRS4QMUMghIUF76oN05oKNy7s+4+qADcndrV8cYXwY89iug60wIoNWtzbEIJTT5SVPoGQRUa463FU4v4B+APwPARyvsKV2zcu7psr4gjn8r/8mPceSvag6zP1XQsfy7BSPZwprGDdvPBq2lx9z7re/2H69A7FJcUvQ6iXoj763L9KK9n7jbg5CZN7wyCGJHO2E+/xMhF+dVpa1X0jHh3NJ9CsUyicquOPj2sB9ln4aMRfM1hHkXZDGEZhesw/IQhbpamkUlV6HnVsyyR5gbPwE1yETUDDL4hD1Z5DEPq7Zauz8BPxMhaGb5ZkaQU+9C7nWPlDIqy27XzSwffZ3iLLc43+Sdf+R9QDHfzaGudd5ap4j7Vuwoo1mn0TobWdDO0ausQ5Iuat6AMFuD/GOdz1XJXsSWKaC9ZTv2gIPxEnPY7ZA4MDp0Ar1P+IuD5X33WjfCzXkRiE3/N4Nx1h8UY3dMGZEHXVN02SL9dDGPsFAxtiKkSNONWfoCuzCJiiAVY2dZ91rRQE3yx8WPOxv4P9YghIo7vENWoLvWZRQneyML/ldVaASVcJFUsKDFjvLh6ae9Cy+CQ0T9EkrmM7j3TA/uiGBf1qTnOpzE7YMtS4vKVa7kyr07CrXXMMQrnR8mX7i08UJcQk6sqbngReNJJkKqp9RbU0XS4gLQYKhu7YCN8o6Cf9CQKyqrnp8nizX6Kr4hCc/r1p0aTPMFThNj9Z0/rjDm/v5/dLgb3cbRwK9A4BUwRgbVWDw6QFEIKPQPj1WbNmTS/EO1Bb3JYYjg8TZrAk28cLex1mtTby9M+7j4iXYe2pz6lzrauiSEdV6DlG88n1vnGNj6zp6XD+jZGO+yP7prFOjTCS2VvIBJT7emh617tNl0ticAzytzatiF8h2Gyc0+OEGB6qsXEJAyLe24IDQ94PbteupPDYse7uSiHqlpMQdy8YZAlnUxjQcBeNwrxEwKwmcK3Vww9E1zrKy8svrjVSC72BPr1ifPj+MXMPtKmrCoj3q4gnlta5i4c5uJ1EOITEYXf3jbDzSQciyOMDUihPRf+azN4MCvbvWtteu/CD8ISAE2zGLjmiTyUx6mocIVguMs69cRywZElBT6u1ViG8/bG4KPzGu8sSW+eN8lGedRPwqgYoioYffzh+IBJcY/6vfVR3mVvMXfzx34NPuCsv125AoTPqKLio+6Ulku5AaGONeJo2VA/T06tx1znAU+k4p9nkc1lhB1SHrgL2W2ftfbIpCeH38SN+Hx3OnSgZgueraalikKnEIbnVvJqSV3M8g0Ucuspn4XULwKz4yV9hHuDL8NZXNX2mOcpDaVYnYIoGuHbt2o6ZmZk1/oKj+TsNP24029jWVukXmDFMf8GmqYtHz8qttt5TjGIKc/nitsylVD0aZwuF8QFxbmxiDiH6yuLRDDwREBSwygh3d/RUOu7SbkqYFqb8C1rgIahxw2Nm7rnDNQ0hwITbTNdw52vU/eOKa+3F+63c37gnJkSXquw147qxR5H3vdaD7Rv7XGPiY3L01aj/wxio+aiuUV/4Ym6LfoIbMQ/wt41Jn+KePwFTNMCSkpJri4uLl0HgiblNeyDwQiH47sQ+EtfFFotl0vlXxfdSEFZRohP3jIeCG12qSf8ZkbjnHYwJHIAwu/zwT3mTLJLlbpT6h42LI9ZiWsha8Bij8eJdMUm5f0H4z/go+mGkNQEfEeYQyn+ozyG6p9LxFElhJWZEUt4z8If8V43xDMxRTMcoaRb0/gBoxldjlHwSL7UNR35u+z5FOUKCOrx+ruRUAoToLUUled9iEjV+Q8yRVZp7P24HoAkBTryHiNvQrbE+lhuarnM8vEuWnRD7BgauVMniP9P5nuv5WVXtIsLQDfqz6z26bl4CpmiAaN7qP3D8KJ7G/g6mvryBao3Avj4gIODKcePG7Wveanov9WFBEXdDgL2ALv5QCLTn8OG/i+M0NAx3MUX51SjZNUHh92Op1Qzca4sF8nOw/wUTKhKxIuOgIsnXZSwK11cIGPFrO3oqndrSb2z45oXha7CWdjgE/2FN0qbgj8F7+A2kIx2MasvvtgkKRjdB7ZtwAcokyzD80fgK/X2R4LYEZqVexRPFoVIAhCcvrv1p93d0H8v60t4G+1h2n1AdodviYxfgXd4IqZaMidTOv29YzOKKswUYVdO7SKAoSjQ3sA6mzXELzM3ZxGRoLBHqhXmAnVVVLezQocOPMTExF8ycAKER3P383h4OVQnKmN87F1owvmX32z3PHujuUO1dggM77m2oD2B3KXkqHXdpNyVM+DXGNLheiqKdvLh7vyNiLl9j0hHdA7Jc3LOjf9Ce+laP1JduY30s15fezri4PrrZKpmNhVbRBX/A3oZOl9UtOOTW7kuWVA0wZSXETZM07U0Ixj1gkY1020FQ3onrE0PDuvVjVivG+2kzi4BpAtCsClE+RMAbBAwByBR5HNe0JyH8wgIledjA1NRqgz/brLHB/Bh/VWPSdejfDMVfwTIhCDHR+53I5PRqgzzeqMeFlicJwAvtjVN9m4XAtqdjO2nF0tOyRVqpcr98TH7uNDQlZW+zZEaJEgEiQASIABEgAkSACBABIkAEiAARIAJEgAgQASJABIgAESACRIAIEIG6CHhlFFjMiVu1alV/TIiOwCTpH8PCwnLhK6TWBeV1VcBT9+5elNemoebZPZUnpUMEiIB3CZguAGESfwYE4GzsVWteMSn4NExjdfAmCixTywKMy7E6YVbG4vC/eLMslDcRIALmEDBlKZyoCgSevHz58reg9b2My0PYn4b2dyeEXyLOP8Pu1U2WlbehmJbAht2fYmbvgyFP2ogAEWjtBEwxhiAgrly5cgIOj2H/vHPnzqOHDx9urOH8XNz39paxoN9yLNwvwyz+D+EE+06UZ5e3y0T5EwEi0LwETNEARZ8fdmERozwkJGSCk/Br3to1MvUAxbJVPILSXtLIRyk6ESACLZCAKQIQ2l80BCDcIrIPxowZU21tpC8xs/sp+uJ8mCkwvW/UlzhQWYjAhULAlCYwhN+wSqBfCKswsAYTib5AmDhiRxH+DYyhnrhQgFM9iQAR8B0CpmiAqO7losoQeIXw/bHd4XBsFTYBIQj/huM+jAyP8wUkXHKUoJQwOyd5dUTaF1hQGYjAhUDAVAEIYSf8yO6GBeihfn5+/SEQZ+E6EOHvo5kc7m3gwk8vDG/uhwS8SZhc93Z5KH8iQASal4BZTWB9zh8E3n7M95vkVKVcmMkXgm8StMEZOP7B6Z5XTjEAkgQNcPnW0rwfYFD0zo/m9a7TE5tXCkmZEgEi4BECZmk5x0RpIQDfcy01LEQbXrB+43rPG9d+FnkXtMBDGAXpW84dVZO1vVEWypMIEIHmJWCKAISQO1JZjRDX6uCePt8OwjHU9Z43rh12bRVE9aUWWR6weX74d94oA+VJBIiAOQRMEYDo49smqoPjPa7VwoCIcI4kNuHT1qtb9Jv7A1CAq9EE/mrDgn55Xi0MZU4EiECzEzBFALZv3345anIK+whMgwkzaoXpMTL28eIaGuB6I9xbR1ZguQhey/wxC/Cgaxmik3JjR8zMe9Q1nK6JABFouQRMEYCjRo0qQVP3eQi5YEyDycLARxL2eEx/+QLorsP++UMPPSR8BvvkJpx3c42nYYYM3DDSRgSIQGshYIoAFLAg4FKg7T2EU38cF2AX19dCKL7asWPHUb4ANNBW6nYFCC8pv6GifHytL5STykAEiIBnCJgyDcYo6sSJEzHAIMEU4KoeYtCja9euebAD6DN+UEs564uVwOLfGaPM+pFJ1zPOyv06sI3VwumCCBCBFk3AVAFokHrwwQd/Ns595Xj37J+62tXyWFEehbOd1crF+Q2cSf8gg6nVqNAFEWjxBExrAvs6Kbta9hGa5OMxAPLRJ4vC1xnlxYoQC/r+SmQmkZFUAwodiQARaF0EYmbl3hU9c881ratWVBsiQASIABEgAkSACBABIkAEiAARIAJEgAgQASJABIgAESACFy4BtxN/PY0D8/66I02lrnQDAgJKfMlcvrAH+GPIiaDlz4QZzpvqKj7dIwJEoAUSMGUeIAwebAebznXxgT3Aj3G/hrGEup5pjnu6QYSj9iWwB/iIVCItRB5zmyMfSpMIEAHvEzBFAGLVRxqq6tbcFebeiWVmkYjztfdxoARH1BlckhJwlqnI0ic+USYqBBEgAs1CwJQmcG0lz8zMDDx69Og+CEH50ksv7Y1lcWW1xTUrPDpxz9fwi3ltQHBgp/XWnoVm5Uv5EAEiYD4BUzTA2qp15MiRKbgn+gcn+4LwE+WEC+NLGON7SfgJGrQRgdZNwGtL4WAOqy3QzkbTdy+0v3d9BjMTbuGY7h/YZ8pEBSECRKBZCHhNA4Tgm46mb0fU6mlfsgjTLJQpUSJABHySgFc0QNH3B/P4UyEET/j7+wsTWT6xQSCj9cvbozA09cUn3ggVggg0LwGvCED0/U1AtTpDAKaMHTvW1rxVbHjqMbMODMIIcHsm8ZyGP0UxiQARaKkEvCIAIfiexG4LCgpK8RVwI5L2jObckYly7VP8Apb6SrmoHESACDQfAdMFIAY/rkFTcwCq9JkvrfyQNRaOIeB2cIq0vZNFPtx8yCllIkAEfIWA6QIQFX9AVB6a1hpfgSDKkbE4YgGTWRwmwjx4sqwsyZfKRmUhAkSgeQiYKgDFIAP2+0XzNzg4WCx986mta2Dg+5gFUw4t8FqfKhgVhggQgWYhYKoAXL169SDU4hIIwezRo0f73CqLd609y+D74xi8IlX5Lm4W6pQoESACPkHAVAEIgwfDRK3hI1gYR/DZDUIQg8G0EQEi0NoJmCoAAVMXgDj6tAAUS0Fa+4un+hEBIoCxCIJQncCIxNxdGAi5os2QiPZrxjK1+l26IgJEgAgQASJABIgAESACRIAIEAEiQASIABEgAkSACBABIkAEiAARIAJEgAgQASJABIgAESACRIAIEAEiQASIABEgAkSACBABIkAEiAARIAJEgAgQAfMJ/D+hCnZNylGvZAAAAABJRU5ErkJggg==";
 
-  const __vite_glob_0_15 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_16 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: html
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const leftRight = "data:image/png;base64,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";
 
-  const __vite_glob_0_16 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_17 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: leftRight
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const lightPie = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAADOCAMAAAB4gyuEAAAC+lBMVEUAAABPvfgJn/8Ijf8Fh/8PhP8Kh/8PiP8Qgf8Khf9jn/cIkv4Mif8Fcv8Mjf8Kif8Mhf8IhP8Mif8Nh/9jrvQLiP8NiP8Kj/+L1v8Mi/93x/8MiP9jqvcImf8KiP8Kif9lrvZirPcMiP9ps/lmsfcLiv9ms/dotPlwxP1lt/llwfoMh/8LiP8Lif8Lh/8Ukv4Kh/9ntfp2uvsKiv8Jhv8Lh/8Kif8Kiv8MiP9ms/oKif8Kif8KiP8Jiv9ksPkKiP8Lif9mtflZnvgKiv9js/gLif9ns/gKiv8Lif9jsvhqtfgLiP8Lif9ptPkLiv8Pc/gNe/tmtPlmtPhmtPcPcvcKif8Lif8Liv8Kif9mtPlltPgLif9ntPpmsvgKkf8NfPtnsvcKif9fqfWq1v9ntPlnsvhotvlruPwPc/cOdfgRdfhpsvtms/d5wPsNfvxotPgKh/9ns/hXreoKh/+21fwPdvhntPlptfoKjf9ntPgOdvkMf/0OdPcMgf0KiP9ntPhls/haofrA4f6Ju/641/wvnv+Pwv5stv2jy/3B3v0xn//C4P+Guf6Xxf5/uP6Uwv4Nefqizf+gyf6ozv621/0ck/8OePkOefoOePkLg/9is/l/uf80oP9Fp/1JqfykzP+Uw/6Kvf7R6P8Pc/cmmP/O4/6TwP2bx/9esfglf/fE3v58u/16t/+o0v6Nvv6Qw/+/3P4mkv+r1P+CuP+Fuv8+pP1Bpf1qsvkYePh/t/1WnPkdeveMv/1UqPtdqvqdyv9NqP87m/2Gu/8cevcngPiFuv9SmvkRdfcWdvehy/84iviFuv+62f+82/5Hpv+s0P3b7P8pl/85ov85ov6Nvv9PovtUpfs0mP5Lpv8xmP+Ov/+Uwv9Aj/guhfiDuf8ziPghffdIqf1wq/qpz/8UdfdBkPmCtv0Udfc8o/0RdPeXxP8zn/8deveDuf8zh/hop/o4ifhDkvhKofpUn/pKlvmNv/8fe/ZgovpEkvgzh/g4ov8ziPgPcvYunf+ucVDlAAAA/HRSTlMABAUHCQ4dEhAMBQooBhUzGCAwFAgkQRoEOAcrDQxdOxoLJh8cNiYhCRUSPz1DLhAiEA5TG0poZkUvWmNfURdhWDwPcipPMktrLSR4Rz9Q8rFnOFX9b21WTVJPVUhFGKhcSBMKYUtCKPrk3zo0EZ9sZ18KfQ7XWUwgb9GY7I91ZEEXEXwt+lg1JB3yJXA+MSq9eVlMQDTLw7iDdkbirKFsRzkX9j8fFZ9/dTQaFxZnT0owGt3QwbdzaFlYQB6XjWREOiPZzMGkoJaTk5JxXDMzKirVz7F1ajQuJMS1ta+qoqGMiYd/emdcyces6MOzhmVgLYNMrJ2Rh2dn2rqkB8bIAAAiC0lEQVR42uzBsQ0AEBAAQL1drKQ3ghhEbxiLSOS3MIP+7hIAAAAAAAAA33K5Z9cZvY21Rusx6z635MRjz+5Ck4rDOI4/x3M86vHtqMftTF1NTVO3tmmzbLW1ar2sd0av9EZFK+yFKIxRKwKhbpbdRdFN3gSHpIh5YdjVVBp5azeGzqAXBtuIoEG0i/7nHKuFRXWr+1yI11+en0fxr2yJsbvBoQnUy5/U2mgpgJS2aZN+VHRiKHh3LGGDeX9CfngRDI0lkjT8AZ1MjIWCLz6QMK9CUkjTAX/VIWROwrw5bG9Dk4l2+GfticnQ2/kxl8kSk6m3RvhPxrepyYQM5pEzwco9Pr8/nC1OZeIjgnhmqpgdvv+8cvXBmVr/ODSOpTg5zMFGw8X4SAb1iozGjoPAFRuNoKKZkXgxHGVhDjmXGjNC7TKXUpwCfooMT40U30d88CusDHyR98WRqeEI/KTgUiUz1Ca6lEoQ8EM0K7b5FSaRSNRlEgTD+MrZKPxAJFIlGmoPlkhxavhuNBwvPjH9pp4axwmlUqlAlEqCIHAcdbzwpBgPj8J3ai6VwKDGOCZLJJSxzzKZx2ehAsqH6imkckTGv0iljY1KAkcR1e73mcwzFsrI0qQDaolsJh2AMtPjeHYUKmESjCAUCqnMoKEFhzUag0zWJpUKESWSk9n4exOUBdIzNfSdJpnmcBC5huPh2O83jtbbKG8zHK4nSZ1ON6gbJMkO1FGDGirQmtEZPgrHh10gwrl0zfw64dJ6ELEo39nyg7biAHFCIZdp6sl2o02lMpvNKpvNyFek0SHKG1FDXIK5UUIKRPo0B7WALpTkIIpmwj7UjqJYisUolp0TUSL04/OpWvVaRwPPodW3oo5GHVl/GDUUpizxhjNREMlLhRp4HCfTX0D08HPuNrAoH2UyMYzJhN78TIj6NcoNh3U2s76hpW5JYOvWrYFAXXMLqtgqNOyg+Yb8kk/mPsdA9KX6Z8yln4Locf4GsCxlYlwuq9VisVqtqCHL/hgwenzQOmOro2WJf33XgZ6enr0Hurbv86OKDQ69WdU+SNZrUEL+Cm/kH5fLP632GU8X2srnl8v6UD6GcVl8Pp/Hy7NYGRMllpCoCYVMQ9paHc1Hd189cuXqvXXLlp1fuXpB596u9f5Ac4OWb6jjE6Ihqz3ZXAwEbYVpqF7ql+MECG7lH6B8qJ7F6/F0d8eaYt3uYx6vhWEoVlywUmro0Jm1zZ0Ts6JTQ5d3Xrm2Z9PyVZ0HtvsDLQ3aVpVxsEMjQ5+FOH4/fx8ExPhLNVQp5fg0Bjw2nHuOsQxj8Xk97keL7PbFm+12e1MMFbzAsBifGm9EB2jUL/QHZ+faNXTn3LVN51d1Lt3nr2tp0JuN/BVKFUp8cS6MieufHq/SP08MBQ4EsVzYhFGM1eJ1uxfZNzudfb29fb3Oxfambq/FJaxYggLSpErb/GK2wqnQkYvoDnu6NqIp61VGkuaHjCvDuUcg4AoGqEKGrx9BcDv/gM9n9XlQPmdv35kN/f39Nzes6HPam9zHLC4xoMJAD6ocdaHZ39kVurJn2erOAxuXLERDbkcJ5QoCf5C/DYKPX6uwoLJQ7hfN32apC1bL2WN8vhU3T28bGDg4MHD99Jk+5+Im91oXQ2FCwHodCrhj9g+Gdm5Ztqqz62gdOkJ+x21oxpF8tFywUHUrpsbfgeDB6+cYw1xYe7Zp0ebevv41AydO7N9/6dObV4fW9K9w2rs9/AlSlRdY6dTExU2re7ZvbXbozWjHhm/cW2tMm2UU/looMO6XAqOUtkDXcoeWa7lTrgXKKJVLO+oKAapyKRctYxcKUWQh7sJmnLswZkwsyVQSk23RDBb3gwSiMVGnMSwxbpkx7IeZm1ETSTzn/TB8rW7RrX8+nh/szwLNwznnec5zXqAIb65fogjufe9L7SysbbmL1zfe4whAPRIlUllFX5mp22g2665ObW5uXril7auQSRPVsXxfLhBIZmDE/j+fgBdO1hWIirIjxEE0g36ekq9f3/JLa9SOwr01Du2eHUpf3wRhUrFELqtq0gJ9Q7q5mU2CKWDQgiWIBBIRiQtNKTr855PwbmNzSWsbFGFaXEhkmE+MZ+evH9JavHaP2kH443sPuv4cfI4gAdVDrqkqM43ahnRL9zf/xv0JLEGQEWAQfWBkSHRUxCD4mCfh8KFB0b62PHGoPzLI8xP+Stegx/d/UDsGn95W0/NvQ+kriFX2F0stmqoJk96sO/fVJgPflKlqpZ1KcDKwifBICYpTM8++ffDFvc89nsK3xgtEmfXJQdGgxmAJkzboOai+/Sm1QzB5+wGtv+vv+QqgfyflMk2T1qjvsi7NbDLxQ1kVyIg6wdeXww2ISUcdDhKntu3LL8xpPjtw8pXHSPLegZrC1uqIqDQchLxdknVaix/cnqR2BtZoA3Ni/Tosb+ok8M5VTe2jNvvYlU1n3AICpYnKWP5uTAN5PoFeGRDGJNdXF5WKSnJrmsfPNr7ywr9ReKa8oLQSGIw7EAkM1q6foM3MDhGS39fo+GD9BNhndZIk3qLSmkbN9oULLvzN6LGFi4FAyFcxzwIGQ/zTgsQpqR1tRfvyRQVAYt3AwX/h8KWR3PzK1CgchIG8XSfW6Whh7XdqB+BbegByHMc4Atg+iuWyvrIeg9n6w8ymCy72NGlqpUnqBMFu+P8enshgZEg4JKp7xMkReZBqtYoKc3OaR94+/M82PpIjasgTBwGDUIPnHVx6DH5LsR7qrQE4Pw/6IeyXxFdU9bYbunQXp1z5mzNqmyrAxigTSCLD5SKDYRhKx/lHQyqNwWp2G3RzQUv5wD+0+YX9NaKi+hSQkixQklff4NJjUE2xHffoNjrmEGzph6rMpB/SXXWl78IPhvYylUxarIglkRad6vvxyFUpJCPcPzotFDnM62hoFeW2jA+86EphY05+ZT3WIGhxjOMYPT5Y7wYfPOKTAbhx2Zcv7C+Ol1WVjUL/usrHzJzdZtROV8glpIO375p+cFjyDgyO9DqAt6U0rMPU7KLSwpzyuv17XRnMzW9IFYeGewX6xMg3yBjkP3pAsRqcFdqMrR6D/UNRLJWBfhiH/sHflXN2c3fPNEqIWkgXIH3ZhNOmHx7W8ThMFyLIsjgiu6G0JKf87Fsu7vDtXBEoSVoGMOh33sEhFnSF3W8WPvmFQpyahQGoSET/Avox5tK/M0tjOv2otklVG1/cD6E04zpH3nZ44IHdBy/sz2d5oagERUVAI0MVDrioycmc/IY89IOwF7/6Ovk2v3xCsRidj4iX7d94GQQ48bJc02cydrnOv68Wxob03T29Gsxi1LECX5f7MMITm5nHS4d2hkKMQwrri0oLWkbecuniQVFlxJ7okOe9eZMbicjg5KNOir24R//6Z08H8MEAyi3TEwabfc6Jvqm5a/YhQ/dEH9Tf+0nqYRJIu4JL3mgBiTExPJiINIWp2ZminPFGpzZ+bgCUJDnIHxjctTjLJU3AYh2Rr5Bq+mJ1NwzARDAwE9163fKUc/tadTZje+90Ra0UHAxR4MeAs/XYCJ97gLWJ3iNOrSzNbT6018nNHMktrU4OjfOChHX1HWTQd0VOsRW3HpITkuOoIFadGC9T9Zr09gUn/3x/eWzIZujpVVlq4SCiHMY0+gngcLAOoZcDn/cKBzmJqG4taTl72MlRn83dVy9OC88KTLc4PPC7PbxFsRTSFT5RkHlQ4ESJvAIH4NgFJ/OH46+9Z1pjiZfgUVPAeSx/zEdHQCHMwgPh0UEpHZmFNSNOlvDF8sKivCjw04E+H57CEuSvSCl24haZgAKHkq9WgAOc1hptup+c+bN2GbrL+lRykA9FLKYw1H8AdjLPJywYowZxfZGoZuQlJymuEVUmh+IYnHQIOTgFWVqCkyvDpABvCIbViVLYQNr1uiUX/sx6U9m0Bccffc/8b0Bvg2qSdQAOn/VYg0wGnztUsK8ekhmvYJ8PiZUZXmFnrvUNKUBfRz9fqIAGnp7QD52bYc6/BV2XwaRVWeKl5B4M9u+/gsMBgw1RQ1YGdnFrSY3THNw7Dl4GluJIb4mDT4T4G4qFEK4I8Z/TNwQJ/ViAE91DTg08szDWZWhv6oNrcCfw54vj738wyCWTMAsj1w6wM0eYWnwwt7QDMn6vYN6NRe7WR2EfHpJfO2f1vQQsQFTgrotM/7cE+tGjVcnkxYlKHH//d0lEd+1DQuuU+qLClkPMlPBQQSaEg3GR6VJHAGmGhxT78FsFfn1zXhBLW8DRrjFmA8+N2Q3d2iqUX8yvnmJjBQb9eN40g5klzY3MS1NLfjUsJLATz1/C76z5jWIdpEukTu5e56OF0TR123TMFeSna1020F+Z/P1OJV/wNPyRvAsZJF3cmlt+kLnSFWRCE4dnhcnukhJcYp+T+YRIyEd3+UL00NM9RicFmTlnNY9qqzTwGkZIto+nAzDo4x2ZAVpcnZ8zwhiD79aJ0AyGBPusXufip2FfpLAkIR7mtECYJIEjXLveKcO6aB0yTjRp5NC/wyQ9eBYG0c1EVIpqDjHW4jO5+dUpUILpi6dQnSTLFMtQ8RstIf2xSkgB+7R688IUo4FhALZD/CLF+uPspp4eOAfRzUTlZZaUn2HsxCMl++r3+IcESla5XHoisws/m8glc5YPMapcAym+7grTwUB+ijfgSczvnynxxEcg4KjxKWYpNjEzGmwTh2ZEps+ewClo+pliF5aJ+Z8/BncQqaWqzGg+N8VU4CFjT59GXrz1GvAZGeThO6Q9qUUl5Y2MKThekBkRFOflfWweS3CSZT3cuUx3MDyjhDtck8kpBbx/zm4zlank0iQFHuCeESjF6cEZaVH1pYN1LzKEuCY/W4zR6irJZJbZlav2ko45OstXJklqVdpus/U+Q0HGzEZwgHD/wBP6M59dkEF40B+U3FDSPMBY6MoL25JDwyN9Zm9yOTBTeik2gf64p08nqMFE900YmEvIhWs6fU8THOAUQswPnhkcfMOAL7mySwfHGSU4kJuZusffy3txMQB+Si+7huAdbBjO7FHSwb3tZt2XTAtjGwUFQQVG/tzCIC8MXnIlNxTW7GdsxC3Qw2khwZpZrMDOOxSLUEw+7e67AuzgKogRGBIyAwXYDgVY3B8LB2A3ACPWXT7BIdEgxLl1h7edTF0J6WHvVU9k8E4xxR5ozWQEzvOVZA022BkdfNXaRQqwUzgc4BYCcQx6xoR5haObZq7E+wdb86CHw+ZPeIAOm7UUe2DTkhF46e8Otm938NQCFiBYGEWswG03by4pwTTiBbdTmVdaiA4HL55GArU2ij2wyogLPCpEDXbu4C/H7MYenIAKtNDuQoCHTxh6wcqS5le2o+m6Qsj2M7KOz3sCgTIrxR7cUZAkRgmvKWVVWicNnrOau3tVcklnrDsJ5MLfJsI6kpItQhlh6nBQXJb0rifosIJFKuJ7h46yYA+Ot6CLvsLoYLvB1KSJT3RjByPgTXUgOJm81oK67R4+k1NaD0Mw+K6fB6oIe/50RHoNv37wGVyD5Zpek816waWD4RmlEgvQfQAh9sa/KykqbD64feFsEWVjpjUrxSF4jT2Z4PGPsQBf+zy2H0ZgmRFHoGsHKxIYb4jc4gXpHq7Mr2ncHoLjhW0paeGRN44jgR8fp9iC8+dJmv+mkLhA4xDjmLkMGowdrBx2ZwejF/RLfx5SrY7SwSPM20hRBLwXXLzkEUA+FVtAftecU18Ik+JlfRN6+1WmizYQDVbyd1NuBReGIPRwXmZB+V7Gg0FIZPy93jnlySV9wRZ8bEECPz+qSAQCTTbdV4wRCC5aVSuhc0B3AlMtWOfAS5dvG5mDOWilD6huoAxb2EPgjzdRiuevA4FwTdIzNOSq1WYsUzFctBt7eFd6ZHgaHEdqTm6rSE1+R1T0gYp5PyDw5o8UW/DjZdyEP/sA78FNo2brDCPJsrU3WeSTCjwkuRcwBIMzosUdpTn7t1PVZhHkCRnfze4CH3OZPQT+Rd21xbYcRvH/vxfrTNnWoquxzi41SqnbGrNpMTEmYXHpNsLsgm0YYiSuU92k5rLVPZiIRTqXkiASyfDixcwlbo/ePHv05He+/+jXEXH5k3znoX1a0pyd851zft/vO7/DnRQSTyeNBZpf3Nhwlq8hhGRljE3donIGs0MwMWlQyvjJ07kqAjyBWOfHR6IMdx6WRLHDLkrhp+mTbCDlV1V+iDrw7OLt1XXZeJfOZbCqVQTI/oyt0du53QWLHABkmANTxXHgAStLYVyHFLmrMchx18F7ffvcNbZ61BD1HTjSBFx62KKCPdEyvHHGTNBVpxzXowybD0ii2AGJRSDeJaGLKa08z4HRDT7MISBj8VCgaogMc+Dcgtnro4gWGsEhfQ6UxHKgrKEIBBhYwlE6Pt+rLC12FyECOTKWarOIHrPIkHEr8mZv4N7esEbwuF4rlAMPI4VlJYXrQMq6y7WBDVUeDHJebg5Rc5gbjmFuHhrB7xxooBQW5wy8gSIiDyQH1uBCibtSf7WpwedxZ+RXjBn4Dx3I0YyOcQ503ZBEsRudLAKJV1kITsJHjpO1urF2flE+QQn/xIETmQNPchSZsvFDBu24SA6sF8eBgS4qIj3XcQY2V5dwaODHneBkzbcDDBwo/0cHvmcO7ApIoljgAaVwzwPGayvhU5hGYdwIu9KVLuY/pfC7bnLgA3EceJNmYUtPC4htzSt9e2OKCG7k7KAk/Nci8q6NHPj4piSKdRylCIz4x2awIhJ14OedDb5iN1iB6jsQfSAa6R+3MbU3qY052iGJYpcuUREJh9DGFFaX8I302UqAMdm2ejwKUd+B+r5Gek9sI508+lwrGmn6VaJYSwcVkWCkHrNwcSk/yt2rLFlZWIRn6f9gEtEpk8jM2FEOs/DowBFyYEeLJIp1BuglR2cPY2aV7uXAhKsMkAYaw9OyVAUThk2esaA/mNCdQWBCoFMSxSzd+JCtPd799sLixtVXeTjLBzwwg4iV/B+oCWeV8XDW1oJ5gLMuxpEDb1gkYaxtLbw4sCfHVjS/trFh50GOmbUaDkQZNltUj0AFUF34HaA64kV3XLxW42qTxLH226wMt4Ba5KlavZiD9OFAlOF89Ydh2Uh99ATHVB7S37CMIP1nbU5A+rfbJXGs9Sgi0BzuxZ1I88qSTS/5S6VSODBT/T6Guhi6VFrB99Enp83CpRIVYaN8tFUSx9iPHXgokmOrqcMjV+5ak/qY5mw4cIvKh6BRudYEIP3dtWagBkWY/qni2LY2cuCWnvouemZd2e9iva6mK8fLQdIqXqxnrVnOX6xvZBfr3Sbqo9u2SQIZVRHZGmnJtIPaUXmPp3aUMG6RV2U8Bni0cwpWhq4YBWoHz29Lm/As4BwpWA3BIdhCDuztzYcDy3ly0avF26sAJ+RUqIzH0L06ukCQizAJc9fCIBedazWgCLeIdARKEv1c2XI7km+vqQM7i6O3nV1dDkTQxr0QUZvedrkfvS2QrU/QaFrFmUPI1rbTITimB5AqdnXwBMsL26sITqhIVTWFMcc5GRQDgiXPLaIa0m2K12noUBHK2rdhmLOG/GilPTEU31cNgBOKUIZVHeaMWj2j+C6Kofjuoac2ng5yoEukLpCslw5BNDL5IJlXlVS+iuYwUhhwQj3HTVCRZL58GnervoGRzO/PiUvQao72SmLZ9RANc+ZIVwYBMg1cDr+u8rB3wir2MbKs0//omcN0cLNetA02QPSmQxwkIZrDbBix4bFruW9xNIc/gBxDEagev0024tn1qiRiV87YE/PQZtGw5OrWOLTR9aJlsCT5/XCgtSmSk1EDRGZ7NIffsEWVxE2QVUtgnTLG/eipV8COLlDGrxHNtrE6bI482A+eeXXjp2+gNNuUSi+t1XKgDP85E9ljw+n9HhvmZr29adIDSWgXagxRLHSdQjAYUta2ld7pqyEUgCjCgGNUe+eFCjKYMfRjn7supRrc2BwXr5NxIotnV3pZKxjpQiGuq91XdZ5pXrzZR6oh+9mqIpUKCOkWgJtK1Er+wfVpdNEptwKshPSK1UUrZm23shAM0+pK95Lilb5PH96Uk+qK3YZdRTqNOn0g8x+g6CzQy2Of/OeBmFXebAKUZW4X540NZ/6gEoLXaHeg273E4/HULimcX2PP3M8kL2Q1PIj1RYr+lwPk6DOxSyfmpZ0IDHfG64xB8UoI2dqQhXrBoH/S/swMyP+43YWF8+cUkfKUNzXBjAikBbN/7T9S4MQDEeycAKWD72HKcrPKPZTB2pBgY9xX81/Bh2VMxOWFAJDdXjQnO9uO8MupmOSFNitMS3rV8l92MFhdRGsEV/RbvLN51opxJ+4PRxMot4gZgH0hKMtBf6qrIicf+nuZmbZ8KBhWeL16fTyzBJIJ/vMwJN0WWv2U7MC+hK27+L07eZNzU8prEw0Y40QNQITgIYkm4lDTmFRIGMKJOfBehdNLit9xMJKrJh/+YT3RkP+cFH9pC8tmfL987NH9AVRChA1ANNMhViebwlAxTHdBftQ7yYvoM5iw2H3VcNgqprWcoPujIGQS4lCAhf9yZ8auv1vP1t/53iUa4o2akIBNNHcKwizPDw00b0lPHwM3psbrnWyVdtLQoROHJiVB49YJddHfPwtRgXQJBvgP+Ys1qst2r+O2qO4uQAI/PDeFxmCBAxC9oHL8WMNQXzZChTldWUU+JYmpWyRPmDBi9MQBqwZDrJpU53/v9CMFbGWBJW00pw6Gv81ck3bi/vtEfYLWFbJKAtshv/IVlGUogBvNCRQ0JPs9JCXN4XCkpXyVxjT8VhDKTOWB9S/w3/K8fktoF4zCOvjyJaviRuqMOIeFtnAT+3pOXzKtnHSaKOugCrJw6tSpC8cPSxkyYnQSUwnWaWX5V7OX1iBjkfQOCBBPLYMmwfrYNchI4EfnSBRDez0siW3bwkouP7eywNGR4uNQ6FbPe3Jyw6kzk+dC4jYrmeWxE8UEjfWvrDLH6acs4ob/1pTlLaM10rEziONE4/vEOBwMYYEriGLBK+yr6Xnf3GAC8JTsKFBC5uTmWYtInxVBSDrLv9LRaJj+/0insgoei8yRv+tjBL6wCn58SuO74SYE4KGgJLpZ+mLgChxJyvM4tyak5H4NmfULRi2fm5uWlTwIQWhCR0PDifxzMQKEn97EDtIs5G/eD8UIHnqmDEYA1oeFRBFirSls6TsGSfjbkEhbwnZzcmbTR0Fn2UHqolB2NDDBdOMP64mMyktaaV/YO7uWNMM4jM90pnsxTbNV2+MSBMFMma/zURSaKBjOA9/AkcTDYI5NpIxFrmCyg0mwdVK2U+d2MjrIT9C+QKyj6nPsC+z630+xZrXXo+z5UT0F1sHV/367/jdeGL0sUYTFYfDdcRi1Cgbwl0f4W2r5HGbgHgDDSNwNCrhB5WCht5sn48yyvoALUdVsHM/ooaFaocCSTEc82RF9gORTq6+qHEy+MWTaYPtSmUo96QpkwQrcfjGkxZQqX73gK/Axqy32EL5aISBZd3Yk9/9gaT7OB0IeG4ucVw5r9Y6rdEiGiuAmwINFAqH2kKvE5BtkkUDh+DzObycpIp4PE+DesB76dS7yFvokqD32rH4dpwqEgMWfUwlrU94wpkKS8AZpiAOeQwUV8cHA7ht5So5+PYVSOSkOyDYdpVCqWlco1aY3EPKbXuwp9ViQnr++0FvoE0A5cRqsr95RsSFc+TkeM92cn/IGc9Fp24hlcBIaUiFqNMxuAHjoT8SiWcRYNN/pWLRmBbFopscHSgq7nnt94XcwP2iJ02Df1qpD48Yi4il3R2OmEplKMJf0+G0m0tA8NKRbVCqVbvfwsNvtxnc6Fsw3iOKzx8RgvlR3MN9mhYL5dnYpmE8hX+1c6SEaH8U9XOeNXnzX7GJ34nKpDAnDAVfeY4eGA4OTY2M3oKMIwjXHSDyT0T8dKwTC3kziVDRkuliJRGEh7Oq05CH0ygJyzMeG6H9+fkfnf2M+gPiKLkrFlawvzOVCsWloOGKxDAwMgkn6MiBmk87mk0hrrmRXiqVT4aRline17ezryIVW4D/WY3xsie9YfPftonMQBmgYESrdvEzNZ+J8MOBK5mf9dqPNZoLfYJoARpQeU49D9c2nzojHrTH9vu063YjHlXd6Tj8oWGeH4auv3h6SBZXj4QCc4slCMZHJeiFipOByRaP5GMhHk0lXLsIFeV8WmaQL6TMCmt/T/Nfe2WYBzfKt1YudqHkmt6AglSAU3IMJlY8Es2uQ4rSGS6nlqUzc6+P5cJBjBINhhFtnMyvLqYUPZ/xKem3Kh4jw9s4e9FORfj1wgjtLwRbzY1Sa+wfkxxQ4b+282PmFzfJyYgpkAB4rieXi2tJ5r67Fw7kY9DOzmH9F52NP6gcaLZmMRac/2N22TPjzAT6Bk8R5pB+Wni4sbWwsLTwtPUyf/7KNhI9zTRt3vgwx/eSdRg+O3yNaLZnYCj98tk3BjvDicZj4L0oIV8/lafqjLEN4+I2e2v91U2+xXiSaGQe7kwM2fxJ2SurDv8v3JJUNR/LTxvaXGzq3nvbPja0rPU29YYWC8ONnDne3yVEpcL5EM/2P8jXn+YDLg9lvH8OXzr+3Gz1hYP0KoVWlUUy9uQNIOMFcgfm1f6jCD2uJClfI222s/LQO6FdvXNhLCH81EaIGWT7r4cH+gAmZ89gdr+Bk+1c83Ex44YLNYvRum0X95FutXl1+f6basmI/SA1i5eHuvsVE7gDHZ8pLT/547G7U4j4ukvTY2+1t86Jbq1epFeOdHrJffs0ohrHY2J1R7u2vWybsyJwP++LslPFb0k+LK3GeC4Rifnt7fcypHGZN0ect65VLg6zaGpfT1YL+GbcOEsJmmU0WON6bTZSbpfQvxCs1y4lsJcwVoh67EfINUTsP5XevU+/d3d9ZjNbrBgSm46IMLPob2+uWEZs/FspxYR9ErG0ulT6cWjOebmxCvHglyJFvaGyPkHxuLd1Omvu01TPu8x8j1AW636J2YD1WOvegocnm90RDuUCQr8Sz2cRyuZhKrTWba6lUsbwM6bwwuwIRV1RUb9LsxI0GyIfy2xIuV/kdUa0LfazT1g+/Xje0t46hPGH0z0ZDrkiAg4HA+3y+Cj55ng8GuUAONhfdBpmAevD92dyHvcu9evVSygduCVUm4VWVSq9By2NobJJEtBnt/tlYNBkKuQougC8hGFuzfqONjFax88Q6oKJ8l2Pvcg5C1UrtcvUddCxRhovk3g/CfjaZoKPRaGfgG7rJNWJZnxy7YT5WDyuv4vbzyzl4T2KtCoY+tH2pZa7Rat06ndgCISP/B7D20SNhrSbtjKafWseKuXtV66WXjxgVBCtdGbqO5i81MNH9VS4uOp3UTTKjs2RGb4lancpht1ar0YsXqxVWQbh8K+95yK4JVoNcTtcP1Oz6gWZG6x6GjoTY3dSi8PT6/n5RvfFxYVQqvi4NRwWDgjS8rsY9BPTSgeaYfkiHywq4enQdLfPb1lGZTNLvNDLDnMEgB6hEdp1DdQzqDtrhhszc3Lihr08S7xf0Xbt2pCLq8Qf4wSCHdlLl/RFHV9pu4pMeeErSSUhISEhISEhISEhISEhISEhIfG8PDgQAAAAABPlbrzBABQAAAACwBXqo0AYEOaUFAAAAAElFTkSuQmCC";
 
-  const __vite_glob_0_17 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_18 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: lightPie
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const lineBar = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAC0CAYAAADl5PURAAAAAXNSR0IArs4c6QAAIABJREFUeF7tXQl4VEW2/s/trCCLICpuo46D+/icUUcdheCGImASIK4kUVRUhMRdR2fGefNccSERVBAlCSrKkgQQ3EYJ4DbuqLjvG4gKKmuWvud9dbs7VJr0TXXndrouqfb7TEhX1T3nr1P/reWcUwTzMQgYBAwCnRQB6qR6G7UNAgYBgwAMARojMAgYBDotAoYAO23XG8UNAgYBQ4DGBgwCBoFOi4AhwE7b9UZxg4BBwBCgsQGDgEGg0yJgCLDTdr1R3CBgEDAEaGzAIGAQ6LQIGALstF1vFDcIGAQMARobMAgYBDotAoYAO23XG8UNAgYBQ4DGBgwCBoFOi4AhwE7b9UZxg4BBwBCgsQGDgEGg0yJgCLDTdr1R3CBgEDAEaGzAIGAQ6LQIGALstF1vFDcIGAQMARobMAgYBDotAoYAO23XG8UNAgYBQ4AuNsDMu6iYCBF9r1KuI8sY2TsS7S3P8jPuES22BR1Ue98QoCFAQ96qo0Wh3LZAHtuCDgpd5RQxBGgI0BCg6mhRKLctkMe2oINCVxkCbAskPxuCkb2t3k3O937G3SyBk2MTvm3Vz8ZsZE+N2fkZd0OAqbEZbZ/qZ2M2sqfGrPyMuyHA1NiMtk/1szEb2VNjVn7G3RBgamxG26f62ZiN7KkxKz/jbgjQQ5uZNYsDa7OfyBwzdOjG1pqdsmBBl+03DakvKKCgh4/1tCk/G7OR3VNTUG7Mz7gbAlTs5rJHFvwBjY2PMHA4gcaUFOdNjVSdNeul7JUbV98F2MUgygTwGllpF44fNXS5KFP+cO0BHOQHABwFRgMIj6Rl9ywZWzBwveLjO6yYn43ZyN5hZtLiQX7G3RCgos2UVdSsYOIdwNgxmgDLKmqmMXg0iJ4mxrcgjGTwhh7d6YB1GzJtu6n+PSL0AGM2E3YD8yBYqCotzC+KfnxZZc0/mckqLc79p6JonhbzszEb2T01BeXGrvuYeQuRAERA5C+R38XPW/qJ/+v58bPtxItoQp1QXlV9AXPgU+bg8zIBMrNVVln7CwjvlxblHSmEmVhRexlg32VZ1jAGgmzbC2HRlaWFeXc631fWvESMQ/p2ye0evRw2BBhvd24p72cj9rPs137E3EyBYnQJOgyPMvmft+5rCDBx6/auZkIEKB5/z8Pz/hpsCr4gE2D5w4u6202bf7WIJo0vyhsnl7PIusghQLYfSENgwKXFpy0V35dV1kxk5pLtunTpfX7ByWtk1QwBJt7RfiYRP8t+9QfMEWqLcN+WKWGYDBm4fX9DgIlbt3c1k06AZTNqj+ag/aIhQO86TaUlP5OIn2W/ShBgjA6SCXGCIUAVM056GUOALhD7eSAa2ZM+dlp9wFXvqy2BJxxgZoCp6aGWTzUEaAjQJEPwcCResWLLDHDteuC7H4HN9UBWJrBrH6DndqEtwTsONAToIewJN5UUAiSie0uK8saGDjmqjwFjmVgC28RNsHmaZSFnfGH+ktAhSXUZgPEZ6Rm9Ljl7yFqzB5hwX7aoaGaA3uAYbytXvBc6AvllPfDxN1vX7rc70GM74K6DDAHGi20yyntKgCFCqxEk9mVpcd6h4t/llbXX2GzfSoHAKeIQBMHgMwT6W0lx3i1hAnwDoD+UFOX2IKLm/WLxnTkESbzLDQEmjl17al72bogAP/gK2LBp65a6ZgP7/w64+2BDgO3B2au6nhNgWWXNZGa+hIheYOAbYpzGwM/dtrcO3FzfnZs2/fIOGDsxYR4xdmPwsSDrgdKi3AujlTIEmHg3GwJMHLv21Cx9h7kpCLzzacgDJvoTIODQfsDdfzQE2B6cvarrOQFOX7w4a93Xv0xgxnkMziKiV6wAXTTunNx3hdD3PLpgv2Bj4xQwjgGhnphmbG91ubywcNAGQ4BedatwvjXp/L1DU62lY+fyn3pthzd+XQ+QBTQ1bV1P0N4uOwA/NaLnf06kX9Va7thSfradeJFKmADbepBwip49++XMgoKjW1kIACJkbuTIo+qJyI7VlpkBtoVy7O/9bMR+kn0kc2D1HOTbhBIC9ujbG7v36QGs3wx89t3W/bNbH2BDPbD2N6wFYXqAcHfdcPo28Z72vqaf8G+v9kkjwPYKJuobAkwcRT8bsR9kH/QU99q0HheCcSkInzNQtvNw1PZdjqZIJMhvG4FVa4D6eiAzE9ipF9Czayg07t3PsbttoxSE0WAsDAQwYXE+OfHyqf74AX+vMDIE6IKknw3ByO7VEGnZzsA5fGATUEKMAiLUUABldXn0dqTUuDe3RMK5STDpT6E9wFMWcff1GzEGjFICVlAAE5bk07PJkV6tVT/bjpqGW0oZAjQEaPwA2xg1zEwD5+DUIKGUGAcycO92XXH/k4Ppx+iqY9+QQuE4djKECAFG6l/4Oqd/+CXOYuAqAMEAMAG98VjdQGplJzHeYR5feUOA8eGVtNJmCZw4tH42Yl1kHzaPu/3SKA7zMJ6ANbAwcb89MGvqYdQYq2cueT02Acp17j0s9ilwTjWfbAcdItwXFu7umYap80+jdYlbQ3w1dcE/PqkTK21mgGYGaGaAUTaQM4/3CTY4pFcIwlNkoWxJPr2sMsQufm1LOiw5/ZWoK76J/O2+w9t2g+k/hw91ZoSMkwE8kJWBsmdPo6T3lyFAlZ7ugDJmBpg4yH424lTJnjOXT3AOJoC/sIWpWWmYHC/hyAQoE57Tk1I+rPsVCDDS+yfM5z0aGnA5AJEzc55YHi8eQSsStw73mqnCP1n6uLVrZoBmBpj0GUW8ht2RA3DkS5z9w0oUglEi9t5AmGj1wiN1A2lzvHKL8mNeZW72gHbJB3j/EW3PAKOfn1PDPYM2LiYbJQy8ZVm4fclwWpyInG51OhJ/r2WPtz1DgIYAtSNAt6zK8izq1nZkVRazqsYGXGozRhNhGRHKvCCTC19Rywc49cj4CTBiqiNXcMYPH+AchA5MNhJwx47DMWs2eXO/jiHAeGk0SeV1WgKf/zyO/+JXXBEMYp9AAJ/u1QN3TjsOzzkrG0r+vky8EPvZiK/5cMs+WrTe8r5aIlmVc6r5GLHMZcZxwhGZMjBp6TD6Il58Y5W/4BVpD7BlQujm5NAiRO6BdhBg5NnNp9PAlUTYG8CdVm88WDeQ2nW/jp9tJ95+NDNAhRmgIL+P16Aqumi/XigUJGgIMF6zcy8vsiqrtKiaVTk8YzoTcJa52wkf+6xuqHhmEG0VfqnyXLcy57+stgR+4KjEZ4CtPT9nDh9mM64G4ThiTKUuKK87lVYloo8hwERQS0IdXWaAx9dgUWMQh0SrmB7A8ufyMNgQoLedL5KKqrTYVlLRnIW8c3ATLgbjYiK8SYyyuhF4KjrrkMqzVMuMfmlLPsCtUuJLjTx4tLcEGGm6/3zeC6EDE7FEngsLdy7Npw9U5RflDAHGg1aMsl7cC6wLAebMwcc20DVaVQvYUDcC/QwBemAwUhNXrogdTSGfK8RKKhqeDYnT3CFMeDQtHWWLT6OPvJWy9dZGvxjzTqQWS+CH/pocAoxIJUL1Nq7DWBAuBfAqESYsHU7OPTxtfQwBtoWQy/fOvcCbfrgDjGKRDQZErxGln19SOOQ9US2ee4F1IUAzA2yHQSRQ9fL3pFlUVDSFfAgiJxXNWcxp9hoMR+iEdFeyUJ7RHdM6OuPKuS+ozV6nH5NcAozAfsoizty4CUXMuFLkaSXGhIEjMPdGlyQkhgATMNpIlYmVtVPB9gUELAToOwYKCNiYnp5+UBNbQT/eCxxrD7BvV1z/+CmoMDPAdhhMK1UjSUXFVyKz8sqfgc2bgawsoG/vUFp5MZ0SOfWOr+beDYwLYTsznU8sC2UD8zHPbYB7K23L1oqXqR2CVBzbMQQYkU4cmPSfg2EgXEXArgzc2TMTDy0YShuj8TAEmKCFLF68OG3512t/I9AbJUV5x4pmyqqqL2Ib91lkjWTCRr/eCxx9CtwlHcvW1eOsvbrjioqTqCJByJJWzc9GXLo8RCK/bgA+bSWl1D67AelpwIdf4UEwRjBQnUGY+NwIeidpgCo2XLRUbQZY2b9jCVAWP2cuH2mzE2HSnyzcl0mY9Ew+rZbIchcVdXV88avILZfx9BRYEOA7X//yMzO/W1qcf4x40MTK2kvA9uRAgPJsm3bYlu4FvvZlHPzK96hgYNLSEXRTvOAns7yfCbDkbWax1P3wa2BjK+7IAQuwRMLRIG6wMjGlbij9lEws42m7cIlaLHDVgNQRYEQfEfJnN+IKAGcAmCXualo6gj6J2I6b65dowxBgK5YxsbL2drB9lUgVxExfEaHISYnf0/rT+l/49G2JAIX6D32MPpXv4gFmfLbzrjhv9tHUagLYeAaRF2X9TIDj3grtAb7zGRBs5TzYAnDw74HojCpe4NbeNgQBRuaAbrHAM3JST4DNRLiAd7A3O1sIY5nwwp/6YPr6JvRwc/0yBBjDUiZVzOvfhKBz41vkQ7DuLynOvbissvb8bY0AhY6Dn8TPGzbiIWbsm5WBYfHGj7Z30LVW388EeOmboVnUx9+2PgPskgX8YVc9CfCcOskP0KVjHx6oDwFGxBRhgatX4lwCrmYbO7Tm+RBx/TIE2Ernli9alGmvrl9FhN8YfHZ6hvVVYwPfBuYziZALWH22RQKMLAX6z+ZrIFKjE05bMpxeSwaxqbbpZwIUOfWEnt/8CKxtJQnUXn2BbtnA5D/rRyJnPx9avjufKEdAeUaoIwFGbGsj864nz8GnDGRF21vE9csQYCsjsWxG7dEctF8E4brSovxbRZGJlfP3ADd9RUT3MGH5tn4vcM5sHmITKggYt2QEzVQlLK/L+ZkAz3+FWZCf4JGe3YA1vwH1DUBmBrDj9kD37BBabjn1vMZTtb2znlPbA3z0eP3IO6KjsJ22XL8MAbZiEZMqq/s1MT4S+38lRfn5DgHOqBmOIM8hohvZsl7qDPcCh9OmL7QYj9aNwPXJjDyINTD9SoAD5vKFBEzZsSfQu7s77ajk1FMlLq/Knfkf6RQ4KhuMPCOceYLeBNhW+KchwFYsRvgalVXVPgnmQUT0KgNfECMXxI3E9D+BLj1/6Cz3Agv/tEYb1QDWWr1xTnsD1OMdoH4jwBPn8S71jc4+6g6/74s/Z2WEV5EujtBTEkgpFS+O8ZYXBNh8bhMdCycR4mOaE6DQ25wCx9v7AKbX1PT89VfcTUBBOBLkTSsQGDf+nGGviOY6073A4p6Hj77AvUw40gpgaF0efZkApAlV8RMB5lTzGcEgyi3CJOqNm/t1QXPK+a0mURIhtielVEKgKlQ6/Vm1ZAiPnaj3DFBBVeMG4waSuRd4CzoD5vI4tnE9ASOXjKRlKsbV3jJ+IEBnlhzEfSAczISzlw2nN4XeIqeeyizKi5RS7cU5un7B09IhSPSX0oxw1iBDgF5jn0h7njpCJyKAWx1dYoHb0kvFITScbn0mW7hu2XCa1lab7f1edwI8di6fSjYEDo907YrrnxxM9RGdW6SUigZCmhJO8zilVHsxF/VHCgIMf1y2ADHbEKAXcLe7DUOALhCKzMQqgU2qiTmdy3YasZCAJ3cajiu8yuDbmgq6EmD4prW7ARxvWRhVl08vRMt/3otbTlKjXUnkbbVkZ1RJZHSNeCr2Elhub87JZgaYCL5e1zEE6IKoyEwceZ1Hv83larftp27MJzzLPRp+xSwwyEpDQV0e/eJ1p4r2dCTAgdU8oMlGJYBnAr1xeayDIZFRpdkwo4CXLxrqqIwq8fTP8CfV8gHOPUXdZuJ5vhdldbQdL/RqrQ1DgC7IisScETPd6oYvqV5biTmjHzGSOfDDHNwBwqnpFoY8l08fe93BOhlxzmLOsn/CLSCcTozRS0bSk276yhlVXFbAmN7BGVVU+ih/kcqaAagebAhQBc9klzEE6IKwSMyp0gGxEnO2Vbf/HD4PjNsogLOW5NOzbZWP53tdCFAkJw0Cj4DxZvdsXLJwCK1tSw+RUSVGMEWLqqnMqBJLh7yFajZTc6ohwLbsoCO+NwTogrJIzBnrikO5mpyYM95OGziX/xq0MZcINy8ZQeXx1o9VPtUEKBKUBn/G30U6egsYu2QkzVbVTSQUUCmrQ0aVaDlzn1A7BKkdYghQpY+TXcYQoAvCpe/EXgLLW1MiMWd7Ouq4ufy7JsYTDLy8/54YO/UwavaDS7TdVBLg8bV8QGMTHgaw0srG6Hgv5zlnsUQiJPYzReqlEBLyVoSO8bSnLVAj73lD22czidqFSr1U2o6KfF6WadfA9VKQ1tpKtRuMSMwZ6xBEPo0sO6T9xnzS09x18294lIFegSzktTfHXSqM+EZm6/lqXAbGdUy4NlF3H5FQQAVRHQlw2Hy1feP5w1Q0TPYIa739VNhOajQNxZtr+0k1AUby0rUGkEyA9xzqjTGLUMIBc/FvZowKBHBqXT4596gk8uloIxa3kXE9qojAVgCF7Yl6EQkFYmVUkbHQMaHA0Pku2yaS0Sw4zRubScQ22qrT0bbTljzJ/N4QoAu6Ii9d5Gu35JZeJ+bsP5dPB2MyM0YvG0nzEjGAjjTiAXP4AgZuIeCmuuGY2N7kDyKeNubpu7T3MFPDjCpD5qnlA3wi1xBgInbtdR1DgC6IXvK62nImGWmZwlc71rKFycuG0y3xdnxHEOCxc7kvbDxEhB1h4Zx475+NpdMZz0pbDy57gI9rGE97ao3L7FUi74WGAOM16aSUTyoBTqqs7o20zO3s7WnV+MGDm0OdhCZTFizosv2mIfUFBRSMpVmql8AXv6ZGgMlKyyQIhhjzAXxs9cbouoHUyg0ZqdnHEQkM7CDugYVJVi/cVDeQmryy0NOfUQoFxuMn6TeLGlytZjOL8vWTPdJ/HfHy9MpW2ttO0ghw1qwVGd9v/FjkBuyWlt1zz7EFA9cLYf10L/BFr6odgiQzLZNwIg7+hOlE2IcJw5YNp5UqnZ4sIw6n+bpXXMvBhHMiCQxUZFItI+JpY/kByqfvOiYUOGWuWj7AJ4cbAlS1h2SWSxoBllXVjmXbngSLriwtzLszRH6LuvvpXuAL/+uynyONxKl/Sb4xHzuXrxN33wYIp9WNoNfbMopkEGD/OTwYwDQGZgZ64/p4ZqRtySt/L+JpmwnQJR+gjvG0ggBVMtk8ZQgwHpNIWtmkEOCsWS9lf79p1WcENFCfrH0jy9+yqtrBfroXWGQliQmQRIAdlZap/1weBsZDIIxdOpwed7MKLwkwksCAgRMsxqhkp/QS8bQxdZNOUudqGE42aI6a8/zTI5L/0kyUNby0nURl6Kh6SSHA8srqq2zG7WRRYUlh3oyIMn67FW70S2ozkQeP7jhjzqnmg4JBLCTCjCXD8fdYJ65eGbFqAgMvDVaOp42OwZZP43WMpz1pllo+wGcKOs5m4u0br2wn3uemorznBFhV9XTXNbzxS4C7Emg6MVZmBrIfHDPq5JV+I8DzXoi9n5PKrCQ5C3iH4GbUEPBjVneMemYQbYg2nvYasbP3+DNuBuN0Czi/rQQGXhqviKeNdbeu/Bwd42lPFASo8HlWYwL0Og2cAhwpK+I5AZZX1ZTaNot8b2tAtAbM+xDo+6yMtEM2NwZz/XQt5rnLlNIBoiIFWUlEuv0Pv8T9YByeZmHo88PpK9mK2kOATgIDxsNEeDt7O1zy9Mm0piMtVISTqWTh0TGc7ITH1ZbA/zld3xng1R/EJnF5Bh5PGriOtJ94nuU5AZZV1LwOQp+u2dmHnl9w8pqyipoLGTyFCFcA1m9+IkCRlURlJpLKrCT953CJCD0LWBi+eDi9GOn8RAhQJDCwf8INDFxChEuXjqBZ8RiTV2VFOFmkLTcHdB3DyY5/TC2TzXNn6EuAIgtS8wsIoXCx1g52Es2C5JWdeNGOpwQ45fXX0zev+HoTmB4sKc4bIwSc8uiCHTY1NP5IFu5m0Ao/3Qs8qk5tJjIjJ7XGPKCaT+QgHgXhmqUj6CGBe7wEKCUwWGVl47x4Exh4YYyRNoaKaAqFj47hZMfNVJP9+TNTazNu8IosSLGIQQ4BbU8WJIXu7ZAi3hPge9+sY+L/lhblDxAaTKqY178JwSViBshW4F0/3QssZyVx6w0dgvKPr+Z+jbaTUeaJnYfjqlnATioW9C9g1eK5KGXgb+1JYKDyLNUyp9aq+QHqGE428FE1Alx8lr4EeNk7sbd+vMyCpGoPySznKQEKQcsqayqYuYgIiwF8xgzngvRMq+v+dlbGRj/dC3zW87H9AOWl2SPH6WHMOTXcMxjEbALs647C+JN3wTo347njHey+4BNMEOeWgTSMak8CAy+N1Akni/GRZyCL8vTAXRY15xE1Aqw7Wz/ZI3qMf9slDZwUmuhFFiQv7SaRtjwnwPAp8ANgPp1I5AaBuOpwTElx3htCQD/dCyyC8iNZSbZyxwjviwgAZ2p0ybWTbn8u7rQIQ07aA0XXHYYvWrvgekM9dvp+I64LJzC4u70JDBIxvlh1nGgKhTWYjtEUAx5WI8Al5+hLgCILUswXkOSY7nUSEC9tSLUtzwkw8uDFixenffNNQ2Zh4aCtXDREGeEsPXLkUfVEZMcSNtWxwC2C8iXCE/LKhKhjTGrBU3zFD+txXa8sTPtpE66JxjjNwpcDdkfRjUfQUlVj6ahyJ0vhZPKSy8Fd2pTXMZqi/wy1VF5LR+lLgGPfUCPAZCQB6SgbizwnaQTohSKpJkA5JjVaH3kg6njHqzgEGVeHI5b/BHGSmx4tf3oAy5/Lw2CVO4296Mt42hg0W41Enh6pH4kcKwgwRhZd+aX5QqF+skf6SCQBae4vlzdQspKAxGMr7S1rCNAFQeeO1/An2g7karM1vOM1cgo8YC4+YUaXaDUtYEPdCPTTkQBbRFPIbxqhhNQRz2hIgMdUqeUDfEHskmv6GSNi4BU+UzogBl5BjHYV0bYThFapngGKkKxmM40aiPI/dQzJihDg8TVY1BjEIX6aAYpoilj+l/IsSkdn4qMrYtuMTN4vakyAF7yi5svYUTHw7WK4NiobAnQBSIRkqUQk6BiSFSFAcQDy8RpURavZrxcKpx2H53ScAQpnYhWj19GZ+Ojpasv3l87VdwZ4/ksuaeCkQ5AH/6qvDir2E1lQqJbt8HKpngGKKw5VZiI6hmTJjtCtnQIL8nMMgOj7Du/YNh7oZ2fiox5S2z97+Tx9yUPEwKu8gaYfo68OqjZtZoAuSA0TVxwqWIKOIVnxRoKoGkxHlPOzM/GREgG6ZbJ5RWMCdC6mV8hIm4oYeK/tzxCgC6JDRESCAkI6hmT5mQDdnInlvdclGjoT/+VBtWQI/x2tYlleD3e19txCQOXDwKoUh4CqaeNeSmF4e/GYxNpI9RJYRCSo7AEu1DAiwc8EKDsTu82idHQmPuIBNSfuVy/QlwD9FAKaGLNsqWUI0AVBccFNrK/lmciTGl5w42cCdPOlk2cgOjoTHy4IUOHzmsYEKIeAunghQcd7mRWgb1HEEKALYvIFN9EzEdmlQceIBD8T4DGVaiepOvrSHTZVLYXa6xfqOwM8Q4SAxnDmll9AOoWAxkt8kfKGAF2Qa3G/Q3Q5yRJ0vN/BzwT41wq1k9QXi/UjkT9PUZsBvjFGP9kjJl7wtNoyXsdb+eIlwpQRoB/uBRYOubEOw2SgdUxvfu1HWwai2z7arfvqNxCFL12MCUgL+9bRl+5P96sR4JsX6Yd7BFy3CCh5SazjrXzaEGD4XuBPhUC7dOm3T0HBgQ3idz/dC+ykN1f46BiRcNX7LrJLs9cJ++s3EIUrSazDJ3kJpqMv3f/cp5ZM9O2L9cM9YurypVQuCx/oeCufwnDtmD3A8qrqC2wbU0HW2NKiXHGRtu/uBXZzyJXzAeoYkXD5u2r7aHcdrN9APPJBtQvpdXQl+Z971V6ab4tLBzT9iACAmC8gKR+gjhFQ8UKalE4QqbCWf7X2IwJl0Y6Ze/v1XuCcR2NfiykToI7ZfUuWx07kIC9jdExq6WdXkj9OVpsBvjNWXwIUl1LF9H6QQuF0DADQggDLqmpGsc1VlmWVjC/MLY8I5bdrMQeI7L5hU5AJT+gj76vp6I827k2XtObSW/yeQ/UbiH52JfnjJLWZ9zuX6od7ZJwOmedC4hIB6nglQcoJkJmt8sqaFQB69u2y896rNq86goi2Hzcqr9ZvBOj4o4U/W6VFkwxhmYa53S55XToEibrZS9ZFx6SW4iRVxQFdx5PUgyepxY+/N05fAmxxJYFLPkAdAwBSToBlFTUFDH4cFl1ZWph358TKmqcAPrS0KH8nvxGg7I/mlplYx+SWY151CcmS1sA65nQTJ6kxCVDqiDc1dCU56B61+PH3xutLgC2uJIj2hJYYRscrCVJKgMxM5VU1b4PRN6t3+p5jhg7d6GcCdHK7hRF1sQO8pKE/mkhp1GwMLuw97Wj9BuKhwpVEYevhLQ1PUg8oU0sksEJjAhT+ryp2r6P/a0oJsLyqdqht2/PJovvIoklCGLvJngpg/4z0jMMbgo0D/XQv8FHT1QzhZQ1zu537grSP40KAD2mY0sjPJ6kHTFS7SOv9Uv1ePBHyEBm5Y/lhyhMBHf1fU0qAEyurrwXjltaEIMI7bAWu9NO9wMIfTSUfoI7uGIVL1PbRqgboNxDdTlJl21qu4Unq/oIAFe4E+fAy/XCPYHvCY2r5AHV0/0opAd47Y96+TTYfLAvBsG9gxp4IBEamZ3Z/2U/3Ah8xTc2n69Xz9TNmP2f0EAcJKkuwdzU8Sd3vbrUIHJ0JUORjVLHo589UKRUvJXVs+aT4AcoqyHuA4u9+uhdYBLardLGOmT3OfE7tEETHgHbnICHW6bt0oq3jSeq+d6klQ/jochXL6lgyiDxNpCNTOYTSMR9jvIglnQBjCeSHe4H97I5R8Iza7HXWSfoNxIPKpSWYSz4mHQ8S/nBH7Jem7Dv6yZX64R4Zq87dxjE+cncs0/huY1UiTBkBqgiY6oSoboHtsiG8pWHJH5uSAAAQuUlEQVRg+/AnYzuzyqm8dAxoFyepsfbRZLt5v0Q/EhEEqGLbOhOgc7VnxPtB8ncVf5LP03RMR6aCvVzGEKALYofepzYT0TGw3TWeU0SyhI25Zoh+JCL20ZqlipoByv/UcR9tnwlqS+BPr9IP98hQEO5fKi8gHd2/DAHGi4BL+UMmu6Rlkl6FyzUMbB82X20momM85353qeWj+1DDfbTf364WgfPZ1foSoEhG4Uz12vjofLFTW7LLe8yqZTu8XKqXwAffI20GR4WTNU+hGHhXw7AmcaHTlnVM7Fi4hbn6DcR+d8YmbzkmW8eDhL1vU9s/++Ia/XCPDHDZ+8EtAkpH74d4SUqB5+Nt0rvyqSZAsRnfrI2LJegY1iTCmWJtRsmq6BjOJB8kRCdzla1Lx320PW9Vywbz5bX6EqDwfog1iuUXkI7eD/GyjyFAF8TcNuNlElmh4Wa8k8063LtuJKKjN7/YR1MxZB330fa8Re2l+eV1+hKgWyy2TIA6JqNQsRtzCKKI0v7CqTUGiciG8IGGYU3HP6ZGIjp68+99u1o6ps81XEbucbOaE/fXf9OXAMXhX6whIr9MdU7qqjjEVbY6VZvyvlyql8BiM14lJlLHvSi3y8VlX4a6s/QbiHvd5uLCI5mZlgR4k1o+wK+v1w/3CLTbQlJXVTYyS2AXpPzs1HpslZo3v47OrM4yUiEWTsdl5O43qcWPf3uDvgQoDv9i7n1L40XHUERV4jOnwApIOXtR4YHodhr2qYZe/S2ulozSVfal09GX63diGRnZeog+fZd0+UrDfbTd/m+LD51LEAu+/bu+BOia0kvCX8e9b4Vh3aKImQG6ICbvRbnlA/xcQ5+uvzyodhqpYyYbsY+mklHlGw2Xkbv8r1o+wO80JkCR0UZhAg4d9759Q4B+uBd4L+HSoDAT0dGny8/3auwuZlHhj9ss6hsNl5F9/6V2+r7yn/rOAEVCB3mJGOkD8Te5P3Tc+9aeAP10L7DYi2o+BJEuEnIMQYqR1HEp5ucLunf9t1ocs477aIIAVXJIrrpRXwL8g3BEV3BE0tEPU2sCLH94UXe7qf49IvQAYzYTdgPzIFioKi3ML4oWPtWnwM5STOGjo0vDIffGXsbI+5k6ujLIy0g3H8bv/6Efiex8o1o+QJ0JUITzxVr5yLajox+mwnBN3R5gWVXtYLbthZELk4QkEytrXiLGIX275HYvKKCgLF2qCVBsaMcKypddSXTcixIneSqzVx1z6olZlIoh67iM3OmfaskQfviXfuQdwbzF1k9UNhjZ7nXc+lGxG7lMhx6C+O1WOHkp5nYIouOGthPForCRpmNKKT/Povr8XS1+/Md/60uALaJZXDwIdNz6MQQYLwIu5cVSLNbX8tJMx5mIvJHtBomOG9nOLCosdLT7kayLjrMoQYAqJqgzAcpbP9FbEHJ/6OzMrdIHooyZAbog5SzFwubsNgPUcT9H+DCqxALruI/j51nUDjdsWQK3yB4alUz0p//TdwYo+zJG6yAPFx0PoVSJTz7ljrdOwuX9tgQWMxEVZXWciYi0TCphfDru4wgSiemALu1J6Ugiva5XO3z6+SZ9CdBt5SOPBx0PoVTGa8r2ACdW1Yz2073ALWYi0ZvBEoo6Lmd+J2UlcVvGfKVhUH7v611ePNIa7GcNZ1G9/uaybSLNAtferC8BynuwboSi48pHbwKcMe9EP90L7MxEFD46zkT8vIxxSEQhFGGNhiTS8zo1J+JfbtGXAHf8h1o+QB1XPgrDtUWRDt0DnDxr8XZ+uhdYLGdihWTJm8E6LmeciIRwV7vtX+p4gLO9RCLRe1DybFZHEulxreTE7RJA/sut+hKgePHH3D+WdPpJ45NsVSLsUAIUQvnpXmBnIMbKByiFBa3V8G2+4z/VYoFXa+iPJkhExYB/1ZBEul+j9uL57TZ9CdBtC0J+ma7ReB9TxX46/BRYFsoP9wL3vFbtIEHHgeicRiq4kui4fBckIp/SxYpF1ZFEul3t4jwvDYDfbteXALeFZbz2BKgiYKojQRxjjiGo/CZcp6Exy7PXFhHsUfroOHvtdpXarXDrJuhHIsJmVGKB12soe8Q0eogXkMLaUMcXvwqvpOwUOF7hUk2A24mBGJlFRSVDkElFx4Eoz6LccO+oWRSH3iU0ezaoT586+rhbN6pfvdrqlp1NXX/MpLXZP1P22gxal5VB/3jjmHVCZotC8IfGYnhMNu9BMf73gLpdGtLqKa3BosZAgAKBBmpssCgtLUABq4HYTreaGhspELCoybIo0NRIlhWgYMAiq6mR2E6zgpZFltVEwSCRJcqI35vE34iY2QpaRFYwSBYR2aJssImcOhT63gqKvwdJfGzboge/OPr5ZlklmUlwSnNuSUbRXv8dxmyLR5JtO7VJ/LDs8G82EcS3tk0sHua0L0pAFCAmm8BObacecagNdv4R+l6IJ8oL7AkI/V38TnCeCYutUGU7VJ2JbNj07KoDbxGgW+ENcBL9IHlBiH4RPXP8jh/e7LTGooQjVKidyO8WWyF5wjI4v4Z+F9KAyRJyyvVEWxD/QdiL+D7UaElRXmG8/KFSXoHnVZpJTpkQAfKNRPRvBzKpsxygmK0WgDvQcdgInHFjtQBcfB82HgEqiC0ZcMc2Qi04oL+1drdRDkChRkI/pcHojGhiHNB9Za1Tz7GEcAey04pFoZ9Ox6O540PPEAYQXS9koI7JNcsv6oUMNPwMx5CFCUXkZ6d8SGzxk2l1fbf9HAOWZQ6Th9OQoxaje8am70L1HCt2xknz70RWszzOd2HZQs8OG/DW9UL6hg1YPhNwxp8zGoX4YlSJkSd+ilLisc7PhmCgq/PLFtqLDMXQz9B4RLe0+lVb6jkPEg057Yfz9dih5zm9J1oXkm/5HWSHHgnRdUIk55HNbTDsUPst64VgdkSwRc1QG04p/nzDDjkhGUPyh1AOy+xcJBOquF/3H55goX+4ngONYxaCNZ1JpOg8wWJCgbCMITkcGYWsDvc5hilqhesJznBUEHo78jkahfVuxsMxVtiiZkjBLfWWrt73GueBgmPDNhOZEkZmBOLfJ+78/g3OEAw/z4IVeq7TyxYLmhU/LWFFzvNC3zh94XA02+xUcQoIOnTqiQbEr2LEh5q2eHxxblUyWEZrAhQKCxIM4RYyjhBWIdBFB8uAh7FzvhegCwOSARedsAXjLR0UAdxpN9QXDujifWqFek90lnihOvWdRkX74uUf7mxRLNTdAec70bfife6UD9cTFe2AxZZoIMCMoGVbzj+YLTvAdkC0YXMgEHCe4dS3RUuiXoADon7ke1vYrGWH/i3+nsYBUTbNDv9MZ2pstINp6Zxm2xwM2pyWnh7+GeSgncFkNdrBYAanB4PclGFzRlMmN2UGubGpiTObsthKa7AbGxs5K7sLNzQ2cXaXRm5o3I7rGxq5a7dGTv81y960fQNvv6k3b+hTz+s2beKd1/+O1+69ifutW8c5OTm2QwWhQWs+BgHtENCeALVDzAhkEDAIbDMIGALcZrrSKGIQMAjEi4AhwHgRM+UNAgaBbQYBQ4DbTFdum4qUL1qUeXB2dnDgwIFN26aGRqtUItCpCbCssmYBgFMtCvx+XOGwL1LZEYk+u6yq5mq2+bYW9Yl+IsbLAeIrLy3K/zjRtlNZ757KmlNs4BIwjgM4HYQXQBnjSwqHvJdKueJ59j1V8/cK2k2fy3WISPTHC5xu/a30rNN+iKc9HcuWVdS8zuA/tyobWdeXFuXerKPcEZk6LQFOfHTeTmi0vwVzGhH9q6Qo70adOyqWbBECJMJ0ED4jIGAzHQngRAK+3566HFBYOGiDn3Qrr6wdYYNngrGewE+BaDdmPhqElb2o675+0SdCgER4jxnPi74B0A9EJwD4JANpx11cNPQ7P/VNtKyCAAEcxOApW+kRCDxROuq0Z3XWr/MSYFXNFcSYAOBlAH3HF+b+3o/uGs0EmEYnlJyT91zE2Moqqx9gxvmBAA0cNyqvTmcjlGVbvHhx2vKv134HUNfMDBx08Zl5X4rvy6pqRrHNVUTWrSVFudf5QZ/mGSBhSmlR/kURmcuraoptm6cTaGpJcd4YP+gS8wUsCJCwd0lRXi8/6tFpCbCssvpdMK0lonKb7dl+I4pmogsvgSmaACtqpjF4tJVmHTj+nNz3/WKc982s2bO+nr8A0czSoryzZLknz1q4cxAUHF8w+Ec/6BOLAIWLZ1lVzTdgaiwtztvLD7oYAvRzL0XJfk/VvMOCdvA1kDV2l+wdp3+/8YcfYHFNa1dz6q528wwQmAyij4gQsG0MAGEIAdUlRXmn666DLN+kivkHNqFJ7POVlxbnl/hJ9mhZYxGgKDexouYtEHYrLcrr42cdnT1Awn5E1vkt9CD+umRU7ku669YpZ4BlFdWTQLgog7rucnHhoNVlFdUPM1FuenbPnccWDFyve6fJ8rV6COIEYNEPAQSOv7R42Ao/6TOxct4fwcHlRHRXSVHeFX6SPR4CDB8e7FVanN/bzzrGPAQhzC4tyi/QXbdOR4DCrcJevfl7At4oKc4/yXkbV1YPAWMBwTqvpDh3uu6d1hoBEiG3e3dasmljOjXYwcMQDN5KoAMD6Rn7Xnr2qV/5RafIDJCI7ikpyhvvF7lbk7OtGSABfUuK83b2s45hAtwnPRA4rIUemWnrxxacukp33TodAU6sqh4JG7NCBx4sYlWdDzMCICwtLcofoHuntUqA0XuAVfPOYDs407Jw4fjC/Af8otPkmbW7N9bbX4OourQob7gs98TK+XtkWxmNY0advNIP+rjtAZZX1n4L8G8lxfn7+0GXWDI6p8DmEMQ/XVhWWbMQzCcyrFtCCTKaPycKVwsLtM/44rzP/KKRyynwBGZcSYTikqL8Sr/oI/JClFfWrAKoO6z0wyJ+f+VVNaW2zXeLzEAlRXn/8IM+sQgwcjkYEaaVFOVf4AddDAH6uZfCsk+Z8VTfzfbGbwB6sqQob6isUnlFzUk2+Gk/DTAhf/MeINGTBP4ulN6LD2fGH0FYnZ2efuCYs4b+5KfuE1sSxKhmQhMxngewI4jEEuvLvtk7HVhQcPQmP+jT7AcIfOg4cgMBBu0H5qOIsDyDup4k9qD9oIsrAQIHgXjGVmXIqikpzF2ks36dagncPFuyrLNLCnMflTtm1iwOrNxY+x2IN48vzNvLLz6BrR2CEGgjiP/rt8iJFsvdGfNOJNsey4BwGs4k8DKy0i8bP2rocp0HlCxbK5EgYsvlbQL9p3sP3HJuXt4vftHFjQBNJIjfe9HIry0Cs2atyOjTZ7VtYoG17SJfC9apZoC+7ikjvEHAIOA5AoYAPYfUNGgQMAj4BQFDgH7pKSOnQcAg4DkChgA9h9Q0aBAwCPgFAUOAfukpI6dBwCDgOQKGAD2H1DRoEDAI+AUBQ4B+6Skjp0HAIOA5AoYAPYfUNGgQMAj4BQFDgH7pKSOnQcAg4DkChgA9h9Q0aBAwCPgFAUOAfukpI6dBwCDgOQKGAD2H1DRoEDAI+AUBQ4B+6Skjp0HAIOA5AoYAPYfUNGgQMAj4BQFDgH7pKSOnQcAg4DkChgA9h9Q0aBAwCPgFAUOAfukpI6dBwCDgOQKGAD2H1DRoEDAI+AUBQ4B+6Skjp0HAIOA5AoYAPYfUNGgQMAj4BQFDgH7pKSOnQcAg4DkChgA9h9Q0aBAwCPgFAUOAfukpI6dBwCDgOQL/D/aQ5ndOBbQZAAAAAElFTkSuQmCC";
 
-  const __vite_glob_0_18 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_19 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: lineBar
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const line = "data:image/png;base64,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";
 
-  const __vite_glob_0_19 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_20 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: line
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const map$1 = "data:image/png;base64,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";
 
-  const __vite_glob_0_20 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_21 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: map$1
   }, Symbol.toStringTag, { value: 'Module' }));
 
+  const markLine = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMjAiIGhlaWdodD0iMTgwIiB2aWV3Qm94PSIwIDAgMzIwIDE4MCI+CiAgPCEtLSDlnZDmoIfovbQgLS0+CiAgPHBhdGggZD0iTTcyIDMwIFYxNTAgSDI2MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRDZFNEZGIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDwhLS0g5bmz5ruR5oqY57q/IC0tPgogIDxwYXRoIGQ9Ik04NSAxMTYgQzEwNSA4NiAxMTIgNzIgMTMyIDcyIEMxNTIgNzIgMTYwIDEwMCAxODAgMTA0IEMyMDAgMTA4IDIwNCA2NiAyMjIgNjAgQzIzOCA1NSAyNDQgODIgMjU4IDg2IgogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQwODBGRiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8IS0tIOaVsOWAvOagh+etviAtLT4KICA8dGV4dCB4PSIxMzIiIHk9IjYwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM2QUExRkYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPjgyPC90ZXh0PgogIDx0ZXh0IHg9IjIyMiIgeT0iNDgiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzZBQTFGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+OTY8L3RleHQ+CiAgPCEtLSDmoIfngrkgLS0+CiAgPGNpcmNsZSBjeD0iODUiIGN5PSIxMTYiIHI9IjUiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzQwODBGRiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPGNpcmNsZSBjeD0iMTMyIiBjeT0iNzIiIHI9IjUiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzQwODBGRiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPGNpcmNsZSBjeD0iMTgwIiBjeT0iMTA0IiByPSI1IiBmaWxsPSIjZmZmIiBzdHJva2U9IiM0MDgwRkYiIHN0cm9rZS13aWR0aD0iMyIvPgogIDxjaXJjbGUgY3g9IjIyMiIgY3k9IjYwIiByPSI1IiBmaWxsPSIjZmZmIiBzdHJva2U9IiM0MDgwRkYiIHN0cm9rZS13aWR0aD0iMyIvPgogIDxjaXJjbGUgY3g9IjI1OCIgY3k9Ijg2IiByPSI1IiBmaWxsPSIjZmZmIiBzdHJva2U9IiM0MDgwRkYiIHN0cm9rZS13aWR0aD0iMyIvPgo8L3N2Zz4K";
+
+  const __vite_glob_0_22 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+    __proto__: null,
+    default: markLine
+  }, Symbol.toStringTag, { value: 'Module' }));
+
   const multiplePie = "data:image/png;base64,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";
 
-  const __vite_glob_0_21 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_23 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: multiplePie
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const peg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAfFJREFUOE+Nk71rFFEUxc99I4NbaEQJ6Lw3OCzjVClFULBKY2EKSUQwWCiiheD/YKmQRhBBJRYSm7SxEANZUCuxEcViF7LyPlZB7Nxlx513dWQnJLsx62tec8+Pc8+9l/AfL03Tg91u95QQ4rMxxm6X0CS9UuqE9/41gANEtI+IrhljVirdREAURY8BqCzL5prN5iKARwCuW2uflZA9AfV6farf77cBXLHWrpUCpdQiMy9XkB2AJEn2DwaDeWY+A2CamVMARZZlpxuNxqCyPYQ8FULMbQGiKIoBvCSiQ+XPzN+I6Jf3/kmn0/kymlUURQ8AyC2AlPKvRSK6aIzp7RVumqbTvV5vlZmb2x18IqJla+3Sv8RSSsXM94noPDOX9TtauEpEDwHMW2tfjELKfPI83/wjei+EuKO1fjc2BaXUbWa+txskSZKjeZ53giCQWmu36x4opQ4z8wcAb5n5lnPue1U4tK/DMDzWbre/jgGGFl8BCIIgWCmK4i4RXaraUUqd896vOuemAPhRAEkpy1RnhqO8CeA5gMsAFvI8b4RhuF66c87dGLuFOI7PFkWxAWCDiE4S0QVjTKPMxHu/REQ/mXlTCDFrjPkxBpBSHmHmN+UaBEGwoLX+WBXFcTzjvT9eq9XWW61Wf3Q6E49p0rX+Bo7i5AP0Lit+AAAAAElFTkSuQmCC";
 
-  const __vite_glob_0_22 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_24 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: peg
   }, Symbol.toStringTag, { value: 'Module' }));
 
+  const petalPie = "data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='320'%20height='180'%20viewBox='0%200%20320%20180'%3e%3c!--%20四花瓣(圆角饼)围绕圆心发散%20--%3e%3cg%20stroke='%23fff'%20stroke-width='3'%3e%3cellipse%20cx='160'%20cy='56'%20rx='24'%20ry='34'%20fill='%234080FF'/%3e%3cellipse%20cx='196'%20cy='90'%20rx='34'%20ry='24'%20fill='%236AA1FF'/%3e%3cellipse%20cx='160'%20cy='124'%20rx='24'%20ry='34'%20fill='%239DBEFF'/%3e%3cellipse%20cx='124'%20cy='90'%20rx='34'%20ry='24'%20fill='%23A9C9FF'/%3e%3c/g%3e%3c!--%20中心留白%20--%3e%3ccircle%20cx='160'%20cy='90'%20r='9'%20fill='%23fff'/%3e%3c/svg%3e";
+
+  const __vite_glob_0_25 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+    __proto__: null,
+    default: petalPie
+  }, Symbol.toStringTag, { value: 'Module' }));
+
   const pie = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAC0CAYAAADl5PURAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAABQKADAAQAAAABAAAAtAAAAAAUtwLMAAAgsUlEQVR4Ae2dCZgU1bmG/+qenWHHIewjQkQwoFGjgMKACwKiohLNYtTERI1r9F5NItdgrvuWR43b1WsMJhoFNHFUrkpYRkGjYmKMmkQUcUHZh2GYtbvP/c70DNPTzNbdVaequr7zPD1Ty1nfU/31Wf5zSoSOBEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEjATgKWnZExrmATGHy7GpanZHpjRCaqqIyLRmSoEimMRiVfYpIXiUkOroejMQmpmEgojI8lSiyJhkMSxXl9OFd25+RIVSgkn+P8HZyvKc6TZe/82NoRbLosvRMEKIBOUA1AnKU3qDGNIflhtEGOheANa6iTnhA6SJoDDiKZlyfRgkLZlp8v7+fnybN9+sojr59lbXMgNUYZIAIUwABVdiZF1a27cKP8qLFRZtfXygH19VKQSXyZhoUQqq8dLG+g9bjcCsnyXrmyunyOVZNpvAwfLAIUwGDVd0qlHXirKslpkGtr6+SbdTXSF4E987z0GyCy76g2xWmwLFmKDvXCgWPl2UXjrIY2d3lCAu0Q8MwD3U7eeMkFAmULVM6HBXIZWnjn794lI5UeofOgGzFSZEBJhxnbATF8Ai3DhatOsV7t0BdvBJ6AJx/uwNeKCwBK7lL7hXbKQzXVclQk4tBYno3lOvBgEXSDu3R4wNfB0wOhAXL/ymlWdZcB6CFQBCiAgaruvQs77Hp1YENUHqqukm94tbWXnOvcPJHxX0++2vk5WoTbUL47wzly98q5VmXnvnk3KAQogEGp6aRyjrxRHba7UR6E8I33i/C1FKH/PiKl+7Wcpfy/CmJ4b48iuWPpLGtLyqEZIKsIUACzqjq7LsyQu9TQyA4p31UlE+Db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";
 
-  const __vite_glob_0_23 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_26 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: pie
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const progress = "data:image/png;base64,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";
 
-  const __vite_glob_0_24 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_27 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: progress
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const query = "data:image/png;base64,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";
 
-  const __vite_glob_0_25 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_28 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: query
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const radar = "data:image/png;base64,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";
 
-  const __vite_glob_0_26 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_29 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: radar
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const radiusBar = "data:image/png;base64,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BVJeJFZ3Oo74Sf2imt9Fkk1SfoLL7Urng0iWf4iFpjc+vef9VKkpQzxFwX4WuRbgUxtfmkmCN1k4Yltq/OYv8ox8i4a2uRvcUjDyIUyIxm+2C8f5B86adEWlkupmGgP8Do3nfJyCVoYwy/nNkpTHvf9LquTo/CZk19npxjmWS0T16VjYSxY5AXT7x/to2E/9PHmGJzpTGw1mNG7smLZmybz9OihqLiH4YM3SObt95e5oau34NLUM/7a9XdXX1kpaPDQ6mxTqEDGhJqCYRt/b/SVvbtsyVqlkC40P7mhYOu9n/rio+92E+1lmQOwOhJ1FpLrAP23fPo7GtObTIwy/dGI0a5X60H4DP+YhXZkx0B124xUkf0qNoUccKs9U/bqsIOmFKJFrJ1Xuo3pxiNoy9fwMYEbWVPIRqksLSACPZoRHfOfp9q1VdMP8DrX+3hsxadSrYcdB497R2ZpbO77uKvXP8Zj4ygNL5u/0l5wed3iN7lmfil87aXL99Ol9/jjb/fqZLqq0r1BZvWEA6VAX2KUusBBLSQB20UzfrbZzMJWvqa2DJszE03RRv0V9urVSOV3UxeO3mi+li+fVqvJ5s6PWMmZOus7QDWAPsdhAdWcYcbqK2CykG+ZlNBOyrCFrdtjEt9hhkeoCUyWmZ//E0XHxebuywdOd/lkSx8bkf3/Ar915MTs+CvvE5xYqJ3+429dHlft39Hj4E6Ii9k9eWAS/qHv7TPOGLV00KPpjusCbaEyUqgpPkstnpOM8HEXxy6gGSs0gLjOo7jCYd+gm8bqUsR+srptTEhNnkWoBZhgOOyBwiQT0X+Emj5aHampqei7x5zgcBEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEqawP8BKh0fsKNTBf0AAAAASUVORK5CYII=";
 
-  const __vite_glob_0_27 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_30 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: radiusBar
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const rankList = "data:image/png;base64,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";
 
-  const __vite_glob_0_28 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_31 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: rankList
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const ringPie = "data:image/png;base64,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";
 
-  const __vite_glob_0_29 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_32 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: ringPie
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const ring = "data:image/png;base64,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";
 
-  const __vite_glob_0_30 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_33 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: ring
   }, Symbol.toStringTag, { value: 'Module' }));
 
+  const roundPie = "data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='320'%20height='180'%20viewBox='0%200%20320%20180'%3e%3c!--%20圆角饼图:四段圆角扇形%20+%20白缝分隔(极小内圆呈现圆角尖端)%20--%3e%3cg%20stroke='%23fff'%20stroke-width='4'%20stroke-linejoin='round'%20stroke-linecap='round'%3e%3cpath%20d='M160%2026%20A64%2064%200%200%201%20224%2090%20L174%2090%20A14%2014%200%200%200%20160%2076%20Z'%20fill='%234080FF'/%3e%3cpath%20d='M224%2090%20A64%2064%200%200%201%20160%20154%20L160%20104%20A14%2014%200%200%200%20174%2090%20Z'%20fill='%236AA1FF'/%3e%3cpath%20d='M160%20154%20A64%2064%200%200%201%2096%2090%20L146%2090%20A14%2014%200%200%200%20160%20104%20Z'%20fill='%23A9C9FF'/%3e%3cpath%20d='M96%2090%20A64%2064%200%200%201%20160%2026%20L160%2076%20A14%2014%200%200%200%20146%2090%20Z'%20fill='%23C7DBFF'/%3e%3c/g%3e%3c/svg%3e";
+
+  const __vite_glob_0_34 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+    __proto__: null,
+    default: roundPie
+  }, Symbol.toStringTag, { value: 'Module' }));
+
+  const roundRing = "data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='320'%20height='180'%20viewBox='0%200%20320%20180'%3e%3c!--%20圆角环图:四段圆角环形%20+%20白缝分隔(中心留空)%20--%3e%3cg%20stroke='%23fff'%20stroke-width='4'%20stroke-linejoin='round'%20stroke-linecap='round'%3e%3cpath%20d='M160%2026%20A64%2064%200%200%201%20224%2090%20L196%2090%20A36%2036%200%200%200%20160%2054%20Z'%20fill='%234080FF'/%3e%3cpath%20d='M224%2090%20A64%2064%200%200%201%20160%20154%20L160%20126%20A36%2036%200%200%200%20196%2090%20Z'%20fill='%236AA1FF'/%3e%3cpath%20d='M160%20154%20A64%2064%200%200%201%2096%2090%20L124%2090%20A36%2036%200%200%200%20160%20126%20Z'%20fill='%23A9C9FF'/%3e%3cpath%20d='M96%2090%20A64%2064%200%200%201%20160%2026%20L160%2054%20A36%2036%200%200%200%20124%2090%20Z'%20fill='%23C7DBFF'/%3e%3c/g%3e%3c/svg%3e";
+
+  const __vite_glob_0_35 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+    __proto__: null,
+    default: roundRing
+  }, Symbol.toStringTag, { value: 'Module' }));
+
   const scatterMap = "data:image/png;base64,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";
 
-  const __vite_glob_0_31 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_36 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: scatterMap
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const search = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAdJJREFUOE99kjGIE1EQhv95CzEJHqSy2LcPAgkEjSBqZ6EHd42VxbGetoqgYKPdaSXopREEEa4VwSaVXqXICYrBtCKIQuQCu7MQRRADWUzcN94LiYaImWreMN8/w7yf8DeUMWbdWnsBwDEARRHZBfA0y7J7vV7vy0wvyD3K5XJpOBw2AawCeA5gB8BAKXXIWnsOgCKikJldfRwOVL7vP9tTPup53loURa9nlZ3oaDR6JCIrRHSCmd+NQWPM+SzLHnuetzwPTQWq1eq+wWDwFkA/SZJTY1Br/UJEfiVJcnp20nzu+/4ZAE88z6tGUfTZgd9EpJEkyd1FYK1WW+r3+z+IaJ2Zmw5MAVxn5q1FYBiGXqvVGhLRRWZ+SL7vf1BKvYzj+Ooi0BhzOMuy90qp5TiOXzmwAeBSLperdrvd7/+DgyB4YK09WywWTafT+UmVSuVAmqYfiehNoVAIXXEeDoJgzVrbVEpdi+P4/vQfobVeEZFtAJ/2Ln2rVCrt1Ov1tN1uHxSRy9baKxMT3GTmzT+gS7TWR0TEqZ2cTLSuGcBXpdRtEdkvIneI6AYzN8aWmw1jTMVae9x5lYh28/l8e7q+1npDRDYd/A+46LKTzTYALP0G7MbHsMBh9EEAAAAASUVORK5CYII=";
 
-  const __vite_glob_0_32 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_37 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: search
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const smoothLine = "data:image/png;base64,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";
 
-  const __vite_glob_0_33 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_38 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: smoothLine
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const stackArea = "data:image/png;base64,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";
 
-  const __vite_glob_0_34 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_39 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: stackArea
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const stackBar = "data:image/png;base64,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SeuVGz/BE5PmwkASSEDAcQXEOuAWmGd9hMVJX8rPKzgJLyUbMRH8VgL59CaBpAQc/wSXlxVeA4nXVJRG5I6KuOggAYcEPLFiSXRqes7w0YNeP/CCW8w6fmX3kptat368y+znhlueXKrOIY66xEs1t0d5dPMhJ/+IYa8PK55nFvOVbXU/ad30ruv94yHDh+dtHzstclyaynPo2mWBHVu3Jj0k3KybXXfrWX61F1DUlfNs4OooDxsPgUDgGRvRGIUESIAESIAESCD9BDzpA9opBt6el6p4akbFTvyuxFELqHRN3IgB829j4dRyjGFG9T+7IjM2DcrRhDUxz0L+FGOMNDaOm88Yf30B26K8hQPDC7FrmWdLQLH5VAu4dezH5fMt88+a8aSb5TBkOX4LNhJ2947hnOmwrsYQorcX3tpvRQ634otb4UVOmJpcjJOjfnDfn5d90Qv5FjIfxy5ltwRqGvZahLnnJbQmNA4V7gm0ltQjFfDeusdGtjfv/anURUi5ryr+9mZr9brvq1pBJSX32NE53ZdmIUFoG5Xvld+f9oFFqGdeQpPhfL3KAG3DUIOdhRW8a9n2SAVsa25twM/WUVhTosH9XZRGrSnx5DLgYQZnEzLI9yCT8EZNv69bPuwHxee5PvySRN8RScK6HQQLp+3oUgzrtqAUAnqkAmI98amwogn3P43/shR6djm4qia4IKRp50DAw10WkiQh+kkzUblH7WlunoJojmeWkohOFDQ1UFv/RZxYqvrOVyWK1G1/qeVhxuv+sByhBytKCh7vtkwKIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIIH+R8Dv939j7ty5k/pfyVliEiABLwmk4zxlL/WnbBIgARLoMoGsLqeMSVhZW3+dDGl3CE1bLoUYqkl5qq7rFeUlBVWB6uDdiF4mhLYskkzKnRVlRT+qqg2WhULyAaT7D9Jtw32ylHKBv6yoIhK3i46lf199yIfrN25OlXzcYaNGzjj3tC2p4mVC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";
 
-  const __vite_glob_0_35 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_40 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: stackBar
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const statisTable = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAC0CAYAAADl5PURAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAABQKADAAQAAAABAAAAtAAAAAAUtwLMAAAg/UlEQVR4Ae2dB5xU1dnGnzOw9KXD0osUpS1SVZoaQVBRsWBvaKKgiSUSY/IZv89YY6ImJhorhliCGhQFpKkgSBGkSFOQXgTpUhZYljnf+86dy5Sd2TqzTHne3293Zs6999xz/mfvc9/3PefOAjQSIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESIAESKISAKWR72m6ucr+1adv5Muy413rhzctD+YwKZXjW9DtVzjOG13qEYfdEKGMRCZAACaQFAQpgWgwzO0kCJBCJAAUwEhWWkQAJpAUBCmBaDDM7SQIkEIkABTASFZaRAAmkBQEKYFoMMztJAiQQiQAFMBIVlpEACaQFAQpgWgwzO0kCJBCJAAUwEhWWkQAJpAUBCmBaDDM7SQIkEIkABTASFZaRAAmkBQEKYFoMMztJAiQQiQAFMBIVlpEACaQFAQrgSR7mZrWBab+2eP6a/F8+k90YmHqfxUd3WdTPjG9D61UDXrvJ+toytFt8zxXr2m84w2E44uzINb9yo9Ov9g0jbw8vvbyLU9+FncK3xO9zy7rAmNuddvZtHb/zsOZQAuVDP/JTWROoKCPQoZHF0WOh31ZUuwrw+i0WjWsCv/i3wY4D8WtZoxrApHst6mU6IlynWmhb4nfm2NS8eBPw9FCL8nI7/+cXoW3PkhvH4Gxg50Hg2+1FO18duRnomNSuElpX0Y4u/l7ZTYCxIyyqVnT4Z1Yum/MWv6WpdwQ9wAQc03IyKi+LN9a4lsVznwITl8W3kXVFJHLzgLfmJeeFt2IbsH6nwakNLJrWCmXVv518NhaThWGifsOjRgEbdwPj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CRBKOBH/57ISwCinL3XxX2VB7lU9LC5/0SPf7lLq6uJWQTwEMG6NTeKKKYCRB485wMhckrZU15698wsrHpCGXiahxS9pIbPhKUOAApgyQ+l0RBdDV5Nw9hN5vvfJSXTwU2x42Z0YE6AAxhjoya5uzU7JJf2Rwneyx4HnTw4CnAVOjnFiK0mABOJAgAIYB6iskgRIIDkIUACTY5zYShIggTgQoADGASqrJAESSA4CFMDkGCe2kgRIIA4EKIBxgMoqSYAEkoMABTA5xomtJAESiAMBCmAcoLJKEiCB5CBAAUyOcWIrSYAE4kCAAhgHqKySBEggOQhQAJNjnNhKEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiCBWBP4f3kV/aMdwqJXAAAAAElFTkSuQmCC";
 
-  const __vite_glob_0_36 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_41 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: statisTable
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const statistics = "data:image/png;base64,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";
 
-  const __vite_glob_0_37 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_42 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: statistics
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const stepLine = "data:image/png;base64,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";
 
-  const __vite_glob_0_38 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_43 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: stepLine
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const addTabLayoutImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAC0CAYAAADl5PURAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAABQKADAAQAAAABAAAAtAAAAAAUtwLMAAAew0lEQVR4Ae2dCXhU1d3Gz53JnrCKDUTAgCJUPleWWqslYC0YRJEarNrHtupna22tUhLX1rTWaglgaR9bF7DWD6sS1xI2+WqD1k9FaKUVWdSyyBL2LZM9c7/3f5k73Ey2We4sd+Y9z3M5+zn/87u5L+fc5YxSdCRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiRAAiSQ0AS0aFi3Zs2a9Jqamqm6rk/VNG00/AL0kxfQV6vEka/70g0fZQ2/s3SUbZNvlg9MN+NmfrzaC9aOYO0Loz1UoSMBZxHAdevFNbEXVm+D/0ZaWtryiRMneuwehe0CuHjx4qtgcAUGcJrdxrI9EiCBlCVwGCN/2O12zysuLm60i4JtAgjBc1VVVT0Cw0rtMo7tkAAJkICVACZXqzEbnDpp0qTd1vRww7YJIGZ+s2AExS/cM8F6JEACwRLYkpeXN3b8+PH7g63QWbm0zjJCSZdlL8q3ET8otdyrmw9/QU5OznoYW2ttEzNGt8Srq6sNEe7Ro4fhZ2dnG/62bdvaxDMzM414RkaG4R84cKBNPD093YgfPXrU8M04/rcw4h6Px/DNuOljSm2k19fXG74ZN/3GxsY26S6Xy4gHppvlzfympiajnIxR0sz05uZmI92Mm35n6d3lt7S0GO2Bs9GHGZd+6UjAqQRwPbmgEfk4ijCGW+H3tIxlCK7nSqRN8OmMJSu0oP8iDa3aidK+Bx4bYIz/nh+M2o0L91tYq795oiRDJEACJBA6gZUrVw5uaGh4GjUvsdaGzlx7+eWXv2BNCzXsCrVCYHnf016r+OkUv0BKjJMACYRL4NJLL92OJe8k1P+HtQ1Muu63xsMJRyyAMGJqQMfzOfMLIMIoCZBARARwC60FM75v42i2NDRyyZIlZ1jiIQcjFkAYNNraK+ILrHGGSYAESMAOAljufoR2VlrbwgTsYms81HDEAggD5CVnv5MHHv4IAyRAAiRgL4G1Ac210Z+AvG6jEQsgemjzhUfg095uLWABEiABEgiSAFaYhwKK9g2IhxS1QwBD6pCFSYAESCBcAlhxGp/Chls/sB4FMJAI4yRAAilDgAKYMqeaAyUBEggkQAEMJMI4CZBAyhCgAKbMqeZASYAEAgnY8i1wYKOxjufO1M/GndExKkMtrfuVZssuEbEeA/sjARKIPYHkmAFqqhjbpM53NanhsUI4cK6eDeGtyP2J/udY9cl+SIAE7CWQFDNAe5F03Vr+TD33mK6uP7jT2P3mdE1Ty7uuwVwSIIFEJUABDOHM9CvTC2pb1QZUka15/oLDvwlECM2wKAmQQIIQSI4lcIxgtrhwl1FT7yiXmlI3R7sSYXkp09YXM2M0FHZDAiQAAnGZAeLe2SOQjXNVpvq251faHuuZyCvVb9W96krNre4cfpr6dOMn6hqUvUHX1OkoJ7ue/hvh++sqtDZb41jb6FumD2xsVfNR7uW62dpT1rycmfp92Kr14jxNfWPPbM1j5vW4Rx/hbVYP4D3zseijCeL2Lvy7a2cbP8xiFDv8iLYVgWKzDn0SIAFnE4jLDBACtB3TponY2OZqKz585aJ5vaoMwjViZo7atPlTNRbl/gQxanHp6nnUewfxS5RXrcq5Vx9grWsNY7+cXKN9rcOHIudKXpP7hPhDkL/W2qzWQPyuBJA30f8nKPNtHOt6lusRfWtotYthEiCBxCIQFwF09VCyi2sjxO6bVhw9y9SFiBfiWFBernndbrUT4jfGM1srrp2j3eeZo30Ts7K7kJ+nNalvwY/YFZbrWRC+pyCu9e4eajD6+W/MGq9wKzUN6f1ba9XdEXfCBkiABBKSQFwE8Gi5dhBPT+UhwldkuWqSacXTVYRbszOVbH+tZMlpXeqWl+su3H8zttvCLG2oWS8Sf3+tugL1CzHbm3esXPP/yEr+YOPpbi3SiyJpn3VJgAQSl0Bc7gEKDgjYM7i3V9LoVdMRnTvqCT0d9/umI33pgYe0nSYy3LObjFnfNYiPnnXMEL1MycOMLccsE6F/ptGeUtdjKSw/7mS43dvhaUp+AckWofU1S48ESCCBCMRNACePUSuWvq92Y5kp4jZ38ydqEsIn4Tfa/A8t8EDkQSyT74cQbcJM7HksidfpreqgV6lVQTHUUbMbhz57SxEI73oIck1A8XfRgm0/whzQNqMkQAJxJhA3AaycrrXiK4r/wfjLes3Uh7QcX/7unDRWLa1EYkG5nnP4mLoHS+WPcA/wLJNTj1JsgQ0F7MplpKva+lajhDG7a1NWV2238Hepz/DUWdw/8WrLQ23KMkICJJDUBFzxHB1edXlG+scv25ZgBjYF682nRRglzeNR8pTXjZnfJxI3HcTqBjPcmf+jdCXfAzdjdneRLK3Ncr3KdBG/Qonr2cdnh2j/bYliqnidpFudPJWWT96saQyTAAkkD4G4zQAFYe0sbUPOT/TVEKrbEM1K05X/B5XOy1XbPjim9kOgpuSW6jPx8OPfqlXdiPhZWKp26eQJMmaXi1Ds+g2bVXXeTP13kDu9xaseQMWtOApxGM5ToX0o3/PChuthy+so92SaSx1o9aov5paqWzWXugcF/+orTo8ESCCJCMR1BigcYcAfIWiDMQN74/AcbZvJtrpca8EMcTrS34E4/VpvUcsgaINc6WqaWaZL36VmYvm8CmUu9OIdQrTxGNoqh8CtkXpa/QkZHXCqugll5yJ5IlKrWlrVu+hrPuLb9DT1sZSnIwESSD4C0ITI3OLFi6EVJ9yUKVMibvNEa8dD8tIzXoRuqX1Y2xeY11089149H3X7HP2V2oQfVGlja2DdonI9bU2dGoYBeHv1V9t3zIBM0pEACSQMgaqqqjtwa+pR0yBc07/Bz2XeacZD9eO6BA7W2Ej2+PN9ardHe7j73mTWiVIbpOSx7ouzBAmQgMMJxH0J7HB+NJ8ESMDBBCiADj55NJ0ESCAyAhTAyPixNgmQgIMJUAAdfPJoOgmQQGQEKICR8WNtEiABBxOgADr45NF0EiCByAhE7TUY367Ms2BeEV6+63Tz0sjMd2ZtvGcon+pVZ7pV2cFZ2g5njoJWk4DzCURlBugTv3UQvmspfu3/SISJsMG2/eus+yG2L8kUEiCBaBKwfQaIN7X1eet3qnf2nhJNu5OibYhg31En7fz8x1VVSTEeDoIEYkDgsJ19RGUG+PHhk+y0ManbIqukPr0cnM0E8BmcsX+nXc1GRQAPNWXZZV/yt2P7l9PJj4wjJAG7CNi+BBbD8rPr1J56u3ast2uoidnOyD4HdXzQnZjG0SoSSDwChzEL7GOXWbYLIHZm0Iz9+5SqsMvIZG0Hundg7eGCcyZPPsX/GyjJOlaOiwTsICC7waAd/24wkbYZlSVwaa6ai41ES2HcfyI10FcfzwuM/fva+ho2x3fiodROzPmey8pU51h/AMomVmyGBEggSAK2zwClX9mRGd5s3yFJdB0Q8HSQxiQSIIHYEYjKDDB25rMnEiABEgifAAUwfHasSQIk4HACFECHn0CaTwIkED4BCmD47FiTBEjA4QQogA4/gTSfBEggfAIUwPDZsSYJkIDDCVAAHX4CaT4JkED4BCiA4bNjTRIgAYcToAA6/ATSfBIggfAJUADDZ8eaJEACDidAAXT4CaT5JEAC4ROgAIbPjjVJgAQcToAC6PATSPNJgATCJxCV3WDCN4c1E5FArxl1sg1Z507Tlh2Zk13ceYHgcnrNqP8Mu54N7bS0pm1CPyM6zWcGCYRIgDPAEIGxOAmQQPIQoAAmz7nkSEiABEIkwCVwiMBYvHMCfUsbJrXq+kWdl+gkR3e/emROxtpOcplMAlEjQAGMGtrUa1jX1SXKq88MeeRa61bUoQCGDI4VIiXAJXCkBFmfBEjAsQQ4A3TsqUs8w7263qKU1hiqZfh1vNZQ67A8CdhBgAJoB0W2YRDAKyr3ICAHHQk4ggAF0BGnKc5G4j2/rizAT3x+0FV+sHmYCVbrStvURfnPu8hjFgmETIACGDKy1Ktgx0vOwVA7PCf7pmDKsQwJ2EWAAmgXyRRpR151MZ72Yrxyz8+37LVt9L3u1vu4WhrvNRv0aq7nj1Rk/MOM0ycBOwlQAO2kmQJtGe/5+V91MR542HrPT2tu6Alh9b9K43Lp64CVApgCf1vxGCIFMB7UU7DPW9bo6ZuPKbcMPbte6cuKQ39anILYOOQoE+B7gFEGzOaPE9i0pekJ777Gejk8nsaPyYUEEoEAZ4CJcBZog5+Ay53V6m2t32Em6MrlMcP0ScBuAhRAu4myvYgIHJylifgNiqgRViaBIAlQAIMExWKxJTCusvEhTWmZ4faq6/rRjMyM+Suv1HaF2wbrJT8BCmDyn2NnjlDXv+xV+vhIjG9qbLoC9UdH0gbrJjcBCmByn9+4jG7cosZXlKYKrZ3j3cFT/XFdG4gZXrtXW9LcGZf+dZp2QMppmusfuu6NSAB1pY/y98kACXRAgALYARQmRUzgTCxBh3feip4BQTyvXb5b+f8eIX572uUzgQRsJsDXYGwGyuZsIqBp6Ta1xGZIoFMC/v9xOy3BDBIIlYCmv4EHGOvbVtNHmctg5HmwRF7RNl+pVq9qNNOwfC0ww/RJIFoEKIDRIpvC7a4qybo9cPi45/c0fvHtu5Kua/qet0qyvhFYxhrXdG0URNCaxDAJ2E6AS2DbkbLBSAkULdL765r6UqTtsD4JdEeAM8DuCDG/LQH8gJE6/hseeFIbnZ2cvVrTbUqHBNKRQJQJUACjDDjZmvf9elvUfsBowiL9lBbVNCPZuHE8iUmAApiY5yWhrOo1o/6zrgySnZy728wUOz0f0ZReI+0gvK+j9i5bqmfW1TZVYvaX01E+00jAbgIUQLuJJmV7+tCuhmVuYy+bmcp+flI2zZ3VvH/Wic/Q3irJuBPJcnToShbp2Xs9TQvx4OPLHRZgIglEgQAfgkQBaqo2KTs54wXorXK0tDasDJZD0UuNI/aqprdRb1qwdViOBOwgwBmgHRTZRqcEsKztmVerGiqna03WQhA7bcLLzWO9uvcm3atuxMzP2CzVWoZhEog2AQpgtAmnePv1dU1XeDT1xLjKBjw40eQeYAvEr6CosnEE3vLLP46H7/ul+J9J3IZPAYwb+uTrWH7AyPcbHvjFJO2wf4R4qAGJu1gef5juRMhMoU8CsSdAAYw986Tt0ffrbe12eUnaAXNgjifAhyCOP4UcAAmQQLgEOAMMl1wq1dO0Td0M9/Nu8plNAglJgAKYkKclsYzCj5+PSBSL8H3cfjxMeQO7yTQkik20w7kEKIDOPXcpZzm20WrQ0jPGVF+lbU25wXPAUSFAAYwKVjYaDQLYHmHzKopfNNCmbJt8CJKyp96BA9dViwOtpskJTIAzwAQ+OTStawJfrWxciHcLJ3RWCpuqPr5qeuYvOstnOglQAPk34FgCeCDSF9vsD+hwAJp6vLok40FuKtghHSb6CHAJzD+F5CMA8Vt1deYPNE3jByfJd3ZtHREF0FacbCzuBCh+cT8FTjKAAuiks0VbuyZA8euaD3PbEaAAtkPCBEcSoPg58rTF22gKYLzPAPuPnADFL3KGKdoCBTBFT3yshu3yunZFtS+KX1TxJnvjfA0m2c9wnMf35vT0N/Gj6A/CjMuwHWBkf2+aarspg66eWlWS+Rqf9sb5JDu4+8j+IB08cJoeOwIQqZ+hNzlsdXjJ+VW+52cr0pRrjEvglDvlHDAJkIBJgAJokqBPAiSQcgQogCl3yjlgEiABkwAF0CRBnwRIIOUIUABT7pRzwCRAAiYBCqBJgj4JkEDKEaAAptwp54BJgARMAhRAkwR9EiCBlCNAAUy5U84BkwAJmAQogCYJ+iRAAilHgAKYcqecAyYBEjAJUABNEvRJgARSjgAFMOVOOQdMAiRgEqAAmiSS0M/JyZmcl5d3ZrhDQ/3z5eiufnl5ecR/R3379u3Zo0ePi7vrK1r56PsijLXjX5hDp8KxZ8+eF+i6rskRLTvYbmwJcDus2PKOaW/YJ282LtZn0OnHYXb8U1+9qzqrX1BQkFNRUbEaAvFgbW3ti1IO4SJ4X5BwZ87lcm05evToB2Z+c3Pz2a2trasQD1lMc3Nz81FPjqAd2LTC3vVmBa/X+zvY9AjixhjMdIt/TUtLyzkYWzWYjuvTp893Dh06dMSSz6ADCVAAHXjSQjR5PGY27o7qpKWl/RUi9H5HecGm7dq1qw6i8BgE5Dn0M7yuru4XEAgRzHN9bfRG/CwIztvWNiF2yxH3CyDCMqvq8GcsIXBnud3ubGt9CQ8bNuyfa9eubUb730e0XNJCcIdRtk+w5TG+Vik7YMCAP+zevXt0U1PTzxG9I9j6LJeYBCiAiXle7LSqP8RnZEcNYkazTtIhYBNwgV8UWAb1RkgahK3dZqbIW+3xeETEFGZSf0AbhyBE5VhK/v7YsWM/lnRxSBdx+jHKjjMSAv6BuIlQToAgDoWvIT7DUuQj1HsD8UWwtRB9Nkke+pFZYt7GjRv7w98jacj7GLOy0ZhJutLT072SFujQVgaEqxDlNkse4oFFjDhs+A3ay7Fmgs95iJ9cU1PzO+TVwYbeGNvVGPtL1nIMO4sABdBZ5ysca5/Hhf7rririYh6I/FEdlOntS2uXhzo11vIQgheKiopeqq6ubrGmo9x4xN+zplnDWHYWQlwmQ1T6oKzMACf78s9EWhXCIoDifohxLJBAr169ToPQfSphi/Pu2LGjHuL1J6QdKC0tnYl7k22EEEL+KNqcDluHHoaz1A0M7oJNmdZE1BsE83oj/XNLeldtWIoxmKgEKICJemZCtAuzkRJcoIMCqvVF/GKIQnNAusx+5pppCD+LsBxtHATjVUnAslaWtB06tH0XMs5C/9+D+HlQ516IxXfMwrBpMOIelDNmXWa6+BC/uzBblD5eQ/7X4L8KWy6RPMSfg9i0EVNJ786hzcdRr2rWrFlDcH/yelmiSx2ZiSL9FthSYhU/9PM0sq+Gnbk4/oj4U1huF+LWwEFrXxiX1L0e9j1oTWfY2QQogM4+f37rcfH+AJEC+B/5E5X6uy/8FUuaLBsvxOEXQEteyEGIwmIIy/cxq3ofy9+rIUAvIP427NDgP4z8Ohy3o+GJSLsN4Ztw7JWOkO8XReRlIb3RNADxDIRDFkAI6rsQu4tQfwWErhqCNgXtDkdfv4V/H+x82ezD598LwXsYS/C/IP4EwksQvgH1ppnlMKZH0d5RtJEraZiBDsEM9O6xY8feFjjjNevQdwYBCqAzzlOwVr6C2do9XRXGhS1CZNy7k3IQi2m4sP+rozoQjE7vAUp5iMW/IDivoY0voY3XcYxFXGaS/8GM6T7Ul4cXozCb+gRpb6HvYei7HOEJEKJ98P0OIjMYeTv9CUploH7IAij10fYGvFZzYWNj4wq0KcvvXLQltwIetrRvBJEmS/ka2NaAMrvFVoRPRdoW2DQfYypHGwXwtyI/TyrhfuTtCA+i+AkNZzuXs82n9ZESwMU9FG3IPb6ODrkHKEdHeaMgCkOQJ4Kzt6ys7CsQk2dPPvnkPAjIfCTfDwG5AULRC3FZZorYfhf9HUO9D5F2h7xCI+nikH4ajk+Px4yHGjIDbLd0N/O78w8ePLgD/d+Ccqei3X4IP9ldHWs+7N4OMZcn18ZsFUJ+FOEvyPuK8G9C/BfW8gw7kwBngM48b51ZfSpEZkJnmZIOMTjXmg/Rmo24HO1cMPcAzUp4F/BaiMMqtLcK4tGK4wIIyDq0IQ81LpVye/bs8ZSUlFy8bNmyByCCjxw5cmQwkmdIHuw6HXU2StjnMhFvMiOh+hDYiejjRbSxEnWzEV4KNlMg1m8F0xbsKRSW8I33CyGgO7A07tPQ0PAjtPkeZoqdPtgJpn2WSQwCFMDEOA92WVGMC/1LXTWGi9c/6zLL4d7dGbi4P0TeBRCwf5npHfl4hWQwlpYb8Q7hOIjAB1IGQvFF9LsQS8OxaOOnEIsVaG85vpz4IdKMZiCExUjPW7p06UCIytkIn9evX78t6M/IRz2ZAS42IvgH4Qwc/nuCZnowPuy5HfbMRZvPjhkz5pb169dnoZ9laG857PgGbhMs664dlL0IZQpwjMTx8te//vXtS5YsaUKbZbBdRJ0uCQi4kmAMHAII4IJ9Dt41uLhPw8V+uvjmgdnQOWYYS7ev4iKuCICmIS4vGovfpUM/Zlnr304RKnnOP//8f6LvP0P8pqGPgZgRGu8Z+ho8BaJUivSFiMuT3vytW7c2SN7AgQOz0e5QCIt/CYxkuQcYkgDiNZw0CJw8BZ6H+g/ClhvlPt2+fftqweAypK3F8ToEsgR+R+5MlPs1+pUnwRNR/xII/QgI+R8rKytlVrsVldZiZvv3k0466RTfcrijdpjmEALWP2KHmEwzAwlgBtcPad/DBboDS0w3LvCNOL4q5SAI5+NC3u0royBOhUiear3/JuUicRCvIvT9nojNqFGj0tHWvTgqTIHztS3v9I2CsPSA0M1FnbnmN8S4XzcD9euysrJEoAyHuLyH5xdA1MkUm+XAGESs2zl8FVKMxBtR97sQ/J9bC1hEcDUE0mAj+eBzHlg9hOBpSC+DXwgbG9DH6RDDuzGDfQxL9f9D+FrYPAz523AoLIWvwUz4RQnTOZcABdC5585vuW/GgxVlv89kpoKMT3GxfkcK4OHEh/AOoczNEscrHO/Ay8PytcunxVI2BDcOovN3Kb958+bLEM5FP49LHGLiFh+CtBveB3h95JsZGRlzYF9vvKsn39Z+AeXlXcJf7t+//5iULSwszPKJjf+eIOx/DK+1eORA+N9SLsC58QVINYTy/MzMzFdkdhZ4QNRc6Otq5N8veT4B/hnam4D0Mtg1AP3uh42fID4H7Z+FYw2O5Uh/FmkvwL8GY+uDtHyEDTFEmM6hBHgP0KEnzjQbM5hiXIjXQWemWmZcLyHtt/n5+T/CRe6ByDyDi/xWzA4rIJB1qFOO/Hm4kJ/G7GaL2Rb8Ssx0jGWpL01eB5GXkv33BSEOMsPzO8wsR0BY5EGBIYBYHv4FaWfCvwS+vAsoT2K3SgXY+BOIyB7M+I7ClmEi1rDl98jaP2TIkN/DfhHl4Xv37pX7bi7Y9zZmrwgaT4VllrhQwhC5IZiZvS9h02E8X8Ss7IjE4ZvJHfqYuRnpeHBzLoTwOvmCxCyI5e5PIZB3yYxR0jCGL2N8/4s+Z+EByn1gsQIMFsCWM5BmiLxZl77zCFAAnXfO2liMi7AHEp6C4LxuZuC+1WsQiDPq6+tlGenBzOZJiMLqkSNH6hAdNXny5AW4oT8Z4tQf+Vswc9qN8A1m/W78k5EvsyPDQQh64/gXhOw9U6xgy34IxVUQJZlZ/Qc2PiCFkW6IpIRF/MSHc6PM/XhQ0YQ62xE/B4eI2/fMrzgQXo4y6yBA+xAWQZaZ3CKMq0H6hD8PfT0reaE43HvcKf1a62Bm3OYLEIjfdchfKOIn5cD2+2D7OPqTcXMJbIXnwLDc0I7ILV68WLc2MGXKlIjbtLbHcGIRwIWvDRo0KOvmm29uxOzSG6l18uDib3/7mzxgaPN3FGm7dtaXMQfaJ8tnO8Zvp52p0FZVVdUdOB+PmmPFefnN5ZdffqcZD9XnDDBUYile3icE9bj4bSEhD07Qpi1tRauRQPGTfih+0aId23b5ECS2vNkbCZBAAhGgACbQyaApJEACsSVAAYwtb/ZGAiSQQAQogAl0MmgKCZBAbAlQAGPLm72RAAkkEAEKYAKdDJpCAiQQWwIUwNjyZm8kQAIJRMAOATQ+GTLHhJdajV1zzTh9EiABErCRgHz5ZHXG9+PWhFDCEQsgXhLdZe0QH73Ld5x0JEACJGA7AXwF0kZfAvUn1A4jFkAYJLtl+B3iN/kjDJAACZCATQTw/bp8uy5bnlldG/2xZgQTjlgAocCvBXR0M3b9nRCQxigJkAAJREQAG3Y8iQb8S2Boz87i4uK1kTQasQD279//NRjymWkEZoCyBdJCiqBJhD4JkEAkBPBcIQubrsxDG1Os7UB35uCIaBMNW75Ch3FXwbBXAowTw+bDwAXYKmn9+PHj2zwssZZlmARIgASsBDCRcq1YsSIf25EVYUL1APKGW/OhK5uxzdrZmAH6dw235gcbtkUApTOI4Cx4pcF2zHIkQAIkEA4BiJ/8ROkF2AZrQzj1rXUiXgKbjcGYuxGuMOP0SYAESMBuAhC/3ZgdXmqH+IlttgkgDPNiM1T5URn5RTD/PUG7AbA9EiCB1CMATZFban/G7t+joTOr7SJg2xLYatCaNWvSa2pqpkKpp8Lw0fALkM8XpK2QGCYBEuiKgBfasRcFtuNYgZ8ieHHSpEnru6rAPBIgARIgARIgARIgARIgARIgARIgARIgARIgARIgARIgARIgARIgARIgARIgARIgARIgARIgARIgARIgARIgARIgARIgARIgARIgARIgARJIQgL/D8QSBFyq3AdMAAAAAElFTkSuQmCC";
 
-  const __vite_glob_0_39 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_44 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: addTabLayoutImg
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const table = "data:image/png;base64,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";
 
-  const __vite_glob_0_40 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_45 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: table
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const time$1 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAC0CAYAAADl5PURAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAABQKADAAQAAAABAAAAtAAAAAAUtwLMAAANWElEQVR4Ae3df2xVZx3H8Xtb6KAtrFCxK9CftnSzigxckOiwm2IYhmmywTQjMkhqdC4uBgNm/mLLlsiSmU33h2M4hzCHkGzTEXU/0C4ZKIbifkBcJ5BCW7oyOksHbSml18+323GF3nt7V84999xz3zc5Oec+z7nPec7re5/nPudHe0IhXggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACbgrMnDnz4bKysmK3ylR5n3SrLMr5QMCtOM2bN298aWnpx6uqqi77oHSW3BBwK0bLli3LLi8vv9LmbtQrGWVkJaPQVJQZiUS+qWnKpW5bnejcGTNm7FRZv73Usvj8SAE34qQGuqS9vb3l/PnzW3t6eloUrwdHbomUsQq4ESPF5Bu7d+9uO3fu3DbNj+v9t8dan2R+LjAdoBtI06dPX62A/VllveNGeZSRHAE10MKcnJw5bW1tc8Ph8FV6v0qjwdrkbI1SxyKQ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Ver4vrBx48ZfadP7c3Jynve4CmwujoDajZ0+2tnc3PxWnNXSNiuQHaAa1UpF5AWdT+rUsP2Pej9Vv2R1aRulAFdcDaxe0y8sZpof0IPq8wK8u+m4a1WKTXM6VjyROgeuA1QjspGejfhyNLK4Rw3qLr0/oWlVIiCs47nAOp1Xqp04ceI0NbRrNN3teQ3YYEwBtaMOZc6IuUKaZwSuAywpKVmooFlj2qfY2P7ZtEtpN9ltMWker8BW/9ChQ/aPGncODg5eH9idTMMdy8rK+rvazpdLS0tj/wvvNNwvp8qB6wAVrFXq/J7S4e+PnKm1tfV27fDbfX19QyfcnZ1nnnoBNbDxOsE+QacoPq/Y1St2L6W+VtTAEViwYMHjiknbwMDAH3Rufei/QJeVlRUrXrfa7THOeuk6D1QHWFNTM0mN6Obs7OzfDQ+IAhjRtEV5q4ens5x6AY34tvT39/dq/nN1hpsLCwu/n/paUQNHYMeOHefVnq5T+zmqtP3qBLvVGf7b2tKZM2cC1X84+8wcAQQQGCFgtyrpFNN0dX7hEZkkIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAAggggIC7Av8DoGCDj3Mxk9MAAAAASUVORK5CYII=";
 
-  const __vite_glob_0_41 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_46 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: time$1
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const upDown = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAC0CAYAAADl5PURAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAABQKADAAQAAAABAAAAtAAAAAAUtwLMAAAGCElEQVR4Ae3asW3bABiEUTNlhtFSGiFzeAQtpWHSMgOYgJsPgk95LiXi+OOdcZU+PvwRIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIEDgG4Hjm+/zr2+P88xD//PA5/340iPn/p+Cc296lXjlfPVc8dmvIkQGAQIEFgUM4GJrbiZAIBEwgAmjEAIEFgUM4GJrbiZAIBEwgAmjEAIEFgUM4GJrbiZAIBEwgAmjEAIEFgUM4GJrbiZAIBEwgAmjEAIEFgUM4GJrbiZAIBEwgAmjEAIEFgUM4GJrbiZAIBEwgAmjEAIEFgUM4GJrbiZAIBEwgAmjEAIEFgUM4GJrbiZAIBEwgAmjEAIEFgUM4GJrbiZAIBEwgAmjEAIEFgUM4GJrbiZAIBEwgAmjEAIEFgUM4GJrbiZAIBEwgAmjEAIEFgUM4GJrbiZAIBEwgAmjEAIEFgUM4GJrbiZAIBEwgAmjEAIEFgUM4GJrbiZAIBEwgAmjEAIEFgUM4GJrbiZAIBEwgAmjEAIEFgUM4GJrbiZAIBEwgAmjEAIEFgUM4GJrbiZAIBEwgAmjEAIEFgUM4GJrbiZAIBEwgAmjEAIEFgUM4GJrbiZAIBEwgAmjEAIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECPwQgePVd/z+c56vfue7v+/v5/Glx9uDc9378865Nr3Ku3K+eq74zM9gCkUZBAhMChjAydocTYBAIWAAC0UZBAhMChjAydocTYBAIWAAC0UZBAhMChjAydocTYBAIWAAC0UZBAhMChjAydocTYBAIWAAC0UZBAhMChjAydocTYBAIWAAC0UZBAhMChjAydocTYBAIWAAC0UZBAhMChjAydocTYBAIWAAC0UZBAhMChjAydocTYBAIWAAC0UZBAhMChjAydocTYBAIWAAC0UZBAhMChjAydocTYBAIWAAC0UZBAhMChjAydocTYBAIWAAC0UZBAhMChjAydocTYBAIWAAC0UZBAhMChjAydocTYBAIWAAC0UZBAhMChjAydocTYBAIWAAC0UZBAhMChjAydocTYBAIWAAC0UZBAhMChjAydocTYBAIWAAC0UZBAhMChjAydocTYBAIWAAC0UZBAhMChjAydocTYBAIWAAC0UZBAhMChjAydocTYBAIWAAC0UZBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQ+CkCx6sPuT3O89XvfPf3Pe/Hlx45961z7k2vEq+cr54rPvMzmEJRBgECkwIGcLI2RxMgUAgYwEJRBgECkwIGcLI2RxMgUAgYwEJRBgECkwIGcLI2RxMgUAgYwEJRBgECkwIGcLI2RxMgUAgYwEJRBgECkwIGcLI2RxMgUAgYwEJRBgECkwIGcLI2RxMgUAgYwEJRBgECkwIGcLI2RxMgUAgYwEJRBgECkwIGcLI2RxMgUAgYwEJRBgECkwIGcLI2RxMgUAgYwEJRBgECkwIGcLI2RxMgUAgYwEJRBgECkwIGcLI2RxMgUAgYwEJRBgECkwIGcLI2RxMgUAgYwEJRBgECkwIGcLI2RxMgUAgYwEJRBgECkwIGcLI2RxMgUAgYwEJRBgECkwIGcLI2RxMgUAgYwEJRBgECkwIGcLI2RxMgUAgYwEJRBgECkwIGcLI2RxMgUAgYwEJRBgECkwIGcLI2RxMgUAgYwEJRBgECkwIGcLI2RxMgUAgYwEJRBgECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIPCeAv8ADH4k7lCmRnoAAAAASUVORK5CYII=";
 
-  const __vite_glob_0_42 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_47 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: upDown
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const windRose = "data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='320'%20height='180'%20viewBox='0%200%20320%20180'%3e%3ccircle%20cx='160'%20cy='95'%20r='30'%20fill='none'%20stroke='%23E3ECFF'%20stroke-width='2'/%3e%3ccircle%20cx='160'%20cy='95'%20r='55'%20fill='none'%20stroke='%23E3ECFF'%20stroke-width='2'/%3e%3cpath%20d='M160%2095%20L218%2095%20A58%2058%200%200%201%20201%20136%20Z'%20fill='%234080FF'/%3e%3cpath%20d='M160%2095%20L191%20126%20A44%2044%200%200%201%20160%20139%20Z'%20fill='%236AA1FF'/%3e%3cpath%20d='M160%2095%20L160%20161%20A66%2066%200%200%201%20113%20142%20Z'%20fill='%230E42D2'/%3e%3cpath%20d='M160%2095%20L133%20122%20A38%2038%200%200%201%20122%2095%20Z'%20fill='%23A9C9FF'/%3e%3cpath%20d='M160%2095%20L108%2095%20A52%2052%200%200%201%20123%2058%20Z'%20fill='%231C5CE6'/%3e%3cpath%20d='M160%2095%20L126%2061%20A48%2048%200%200%201%20160%2047%20Z'%20fill='%234080FF'/%3e%3cpath%20d='M160%2095%20L160%2035%20A60%2060%200%200%201%20202%2053%20Z'%20fill='%236AA1FF'/%3e%3cpath%20d='M160%2095%20L190%2065%20A42%2042%200%200%201%20202%2095%20Z'%20fill='%23C7DBFF'/%3e%3c/svg%3e";
 
-  const __vite_glob_0_43 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_48 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: windRose
   }, Symbol.toStringTag, { value: 'Module' }));
 
   const yuliang = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJcAAABuCAYAAAAqAoGoAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOwwAADsMBx2+oZAAAABZ0RVh0Q3JlYXRpb24gVGltZQAwNi8xNS8yNqzmzG8AAAAcdEVYdFNvZnR3YXJlAEFkb2JlIEZpcmV3b3JrcyBDUzbovLKMAAAgAElEQVR4nO29S5BdR5rf9/syzzn33Efde+uNRwEECYIgmyC7OeL0eEYz3aPweEYjhTQRfkkrb2xH2BEOr7yyN7PwwitvHF55o53lCGlhOWSppYmw7Jlmq9VkN7ubjybBbgAEQNS76r7PKzO9OOfce6vqFlAgCaDAqT+jG3XPyZPPL7/88svv+1Kccw5gY2ODmzdvUq1WKR6xvLzMCy+8gHOONE0REc5whpNCSuICcM7hnENExv+WBFX+PsMZTooDxHWGM3ydUM+6Amf45uKMuM7wxHBGXGd4YjhCXKUIdiaKneGrwiv/sNbym9/8hiRJsNaitWZubo61tTXgbLd4hsfHmLg+//xz3nvvPZaXl+l2u8zNzXHx4sWxemI0Gp0R1xlODKXUhLhqtRovvfQSnuextLSEiFCv18c6L9/3x8R1RmRnOAmO6LmstSilMMYAoLUGDspgZ8R1hpPgTIl6hieGM1XEGZ4YzojrDE8MZ8R1hieGMXFZaw8I7Wei2Bm+KsaqiNFoxKeffopSE2a2uLh4QIla4ozwznASjIlrMBhw+/ZtarUavV6PWq1GEARATkxJkjyzSp7h+cSYuESEa9euEQTBmHs1Go3xO9/3mU57hjM8CuJynBHME4Qr/hMUf516WcEZJ3qScOTEpXBI8fuvC55/VcQpHy0HCMJwKNy718Pa7FlX6anh+SYuB4jjNFOYIieunW7MDz/MSOzz3eWPg+e3pQ4yiflikBCnltNMYGARBXt9RxJZID7Vtf26MN4tZllGkiSICEqpsXVEpVI58tGz1nOJCIglSjL+yQ8i/ta353jjqn6mdXo4FCKKbheyBE73RPj6MCauTqfDRx99NFZDeJ7HysoKV65cOeDHeJrg0oBuf8Tmfgz4GJMvkdP+lqcBIuCUYJ3hwV7C4kINXC7oT9IU9XUOiv5+3nGAc21vb7O8vMz29jb1ep12uw1wxBL1WTdciaC1kCY+c7WUOIrJUr9YHvP3p4m4PO1IU8N8G77YGvHamiYx9gBx5W1SpJkZT+bnHWPics7x2muvUa1WOXfuHFprarXaeJCq1eozq+QsiICKDXNa4VPF8ysoz+Xy/SkiLAARR61uaFQtOtXoik/ogCmt127PcO/zmBuvVL8x2rAxcZ07d45z584dm/A0cYIS1gJoUAIIIsVwncK6AiglBdlYRDQOGZPRVtfxr/9dxBvXKojyjs/kOcLzu1sErHWIVogCi82H6lQSlpClsLCgGVmPzd2seDqBcbDTTYmi5385LPFcE5exEPgKpz0SYzjNu7A0c8y3PVQQ8WDDwOGlz1lq9YxB77kekgN4rluSGKES+PhiSaJcF346YXFYTBbzrYs1tjbyTeH0ZBAjzNfgk63hM6vl143nmrisFSqBAgNpki81p1OdmstWaQqrSx773ZTM5NwrGRbqEzTNuTm+2NkH0mdb3a8JY+JyzjEYDNjc3KTT6bC3t0e/33+WdXskjLEEviMMPPqjXIkqnEb+JYgocD6iHdY5lDg21uF/+9+32NmNSeOUG5fnqNNiZ/90L/EnxYFtyfvvv89gMCDLMmq1GhcuXODatWsAGGNOjZ4LBE9DmiU4YHHR4/664YULNt9BPvP6HYRWQpIZTGbwVIXmKtzfi7i3ntE4F/D/vjvC1wl/9DttTKL57AthsZVgrH5kU579WBzEtFbhgLHguXPnuHPnTv7C8w4EJTlNZs7OWVCCySxpltFqaD67GTOMfHxfMNaCc6dmzVcoTGbJMoPWhoV2xvqWYBPN3/9+hc82YwLfo1LzeOmS5Ycf9+mO6tSCYrKQ9/m0CXr57DTjAOe6cuUKy8vLY8IqqVApdaRhpwFKLFqlLLY8UIZuH84taZTWhTXCs0U59AJUAovnKVAeS/WQd341JLBV3rSK335pjoKGWFys0Kr1+fX9jLeuNcYEdBr1jI/CAYrRWtNsNqnVatTrdWq12rOq14kgIoj10cojsRndQQycjl1KaQhUEo2isA7CMT9XY9TxSKOI9z7sjN8DIIrXXmpz+/aA/qAMcuxOPZeahUeOw2meMY6J+qG9WOHuZh7fQgqrz2cJIe/cvIMdmOIgAWjOCZcvefg1TX2h8E1weVoHrMz7XDlX4y9/FJNkGSKnWc1yPE7DJP/SsNZgiz5/+/UmvW1YXx9y3EC4A0fFTxJ5KTdvDtnu9gGDjTVe4AEOrR1vvebzO683eeuVuZzLFVUua/7WG3XmG8IPfzLCoQsC+3IYDiPS9Ol7bz3XxOUQfJX/Vfcy3nrD40cfwn7f4sgAR+YsxqaAwZLgxgvVk0LOPe/3U/7Zv0v44GOwBj7fHdJu5Aulc46VZo0XLih8mVWfnFP9zncDYmP45c0RvUiI0sNpSoKzh37n2NqN+Zfv7POP/mWff/yvetx5MORp6tCe6yg3f/GjDueXfF6/VgMywONHH4+4v5ux6HuszHvsDzOyKOHSJY8XL9SmjoqfFHLC+NEvuxjrQeQxjEa4huH7N1qElVxfnytWy9qoQ9+78qSUva7lhz/roP0aSEK7rlmoKbQ4vIpjccXDZh63P025cMFnZSXX991fT/jxz/d47ZUaVy426PYNP/75LqvnA1bn6viVESvzNXx99JA8S1I83/vK57Qzictay/3796nX6ywsLDwyk1Hk+OEHPV5eq3Pl3FezCB25hH/z0wFr7RpvXD1oBZsY2Nm3JJHQGYz4+Scj/sHfWSQ4VORWzxINhZ9+2GUkPqJi+t0Br19Z4rdfD9Ffkl9/eDthczfh919v4B810J2U37X8xTtd/vh3m8zVhXubGRdXfSpfsmuizBKNhCixdPuOQS9FiyXKDJ20wt07EX/jWpU7uzFXLlXQznHvdsJ33qyxujIptDuETx6kpPGAaOChjFCfC2hUFZ6y6MAjtSm/urXLfD3ku2+2Cb+CgcZM4trd3eVnP/sZly+tcfWV63x0a8B7767jeblNiy1mmogDm9EZ1Pmt15b58Qd9mtUtfN/DIjhAjZ2rCjHbOVyWYozBiMbTmsBXKByeCL/+YsTvvX2F7rbj4y82aTVTBEUcG7CKILD4gZBJxksvaq4vBrhMYQvHLa0UWkB5MBwK//b9hEzF/PYbwvsfhWzuZNRqDlzp7DXt8JX/LTrD9z2U5AoNpVK6qcXIOX77xZSf/HKPhZbGU4rMmuLzXHUTG8vuLly7lPHWG3VcCp4GZ8G6iWyFc2PF9NFN00EBPt8IFMdEKrcGAYdOArKkyl99OGQ9NoRBn7rnMehk3Lge8uqVgDjxc1FAQHs5r0zTFOs8esOMnd2Y3X2hPzAQeKz3PL7/Ny7yq990Wd/YY7k6InM+FkucGbSGuVqFSuAfqKMTsFL8a4SatrOJazAY8P7777O6usrLL1/li/Uet+728Ssah8U6UOLhXAYYesOAmm2yE8cstrsorTDWopSPOAPisMbiiv2QcwacQrSXLw2SITgUmmGnQkdlVDKPek3QOip0bhn1imZxUQgqMU4pzMiHYUoqAlqhVBlWUyEi6EDY3d7HE83iyhImTvhiyzBMBFGCca6QwQ52gSgPrTQ4EKVwLiNxjt0dw3K1ReKNmKsA1uFUPolEcjPmNDWsNDQrbUsnTtDKK6aZQ2uPDIenNL1uh263y/nz58c+C4evwymjO5a/S0Vq+W8gClE+UaB456c3+c7lJS5fXCKKB6SJIjMp+bT1MSbBicWKwYkg2qMmIVoMxsVU/Ar4jo2e4cMPQprtgOW5Dkmc4lSdJI2xVmFxKC1o7R3oNifFT8knUigPkbkGgwFKaSqViXv/oLdHtVZD6QrRoENYb5CZFK09bn0+pNnMWGq3cglWBaRRH8/38+jQ/iFLVpcxGg6o1hukcYSIQnkeSgm7+wlgaDcDlAoAIbUDPCX0h0PmakuzqkwUDQnDkDSzZElGWKsQJwOcdYgKCIMKJo3QfojLEsQLpitUkhbTwvFoNKRarYFJiCJha8/Smo9ROBr1eZyJEa1yOSU4qhdMkwStFThXxOCYw1iLdQatNUEQkKYpQRCQZRlxHFOpVMZxaA90WUFwSin6/T6e75EkMYGnqdVrZJklihIqlQDfD0jSBGsMohSV4Og6nqUZ1lmCIKDX7yEIjUaD/f0d2q0miAI01kQoHWKyEdo7uUXyIwX6aU39Z599xnA4ZH5+nvX1dZTWVMIQL/BYXV3hww8/RKNp1Ov4fsBwOGQwGFCpVHj99W9Rr9fH+Q4GA+7evUscJ7TbLR48WMc5IaxVeeWVl7h96zZ3bm/RajVZXV1ifeM+SuWNX1tbY2G+fUBD+cknn3D33udceeEF+v0Rn39+l+9/7w/Y7+zyxYMHrG9u8ca33iCLU3Z2tlFas/bCZS6uXQDMeCESNO//4ufs73W4evUq6w8eEAYhw8GAV65fIzIxd+/dxxNFu9lie2cHrRRRFHHt2jVWV1cxDrRAFEX89N33UOJYu3SJjY1NssxgnWPt0hpaa27dukWapqytrZEkCXEcs7e3x+XLl7l69eqBJfOTTz7h9u3bvPrqq+zs7CAiGGOoVau8fO0VfvGLn7O3t8f169eJooidnR1838f3fW7cuDGObwu5XP2LX/yc3b09Ll+6jHOOjfUNXn75ZYajAcYYNje3uHz5Bba3t9jZ2WVpaZELFy6wsrJyIuI6sRK1nEn1ep3RaMTc3ByVIGDY7zMajoiGKdYInl+hPxixv7uPczAaRSRxisnMgXz9kqNpRa1WYzDo0+91SKKILDE06nNYM6LX3WU46JElKcP+EJs54iguKsd42R8MBmxtbrO9vYvvaXq9fTrdDo1GkyRJ6e512dvdI7WGTr/HKB6RJlGxHAvKgSp2aMNen62NdTbXH/DGG6+TZBG9QYcojgj8KjjFXLNNnBkGwyHD4ZAsy0jTtOhUNx7AQTTk9t17DKOYaq2OeApHHjUoCAK01uzu7rK5uclwOMRaS7fbPbAkluj3++zs7LCxscH58+cBCMOQxaUlgsAnDENEhHv37rG7u8tgMBgTbJYd9PQWESqVkO2tbfb29mg0GoyiEWmWUq3WuHXrNru7u+zv7wGwu7tDmqZEUXQiwgLQf/7nf/7nJ0lojGF7exvP86jX62xvbxcRcYQXLr9AfzjAZIZ6vYH2NK9ef5X9/X2WFpfwA5+LFy+OZSKA4XBIp9Oh2WzmgedwtNvzVKt11i5eIE0zgsDn8uVLLK8sEycxKyurjOIRL754JV9qpogrDENqtRrNZpOlpSWq1SrLy8sEQUCtXmdpYYnLly/T63dZu7CG9jSLi4tjbppPooJ3aU2j0WBxcRGTGQQhDEPW1tawLl8qw0rI/Pw84hzt+TY4x5UrV/A8b5yfUgrf92m32+PQVM1mcxyGvdVqjet8/vx5fN9nNBpx/vz58fsDg6U1rVaLxcVFdnZ2iKKIer0+bnvpa3r+/Hnm5ubwfT9vf612xD9CRMiyjHq9zoULF+j1eniex9raGs451tbWCMOQ5eVl+v0+165dI45jzp8/TxiGJyKuE2/KPc/DGEOn0yFNU3zfJ01TnIP19XUWWvMMhgO2t7dI05Q7d+5grGVzc5PRKGI4HB1pnHOO3d1dAAb9Afv7+wyHA/b3u2xsbnLn9h1u3rzJ9s42w8GQjfUHhBWPbnf/SP3W19e5efMmIsLt27f59NObWGvpdDrc/fxzfvrTn7K9s42nPW5//jm9Xp8oKuskTFPqgy8e8ODBAwDu37/PYDBgf79Dr9+n1+syHAzY3t5hf2+Xbq/L7vY2SZLQ63XHbYPcXe+zzz5jZ2cHpfJNxt7eHsPhEOcce3t73PzsJvfu3WN/f5/BYIC1lnv37jEajTiMnZ0dfvOb3+Ccw/M8fN9nf3+fnZ2dcZ/funWb4XDIcDhid3ePwWBAFEVHOKFzjo2NDR48eEC328XzvHEd9vf32dzcZGNjneFwSJIk/OpXv8JaO7Nex+HExGVtvizONZsMBsPc+A1hOBxgjGN7t4O1jiDw6fd6RElMHEf0BwMGgz6Hd2Raa9I0o1KpoLUmSRK63S6jUYTWirlGA6UEZx1ZmjGKIgbDIaPRkMwcDeZR+lWur69Tr9WA3PjR0wFZZmnMNeh2u8RxzLDfYzDok6Szg4JYZ7HWsrGRyyBRFDEcDjGZodFo4YB2uwUidPY7xdI4Ij2UX5qmhGGVzc0t+v1eQWCK4WhIHEdUq1V8nQvenW6nGMiY4aiPMdmRw+pySdra2qJarTIcDmk0GrTb81QqFarVKs1mg52dbXq9LqPRkCRJGY1GMw++G40Gw+GQbrc7XlWSOKESVLl16w737t1ne3s7X94HA+I4eqwggMcK9Ie3xrh8AON0hJKAXrebE5goWs0m/dEO/V5Cu7VImqU0m3N09vaoVDwyk7KyssoBvYiDTmcfpTTVsMr29iZ+EKCVx/xCmzRN2dnZoladQ8RjMOxSCfKl5fILF47UdzRK2NzcoF6vMT8/zxf377O8fB7lJQz6Q3qdjMXFBTrdXebm6gyHCc1mg2rt6C6q1+uxu92jPd+i1a6zu9NhNIo4d36RzDjiOKVSqdDvD0iTFE9r+oMua2sXimXRUs7bna19RvGQuWZIHEXEsUPrjHptgbnGHEmSst/dIKhUsEYYRgOq1RDfq9ButQ/UaziI2dreot1qYmzG7u4eS4urtNsNjEuJRtDpbNFoVEniGJSQJgpPa5ZXjirDu50Be/sdFhYW0Eqxvb3N2toFRnGHIKiRxAlZ6uj1+8zPt9nf22VlZRk/8I/kdWLiKtlguz3P5ctrGNcjyXbRqk6gl8fpDPuYLCNKNxhkHxAGS9T06wiCcwZRIBLgq0VAMDYiMVtQuH1KoeJwzqGVxrmMQC+xvxfnsseFNrHdwpdllPgYOhg7wKQBgd9CUQGBzO1hbYTWGusszjq09kmzPvvRT3BWWGz8HnlxqpjFBi1NNE0sMQ5DZjr4egURh3VdtITEWQ+lHc5l7A1/gTE9muGr+N4qOIOSAH+qT3K1B6TZPsZawmCBWQfpg2GHnb3PuXzxjcm3Uykdljh7MLZEdc7mCmId4MkiJfEmdpN+9Gv60QMa1TXmqzcQalO5paR2D2stFW+ZzCRkbg/BQ7RF4TCF97cWjzjboxO9hycrrDb/GEhJzDbWFjFEXIZzKYF3DnGKKNtAqwpS6DCtcziXIqJnE9fOzg7vvvsua2uX+Na3XmWve4vtzkc4bxukTxzHBOocc80qw+E+sX3Ayvx3Wd/9K2req7mCFYMAlhFZvIAdXSRof0DgN0hTc8S6FXKXdmN7dDaukEYBqy9+gZUhSQRE34bwXarVFtYa4kELGX0bF9wlbP8GcR7WSKGbcYAmNvdoNefJ4hq90R3q1QvYLPdtFG2IY4dJhVqzhyc10tQx6rYJq4JX+wJRKS5dxWFJzRbWDVlsvM36/l/RrLyJiCa1W0RxD+KXMTaikv0uhDcJF24SR4qkex3PvkLqv4v2ezi6MHwbFd6iUh8yGs0T7a/h6RDPM1h9F6vv06hXCUNwTuWDGGV4qgrBA7p7K2SZT6Y+pTnXZJh+zKWlP2On9y4u9ZDen2CzJs67T9i6SVBVWJOSZQqtQXsW5zQiCmchyyzWWMQFDLN7tJtXGaa3GPY9at4FlB6iJEB7GlEJSicMhl2crVINw1x8cSpXFovFYSBdmk1cWZbx0UcfMT8/z6VLl0hTgzVCP/mATzf/Ry7M/0fU/Ku0ai8BGVG6x+7gxzQq12iGbzKRrxSGPR7s/JBOb5uVpfOsNv8UY9IxxzpAXCpgd/Sv6Xb3qVduYNUdVub+kAf7/xejkaJSqbG2+CfE5i7ru/+WxfDv0U9/RlCBhfrbEw/sIkSkcUN2R+/gLCzWv4tSdZwVRIFSPlv9H3Fz83/ltfP/DY3gRcTW+fTBP0L0iOsX/wsy08OXZRw659PDd4nSbRZrf5MwWEKUJkq+4Jef/09kJqYeXmCp+mek7h7t+TbKzXN/78f0ej0ytYHWQyrSZLn2t/GCEaoifLbxz8iSKoGuk2RfYF2HufAlVttvc771dymVecYUpyJqn19v/XP2hh9R8UNeW/2vSNI+272fsNC8jrPC1u7HnJ/7j/l4679jfu5Frq781xgbEyVb+H5AoBdy4yPnI2isc+Asgkdqe2wO/g3V8Bz7w0/Z797k22v/PZ7SOMmP/BSazuATnIpoVV/HuHjMc0XyExJnAmYeS3qex5tvvjn+7fsafMBbolV/kYsLfxtPJtvkwFthLryKyKzsaoRhhdhtcq71n6NVBU8fv5Vd9f+YUfJ/MOQvqQUXqARt6tVz3O38z7w4998S+DUC/zr9uZs0GjE2VmjXJPBbM3KrUwv/jMkSkQATrXy79hLtxhqt2iuEOpfjFtoX6Qw/JvTOg3ceGAK55v1c8B/gXHagnY3qi1y7+J9xb++fsjT/BnuDf4wvc9T9/xKtF9HRP6cdVNgb3qcRvMj5+t9HewmOGlv9n7PYvE4n+gl1/zL14PcYJbdphf8eNX8BX0+Uzv5Y/1llqXmNyH3Mt8//D2jq1AJoVl9BKQ/nEvZHf0mt2cftPkDr1/B1E19D6C8fPrY8goAaV8L/BEFRC9pk5j5hUEfEZ/rjheZvjb+ZSUTqmOfHQUmNZvVNnDU5g8BSbuEnHX6YEQrWWsBDq8qhNIfT5u5XcdpnN/oxl/y/C0CcdQn0AguNG+OU1ihGcYdhPKAdXprKb7rnJnr3yd8mL4dcBllr/adoJsTuq2Uqanfq+7AIa8RUO6ftpzyqwQWsGMS26Aw/w5cWtu0TejXIWlTUAr76lFb4Cq3qKzzo/gVG9mmH36FaeQlnM6wZsBB+F934XUbxNu7A0JhxWXnjc+FfqIxroYr4EtZaoqjHVv9fUfVfREuubLVFc9S4z2dRWGGvXwg0oX6Bywv/4TF9Ox4JjlM6PAZxOXzdZK39DykHZzaOVkBpjYiekWb2FNKewbgRQjMv2Vla1W9RC9bGaXyvwihbx1lDPSiJ63B+cujviUkxgKdqLNV/70BbtBaCUDPpNJlRzbL95emFJbMJTgTQWKuRfPahvQBP+4TpAuebf4qvWmRuj9QMCHVEq3IJWn/Kne1/QuC1qPmXqfkDnFNT41nKkWVLhIpuoNBHSEUrjfKEjd7/hxc08bzyvNMV9lnC0Ul9uL9y7ymfNkHQPibtdF887puZBecHmQ932LRT/ytmgprDHeBsx38vUgQQMgpl86XO2QBjDuapxCM1uwgBWh5iXHUspol9Mni+blP1XuYoBzzKkcdvncPaBMTDWR9jOijJCdlzNTRz+KyCrVEuz1X/Eo3wWlGTGmrKIlVTx5PqVBGTPSQU2n8Jxs+nB1HEx1NtrFK063+ILSxPBVAnNgvNx1kUHGflehI8gVg9h60LBMSfYvOPdjZwzqKUR1DoUxqVF/FVyDRBOGcRaxGXP5ss0CfAzET5w1b1tcIMZ5aN1bEfY22GpoIWj9SNKLmkr3SuPFVebl8qGuO6OOMTqJwriDis2Ec4wE5IKCeuQ7qmqeppFVBT16j7L9BLf/2QWj8E4w++vCX8EeIqrSBGo9HYJOQoHlZgyQUONcfpqfcPR2Yj5htvM1d7DXDMN97A8WYZ0THPrvCsVo/daw+HklnudLPIdvLMiWBdhhINUgVidFkx8fI6KzduepKkxOYT1tplnhU0TU5qgq1FCAph/whzo5DBXAXlfBQnU3g+CRwhrvJA84MPPqDVavHKK68AB281m+VudlCtMDHTEdHgBMHDuYLjHBMWoPgC42Jq/st40sqVcuREZa3LhVIRjM1Is4yKl8vb0549pX/gk4YDlKhccUpu3SoEgMZYg1YQqG+hJEapfEI4BThNZkfgKLiVRhFgbamEnBasj6KiL7FUC3ODzKmxKC3zjXF5HFbr0OKKfneTRDM589cLEZm9LDrniON4/NtaSxzHj0FcMpYdlapiDWAdaQrGRmPzYWsPbQpEUHg4F5NmCWkC1kXg8hh84nJzFV+HZFlGRoomK/JNgCJsJfA0nMicgFYVjAFHRpamKAFRhsxkOJvR9L9FzG2yzJKmNpd7lMOYlCSxYCEzuabfGI8kNcVFCG4qfGXJ7fP+ErdIVa+SJtGk3wUsgidhsfQ6rEmLS8Esxo7A5a5tiGFib/1koJSaTVwiwtLSEsvLy+Pfpa0QHOU4ZZrjUEk8fE+Tr7Ahj5KOtHL4WggDsISo8W5O8qkvoAON5xRaFEEAzlUoBU9hYnr8NJAWS74KQHsKbYUgqOAXmxiXevg6JAw0vpcvWdbFhKFPoMGlGs/3qYQ+ofawxaZpQlzTAr1jTGwuPDCJnOSHMH5Fo7IKQQUyZalUFM5Vx333NDgXHCPQe57Hq6++Ov59eJAed9AU5PJI/vUj0zurxh17ZD80/txinRpv+UWmXz55B7IDcC5f7pWgPQ+VeoiTaR99tARIIYctNt8iduuFDwJ43hxLjd/HlzkmrThOXSMH/pxu6ZjPuQqGmKp3dazslnHA2DLlMyKurx1H2nFcwwqpwdWnUs5OK2LJTA/rHTa5fapkVVYGKCxJbAWhclDDJgqtAlzhxbBY/T5RvIuxQ2ABjxqtyquFPFTIb/mXhws6UXW0nSezG/h6Dl/PzbhD4On00VPxuM49fE7OuUTUIyUmJT6j5BOUOmoO/LSRM83cSDrfuEyiROAcFb3MSuOP0FIFB5YE40Z5KKg80XRGU7l+OSIQKcQHZoswTwtPhXMpCdDqJF4jhUynFLZYQo47XBDnk6XdqQF6tlCi8iMY8Q7tVh1KKoT+hfInWgv18DyeOu6M9avNeQfjJfhZ4qkQl0MeK9ifUv6URv84aJI0fuK7nhNBQCmNQqGch0NjxTHTwVpAuzrLjX8fcWWAva+3DU4McnJ1/BPDsSPonCPLsiO+c18GWvsEXuPklVIeuiCu47o9XzrtU9sRPhQSMDbQE/m4maoAAA4pSURBVI3S3sQZZVb9RKEIisZ9/cRVC1bIbKUo/tn1z0zistby8ccfEwTBOCbqtGvS463jmoAXaVVWx65XJY42PP9tXIaHIjNgbXqk65XyMcZiyfKwAEW6pw0roPAwRiEuIEuTsTLEmKyw2jSI8+BACKSHHyUdTfd4aPpvg7JkWfZQ3eSThHNuNnGNRiM+/fRTVldXuXbt2piLfamAu04hVHOtusl4WIeKCJoKWeyhVQJuEuh3Wg8t+CAOpWM8CbEWMpM9bQVE7sIuGmtyuc8ahbg8SG6WGRQGaw3KSU5cRy4elUlGBx59WT1UudsOwVmci3FOntmlIjOJq1qt8gd/8AcHrsI7qa/abOS3PIsLHtln3dGnKA1IipEe1XBuZjo/BV9VmG9cw/fAPxwu4ClClIfvBfhhFRWFeEpTrVTzoyBnKcwLCkwphA/8O42Tcrbj4HK1B+HpWxaVUiwtzY7H8OUgTEx1Ht7YXvQx9bAFKiDKHlDRs4nLWY1N5tBulgXq00WpoDQmQ2mNFj2lDXdTzXZMuNL0kc40oZUmLg8jvkfW6FRcgfTUIgsKarZwewCOc60/wboUaxKalSsPyS9AJD01sRGVWETA15XC3Pg4gb60iSshTI51pjnW09GiP0k8xbvXTtJRglYhK3PfJ8n6xbIy+1MRlbuRnYoByJXE+aHV4S51h+p/XH0PRxd8/nEqL/ar+Vep+cDYNPcoRAlG5ZFOv/7N/ONBXAVP5lCiEad5eGzc6UPo8t/DRzPfDOI6sqicrhCpDyEZYXyJ57OGiKBVgJDvFuUIAY1THvpdWjjMUsk8+3Z9VRwhrnKHuL29fbovlhKHKHNqhsBJHkExj5npTzHcY9XAHC8wnpZWfTXMXBa73S4/+MEPuHHjBt/+9rcLB4TJGd6z5W6CVhrtFtCuirWW/HK5Z3OArSQP0WmswRiLEh8Rv3DQNYWpqYIDIcEPqxocR5fL5395PNaea2lpaRxrCjhFxAUgBGoZXzXI0hStHSLPhricANYDW8NTIQu179Ed/ZrUZLnFrTvkDXU47rw76DY2WRJP582Rj4OZxFWv1/ne9743ZQcvX8sZ49cJsRVawVtUgxDfE6Y9qZ82lAnwdQVfK6qVFZRofM+hVeGl7IRJDIuSaMol8ZshX83CsbvFajXXeB81NDsdUOLx0vI/PCaEwNOuTG5uDS53d3uo8q1cAmcpUb9ZeOTInEbCAorYYV/GGfbrhzDZCEnp+TTutsOqhilDwvHXx7vEP884BdP++Yeb+v+Hc6Fv7hI4C9+86fIMICh8dQEldYy4sXHkw93bDh/5fPNwxrm+EiYH0efbf4KnqiRuyOSWxdLJ7WHff3Pn98yWGWP47LPP2Nraetr1eS4hIvg6j92qnOApHyWlWF/abHGIScnBd99AHGss+M477/Dyyy+ztLQ0NhYs8ez1XKcTgkdW+OybDAwpDoszpSXqw6wfSi74/OLw5u/YZfHq1atjj+tZH57hKEQA67BOTS148hhy/PPdxycirkajwdtvvz0OFV7eBnGGE8B6aOXheTPCHOUJin9n+w98k3As56pUTocO6fnDw5TOX9V8+fnC2W7xa4ZCUOq4K2GnD6O/+QR2RlxfMxwgtgyQOwt/fcSLvz4tfUoQFJ5a4hurX3gMPPIyz+caz2IFco7MRnj62bm6nRYcIa44jrh16zYiQrvdZnV1FXiUbmuWB8WTGtPjLeanY6bO/o6pb2dR3nHPZpktPyyfJw03cUxxrpDkHqf8x+Enj9+uUrKcEXAXfvmLX9JqN7H2MisrK4jIw69Cc7MVOe7IYBz+/WUM/KbLmlY66ryeWcZ+r4fBgmjyJuYKSoHCrqqoi5vyIRTHOFpKGXPTlQpPKZ4dSuMEpXIfwcwYhDx+xaSdZVnTvojq0O/DxoFT9ZvycVQOxBk0jmazlt9qUkymvEqP4+f4OMraL+c/KQf8oBwgjjAMeOs7r9PrxzTn5sbb6vLaYJhWlj1khrspUirGyKkUCPIgIuOXcsBk5bD9WPl8XN50VJgpT2ZH7sy720+5+VmfxCiU1rkrPXlcBxFBnBl/76Sc86VdQ6n2nOiiJueDbvx7ksZQr1VRytHpRSCVoq6F6Q22sBUsidVOpljxbJxmSlMvuMk3gLhJfcQpXrteZXVJg3WImu7Lqc54GE6sED+U7pH5TpI5kYPL4vbAsP6gx7UrVSrjm+slD/pR3Ec9cfFX45wOTHQoogfnczCzFmtNHl1PNKmL2I8+oh6uUvUu4ozBOTO+SVVrPY4PoZQa30af2/GXUaUlj2Isk9vPHICn6A0ytjYdqJxUSjcvW9KjTDhEWV9VWOHbMXEVA1xcZjL5fZC4SiJ0BZc06Dw2A6Ccm3qfE27+zSQfYULItuBQs9O4og2CyTQri4r5pqBEF4OowBbxrKUoceyUW9ZAplbwE1pjuENe8uV3TqbyZaqsST0thcwVDy3r+4Z3f92n6hSRzfjD35pnoam4c+cOd+8+4MqLLzDfbrK/v0+lEhbBQRTWOtI0K6K6GAb9AfPz84TVkOFwRLPZoF6vYV1GajbZGvwQlGBsh1b4Fq3K6wz6Ge+99x7nz6/SbLaKaNIRvu/zxRfrnD9/AWvzK5Bv3Hg9v2VjxuSzWPb6CUmsCWr+OPaHK9pf8qeSPErI4T46lPJgmrKzXR73dJygWOSl8Hizx0lqjkkJR8sqeOrBsstMFMSjiECntFt1VHnnYpIHKD5WvfZU4YrpAZ5zjp+8e4t3fpVw4/oCf/Q3V/lf/ukX9P7FHW686Nja/wyMz4e//JD9zi69Xpd2a4EgCMhMRlgJ6XQ7ZFnG8tIyWZbSqM/hxNHtdrl+/RVevX6dxGyy1ft/SLOEy4v/gK3hD9jo/p9UF1pE0Ty9Xg/nLD/84Tusra0RJwlZmtFsNHnw4GfEUURjrs6NG986lqtnmUMrQXRGFDu0+GgnOCmcZ4s1qRzAki+Ml3DJL02YMPNyxk8T0dSsHy/RB8kozgyeVwYCLhfVo0R9koGaFJtfyexp8DRYk68kAL1ehO97tJp+MbTPRsNUCgRQ9EqapO5f/N8/Yr+7Ty+4TJKEhHS4srSPCmDQS/j89l2WlxcQ7fC0ZnNjG1H59cNhWCGsVllYXGTtwkWSNMXmlwNSq9UIKyEL821QCcbG7A1+Ti/6GE81WWn9PqF3juEwpt/vY4zh7t27LC0uEQQVEEVQCdja2kKLotaocmlt7djjlTjJSIxjEGdkVuOpoBDij9ocCBNuVHKbJEkYjRKarcZBOeYkG8KCaK1zbO/ts7jQRmshS0wuTqiCaA/nUYZXmv49oyBx4KzD1xkVLyMMK3gFce3sjQChOefjexMn24P76mlemb/5qvvbWfvvA1w6SRK3sbGBzRJ+ffs2vVHCyy+9QK1SJRpGdLs99rr7rF28SLezz4W1NaJRzHAwpN6okxlDPIr49nfenETTewSM7aOkUtzh93gNeBiS1JAYxzDOSI2HLlzjRMAeEjFmEVccJWzvdlhaWiDw9WOF2izzSTLH3n6XsBKgtTDsR9RrFer1KkqDG/syCogqllY3YY7Fzu8A8yzqaw0E2lDxLWHooxVkxjIYJljA86EWhuMwJwbIkgSt1EE3wakqf1ked3i/WeZzgLimBfosy/KtdbF4C2CyDKUUSZoSJSlhGKK1l4sAFqxxJCbB8yffOPKlqMxa2fypLbb7qthi53KhnpJBJb/32uVXseQ7PIcqNAXiHHZqiVLFHHTkBJQaS5pAb5SS4iE6KLQHUwFLpgYrf2JAchusNM1IkwylJb/zSMr4+cXVugigDwmwEy7ggFGcRxe01uGsI1Aaa8HTPsrLNxRCfv7oinaWvYY4lJqOZyqUfo2C4IzG8xJC31ILA3ytiKM431lqydUh4vBEISrfeNnM5I7gXpDvLItZJeMrYPLrbsrQCGXRtmD5qiR2KTYuTClTyh2vs5SiaJmrc4eIq8RBdpqj2xuQOkt5L/K4Ukh+65bNxlHsxJETEmoqw3KnURankcLefCwH5ToJnMt3cm4ctNYU2ZTb95KEbVFW/q2gGPSE3YHF6oCJr6A5JLWXpDBFaS6/L8fz8kuijDXgFAqFk6IsNNYVsbfGEntOACIZqDTfyWov3007MxHgXX6XdN5fqug7h3WmKL/IRxlQZtIoFDiP/IpzA5LQCoVmGI4v5tRKQCuczXf1rtg5ilL4xWTNrC3CbBYykeR74eI6JcrrgyeCaXlRUTGZxOb/KwRUKXokb09+P+P0ziO/M/uExz9xkpEaA6IptcJ526blCDsZKygqJ8UOy405zWRGTsGVu6YpxiDjO9+nxcQi9pXLuYA7qGbIMk2aqoKu3fg5RTScCc+acJ2yA8dOwCorbkVTBc+wY+J04214OjX45eWftoi3X8o9ZZzWcqKpqXdF+aWn+Dh2fTGILs87b2uetxWLtY7Q9wm8/EatnEOZiVqldGsb71YL4paJeJfP9UKzX2443HjUpvpmikEckqiUU+NRyftm2k6tYBhf5mxxlhw0S7g7DofTHM7n8PMjMvAjyj76dDrXWXy5THdSEfdw539V0fikZXKkrFn9fFxtjruTclafT4v/kOv8pt+XJH8chCdocjNp9ISbnXQAj01RcEoZ65omc3P6W1f8d7DMcnd0aIZxeNYdLrDMSaZSPKwd00N13E0g5amATLHp6TZOqpOnKus3S/wu63jgs6m/pn8d5D6T54fbN/1uLEXhOLzDPMzdpt88xrL45XE4+69jls/mPlOiMcLUEnyg5JPw3ek3k7JOXvNyiX/YF0eHanYu0znNbvPxJc16+ji8bjr9w/Ka/e7/B++WCN3uGP/xAAAAAElFTkSuQmCC";
 
-  const __vite_glob_0_44 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  const __vite_glob_0_49 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
     __proto__: null,
     default: yuliang
   }, Symbol.toStringTag, { value: 'Module' }));
@@ -11754,6 +11798,44 @@
     branchType: 'smoothLineChart',
     img: 'smooth-line.png',
     chartComId: '31',
+    explainConfig: {
+      show: false,
+      text: '',
+      position: 'topLeft',
+      x: 0,
+      y: 0
+    },
+    eventConfig: [{
+      title: '当数据项被点击时',
+      event: 'click',
+      isActive: false,
+      items: [{
+        field: 'x',
+        varField: ''
+      }, {
+        field: 'y',
+        varField: ''
+      }]
+    }],
+    items: [{
+      label: 'x',
+      field: 'x',
+      value: 'x'
+    }, {
+      label: 'y',
+      field: 'y',
+      value: 'y'
+    }, {
+      label: '颜色映射',
+      field: 'colorField',
+      value: 'colorField'
+    }]
+  }, {
+    title: '标点折线',
+    type: 'BKBarChart',
+    branchType: 'markLineChart',
+    img: 'mark-line.svg',
+    chartComId: '25',
     explainConfig: {
       show: false,
       text: '',
@@ -12205,7 +12287,7 @@
   }, {
     title: '圆角饼图',
     type: 'BKPieChart',
-    img: 'pie.png',
+    img: 'round-pie.svg',
     explainConfig: {
       show: false,
       text: '',
@@ -12239,7 +12321,7 @@
   }, {
     title: '圆角环图',
     type: 'BKPieChart',
-    img: 'ring-pie.png',
+    img: 'round-ring.svg',
     explainConfig: {
       show: false,
       text: '',
@@ -12441,6 +12523,74 @@
       },
       //  field 值字段   varField 更新值变量
       {
+        field: 'value',
+        varField: ''
+      }]
+    }],
+    items: [{
+      label: 'name',
+      field: 'name',
+      value: 'name'
+    }, {
+      label: 'value',
+      field: 'value',
+      value: 'value'
+    }]
+  }, {
+    title: '轮播饼图',
+    type: 'BKPieChart',
+    img: 'carousel-pie.svg',
+    explainConfig: {
+      show: false,
+      text: '',
+      position: 'topLeft',
+      x: 0,
+      y: 0
+    },
+    chartComId: '42',
+    branchType: 'carouselPieChart',
+    eventConfig: [{
+      title: '当数据项被点击时',
+      event: 'click',
+      isActive: false,
+      items: [{
+        field: 'name',
+        varField: ''
+      }, {
+        field: 'value',
+        varField: ''
+      }]
+    }],
+    items: [{
+      label: 'name',
+      field: 'name',
+      value: 'name'
+    }, {
+      label: 'value',
+      field: 'value',
+      value: 'value'
+    }]
+  }, {
+    title: '花瓣饼图',
+    type: 'BKPieChart',
+    img: 'petal-pie.svg',
+    explainConfig: {
+      show: false,
+      text: '',
+      position: 'topLeft',
+      x: 0,
+      y: 0
+    },
+    chartComId: '43',
+    branchType: 'petalPieChart',
+    eventConfig: [{
+      title: '当数据项被点击时',
+      event: 'click',
+      isActive: false,
+      items: [{
+        field: 'name',
+        varField: ''
+      }, {
         field: 'value',
         varField: ''
       }]
@@ -12854,7 +13004,7 @@
     }
   }];
   const allComponents = chartComponents$1.concat(mapComponents, customComponents, ringComponents, tableComponents);
-  const req = /* #__PURE__ */ Object.assign({"../analysis-maker/src/components/toolbar/images/3d-map.png": __vite_glob_0_0$1,"../analysis-maker/src/components/toolbar/images/3d-pie.png": __vite_glob_0_1$1,"../analysis-maker/src/components/toolbar/images/add-area.png": __vite_glob_0_2$1,"../analysis-maker/src/components/toolbar/images/add-item.png": __vite_glob_0_3$1,"../analysis-maker/src/components/toolbar/images/area.png": __vite_glob_0_4$1,"../analysis-maker/src/components/toolbar/images/bar-gradient.svg": __vite_glob_0_5,"../analysis-maker/src/components/toolbar/images/bar-horizontal.png": __vite_glob_0_6,"../analysis-maker/src/components/toolbar/images/bar-posneg.svg": __vite_glob_0_7,"../analysis-maker/src/components/toolbar/images/bar-radius.svg": __vite_glob_0_8,"../analysis-maker/src/components/toolbar/images/bar-stacked.svg": __vite_glob_0_9,"../analysis-maker/src/components/toolbar/images/bar.png": __vite_glob_0_10,"../analysis-maker/src/components/toolbar/images/bubble.svg": __vite_glob_0_11,"../analysis-maker/src/components/toolbar/images/calendar-heatmap.svg": __vite_glob_0_12,"../analysis-maker/src/components/toolbar/images/grid.png": __vite_glob_0_13,"../analysis-maker/src/components/toolbar/images/guage.png": __vite_glob_0_14,"../analysis-maker/src/components/toolbar/images/html.png": __vite_glob_0_15,"../analysis-maker/src/components/toolbar/images/left-right.png": __vite_glob_0_16,"../analysis-maker/src/components/toolbar/images/light-pie.png": __vite_glob_0_17,"../analysis-maker/src/components/toolbar/images/line-bar.png": __vite_glob_0_18,"../analysis-maker/src/components/toolbar/images/line.png": __vite_glob_0_19,"../analysis-maker/src/components/toolbar/images/map.png": __vite_glob_0_20,"../analysis-maker/src/components/toolbar/images/multiple-pie.png": __vite_glob_0_21,"../analysis-maker/src/components/toolbar/images/peg.png": __vite_glob_0_22,"../analysis-maker/src/components/toolbar/images/pie.png": __vite_glob_0_23,"../analysis-maker/src/components/toolbar/images/progress.png": __vite_glob_0_24,"../analysis-maker/src/components/toolbar/images/query.png": __vite_glob_0_25,"../analysis-maker/src/components/toolbar/images/radar.png": __vite_glob_0_26,"../analysis-maker/src/components/toolbar/images/radius-bar.png": __vite_glob_0_27,"../analysis-maker/src/components/toolbar/images/rank-list.png": __vite_glob_0_28,"../analysis-maker/src/components/toolbar/images/ring-pie.png": __vite_glob_0_29,"../analysis-maker/src/components/toolbar/images/ring.png": __vite_glob_0_30,"../analysis-maker/src/components/toolbar/images/scatter-map.png": __vite_glob_0_31,"../analysis-maker/src/components/toolbar/images/search.png": __vite_glob_0_32,"../analysis-maker/src/components/toolbar/images/smooth-line.png": __vite_glob_0_33,"../analysis-maker/src/components/toolbar/images/stack-area.png": __vite_glob_0_34,"../analysis-maker/src/components/toolbar/images/stack-bar.png": __vite_glob_0_35,"../analysis-maker/src/components/toolbar/images/statis-table.png": __vite_glob_0_36,"../analysis-maker/src/components/toolbar/images/statistics.png": __vite_glob_0_37,"../analysis-maker/src/components/toolbar/images/step-line.png": __vite_glob_0_38,"../analysis-maker/src/components/toolbar/images/tab-layout.png": __vite_glob_0_39,"../analysis-maker/src/components/toolbar/images/table.png": __vite_glob_0_40,"../analysis-maker/src/components/toolbar/images/time.png": __vite_glob_0_41,"../analysis-maker/src/components/toolbar/images/up-down.png": __vite_glob_0_42,"../analysis-maker/src/components/toolbar/images/wind-rose.svg": __vite_glob_0_43,"../analysis-maker/src/components/toolbar/images/yuliang.png": __vite_glob_0_44
+  const req = /* #__PURE__ */ Object.assign({"../analysis-maker/src/components/toolbar/images/3d-map.png": __vite_glob_0_0$1,"../analysis-maker/src/components/toolbar/images/3d-pie.png": __vite_glob_0_1$1,"../analysis-maker/src/components/toolbar/images/add-area.png": __vite_glob_0_2$1,"../analysis-maker/src/components/toolbar/images/add-item.png": __vite_glob_0_3$1,"../analysis-maker/src/components/toolbar/images/area.png": __vite_glob_0_4$1,"../analysis-maker/src/components/toolbar/images/bar-gradient.svg": __vite_glob_0_5,"../analysis-maker/src/components/toolbar/images/bar-horizontal.png": __vite_glob_0_6,"../analysis-maker/src/components/toolbar/images/bar-posneg.svg": __vite_glob_0_7,"../analysis-maker/src/components/toolbar/images/bar-radius.svg": __vite_glob_0_8,"../analysis-maker/src/components/toolbar/images/bar-stacked.svg": __vite_glob_0_9,"../analysis-maker/src/components/toolbar/images/bar.png": __vite_glob_0_10,"../analysis-maker/src/components/toolbar/images/bubble.svg": __vite_glob_0_11,"../analysis-maker/src/components/toolbar/images/calendar-heatmap.svg": __vite_glob_0_12,"../analysis-maker/src/components/toolbar/images/carousel-pie.svg": __vite_glob_0_13,"../analysis-maker/src/components/toolbar/images/grid.png": __vite_glob_0_14,"../analysis-maker/src/components/toolbar/images/guage.png": __vite_glob_0_15,"../analysis-maker/src/components/toolbar/images/html.png": __vite_glob_0_16,"../analysis-maker/src/components/toolbar/images/left-right.png": __vite_glob_0_17,"../analysis-maker/src/components/toolbar/images/light-pie.png": __vite_glob_0_18,"../analysis-maker/src/components/toolbar/images/line-bar.png": __vite_glob_0_19,"../analysis-maker/src/components/toolbar/images/line.png": __vite_glob_0_20,"../analysis-maker/src/components/toolbar/images/map.png": __vite_glob_0_21,"../analysis-maker/src/components/toolbar/images/mark-line.svg": __vite_glob_0_22,"../analysis-maker/src/components/toolbar/images/multiple-pie.png": __vite_glob_0_23,"../analysis-maker/src/components/toolbar/images/peg.png": __vite_glob_0_24,"../analysis-maker/src/components/toolbar/images/petal-pie.svg": __vite_glob_0_25,"../analysis-maker/src/components/toolbar/images/pie.png": __vite_glob_0_26,"../analysis-maker/src/components/toolbar/images/progress.png": __vite_glob_0_27,"../analysis-maker/src/components/toolbar/images/query.png": __vite_glob_0_28,"../analysis-maker/src/components/toolbar/images/radar.png": __vite_glob_0_29,"../analysis-maker/src/components/toolbar/images/radius-bar.png": __vite_glob_0_30,"../analysis-maker/src/components/toolbar/images/rank-list.png": __vite_glob_0_31,"../analysis-maker/src/components/toolbar/images/ring-pie.png": __vite_glob_0_32,"../analysis-maker/src/components/toolbar/images/ring.png": __vite_glob_0_33,"../analysis-maker/src/components/toolbar/images/round-pie.svg": __vite_glob_0_34,"../analysis-maker/src/components/toolbar/images/round-ring.svg": __vite_glob_0_35,"../analysis-maker/src/components/toolbar/images/scatter-map.png": __vite_glob_0_36,"../analysis-maker/src/components/toolbar/images/search.png": __vite_glob_0_37,"../analysis-maker/src/components/toolbar/images/smooth-line.png": __vite_glob_0_38,"../analysis-maker/src/components/toolbar/images/stack-area.png": __vite_glob_0_39,"../analysis-maker/src/components/toolbar/images/stack-bar.png": __vite_glob_0_40,"../analysis-maker/src/components/toolbar/images/statis-table.png": __vite_glob_0_41,"../analysis-maker/src/components/toolbar/images/statistics.png": __vite_glob_0_42,"../analysis-maker/src/components/toolbar/images/step-line.png": __vite_glob_0_43,"../analysis-maker/src/components/toolbar/images/tab-layout.png": __vite_glob_0_44,"../analysis-maker/src/components/toolbar/images/table.png": __vite_glob_0_45,"../analysis-maker/src/components/toolbar/images/time.png": __vite_glob_0_46,"../analysis-maker/src/components/toolbar/images/up-down.png": __vite_glob_0_47,"../analysis-maker/src/components/toolbar/images/wind-rose.svg": __vite_glob_0_48,"../analysis-maker/src/components/toolbar/images/yuliang.png": __vite_glob_0_49
 
   });
   // const req = require.context('../analysis-maker/src/components/toolbar/images', false, /\.png$/)
@@ -12942,7 +13092,7 @@
       children: []
     },
     {
-      name: '组件',
+      name: '其他',
 
       key: 'component',
       draggable: true,
@@ -13887,12 +14037,12 @@
   const _hoisted_1$25 = { class: "var-content" };
   const _hoisted_2$1x = { class: "var-panel" };
   const _hoisted_3$1h = { style: {"position":"relative"} };
-  const _hoisted_4$17 = {
+  const _hoisted_4$18 = {
     key: 0,
     class: "var-tools"
   };
-  const _hoisted_5$U = { class: "var-table" };
-  const _hoisted_6$L = { class: "analysis-modal-footer" };
+  const _hoisted_5$X = { class: "var-table" };
+  const _hoisted_6$P = { class: "analysis-modal-footer" };
 
   function _sfc_render$1Y(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_EfTabs = vue.resolveComponent("EfTabs");
@@ -13926,7 +14076,7 @@
                 class: "tabs_box"
               }, null, 8, ["modelValue", "data"]),
               ($props.setMode)
-                ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_4$17, [
+                ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_4$18, [
                     vue.createVNode(_component_el_button, {
                       type: "primary",
                       size: "small",
@@ -13964,7 +14114,7 @@
                   ]))
                 : vue.createCommentVNode("", true)
             ]),
-            vue.createElementVNode("div", _hoisted_5$U, [
+            vue.createElementVNode("div", _hoisted_5$X, [
               vue.createVNode(_component_EfTable, {
                 ref: "grid",
                 columns: $data.columns,
@@ -13985,7 +14135,7 @@
               }, null, 8, ["columns", "data", "has-checkbox", "edit-config"])
             ])
           ]),
-          vue.createElementVNode("div", _hoisted_6$L, [
+          vue.createElementVNode("div", _hoisted_6$P, [
             vue.createVNode(_component_el_button, {
               type: "primary",
               disabled: !$props.setMode,
@@ -14736,6 +14886,13 @@
     }
     // 读取主题
     const { configOption, chartTheme } = getConfigTheme(option, theme, tab.type, tab.branchType);
+    // 新增图表:默认整体取用看板当前选定的图表配色模版(themeStyle.colorList),与看板保持一致。
+    // 用整体替换而非按索引合并(getConfigTheme 内是 merge,默认色比 palette 长时会残留旧色)。
+    // 仅作用于以 color 数组取色的图表类型;用户后续可在图表配置里单独改色。
+    const boardColors = theme?.themeStyle?.colorList;
+    if (Array.isArray(boardColors) && boardColors.length && chartItemList.includes(tab.type)) {
+      configOption.color = XEUtils.clone(boardColors, true);
+    }
     explainConfig.textStyle = { color: chartTheme.textColor, fontSize: chartTheme.fontSize };
 
     return { configOption, chartTheme, explainConfig }
@@ -23830,8 +23987,8 @@
   const _hoisted_1$21 = { class: "d-flex-c" };
   const _hoisted_2$1v = { class: "d-flex-c" };
   const _hoisted_3$1f = { class: "d-flex-c" };
-  const _hoisted_4$16 = { class: "d-flex-c" };
-  const _hoisted_5$T = { class: "d-flex-c" };
+  const _hoisted_4$17 = { class: "d-flex-c" };
+  const _hoisted_5$W = { class: "d-flex-c" };
 
   function _sfc_render$1S(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
@@ -23932,7 +24089,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, { label: "" }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$16, [
+                    vue.createElementVNode("div", _hoisted_4$17, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.height,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.height) = $event)),
@@ -23962,7 +24119,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$T, [
+                    vue.createElementVNode("div", _hoisted_5$W, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.form.fontWeight,
                         "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.fontWeight) = $event)),
@@ -24131,21 +24288,21 @@
   const _hoisted_1$20 = { class: "d-flex-c" };
   const _hoisted_2$1u = { class: "d-flex-c" };
   const _hoisted_3$1e = { class: "d-flex-c" };
-  const _hoisted_4$15 = { class: "d-flex-c" };
-  const _hoisted_5$S = { class: "d-flex-c" };
-  const _hoisted_6$K = { class: "d-flex-c" };
-  const _hoisted_7$B = { class: "d-flex-c" };
-  const _hoisted_8$s = { class: "d-flex-c" };
-  const _hoisted_9$n = { class: "d-flex-c" };
-  const _hoisted_10$i = { class: "d-flex-c" };
-  const _hoisted_11$e = { class: "d-flex-c" };
-  const _hoisted_12$a = { class: "d-flex-c" };
-  const _hoisted_13$a = { class: "d-flex-c" };
-  const _hoisted_14$7 = { class: "d-flex-c" };
-  const _hoisted_15$7 = { class: "d-flex-c" };
-  const _hoisted_16$7 = { class: "d-flex-c" };
-  const _hoisted_17$6 = { class: "d-flex-c" };
-  const _hoisted_18$5 = { class: "d-flex ai-c" };
+  const _hoisted_4$16 = { class: "d-flex-c" };
+  const _hoisted_5$V = { class: "d-flex-c" };
+  const _hoisted_6$O = { class: "d-flex-c" };
+  const _hoisted_7$F = { class: "d-flex-c" };
+  const _hoisted_8$w = { class: "d-flex-c" };
+  const _hoisted_9$q = { class: "d-flex-c" };
+  const _hoisted_10$l = { class: "d-flex-c" };
+  const _hoisted_11$i = { class: "d-flex-c" };
+  const _hoisted_12$d = { class: "d-flex-c" };
+  const _hoisted_13$d = { class: "d-flex-c" };
+  const _hoisted_14$b = { class: "d-flex-c" };
+  const _hoisted_15$b = { class: "d-flex-c" };
+  const _hoisted_16$b = { class: "d-flex-c" };
+  const _hoisted_17$8 = { class: "d-flex-c" };
+  const _hoisted_18$6 = { class: "d-flex ai-c" };
   const _hoisted_19$5 = { style: {"margin-left":"10px"} };
   const _hoisted_20$4 = { class: "d-flex-c" };
 
@@ -24255,7 +24412,7 @@
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_4$15, [
+                        vue.createElementVNode("div", _hoisted_4$16, [
                           vue.createVNode(_component_CommonColorPicker, {
                             modelValue: $data.form.underlineStyle.textColor,
                             "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.underlineStyle.textColor) = $event)),
@@ -24287,7 +24444,7 @@
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_5$S, [
+                        vue.createElementVNode("div", _hoisted_5$V, [
                           vue.createVNode(_component_CommonColorPicker, {
                             modelValue: $data.form.splitlineStyle.lineColor,
                             "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.splitlineStyle.lineColor) = $event)),
@@ -24301,7 +24458,7 @@
                     }),
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_6$K, [
+                        vue.createElementVNode("div", _hoisted_6$O, [
                           vue.createVNode(_component_el_input_number, {
                             modelValue: $data.form.splitlineStyle.lineWidth,
                             "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.splitlineStyle.lineWidth) = $event)),
@@ -24326,7 +24483,7 @@
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_7$B, [
+                        vue.createElementVNode("div", _hoisted_7$F, [
                           vue.createVNode(_component_CommonColorPicker, {
                             modelValue: $data.form.splitlineStyle.textColor,
                             "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.splitlineStyle.textColor) = $event)),
@@ -24358,7 +24515,7 @@
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_8$s, [
+                        vue.createElementVNode("div", _hoisted_8$w, [
                           vue.createVNode(_component_el_input_number, {
                             modelValue: $data.form.blockStyle.radius,
                             "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.blockStyle.radius) = $event)),
@@ -24374,7 +24531,7 @@
                     }),
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_9$n, [
+                        vue.createElementVNode("div", _hoisted_9$q, [
                           vue.createVNode(_component_el_input_number, {
                             modelValue: $data.form.blockStyle.padding,
                             "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form.blockStyle.padding) = $event)),
@@ -24398,7 +24555,7 @@
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_10$i, [
+                        vue.createElementVNode("div", _hoisted_10$l, [
                           vue.createVNode(_component_el_input_number, {
                             modelValue: $data.form.blockStyle.borderWidth,
                             "onUpdate:modelValue": _cache[9] || (_cache[9] = $event => (($data.form.blockStyle.borderWidth) = $event)),
@@ -24414,7 +24571,7 @@
                     }),
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_11$e, [
+                        vue.createElementVNode("div", _hoisted_11$i, [
                           vue.createVNode(_component_CommonColorPicker, {
                             modelValue: $data.form.blockStyle.borderColor,
                             "onUpdate:modelValue": _cache[10] || (_cache[10] = $event => (($data.form.blockStyle.borderColor) = $event)),
@@ -24435,7 +24592,7 @@
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_12$a, [
+                        vue.createElementVNode("div", _hoisted_12$d, [
                           vue.createVNode(_component_CommonColorPicker, {
                             modelValue: $data.form.blockStyle.textColor,
                             "onUpdate:modelValue": _cache[11] || (_cache[11] = $event => (($data.form.blockStyle.textColor) = $event)),
@@ -24448,7 +24605,7 @@
                     }),
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_13$a, [
+                        vue.createElementVNode("div", _hoisted_13$d, [
                           vue.createVNode(_component_CommonColorPicker, {
                             modelValue: $data.form.blockStyle.backgroundColor,
                             "onUpdate:modelValue": _cache[12] || (_cache[12] = $event => (($data.form.blockStyle.backgroundColor) = $event)),
@@ -24469,7 +24626,7 @@
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_14$7, [
+                        vue.createElementVNode("div", _hoisted_14$b, [
                           vue.createVNode(_component_el_select, {
                             modelValue: $data.form.blockStyle.borderType,
                             "onUpdate:modelValue": _cache[13] || (_cache[13] = $event => (($data.form.blockStyle.borderType) = $event)),
@@ -24495,7 +24652,7 @@
                     }),
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_15$7, [
+                        vue.createElementVNode("div", _hoisted_15$b, [
                           vue.createVNode(_component_el_input_number, {
                             modelValue: $data.form.blockStyle.selectedBorderWidth,
                             "onUpdate:modelValue": _cache[14] || (_cache[14] = $event => (($data.form.blockStyle.selectedBorderWidth) = $event)),
@@ -24520,7 +24677,7 @@
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_16$7, [
+                        vue.createElementVNode("div", _hoisted_16$b, [
                           vue.createVNode(_component_CommonColorPicker, {
                             modelValue: $data.form.blockStyle.selectedBorderColor,
                             "onUpdate:modelValue": _cache[15] || (_cache[15] = $event => (($data.form.blockStyle.selectedBorderColor) = $event)),
@@ -24554,8 +24711,8 @@
                       default: vue.withCtx(() => [
                         vue.createVNode(_component_el_form_item, null, {
                           default: vue.withCtx(() => [
-                            vue.createElementVNode("div", _hoisted_17$6, [
-                              vue.createElementVNode("div", _hoisted_18$5, [
+                            vue.createElementVNode("div", _hoisted_17$8, [
+                              vue.createElementVNode("div", _hoisted_18$6, [
                                 vue.createVNode(_component_el_input, {
                                   modelValue: $data.form.customStyle.backgroundImage,
                                   "onUpdate:modelValue": _cache[16] || (_cache[16] = $event => (($data.form.customStyle.backgroundImage) = $event)),
@@ -24713,16 +24870,16 @@
   const _hoisted_1$1$ = { class: "d-flex-c" };
   const _hoisted_2$1t = { class: "d-flex-c" };
   const _hoisted_3$1d = { class: "d-flex-c" };
-  const _hoisted_4$14 = {
+  const _hoisted_4$15 = {
     key: 0,
     class: "d-flex-c"
   };
-  const _hoisted_5$R = {
+  const _hoisted_5$U = {
     key: 1,
     class: "d-flex-c"
   };
-  const _hoisted_6$J = { class: "d-flex-c" };
-  const _hoisted_7$A = { class: "d-flex-c" };
+  const _hoisted_6$N = { class: "d-flex-c" };
+  const _hoisted_7$E = { class: "d-flex-c" };
 
   function _sfc_render$1Q(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_EfRadio = vue.resolveComponent("EfRadio");
@@ -24844,7 +25001,7 @@
                 vue.createVNode(_component_el_form_item, { label: "" }, {
                   default: vue.withCtx(() => [
                     ($data.form.cardMode == 'adaptive')
-                      ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_4$14, [
+                      ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_4$15, [
                           vue.createVNode(_component_el_input_number, {
                             modelValue: $data.form.maxRows,
                             "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.maxRows) = $event)),
@@ -24856,7 +25013,7 @@
                           _cache[13] || (_cache[13] = vue.createTextVNode()),
                           _cache[14] || (_cache[14] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 最大行数", -1))
                         ]))
-                      : (vue.openBlock(), vue.createElementBlock("div", _hoisted_5$R, [
+                      : (vue.openBlock(), vue.createElementBlock("div", _hoisted_5$U, [
                           vue.createVNode(_component_el_input_number, {
                             modelValue: $data.form.rowHeight,
                             "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.rowHeight) = $event)),
@@ -24886,7 +25043,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_6$J, [
+                    vue.createElementVNode("div", _hoisted_6$N, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.rowMargin,
                         "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.rowMargin) = $event)),
@@ -24908,7 +25065,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, { label: "" }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_7$A, [
+                    vue.createElementVNode("div", _hoisted_7$E, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.colMargin,
                         "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.colMargin) = $event)),
@@ -24992,7 +25149,7 @@
   const _hoisted_1$1_ = { class: "d-flex-c" };
   const _hoisted_2$1s = { class: "d-flex ai-c" };
   const _hoisted_3$1c = { style: {"margin-left":"10px"} };
-  const _hoisted_4$13 = { class: "d-flex-c" };
+  const _hoisted_4$14 = { class: "d-flex-c" };
 
   function _sfc_render$1P(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input = vue.resolveComponent("el-input");
@@ -25083,7 +25240,7 @@
                   class: "radio-item"
                 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$13, [
+                    vue.createElementVNode("div", _hoisted_4$14, [
                       vue.createVNode(_component_EfRadio, {
                         modelValue: $data.form.backgroundRepeat,
                         "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($data.form.backgroundRepeat) = $event)),
@@ -25163,8 +25320,8 @@
   const _hoisted_1$1Z = { class: "d-flex-c" };
   const _hoisted_2$1r = { class: "d-flex-c" };
   const _hoisted_3$1b = { class: "d-flex-c" };
-  const _hoisted_4$12 = { class: "d-flex-c" };
-  const _hoisted_5$Q = { class: "d-flex-c" };
+  const _hoisted_4$13 = { class: "d-flex-c" };
+  const _hoisted_5$T = { class: "d-flex-c" };
 
   function _sfc_render$1O(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_CommonColorPicker = vue.resolveComponent("CommonColorPicker");
@@ -25267,7 +25424,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$12, [
+                    vue.createElementVNode("div", _hoisted_4$13, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.color,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.color) = $event)),
@@ -25295,7 +25452,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$Q, [
+                    vue.createElementVNode("div", _hoisted_5$T, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.form.type,
                         "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.type) = $event)),
@@ -25582,17 +25739,17 @@
     class: "d-flex",
     style: {"flex":"1","align-items":"center","overflow":"hidden"}
   };
-  const _hoisted_4$11 = { class: "color-view" };
-  const _hoisted_5$P = { class: "color-view-dropdown" };
-  const _hoisted_6$I = { style: {"position":"relative","width":"100%","padding":"30px 10px 10px 20px","border-bottom":"1px solid #e8eaec"} };
-  const _hoisted_7$z = {
+  const _hoisted_4$12 = { class: "color-view" };
+  const _hoisted_5$S = { class: "color-view-dropdown" };
+  const _hoisted_6$M = { style: {"position":"relative","width":"100%","padding":"30px 10px 10px 20px","border-bottom":"1px solid #e8eaec"} };
+  const _hoisted_7$D = {
     class: "down-color-item",
     style: {"margin":"2px 0"}
   };
-  const _hoisted_8$r = { style: {"display":"flex","justify-content":"center","width":"100%","padding":"10px","font-size":"14px"} };
-  const _hoisted_9$m = { style: {"display":"flex","margin-right":"30px"} };
-  const _hoisted_10$h = ["value"];
-  const _hoisted_11$d = { class: "d-flex-c colors-number-suffix" };
+  const _hoisted_8$v = { style: {"display":"flex","justify-content":"center","width":"100%","padding":"10px","font-size":"14px"} };
+  const _hoisted_9$p = { style: {"display":"flex","margin-right":"30px"} };
+  const _hoisted_10$k = ["value"];
+  const _hoisted_11$h = { class: "d-flex-c colors-number-suffix" };
 
   function _sfc_render$1M(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_option = vue.resolveComponent("el-option");
@@ -25624,7 +25781,7 @@
             onChange: $options.colorChange
           }, {
             prefix: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_4$11, [
+              vue.createElementVNode("div", _hoisted_4$12, [
                 (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.value.split('@'), (color, index) => {
                   return (vue.openBlock(), vue.createElementBlock("div", {
                     key: index,
@@ -25641,7 +25798,7 @@
                   value: colors
                 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$P, [
+                    vue.createElementVNode("div", _hoisted_5$S, [
                       (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(colors.split('@'), (color, key) => {
                         return (vue.openBlock(), vue.createElementBlock("div", {
                           key: key,
@@ -25675,7 +25832,7 @@
         class: "d-flex-c plane-inner-bg",
         style: vue.normalizeStyle( `margin: 10px 10px 0 ${$props.name?40:0}px;padding: 0;width:auto;`)
       }, [
-        vue.createElementVNode("div", _hoisted_6$I, [
+        vue.createElementVNode("div", _hoisted_6$M, [
           vue.createVNode(_component_el_button, {
             circle: "",
             text: "",
@@ -25699,7 +25856,7 @@
                 class: "color-example",
                 style: vue.normalizeStyle(`background:${$data.conversionColorList[index].color};`)
               }, null, 4),
-              vue.createElementVNode("div", _hoisted_7$z, [
+              vue.createElementVNode("div", _hoisted_7$D, [
                 vue.createVNode(_component_CommonColorPicker, {
                   modelValue: $data.conversionColorList[index].color,
                   "onUpdate:modelValue": $event => (($data.conversionColorList[index].color) = $event),
@@ -25722,8 +25879,8 @@
             ]))
           }), 128))
         ]),
-        vue.createElementVNode("div", _hoisted_8$r, [
-          vue.createElementVNode("div", _hoisted_9$m, [
+        vue.createElementVNode("div", _hoisted_8$v, [
+          vue.createElementVNode("div", _hoisted_9$p, [
             _cache[6] || (_cache[6] = vue.createTextVNode(" 数量 ", -1)),
             vue.createElementVNode("div", {
               "controls-position": "right",
@@ -25733,7 +25890,7 @@
               onChange: _cache[4] || (_cache[4] = $event => (_ctx.size="mini"))
             }, [
               vue.createTextVNode(vue.toDisplayString($data.conversionColorList.length) + " ", 1),
-              vue.createElementVNode("div", _hoisted_11$d, [
+              vue.createElementVNode("div", _hoisted_11$h, [
                 vue.createVNode(_component_el_button, {
                   type: "info",
                   class: "colors-number-button",
@@ -25769,7 +25926,7 @@
                   _: 1
                 }, 8, ["disabled"])
               ])
-            ], 40, _hoisted_10$h)
+            ], 40, _hoisted_10$k)
           ]),
           vue.createElementVNode("div", {
             style: {"display":"flex"},
@@ -25855,8 +26012,8 @@
   const _hoisted_1$1V = { class: "d-flex-c" };
   const _hoisted_2$1p = { class: "d-flex-c" };
   const _hoisted_3$19 = { class: "d-flex-c" };
-  const _hoisted_4$10 = { class: "d-flex-c" };
-  const _hoisted_5$O = { class: "d-flex-c" };
+  const _hoisted_4$11 = { class: "d-flex-c" };
+  const _hoisted_5$R = { class: "d-flex-c" };
 
   function _sfc_render$1L(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
@@ -25956,7 +26113,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$10, [
+                    vue.createElementVNode("div", _hoisted_4$11, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.borderWidth,
                         "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.borderWidth) = $event)),
@@ -25972,7 +26129,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$O, [
+                    vue.createElementVNode("div", _hoisted_5$R, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.borderColor,
                         "onUpdate:modelValue": _cache[9] || (_cache[9] = $event => (($data.form.borderColor) = $event)),
@@ -26036,8 +26193,8 @@
   const _hoisted_1$1U = { class: "d-flex-c" };
   const _hoisted_2$1o = { class: "d-flex-c" };
   const _hoisted_3$18 = { class: "d-flex-c" };
-  const _hoisted_4$$ = { class: "d-flex-c" };
-  const _hoisted_5$N = { class: "d-flex-c" };
+  const _hoisted_4$10 = { class: "d-flex-c" };
+  const _hoisted_5$Q = { class: "d-flex-c" };
 
   function _sfc_render$1K(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
@@ -26119,7 +26276,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$$, [
+                    vue.createElementVNode("div", _hoisted_4$10, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.borderRadius[3],
                         "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.borderRadius[3]) = $event)),
@@ -26148,7 +26305,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$N, [
+                    vue.createElementVNode("div", _hoisted_5$Q, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.barWidth,
                         "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form.barWidth) = $event)),
@@ -26235,11 +26392,11 @@
   const _hoisted_1$1T = { class: "d-flex-c" };
   const _hoisted_2$1n = { class: "d-flex-c" };
   const _hoisted_3$17 = { class: "d-flex-c" };
-  const _hoisted_4$_ = { class: "d-flex-c" };
-  const _hoisted_5$M = { class: "d-flex-c" };
-  const _hoisted_6$H = { class: "d-flex-c" };
-  const _hoisted_7$y = { class: "d-flex-c" };
-  const _hoisted_8$q = { class: "d-flex-c" };
+  const _hoisted_4$$ = { class: "d-flex-c" };
+  const _hoisted_5$P = { class: "d-flex-c" };
+  const _hoisted_6$L = { class: "d-flex-c" };
+  const _hoisted_7$C = { class: "d-flex-c" };
+  const _hoisted_8$u = { class: "d-flex-c" };
 
   function _sfc_render$1J(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
@@ -26350,7 +26507,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$_, [
+                    vue.createElementVNode("div", _hoisted_4$$, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.showSymbol,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.showSymbol) = $event)),
@@ -26367,7 +26524,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$M, [
+                    vue.createElementVNode("div", _hoisted_5$P, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.symbolSize,
                         "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.symbolSize) = $event)),
@@ -26391,7 +26548,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_6$H, [
+                    vue.createElementVNode("div", _hoisted_6$L, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.form.symbol,
                         "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.symbol) = $event)),
@@ -26430,7 +26587,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_7$y, [
+                    vue.createElementVNode("div", _hoisted_7$C, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.label.show,
                         "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.label.show) = $event)),
@@ -26447,7 +26604,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_8$q, [
+                    vue.createElementVNode("div", _hoisted_8$u, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.isArea,
                         "onUpdate:modelValue": _cache[9] || (_cache[9] = $event => (($data.form.isArea) = $event)),
@@ -26675,9 +26832,9 @@
   const _hoisted_1$1R = { class: "d-flex-c" };
   const _hoisted_2$1l = { class: "d-flex-c" };
   const _hoisted_3$15 = { class: "d-flex-c" };
-  const _hoisted_4$Z = { class: "d-flex" };
-  const _hoisted_5$L = ["onClick"];
-  const _hoisted_6$G = { class: "d-flex-c" };
+  const _hoisted_4$_ = { class: "d-flex" };
+  const _hoisted_5$O = ["onClick"];
+  const _hoisted_6$K = { class: "d-flex-c" };
 
   function _sfc_render$1H(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
@@ -26745,7 +26902,7 @@
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
                     vue.createElementVNode("div", _hoisted_3$15, [
-                      vue.createElementVNode("div", _hoisted_4$Z, [
+                      vue.createElementVNode("div", _hoisted_4$_, [
                         (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.alignOption, (ele) => {
                           return (vue.openBlock(), vue.createElementBlock("div", {
                             key: ele.value,
@@ -26755,7 +26912,7 @@
                             vue.createElementVNode("i", {
                               class: vue.normalizeClass(['icon am-iconfont align-icon', ele.icon])
                             }, null, 2)
-                          ], 10, _hoisted_5$L))
+                          ], 10, _hoisted_5$O))
                         }), 128))
                       ]),
                       _cache[8] || (_cache[8] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 轴标签角度", -1))
@@ -26765,7 +26922,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_6$G, [
+                    vue.createElementVNode("div", _hoisted_6$K, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.alignActive,
                         "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.alignActive) = $event)),
@@ -27056,7 +27213,7 @@
   const _hoisted_1$1O = { class: "d-flex-c" };
   const _hoisted_2$1j = { class: "d-flex-c" };
   const _hoisted_3$14 = { class: "d-flex-c" };
-  const _hoisted_4$Y = { class: "d-flex-c" };
+  const _hoisted_4$Z = { class: "d-flex-c" };
 
   function _sfc_render$1E(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
@@ -27145,7 +27302,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$Y, [
+                    vue.createElementVNode("div", _hoisted_4$Z, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.itemHeight,
                         "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.itemHeight) = $event)),
@@ -27254,14 +27411,14 @@
   const _hoisted_1$1N = { class: "d-flex-c" };
   const _hoisted_2$1i = { class: "d-flex-c" };
   const _hoisted_3$13 = { class: "d-flex-c" };
-  const _hoisted_4$X = { class: "d-flex-c" };
-  const _hoisted_5$K = { class: "d-flex-c" };
-  const _hoisted_6$F = { class: "d-flex-c" };
-  const _hoisted_7$x = { class: "d-flex-c" };
-  const _hoisted_8$p = { class: "d-flex-c" };
-  const _hoisted_9$l = { class: "d-flex-c" };
-  const _hoisted_10$g = { class: "d-flex-c" };
-  const _hoisted_11$c = { class: "d-flex-c" };
+  const _hoisted_4$Y = { class: "d-flex-c" };
+  const _hoisted_5$N = { class: "d-flex-c" };
+  const _hoisted_6$J = { class: "d-flex-c" };
+  const _hoisted_7$B = { class: "d-flex-c" };
+  const _hoisted_8$t = { class: "d-flex-c" };
+  const _hoisted_9$o = { class: "d-flex-c" };
+  const _hoisted_10$j = { class: "d-flex-c" };
+  const _hoisted_11$g = { class: "d-flex-c" };
 
   function _sfc_render$1D(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
@@ -27356,7 +27513,7 @@
                   style: {"padding-right":"10px"}
                 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$X, [
+                    vue.createElementVNode("div", _hoisted_4$Y, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.styles['--rowCurrentColor'],
                         "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.styles['--rowCurrentColor']) = $event)),
@@ -27383,7 +27540,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$K, [
+                    vue.createElementVNode("div", _hoisted_5$N, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.form.border,
                         "onUpdate:modelValue": _cache[10] || (_cache[10] = $event => (($data.form.border) = $event)),
@@ -27409,7 +27566,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_6$F, [
+                    vue.createElementVNode("div", _hoisted_6$J, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.styles['--borderColor'],
                         "onUpdate:modelValue": _cache[12] || (_cache[12] = $event => (($data.styles['--borderColor']) = $event)),
@@ -27436,7 +27593,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_7$x, [
+                    vue.createElementVNode("div", _hoisted_7$B, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.styles['--tablecellheight'],
                         "onUpdate:modelValue": _cache[14] || (_cache[14] = $event => (($data.styles['--tablecellheight']) = $event)),
@@ -27460,7 +27617,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_8$p, [
+                    vue.createElementVNode("div", _hoisted_8$t, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.stripe,
                         "onUpdate:modelValue": _cache[16] || (_cache[16] = $event => (($data.form.stripe) = $event)),
@@ -27476,7 +27633,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_9$l, [
+                    vue.createElementVNode("div", _hoisted_9$o, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.styles['--stripeColor'],
                         "onUpdate:modelValue": _cache[19] || (_cache[19] = $event => (($data.styles['--stripeColor']) = $event)),
@@ -27498,7 +27655,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_10$g, [
+                    vue.createElementVNode("div", _hoisted_10$j, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.styles['--bodyBg'],
                         "onUpdate:modelValue": _cache[21] || (_cache[21] = $event => (($data.styles['--bodyBg']) = $event)),
@@ -27512,7 +27669,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_11$c, [
+                    vue.createElementVNode("div", _hoisted_11$g, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.form.align,
                         "onUpdate:modelValue": _cache[23] || (_cache[23] = $event => (($data.form.align) = $event)),
@@ -27622,7 +27779,7 @@
   const _hoisted_1$1M = { class: "d-flex-c" };
   const _hoisted_2$1h = { class: "d-flex-c" };
   const _hoisted_3$12 = { class: "d-flex-c" };
-  const _hoisted_4$W = { class: "d-flex-c" };
+  const _hoisted_4$X = { class: "d-flex-c" };
 
   function _sfc_render$1C(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
@@ -27724,7 +27881,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$W, [
+                    vue.createElementVNode("div", _hoisted_4$X, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.styles['--headerBg'],
                         "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.styles['--headerBg']) = $event)),
@@ -27810,7 +27967,7 @@
   const _hoisted_1$1L = { class: "d-flex-c" };
   const _hoisted_2$1g = { class: "d-flex-c" };
   const _hoisted_3$11 = { class: "d-flex-c" };
-  const _hoisted_4$V = { class: "d-flex-c" };
+  const _hoisted_4$W = { class: "d-flex-c" };
 
   function _sfc_render$1B(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_CommonColorPicker = vue.resolveComponent("CommonColorPicker");
@@ -27909,7 +28066,7 @@
         }),
         vue.createVNode(_component_el_form_item, null, {
           default: vue.withCtx(() => [
-            vue.createElementVNode("div", _hoisted_4$V, [
+            vue.createElementVNode("div", _hoisted_4$W, [
               vue.createVNode(_component_el_switch, {
                 modelValue: $data.form.label.show,
                 "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.label.show) = $event)),
@@ -27990,11 +28147,11 @@
   const _hoisted_1$1K = { class: "d-flex-c" };
   const _hoisted_2$1f = { class: "d-flex-c" };
   const _hoisted_3$10 = { class: "d-flex" };
-  const _hoisted_4$U = ["onClick"];
-  const _hoisted_5$J = { class: "d-flex-c" };
-  const _hoisted_6$E = { class: "d-flex-c" };
-  const _hoisted_7$w = { class: "d-flex-c" };
-  const _hoisted_8$o = { class: "d-flex-c" };
+  const _hoisted_4$V = ["onClick"];
+  const _hoisted_5$M = { class: "d-flex-c" };
+  const _hoisted_6$I = { class: "d-flex-c" };
+  const _hoisted_7$A = { class: "d-flex-c" };
+  const _hoisted_8$s = { class: "d-flex-c" };
 
   function _sfc_render$1A(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
@@ -28049,7 +28206,7 @@
                             vue.createElementVNode("i", {
                               class: vue.normalizeClass(['icon am-iconfont align-icon', ele.icon])
                             }, null, 2)
-                          ], 10, _hoisted_4$U))
+                          ], 10, _hoisted_4$V))
                         }), 128))
                       ]),
                       _cache[9] || (_cache[9] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 标签位置", -1))
@@ -28067,7 +28224,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$J, [
+                    vue.createElementVNode("div", _hoisted_5$M, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.labelLine.show,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.labelLine.show) = $event)),
@@ -28083,7 +28240,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_6$E, [
+                    vue.createElementVNode("div", _hoisted_6$I, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.labelLine.lineStyle.width,
                         "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.labelLine.lineStyle.width) = $event)),
@@ -28107,7 +28264,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_7$w, [
+                    vue.createElementVNode("div", _hoisted_7$A, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.labelLine.length,
                         "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.labelLine.length) = $event)),
@@ -28123,7 +28280,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_8$o, [
+                    vue.createElementVNode("div", _hoisted_8$s, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.labelLine.length2,
                         "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.labelLine.length2) = $event)),
@@ -28830,6 +28987,7 @@
     data() {
       return {
         preThemeList: [],
+        chartPaletteList: CHART_PALETTES,
         cardRadiusList,
         spaceModeList,
         pageHeightList,
@@ -28878,7 +29036,10 @@
         cardBorderBox: null,
         cardShadowBox: null,
         tabSplitStyleBox: null,
-        collapseModel: [],
+        collapseModel: ['preTheme', 'chartPalette'],
+        // 预置主题 + 图表配色模版 默认展开
+        palettesExpanded: false,
+        // 图表配色模版:默认只显示前两行(6 个)
         themeModeDisabled: false,
         themeModeValue: 'default',
         spaceModeDisabled: false,
@@ -28893,6 +29054,10 @@
       },
       hasSaveAsPermission() {
         return hasPermission(this.operPermission, 'theme.saveAs');
+      },
+      // 图表配色模版:未展开只显示前两行(6 个)
+      visiblePalettes() {
+        return this.palettesExpanded ? this.chartPaletteList : this.chartPaletteList.slice(0, 6);
       }
     },
     watch: {
@@ -28916,6 +29081,40 @@
       this.init(this.theme);
     },
     methods: {
+      // 当前整页图表配色(用于高亮选中的配色模版)
+      isPaletteActive(p) {
+        const active = this.theme?.chartStyle?.themeStyle?.colorList || [];
+        return JSON.stringify(active) === JSON.stringify(p.colors);
+      },
+      // 选定一套配色模版 → 整页图表默认配色切换(单图表自定义配色仍优先)
+      selectChartPalette(p) {
+        if (this.disabled) return;
+        this.chartStyleChange({
+          form: [...p.colors],
+          path: 'themeStyle',
+          field: 'colorList'
+        });
+      },
+      // 预置主题效果示意图配色(浅色 default / 深色 blue),自定义主题回退到浅色
+      getThemePreview(t) {
+        const presets = {
+          default: {
+            page: '#eef1f6',
+            card: '#ffffff',
+            border: '#e6e9f0',
+            accent: '#1f6aff',
+            palette: ['#5b9bff', '#3fd08a', '#f7b955', '#f2637b']
+          },
+          blue: {
+            page: '#0f1c30',
+            card: '#1b2b45',
+            border: '#2b3e5d',
+            accent: '#4d8bff',
+            palette: ['#4d8bff', '#3fd0c9', '#f7b955', '#ef6a7a']
+          }
+        };
+        return presets[t.key] || presets.default;
+      },
       async init(theme) {
         const preTheme = this.getThemeConfig(theme.preTheme, theme.globalCss?.themeMode || '', true);
         this.preThemeData = preTheme.config;
@@ -29724,19 +29923,24 @@
   const _hoisted_1$1J = { class: "page-setting-wrapper" };
   const _hoisted_2$1e = { class: "title" };
   const _hoisted_3$$ = ["onClick"];
-  const _hoisted_4$T = { class: "collapse-item" };
-  const _hoisted_5$I = { class: "collapse-item" };
-  const _hoisted_6$D = { class: "input-number-box" };
-  const _hoisted_7$v = { class: "input-number-box" };
-  const _hoisted_8$n = { class: "collapse-item" };
-  const _hoisted_9$k = { class: "collapse-item layout-collapse-item" };
-  const _hoisted_10$f = { class: "collapse-item" };
-  const _hoisted_11$b = { style: {"height":"300px"} };
-  const _hoisted_12$9 = { style: {"height":"300px"} };
-  const _hoisted_13$9 = {
+  const _hoisted_4$U = { class: "tp-dots" };
+  const _hoisted_5$L = ["onClick"];
+  const _hoisted_6$H = { class: "palette-name" };
+  const _hoisted_7$z = {
     key: 0,
-    class: "page-setting-footer"
+    class: "am-iconfont icon-a-yingyong palette-check"
   };
+  const _hoisted_8$r = { class: "palette-swatches" };
+  const _hoisted_9$n = { class: "palette-more-ic" };
+  const _hoisted_10$i = { class: "collapse-item" };
+  const _hoisted_11$f = { class: "collapse-item" };
+  const _hoisted_12$c = { class: "input-number-box" };
+  const _hoisted_13$c = { class: "input-number-box" };
+  const _hoisted_14$a = { class: "collapse-item" };
+  const _hoisted_15$a = { class: "collapse-item layout-collapse-item" };
+  const _hoisted_16$a = { class: "collapse-item" };
+  const _hoisted_17$7 = { style: {"height":"300px"} };
+  const _hoisted_18$5 = { style: {"height":"300px"} };
 
   function _sfc_render$1y(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_CopyDocument = vue.resolveComponent("CopyDocument");
@@ -29755,7 +29959,7 @@
 
     return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1J, [
       vue.createElementVNode("div", _hoisted_2$1e, [
-        _cache[6] || (_cache[6] = vue.createElementVNode("span", { style: {"margin-right":"10px"} }, "页面设置", -1)),
+        _cache[7] || (_cache[7] = vue.createElementVNode("span", { style: {"margin-right":"10px"} }, "页面设置", -1)),
         vue.createVNode(_component_el_button, {
           text: "",
           size: "small",
@@ -29798,12 +30002,12 @@
       ]),
       vue.createVNode(_component_el_collapse, {
         modelValue: $data.collapseModel,
-        "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.collapseModel) = $event)),
+        "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.collapseModel) = $event)),
         class: "page-setting-container"
       }, {
         default: vue.withCtx(() => [
-          vue.createVNode(_component_el_collapse_item, null, {
-            title: vue.withCtx(() => [...(_cache[7] || (_cache[7] = [
+          vue.createVNode(_component_el_collapse_item, { name: "preTheme" }, {
+            title: vue.withCtx(() => [...(_cache[8] || (_cache[8] = [
               vue.createTextVNode(" 预置主题 ", -1)
             ]))]),
             default: vue.withCtx(() => [
@@ -29817,6 +30021,34 @@
                     style: vue.normalizeStyle(t.config.imgPath ? {background:'url('+t.config.imgPath+') no-repeat'} : {}),
                     onClick: $event => ($options.changePreTheme(t))
                   }, [
+                    (!t.config.imgPath)
+                      ? (vue.openBlock(), vue.createElementBlock("div", {
+                          key: 0,
+                          class: "theme-preview",
+                          style: vue.normalizeStyle({ background: $options.getThemePreview(t).page })
+                        }, [
+                          (vue.openBlock(), vue.createElementBlock(vue.Fragment, null, vue.renderList(2, (n) => {
+                            return vue.createElementVNode("div", {
+                              key: n,
+                              class: "tp-card",
+                              style: vue.normalizeStyle({ background: $options.getThemePreview(t).card, borderColor: $options.getThemePreview(t).border })
+                            }, [
+                              vue.createElementVNode("span", {
+                                class: "tp-bar",
+                                style: vue.normalizeStyle({ background: $options.getThemePreview(t).accent })
+                              }, null, 4),
+                              vue.createElementVNode("div", _hoisted_4$U, [
+                                (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.getThemePreview(t).palette, (c, ci) => {
+                                  return (vue.openBlock(), vue.createElementBlock("i", {
+                                    key: ci,
+                                    style: vue.normalizeStyle({ background: c })
+                                  }, null, 4))
+                                }), 128))
+                              ])
+                            ], 4)
+                          }), 64))
+                        ], 4))
+                      : vue.createCommentVNode("", true),
                     vue.createElementVNode("span", null, vue.toDisplayString(t.name), 1)
                   ], 14, _hoisted_3$$))
                 }), 128))
@@ -29824,12 +30056,56 @@
             ]),
             _: 1
           }),
+          vue.createVNode(_component_el_collapse_item, { name: "chartPalette" }, {
+            title: vue.withCtx(() => [...(_cache[9] || (_cache[9] = [
+              vue.createTextVNode(" 图表配色模版 ", -1)
+            ]))]),
+            default: vue.withCtx(() => [
+              vue.createElementVNode("div", {
+                class: vue.normalizeClass(["collapse-item chart-palette-container", {'is-disabled':$props.disabled}])
+              }, [
+                (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.visiblePalettes, (p) => {
+                  return (vue.openBlock(), vue.createElementBlock("div", {
+                    key: p.key,
+                    class: vue.normalizeClass(['palette-item', $options.isPaletteActive(p) ? 'active' : '', $props.disabled?'is-disabled':'']),
+                    onClick: $event => ($options.selectChartPalette(p))
+                  }, [
+                    vue.createElementVNode("div", _hoisted_6$H, [
+                      vue.createElementVNode("span", null, vue.toDisplayString(p.name), 1),
+                      ($options.isPaletteActive(p))
+                        ? (vue.openBlock(), vue.createElementBlock("i", _hoisted_7$z))
+                        : vue.createCommentVNode("", true)
+                    ]),
+                    vue.createElementVNode("div", _hoisted_8$r, [
+                      (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(p.colors, (c, ci) => {
+                        return (vue.openBlock(), vue.createElementBlock("i", {
+                          key: ci,
+                          style: vue.normalizeStyle({ background: c })
+                        }, null, 4))
+                      }), 128))
+                    ])
+                  ], 10, _hoisted_5$L))
+                }), 128)),
+                ($data.chartPaletteList.length > 6)
+                  ? (vue.openBlock(), vue.createElementBlock("div", {
+                      key: 0,
+                      class: "palette-more",
+                      onClick: _cache[0] || (_cache[0] = $event => ($data.palettesExpanded = !$data.palettesExpanded))
+                    }, [
+                      vue.createElementVNode("span", null, vue.toDisplayString($data.palettesExpanded ? '收起' : `展开更多(${$data.chartPaletteList.length - 6})`), 1),
+                      vue.createElementVNode("span", _hoisted_9$n, vue.toDisplayString($data.palettesExpanded ? '︿' : '﹀'), 1)
+                    ]))
+                  : vue.createCommentVNode("", true)
+              ], 2)
+            ]),
+            _: 1
+          }),
           vue.createVNode(_component_el_collapse_item, null, {
-            title: vue.withCtx(() => [...(_cache[8] || (_cache[8] = [
+            title: vue.withCtx(() => [...(_cache[10] || (_cache[10] = [
               vue.createTextVNode(" 全局样式 ", -1)
             ]))]),
             default: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_4$T, [
+              vue.createElementVNode("div", _hoisted_10$i, [
                 vue.createVNode(_component_EfForm, {
                   ref: "globalCssForm",
                   items: $data.globalCssItems,
@@ -29844,11 +30120,11 @@
             _: 1
           }),
           vue.createVNode(_component_el_collapse_item, null, {
-            title: vue.withCtx(() => [...(_cache[9] || (_cache[9] = [
+            title: vue.withCtx(() => [...(_cache[11] || (_cache[11] = [
               vue.createTextVNode(" 卡片样式 ", -1)
             ]))]),
             default: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_5$I, [
+              vue.createElementVNode("div", _hoisted_11$f, [
                 vue.createVNode(_component_EfForm, {
                   ref: "cardForm",
                   items: $data.cardItems,
@@ -29860,32 +30136,32 @@
                 }, null, 8, ["items", "disabled"]),
                 vue.withDirectives(vue.createVNode(_component_el_row, { class: "space-custom" }, {
                   default: vue.withCtx(() => [
-                    _cache[12] || (_cache[12] = vue.createElementVNode("span", { class: "label" }, "卡片间距", -1)),
-                    vue.createElementVNode("div", _hoisted_6$D, [
+                    _cache[14] || (_cache[14] = vue.createElementVNode("span", { class: "label" }, "卡片间距", -1)),
+                    vue.createElementVNode("div", _hoisted_12$c, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.rowSpace,
-                        "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.rowSpace) = $event)),
+                        "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($data.rowSpace) = $event)),
                         "controls-position": "right",
                         min: 0,
                         max: 32,
                         size: "small",
                         disabled: $data.spaceDisabled||$props.disabled,
-                        onChange: _cache[1] || (_cache[1] = $event => ($options.changeSpace('custom')))
+                        onChange: _cache[2] || (_cache[2] = $event => ($options.changeSpace('custom')))
                       }, null, 8, ["modelValue", "disabled"]),
-                      _cache[10] || (_cache[10] = vue.createElementVNode("span", { class: "input-label" }, "行间距", -1))
+                      _cache[12] || (_cache[12] = vue.createElementVNode("span", { class: "input-label" }, "行间距", -1))
                     ]),
-                    vue.createElementVNode("div", _hoisted_7$v, [
+                    vue.createElementVNode("div", _hoisted_13$c, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.colSpace,
-                        "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.colSpace) = $event)),
+                        "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.colSpace) = $event)),
                         "controls-position": "right",
                         min: 0,
                         max: 32,
                         size: "small",
                         disabled: $data.spaceDisabled||$props.disabled,
-                        onChange: _cache[3] || (_cache[3] = $event => ($options.changeSpace('custom')))
+                        onChange: _cache[4] || (_cache[4] = $event => ($options.changeSpace('custom')))
                       }, null, 8, ["modelValue", "disabled"]),
-                      _cache[11] || (_cache[11] = vue.createElementVNode("span", { class: "input-label" }, "列间距", -1))
+                      _cache[13] || (_cache[13] = vue.createElementVNode("span", { class: "input-label" }, "列间距", -1))
                     ])
                   ]),
                   _: 1
@@ -29894,7 +30170,7 @@
                 ]),
                 vue.withDirectives(vue.createVNode(_component_el_row, { class: "space-custom" }, {
                   default: vue.withCtx(() => [
-                    _cache[13] || (_cache[13] = vue.createElementVNode("span", { class: "label" }, "卡片边距", -1)),
+                    _cache[15] || (_cache[15] = vue.createElementVNode("span", { class: "label" }, "卡片边距", -1)),
                     vue.createVNode(_component_PaddingBox, {
                       ref: "cardPaddingBox",
                       style: {"flex":"1"},
@@ -29911,11 +30187,11 @@
             _: 1
           }),
           vue.createVNode(_component_el_collapse_item, null, {
-            title: vue.withCtx(() => [...(_cache[14] || (_cache[14] = [
+            title: vue.withCtx(() => [...(_cache[16] || (_cache[16] = [
               vue.createTextVNode(" 页签样式 ", -1)
             ]))]),
             default: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_8$n, [
+              vue.createElementVNode("div", _hoisted_14$a, [
                 vue.createVNode(_component_EfForm, {
                   ref: "tabStyleForm",
                   items: $data.tabStyleItems,
@@ -29930,11 +30206,11 @@
             _: 1
           }),
           vue.createVNode(_component_el_collapse_item, null, {
-            title: vue.withCtx(() => [...(_cache[15] || (_cache[15] = [
+            title: vue.withCtx(() => [...(_cache[17] || (_cache[17] = [
               vue.createTextVNode(" 页面布局 ", -1)
             ]))]),
             default: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_9$k, [
+              vue.createElementVNode("div", _hoisted_15$a, [
                 vue.createVNode(_component_EfForm, {
                   ref: "pageLayoutForm",
                   items: $data.pageLayoutItems,
@@ -29950,11 +30226,11 @@
             _: 1
           }),
           vue.createVNode(_component_el_collapse_item, { class: "chart-collapse-item" }, {
-            title: vue.withCtx(() => [...(_cache[16] || (_cache[16] = [
+            title: vue.withCtx(() => [...(_cache[18] || (_cache[18] = [
               vue.createTextVNode(" 通用内容样式 ", -1)
             ]))]),
             default: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_10$f, [
+              vue.createElementVNode("div", _hoisted_16$a, [
                 vue.createVNode(_component_CardPaddingConfig, {
                   ref: "innerPaddingRef",
                   class: "padding-switch",
@@ -29972,11 +30248,11 @@
             _: 1
           }),
           vue.createVNode(_component_el_collapse_item, { name: "customStyle" }, {
-            title: vue.withCtx(() => [...(_cache[17] || (_cache[17] = [
+            title: vue.withCtx(() => [...(_cache[19] || (_cache[19] = [
               vue.createTextVNode(" 自定义样式 ", -1)
             ]))]),
             default: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_11$b, [
+              vue.createElementVNode("div", _hoisted_17$7, [
                 vue.createVNode(_component_BKCodeCom, {
                   ref: "cssEditor",
                   key: "2",
@@ -29991,15 +30267,15 @@
             _: 1
           }),
           vue.createVNode(_component_el_collapse_item, { name: "customScript" }, {
-            title: vue.withCtx(() => [...(_cache[18] || (_cache[18] = [
+            title: vue.withCtx(() => [...(_cache[20] || (_cache[20] = [
               vue.createTextVNode(" 自定义脚本 ", -1)
             ]))]),
             default: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_12$9, [
+              vue.createElementVNode("div", _hoisted_18$5, [
                 vue.createVNode(_component_BKCodeCom, {
                   ref: "editor",
                   modelValue: $data.customScript,
-                  "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.customScript) = $event)),
+                  "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.customScript) = $event)),
                   language: "javascript",
                   readonly: $props.disabled,
                   style: {"height":"300px"},
@@ -30013,23 +30289,10 @@
         ]),
         _: 1
       }, 8, ["modelValue"]),
-      ($options.hasSaveAsPermission)
-        ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_13$9, [
-            vue.createVNode(_component_el_button, {
-              size: "small",
-              type: "primary",
-              onClick: $options.saveAs
-            }, {
-              default: vue.withCtx(() => [...(_cache[19] || (_cache[19] = [
-                vue.createTextVNode(" 另存为 ", -1)
-              ]))]),
-              _: 1
-            }, 8, ["onClick"])
-          ]))
-        : vue.createCommentVNode("", true)
+      vue.createCommentVNode("", true)
     ]))
   }
-  const PageSetting = /*#__PURE__*/_export_sfc(_sfc_main$1z, [['render',_sfc_render$1y],['__scopeId',"data-v-860e3f13"]]);
+  const PageSetting = /*#__PURE__*/_export_sfc(_sfc_main$1z, [['render',_sfc_render$1y],['__scopeId',"data-v-17650fbb"]]);
 
   const _sfc_main$1y = {
     name: 'CardSetting',
@@ -30343,7 +30606,7 @@
   const _hoisted_1$1I = { class: "card-setting-wrapper" };
   const _hoisted_2$1d = { class: "title" };
   const _hoisted_3$_ = { class: "d-flex ai-c" };
-  const _hoisted_4$S = { class: "collapse-item" };
+  const _hoisted_4$T = { class: "collapse-item" };
 
   function _sfc_render$1x(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_CopyDocument = vue.resolveComponent("CopyDocument");
@@ -30420,7 +30683,7 @@
               ])
             ]),
             default: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_4$S, [
+              vue.createElementVNode("div", _hoisted_4$T, [
                 vue.createVNode(_component_EfForm, {
                   ref: "cardForm",
                   items: $data.cardItems,
@@ -30560,8 +30823,13 @@
         this.layoutConfig = { ...this.layoutConfig, themeConfigs: { ...this.layoutConfig.themeConfigs, innerPaddingConfig: e } };
       },
       changePreTheme (preTheme) {
-        const chartStyle = preTheme.chartStyle;
+        const chartStyle = efficientSuite.utils.deepClone(preTheme.chartStyle);
         delete preTheme.chartStyle;
+        // 切换主题时保留用户当前选定的图表配色模版(不重置为新主题内置色系)
+        const prevColorList = this.layoutConfig?.themeConfigs?.chartStyle?.themeStyle?.colorList;
+        if (prevColorList && prevColorList.length && chartStyle?.themeStyle) {
+          chartStyle.themeStyle.colorList = efficientSuite.utils.deepClone(prevColorList);
+        }
         this.layoutConfig = {
           ...this.layoutConfig,
           themeConfigs: { ...efficientSuite.utils.deepClone(preTheme), chartStyle },
@@ -30732,7 +31000,7 @@
         searchResult: [],
         panelHeight: 0,
         topMap: {},
-        activeNames: []
+        activeNames: ['layout', 'line']
       }
     },
     computed: {
@@ -30742,6 +31010,17 @@
         } else {
           return this.menus
         }
+      },
+      // 分组按两大类拆分:画布(布局/模板) + 图表(其余全部),小标题占位分隔
+      menuCats () {
+        const isCanvas = m => m.key === 'layout' || m.key === 'template';
+        const withChildren = this.finalMenus.filter(m => m.children.length);
+        const canvas = withChildren.filter(isCanvas);
+        const charts = withChildren.filter(m => !isCanvas(m));
+        const arr = [];
+        if (canvas.length) arr.push({ cat: '画布', items: canvas });
+        if (charts.length) arr.push({ cat: '图表', items: charts });
+        return arr
       },
       customChartList () {
         return this.customChart.filter(c => c.type !== 'decorate')
@@ -30774,7 +31053,8 @@
         }
       },
       finalMenus () {
-        this.activeNames = this.finalMenus.map(item => item.key);
+        // 搜索态:展开所有命中分组;默认态:展开「布局 + 折线图」两组
+        this.activeNames = this.keywords ? this.searchResult.map(m => m.key) : ['layout', 'line'];
       }
     },
     created () {
@@ -30853,7 +31133,7 @@
         }
 
         // 折线图(折线类 branchType)
-        const LINE_TYPES = ['lineChart', 'smoothLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap'];
+        const LINE_TYPES = ['lineChart', 'smoothLineChart', 'markLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap'];
         const lineMenu = this.menus.find(c => c.key === 'line');
         if (lineMenu) {
           lineMenu.children = this.chartData.filter(item => LINE_TYPES.indexOf(item.branchType) !== -1).map(item => ({
@@ -31048,43 +31328,45 @@
   const _hoisted_1$1G = { class: "toolbar-pannel-wrapper" };
   const _hoisted_2$1c = { class: "title" };
   const _hoisted_3$Z = { class: "icons" };
-  const _hoisted_4$R = { class: "group-name" };
-  const _hoisted_5$H = {
+  const _hoisted_4$S = { class: "menu-cat" };
+  const _hoisted_5$K = { class: "group-name" };
+  const _hoisted_6$G = { class: "group-count" };
+  const _hoisted_7$y = {
     key: 0,
     class: "group-content"
   };
-  const _hoisted_6$C = ["onClick"];
-  const _hoisted_7$u = { class: "menu-item-tip" };
-  const _hoisted_8$m = {
+  const _hoisted_8$q = ["onClick"];
+  const _hoisted_9$m = { class: "menu-item-tip" };
+  const _hoisted_10$h = {
     key: 0,
     class: "decorate-tip d-flex ai-c jc-c"
   };
-  const _hoisted_9$j = ["src", "title"];
-  const _hoisted_10$e = {
+  const _hoisted_11$e = ["src", "title"];
+  const _hoisted_12$b = {
     key: 2,
     class: "menu-card-name"
   };
-  const _hoisted_11$a = { class: "menu-item-wrapper" };
-  const _hoisted_12$8 = {
+  const _hoisted_13$b = { class: "menu-item-wrapper" };
+  const _hoisted_14$9 = {
     key: 0,
     class: "menu-item-img d-flex ai-c jc-c",
     style: {"height":"100%"}
   };
-  const _hoisted_13$8 = ["src", "title"];
-  const _hoisted_14$6 = {
+  const _hoisted_15$9 = ["src", "title"];
+  const _hoisted_16$9 = {
     key: 2,
     class: "menu-card-name"
   };
-  const _hoisted_15$6 = {
+  const _hoisted_17$6 = {
     class: "menu-item",
     title: "拖拽到对应区域"
   };
-  const _hoisted_16$6 = { class: "menu-item-tip" };
-  const _hoisted_17$5 = ["src", "title"];
-  const _hoisted_18$4 = { class: "menu-card-name" };
-  const _hoisted_19$4 = { class: "menu-item-wrapper" };
-  const _hoisted_20$3 = ["src", "title"];
-  const _hoisted_21$3 = { class: "menu-card-name" };
+  const _hoisted_18$4 = { class: "menu-item-tip" };
+  const _hoisted_19$4 = ["src", "title"];
+  const _hoisted_20$3 = { class: "menu-card-name" };
+  const _hoisted_21$3 = { class: "menu-item-wrapper" };
+  const _hoisted_22$3 = ["src", "title"];
+  const _hoisted_23$3 = { class: "menu-card-name" };
 
   function _sfc_render$1w(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_i_ri_search_2_line = __unplugin_components_0$4;
@@ -31097,7 +31379,7 @@
 
     return vue.withDirectives((vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1G, [
       vue.createElementVNode("div", _hoisted_2$1c, [
-        vue.withDirectives(vue.createElementVNode("span", null, "看板组件", 512), [
+        vue.withDirectives(vue.createElementVNode("span", null, "组件", 512), [
           [vue.vShow, !$data.showSearch]
         ]),
         vue.withDirectives(vue.createElementVNode("div", _hoisted_3$Z, [
@@ -31128,120 +31410,128 @@
         class: "content"
       }, {
         default: vue.withCtx(() => [
-          (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.finalMenus, (m, key) => {
-            return vue.withDirectives((vue.openBlock(), vue.createBlock(_component_el_collapse_item, {
-              key: key,
-              ref_for: true,
-              ref: m.key,
-              class: "group",
-              name: m.key
-            }, {
-              title: vue.withCtx(() => [
-                vue.createElementVNode("div", _hoisted_4$R, vue.toDisplayString(m.name), 1)
-              ]),
-              default: vue.withCtx(() => [
-                (!m.draggable)
-                  ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_5$H, [
-                      (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(m.children, (item, index) => {
-                        return (vue.openBlock(), vue.createElementBlock("div", {
-                          key: index,
-                          class: "menu-item",
-                          onClick: $event => ($options.clickItem(item.key, item.payload))
-                        }, [
-                          vue.createVNode(_component_el_tooltip, {
-                            placement: "right",
-                            effect: "light",
-                            "popper-class": "tip_popper",
-                            class: vue.normalizeClass(item.isDecorate ? 'menu-item-decorate' : '')
-                          }, {
-                            content: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_7$u, [
-                                (item.isDecorate)
-                                  ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_8$m, [
-                                      vue.createVNode(_component_BKDecorateChart, {
-                                        content: item.payload.content
-                                      }, null, 8, ["content"])
-                                    ]))
-                                  : (vue.openBlock(), vue.createElementBlock("img", {
-                                      key: 1,
+          (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.menuCats, (grp) => {
+            return (vue.openBlock(), vue.createElementBlock(vue.Fragment, {
+              key: grp.cat
+            }, [
+              vue.createElementVNode("div", _hoisted_4$S, vue.toDisplayString(grp.cat), 1),
+              (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(grp.items, (m) => {
+                return (vue.openBlock(), vue.createBlock(_component_el_collapse_item, {
+                  key: m.key,
+                  ref_for: true,
+                  ref: m.key,
+                  class: "group",
+                  name: m.key
+                }, {
+                  title: vue.withCtx(() => [
+                    vue.createElementVNode("div", _hoisted_5$K, [
+                      vue.createTextVNode(vue.toDisplayString(m.name), 1),
+                      vue.createElementVNode("span", _hoisted_6$G, vue.toDisplayString(m.children.length), 1)
+                    ])
+                  ]),
+                  default: vue.withCtx(() => [
+                    (!m.draggable)
+                      ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_7$y, [
+                          (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(m.children, (item, index) => {
+                            return (vue.openBlock(), vue.createElementBlock("div", {
+                              key: index,
+                              class: "menu-item",
+                              onClick: $event => ($options.clickItem(item.key, item.payload))
+                            }, [
+                              vue.createVNode(_component_el_tooltip, {
+                                placement: "right",
+                                effect: "light",
+                                "popper-class": "tip_popper",
+                                class: vue.normalizeClass(item.isDecorate ? 'menu-item-decorate' : '')
+                              }, {
+                                content: vue.withCtx(() => [
+                                  vue.createElementVNode("div", _hoisted_9$m, [
+                                    (item.isDecorate)
+                                      ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_10$h, [
+                                          vue.createVNode(_component_BKDecorateChart, {
+                                            content: item.payload.content
+                                          }, null, 8, ["content"])
+                                        ]))
+                                      : (vue.openBlock(), vue.createElementBlock("img", {
+                                          key: 1,
+                                          src: item.img,
+                                          title: item.name
+                                        }, null, 8, _hoisted_11$e)),
+                                    (!item.isDecorate)
+                                      ? (vue.openBlock(), vue.createElementBlock("span", _hoisted_12$b, vue.toDisplayString(item.name), 1))
+                                      : vue.createCommentVNode("", true)
+                                  ])
+                                ]),
+                                default: vue.withCtx(() => [
+                                  vue.createElementVNode("div", _hoisted_13$b, [
+                                    (item.isDecorate)
+                                      ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_14$9, [
+                                          vue.createVNode(_component_BKDecorateChart, {
+                                            content: item.payload.content
+                                          }, null, 8, ["content"])
+                                        ]))
+                                      : (vue.openBlock(), vue.createElementBlock("img", {
+                                          key: 1,
+                                          src: item.img,
+                                          title: item.name,
+                                          class: "menu-item-img"
+                                        }, null, 8, _hoisted_15$9)),
+                                    (!item.isDecorate)
+                                      ? (vue.openBlock(), vue.createElementBlock("span", _hoisted_16$9, vue.toDisplayString(item.name), 1))
+                                      : vue.createCommentVNode("", true)
+                                  ])
+                                ]),
+                                _: 2
+                              }, 1032, ["class"])
+                            ], 8, _hoisted_8$q))
+                          }), 128))
+                        ]))
+                      : (vue.openBlock(), vue.createBlock(_component_draggable, {
+                          key: 1,
+                          list: m.children,
+                          class: "group-content",
+                          sort: false,
+                          disabled: $props.disabled,
+                          "item-key": "payload.chartComId",
+                          group: {name:'bk-chart-com' , pull: 'clone', put: false}
+                        }, {
+                          item: vue.withCtx(({element:item}) => [
+                            vue.createElementVNode("div", _hoisted_17$6, [
+                              vue.createVNode(_component_el_tooltip, {
+                                placement: "right",
+                                effect: "light",
+                                "popper-class": "tip_popper"
+                              }, {
+                                content: vue.withCtx(() => [
+                                  vue.createElementVNode("div", _hoisted_18$4, [
+                                    vue.createElementVNode("img", {
                                       src: item.img,
                                       title: item.name
-                                    }, null, 8, _hoisted_9$j)),
-                                (!item.isDecorate)
-                                  ? (vue.openBlock(), vue.createElementBlock("span", _hoisted_10$e, vue.toDisplayString(item.name), 1))
-                                  : vue.createCommentVNode("", true)
-                              ])
-                            ]),
-                            default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_11$a, [
-                                (item.isDecorate)
-                                  ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_12$8, [
-                                      vue.createVNode(_component_BKDecorateChart, {
-                                        content: item.payload.content
-                                      }, null, 8, ["content"])
-                                    ]))
-                                  : (vue.openBlock(), vue.createElementBlock("img", {
-                                      key: 1,
+                                    }, null, 8, _hoisted_19$4),
+                                    vue.createElementVNode("span", _hoisted_20$3, vue.toDisplayString(item.name), 1)
+                                  ])
+                                ]),
+                                default: vue.withCtx(() => [
+                                  vue.createElementVNode("div", _hoisted_21$3, [
+                                    vue.createElementVNode("img", {
                                       src: item.img,
                                       title: item.name,
                                       class: "menu-item-img"
-                                    }, null, 8, _hoisted_13$8)),
-                                (!item.isDecorate)
-                                  ? (vue.openBlock(), vue.createElementBlock("span", _hoisted_14$6, vue.toDisplayString(item.name), 1))
-                                  : vue.createCommentVNode("", true)
-                              ])
-                            ]),
-                            _: 2
-                          }, 1032, ["class"])
-                        ], 8, _hoisted_6$C))
-                      }), 128))
-                    ]))
-                  : (vue.openBlock(), vue.createBlock(_component_draggable, {
-                      key: 1,
-                      list: m.children,
-                      class: "group-content",
-                      sort: false,
-                      disabled: $props.disabled,
-                      "item-key": "payload.chartComId",
-                      group: {name:'bk-chart-com' , pull: 'clone', put: false}
-                    }, {
-                      item: vue.withCtx(({element:item}) => [
-                        vue.createElementVNode("div", _hoisted_15$6, [
-                          vue.createVNode(_component_el_tooltip, {
-                            placement: "right",
-                            effect: "light",
-                            "popper-class": "tip_popper"
-                          }, {
-                            content: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_16$6, [
-                                vue.createElementVNode("img", {
-                                  src: item.img,
-                                  title: item.name
-                                }, null, 8, _hoisted_17$5),
-                                vue.createElementVNode("span", _hoisted_18$4, vue.toDisplayString(item.name), 1)
-                              ])
-                            ]),
-                            default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_19$4, [
-                                vue.createElementVNode("img", {
-                                  src: item.img,
-                                  title: item.name,
-                                  class: "menu-item-img"
-                                }, null, 8, _hoisted_20$3),
-                                vue.createElementVNode("span", _hoisted_21$3, vue.toDisplayString(item.name), 1)
-                              ])
-                            ]),
-                            _: 2
-                          }, 1024)
-                        ])
-                      ]),
-                      _: 1
-                    }, 8, ["list", "disabled"]))
-              ]),
-              _: 2
-            }, 1032, ["name"])), [
-              [vue.vShow, m.children.length]
-            ])
+                                    }, null, 8, _hoisted_22$3),
+                                    vue.createElementVNode("span", _hoisted_23$3, vue.toDisplayString(item.name), 1)
+                                  ])
+                                ]),
+                                _: 2
+                              }, 1024)
+                            ])
+                          ]),
+                          _: 1
+                        }, 8, ["list", "disabled"]))
+                  ]),
+                  _: 2
+                }, 1032, ["name"]))
+              }), 128))
+            ], 64))
           }), 128))
         ]),
         _: 1
@@ -31250,7 +31540,7 @@
       [vue.vShow, $props.appendToBody || $data.show]
     ])
   }
-  const ToolbarPannel = /*#__PURE__*/_export_sfc(_sfc_main$1x, [['render',_sfc_render$1w],['__scopeId',"data-v-d5131a67"]]);
+  const ToolbarPannel = /*#__PURE__*/_export_sfc(_sfc_main$1x, [['render',_sfc_render$1w],['__scopeId',"data-v-ffad3f30"]]);
 
   /* unplugin-vue-components disabled */
 
@@ -31406,9 +31696,9 @@
     key: 1,
     class: "pannel-container"
   };
-  const _hoisted_4$Q = { class: "grid-setting-bar" };
-  const _hoisted_5$G = { style: {"display":"flex","align-items":"center","font-size":"12px","white-space":"nowrap"} };
-  const _hoisted_6$B = { style: {"margin-right":"6px"} };
+  const _hoisted_4$R = { class: "grid-setting-bar" };
+  const _hoisted_5$J = { style: {"display":"flex","align-items":"center","font-size":"12px","white-space":"nowrap"} };
+  const _hoisted_6$F = { style: {"margin-right":"6px"} };
 
   function _sfc_render$1v(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_i_ri_pencil_ruler_2_fill = __unplugin_components_3$1;
@@ -31460,9 +31750,9 @@
             }), null, 16, ["disabled", "onClickItem"])
           ]))
         : vue.createCommentVNode("", true),
-      vue.withDirectives(vue.createElementVNode("div", _hoisted_4$Q, [
+      vue.withDirectives(vue.createElementVNode("div", _hoisted_4$R, [
         _cache[10] || (_cache[10] = vue.createElementVNode("span", { style: {"font-size":"14px"} }, "页面栅格设置", -1)),
-        vue.createElementVNode("div", _hoisted_5$G, [
+        vue.createElementVNode("div", _hoisted_5$J, [
           _cache[8] || (_cache[8] = vue.createElementVNode("span", { style: {"margin-right":"6px"} }, "栅格列数", -1)),
           vue.createVNode(_component_EfSelect, {
             modelValue: $data.columnNum,
@@ -31474,7 +31764,7 @@
             clearable: false,
             onChange: $options.changeColNum
           }, null, 8, ["modelValue", "mock", "disabled", "onChange"]),
-          vue.withDirectives(vue.createElementVNode("span", _hoisted_6$B, "每行高度", 512), [
+          vue.withDirectives(vue.createElementVNode("span", _hoisted_6$F, "每行高度", 512), [
             [vue.vShow, $options.showRowHeight]
           ]),
           vue.withDirectives(vue.createVNode(_component_el_input_number, {
@@ -31578,7 +31868,7 @@
   const _hoisted_1$1E = { class: "script-panel" };
   const _hoisted_2$1a = { class: "script-content" };
   const _hoisted_3$X = { class: "code-content" };
-  const _hoisted_4$P = { class: "analysis-modal-footer" };
+  const _hoisted_4$Q = { class: "analysis-modal-footer" };
 
   function _sfc_render$1u(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BKCodeCom = vue.resolveComponent("BKCodeCom");
@@ -31605,7 +31895,7 @@
               }, null, 8, ["modelValue"])
             ])
           ]),
-          vue.createElementVNode("div", _hoisted_4$P, [
+          vue.createElementVNode("div", _hoisted_4$Q, [
             vue.createVNode(_component_el_button, {
               type: "primary",
               size: "small",
@@ -32224,7 +32514,7 @@
   const _hoisted_1$1C = { class: "script-panel" };
   const _hoisted_2$18 = { class: "script-content" };
   const _hoisted_3$V = { class: "code-content" };
-  const _hoisted_4$O = { class: "analysis-modal-footer" };
+  const _hoisted_4$P = { class: "analysis-modal-footer" };
 
   function _sfc_render$1s(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_BKCodeCom = vue.resolveComponent("BKCodeCom");
@@ -32251,7 +32541,7 @@
               }, null, 8, ["modelValue"])
             ])
           ]),
-          vue.createElementVNode("div", _hoisted_4$O, [
+          vue.createElementVNode("div", _hoisted_4$P, [
             vue.createVNode(_component_el_button, {
               type: "primary",
               size: "small",
@@ -35114,6 +35404,8 @@
         previewModalConfig: null,
         openPageModalVisible: false,
         addPanelOpen: false,         // 顶部「+」看板组件浮窗是否打开(用于按钮激活态)
+        addAreaActive: 'layout',     // 看板组件浮窗:左侧锚点列当前激活分组
+        aacClickLock: false,         // 点击锚点触发的平滑滚动期间,忽略滚动高亮回写
         gridSettingActive: false,    // 栅格设置栏是否打开(用于栅格按钮激活态)
         pageSettingVisible: false,
         pageSettingMounted: false,   // 首次打开后常驻挂载,避免每次重建 monaco 编辑器导致卡顿
@@ -35157,7 +35449,7 @@
           name: item.title, key: 'setLayout', payload: item.configs, img: item.img ? imgObject[item.img] : ''
         }));
         // 图表分组(与左侧图表资源同源、同分组)
-        const LINE = ['lineChart', 'smoothLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap'];
+        const LINE = ['lineChart', 'smoothLineChart', 'markLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap'];
         const ADV = ['bubbleChart', 'calendarHeatmap', 'polarChart'];
         const toCard = c => ({ name: c.title, img: c.img ? imgObject[c.img] : '', chart: c });
         const bars = chartComponents$1.filter(c => (c.type === 'BKBarChart' || c.type === 'BKPolarChart') && !LINE.includes(c.branchType) && !ADV.includes(c.branchType));
@@ -35168,9 +35460,25 @@
           { name: '高级图表', items: chartComponents$1.filter(c => ADV.includes(c.branchType)).map(toCard) },
           { name: '表格', items: (tableComponents || []).map(toCard) },
           { name: '地图', items: (mapComponents || []).map(toCard) },
-          { name: '组件', items: (customComponents || []).map(toCard) }
+          { name: '其他', items: (customComponents || []).map(toCard) }
         ].filter(g => g.items.length);
         return { layout, tpl, charts }
+      },
+      // 看板组件浮窗:左侧锚点列(布局 / 布局模版 / 各图表分组),与右侧内容分组一一对应
+      addAreaSections () {
+        const secs = [{ key: 'layout', name: '布局', count: this.addAreaCards.layout.length }];
+        if (this.addAreaCards.tpl.length) secs.push({ key: 'tpl', name: '布局模版', count: this.addAreaCards.tpl.length });
+        this.addAreaCards.charts.forEach((g, i) => secs.push({ key: 'chart-' + i, name: g.name, count: g.items.length }));
+        return secs
+      },
+      // 左侧锚点列按两大类分组:画布(布局/布局模版) + 图表(各图表分组)
+      addAreaNavGroups () {
+        const secs = this.addAreaSections;
+        const isCanvas = s => s.key === 'layout' || s.key === 'tpl';
+        return [
+          { cat: '画布', items: secs.filter(isCanvas) },
+          { cat: '图表', items: secs.filter(s => !isCanvas(s)) }
+        ].filter(c => c.items.length)
       },
       layoutWrapperWidth () {
         if (this.layoutConfig?.themeConfigs?.pageLayout?.pageWidthMode === 'custom' && this.layoutConfig?.themeConfigs?.pageLayout?.pageWidth) {
@@ -35931,12 +36239,52 @@
       closeAddDropdown () {
         this.$refs.addAreaDropdown && this.$refs.addAreaDropdown.handleClose && this.$refs.addAreaDropdown.handleClose();
       },
+      // 看板组件浮窗开合:打开时复位到第一个分组
+      onAddPanelToggle (open) {
+        this.addPanelOpen = open;
+        if (open) {
+          this.addAreaActive = 'layout';
+          this.$nextTick(() => { if (this.$refs.aacBody) this.$refs.aacBody.scrollTop = 0; });
+        }
+      },
+      // 左侧锚点点击:平滑滚动到对应分组
+      scrollToSection (key) {
+        this.addAreaActive = key;
+        const body = this.$refs.aacBody;
+        if (!body) return
+        const el = body.querySelector(`[data-key="${key}"]`);
+        if (!el) return
+        this.aacClickLock = true;
+        body.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
+        clearTimeout(this._aacLockTimer);
+        this._aacLockTimer = setTimeout(() => { this.aacClickLock = false; }, 400);
+      },
+      // 右侧滚动:高亮当前分组锚点
+      onAacScroll () {
+        if (this.aacClickLock) return
+        const body = this.$refs.aacBody;
+        if (!body) return
+        const secs = body.querySelectorAll('.aac-sec');
+        const top = body.scrollTop;
+        let active = this.addAreaActive;
+        for (const sec of secs) {
+          if (sec.offsetTop - 8 <= top) active = sec.dataset.key;
+          else break
+        }
+        // 已滚到底:强制激活最后一个分组(末组太短时也能高亮)
+        if (top + body.clientHeight >= body.scrollHeight - 2 && secs.length) {
+          active = secs[secs.length - 1].dataset.key;
+        }
+        this.addAreaActive = active;
+      },
       onSaveCommand (cmd) {
         if (cmd === 'save') {
           this.savePageConfig(false);
         } else if (cmd === 'saveAs') {
           if (this.embedOnSaveAs) this.embedOnSaveAs();
           else this.savePageConfig(true);
+        } else if (cmd === 'newDash') {
+          if (this.embedOnNewDashboard) this.embedOnNewDashboard();
         }
       },
       onModeCommand (cmd) {
@@ -36364,46 +36712,69 @@
     key: 1,
     class: "right"
   };
-  const _hoisted_4$N = { class: "aac-panel" };
-  const _hoisted_5$F = { class: "aac-head" };
-  const _hoisted_6$A = { class: "aac-head-toggle" };
-  const _hoisted_7$t = { class: "aac-body" };
-  const _hoisted_8$l = { class: "aac-grid" };
-  const _hoisted_9$i = ["onClick"];
-  const _hoisted_10$d = ["src", "title"];
-  const _hoisted_11$9 = { class: "aac-name" };
-  const _hoisted_12$7 = { class: "aac-grid" };
-  const _hoisted_13$7 = ["onClick"];
-  const _hoisted_14$5 = ["src", "title"];
-  const _hoisted_15$5 = { class: "aac-name" };
-  const _hoisted_16$5 = { class: "aac-group-name" };
-  const _hoisted_17$4 = { class: "aac-grid" };
-  const _hoisted_18$3 = ["title", "onClick"];
-  const _hoisted_19$3 = ["src"];
-  const _hoisted_20$2 = { class: "aac-name" };
-  const _hoisted_21$2 = { class: "canvas-zoom-ctrl" };
-  const _hoisted_22$2 = ["title"];
-  const _hoisted_23$2 = { style: {"display":"flex","flex":"1","overflow":"hidden","position":"relative"} };
-  const _hoisted_24$1 = {
+  const _hoisted_4$O = { class: "aac-panel" };
+  const _hoisted_5$I = { class: "aac-head" };
+  const _hoisted_6$E = { class: "aac-head-toggle" };
+  const _hoisted_7$x = { class: "aac-main" };
+  const _hoisted_8$p = { class: "aac-nav" };
+  const _hoisted_9$l = { class: "aac-nav-cat" };
+  const _hoisted_10$g = ["onClick"];
+  const _hoisted_11$d = { class: "aac-nav-txt" };
+  const _hoisted_12$a = { class: "aac-nav-count" };
+  const _hoisted_13$a = {
+    class: "aac-sec",
+    "data-key": "layout"
+  };
+  const _hoisted_14$8 = { class: "aac-grid" };
+  const _hoisted_15$8 = ["onClick"];
+  const _hoisted_16$8 = ["src", "title"];
+  const _hoisted_17$5 = { class: "aac-name" };
+  const _hoisted_18$3 = {
+    key: 0,
+    class: "aac-sec",
+    "data-key": "tpl"
+  };
+  const _hoisted_19$3 = { class: "aac-grid" };
+  const _hoisted_20$2 = ["onClick"];
+  const _hoisted_21$2 = ["src", "title"];
+  const _hoisted_22$2 = { class: "aac-name" };
+  const _hoisted_23$2 = ["data-key"];
+  const _hoisted_24$2 = { class: "aac-group-name" };
+  const _hoisted_25$2 = { class: "aac-grid" };
+  const _hoisted_26$2 = ["title", "onClick"];
+  const _hoisted_27$2 = ["src"];
+  const _hoisted_28$1 = { class: "aac-name" };
+  const _hoisted_29$1 = { class: "canvas-zoom-ctrl" };
+  const _hoisted_30$1 = ["title"];
+  const _hoisted_31$1 = { style: {"display":"flex","flex":"1","overflow":"hidden","position":"relative"} };
+  const _hoisted_32$1 = {
     style: {"position":"relative","display":"flex","flex":"1","flex-direction":"column","height":"100%","overflow":"hidden"},
     direction: "vertical"
   };
-  const _hoisted_25$1 = {
+  const _hoisted_33$1 = {
     key: 0,
     style: {"padding":"0"}
   };
-  const _hoisted_26$1 = { style: {"display":"flex","flex":"1","overflow":"hidden","position":"relative"} };
-  const _hoisted_27$1 = { class: "decorate-container" };
-  const _hoisted_28$1 = {
+  const _hoisted_34$1 = { style: {"display":"flex","flex":"1","overflow":"hidden","position":"relative"} };
+  const _hoisted_35$1 = {
+    key: 0,
+    class: "bk-empty-guide"
+  };
+  const _hoisted_36$1 = {
+    key: 1,
+    class: "bk-empty-guide"
+  };
+  const _hoisted_37$1 = { class: "decorate-container" };
+  const _hoisted_38$1 = {
     ref: "gridLineContainer",
     class: "grid-line-container"
   };
-  const _hoisted_29$1 = ["title"];
-  const _hoisted_30$1 = {
+  const _hoisted_39$1 = ["title"];
+  const _hoisted_40$1 = {
     key: 2,
     style: {"display":"flex","height":"100%","overflow":"auto"}
   };
-  const _hoisted_31$1 = {
+  const _hoisted_41$1 = {
     key: 1,
     style: {"display":"flex","flex-direction":"column","align-items":"center","align-self":"center","justify-content":"center","width":"100%","overflow":"hidden"}
   };
@@ -36420,15 +36791,14 @@
     const _component_el_dropdown_item = vue.resolveComponent("el-dropdown-item");
     const _component_i_ri_file_copy_2_fill = __unplugin_components_0$9;
     const _component_el_dropdown_menu = vue.resolveComponent("el-dropdown-menu");
-    const _component_i_ri_add_box_line = __unplugin_components_8;
-    const _component_i_ri_eye_line = __unplugin_components_9;
-    const _component_i_ri_pencil_ruler_2_line = __unplugin_components_10;
+    const _component_i_ri_eye_line = __unplugin_components_8;
+    const _component_i_ri_pencil_ruler_2_line = __unplugin_components_9;
     const _component_Toolbar = vue.resolveComponent("Toolbar");
     const _component_ToolbarPannel = vue.resolveComponent("ToolbarPannel");
     const _component_BKGridLayoutContent = vue.resolveComponent("BKGridLayoutContent");
     const _component_BKGridLayoutDecorate = vue.resolveComponent("BKGridLayoutDecorate");
-    const _component_i_ri_pushpin_2_fill = __unplugin_components_11;
-    const _component_i_ri_pushpin_2_line = __unplugin_components_12;
+    const _component_i_ri_pushpin_2_fill = __unplugin_components_10;
+    const _component_i_ri_pushpin_2_line = __unplugin_components_11;
     const _component_i_ri_close_line = __unplugin_components_2$2;
     const _component_PageSetting = vue.resolveComponent("PageSetting");
     const _component_CardSetting = vue.resolveComponent("CardSetting");
@@ -36470,14 +36840,14 @@
                             trigger: "click",
                             class: "add-area-dropdown",
                             "popper-class": "add-area-dd",
-                            onVisibleChange: _cache[1] || (_cache[1] = $event => ($data.addPanelOpen = $event))
+                            onVisibleChange: $options.onAddPanelToggle
                           }, {
                             dropdown: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_4$N, [
-                                vue.createElementVNode("div", _hoisted_5$F, [
-                                  _cache[28] || (_cache[28] = vue.createElementVNode("span", { class: "aac-head-title" }, "看板组件", -1)),
-                                  vue.createElementVNode("label", _hoisted_6$A, [
-                                    _cache[27] || (_cache[27] = vue.createElementVNode("span", null, "固定面板", -1)),
+                              vue.createElementVNode("div", _hoisted_4$O, [
+                                vue.createElementVNode("div", _hoisted_5$I, [
+                                  _cache[27] || (_cache[27] = vue.createElementVNode("span", { class: "aac-head-title" }, "组件", -1)),
+                                  vue.createElementVNode("label", _hoisted_6$E, [
+                                    _cache[26] || (_cache[26] = vue.createElementVNode("span", null, "固定面板", -1)),
                                     vue.createVNode(_component_el_switch, {
                                       modelValue: $data.showBodyPannel,
                                       "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.showBodyPannel) = $event)),
@@ -36485,71 +36855,100 @@
                                     }, null, 8, ["modelValue"])
                                   ])
                                 ]),
-                                vue.createElementVNode("div", _hoisted_7$t, [
-                                  _cache[30] || (_cache[30] = vue.createElementVNode("div", { class: "aac-group-name" }, "布局", -1)),
-                                  vue.createElementVNode("div", _hoisted_8$l, [
-                                    (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.addAreaCards.layout, (it) => {
-                                      return (vue.openBlock(), vue.createElementBlock("div", {
-                                        key: it.key,
-                                        class: "aac-card",
-                                        onClick: $event => ($options.onAddCardClick(it))
+                                vue.createElementVNode("div", _hoisted_7$x, [
+                                  vue.createElementVNode("div", _hoisted_8$p, [
+                                    (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.addAreaNavGroups, (cat) => {
+                                      return (vue.openBlock(), vue.createElementBlock(vue.Fragment, {
+                                        key: cat.cat
                                       }, [
-                                        vue.createElementVNode("img", {
-                                          src: it.img,
-                                          title: it.name,
-                                          class: "aac-img"
-                                        }, null, 8, _hoisted_10$d),
-                                        vue.createElementVNode("span", _hoisted_11$9, vue.toDisplayString(it.name), 1)
-                                      ], 8, _hoisted_9$i))
+                                        vue.createElementVNode("div", _hoisted_9$l, vue.toDisplayString(cat.cat), 1),
+                                        (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(cat.items, (s) => {
+                                          return (vue.openBlock(), vue.createElementBlock("div", {
+                                            key: s.key,
+                                            class: vue.normalizeClass(['aac-nav-item', $data.addAreaActive === s.key && 'is-active']),
+                                            onClick: $event => ($options.scrollToSection(s.key))
+                                          }, [
+                                            vue.createElementVNode("span", _hoisted_11$d, vue.toDisplayString(s.name), 1),
+                                            vue.createElementVNode("span", _hoisted_12$a, vue.toDisplayString(s.count), 1)
+                                          ], 10, _hoisted_10$g))
+                                        }), 128))
+                                      ], 64))
                                     }), 128))
                                   ]),
-                                  ($options.addAreaCards.tpl.length)
-                                    ? (vue.openBlock(), vue.createElementBlock(vue.Fragment, { key: 0 }, [
-                                        _cache[29] || (_cache[29] = vue.createElementVNode("div", { class: "aac-group-name" }, "布局模版", -1)),
-                                        vue.createElementVNode("div", _hoisted_12$7, [
-                                          (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.addAreaCards.tpl, (it, i) => {
-                                            return (vue.openBlock(), vue.createElementBlock("div", {
-                                              key: 'tpl' + i,
-                                              class: "aac-card",
-                                              onClick: $event => ($options.onAddCardClick(it))
-                                            }, [
-                                              vue.createElementVNode("img", {
-                                                src: it.img,
-                                                title: it.name,
-                                                class: "aac-img"
-                                              }, null, 8, _hoisted_14$5),
-                                              vue.createElementVNode("span", _hoisted_15$5, vue.toDisplayString(it.name), 1)
-                                            ], 8, _hoisted_13$7))
-                                          }), 128))
-                                        ])
-                                      ], 64))
-                                    : vue.createCommentVNode("", true),
-                                  (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.addAreaCards.charts, (g) => {
-                                    return (vue.openBlock(), vue.createElementBlock(vue.Fragment, {
-                                      key: g.name
-                                    }, [
-                                      vue.createElementVNode("div", _hoisted_16$5, vue.toDisplayString(g.name), 1),
-                                      vue.createElementVNode("div", _hoisted_17$4, [
-                                        (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(g.items, (it, i) => {
+                                  vue.createElementVNode("div", {
+                                    ref: "aacBody",
+                                    class: "aac-body",
+                                    onScroll: _cache[1] || (_cache[1] = (...args) => ($options.onAacScroll && $options.onAacScroll(...args)))
+                                  }, [
+                                    vue.createElementVNode("div", _hoisted_13$a, [
+                                      _cache[28] || (_cache[28] = vue.createElementVNode("div", { class: "aac-group-name" }, "布局", -1)),
+                                      vue.createElementVNode("div", _hoisted_14$8, [
+                                        (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.addAreaCards.layout, (it) => {
                                           return (vue.openBlock(), vue.createElementBlock("div", {
-                                            key: g.name + i,
+                                            key: it.key,
                                             class: "aac-card",
-                                            title: it.name,
-                                            onClick: $event => ($options.onAddChartCard(it))
+                                            onClick: $event => ($options.onAddCardClick(it))
                                           }, [
-                                            (it.img)
-                                              ? (vue.openBlock(), vue.createElementBlock("img", {
-                                                  key: 0,
-                                                  src: it.img,
-                                                  class: "aac-img"
-                                                }, null, 8, _hoisted_19$3))
-                                              : vue.createCommentVNode("", true),
-                                            vue.createElementVNode("span", _hoisted_20$2, vue.toDisplayString(it.name), 1)
-                                          ], 8, _hoisted_18$3))
+                                            vue.createElementVNode("img", {
+                                              src: it.img,
+                                              title: it.name,
+                                              class: "aac-img"
+                                            }, null, 8, _hoisted_16$8),
+                                            vue.createElementVNode("span", _hoisted_17$5, vue.toDisplayString(it.name), 1)
+                                          ], 8, _hoisted_15$8))
                                         }), 128))
                                       ])
-                                    ], 64))
-                                  }), 128))
+                                    ]),
+                                    ($options.addAreaCards.tpl.length)
+                                      ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_18$3, [
+                                          _cache[29] || (_cache[29] = vue.createElementVNode("div", { class: "aac-group-name" }, "布局模版", -1)),
+                                          vue.createElementVNode("div", _hoisted_19$3, [
+                                            (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.addAreaCards.tpl, (it, i) => {
+                                              return (vue.openBlock(), vue.createElementBlock("div", {
+                                                key: 'tpl' + i,
+                                                class: "aac-card",
+                                                onClick: $event => ($options.onAddCardClick(it))
+                                              }, [
+                                                vue.createElementVNode("img", {
+                                                  src: it.img,
+                                                  title: it.name,
+                                                  class: "aac-img"
+                                                }, null, 8, _hoisted_21$2),
+                                                vue.createElementVNode("span", _hoisted_22$2, vue.toDisplayString(it.name), 1)
+                                              ], 8, _hoisted_20$2))
+                                            }), 128))
+                                          ])
+                                        ]))
+                                      : vue.createCommentVNode("", true),
+                                    (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.addAreaCards.charts, (g, gi) => {
+                                      return (vue.openBlock(), vue.createElementBlock("div", {
+                                        key: g.name,
+                                        class: "aac-sec",
+                                        "data-key": 'chart-' + gi
+                                      }, [
+                                        vue.createElementVNode("div", _hoisted_24$2, vue.toDisplayString(g.name), 1),
+                                        vue.createElementVNode("div", _hoisted_25$2, [
+                                          (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(g.items, (it, i) => {
+                                            return (vue.openBlock(), vue.createElementBlock("div", {
+                                              key: g.name + i,
+                                              class: "aac-card",
+                                              title: it.name,
+                                              onClick: $event => ($options.onAddChartCard(it))
+                                            }, [
+                                              (it.img)
+                                                ? (vue.openBlock(), vue.createElementBlock("img", {
+                                                    key: 0,
+                                                    src: it.img,
+                                                    class: "aac-img"
+                                                  }, null, 8, _hoisted_27$2))
+                                                : vue.createCommentVNode("", true),
+                                              vue.createElementVNode("span", _hoisted_28$1, vue.toDisplayString(it.name), 1)
+                                            ], 8, _hoisted_26$2))
+                                          }), 128))
+                                        ])
+                                      ], 8, _hoisted_23$2))
+                                    }), 128))
+                                  ], 544)
                                 ])
                               ])
                             ]),
@@ -36562,7 +36961,7 @@
                               ], 2)
                             ]),
                             _: 1
-                          }, 512),
+                          }, 8, ["onVisibleChange"]),
                           vue.createElementVNode("div", {
                             class: "text-button",
                             title: "清空",
@@ -36592,7 +36991,7 @@
                               ], 2))
                             : vue.createCommentVNode("", true),
                           _cache[35] || (_cache[35] = vue.createElementVNode("span", { class: "tb-divider" }, null, -1)),
-                          vue.createElementVNode("div", _hoisted_21$2, [
+                          vue.createElementVNode("div", _hoisted_29$1, [
                             vue.createElementVNode("span", {
                               class: "cz-btn",
                               title: "缩小",
@@ -36640,17 +37039,42 @@
                                       vue.createVNode(_component_el_dropdown_item, { command: "save" }, {
                                         default: vue.withCtx(() => [
                                           vue.createVNode(_component_i_ri_save_fill),
-                                          _cache[32] || (_cache[32] = vue.createElementVNode("span", null, "保存", -1))
+                                          _cache[31] || (_cache[31] = vue.createElementVNode("span", null, "保存", -1))
                                         ]),
                                         _: 1
                                       }),
                                       vue.createVNode(_component_el_dropdown_item, { command: "saveAs" }, {
                                         default: vue.withCtx(() => [
                                           vue.createVNode(_component_i_ri_file_copy_2_fill),
-                                          _cache[33] || (_cache[33] = vue.createElementVNode("span", null, "另存为", -1))
+                                          _cache[32] || (_cache[32] = vue.createElementVNode("span", null, "另存为", -1))
                                         ]),
                                         _: 1
-                                      })
+                                      }),
+                                      ($props.embedOnNewDashboard)
+                                        ? (vue.openBlock(), vue.createBlock(_component_el_dropdown_item, {
+                                            key: 0,
+                                            command: "newDash",
+                                            divided: ""
+                                          }, {
+                                            default: vue.withCtx(() => [...(_cache[33] || (_cache[33] = [
+                                              vue.createElementVNode("svg", {
+                                                width: "1em",
+                                                height: "1em",
+                                                viewBox: "0 0 24 24",
+                                                fill: "none",
+                                                stroke: "currentColor",
+                                                "stroke-width": "2",
+                                                "stroke-linecap": "round",
+                                                "stroke-linejoin": "round"
+                                              }, [
+                                                vue.createElementVNode("path", { d: "M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" }),
+                                                vue.createElementVNode("path", { d: "M14 3v6h6" })
+                                              ], -1),
+                                              vue.createElementVNode("span", null, "新建看板", -1)
+                                            ]))]),
+                                            _: 1
+                                          }))
+                                        : vue.createCommentVNode("", true)
                                     ]),
                                     _: 1
                                   })
@@ -36662,16 +37086,6 @@
                                 _: 1
                               }, 8, ["onCommand"]))
                             : vue.createCommentVNode("", true),
-                          ($props.setMode && $props.embedOnNewDashboard)
-                            ? (vue.openBlock(), vue.createElementBlock("div", {
-                                key: 5,
-                                class: "text-button",
-                                title: "新建看板",
-                                onClick: _cache[12] || (_cache[12] = $event => ($props.embedOnNewDashboard()))
-                              }, [
-                                vue.createVNode(_component_i_ri_add_box_line)
-                              ]))
-                            : vue.createCommentVNode("", true),
                           _cache[37] || (_cache[37] = vue.createElementVNode("span", { class: "tb-divider" }, null, -1))
                         ], 64))
                       : vue.createCommentVNode("", true),
@@ -36680,24 +37094,24 @@
                           key: 1,
                           type: "button",
                           class: "mode-toggle",
-                          title: $data.designMode ? '切换到预览' : '切换到设计',
-                          onClick: _cache[13] || (_cache[13] = $event => ($options.onModeCommand($data.designMode ? 'preview' : 'design')))
+                          title: $data.designMode ? '切换到预览模式' : '切换到设计模式',
+                          onClick: _cache[12] || (_cache[12] = $event => ($options.onModeCommand($data.designMode ? 'preview' : 'design')))
                         }, [
                           ($data.designMode)
                             ? (vue.openBlock(), vue.createBlock(_component_i_ri_eye_line, { key: 0 }))
                             : (vue.openBlock(), vue.createBlock(_component_i_ri_pencil_ruler_2_line, { key: 1 })),
                           vue.createElementVNode("span", null, vue.toDisplayString($data.designMode ? '预览' : '设计'), 1)
-                        ], 8, _hoisted_22$2))
+                        ], 8, _hoisted_30$1))
                       : vue.createCommentVNode("", true)
                   ]))
                 : vue.createCommentVNode("", true)
             ], 2))
           : vue.createCommentVNode("", true)
       ], 8, ["to", "disabled"])),
-      vue.createElementVNode("div", _hoisted_23$2, [
-        vue.createElementVNode("div", _hoisted_24$1, [
+      vue.createElementVNode("div", _hoisted_31$1, [
+        vue.createElementVNode("div", _hoisted_32$1, [
           (!$props.isModal)
-            ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_25$1, [
+            ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_33$1, [
                 vue.createVNode(_component_Toolbar, vue.mergeProps(_ctx.$props, {
                   ref: "leftToolBar",
                   "custom-chart": $props.customChart,
@@ -36710,7 +37124,7 @@
                 }), null, 16, ["custom-chart", "disabled", "is-app", "layout-config", "onToggleEvent", "onUpdateGridSetting", "onClearConfig"])
               ]))
             : vue.createCommentVNode("", true),
-          vue.createElementVNode("div", _hoisted_26$1, [
+          vue.createElementVNode("div", _hoisted_34$1, [
             ($data.showBodyPannel && !$props.isModal && $data.designMode)
               ? (vue.openBlock(), vue.createBlock(_component_ToolbarPannel, vue.mergeProps({
                   key: 0,
@@ -36721,15 +37135,25 @@
                   "append-to-body": "",
                   "is-app": $options.isApp,
                   onClickItem: $options.toggleEvent,
-                  onHidden: _cache[14] || (_cache[14] = $event => ($data.showBodyPannel = false))
+                  onHidden: _cache[13] || (_cache[13] = $event => ($data.showBodyPannel = false))
                 }), null, 16, ["custom-chart", "disabled", "is-app", "onClickItem"]))
               : vue.createCommentVNode("", true),
             vue.createElementVNode("div", {
               ref: "workingContainer",
               class: vue.normalizeClass(['working-container', ($props.isModal || !$data.designMode) ? 'no-background' : '']),
               style: vue.normalizeStyle(`padding: ${($props.isModal || !$data.designMode) ? '0' : '30px 40px'}; height:  ${!$data.layoutConfig.layout.length ? '100%' : 'auto'};${$data.styleText}`),
-              onScroll: _cache[15] || (_cache[15] = (...args) => ($options.handleScroll && $options.handleScroll(...args)))
+              onScroll: _cache[14] || (_cache[14] = (...args) => ($options.handleScroll && $options.handleScroll(...args)))
             }, [
+              ($data.designMode && !$props.isModal && !$data.layoutConfig.layout.length)
+                ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_35$1, [...(_cache[38] || (_cache[38] = [
+                    vue.createStaticVNode("<div class=\"beg-card\" data-v-1213fdaa><div class=\"beg-icon\" data-v-1213fdaa><svg width=\"56\" height=\"56\" viewBox=\"0 0 56 56\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" data-v-1213fdaa><rect x=\"6\" y=\"6\" width=\"44\" height=\"44\" rx=\"8\" fill=\"#eaf2ff\" data-v-1213fdaa></rect><rect x=\"14\" y=\"28\" width=\"6\" height=\"14\" rx=\"2\" fill=\"#6aa1ff\" data-v-1213fdaa></rect><rect x=\"25\" y=\"20\" width=\"6\" height=\"22\" rx=\"2\" fill=\"#4080ff\" data-v-1213fdaa></rect><rect x=\"36\" y=\"14\" width=\"6\" height=\"28\" rx=\"2\" fill=\"#1c5ce6\" data-v-1213fdaa></rect></svg></div><div class=\"beg-title\" data-v-1213fdaa>开始设计你的看板</div><div class=\"beg-desc\" data-v-1213fdaa>这是一块空白画布,任选下面一种方式添加第一个图表</div><div class=\"beg-steps\" data-v-1213fdaa><div class=\"beg-step\" data-v-1213fdaa><span class=\"beg-step-no\" data-v-1213fdaa>1</span><div class=\"beg-step-txt\" data-v-1213fdaa><b data-v-1213fdaa>添加图表</b><span data-v-1213fdaa>点击顶部「+」或下方按钮,从「看板组件」中挑选图表 / 布局</span></div></div><div class=\"beg-step\" data-v-1213fdaa><span class=\"beg-step-no\" data-v-1213fdaa>2</span><div class=\"beg-step-txt\" data-v-1213fdaa><b data-v-1213fdaa>调整布局</b><span data-v-1213fdaa>拖拽卡片移动位置,拖右下角缩放大小</span></div></div></div></div>", 1)
+                  ]))]))
+                : vue.createCommentVNode("", true),
+              (!$data.designMode && !$props.isModal && !$data.layoutConfig.layout.length)
+                ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_36$1, [...(_cache[39] || (_cache[39] = [
+                    vue.createStaticVNode("<div class=\"beg-card beg-card-simple\" data-v-1213fdaa><div class=\"beg-icon\" data-v-1213fdaa><svg width=\"52\" height=\"52\" viewBox=\"0 0 56 56\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" data-v-1213fdaa><rect x=\"6\" y=\"6\" width=\"44\" height=\"44\" rx=\"8\" fill=\"#eef0f3\" data-v-1213fdaa></rect><rect x=\"14\" y=\"28\" width=\"6\" height=\"14\" rx=\"2\" fill=\"#c9cdd4\" data-v-1213fdaa></rect><rect x=\"25\" y=\"20\" width=\"6\" height=\"22\" rx=\"2\" fill=\"#b0b5be\" data-v-1213fdaa></rect><rect x=\"36\" y=\"14\" width=\"6\" height=\"28\" rx=\"2\" fill=\"#c9cdd4\" data-v-1213fdaa></rect></svg></div><div class=\"beg-title\" data-v-1213fdaa>看板暂无内容</div><div class=\"beg-desc\" data-v-1213fdaa>点击右上角「设计」进入编辑,添加图表后即可在此查看</div></div>", 1)
+                  ]))]))
+                : vue.createCommentVNode("", true),
               vue.withDirectives(vue.createElementVNode("div", {
                 ref: "layoutWrapper",
                 class: "layout-wrapper",
@@ -36755,7 +37179,7 @@
                       }), null, 16, ["configs", "set-mode", "edit-mode", "page-config", "custom-card-style-props", "selected-card-item", "onRemoveItem", "onCancelSetCard"]))
                     : vue.createCommentVNode("", true)
                 ], 4),
-                vue.createElementVNode("div", _hoisted_27$1, [
+                vue.createElementVNode("div", _hoisted_37$1, [
                   (!$data.isThemeChange && $data.showContent)
                     ? (vue.openBlock(), vue.createBlock(_component_BKGridLayoutDecorate, vue.mergeProps({ key: 0 }, _ctx.$props, {
                         ref: "gridLayoutDecorate",
@@ -36766,7 +37190,7 @@
                       }), null, 16, ["configs", "set-mode", "page-config", "decorate-config"]))
                     : vue.createCommentVNode("", true)
                 ]),
-                vue.withDirectives(vue.createElementVNode("div", _hoisted_28$1, [
+                vue.withDirectives(vue.createElementVNode("div", _hoisted_38$1, [
                   (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.layoutConfig.colNum, (num) => {
                     return (vue.openBlock(), vue.createElementBlock("div", { key: num }))
                   }), 128))
@@ -36790,25 +37214,25 @@
                     key: 0,
                     class: vue.normalizeClass(['cfg-pin-btn', $data.panelPinned && 'is-on']),
                     title: $data.panelPinned ? '取消固定(浮动)' : '固定到右侧',
-                    onClick: _cache[16] || (_cache[16] = $event => ($data.panelPinned = !$data.panelPinned))
+                    onClick: _cache[15] || (_cache[15] = $event => ($data.panelPinned = !$data.panelPinned))
                   }, [
                     ($data.panelPinned)
                       ? (vue.openBlock(), vue.createBlock(_component_i_ri_pushpin_2_fill, { key: 0 }))
                       : (vue.openBlock(), vue.createBlock(_component_i_ri_pushpin_2_line, { key: 1 }))
-                  ], 10, _hoisted_29$1))
+                  ], 10, _hoisted_39$1))
                 : vue.createCommentVNode("", true),
               ($data.expand)
                 ? (vue.openBlock(), vue.createElementBlock("div", {
                     key: 1,
                     class: "cfg-close-btn",
                     title: "关闭",
-                    onClick: _cache[17] || (_cache[17] = (...args) => ($options.closeRightPanel && $options.closeRightPanel(...args)))
+                    onClick: _cache[16] || (_cache[16] = (...args) => ($options.closeRightPanel && $options.closeRightPanel(...args)))
                   }, [
                     vue.createVNode(_component_i_ri_close_line)
                   ]))
                 : vue.createCommentVNode("", true),
               (!$data.pageSettingVisible && !$data.cardSettingVisible)
-                ? vue.withDirectives((vue.openBlock(), vue.createElementBlock("div", _hoisted_30$1, [
+                ? vue.withDirectives((vue.openBlock(), vue.createElementBlock("div", _hoisted_40$1, [
                     ($data.configs && $data.configs.type)
                       ? (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent($options.getConfigName($data.configs)), vue.mergeProps({ key: 0 }, _ctx.$props, {
                           key: $data.configs.chartId,
@@ -36818,11 +37242,11 @@
                           "init-tab": $data.rightTab,
                           style: {"overflow":"hidden"},
                           onSaveChartCfg: $options.saveChartCfg,
-                          onSetExpand: _cache[18] || (_cache[18] = $event => ($options.setRightExpand(false))),
-                          onChangeTab: _cache[19] || (_cache[19] = $event => ($data.rightTab = $event)),
-                          onChangeDataMappingVisible: _cache[20] || (_cache[20] = $event => ($data.dataMappingVisible = $event))
+                          onSetExpand: _cache[17] || (_cache[17] = $event => ($options.setRightExpand(false))),
+                          onChangeTab: _cache[18] || (_cache[18] = $event => ($data.rightTab = $event)),
+                          onChangeDataMappingVisible: _cache[19] || (_cache[19] = $event => ($data.dataMappingVisible = $event))
                         }), null, 16, ["configs", "page-config", "save-able", "init-tab", "onSaveChartCfg"]))
-                      : (vue.openBlock(), vue.createElementBlock("div", _hoisted_31$1, [...(_cache[38] || (_cache[38] = [
+                      : (vue.openBlock(), vue.createElementBlock("div", _hoisted_41$1, [...(_cache[40] || (_cache[40] = [
                           vue.createElementVNode("img", {
                             src: _imports_0$2,
                             alt: ""
@@ -36857,7 +37281,7 @@
                     onPublicChangeMethod: _ctx.publicChangeMethod,
                     onCustomScriptBlur: _ctx.customScriptBlur,
                     onCustomStyleBlur: _ctx.customStyleBlur,
-                    onOpenSaveAs: _cache[21] || (_cache[21] = $event => ($data.themeEditVisible=true))
+                    onOpenSaveAs: _cache[20] || (_cache[20] = $event => ($data.themeEditVisible=true))
                   }, null, 8, ["oper-permission", "theme", "disabled", "is-app", "onSetTheme", "onChangeCardRadius", "onChangeSpaceMode", "onChangeSpace", "onChangePageWidth", "onChangePagePadding", "onChangeCardPadding", "onInnerPaddingRefChange", "onChangePreTheme", "onChangePageHeightMode", "onChangePageMinHeight", "onChangePageMinWidth", "onChartStyleChange", "onPublicChangeMethod", "onCustomScriptBlur", "onCustomStyleBlur"])), [
                     [vue.vShow, $data.pageSettingVisible && $data.expand]
                   ])
@@ -36883,7 +37307,7 @@
             visible: $data.varConfigVisible,
             "set-mode": $props.setMode,
             configs: $data.layoutConfig,
-            onClose: _cache[22] || (_cache[22] = $event => ($data.varConfigVisible=false)),
+            onClose: _cache[21] || (_cache[21] = $event => ($data.varConfigVisible=false)),
             onSave: $options.saveVarConfig
           }, null, 8, ["visible", "set-mode", "configs", "onSave"]))
         : vue.createCommentVNode("", true),
@@ -36909,14 +37333,14 @@
             "map-path": $props.mapPath,
             "is-basic-mode": $props.isBasicMode,
             "is-app": $options.isApp,
-            onPreviewClose: _cache[23] || (_cache[23] = $event => ($data.previewVisible=false))
+            onPreviewClose: _cache[22] || (_cache[22] = $event => ($data.previewVisible=false))
           }), null, 16, ["visible", "configs", "map-source", "tjb-u-r-l", "map-path", "is-basic-mode", "is-app"]))
         : vue.createCommentVNode("", true),
       ($data.cardConfigVisible)
         ? (vue.openBlock(), vue.createBlock(_component_CardConfig, {
             key: 3,
             visible: $data.cardConfigVisible,
-            onClose: _cache[24] || (_cache[24] = $event => ($data.cardConfigVisible=false)),
+            onClose: _cache[23] || (_cache[23] = $event => ($data.cardConfigVisible=false)),
             onSave: $options.saveCardConfig,
             onRefresh: $options.refreshCardConfig
           }, null, 8, ["visible", "onSave", "onRefresh"]))
@@ -36925,7 +37349,7 @@
         ? (vue.openBlock(), vue.createBlock(_component_ThemeConfig, {
             key: 4,
             visible: $data.themeConfigVisible,
-            onClose: _cache[25] || (_cache[25] = $event => ($data.themeConfigVisible=false)),
+            onClose: _cache[24] || (_cache[24] = $event => ($data.themeConfigVisible=false)),
             onSave: $options.saveThemeConfig,
             onRefresh: $options.refreshThemeConfig
           }, null, 8, ["visible", "onSave", "onRefresh"]))
@@ -36936,14 +37360,14 @@
             visible: $data.themeEditVisible,
             "pre-theme": $data.layoutConfig.themeConfigs,
             "oper-permission": $props.operPermission,
-            onClose: _cache[26] || (_cache[26] = $event => ($data.themeEditVisible=false)),
+            onClose: _cache[25] || (_cache[25] = $event => ($data.themeEditVisible=false)),
             onSave: $options.saveThemeConfig,
             onRefresh: $options.refreshThemeConfig
           }, null, 8, ["visible", "pre-theme", "oper-permission", "onSave", "onRefresh"]))
         : vue.createCommentVNode("", true)
     ], 2))
   }
-  const AnalysisMaker = /*#__PURE__*/_export_sfc(_sfc_main$1s, [['render',_sfc_render$1r],['__scopeId',"data-v-5f0e6bd4"]]);
+  const AnalysisMaker = /*#__PURE__*/_export_sfc(_sfc_main$1s, [['render',_sfc_render$1r],['__scopeId',"data-v-1213fdaa"]]);
 
   AnalysisMaker.install = function (Vue) {
     Vue.component(AnalysisMaker.name, AnalysisMaker);
@@ -38334,9 +38758,9 @@
   const _hoisted_1$1z = { style: {"display":"flex","justify-content":"space-between"} };
   const _hoisted_2$16 = ["onClick"];
   const _hoisted_3$T = { class: "rank-image" };
-  const _hoisted_4$M = { class: "f-14 title" };
-  const _hoisted_5$E = { class: "f-16 f-w ff-wf num" };
-  const _hoisted_6$z = {
+  const _hoisted_4$N = { class: "f-14 title" };
+  const _hoisted_5$H = { class: "f-16 f-w ff-wf num" };
+  const _hoisted_6$D = {
     key: 1,
     style: {"display":"flex","align-items":"center","justify-content":"center","width":"100%","height":"100%"}
   };
@@ -38361,9 +38785,9 @@
                   onClick: $event => ($options.itemClick(item))
                 }, [
                   vue.createElementVNode("span", _hoisted_3$T, vue.toDisplayString(i + 1), 1),
-                  vue.createElementVNode("span", _hoisted_4$M, vue.toDisplayString(item.name), 1)
+                  vue.createElementVNode("span", _hoisted_4$N, vue.toDisplayString(item.name), 1)
                 ], 8, _hoisted_2$16),
-                vue.createElementVNode("div", _hoisted_5$E, vue.toDisplayString(item.number), 1)
+                vue.createElementVNode("div", _hoisted_5$H, vue.toDisplayString(item.number), 1)
               ]),
               vue.createVNode(_component_el_slider, {
                 modelValue: item.number,
@@ -38375,7 +38799,7 @@
             ], 2))
           }), 128))
         ], 2))
-      : (vue.openBlock(), vue.createElementBlock("div", _hoisted_6$z, [
+      : (vue.openBlock(), vue.createElementBlock("div", _hoisted_6$D, [
           vue.createVNode(_component_el_empty, { description: "暂无数据" })
         ]))
   }
@@ -38933,11 +39357,11 @@
   const _hoisted_1$1w = { class: "copy-button-box" };
   const _hoisted_2$14 = { class: "d-flex-c" };
   const _hoisted_3$S = { class: "d-flex-c" };
-  const _hoisted_4$L = { class: "d-flex-c" };
-  const _hoisted_5$D = { class: "d-flex-c" };
-  const _hoisted_6$y = { class: "d-flex-c" };
-  const _hoisted_7$s = { class: "d-flex-c" };
-  const _hoisted_8$k = { class: "d-flex-c" };
+  const _hoisted_4$M = { class: "d-flex-c" };
+  const _hoisted_5$G = { class: "d-flex-c" };
+  const _hoisted_6$C = { class: "d-flex-c" };
+  const _hoisted_7$w = { class: "d-flex-c" };
+  const _hoisted_8$o = { class: "d-flex-c" };
 
   function _sfc_render$1k(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_button = vue.resolveComponent("el-button");
@@ -39067,7 +39491,7 @@
                     }),
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_4$L, [
+                        vue.createElementVNode("div", _hoisted_4$M, [
                           vue.createVNode(_component_el_select, {
                             modelValue: $data.form['--titlefontWeight'],
                             "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form['--titlefontWeight']) = $event)),
@@ -39101,7 +39525,7 @@
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_5$D, [
+                        vue.createElementVNode("div", _hoisted_5$G, [
                           vue.createVNode(_component_CommonColorPicker, {
                             modelValue: $data.form['--titlecolor'],
                             "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form['--titlecolor']) = $event)),
@@ -39133,7 +39557,7 @@
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_6$y, [
+                        vue.createElementVNode("div", _hoisted_6$C, [
                           vue.createVNode(_component_el_input_number, {
                             modelValue: $data.form['--numfontSize'],
                             "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form['--numfontSize']) = $event)),
@@ -39149,7 +39573,7 @@
                     }),
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_7$s, [
+                        vue.createElementVNode("div", _hoisted_7$w, [
                           vue.createVNode(_component_el_select, {
                             modelValue: $data.form['--numfontWeight'],
                             "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form['--numfontWeight']) = $event)),
@@ -39184,7 +39608,7 @@
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_el_col, { span: 12 }, {
                       default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_8$k, [
+                        vue.createElementVNode("div", _hoisted_8$o, [
                           vue.createVNode(_component_CommonColorPicker, {
                             modelValue: $data.form['--numcolor'],
                             "onUpdate:modelValue": _cache[9] || (_cache[9] = $event => (($data.form['--numcolor']) = $event)),
@@ -39534,9 +39958,9 @@
   const _hoisted_1$1t = { class: "d-flex-c" };
   const _hoisted_2$11 = { class: "d-flex-c" };
   const _hoisted_3$R = { class: "d-flex-c" };
-  const _hoisted_4$K = { class: "d-flex-c" };
-  const _hoisted_5$C = { class: "d-flex-c" };
-  const _hoisted_6$x = { class: "d-flex-c" };
+  const _hoisted_4$L = { class: "d-flex-c" };
+  const _hoisted_5$F = { class: "d-flex-c" };
+  const _hoisted_6$B = { class: "d-flex-c" };
 
   function _sfc_render$1h(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_option = vue.resolveComponent("el-option");
@@ -39658,7 +40082,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$K, [
+                    vue.createElementVNode("div", _hoisted_4$L, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.color,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.color) = $event)),
@@ -39688,7 +40112,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$C, [
+                    vue.createElementVNode("div", _hoisted_5$F, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.extra.fontStyle,
                         "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.extra.fontStyle) = $event)),
@@ -39719,7 +40143,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_form_item, null, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_6$x, [
+                    vue.createElementVNode("div", _hoisted_6$B, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.extra.textDecoration,
                         "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.extra.textDecoration) = $event)),
@@ -39755,7 +40179,7 @@
       _: 1
     }, 8, ["model", "disabled"]))
   }
-  const TextStyle = /*#__PURE__*/_export_sfc(_sfc_main$1i, [['render',_sfc_render$1h],['__scopeId',"data-v-8776f1fd"]]);
+  const TextStyle = /*#__PURE__*/_export_sfc(_sfc_main$1i, [['render',_sfc_render$1h],['__scopeId',"data-v-092259c2"]]);
 
   /* unplugin-vue-components disabled */
 
@@ -39857,10 +40281,10 @@
     style: {"margin-bottom":"10px"}
   };
   const _hoisted_3$Q = { class: "d-flex-c" };
-  const _hoisted_4$J = { class: "d-flex" };
-  const _hoisted_5$B = ["onClick"];
-  const _hoisted_6$w = { class: "d-flex-c" };
-  const _hoisted_7$r = { class: "d-flex-c" };
+  const _hoisted_4$K = { class: "d-flex" };
+  const _hoisted_5$E = ["onClick"];
+  const _hoisted_6$A = { class: "d-flex-c" };
+  const _hoisted_7$v = { class: "d-flex-c" };
 
   function _sfc_render$1g(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
@@ -40093,7 +40517,7 @@
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
                               vue.createElementVNode("div", _hoisted_3$Q, [
-                                vue.createElementVNode("div", _hoisted_4$J, [
+                                vue.createElementVNode("div", _hoisted_4$K, [
                                   (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.alignOption, (ele) => {
                                     return (vue.openBlock(), vue.createElementBlock("div", {
                                       key: ele.value,
@@ -40103,7 +40527,7 @@
                                       vue.createElementVNode("i", {
                                         class: vue.normalizeClass(['icon am-iconfont align-icon', ele.icon])
                                       }, null, 2)
-                                    ], 10, _hoisted_5$B))
+                                    ], 10, _hoisted_5$E))
                                   }), 128))
                                 ]),
                                 _cache[44] || (_cache[44] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 角度", -1))
@@ -40113,7 +40537,7 @@
                           }),
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_6$w, [
+                              vue.createElementVNode("div", _hoisted_6$A, [
                                 vue.createVNode(_component_el_input_number, {
                                   modelValue: $data.alignActive,
                                   "onUpdate:modelValue": _cache[17] || (_cache[17] = $event => (($data.alignActive) = $event)),
@@ -40136,7 +40560,7 @@
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_7$r, [
+                              vue.createElementVNode("div", _hoisted_7$v, [
                                 vue.createVNode(_component_el_input_number, {
                                   modelValue: $data.form.axisLabel.margin,
                                   "onUpdate:modelValue": _cache[18] || (_cache[18] = $event => (($data.form.axisLabel.margin) = $event)),
@@ -40367,10 +40791,10 @@
     style: {"margin-bottom":"10px"}
   };
   const _hoisted_3$P = { class: "d-flex-c" };
-  const _hoisted_4$I = { class: "d-flex" };
-  const _hoisted_5$A = ["onClick"];
-  const _hoisted_6$v = { class: "d-flex-c" };
-  const _hoisted_7$q = { class: "d-flex-c" };
+  const _hoisted_4$J = { class: "d-flex" };
+  const _hoisted_5$D = ["onClick"];
+  const _hoisted_6$z = { class: "d-flex-c" };
+  const _hoisted_7$u = { class: "d-flex-c" };
 
   function _sfc_render$1f(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
@@ -40603,7 +41027,7 @@
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
                               vue.createElementVNode("div", _hoisted_3$P, [
-                                vue.createElementVNode("div", _hoisted_4$I, [
+                                vue.createElementVNode("div", _hoisted_4$J, [
                                   (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.alignOption, (ele) => {
                                     return (vue.openBlock(), vue.createElementBlock("div", {
                                       key: ele.value,
@@ -40613,7 +41037,7 @@
                                       vue.createElementVNode("i", {
                                         class: vue.normalizeClass(['icon am-iconfont align-icon', ele.icon])
                                       }, null, 2)
-                                    ], 10, _hoisted_5$A))
+                                    ], 10, _hoisted_5$D))
                                   }), 128))
                                 ]),
                                 _cache[44] || (_cache[44] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 角度", -1))
@@ -40623,7 +41047,7 @@
                           }),
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_6$v, [
+                              vue.createElementVNode("div", _hoisted_6$z, [
                                 vue.createVNode(_component_el_input_number, {
                                   modelValue: $data.alignActive,
                                   "onUpdate:modelValue": _cache[17] || (_cache[17] = $event => (($data.alignActive) = $event)),
@@ -40646,7 +41070,7 @@
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_7$q, [
+                              vue.createElementVNode("div", _hoisted_7$u, [
                                 vue.createVNode(_component_el_input_number, {
                                   modelValue: $data.form.axisLabel.margin,
                                   "onUpdate:modelValue": _cache[18] || (_cache[18] = $event => (($data.form.axisLabel.margin) = $event)),
@@ -41910,10 +42334,10 @@
     style: {"margin-bottom":"10px"}
   };
   const _hoisted_3$M = { class: "d-flex-c" };
-  const _hoisted_4$H = { class: "d-flex" };
-  const _hoisted_5$z = ["onClick"];
-  const _hoisted_6$u = { class: "d-flex-c" };
-  const _hoisted_7$p = { class: "d-flex-c" };
+  const _hoisted_4$I = { class: "d-flex" };
+  const _hoisted_5$C = ["onClick"];
+  const _hoisted_6$y = { class: "d-flex-c" };
+  const _hoisted_7$t = { class: "d-flex-c" };
 
   function _sfc_render$1a(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
@@ -42119,7 +42543,7 @@
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
                               vue.createElementVNode("div", _hoisted_3$M, [
-                                vue.createElementVNode("div", _hoisted_4$H, [
+                                vue.createElementVNode("div", _hoisted_4$I, [
                                   (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.alignOption, (ele) => {
                                     return (vue.openBlock(), vue.createElementBlock("div", {
                                       key: ele.value,
@@ -42129,7 +42553,7 @@
                                       vue.createElementVNode("i", {
                                         class: vue.normalizeClass(['icon am-iconfont align-icon', ele.icon])
                                       }, null, 2)
-                                    ], 10, _hoisted_5$z))
+                                    ], 10, _hoisted_5$C))
                                   }), 128))
                                 ]),
                                 _cache[40] || (_cache[40] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 角度", -1))
@@ -42139,7 +42563,7 @@
                           }),
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_6$u, [
+                              vue.createElementVNode("div", _hoisted_6$y, [
                                 vue.createVNode(_component_el_input_number, {
                                   modelValue: $data.alignActive,
                                   "onUpdate:modelValue": _cache[15] || (_cache[15] = $event => (($data.alignActive) = $event)),
@@ -42162,7 +42586,7 @@
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_7$p, [
+                              vue.createElementVNode("div", _hoisted_7$t, [
                                 vue.createVNode(_component_el_input_number, {
                                   modelValue: $data.form.axisLabel.margin,
                                   "onUpdate:modelValue": _cache[16] || (_cache[16] = $event => (($data.form.axisLabel.margin) = $event)),
@@ -42458,8 +42882,8 @@
     key: 0,
     class: "code-bg mtk1"
   };
-  const _hoisted_4$G = { class: "code-content" };
-  const _hoisted_5$y = {
+  const _hoisted_4$H = { class: "code-content" };
+  const _hoisted_5$B = {
     key: 1,
     class: "code-bg mtk1 code-close"
   };
@@ -42475,7 +42899,7 @@
               vue.createTextVNode(vue.toDisplayString($props.methodName) + "{ ", 1)
             ]))
           : vue.createCommentVNode("", true),
-        vue.createElementVNode("div", _hoisted_4$G, [
+        vue.createElementVNode("div", _hoisted_4$H, [
           vue.createVNode(_component_BKCodeCom, {
             ref: "editor",
             modelValue: $data.filterScript,
@@ -42489,7 +42913,7 @@
           }, null, 8, ["modelValue", "language", "class", "readonly", "is-modal", "method-name"])
         ]),
         (!$props.type)
-          ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_5$y, " } "))
+          ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_5$B, " } "))
           : vue.createCommentVNode("", true)
       ])
     ]))
@@ -42568,12 +42992,12 @@
   const _hoisted_1$1j = { class: "tooltip-config" };
   const _hoisted_2$U = { class: "d-flex-c" };
   const _hoisted_3$K = { class: "d-flex" };
-  const _hoisted_4$F = ["onClick"];
-  const _hoisted_5$x = { class: "d-flex-c" };
-  const _hoisted_6$t = { class: "d-flex" };
-  const _hoisted_7$o = ["onClick"];
-  const _hoisted_8$j = { class: "d-flex-c" };
-  const _hoisted_9$h = { class: "d-flex-c" };
+  const _hoisted_4$G = ["onClick"];
+  const _hoisted_5$A = { class: "d-flex-c" };
+  const _hoisted_6$x = { class: "d-flex" };
+  const _hoisted_7$s = ["onClick"];
+  const _hoisted_8$n = { class: "d-flex-c" };
+  const _hoisted_9$k = { class: "d-flex-c" };
 
   function _sfc_render$17(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
@@ -42633,7 +43057,7 @@
                                   key: ele.value,
                                   class: vue.normalizeClass(["chart-align-item trigger-btn", {'active':$data.form.trigger===ele.value,'is-disabled':!$options.saveAble}]),
                                   onClick: $event => ($options.triggerChange(ele))
-                                }, vue.toDisplayString(ele.label), 11, _hoisted_4$F))
+                                }, vue.toDisplayString(ele.label), 11, _hoisted_4$G))
                               }), 128))
                             ]),
                             _cache[14] || (_cache[14] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 触发类型", -1))
@@ -42643,14 +43067,14 @@
                       }),
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_5$x, [
-                            vue.createElementVNode("div", _hoisted_6$t, [
+                          vue.createElementVNode("div", _hoisted_5$A, [
+                            vue.createElementVNode("div", _hoisted_6$x, [
                               (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.triggerOnOption, (el) => {
                                 return (vue.openBlock(), vue.createElementBlock("div", {
                                   key: el.value,
                                   class: vue.normalizeClass(["chart-align-item trigger-btn", {'active':$data.form.triggerOn===el.value,'is-disabled':!$options.saveAble}]),
                                   onClick: $event => ($options.triggerOnChange(el))
-                                }, vue.toDisplayString(el.label), 11, _hoisted_7$o))
+                                }, vue.toDisplayString(el.label), 11, _hoisted_7$s))
                               }), 128))
                             ]),
                             _cache[15] || (_cache[15] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 触发动作", -1))
@@ -42715,7 +43139,7 @@
                             default: vue.withCtx(() => [
                               vue.createVNode(_component_el_col, { span: 12 }, {
                                 default: vue.withCtx(() => [
-                                  vue.createElementVNode("div", _hoisted_8$j, [
+                                  vue.createElementVNode("div", _hoisted_8$n, [
                                     vue.createVNode(_component_el_input_number, {
                                       modelValue: $data.form.borderWidth,
                                       "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.borderWidth) = $event)),
@@ -42731,7 +43155,7 @@
                               }),
                               vue.createVNode(_component_el_col, { span: 12 }, {
                                 default: vue.withCtx(() => [
-                                  vue.createElementVNode("div", _hoisted_9$h, [
+                                  vue.createElementVNode("div", _hoisted_9$k, [
                                     vue.createVNode(_component_CommonColorPicker, {
                                       modelValue: $data.form.borderColor,
                                       "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form.borderColor) = $event)),
@@ -42892,18 +43316,18 @@
   };
   const _hoisted_2$T = { class: "axis-item-title" };
   const _hoisted_3$J = { style: {"margin-right":"5px"} };
-  const _hoisted_4$E = {
+  const _hoisted_4$F = {
     class: "series-header flex-between",
     style: {"width":"100%"}
   };
-  const _hoisted_5$w = { style: {"position":"relative","width":"100%"} };
-  const _hoisted_6$s = { class: "tabs-series" };
-  const _hoisted_7$n = ["name", "onClick"];
-  const _hoisted_8$i = {
+  const _hoisted_5$z = { style: {"position":"relative","width":"100%"} };
+  const _hoisted_6$w = { class: "tabs-series" };
+  const _hoisted_7$r = ["name", "onClick"];
+  const _hoisted_8$m = {
     key: 0,
     class: "tabs-series-content"
   };
-  const _hoisted_9$g = { class: "series-header icon-viewer" };
+  const _hoisted_9$j = { class: "series-header icon-viewer" };
 
   function _sfc_render$16(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_CirclePlus = vue.resolveComponent("CirclePlus");
@@ -42996,7 +43420,7 @@
                   item: vue.withCtx(({element:series}) => [
                     vue.createVNode(_component_el_collapse_item, null, {
                       title: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_4$E, [
+                        vue.createElementVNode("div", _hoisted_4$F, [
                           vue.renderSlot(_ctx.$slots, "title", {
                             index: $props.seriesList.indexOf(series)
                           }, undefined, true),
@@ -43053,8 +43477,8 @@
             }, 512), [
               [vue.vShow, $data.layoutType==='horizontal']
             ]),
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_5$w, [
-              vue.createElementVNode("div", _hoisted_6$s, [
+            vue.withDirectives(vue.createElementVNode("div", _hoisted_5$z, [
+              vue.createElementVNode("div", _hoisted_6$w, [
                 vue.createVNode(_component_draggable, {
                   list: $props.seriesList,
                   disabled: !$options.saveAble,
@@ -43072,12 +43496,12 @@
                       vue.renderSlot(_ctx.$slots, "title", {
                         index: $props.seriesList.indexOf(series)
                       }, undefined, true)
-                    ], 10, _hoisted_7$n))
+                    ], 10, _hoisted_7$r))
                   ]),
                   _: 3
                 }, 8, ["list", "disabled", "onEnd"]),
                 ($props.seriesList[Number($data.currentTab)])
-                  ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_8$i, [
+                  ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_8$m, [
                       (vue.openBlock(), vue.createBlock(vue.KeepAlive, null, [
                         vue.renderSlot(_ctx.$slots, "content", {
                           series: $props.seriesList[Number($data.currentTab)],
@@ -43087,7 +43511,7 @@
                     ]))
                   : vue.createCommentVNode("", true)
               ]),
-              vue.createElementVNode("div", _hoisted_9$g, [
+              vue.createElementVNode("div", _hoisted_9$j, [
                 vue.createVNode(_component_el_button, {
                   size: "small",
                   disabled: !$options.saveAble,
@@ -43220,11 +43644,11 @@
   const _hoisted_1$1g = { class: "full-box" };
   const _hoisted_2$S = { class: "d-flex-c" };
   const _hoisted_3$I = { class: "d-flex-c" };
-  const _hoisted_4$D = { class: "d-flex-c" };
-  const _hoisted_5$v = { class: "d-flex" };
-  const _hoisted_6$r = { style: {"width":"80px"} };
-  const _hoisted_7$m = { class: "d-flex-c" };
-  const _hoisted_8$h = { class: "d-flex-c" };
+  const _hoisted_4$E = { class: "d-flex-c" };
+  const _hoisted_5$y = { class: "d-flex" };
+  const _hoisted_6$v = { style: {"width":"80px"} };
+  const _hoisted_7$q = { class: "d-flex-c" };
+  const _hoisted_8$l = { class: "d-flex-c" };
 
   function _sfc_render$15(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input = vue.resolveComponent("el-input");
@@ -43339,7 +43763,7 @@
                     default: vue.withCtx(() => [
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_4$D, [
+                          vue.createElementVNode("div", _hoisted_4$E, [
                             vue.createVNode(_component_el_select, {
                               modelValue: series.symbol,
                               "onUpdate:modelValue": $event => ((series.symbol) = $event),
@@ -43369,8 +43793,8 @@
                 ]),
                 _: 2
               }, 1024),
-              vue.createElementVNode("div", _hoisted_5$v, [
-                vue.createElementVNode("div", _hoisted_6$r, [
+              vue.createElementVNode("div", _hoisted_5$y, [
+                vue.createElementVNode("div", _hoisted_6$v, [
                   vue.createVNode(_component_el_switch, {
                     modelValue: series.areaStyle.show,
                     "onUpdate:modelValue": $event => ((series.areaStyle.show) = $event),
@@ -43395,7 +43819,7 @@
                       default: vue.withCtx(() => [
                         vue.createVNode(_component_el_col, { span: 12 }, {
                           default: vue.withCtx(() => [
-                            vue.createElementVNode("div", _hoisted_7$m, [
+                            vue.createElementVNode("div", _hoisted_7$q, [
                               vue.createVNode(_component_CommonColorPicker, {
                                 modelValue: series.areaStyle.color,
                                 "onUpdate:modelValue": $event => ((series.areaStyle.color) = $event),
@@ -43408,7 +43832,7 @@
                         }, 1024),
                         vue.createVNode(_component_el_col, { span: 12 }, {
                           default: vue.withCtx(() => [
-                            vue.createElementVNode("div", _hoisted_8$h, [
+                            vue.createElementVNode("div", _hoisted_8$l, [
                               vue.createVNode(_component_el_input_number, {
                                 modelValue: series.areaStyle.opacity,
                                 "onUpdate:modelValue": $event => ((series.areaStyle.opacity) = $event),
@@ -43542,14 +43966,14 @@
   const _hoisted_1$1f = { class: "xAix-cofig" };
   const _hoisted_2$R = { class: "d-flex-c" };
   const _hoisted_3$H = { class: "d-flex-c" };
-  const _hoisted_4$C = { class: "d-flex-c" };
-  const _hoisted_5$u = { class: "d-flex-c" };
-  const _hoisted_6$q = { class: "d-flex" };
-  const _hoisted_7$l = ["onClick"];
-  const _hoisted_8$g = { class: "d-flex-c" };
-  const _hoisted_9$f = { class: "d-flex-c" };
-  const _hoisted_10$c = { class: "d-flex-c" };
-  const _hoisted_11$8 = { class: "d-flex-c" };
+  const _hoisted_4$D = { class: "d-flex-c" };
+  const _hoisted_5$x = { class: "d-flex-c" };
+  const _hoisted_6$u = { class: "d-flex" };
+  const _hoisted_7$p = ["onClick"];
+  const _hoisted_8$k = { class: "d-flex-c" };
+  const _hoisted_9$i = { class: "d-flex-c" };
+  const _hoisted_10$f = { class: "d-flex-c" };
+  const _hoisted_11$c = { class: "d-flex-c" };
 
   function _sfc_render$14(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
@@ -43629,7 +44053,7 @@
                   }),
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_4$C, [
+                      vue.createElementVNode("div", _hoisted_4$D, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.center[1],
                           "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.center[1]) = $event)),
@@ -43710,8 +44134,8 @@
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_5$u, [
-                                vue.createElementVNode("div", _hoisted_6$q, [
+                              vue.createElementVNode("div", _hoisted_5$x, [
+                                vue.createElementVNode("div", _hoisted_6$u, [
                                   (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.alignOption, (ele) => {
                                     return (vue.openBlock(), vue.createElementBlock("div", {
                                       key: ele.value,
@@ -43721,7 +44145,7 @@
                                       vue.createElementVNode("i", {
                                         class: vue.normalizeClass(['icon am-iconfont align-icon', ele.icon])
                                       }, null, 2)
-                                    ], 10, _hoisted_7$l))
+                                    ], 10, _hoisted_7$p))
                                   }), 128))
                                 ]),
                                 _cache[37] || (_cache[37] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 角度", -1))
@@ -43731,7 +44155,7 @@
                           }),
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_8$g, [
+                              vue.createElementVNode("div", _hoisted_8$k, [
                                 vue.createVNode(_component_el_input_number, {
                                   modelValue: $data.alignActive,
                                   "onUpdate:modelValue": _cache[12] || (_cache[12] = $event => (($data.alignActive) = $event)),
@@ -43754,7 +44178,7 @@
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_9$f, [
+                              vue.createElementVNode("div", _hoisted_9$i, [
                                 vue.createVNode(_component_el_input_number, {
                                   modelValue: $data.form.axisLabel.margin,
                                   "onUpdate:modelValue": _cache[13] || (_cache[13] = $event => (($data.form.axisLabel.margin) = $event)),
@@ -43863,7 +44287,7 @@
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_10$c, [
+                              vue.createElementVNode("div", _hoisted_10$f, [
                                 vue.createVNode(_component_CommonColorPicker, {
                                   modelValue: $data.form.splitArea.areaStyle.color[0],
                                   "onUpdate:modelValue": _cache[28] || (_cache[28] = $event => (($data.form.splitArea.areaStyle.color[0]) = $event)),
@@ -43875,7 +44299,7 @@
                           }),
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_11$8, [
+                              vue.createElementVNode("div", _hoisted_11$c, [
                                 vue.createVNode(_component_CommonColorPicker, {
                                   modelValue: $data.form.splitArea.areaStyle.color[1],
                                   "onUpdate:modelValue": _cache[30] || (_cache[30] = $event => (($data.form.splitArea.areaStyle.color[1]) = $event)),
@@ -43945,6 +44369,7 @@
         rules: commonRules,
         colorList: [],
         seriesList: [],
+        componentsList: [],
         activeConfig: 'basic',
         configType: { grid: 'basic', legend: 'basic', axis: 'axis', tooltip: 'other' },
         chartMenu: [{ name: '图表', key: 'basic', icon: 'icon-tuxing' }, { name: '坐标轴', key: 'axis', icon: 'icon-zuobiao' }, { name: '系列', key: 'series', icon: 'icon-a-shujuyuan2' }, { name: '其他', key: 'other', icon: 'icon-qita' }]
@@ -43954,6 +44379,8 @@
       saveAble () {
         return this.getSaveAble()
       },
+      basicComps () { return this.componentsList.filter(n => this.configType[n] === 'basic') },
+      otherComps () { return this.componentsList.filter(n => this.configType[n] === 'other') },
 
       colorsList () {
         let list = [];
@@ -43969,7 +44396,36 @@
         return itemsConfig$4.basicConfig[ele]
       });
     },
+    mounted () {
+      this.$nextTick(() => {
+        this.scrollEl = this.$refs.cfgScroll?.closest('.base-flow') || this.$refs.cfgScroll;
+        if (this.scrollEl) this.scrollEl.addEventListener('scroll', this.onCfgScroll, { passive: true });
+      });
+    },
+    beforeUnmount () {
+      if (this.scrollEl) this.scrollEl.removeEventListener('scroll', this.onCfgScroll);
+    },
     methods: {
+      scrollToSec (key) {
+        const sc = this.scrollEl;
+        const el = document.getElementById('cfgsec-' + key);
+        if (sc && el) {
+          this.activeConfig = key;
+          const top = el.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop;
+          sc.scrollTo({ top: Math.max(0, top - 8), behavior: 'smooth' });
+        }
+      },
+      onCfgScroll () {
+        const sc = this.scrollEl;
+        if (!sc) return
+        const base = sc.getBoundingClientRect().top + 24;
+        let cur = this.chartMenu[0].key;
+        for (const t of this.chartMenu) {
+          const el = document.getElementById('cfgsec-' + t.key);
+          if (el && el.getBoundingClientRect().top <= base) cur = t.key;
+        }
+        this.activeConfig = cur;
+      },
       buildChartData (type, data) {
         if (!this.configs.dataSourceConfig || !data) {
           return
@@ -44095,20 +44551,38 @@
     }
   };
 
-  const _hoisted_1$1e = {
-    class: "d-flex",
-    style: {"flex-direction":"column","height":"100%","overflow":"auto"}
+  const _hoisted_1$1e = { class: "cfg-anchor-wrap" };
+  const _hoisted_2$Q = { class: "cfg-anchor-nav" };
+  const _hoisted_3$G = ["onClick"];
+  const _hoisted_4$C = {
+    class: "radar-basic-config cfg-scroll",
+    ref: "cfgScroll"
   };
-  const _hoisted_2$Q = { class: "radar-basic-config" };
-  const _hoisted_3$G = { class: "copy-button-box" };
-  const _hoisted_4$B = { style: {"margin-top":"10px"} };
+  const _hoisted_5$w = {
+    id: "cfgsec-basic",
+    class: "cfg-sec"
+  };
+  const _hoisted_6$t = { class: "copy-button-box" };
+  const _hoisted_7$o = { style: {"margin-top":"10px"} };
+  const _hoisted_8$j = {
+    id: "cfgsec-axis",
+    class: "cfg-sec"
+  };
+  const _hoisted_9$h = {
+    id: "cfgsec-series",
+    class: "cfg-sec"
+  };
+  const _hoisted_10$e = {
+    key: 0,
+    id: "cfgsec-other",
+    class: "cfg-sec"
+  };
 
   function _sfc_render$13(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_SidebarTabs = vue.resolveComponent("SidebarTabs");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_ColorsPicker = vue.resolveComponent("ColorsPicker");
-    const _component_SeriesConfig = vue.resolveComponent("SeriesConfig");
     const _component_AxisConfig = vue.resolveComponent("AxisConfig");
+    const _component_SeriesConfig = vue.resolveComponent("SeriesConfig");
     const _component_BKBasicChartConfig = vue.resolveComponent("BKBasicChartConfig");
 
     return (vue.openBlock(), vue.createBlock(_component_BKBasicChartConfig, vue.mergeProps({
@@ -44120,89 +44594,112 @@
       "tjb-u-r-l": $props.tjbURL
     }, _ctx.$attrs, {
       onBuildChartSeriesData: $options.buildChartData,
-      onSetExpand: _cache[4] || (_cache[4] = $event => (_ctx.$emit('setExpand'))),
+      onSetExpand: _cache[3] || (_cache[3] = $event => (_ctx.$emit('setExpand'))),
       onConfigOptionInit: $options.configOptionInit,
       onSaveChartConfig: $options.saveChartCfg
     }), {
       default: vue.withCtx(() => [
         vue.createElementVNode("div", _hoisted_1$1e, [
-          vue.createVNode(_component_SidebarTabs, {
-            modelValue: $data.activeConfig,
-            "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.activeConfig) = $event)),
-            menu: $data.chartMenu
-          }, null, 8, ["modelValue", "menu"]),
           vue.createElementVNode("div", _hoisted_2$Q, [
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_3$G, [
-              vue.createVNode(_component_el_button, {
-                type: "primary",
-                size: "small",
-                onClick: _cache[1] || (_cache[1] = $event => (_ctx.copyConfig('radarBasic')))
-              }, {
-                default: vue.withCtx(() => [...(_cache[5] || (_cache[5] = [
-                  vue.createTextVNode(" 复制基础配置 ", -1)
-                ]))]),
-                _: 1
-              }),
-              vue.createVNode(_component_el_button, {
-                type: "primary",
-                size: "small",
-                disabled: !$options.saveAble,
-                onClick: _cache[2] || (_cache[2] = $event => (_ctx.pasteConfig('radarBasic')))
-              }, {
-                default: vue.withCtx(() => [...(_cache[6] || (_cache[6] = [
-                  vue.createTextVNode(" 粘贴基础配置 ", -1)
-                ]))]),
-                _: 1
-              }, 8, ["disabled"])
-            ], 512), [
-              [vue.vShow, $data.activeConfig==='basic']
+            (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.chartMenu, (t) => {
+              return (vue.openBlock(), vue.createElementBlock("div", {
+                key: t.key,
+                class: vue.normalizeClass(['cfg-anchor-item', $data.activeConfig===t.key && 'is-on']),
+                onClick: $event => ($options.scrollToSec(t.key))
+              }, [
+                vue.createElementVNode("i", {
+                  class: vue.normalizeClass(["am-iconfont cfg-anchor-ic", t.icon])
+                }, null, 2),
+                vue.createElementVNode("span", null, vue.toDisplayString(t.name), 1)
+              ], 10, _hoisted_3$G))
+            }), 128))
+          ]),
+          vue.createElementVNode("div", _hoisted_4$C, [
+            vue.createElementVNode("div", _hoisted_5$w, [
+              _cache[6] || (_cache[6] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "图表", -1)),
+              vue.createElementVNode("div", _hoisted_6$t, [
+                vue.createVNode(_component_el_button, {
+                  type: "primary",
+                  size: "small",
+                  onClick: _cache[0] || (_cache[0] = $event => (_ctx.copyConfig('radarBasic')))
+                }, {
+                  default: vue.withCtx(() => [...(_cache[4] || (_cache[4] = [
+                    vue.createTextVNode(" 复制基础配置 ", -1)
+                  ]))]),
+                  _: 1
+                }),
+                vue.createVNode(_component_el_button, {
+                  type: "primary",
+                  size: "small",
+                  disabled: !$options.saveAble,
+                  onClick: _cache[1] || (_cache[1] = $event => (_ctx.pasteConfig('radarBasic')))
+                }, {
+                  default: vue.withCtx(() => [...(_cache[5] || (_cache[5] = [
+                    vue.createTextVNode(" 粘贴基础配置 ", -1)
+                  ]))]),
+                  _: 1
+                }, 8, ["disabled"])
+              ]),
+              vue.createElementVNode("div", _hoisted_7$o, [
+                vue.createVNode(_component_ColorsPicker, {
+                  modelValue: $data.colorList,
+                  "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.colorList) = $event)),
+                  name: " 色系配置",
+                  "color-list": $options.colorsList,
+                  onColorChange: $options.colorsChange
+                }, null, 8, ["modelValue", "color-list", "onColorChange"])
+              ]),
+              (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.basicComps, (name, index) => {
+                return (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(name+'-config'), {
+                  key: 'b'+index,
+                  ref_for: true,
+                  ref: name+'form',
+                  "save-able": $options.saveAble,
+                  "series-length": $data.seriesList.length||0,
+                  onChartChange: $options.getChartBasicConfigData
+                }, null, 40, ["save-able", "series-length", "onChartChange"]))
+              }), 128))
             ]),
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_4$B, [
-              vue.createVNode(_component_ColorsPicker, {
-                modelValue: $data.colorList,
-                "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.colorList) = $event)),
-                name: " 色系配置",
-                "color-list": $options.colorsList,
-                onColorChange: $options.colorsChange
-              }, null, 8, ["modelValue", "color-list", "onColorChange"])
-            ], 512), [
-              [vue.vShow, $data.activeConfig==='basic']
-            ]),
-            (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.componentsList, (name, index) => {
-              return vue.withDirectives((vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(name+'-config'), {
-                key: index,
-                ref_for: true,
-                ref: name+'form',
-                "save-able": $options.saveAble,
+            vue.createElementVNode("div", _hoisted_8$j, [
+              _cache[7] || (_cache[7] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "坐标轴", -1)),
+              vue.createVNode(_component_AxisConfig, {
+                ref: "axisConfigRef",
                 "series-length": $data.seriesList.length||0,
+                "branch-type": $props.configs.branchType,
                 onChartChange: $options.getChartBasicConfigData
-              }, null, 40, ["save-able", "series-length", "onChartChange"])), [
-                [vue.vShow, $data.activeConfig===$data.configType[name]]
-              ])
-            }), 128)),
-            vue.withDirectives(vue.createVNode(_component_SeriesConfig, {
-              ref: "seriesConfigRef",
-              "series-length": $data.seriesList.length||0,
-              "branch-type": $props.configs.branchType,
-              onChartChange: $options.getChartBasicConfigData
-            }, null, 8, ["series-length", "branch-type", "onChartChange"]), [
-              [vue.vShow, $data.activeConfig==='series']
+              }, null, 8, ["series-length", "branch-type", "onChartChange"])
             ]),
-            vue.withDirectives(vue.createVNode(_component_AxisConfig, {
-              ref: "axisConfigRef",
-              "series-length": $data.seriesList.length||0,
-              "branch-type": $props.configs.branchType,
-              onChartChange: $options.getChartBasicConfigData
-            }, null, 8, ["series-length", "branch-type", "onChartChange"]), [
-              [vue.vShow, $data.activeConfig==='axis']
-            ])
-          ])
+            vue.createElementVNode("div", _hoisted_9$h, [
+              _cache[8] || (_cache[8] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "系列", -1)),
+              vue.createVNode(_component_SeriesConfig, {
+                ref: "seriesConfigRef",
+                "series-length": $data.seriesList.length||0,
+                "branch-type": $props.configs.branchType,
+                onChartChange: $options.getChartBasicConfigData
+              }, null, 8, ["series-length", "branch-type", "onChartChange"])
+            ]),
+            ($options.otherComps.length)
+              ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_10$e, [
+                  _cache[9] || (_cache[9] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "其他", -1)),
+                  (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.otherComps, (name, index) => {
+                    return (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(name+'-config'), {
+                      key: 'o'+index,
+                      ref_for: true,
+                      ref: name+'form',
+                      "save-able": $options.saveAble,
+                      "series-length": $data.seriesList.length||0,
+                      onChartChange: $options.getChartBasicConfigData
+                    }, null, 40, ["save-able", "series-length", "onChartChange"]))
+                  }), 128))
+                ]))
+              : vue.createCommentVNode("", true)
+          ], 512)
         ])
       ]),
       _: 1
     }, 16, ["configs", "page-config", "save-able", "rules", "tjb-u-r-l", "onBuildChartSeriesData", "onConfigOptionInit", "onSaveChartConfig"]))
   }
-  const RadarChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$14, [['render',_sfc_render$13],['__scopeId',"data-v-382352ce"]]);
+  const RadarChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$14, [['render',_sfc_render$13],['__scopeId',"data-v-3a8e41f9"]]);
 
   RadarChartConfig.install = function (Vue) {
     Vue.component(libPrefix + RadarChartConfig.name, RadarChartConfig);
@@ -44603,6 +45100,7 @@
         }
       },
       customResetChart (config) {
+        this.clearCarousel();
         if (!this.relList) {
           return
         }
@@ -44751,6 +45249,9 @@
               option.tooltip.formatter = function ({ data, color }) {
                 return '<div style="display:flex;align-items:center;"> <div style="height:10px;width:10px;border-radius:5px;margin-right:10px;background:' + color + ';"></div>' + data.originData.name + '<div style="width:10px;"></div>' + data.originData.value + ' </div>'
               };
+            } else if (config.branchType === 'carouselPieChart') {
+              option.series[0].data = formData;
+              this._carouselLen = Array.isArray(formData) ? formData.length : 0;
             } else {
               option.series[0].data = formData;
               // 圆角饼图/圆角环图:强制给饼图 series 上圆角(默认配置已带,这里兜底,避免配置面板剥离)
@@ -44812,6 +45313,9 @@
             this.option = option;
 
             this.$refs.chart.setOption && this.$refs.chart.setOption(option, true);
+            if (config.branchType === 'carouselPieChart' && this._carouselLen > 0) {
+              this.startCarousel();
+            }
           }
         });
         // if (Object.keys(this.option).length === 0) {
@@ -44821,7 +45325,38 @@
       },
       buildSeriesConfig () {
         return [{ type: 'pie', radius: 100 }]
+      },
+      // 轮播饼图:定时高亮各扇区,emphasis 中心标签显示当前项占比+名称
+      startCarousel () {
+        this.clearCarousel();
+        const len = this._carouselLen;
+        if (!len || !this.$refs.chart) {
+          return
+        }
+        let idx = 0;
+        const tick = () => {
+          const chart = this.$refs.chart;
+          if (!chart || !chart.dispatchAction) {
+            this.clearCarousel();
+            return
+          }
+          chart.dispatchAction({ type: 'downplay', seriesIndex: 0 });
+          chart.dispatchAction({ type: 'highlight', seriesIndex: 0, dataIndex: idx });
+          chart.dispatchAction({ type: 'showTip', seriesIndex: 0, dataIndex: idx });
+          idx = (idx + 1) % len;
+        };
+        tick();
+        this._carouselTimer = setInterval(tick, 2500);
+      },
+      clearCarousel () {
+        if (this._carouselTimer) {
+          clearInterval(this._carouselTimer);
+          this._carouselTimer = null;
+        }
       }
+    },
+    beforeUnmount () {
+      this.clearCarousel();
     }
   };
 
@@ -45080,20 +45615,20 @@
   const _hoisted_1$1b = { style: {"width":"100%"} };
   const _hoisted_2$O = { class: "d-flex-c" };
   const _hoisted_3$F = { class: "d-flex-c" };
-  const _hoisted_4$A = { class: "d-flex-c" };
-  const _hoisted_5$t = { class: "d-flex-c" };
-  const _hoisted_6$p = { class: "d-flex-c" };
-  const _hoisted_7$k = { class: "d-flex-c" };
-  const _hoisted_8$f = { class: "d-flex-c" };
-  const _hoisted_9$e = { class: "d-flex" };
-  const _hoisted_10$b = ["onClick"];
-  const _hoisted_11$7 = { class: "d-flex-c" };
-  const _hoisted_12$6 = { class: "d-flex-c" };
-  const _hoisted_13$6 = { class: "d-flex el-form-item" };
-  const _hoisted_14$4 = { style: {"width":"80px"} };
-  const _hoisted_15$4 = { class: "d-flex-c" };
-  const _hoisted_16$4 = { class: "d-flex-c" };
-  const _hoisted_17$3 = { class: "d-flex-c" };
+  const _hoisted_4$B = { class: "d-flex-c" };
+  const _hoisted_5$v = { class: "d-flex-c" };
+  const _hoisted_6$s = { class: "d-flex-c" };
+  const _hoisted_7$n = { class: "d-flex-c" };
+  const _hoisted_8$i = { class: "d-flex-c" };
+  const _hoisted_9$g = { class: "d-flex" };
+  const _hoisted_10$d = ["onClick"];
+  const _hoisted_11$b = { class: "d-flex-c" };
+  const _hoisted_12$9 = { class: "d-flex-c" };
+  const _hoisted_13$9 = { class: "d-flex el-form-item" };
+  const _hoisted_14$7 = { style: {"width":"80px"} };
+  const _hoisted_15$7 = { class: "d-flex-c" };
+  const _hoisted_16$7 = { class: "d-flex-c" };
+  const _hoisted_17$4 = { class: "d-flex-c" };
 
   function _sfc_render$$(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
@@ -45177,7 +45712,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_4$A, [
+                      vue.createElementVNode("div", _hoisted_4$B, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.center[0],
                           "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.center[0]) = $event)),
@@ -45195,7 +45730,7 @@
                   }),
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_5$t, [
+                      vue.createElementVNode("div", _hoisted_5$v, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.center[1],
                           "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.center[1]) = $event)),
@@ -45219,7 +45754,7 @@
           }),
           vue.createVNode(_component_el_form_item, { label: "风玫瑰图" }, {
             default: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_6$p, [
+              vue.createElementVNode("div", _hoisted_6$s, [
                 vue.createVNode(_component_el_radio_group, {
                   modelValue: $data.form.roseType,
                   "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.roseType) = $event)),
@@ -45278,7 +45813,7 @@
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_7$k, [
+                              vue.createElementVNode("div", _hoisted_7$n, [
                                 vue.createVNode(_component_el_select, {
                                   modelValue: $data.form.label.formatter,
                                   "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.label.formatter) = $event)),
@@ -45304,8 +45839,8 @@
                           }),
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_8$f, [
-                                vue.createElementVNode("div", _hoisted_9$e, [
+                              vue.createElementVNode("div", _hoisted_8$i, [
+                                vue.createElementVNode("div", _hoisted_9$g, [
                                   (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.alignOption, (ele) => {
                                     return (vue.openBlock(), vue.createElementBlock("div", {
                                       key: ele.value,
@@ -45315,7 +45850,7 @@
                                       vue.createElementVNode("i", {
                                         class: vue.normalizeClass(['icon am-iconfont align-icon', ele.icon])
                                       }, null, 2)
-                                    ], 10, _hoisted_10$b))
+                                    ], 10, _hoisted_10$d))
                                   }), 128))
                                 ]),
                                 _cache[24] || (_cache[24] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 位置", -1))
@@ -45333,7 +45868,7 @@
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_11$7, [
+                              vue.createElementVNode("div", _hoisted_11$b, [
                                 vue.createVNode(_component_el_input, {
                                   modelValue: $data.form.label.prefix,
                                   "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.label.prefix) = $event)),
@@ -45347,7 +45882,7 @@
                           }),
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_12$6, [
+                              vue.createElementVNode("div", _hoisted_12$9, [
                                 vue.createVNode(_component_el_input, {
                                   modelValue: $data.form.label.suffix,
                                   "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.label.suffix) = $event)),
@@ -45375,8 +45910,8 @@
                   }, null, 8, ["modelValue", "onDataTypeChange"]), [
                     [vue.vShow, $data.form.label.formatter==='{c}']
                   ]),
-                  vue.createElementVNode("div", _hoisted_13$6, [
-                    vue.createElementVNode("div", _hoisted_14$4, [
+                  vue.createElementVNode("div", _hoisted_13$9, [
+                    vue.createElementVNode("div", _hoisted_14$7, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: $data.form.labelLine.show,
                         "onUpdate:modelValue": _cache[9] || (_cache[9] = $event => (($data.form.labelLine.show) = $event)),
@@ -45400,7 +45935,7 @@
                           default: vue.withCtx(() => [
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_15$4, [
+                                vue.createElementVNode("div", _hoisted_15$7, [
                                   vue.createVNode(_component_el_input_number, {
                                     modelValue: $data.form.labelLine.length,
                                     "onUpdate:modelValue": _cache[11] || (_cache[11] = $event => (($data.form.labelLine.length) = $event)),
@@ -45416,7 +45951,7 @@
                             }),
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_16$4, [
+                                vue.createElementVNode("div", _hoisted_16$7, [
                                   vue.createVNode(_component_el_input_number, {
                                     modelValue: $data.form.labelLine.length2,
                                     "onUpdate:modelValue": _cache[12] || (_cache[12] = $event => (($data.form.labelLine.length2) = $event)),
@@ -45440,7 +45975,7 @@
                           default: vue.withCtx(() => [
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_17$3, [
+                                vue.createElementVNode("div", _hoisted_17$4, [
                                   vue.createVNode(_component_el_input_number, {
                                     modelValue: $data.form.labelLine.lineStyle.width,
                                     "onUpdate:modelValue": _cache[13] || (_cache[13] = $event => (($data.form.labelLine.lineStyle.width) = $event)),
@@ -45796,16 +46331,16 @@
   const _hoisted_1$19 = { class: "legend-config" };
   const _hoisted_2$N = { class: "d-flex-c" };
   const _hoisted_3$E = { class: "d-flex-c" };
-  const _hoisted_4$z = { class: "d-flex" };
-  const _hoisted_5$s = ["onClick"];
-  const _hoisted_6$o = { class: "d-flex-c" };
-  const _hoisted_7$j = { class: "d-flex-c" };
-  const _hoisted_8$e = { class: "d-flex-c" };
-  const _hoisted_9$d = { class: "d-flex-c" };
-  const _hoisted_10$a = { class: "d-flex" };
-  const _hoisted_11$6 = ["onClick"];
-  const _hoisted_12$5 = { class: "d-flex-c" };
-  const _hoisted_13$5 = { class: "d-flex-c" };
+  const _hoisted_4$A = { class: "d-flex" };
+  const _hoisted_5$u = ["onClick"];
+  const _hoisted_6$r = { class: "d-flex-c" };
+  const _hoisted_7$m = { class: "d-flex-c" };
+  const _hoisted_8$h = { class: "d-flex-c" };
+  const _hoisted_9$f = { class: "d-flex-c" };
+  const _hoisted_10$c = { class: "d-flex" };
+  const _hoisted_11$a = ["onClick"];
+  const _hoisted_12$8 = { class: "d-flex-c" };
+  const _hoisted_13$8 = { class: "d-flex-c" };
 
   function _sfc_render$Z(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_DataFormatSelect = vue.resolveComponent("DataFormatSelect");
@@ -45862,13 +46397,13 @@
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
                           vue.createElementVNode("div", _hoisted_3$E, [
-                            vue.createElementVNode("div", _hoisted_4$z, [
+                            vue.createElementVNode("div", _hoisted_4$A, [
                               (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.positionOption, (ele) => {
                                 return (vue.openBlock(), vue.createElementBlock("div", {
                                   key: ele.value,
                                   class: vue.normalizeClass(["chart-align-item", {'active':$data.form.unitPosition===ele.value,'is-disabled':!$options.saveAble}]),
                                   onClick: $event => ($options.unitPositionChange(ele))
-                                }, vue.toDisplayString(ele.label), 11, _hoisted_5$s))
+                                }, vue.toDisplayString(ele.label), 11, _hoisted_5$u))
                               }), 128))
                             ]),
                             _cache[21] || (_cache[21] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 位置", -1))
@@ -45891,7 +46426,7 @@
                     default: vue.withCtx(() => [
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_6$o, [
+                          vue.createElementVNode("div", _hoisted_6$r, [
                             vue.createVNode(_component_el_input, {
                               modelValue: $data.form.header[0],
                               "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.header[0]) = $event)),
@@ -45905,7 +46440,7 @@
                       }),
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_7$j, [
+                          vue.createElementVNode("div", _hoisted_7$m, [
                             vue.createVNode(_component_el_input, {
                               modelValue: $data.form.header[1],
                               "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.header[1]) = $event)),
@@ -45927,7 +46462,7 @@
                     default: vue.withCtx(() => [
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_8$e, [
+                          vue.createElementVNode("div", _hoisted_8$h, [
                             vue.createVNode(_component_el_input, {
                               modelValue: $data.form.header[2],
                               "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form.header[2]) = $event)),
@@ -45968,7 +46503,7 @@
                       _cache[26] || (_cache[26] = vue.createTextVNode()),
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_9$d, [
+                          vue.createElementVNode("div", _hoisted_9$f, [
                             vue.createVNode(_component_el_input_number, {
                               modelValue: $data.form.percNumber,
                               "onUpdate:modelValue": _cache[13] || (_cache[13] = $event => (($data.form.percNumber) = $event)),
@@ -45990,7 +46525,7 @@
               }),
               vue.createVNode(_component_el_form_item, { label: "位置" }, {
                 default: vue.withCtx(() => [
-                  vue.createElementVNode("div", _hoisted_10$a, [
+                  vue.createElementVNode("div", _hoisted_10$c, [
                     (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.alignOption, (ele) => {
                       return (vue.openBlock(), vue.createElementBlock("div", {
                         key: ele.value,
@@ -46000,7 +46535,7 @@
                         vue.createElementVNode("i", {
                           class: vue.normalizeClass(['icon am-iconfont align-icon', ele.icon])
                         }, null, 2)
-                      ], 10, _hoisted_11$6))
+                      ], 10, _hoisted_11$a))
                     }), 128))
                   ])
                 ]),
@@ -46015,7 +46550,7 @@
                     default: vue.withCtx(() => [
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_12$5, [
+                          vue.createElementVNode("div", _hoisted_12$8, [
                             vue.createVNode(_component_el_input_number, {
                               modelValue: $data.form.x,
                               "onUpdate:modelValue": _cache[15] || (_cache[15] = $event => (($data.form.x) = $event)),
@@ -46031,7 +46566,7 @@
                       }),
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_13$5, [
+                          vue.createElementVNode("div", _hoisted_13$8, [
                             vue.createVNode(_component_el_input_number, {
                               modelValue: $data.form.y,
                               "onUpdate:modelValue": _cache[17] || (_cache[17] = $event => (($data.form.y) = $event)),
@@ -46129,11 +46664,11 @@
   const _hoisted_1$18 = { style: {"width":"100%"} };
   const _hoisted_2$M = { class: "d-flex-c" };
   const _hoisted_3$D = { class: "d-flex-c" };
-  const _hoisted_4$y = { class: "plane-inner-bg" };
-  const _hoisted_5$r = { class: "d-flex-c" };
-  const _hoisted_6$n = { class: "d-flex-c" };
-  const _hoisted_7$i = { class: "d-flex-c" };
-  const _hoisted_8$d = { class: "d-flex-c" };
+  const _hoisted_4$z = { class: "plane-inner-bg" };
+  const _hoisted_5$t = { class: "d-flex-c" };
+  const _hoisted_6$q = { class: "d-flex-c" };
+  const _hoisted_7$l = { class: "d-flex-c" };
+  const _hoisted_8$g = { class: "d-flex-c" };
 
   function _sfc_render$Y(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_CommonColorPicker = vue.resolveComponent("CommonColorPicker");
@@ -46202,7 +46737,7 @@
                   vue.createElementVNode("div", { class: "collapse-title-common" }, " 极坐标轴 ", -1)
                 ]))]),
                 default: vue.withCtx(() => [
-                  vue.createElementVNode("div", _hoisted_4$y, [
+                  vue.createElementVNode("div", _hoisted_4$z, [
                     vue.createVNode(_component_el_form_item, { label: "半径" }, {
                       default: vue.withCtx(() => [
                         vue.createVNode(_component_el_row, {
@@ -46212,7 +46747,7 @@
                           default: vue.withCtx(() => [
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_5$r, [
+                                vue.createElementVNode("div", _hoisted_5$t, [
                                   vue.createVNode(_component_el_input_number, {
                                     modelValue: $data.form.polar.radius[0],
                                     "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.polar.radius[0]) = $event)),
@@ -46230,7 +46765,7 @@
                             }),
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_6$n, [
+                                vue.createElementVNode("div", _hoisted_6$q, [
                                   vue.createVNode(_component_el_input_number, {
                                     modelValue: $data.form.polar.radius[1],
                                     "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.polar.radius[1]) = $event)),
@@ -46261,7 +46796,7 @@
                           default: vue.withCtx(() => [
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_7$i, [
+                                vue.createElementVNode("div", _hoisted_7$l, [
                                   vue.createVNode(_component_el_input_number, {
                                     modelValue: $data.form.polar.center[0],
                                     "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form.polar.center[0]) = $event)),
@@ -46279,7 +46814,7 @@
                             }),
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_8$d, [
+                                vue.createElementVNode("div", _hoisted_8$g, [
                                   vue.createVNode(_component_el_input_number, {
                                     modelValue: $data.form.polar.center[1],
                                     "onUpdate:modelValue": _cache[10] || (_cache[10] = $event => (($data.form.polar.center[1]) = $event)),
@@ -46380,8 +46915,8 @@
   const _hoisted_1$17 = { style: {"width":"100%"} };
   const _hoisted_2$L = { class: "d-flex-c" };
   const _hoisted_3$C = { class: "d-flex-c" };
-  const _hoisted_4$x = { class: "d-flex-c" };
-  const _hoisted_5$q = { class: "d-flex-c" };
+  const _hoisted_4$y = { class: "d-flex-c" };
+  const _hoisted_5$s = { class: "d-flex-c" };
 
   function _sfc_render$X(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
@@ -46467,7 +47002,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_4$x, [
+                      vue.createElementVNode("div", _hoisted_4$y, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.viewControl.beta,
                           "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.viewControl.beta) = $event)),
@@ -46486,7 +47021,7 @@
                   }),
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_5$q, [
+                      vue.createElementVNode("div", _hoisted_5$s, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.viewControl.alpha,
                           "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.viewControl.alpha) = $event)),
@@ -46576,6 +47111,9 @@
     },
 
     computed: {
+      basicComps () { return this.componentsList.filter(n => this.configType[n] === 'basic') },
+      legendComps () { return this.componentsList.filter(n => this.configType[n] === 'legend') },
+      otherComps () { return this.componentsList.filter(n => this.configType[n] === 'other') },
       chartMenu () {
         if (this.configs.branchType === 'multiplePieChart') {
           return [{ name: '图表', key: 'basic', icon: 'icon-tuxing' }, { name: '系列', key: 'series', icon: 'icon-a-shujuyuan2' }, { name: '图例', key: 'legend', icon: 'ri-list-unordered' }, { name: '其他', key: 'other', icon: 'icon-qita' }]
@@ -46598,7 +47136,36 @@
         return itemsConfig$3.basicConfig[ele] && this.chartMenu.find(el => { return el.key === this.configType[ele] })
       });
     },
+    mounted () {
+      this.$nextTick(() => {
+        this.scrollEl = this.$refs.cfgScroll?.closest('.base-flow') || this.$refs.cfgScroll;
+        if (this.scrollEl) this.scrollEl.addEventListener('scroll', this.onCfgScroll, { passive: true });
+      });
+    },
+    beforeUnmount () {
+      if (this.scrollEl) this.scrollEl.removeEventListener('scroll', this.onCfgScroll);
+    },
     methods: {
+      scrollToSec (key) {
+        const sc = this.scrollEl;
+        const el = document.getElementById('cfgsec-' + key);
+        if (sc && el) {
+          this.activeConfig = key;
+          const top = el.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop;
+          sc.scrollTo({ top: Math.max(0, top - 8), behavior: 'smooth' });
+        }
+      },
+      onCfgScroll () {
+        const sc = this.scrollEl;
+        if (!sc) return
+        const base = sc.getBoundingClientRect().top + 24;
+        let cur = this.chartMenu[0].key;
+        for (const t of this.chartMenu) {
+          const el = document.getElementById('cfgsec-' + t.key);
+          if (el && el.getBoundingClientRect().top <= base) cur = t.key;
+        }
+        this.activeConfig = cur;
+      },
       buildChartData (type, data) {
         if (!this.configs.dataSourceConfig) {
           return
@@ -46742,22 +47309,45 @@
     }
   };
 
-  const _hoisted_1$16 = { style: {"display":"flex","flex-direction":"column","height":"100%"} };
-  const _hoisted_2$K = { class: "pie-basic-config" };
-  const _hoisted_3$B = { class: "copy-button-box" };
-  const _hoisted_4$w = { key: 0 };
-  const _hoisted_5$p = { class: "copy-button-box" };
-  const _hoisted_6$m = {
+  const _hoisted_1$16 = { class: "cfg-anchor-wrap" };
+  const _hoisted_2$K = { class: "cfg-anchor-nav" };
+  const _hoisted_3$B = ["onClick"];
+  const _hoisted_4$x = {
+    class: "pie-basic-config cfg-scroll",
+    ref: "cfgScroll"
+  };
+  const _hoisted_5$r = {
+    id: "cfgsec-basic",
+    class: "cfg-sec"
+  };
+  const _hoisted_6$p = { class: "copy-button-box" };
+  const _hoisted_7$k = { key: 0 };
+  const _hoisted_8$f = {
     key: 1,
     style: {"padding-top":"10px"}
   };
-  const _hoisted_7$h = { class: "d-flex-c" };
-  const _hoisted_8$c = { class: "d-flex-c" };
-  const _hoisted_9$c = { class: "d-flex-c" };
-  const _hoisted_10$9 = { class: "d-flex-c" };
+  const _hoisted_9$e = { class: "d-flex-c" };
+  const _hoisted_10$b = { class: "d-flex-c" };
+  const _hoisted_11$9 = { class: "d-flex-c" };
+  const _hoisted_12$7 = { class: "d-flex-c" };
+  const _hoisted_13$7 = {
+    key: 0,
+    id: "cfgsec-series",
+    class: "cfg-sec"
+  };
+  const _hoisted_14$6 = { class: "copy-button-box" };
+  const _hoisted_15$6 = {
+    key: 1,
+    id: "cfgsec-legend",
+    class: "cfg-sec"
+  };
+  const _hoisted_16$6 = {
+    key: 2,
+    id: "cfgsec-other",
+    class: "cfg-sec"
+  };
 
   function _sfc_render$W(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_SidebarTabs = vue.resolveComponent("SidebarTabs");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_ChartTypeChange = vue.resolveComponent("ChartTypeChange");
     const _component_ColorsPicker = vue.resolveComponent("ColorsPicker");
@@ -46766,11 +47356,11 @@
     const _component_el_row = vue.resolveComponent("el-row");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
     const _component_el_form = vue.resolveComponent("el-form");
-    const _component_SeriesConfig = vue.resolveComponent("SeriesConfig");
     const _component_ProgressSeriesConfig = vue.resolveComponent("ProgressSeriesConfig");
     const _component_PieSeriesConfig = vue.resolveComponent("PieSeriesConfig");
     const _component_Pie3dConfig = vue.resolveComponent("Pie3dConfig");
     const _component_ExLegendConfig = vue.resolveComponent("ExLegendConfig");
+    const _component_SeriesConfig = vue.resolveComponent("SeriesConfig");
     const _component_BKBasicChartConfig = vue.resolveComponent("BKBasicChartConfig");
 
     return (vue.openBlock(), vue.createBlock(_component_BKBasicChartConfig, vue.mergeProps({
@@ -46784,264 +47374,286 @@
     }, _ctx.$attrs, {
       onChangeBranchType: $options.changeBranchType,
       onConfigOptionInit: $options.configOptionInit,
-      onSetExpand: _cache[10] || (_cache[10] = $event => (_ctx.$emit('setExpand'))),
+      onSetExpand: _cache[9] || (_cache[9] = $event => (_ctx.$emit('setExpand'))),
       onSaveChartConfig: $options.saveChartCfg,
       onBuildChartSeriesData: $options.buildChartData
     }), {
       default: vue.withCtx(() => [
         vue.createElementVNode("div", _hoisted_1$16, [
-          vue.createVNode(_component_SidebarTabs, {
-            modelValue: $data.activeConfig,
-            "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.activeConfig) = $event)),
-            menu: $options.chartMenu
-          }, null, 8, ["modelValue", "menu"]),
           vue.createElementVNode("div", _hoisted_2$K, [
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_3$B, [
-              vue.createVNode(_component_el_button, {
-                type: "primary",
-                size: "small",
-                onClick: _cache[1] || (_cache[1] = $event => (_ctx.copyConfig('pieBasic')))
-              }, {
-                default: vue.withCtx(() => [...(_cache[11] || (_cache[11] = [
-                  vue.createTextVNode(" 复制基础配置 ", -1)
-                ]))]),
-                _: 1
-              }),
-              vue.createVNode(_component_el_button, {
-                type: "primary",
-                size: "small",
-                disabled: !$props.saveAble,
-                onClick: _cache[2] || (_cache[2] = $event => (_ctx.pasteConfig('pieBasic')))
-              }, {
-                default: vue.withCtx(() => [...(_cache[12] || (_cache[12] = [
-                  vue.createTextVNode(" 粘贴基础配置 ", -1)
-                ]))]),
-                _: 1
-              }, 8, ["disabled"])
-            ], 512), [
-              [vue.vShow, $data.activeConfig==='basic']
+            (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.chartMenu, (t) => {
+              return (vue.openBlock(), vue.createElementBlock("div", {
+                key: t.key,
+                class: vue.normalizeClass(['cfg-anchor-item', $data.activeConfig===t.key && 'is-on']),
+                onClick: $event => ($options.scrollToSec(t.key))
+              }, [
+                vue.createElementVNode("i", {
+                  class: vue.normalizeClass(["am-iconfont cfg-anchor-ic", t.icon])
+                }, null, 2),
+                vue.createElementVNode("span", null, vue.toDisplayString(t.name), 1)
+              ], 10, _hoisted_3$B))
+            }), 128))
+          ]),
+          vue.createElementVNode("div", _hoisted_4$x, [
+            vue.createElementVNode("div", _hoisted_5$r, [
+              _cache[16] || (_cache[16] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "图表", -1)),
+              vue.createElementVNode("div", _hoisted_6$p, [
+                vue.createVNode(_component_el_button, {
+                  type: "primary",
+                  size: "small",
+                  onClick: _cache[0] || (_cache[0] = $event => (_ctx.copyConfig('pieBasic')))
+                }, {
+                  default: vue.withCtx(() => [...(_cache[10] || (_cache[10] = [
+                    vue.createTextVNode(" 复制基础配置 ", -1)
+                  ]))]),
+                  _: 1
+                }),
+                vue.createVNode(_component_el_button, {
+                  type: "primary",
+                  size: "small",
+                  disabled: !$props.saveAble,
+                  onClick: _cache[1] || (_cache[1] = $event => (_ctx.pasteConfig('pieBasic')))
+                }, {
+                  default: vue.withCtx(() => [...(_cache[11] || (_cache[11] = [
+                    vue.createTextVNode(" 粘贴基础配置 ", -1)
+                  ]))]),
+                  _: 1
+                }, 8, ["disabled"])
+              ]),
+              vue.createVNode(_component_ChartTypeChange, {
+                style: {"margin-bottom":"10px"},
+                type: $props.configs.branchType,
+                onChangeType: $options.changeChartType
+              }, null, 8, ["type", "onChangeType"]),
+              (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.basicComps, (name, index) => {
+                return (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(name+'-config'), {
+                  key: 'b'+index,
+                  ref_for: true,
+                  ref: name+'form',
+                  "save-able": $props.saveAble,
+                  onChartChange: $options.getChartBasicConfigData
+                }, null, 40, ["save-able", "onChartChange"]))
+              }), 128)),
+              ($props.configs.branchType!='progressChart')
+                ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_7$k, [
+                    vue.createVNode(_component_ColorsPicker, {
+                      modelValue: $data.color,
+                      "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.color) = $event)),
+                      name: "饼图颜色",
+                      "color-list": $options.colorsList,
+                      onColorChange: $options.getChartBasicConfigData
+                    }, null, 8, ["modelValue", "color-list", "onColorChange"])
+                  ]))
+                : vue.createCommentVNode("", true),
+              ($props.configs.branchType==='ringChart2' )
+                ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_8$f, [
+                    vue.createVNode(_component_el_form, { "label-width": "80px" }, {
+                      default: vue.withCtx(() => [
+                        vue.createVNode(_component_el_form_item, { label: "饼图半径" }, {
+                          default: vue.withCtx(() => [
+                            vue.createVNode(_component_el_row, {
+                              gutter: 10,
+                              type: "flex"
+                            }, {
+                              default: vue.withCtx(() => [
+                                vue.createVNode(_component_el_col, { span: 12 }, {
+                                  default: vue.withCtx(() => [
+                                    vue.createElementVNode("div", _hoisted_9$e, [
+                                      vue.createVNode(_component_el_input_number, {
+                                        modelValue: $data.form.radius[0],
+                                        "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.radius[0]) = $event)),
+                                        size: "small",
+                                        "controls-position": "right",
+                                        class: "input-number-box-perc",
+                                        min: 0,
+                                        max: 100,
+                                        onChange: $options.getChartBasicConfigData
+                                      }, null, 8, ["modelValue", "onChange"]),
+                                      _cache[12] || (_cache[12] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 内径", -1))
+                                    ])
+                                  ]),
+                                  _: 1
+                                }),
+                                vue.createVNode(_component_el_col, { span: 12 }, {
+                                  default: vue.withCtx(() => [
+                                    vue.createElementVNode("div", _hoisted_10$b, [
+                                      vue.createVNode(_component_el_input_number, {
+                                        modelValue: $data.form.radius[1],
+                                        "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.radius[1]) = $event)),
+                                        size: "small",
+                                        "controls-position": "right",
+                                        class: "input-number-box-perc",
+                                        min: 0,
+                                        max: 100,
+                                        onChange: $options.getChartBasicConfigData
+                                      }, null, 8, ["modelValue", "onChange"]),
+                                      _cache[13] || (_cache[13] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 外径", -1))
+                                    ])
+                                  ]),
+                                  _: 1
+                                })
+                              ]),
+                              _: 1
+                            })
+                          ]),
+                          _: 1
+                        }),
+                        vue.createVNode(_component_el_form_item, { label: "中心位置" }, {
+                          default: vue.withCtx(() => [
+                            vue.createVNode(_component_el_row, {
+                              gutter: 10,
+                              type: "flex"
+                            }, {
+                              default: vue.withCtx(() => [
+                                vue.createVNode(_component_el_col, { span: 12 }, {
+                                  default: vue.withCtx(() => [
+                                    vue.createElementVNode("div", _hoisted_11$9, [
+                                      vue.createVNode(_component_el_input_number, {
+                                        modelValue: $data.form.center[0],
+                                        "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.center[0]) = $event)),
+                                        size: "small",
+                                        class: "input-number-box-perc",
+                                        "controls-position": "right",
+                                        min: 0,
+                                        max: 100,
+                                        onChange: $options.getChartBasicConfigData
+                                      }, null, 8, ["modelValue", "onChange"]),
+                                      _cache[14] || (_cache[14] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 水平", -1))
+                                    ])
+                                  ]),
+                                  _: 1
+                                }),
+                                vue.createVNode(_component_el_col, { span: 12 }, {
+                                  default: vue.withCtx(() => [
+                                    vue.createElementVNode("div", _hoisted_12$7, [
+                                      vue.createVNode(_component_el_input_number, {
+                                        modelValue: $data.form.center[1],
+                                        "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.center[1]) = $event)),
+                                        size: "small",
+                                        class: "input-number-box-perc",
+                                        "controls-position": "right",
+                                        min: 0,
+                                        max: 100,
+                                        onChange: $options.getChartBasicConfigData
+                                      }, null, 8, ["modelValue", "onChange"]),
+                                      _cache[15] || (_cache[15] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 垂直", -1))
+                                    ])
+                                  ]),
+                                  _: 1
+                                })
+                              ]),
+                              _: 1
+                            })
+                          ]),
+                          _: 1
+                        })
+                      ]),
+                      _: 1
+                    })
+                  ]))
+                : vue.createCommentVNode("", true),
+              ($props.configs.branchType==='progressChart')
+                ? (vue.openBlock(), vue.createBlock(_component_ProgressSeriesConfig, {
+                    key: 2,
+                    ref: "progressSeries",
+                    style: {"padding-top":"10px"},
+                    onPieSeriesChange: $options.getChartBasicConfigData
+                  }, null, 8, ["onPieSeriesChange"]))
+                : vue.createCommentVNode("", true),
+              ($props.configs.branchType==='ringChart'||$props.configs.branchType==='pieChart'||$props.configs.branchType==='roundPieChart'||$props.configs.branchType==='roundRingChart'||$props.configs.branchType==='carouselPieChart'||$props.configs.branchType==='petalPieChart')
+                ? (vue.openBlock(), vue.createBlock(_component_PieSeriesConfig, {
+                    key: 3,
+                    ref: "singleSeries",
+                    style: {"padding-top":"10px"},
+                    onPieSeriesChange: $options.getChartBasicConfigData
+                  }, null, 8, ["onPieSeriesChange"]))
+                : vue.createCommentVNode("", true),
+              ($props.configs.branchType==='3dPieChart')
+                ? (vue.openBlock(), vue.createBlock(_component_Pie3dConfig, {
+                    key: 4,
+                    ref: "pie3dRef",
+                    style: {"margin-top":"10px"},
+                    onChartChange: $options.getChartBasicConfigData
+                  }, null, 8, ["onChartChange"]))
+                : vue.createCommentVNode("", true),
+              ($props.configs.branchType!='progressChart')
+                ? (vue.openBlock(), vue.createBlock(_component_ExLegendConfig, {
+                    key: 5,
+                    ref: "exLegendConfig",
+                    onExLegendShowChange: $options.exLegendShowChange,
+                    onChartChange: $options.getChartBasicConfigData
+                  }, null, 8, ["onExLegendShowChange", "onChartChange"]))
+                : vue.createCommentVNode("", true)
             ]),
-            vue.withDirectives(vue.createVNode(_component_ChartTypeChange, {
-              style: {"margin-bottom":"10px"},
-              type: $props.configs.branchType,
-              onChangeType: $options.changeChartType
-            }, null, 8, ["type", "onChangeType"]), [
-              [vue.vShow, $data.activeConfig==='basic']
-            ]),
-            (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.componentsList, (name, index) => {
-              return vue.withDirectives((vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(name+'-config'), {
-                key: index,
-                ref_for: true,
-                ref: name+'form',
-                "save-able": $props.saveAble,
-                "is-expand": name==='legend',
-                onLegendShowChange: $options.legendShowChange,
-                onChartChange: $options.getChartBasicConfigData
-              }, null, 40, ["save-able", "is-expand", "onLegendShowChange", "onChartChange"])), [
-                [vue.vShow, $data.activeConfig===$data.configType[name]]
-              ])
-            }), 128)),
-            ($props.configs.branchType!='progressChart')
-              ? vue.withDirectives((vue.openBlock(), vue.createElementBlock("div", _hoisted_4$w, [
-                  vue.createVNode(_component_ColorsPicker, {
-                    modelValue: $data.color,
-                    "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.color) = $event)),
-                    name: "饼图颜色",
-                    "color-list": $options.colorsList,
-                    onColorChange: $options.getChartBasicConfigData
-                  }, null, 8, ["modelValue", "color-list", "onColorChange"])
-                ], 512)), [
-                  [vue.vShow, $data.activeConfig==='basic']
-                ])
-              : vue.createCommentVNode("", true),
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_5$p, [
-              vue.createVNode(_component_el_button, {
-                type: "primary",
-                size: "small",
-                onClick: _cache[4] || (_cache[4] = $event => (_ctx.copyConfig('pieSeries')))
-              }, {
-                default: vue.withCtx(() => [...(_cache[13] || (_cache[13] = [
-                  vue.createTextVNode(" 复制系列配置 ", -1)
-                ]))]),
-                _: 1
-              }),
-              vue.createVNode(_component_el_button, {
-                type: "primary",
-                size: "small",
-                disabled: !$props.saveAble,
-                onClick: _cache[5] || (_cache[5] = $event => (_ctx.pasteConfig('pieSeries')))
-              }, {
-                default: vue.withCtx(() => [...(_cache[14] || (_cache[14] = [
-                  vue.createTextVNode(" 粘贴系列配置 ", -1)
-                ]))]),
-                _: 1
-              }, 8, ["disabled"])
-            ], 512), [
-              [vue.vShow, $data.activeConfig==='series']
-            ]),
-            ($props.configs.branchType==='ringChart2' )
-              ? vue.withDirectives((vue.openBlock(), vue.createElementBlock("div", _hoisted_6$m, [
-                  vue.createVNode(_component_el_form, { "label-width": "80px" }, {
-                    default: vue.withCtx(() => [
-                      vue.createVNode(_component_el_form_item, { label: "饼图半径" }, {
-                        default: vue.withCtx(() => [
-                          vue.createVNode(_component_el_row, {
-                            gutter: 10,
-                            type: "flex"
-                          }, {
-                            default: vue.withCtx(() => [
-                              vue.createVNode(_component_el_col, { span: 12 }, {
-                                default: vue.withCtx(() => [
-                                  vue.createElementVNode("div", _hoisted_7$h, [
-                                    vue.createVNode(_component_el_input_number, {
-                                      modelValue: $data.form.radius[0],
-                                      "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.radius[0]) = $event)),
-                                      size: "small",
-                                      "controls-position": "right",
-                                      class: "input-number-box-perc",
-                                      min: 0,
-                                      max: 100,
-                                      onChange: $options.getChartBasicConfigData
-                                    }, null, 8, ["modelValue", "onChange"]),
-                                    _cache[15] || (_cache[15] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 内径", -1))
-                                  ])
-                                ]),
-                                _: 1
-                              }),
-                              vue.createVNode(_component_el_col, { span: 12 }, {
-                                default: vue.withCtx(() => [
-                                  vue.createElementVNode("div", _hoisted_8$c, [
-                                    vue.createVNode(_component_el_input_number, {
-                                      modelValue: $data.form.radius[1],
-                                      "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.radius[1]) = $event)),
-                                      size: "small",
-                                      "controls-position": "right",
-                                      class: "input-number-box-perc",
-                                      min: 0,
-                                      max: 100,
-                                      onChange: $options.getChartBasicConfigData
-                                    }, null, 8, ["modelValue", "onChange"]),
-                                    _cache[16] || (_cache[16] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 外径", -1))
-                                  ])
-                                ]),
-                                _: 1
-                              })
-                            ]),
-                            _: 1
-                          })
-                        ]),
-                        _: 1
-                      }),
-                      vue.createVNode(_component_el_form_item, { label: "中心位置" }, {
-                        default: vue.withCtx(() => [
-                          vue.createVNode(_component_el_row, {
-                            gutter: 10,
-                            type: "flex"
-                          }, {
-                            default: vue.withCtx(() => [
-                              vue.createVNode(_component_el_col, { span: 12 }, {
-                                default: vue.withCtx(() => [
-                                  vue.createElementVNode("div", _hoisted_9$c, [
-                                    vue.createVNode(_component_el_input_number, {
-                                      modelValue: $data.form.center[0],
-                                      "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form.center[0]) = $event)),
-                                      size: "small",
-                                      class: "input-number-box-perc",
-                                      "controls-position": "right",
-                                      min: 0,
-                                      max: 100,
-                                      onChange: $options.getChartBasicConfigData
-                                    }, null, 8, ["modelValue", "onChange"]),
-                                    _cache[17] || (_cache[17] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 水平", -1))
-                                  ])
-                                ]),
-                                _: 1
-                              }),
-                              vue.createVNode(_component_el_col, { span: 12 }, {
-                                default: vue.withCtx(() => [
-                                  vue.createElementVNode("div", _hoisted_10$9, [
-                                    vue.createVNode(_component_el_input_number, {
-                                      modelValue: $data.form.center[1],
-                                      "onUpdate:modelValue": _cache[9] || (_cache[9] = $event => (($data.form.center[1]) = $event)),
-                                      size: "small",
-                                      class: "input-number-box-perc",
-                                      "controls-position": "right",
-                                      min: 0,
-                                      max: 100,
-                                      onChange: $options.getChartBasicConfigData
-                                    }, null, 8, ["modelValue", "onChange"]),
-                                    _cache[18] || (_cache[18] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 垂直", -1))
-                                  ])
-                                ]),
-                                _: 1
-                              })
-                            ]),
-                            _: 1
-                          })
-                        ]),
-                        _: 1
-                      })
-                    ]),
-                    _: 1
-                  })
-                ], 512)), [
-                  [vue.vShow, $data.activeConfig==='basic']
-                ])
-              : vue.createCommentVNode("", true),
             ($props.configs.branchType==='multiplePieChart')
-              ? vue.withDirectives((vue.openBlock(), vue.createBlock(_component_SeriesConfig, {
-                  key: 2,
-                  ref: "seriesConfigRef",
-                  style: {"padding-top":"10px"},
-                  onChartChange: $options.getChartBasicConfigData
-                }, null, 8, ["onChartChange"])), [
-                  [vue.vShow, $data.activeConfig==='series']
-                ])
+              ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_13$7, [
+                  _cache[19] || (_cache[19] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "系列", -1)),
+                  vue.createElementVNode("div", _hoisted_14$6, [
+                    vue.createVNode(_component_el_button, {
+                      type: "primary",
+                      size: "small",
+                      onClick: _cache[7] || (_cache[7] = $event => (_ctx.copyConfig('pieSeries')))
+                    }, {
+                      default: vue.withCtx(() => [...(_cache[17] || (_cache[17] = [
+                        vue.createTextVNode(" 复制系列配置 ", -1)
+                      ]))]),
+                      _: 1
+                    }),
+                    vue.createVNode(_component_el_button, {
+                      type: "primary",
+                      size: "small",
+                      disabled: !$props.saveAble,
+                      onClick: _cache[8] || (_cache[8] = $event => (_ctx.pasteConfig('pieSeries')))
+                    }, {
+                      default: vue.withCtx(() => [...(_cache[18] || (_cache[18] = [
+                        vue.createTextVNode(" 粘贴系列配置 ", -1)
+                      ]))]),
+                      _: 1
+                    }, 8, ["disabled"])
+                  ]),
+                  vue.createVNode(_component_SeriesConfig, {
+                    ref: "seriesConfigRef",
+                    onChartChange: $options.getChartBasicConfigData
+                  }, null, 8, ["onChartChange"])
+                ]))
               : vue.createCommentVNode("", true),
-            ($props.configs.branchType==='progressChart')
-              ? vue.withDirectives((vue.openBlock(), vue.createBlock(_component_ProgressSeriesConfig, {
-                  key: 3,
-                  ref: "progressSeries",
-                  style: {"padding-top":"10px"},
-                  onPieSeriesChange: $options.getChartBasicConfigData
-                }, null, 8, ["onPieSeriesChange"])), [
-                  [vue.vShow, $data.activeConfig==='basic']
-                ])
+            ($options.legendComps.length)
+              ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_15$6, [
+                  _cache[20] || (_cache[20] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "图例", -1)),
+                  (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.legendComps, (name, index) => {
+                    return (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(name+'-config'), {
+                      key: 'l'+index,
+                      ref_for: true,
+                      ref: name+'form',
+                      "save-able": $props.saveAble,
+                      "is-expand": true,
+                      onLegendShowChange: $options.legendShowChange,
+                      onChartChange: $options.getChartBasicConfigData
+                    }, null, 40, ["save-able", "onLegendShowChange", "onChartChange"]))
+                  }), 128))
+                ]))
               : vue.createCommentVNode("", true),
-            ($props.configs.branchType==='ringChart'||$props.configs.branchType==='pieChart'||$props.configs.branchType==='roundPieChart'||$props.configs.branchType==='roundRingChart')
-              ? vue.withDirectives((vue.openBlock(), vue.createBlock(_component_PieSeriesConfig, {
-                  key: 4,
-                  ref: "singleSeries",
-                  style: {"padding-top":"10px"},
-                  onPieSeriesChange: $options.getChartBasicConfigData
-                }, null, 8, ["onPieSeriesChange"])), [
-                  [vue.vShow, $data.activeConfig==='basic']
-                ])
-              : vue.createCommentVNode("", true),
-            ($props.configs.branchType==='3dPieChart')
-              ? vue.withDirectives((vue.openBlock(), vue.createBlock(_component_Pie3dConfig, {
-                  key: 5,
-                  ref: "pie3dRef",
-                  style: {"margin-top":"10px"},
-                  onChartChange: $options.getChartBasicConfigData
-                }, null, 8, ["onChartChange"])), [
-                  [vue.vShow, $data.activeConfig==='basic']
-                ])
-              : vue.createCommentVNode("", true),
-            vue.withDirectives(vue.createVNode(_component_ExLegendConfig, {
-              ref: "exLegendConfig",
-              onExLegendShowChange: $options.exLegendShowChange,
-              onChartChange: $options.getChartBasicConfigData
-            }, null, 8, ["onExLegendShowChange", "onChartChange"]), [
-              [vue.vShow, $data.activeConfig==='basic'&&$props.configs.branchType!='progressChart']
-            ])
-          ])
+            ($options.otherComps.length)
+              ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_16$6, [
+                  _cache[21] || (_cache[21] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "其他", -1)),
+                  (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.otherComps, (name, index) => {
+                    return (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(name+'-config'), {
+                      key: 'o'+index,
+                      ref_for: true,
+                      ref: name+'form',
+                      "save-able": $props.saveAble,
+                      onChartChange: $options.getChartBasicConfigData
+                    }, null, 40, ["save-able", "onChartChange"]))
+                  }), 128))
+                ]))
+              : vue.createCommentVNode("", true)
+          ], 512)
         ])
       ]),
       _: 1
     }, 16, ["configs", "page-config", "save-able", "items", "rules", "tjb-u-r-l", "onChangeBranchType", "onConfigOptionInit", "onSaveChartConfig", "onBuildChartSeriesData"]))
   }
-  const PieChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$X, [['render',_sfc_render$W],['__scopeId',"data-v-fd683836"]]);
+  const PieChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$X, [['render',_sfc_render$W],['__scopeId',"data-v-719c4d39"]]);
 
   PieChartConfig.install = function (Vue) {
     Vue.component(libPrefix + PieChartConfig.name, PieChartConfig);
@@ -47602,16 +48214,16 @@
   const _hoisted_1$14 = { class: "d-flex-c" };
   const _hoisted_2$I = { class: "d-flex-c" };
   const _hoisted_3$A = { class: "d-flex-c" };
-  const _hoisted_4$v = { class: "d-flex-c" };
-  const _hoisted_5$o = { class: "d-flex el-form-item" };
-  const _hoisted_6$l = { style: {"width":"80px"} };
-  const _hoisted_7$g = { style: {"flex":"1"} };
-  const _hoisted_8$b = { class: "d-flex-c" };
-  const _hoisted_9$b = { class: "d-flex-c" };
-  const _hoisted_10$8 = { class: "d-flex-c" };
-  const _hoisted_11$5 = { class: "d-flex" };
-  const _hoisted_12$4 = { style: {"width":"80px"} };
-  const _hoisted_13$4 = { class: "d-flex-c" };
+  const _hoisted_4$w = { class: "d-flex-c" };
+  const _hoisted_5$q = { class: "d-flex el-form-item" };
+  const _hoisted_6$o = { style: {"width":"80px"} };
+  const _hoisted_7$j = { style: {"flex":"1"} };
+  const _hoisted_8$e = { class: "d-flex-c" };
+  const _hoisted_9$d = { class: "d-flex-c" };
+  const _hoisted_10$a = { class: "d-flex-c" };
+  const _hoisted_11$8 = { class: "d-flex" };
+  const _hoisted_12$6 = { style: {"width":"80px"} };
+  const _hoisted_13$6 = { class: "d-flex-c" };
 
   function _sfc_render$U(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_input_number = vue.resolveComponent("el-input-number");
@@ -47726,7 +48338,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$v, [
+                    vue.createElementVNode("div", _hoisted_4$w, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.lineStyle.color,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.lineStyle.color) = $event)),
@@ -47743,8 +48355,8 @@
           ]),
           _: 1
         }),
-        vue.createElementVNode("div", _hoisted_5$o, [
-          vue.createElementVNode("div", _hoisted_6$l, [
+        vue.createElementVNode("div", _hoisted_5$q, [
+          vue.createElementVNode("div", _hoisted_6$o, [
             vue.createVNode(_component_el_switch, {
               modelValue: $data.form.showSymbol,
               "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.showSymbol) = $event)),
@@ -47755,7 +48367,7 @@
             }, null, 8, ["modelValue", "onChange"]),
             _cache[19] || (_cache[19] = vue.createElementVNode("span", { class: "chart-config-title" }, " 圆点 ", -1))
           ]),
-          vue.createElementVNode("div", _hoisted_7$g, [
+          vue.createElementVNode("div", _hoisted_7$j, [
             vue.createVNode(_component_el_row, {
               gutter: 10,
               type: "flex"
@@ -47763,7 +48375,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_8$b, [
+                    vue.createElementVNode("div", _hoisted_8$e, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.symbolSize,
                         "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.symbolSize) = $event)),
@@ -47779,7 +48391,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_9$b, [
+                    vue.createElementVNode("div", _hoisted_9$d, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.itemStyle.color,
                         "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.itemStyle.color) = $event)),
@@ -47800,7 +48412,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_10$8, [
+                    vue.createElementVNode("div", _hoisted_10$a, [
                       vue.createVNode(_component_el_select, {
                         modelValue: $data.form.symbol,
                         "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form.symbol) = $event)),
@@ -47829,8 +48441,8 @@
             })
           ])
         ]),
-        vue.createElementVNode("div", _hoisted_11$5, [
-          vue.createElementVNode("div", _hoisted_12$4, [
+        vue.createElementVNode("div", _hoisted_11$8, [
+          vue.createElementVNode("div", _hoisted_12$6, [
             vue.createVNode(_component_el_switch, {
               modelValue: $data.isArea,
               "onUpdate:modelValue": _cache[9] || (_cache[9] = $event => (($data.isArea) = $event)),
@@ -47855,7 +48467,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_13$4, [
+                      vue.createElementVNode("div", _hoisted_13$6, [
                         vue.createVNode(_component_CommonColorPicker, {
                           modelValue: $data.form.areaColor,
                           "onUpdate:modelValue": _cache[11] || (_cache[11] = $event => (($data.form.areaColor) = $event)),
@@ -47927,6 +48539,7 @@
         show: [],
         seriesList: [],
         autoSeries: false,
+        smoothAll: false,
         filterDataEmpty: false,
         symbolOptions: [{ label: '默认', value: '' }, { label: '空', value: 'none' }, { label: '空心圆环', value: 'emptyCircle' }, { label: '圆点', value: 'circle' }, { label: '方形', value: 'rect' }, { label: '圆角方形', value: 'roundRect' }, { label: '三角形', value: 'triangle' }, { label: '菱形', value: 'diamond' }, { label: '箭头', value: 'arrow' }]
       }
@@ -47934,6 +48547,12 @@
     computed: {
       saveAble () {
         return this.getSaveAble()
+      },
+      // 是否折线类图表(用于显示「平滑曲线」总开关):已知折线 branchType 或存在 line 系列
+      isLineChart () {
+        const LINE = ['lineChart', 'smoothLineChart', 'markLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap', 'mixChart'];
+        if (LINE.includes(this.branchType)) return true
+        return this.seriesList.some(s => s?.basic?.type === 'line')
       }
     },
     watch: {
@@ -47954,6 +48573,13 @@
           form.lineSeries = { ...ele };
           return form
         });
+        // 「平滑曲线」总开关初值:任一 line 系列已开平滑则勾选
+        this.smoothAll = this.seriesList.some(s => s.basic.type === 'line' && s.lineSeries && s.lineSeries.smooth);
+      },
+      // 「平滑曲线」总开关:对所有系列的折线配置统一设置 smooth(自生成系列取 series[0] 作模板,同样生效)
+      toggleSmoothAll (val) {
+        this.seriesList = this.seriesList.map(s => ({ ...s, lineSeries: { ...s.lineSeries, smooth: val } }));
+        this.$emit('chartChange');
       },
       setFilterDataEmpty (e) {
         this.filterDataEmpty = e;
@@ -48035,19 +48661,23 @@
   const _hoisted_1$13 = { class: "full-box" };
   const _hoisted_2$H = { style: {"width":"100px","margin-bottom":"10px"} };
   const _hoisted_3$z = { style: {"width":"100px"} };
-  const _hoisted_4$u = {
+  const _hoisted_4$v = {
+    key: 0,
+    style: {"width":"100px","margin-top":"10px"}
+  };
+  const _hoisted_5$p = {
     class: "d-flex",
     style: {"margin-bottom":"10px"}
   };
-  const _hoisted_5$n = { style: {"width":"80px"} };
-  const _hoisted_6$k = { class: "d-flex-c" };
-  const _hoisted_7$f = {
+  const _hoisted_6$n = { style: {"width":"80px"} };
+  const _hoisted_7$i = { class: "d-flex-c" };
+  const _hoisted_8$d = {
     key: 4,
     class: "d-flex"
   };
-  const _hoisted_8$a = { style: {"width":"80px"} };
-  const _hoisted_9$a = { class: "d-flex-c" };
-  const _hoisted_10$7 = { class: "d-flex-c" };
+  const _hoisted_9$c = { style: {"width":"80px"} };
+  const _hoisted_10$9 = { class: "d-flex-c" };
+  const _hoisted_11$7 = { class: "d-flex-c" };
 
   function _sfc_render$T(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
@@ -48075,7 +48705,7 @@
           onClick: _cache[1] || (_cache[1] = vue.withModifiers(() => {}, ["stop","prevent"])),
           onChange: _cache[2] || (_cache[2] = $event => (_ctx.$emit('chartChange')))
         }, null, 8, ["modelValue", "disabled"]),
-        _cache[16] || (_cache[16] = vue.createElementVNode("span", { class: "chart-config-title" }, " 无数据列过滤 ", -1))
+        _cache[18] || (_cache[18] = vue.createElementVNode("span", { class: "chart-config-title" }, " 无数据列过滤 ", -1))
       ]),
       vue.createElementVNode("div", _hoisted_3$z, [
         vue.createVNode(_component_el_switch, {
@@ -48087,14 +48717,28 @@
           onClick: _cache[4] || (_cache[4] = vue.withModifiers(() => {}, ["stop","prevent"])),
           onChange: _cache[5] || (_cache[5] = $event => (_ctx.$emit('chartChange')))
         }, null, 8, ["modelValue", "disabled"]),
-        _cache[17] || (_cache[17] = vue.createElementVNode("span", { class: "chart-config-title" }, " 自生成系列", -1))
+        _cache[19] || (_cache[19] = vue.createElementVNode("span", { class: "chart-config-title" }, " 自生成系列", -1))
       ]),
+      ($options.isLineChart)
+        ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_4$v, [
+            vue.createVNode(_component_el_switch, {
+              modelValue: $data.smoothAll,
+              "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.smoothAll) = $event)),
+              disabled: !$options.saveAble,
+              class: "am-switch active-switch",
+              size: "small",
+              onClick: _cache[7] || (_cache[7] = vue.withModifiers(() => {}, ["stop","prevent"])),
+              onChange: $options.toggleSmoothAll
+            }, null, 8, ["modelValue", "disabled", "onChange"]),
+            _cache[20] || (_cache[20] = vue.createElementVNode("span", { class: "chart-config-title" }, " 平滑曲线", -1))
+          ]))
+        : vue.createCommentVNode("", true),
       vue.createVNode(_component_SeriesPlane, {
         name: "数据系列",
         "series-list": $data.seriesList,
         onDelSeries: $options.delSeries,
         onCopySeries: $options.copySeries,
-        onSeriesChange: _cache[15] || (_cache[15] = $event => (_ctx.$emit('chartChange'))),
+        onSeriesChange: _cache[17] || (_cache[17] = $event => (_ctx.$emit('chartChange'))),
         onAddSeries: $options.addSeries
       }, {
         title: vue.withCtx(({index}) => [
@@ -48161,7 +48805,7 @@
                         "onUpdate:modelValue": $event => ((series.barSeries.itemStyle.color) = $event),
                         size: "small",
                         "color-modes": ['monochrome', 'linear-gradient'],
-                        onChange: _cache[6] || (_cache[6] = $event => (_ctx.$emit('chartChange')))
+                        onChange: _cache[8] || (_cache[8] = $event => (_ctx.$emit('chartChange')))
                       }, null, 8, ["modelValue", "onUpdate:modelValue"])
                     ]),
                     _: 2
@@ -48177,7 +48821,7 @@
                         modelValue: series.barSeries.stack,
                         "onUpdate:modelValue": $event => ((series.barSeries.stack) = $event),
                         size: "small",
-                        onChange: _cache[7] || (_cache[7] = $event => (_ctx.$emit('chartChange')))
+                        onChange: _cache[9] || (_cache[9] = $event => (_ctx.$emit('chartChange')))
                       }, null, 8, ["modelValue", "onUpdate:modelValue"])
                     ]),
                     _: 2
@@ -48197,13 +48841,13 @@
                       }, {
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_el_radio_button, { value: "bar" }, {
-                            default: vue.withCtx(() => [...(_cache[18] || (_cache[18] = [
+                            default: vue.withCtx(() => [...(_cache[21] || (_cache[21] = [
                               vue.createTextVNode(" 柱体 ", -1)
                             ]))]),
                             _: 1
                           }),
                           vue.createVNode(_component_el_radio_button, { value: "line" }, {
-                            default: vue.withCtx(() => [...(_cache[19] || (_cache[19] = [
+                            default: vue.withCtx(() => [...(_cache[22] || (_cache[22] = [
                               vue.createTextVNode(" 折线 ", -1)
                             ]))]),
                             _: 1
@@ -48215,17 +48859,17 @@
                     _: 2
                   }, 1024))
                 : vue.createCommentVNode("", true),
-              vue.createElementVNode("div", _hoisted_4$u, [
-                vue.createElementVNode("div", _hoisted_5$n, [
+              vue.createElementVNode("div", _hoisted_5$p, [
+                vue.createElementVNode("div", _hoisted_6$n, [
                   vue.createVNode(_component_el_switch, {
                     modelValue: series.basic.legendConfig.show,
                     "onUpdate:modelValue": $event => ((series.basic.legendConfig.show) = $event),
                     size: "small",
                     disabled: !$options.saveAble,
                     class: "am-switch active-switch",
-                    onChange: _cache[8] || (_cache[8] = $event => (_ctx.$emit('chartChange')))
+                    onChange: _cache[10] || (_cache[10] = $event => (_ctx.$emit('chartChange')))
                   }, null, 8, ["modelValue", "onUpdate:modelValue", "disabled"]),
-                  _cache[20] || (_cache[20] = vue.createElementVNode("span", { class: "chart-config-title" }, " 图例 ", -1))
+                  _cache[23] || (_cache[23] = vue.createElementVNode("span", { class: "chart-config-title" }, " 图例 ", -1))
                 ]),
                 vue.createVNode(_component_el_form, {
                   size: "small",
@@ -48241,14 +48885,14 @@
                       default: vue.withCtx(() => [
                         vue.createVNode(_component_el_col, { span: 12 }, {
                           default: vue.withCtx(() => [
-                            vue.createElementVNode("div", _hoisted_6$k, [
+                            vue.createElementVNode("div", _hoisted_7$i, [
                               vue.createVNode(_component_el_select, {
                                 modelValue: series.basic.legendConfig.icon,
                                 "onUpdate:modelValue": $event => ((series.basic.legendConfig.icon) = $event),
                                 clearable: "",
                                 placeholder: "请选择",
                                 size: "small",
-                                onChange: _cache[9] || (_cache[9] = $event => (_ctx.$emit('chartChange')))
+                                onChange: _cache[11] || (_cache[11] = $event => (_ctx.$emit('chartChange')))
                               }, {
                                 default: vue.withCtx(() => [
                                   (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.symbolOptions, (item) => {
@@ -48261,7 +48905,7 @@
                                 ]),
                                 _: 1
                               }, 8, ["modelValue", "onUpdate:modelValue"]),
-                              _cache[21] || (_cache[21] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 图形", -1))
+                              _cache[24] || (_cache[24] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 图形", -1))
                             ])
                           ]),
                           _: 2
@@ -48285,24 +48929,24 @@
                         size: "small",
                         "controls-position": "right",
                         class: "input-number-box-px",
-                        onChange: _cache[10] || (_cache[10] = $event => (_ctx.$emit('chartChange')))
+                        onChange: _cache[12] || (_cache[12] = $event => (_ctx.$emit('chartChange')))
                       }, null, 8, ["modelValue", "onUpdate:modelValue"])
                     ]),
                     _: 2
                   }, 1024))
                 : vue.createCommentVNode("", true),
               (series.basic.type!=='line')
-                ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_7$f, [
-                    vue.createElementVNode("div", _hoisted_8$a, [
+                ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_8$d, [
+                    vue.createElementVNode("div", _hoisted_9$c, [
                       vue.createVNode(_component_el_switch, {
                         modelValue: series.barSeries.showBackground,
                         "onUpdate:modelValue": $event => ((series.barSeries.showBackground) = $event),
                         class: "am-switch active-switch",
                         size: "small",
-                        onClick: _cache[11] || (_cache[11] = vue.withModifiers(() => {}, ["stop","prevent"])),
-                        onChange: _cache[12] || (_cache[12] = $event => (_ctx.$emit('chartChange')))
+                        onClick: _cache[13] || (_cache[13] = vue.withModifiers(() => {}, ["stop","prevent"])),
+                        onChange: _cache[14] || (_cache[14] = $event => (_ctx.$emit('chartChange')))
                       }, null, 8, ["modelValue", "onUpdate:modelValue"]),
-                      _cache[22] || (_cache[22] = vue.createElementVNode("span", { class: "chart-config-title" }, " 背景色 ", -1))
+                      _cache[25] || (_cache[25] = vue.createElementVNode("span", { class: "chart-config-title" }, " 背景色 ", -1))
                     ]),
                     vue.createVNode(_component_el_form, {
                       size: "small",
@@ -48318,20 +48962,20 @@
                           default: vue.withCtx(() => [
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_9$a, [
+                                vue.createElementVNode("div", _hoisted_10$9, [
                                   vue.createVNode(_component_CommonColorPicker, {
                                     modelValue: series.barSeries.backgroundStyle.color ,
                                     "onUpdate:modelValue": $event => ((series.barSeries.backgroundStyle.color ) = $event),
-                                    onChange: _cache[13] || (_cache[13] = $event => (_ctx.$emit('chartChange')))
+                                    onChange: _cache[15] || (_cache[15] = $event => (_ctx.$emit('chartChange')))
                                   }, null, 8, ["modelValue", "onUpdate:modelValue"]),
-                                  _cache[23] || (_cache[23] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 颜色", -1))
+                                  _cache[26] || (_cache[26] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 颜色", -1))
                                 ])
                               ]),
                               _: 2
                             }, 1024),
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_10$7, [
+                                vue.createElementVNode("div", _hoisted_11$7, [
                                   vue.createVNode(_component_el_input_number, {
                                     modelValue: series.barSeries.backgroundStyle.opacity,
                                     "onUpdate:modelValue": $event => ((series.barSeries.backgroundStyle.opacity) = $event),
@@ -48341,9 +48985,9 @@
                                     "controls-position": "right",
                                     precision: 2,
                                     class: "input-number-box",
-                                    onChange: _cache[14] || (_cache[14] = $event => (_ctx.$emit('chartChange')))
+                                    onChange: _cache[16] || (_cache[16] = $event => (_ctx.$emit('chartChange')))
                                   }, null, 8, ["modelValue", "onUpdate:modelValue"]),
-                                  _cache[24] || (_cache[24] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 透明度", -1))
+                                  _cache[27] || (_cache[27] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 透明度", -1))
                                 ])
                               ]),
                               _: 2
@@ -48371,7 +49015,7 @@
       }, 8, ["series-list", "onDelSeries", "onCopySeries", "onAddSeries"])
     ]))
   }
-  const barSeriesConfig$1 = /*#__PURE__*/_export_sfc(_sfc_main$U, [['render',_sfc_render$T],['__scopeId',"data-v-764285cc"]]);
+  const barSeriesConfig$1 = /*#__PURE__*/_export_sfc(_sfc_main$U, [['render',_sfc_render$T],['__scopeId',"data-v-2bc16933"]]);
 
   /* unplugin-vue-components disabled */
 
@@ -48420,11 +49064,15 @@
         showBorderRadius: false,
         borderRadius: [0, 0, 0, 0],
         activeConfig: 'basic',
+        scrollContainer: null,
         configType: { grid: 'basic', legend: 'basic', axis: 'axis', tooltip: 'other' },
         chartMenu: [{ name: '图表', key: 'basic', icon: 'icon-tuxing' }, { name: '坐标轴', key: 'axis', icon: 'icon-zuobiao' }, { name: '系列', key: 'series', icon: 'icon-a-shujuyuan2' }, { name: '其他', key: 'other', icon: 'icon-qita' }]
       }
     },
     computed: {
+      basicComps () { return this.componentsList.filter(n => this.configType[n] === 'basic') },
+      axisComps () { return this.componentsList.filter(n => this.configType[n] === 'axis') },
+      otherComps () { return this.componentsList.filter(n => this.configType[n] === 'other') },
       colorsList () {
         let list = [];
         if (this.pageConfig?.themeConfigs?.chartStyle?.themeStyle.colorList) {
@@ -48438,7 +49086,39 @@
         return itemsConfig$2.basicConfig[ele]
       });
     },
+    mounted () {
+      this.$nextTick(() => {
+        // 真正的滚动容器是外层 .base-flow(BKBasicChartConfig 的单容器)
+        this.scrollEl = this.$refs.cfgScroll?.closest('.base-flow') || this.$refs.cfgScroll;
+        if (this.scrollEl) this.scrollEl.addEventListener('scroll', this.onCfgScroll, { passive: true });
+      });
+    },
+    beforeUnmount () {
+      if (this.scrollEl) this.scrollEl.removeEventListener('scroll', this.onCfgScroll);
+    },
     methods: {
+      // 点击左侧锚点:平滑滚动到对应模块
+      scrollToSec (key) {
+        const sc = this.scrollEl;
+        const el = document.getElementById('cfgsec-' + key);
+        if (sc && el) {
+          this.activeConfig = key;
+          const top = el.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop;
+          sc.scrollTo({ top: Math.max(0, top - 8), behavior: 'smooth' });
+        }
+      },
+      // 滚动时:高亮当前所在模块的锚点
+      onCfgScroll () {
+        const sc = this.scrollEl;
+        if (!sc) return
+        const base = sc.getBoundingClientRect().top + 24;
+        let cur = this.chartMenu[0].key;
+        for (const t of this.chartMenu) {
+          const el = document.getElementById('cfgsec-' + t.key);
+          if (el && el.getBoundingClientRect().top <= base) cur = t.key;
+        }
+        this.activeConfig = cur;
+      },
       buildChartData (type, data) {
         if (!this.configs.dataSourceConfig || !data) {
           return
@@ -48579,22 +49259,44 @@
     }
   };
 
-  const _hoisted_1$12 = { style: {"display":"flex","flex-direction":"column","height":"100%"} };
-  const _hoisted_2$G = { class: "bar-basic-config" };
-  const _hoisted_3$y = { class: "copy-button-box" };
-  const _hoisted_4$t = {
+  const _hoisted_1$12 = { class: "cfg-anchor-wrap" };
+  const _hoisted_2$G = { class: "cfg-anchor-nav" };
+  const _hoisted_3$y = ["onClick"];
+  const _hoisted_4$u = {
+    class: "bar-basic-config cfg-scroll",
+    ref: "cfgScroll"
+  };
+  const _hoisted_5$o = {
+    id: "cfgsec-basic",
+    class: "cfg-sec"
+  };
+  const _hoisted_6$m = { class: "copy-button-box" };
+  const _hoisted_7$h = {
     class: "plane-inner-bg",
     style: {"margin-bottom":"10px"}
   };
-  const _hoisted_5$m = { class: "d-flex-c" };
-  const _hoisted_6$j = { class: "d-flex-c" };
-  const _hoisted_7$e = { class: "d-flex-c" };
-  const _hoisted_8$9 = { class: "d-flex-c" };
-  const _hoisted_9$9 = { style: {"margin-top":"10px"} };
-  const _hoisted_10$6 = { class: "copy-button-box" };
+  const _hoisted_8$c = { class: "d-flex-c" };
+  const _hoisted_9$b = { class: "d-flex-c" };
+  const _hoisted_10$8 = { class: "d-flex-c" };
+  const _hoisted_11$6 = { class: "d-flex-c" };
+  const _hoisted_12$5 = { style: {"margin-top":"10px"} };
+  const _hoisted_13$5 = {
+    key: 0,
+    id: "cfgsec-axis",
+    class: "cfg-sec"
+  };
+  const _hoisted_14$5 = {
+    id: "cfgsec-series",
+    class: "cfg-sec"
+  };
+  const _hoisted_15$5 = { class: "copy-button-box" };
+  const _hoisted_16$5 = {
+    key: 1,
+    id: "cfgsec-other",
+    class: "cfg-sec"
+  };
 
   function _sfc_render$S(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_SidebarTabs = vue.resolveComponent("SidebarTabs");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_ChartTypeChange = vue.resolveComponent("ChartTypeChange");
     const _component_el_input_number = vue.resolveComponent("el-input-number");
@@ -48617,226 +49319,260 @@
       "tjb-u-r-l": $props.tjbURL
     }, _ctx.$attrs, {
       onChangeBranchType: $options.changeBranchType,
-      onSetExpand: _cache[11] || (_cache[11] = $event => (_ctx.$emit('setExpand'))),
+      onSetExpand: _cache[10] || (_cache[10] = $event => (_ctx.$emit('setExpand'))),
       onSaveChartConfig: $options.saveChartCfg,
       onConfigOptionInit: $options.configOptionInit,
       onBuildChartSeriesData: $options.buildChartData
     }), {
       default: vue.withCtx(() => [
         vue.createElementVNode("div", _hoisted_1$12, [
-          vue.createVNode(_component_SidebarTabs, {
-            modelValue: $data.activeConfig,
-            "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.activeConfig) = $event)),
-            menu: $data.chartMenu
-          }, null, 8, ["modelValue", "menu"]),
           vue.createElementVNode("div", _hoisted_2$G, [
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_3$y, [
-              vue.createVNode(_component_el_button, {
-                type: "primary",
-                size: "small",
-                class: "copy_pasted_button",
-                onClick: _cache[1] || (_cache[1] = $event => (_ctx.copyConfig('barBasic')))
-              }, {
-                default: vue.withCtx(() => [...(_cache[12] || (_cache[12] = [
-                  vue.createTextVNode(" 复制基础配置 ", -1)
-                ]))]),
-                _: 1
-              }),
-              vue.createVNode(_component_el_button, {
-                type: "primary",
-                size: "small",
-                disabled: !$props.saveAble,
-                onClick: _cache[2] || (_cache[2] = $event => (_ctx.pasteConfig('barBasic')))
-              }, {
-                default: vue.withCtx(() => [...(_cache[13] || (_cache[13] = [
-                  vue.createTextVNode(" 粘贴基础配置 ", -1)
-                ]))]),
-                _: 1
-              }, 8, ["disabled"])
-            ], 512), [
-              [vue.vShow, $data.activeConfig==='basic']
-            ]),
-            vue.withDirectives(vue.createVNode(_component_ChartTypeChange, {
-              style: {"margin-bottom":"10px"},
-              type: $props.configs.branchType,
-              onChangeType: $options.changeChartType
-            }, null, 8, ["type", "onChangeType"]), [
-              [vue.vShow, $data.activeConfig==='basic']
-            ]),
-            (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.componentsList, (name, index) => {
-              return vue.withDirectives((vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(name+'-config'), {
-                key: index,
-                ref_for: true,
-                ref: name+'form',
-                "save-able": $props.saveAble,
-                "series-length": $data.seriesList.length||0,
-                onChartChange: $options.getChartBasicConfigData
-              }, null, 40, ["save-able", "series-length", "onChartChange"])), [
-                [vue.vShow, $data.activeConfig===$data.configType[name]]
-              ])
-            }), 128)),
-            vue.withDirectives(vue.createVNode(_component_CollapseItem, {
-              modelValue: $data.showBorderRadius,
-              "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.showBorderRadius) = $event)),
-              name: "柱图样式",
-              onChange: $options.getChartBasicConfigData
-            }, {
-              default: vue.withCtx(() => [
-                vue.createElementVNode("div", _hoisted_4$t, [
-                  vue.createVNode(_component_el_form, {
-                    disabled: !$props.saveAble,
-                    "label-width": "90px"
+            (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.chartMenu, (t) => {
+              return (vue.openBlock(), vue.createElementBlock("div", {
+                key: t.key,
+                class: vue.normalizeClass(['cfg-anchor-item', $data.activeConfig===t.key && 'is-on']),
+                onClick: $event => ($options.scrollToSec(t.key))
+              }, [
+                vue.createElementVNode("i", {
+                  class: vue.normalizeClass(["am-iconfont cfg-anchor-ic", t.icon])
+                }, null, 2),
+                vue.createElementVNode("span", null, vue.toDisplayString(t.name), 1)
+              ], 10, _hoisted_3$y))
+            }), 128))
+          ]),
+          vue.createElementVNode("div", _hoisted_4$u, [
+            vue.createElementVNode("div", _hoisted_5$o, [
+              _cache[17] || (_cache[17] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "图表", -1)),
+              vue.createElementVNode("div", _hoisted_6$m, [
+                vue.createVNode(_component_el_button, {
+                  type: "primary",
+                  size: "small",
+                  class: "copy_pasted_button",
+                  onClick: _cache[0] || (_cache[0] = $event => (_ctx.copyConfig('barBasic')))
+                }, {
+                  default: vue.withCtx(() => [...(_cache[11] || (_cache[11] = [
+                    vue.createTextVNode(" 复制基础配置 ", -1)
+                  ]))]),
+                  _: 1
+                }),
+                vue.createVNode(_component_el_button, {
+                  type: "primary",
+                  size: "small",
+                  disabled: !$props.saveAble,
+                  onClick: _cache[1] || (_cache[1] = $event => (_ctx.pasteConfig('barBasic')))
+                }, {
+                  default: vue.withCtx(() => [...(_cache[12] || (_cache[12] = [
+                    vue.createTextVNode(" 粘贴基础配置 ", -1)
+                  ]))]),
+                  _: 1
+                }, 8, ["disabled"])
+              ]),
+              vue.createVNode(_component_ChartTypeChange, {
+                style: {"margin-bottom":"10px"},
+                type: $props.configs.branchType,
+                onChangeType: $options.changeChartType
+              }, null, 8, ["type", "onChangeType"]),
+              (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.basicComps, (name, index) => {
+                return (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(name+'-config'), {
+                  key: 'b'+index,
+                  ref_for: true,
+                  ref: name+'form',
+                  "save-able": $props.saveAble,
+                  "series-length": $data.seriesList.length||0,
+                  onChartChange: $options.getChartBasicConfigData
+                }, null, 40, ["save-able", "series-length", "onChartChange"]))
+              }), 128)),
+              ($props.configs.branchType!=='stackedChart')
+                ? (vue.openBlock(), vue.createBlock(_component_CollapseItem, {
+                    key: 0,
+                    modelValue: $data.showBorderRadius,
+                    "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.showBorderRadius) = $event)),
+                    name: "柱图样式",
+                    onChange: $options.getChartBasicConfigData
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_el_form_item, { label: "柱体圆角" }, {
-                        default: vue.withCtx(() => [
-                          vue.createVNode(_component_el_row, {
-                            gutter: 10,
-                            type: "flex"
-                          }, {
-                            default: vue.withCtx(() => [
-                              vue.createVNode(_component_el_col, { span: 12 }, {
-                                default: vue.withCtx(() => [
-                                  vue.createElementVNode("div", _hoisted_5$m, [
-                                    vue.createVNode(_component_el_input_number, {
-                                      modelValue: $data.borderRadius[0],
-                                      "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.borderRadius[0]) = $event)),
-                                      size: "small",
-                                      "controls-position": "right",
-                                      class: "input-number-box-px",
-                                      onChange: $options.getChartBasicConfigData
-                                    }, null, 8, ["modelValue", "onChange"]),
-                                    _cache[14] || (_cache[14] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 左上", -1))
-                                  ])
-                                ]),
-                                _: 1
-                              }),
-                              vue.createVNode(_component_el_col, { span: 12 }, {
-                                default: vue.withCtx(() => [
-                                  vue.createElementVNode("div", _hoisted_6$j, [
-                                    vue.createVNode(_component_el_input_number, {
-                                      modelValue: $data.borderRadius[1],
-                                      "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.borderRadius[1]) = $event)),
-                                      size: "small",
-                                      "controls-position": "right",
-                                      class: "input-number-box-px",
-                                      onChange: $options.getChartBasicConfigData
-                                    }, null, 8, ["modelValue", "onChange"]),
-                                    _cache[15] || (_cache[15] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 右上", -1))
-                                  ])
-                                ]),
-                                _: 1
-                              })
-                            ]),
-                            _: 1
-                          }),
-                          vue.createVNode(_component_el_row, {
-                            gutter: 10,
-                            type: "flex"
-                          }, {
-                            default: vue.withCtx(() => [
-                              vue.createVNode(_component_el_col, { span: 12 }, {
-                                default: vue.withCtx(() => [
-                                  vue.createElementVNode("div", _hoisted_7$e, [
-                                    vue.createVNode(_component_el_input_number, {
-                                      modelValue: $data.borderRadius[2],
-                                      "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.borderRadius[2]) = $event)),
-                                      size: "small",
-                                      "controls-position": "right",
-                                      class: "input-number-box-px",
-                                      onChange: $options.getChartBasicConfigData
-                                    }, null, 8, ["modelValue", "onChange"]),
-                                    _cache[16] || (_cache[16] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 右下", -1))
-                                  ])
-                                ]),
-                                _: 1
-                              }),
-                              vue.createVNode(_component_el_col, { span: 12 }, {
-                                default: vue.withCtx(() => [
-                                  vue.createElementVNode("div", _hoisted_8$9, [
-                                    vue.createVNode(_component_el_input_number, {
-                                      modelValue: $data.borderRadius[3],
-                                      "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.borderRadius[3]) = $event)),
-                                      size: "small",
-                                      "controls-position": "right",
-                                      class: "input-number-box-px",
-                                      onChange: $options.getChartBasicConfigData
-                                    }, null, 8, ["modelValue", "onChange"]),
-                                    _cache[17] || (_cache[17] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 左下", -1))
-                                  ])
-                                ]),
-                                _: 1
-                              })
-                            ]),
-                            _: 1
-                          })
-                        ]),
-                        _: 1
-                      })
+                      vue.createElementVNode("div", _hoisted_7$h, [
+                        vue.createVNode(_component_el_form, {
+                          disabled: !$props.saveAble,
+                          "label-width": "90px"
+                        }, {
+                          default: vue.withCtx(() => [
+                            vue.createVNode(_component_el_form_item, { label: "柱体圆角" }, {
+                              default: vue.withCtx(() => [
+                                vue.createVNode(_component_el_row, {
+                                  gutter: 10,
+                                  type: "flex"
+                                }, {
+                                  default: vue.withCtx(() => [
+                                    vue.createVNode(_component_el_col, { span: 12 }, {
+                                      default: vue.withCtx(() => [
+                                        vue.createElementVNode("div", _hoisted_8$c, [
+                                          vue.createVNode(_component_el_input_number, {
+                                            modelValue: $data.borderRadius[0],
+                                            "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.borderRadius[0]) = $event)),
+                                            size: "small",
+                                            "controls-position": "right",
+                                            class: "input-number-box-px",
+                                            onChange: $options.getChartBasicConfigData
+                                          }, null, 8, ["modelValue", "onChange"]),
+                                          _cache[13] || (_cache[13] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 左上", -1))
+                                        ])
+                                      ]),
+                                      _: 1
+                                    }),
+                                    vue.createVNode(_component_el_col, { span: 12 }, {
+                                      default: vue.withCtx(() => [
+                                        vue.createElementVNode("div", _hoisted_9$b, [
+                                          vue.createVNode(_component_el_input_number, {
+                                            modelValue: $data.borderRadius[1],
+                                            "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.borderRadius[1]) = $event)),
+                                            size: "small",
+                                            "controls-position": "right",
+                                            class: "input-number-box-px",
+                                            onChange: $options.getChartBasicConfigData
+                                          }, null, 8, ["modelValue", "onChange"]),
+                                          _cache[14] || (_cache[14] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 右上", -1))
+                                        ])
+                                      ]),
+                                      _: 1
+                                    })
+                                  ]),
+                                  _: 1
+                                }),
+                                vue.createVNode(_component_el_row, {
+                                  gutter: 10,
+                                  type: "flex"
+                                }, {
+                                  default: vue.withCtx(() => [
+                                    vue.createVNode(_component_el_col, { span: 12 }, {
+                                      default: vue.withCtx(() => [
+                                        vue.createElementVNode("div", _hoisted_10$8, [
+                                          vue.createVNode(_component_el_input_number, {
+                                            modelValue: $data.borderRadius[2],
+                                            "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.borderRadius[2]) = $event)),
+                                            size: "small",
+                                            "controls-position": "right",
+                                            class: "input-number-box-px",
+                                            onChange: $options.getChartBasicConfigData
+                                          }, null, 8, ["modelValue", "onChange"]),
+                                          _cache[15] || (_cache[15] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 右下", -1))
+                                        ])
+                                      ]),
+                                      _: 1
+                                    }),
+                                    vue.createVNode(_component_el_col, { span: 12 }, {
+                                      default: vue.withCtx(() => [
+                                        vue.createElementVNode("div", _hoisted_11$6, [
+                                          vue.createVNode(_component_el_input_number, {
+                                            modelValue: $data.borderRadius[3],
+                                            "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.borderRadius[3]) = $event)),
+                                            size: "small",
+                                            "controls-position": "right",
+                                            class: "input-number-box-px",
+                                            onChange: $options.getChartBasicConfigData
+                                          }, null, 8, ["modelValue", "onChange"]),
+                                          _cache[16] || (_cache[16] = vue.createElementVNode("span", { class: "extra-bottom-text" }, " 左下", -1))
+                                        ])
+                                      ]),
+                                      _: 1
+                                    })
+                                  ]),
+                                  _: 1
+                                })
+                              ]),
+                              _: 1
+                            })
+                          ]),
+                          _: 1
+                        }, 8, ["disabled"])
+                      ])
                     ]),
                     _: 1
-                  }, 8, ["disabled"])
-                ])
+                  }, 8, ["modelValue", "onChange"]))
+                : vue.createCommentVNode("", true),
+              vue.createElementVNode("div", _hoisted_12$5, [
+                vue.createVNode(_component_ColorsPicker, {
+                  modelValue: $data.colorList,
+                  "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.colorList) = $event)),
+                  "color-modes":  $props.configs.branchType==='barLineargradientChart'?['linear-gradient']:['monochrome'],
+                  name: " 色系配置",
+                  "color-list": $options.colorsList,
+                  onColorChange: $options.colorsChange
+                }, null, 8, ["modelValue", "color-modes", "color-list", "onColorChange"])
+              ])
+            ]),
+            ($options.axisComps.length)
+              ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_13$5, [
+                  _cache[18] || (_cache[18] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "坐标轴", -1)),
+                  (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.axisComps, (name, index) => {
+                    return (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(name+'-config'), {
+                      key: 'a'+index,
+                      ref_for: true,
+                      ref: name+'form',
+                      "save-able": $props.saveAble,
+                      "series-length": $data.seriesList.length||0,
+                      onChartChange: $options.getChartBasicConfigData
+                    }, null, 40, ["save-able", "series-length", "onChartChange"]))
+                  }), 128))
+                ]))
+              : vue.createCommentVNode("", true),
+            vue.createElementVNode("div", _hoisted_14$5, [
+              _cache[21] || (_cache[21] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "系列", -1)),
+              vue.createElementVNode("div", _hoisted_15$5, [
+                vue.createVNode(_component_el_button, {
+                  type: "primary",
+                  size: "small",
+                  onClick: _cache[8] || (_cache[8] = $event => (_ctx.copyConfig('barSeries')))
+                }, {
+                  default: vue.withCtx(() => [...(_cache[19] || (_cache[19] = [
+                    vue.createTextVNode(" 复制系列配置 ", -1)
+                  ]))]),
+                  _: 1
+                }),
+                vue.createVNode(_component_el_button, {
+                  type: "primary",
+                  size: "small",
+                  disabled: !$props.saveAble,
+                  onClick: _cache[9] || (_cache[9] = $event => (_ctx.pasteConfig('barSeries')))
+                }, {
+                  default: vue.withCtx(() => [...(_cache[20] || (_cache[20] = [
+                    vue.createTextVNode(" 粘贴系列配置 ", -1)
+                  ]))]),
+                  _: 1
+                }, 8, ["disabled"])
               ]),
-              _: 1
-            }, 8, ["modelValue", "onChange"]), [
-              [vue.vShow, $data.activeConfig==='basic'&&$props.configs.branchType!=='stackedChart']
+              vue.createVNode(_component_barSeriesConfig, {
+                ref: "seriesConfigRef",
+                "save-able": $props.saveAble,
+                "color-list": $data.colorList,
+                "series-length": $data.seriesList.length||0,
+                "branch-type": $props.configs.branchType,
+                type: $props.configs.type,
+                onChartChange: $options.getChartBasicConfigData
+              }, null, 8, ["save-able", "color-list", "series-length", "branch-type", "type", "onChartChange"])
             ]),
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_9$9, [
-              vue.createVNode(_component_ColorsPicker, {
-                modelValue: $data.colorList,
-                "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.colorList) = $event)),
-                "color-modes":  $props.configs.branchType==='barLineargradientChart'?['linear-gradient']:['monochrome'],
-                name: " 色系配置",
-                "color-list": $options.colorsList,
-                onColorChange: $options.colorsChange
-              }, null, 8, ["modelValue", "color-modes", "color-list", "onColorChange"])
-            ], 512), [
-              [vue.vShow, $data.activeConfig==='basic']
-            ]),
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_10$6, [
-              vue.createVNode(_component_el_button, {
-                type: "primary",
-                size: "small",
-                onClick: _cache[9] || (_cache[9] = $event => (_ctx.copyConfig('barSeries')))
-              }, {
-                default: vue.withCtx(() => [...(_cache[18] || (_cache[18] = [
-                  vue.createTextVNode(" 复制系列配置 ", -1)
-                ]))]),
-                _: 1
-              }),
-              vue.createVNode(_component_el_button, {
-                type: "primary",
-                size: "small",
-                disabled: !$props.saveAble,
-                onClick: _cache[10] || (_cache[10] = $event => (_ctx.pasteConfig('barSeries')))
-              }, {
-                default: vue.withCtx(() => [...(_cache[19] || (_cache[19] = [
-                  vue.createTextVNode(" 粘贴系列配置 ", -1)
-                ]))]),
-                _: 1
-              }, 8, ["disabled"])
-            ], 512), [
-              [vue.vShow, $data.activeConfig==='series']
-            ]),
-            vue.withDirectives(vue.createVNode(_component_barSeriesConfig, {
-              ref: "seriesConfigRef",
-              "save-able": $props.saveAble,
-              "color-list": $data.colorList,
-              "series-length": $data.seriesList.length||0,
-              "branch-type": $props.configs.branchType,
-              type: $props.configs.type,
-              onChartChange: $options.getChartBasicConfigData
-            }, null, 8, ["save-able", "color-list", "series-length", "branch-type", "type", "onChartChange"]), [
-              [vue.vShow, $data.activeConfig==='series']
-            ])
-          ])
+            ($options.otherComps.length)
+              ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_16$5, [
+                  _cache[22] || (_cache[22] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "其他", -1)),
+                  (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.otherComps, (name, index) => {
+                    return (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(name+'-config'), {
+                      key: 'o'+index,
+                      ref_for: true,
+                      ref: name+'form',
+                      "save-able": $props.saveAble,
+                      "series-length": $data.seriesList.length||0,
+                      onChartChange: $options.getChartBasicConfigData
+                    }, null, 40, ["save-able", "series-length", "onChartChange"]))
+                  }), 128))
+                ]))
+              : vue.createCommentVNode("", true)
+          ], 512)
         ])
       ]),
       _: 1
     }, 16, ["configs", "page-config", "save-able", "items", "rules", "tjb-u-r-l", "onChangeBranchType", "onSaveChartConfig", "onConfigOptionInit", "onBuildChartSeriesData"]))
   }
-  const BarChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$T, [['render',_sfc_render$S],['__scopeId',"data-v-a9e4d8d3"]]);
+  const BarChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$T, [['render',_sfc_render$S],['__scopeId',"data-v-5f4c17b5"]]);
 
   BarChartConfig.install = function (Vue) {
     Vue.component(libPrefix + BarChartConfig.name, BarChartConfig);
@@ -49247,6 +49983,9 @@
       }
     },
     computed: {
+      basicComps () { return this.componentsList.filter(n => this.configType[n] === 'basic') },
+      axisComps () { return this.componentsList.filter(n => this.configType[n] === 'axis') },
+      otherComps () { return this.componentsList.filter(n => this.configType[n] === 'other') },
       colorsList () {
         let list = [];
         if (this.pageConfig?.themeConfigs?.chartStyle?.themeStyle.colorList) {
@@ -49260,7 +49999,36 @@
         return itemsConfig$1.basicConfig[ele]
       });
     },
+    mounted () {
+      this.$nextTick(() => {
+        this.scrollEl = this.$refs.cfgScroll?.closest('.base-flow') || this.$refs.cfgScroll;
+        if (this.scrollEl) this.scrollEl.addEventListener('scroll', this.onCfgScroll, { passive: true });
+      });
+    },
+    beforeUnmount () {
+      if (this.scrollEl) this.scrollEl.removeEventListener('scroll', this.onCfgScroll);
+    },
     methods: {
+      scrollToSec (key) {
+        const sc = this.scrollEl;
+        const el = document.getElementById('cfgsec-' + key);
+        if (sc && el) {
+          this.activeConfig = key;
+          const top = el.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop;
+          sc.scrollTo({ top: Math.max(0, top - 8), behavior: 'smooth' });
+        }
+      },
+      onCfgScroll () {
+        const sc = this.scrollEl;
+        if (!sc) return
+        const base = sc.getBoundingClientRect().top + 24;
+        let cur = this.chartMenu[0].key;
+        for (const t of this.chartMenu) {
+          const el = document.getElementById('cfgsec-' + t.key);
+          if (el && el.getBoundingClientRect().top <= base) cur = t.key;
+        }
+        this.activeConfig = cur;
+      },
       buildChartData (type, data) {
         if (!this.configs.dataSourceConfig || !data) {
           return
@@ -49373,14 +50141,36 @@
     }
   };
 
-  const _hoisted_1$$ = { style: {"display":"flex","flex-direction":"column","height":"100%"} };
-  const _hoisted_2$E = { class: "polar-basic-config" };
-  const _hoisted_3$x = { class: "copy-button-box" };
-  const _hoisted_4$s = { style: {"margin-top":"10px"} };
-  const _hoisted_5$l = { class: "copy-button-box" };
+  const _hoisted_1$$ = { class: "cfg-anchor-wrap" };
+  const _hoisted_2$E = { class: "cfg-anchor-nav" };
+  const _hoisted_3$x = ["onClick"];
+  const _hoisted_4$t = {
+    class: "polar-basic-config cfg-scroll",
+    ref: "cfgScroll"
+  };
+  const _hoisted_5$n = {
+    id: "cfgsec-basic",
+    class: "cfg-sec"
+  };
+  const _hoisted_6$l = { class: "copy-button-box" };
+  const _hoisted_7$g = { style: {"margin-top":"10px"} };
+  const _hoisted_8$b = {
+    key: 0,
+    id: "cfgsec-axis",
+    class: "cfg-sec"
+  };
+  const _hoisted_9$a = {
+    id: "cfgsec-series",
+    class: "cfg-sec"
+  };
+  const _hoisted_10$7 = { class: "copy-button-box" };
+  const _hoisted_11$5 = {
+    key: 1,
+    id: "cfgsec-other",
+    class: "cfg-sec"
+  };
 
   function _sfc_render$P(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_SidebarTabs = vue.resolveComponent("SidebarTabs");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_ChartTypeChange = vue.resolveComponent("ChartTypeChange");
     const _component_ColorsPicker = vue.resolveComponent("ColorsPicker");
@@ -49397,118 +50187,151 @@
       "tjb-u-r-l": $props.tjbURL
     }, _ctx.$attrs, {
       onChangeBranchType: $options.changeBranchType,
-      onSetExpand: _cache[6] || (_cache[6] = $event => (_ctx.$emit('setExpand'))),
+      onSetExpand: _cache[5] || (_cache[5] = $event => (_ctx.$emit('setExpand'))),
       onSaveChartConfig: $options.saveChartCfg,
       onConfigOptionInit: $options.configOptionInit,
       onBuildChartSeriesData: $options.buildChartData
     }), {
       default: vue.withCtx(() => [
         vue.createElementVNode("div", _hoisted_1$$, [
-          vue.createVNode(_component_SidebarTabs, {
-            modelValue: $data.activeConfig,
-            "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.activeConfig) = $event)),
-            menu: $data.chartMenu
-          }, null, 8, ["modelValue", "menu"]),
           vue.createElementVNode("div", _hoisted_2$E, [
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_3$x, [
-              vue.createVNode(_component_el_button, {
-                type: "primary",
-                size: "small",
-                class: "copy_pasted_button",
-                onClick: _cache[1] || (_cache[1] = $event => (_ctx.copyConfig('polarBasic')))
-              }, {
-                default: vue.withCtx(() => [...(_cache[7] || (_cache[7] = [
-                  vue.createTextVNode(" 复制基础配置 ", -1)
-                ]))]),
-                _: 1
-              }),
-              vue.createVNode(_component_el_button, {
-                type: "primary",
-                size: "small",
-                disabled: !$props.saveAble,
-                onClick: _cache[2] || (_cache[2] = $event => (_ctx.pasteConfig('polarBasic')))
-              }, {
-                default: vue.withCtx(() => [...(_cache[8] || (_cache[8] = [
-                  vue.createTextVNode(" 粘贴基础配置 ", -1)
-                ]))]),
-                _: 1
-              }, 8, ["disabled"])
-            ], 512), [
-              [vue.vShow, $data.activeConfig==='basic']
-            ]),
-            vue.withDirectives(vue.createVNode(_component_ChartTypeChange, {
-              style: {"margin-bottom":"10px"},
-              type: $props.configs.branchType,
-              onChangeType: $options.changeChartType
-            }, null, 8, ["type", "onChangeType"]), [
-              [vue.vShow, $data.activeConfig==='basic']
-            ]),
-            (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.componentsList, (name, index) => {
-              return vue.withDirectives((vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(name+'-config'), {
-                key: index,
-                ref_for: true,
-                ref: name+'form',
-                "save-able": $props.saveAble,
-                "series-length": $data.seriesList.length||0,
-                onChartChange: $options.getChartBasicConfigData
-              }, null, 40, ["save-able", "series-length", "onChartChange"])), [
-                [vue.vShow, $data.activeConfig===$data.configType[name]]
+            (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.chartMenu, (t) => {
+              return (vue.openBlock(), vue.createElementBlock("div", {
+                key: t.key,
+                class: vue.normalizeClass(['cfg-anchor-item', $data.activeConfig===t.key && 'is-on']),
+                onClick: $event => ($options.scrollToSec(t.key))
+              }, [
+                vue.createElementVNode("i", {
+                  class: vue.normalizeClass(["am-iconfont cfg-anchor-ic", t.icon])
+                }, null, 2),
+                vue.createElementVNode("span", null, vue.toDisplayString(t.name), 1)
+              ], 10, _hoisted_3$x))
+            }), 128))
+          ]),
+          vue.createElementVNode("div", _hoisted_4$t, [
+            vue.createElementVNode("div", _hoisted_5$n, [
+              _cache[8] || (_cache[8] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "图表", -1)),
+              vue.createElementVNode("div", _hoisted_6$l, [
+                vue.createVNode(_component_el_button, {
+                  type: "primary",
+                  size: "small",
+                  class: "copy_pasted_button",
+                  onClick: _cache[0] || (_cache[0] = $event => (_ctx.copyConfig('polarBasic')))
+                }, {
+                  default: vue.withCtx(() => [...(_cache[6] || (_cache[6] = [
+                    vue.createTextVNode(" 复制基础配置 ", -1)
+                  ]))]),
+                  _: 1
+                }),
+                vue.createVNode(_component_el_button, {
+                  type: "primary",
+                  size: "small",
+                  disabled: !$props.saveAble,
+                  onClick: _cache[1] || (_cache[1] = $event => (_ctx.pasteConfig('polarBasic')))
+                }, {
+                  default: vue.withCtx(() => [...(_cache[7] || (_cache[7] = [
+                    vue.createTextVNode(" 粘贴基础配置 ", -1)
+                  ]))]),
+                  _: 1
+                }, 8, ["disabled"])
+              ]),
+              vue.createVNode(_component_ChartTypeChange, {
+                style: {"margin-bottom":"10px"},
+                type: $props.configs.branchType,
+                onChangeType: $options.changeChartType
+              }, null, 8, ["type", "onChangeType"]),
+              (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.basicComps, (name, index) => {
+                return (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(name+'-config'), {
+                  key: 'b'+index,
+                  ref_for: true,
+                  ref: name+'form',
+                  "save-able": $props.saveAble,
+                  "series-length": $data.seriesList.length||0,
+                  onChartChange: $options.getChartBasicConfigData
+                }, null, 40, ["save-able", "series-length", "onChartChange"]))
+              }), 128)),
+              vue.createElementVNode("div", _hoisted_7$g, [
+                vue.createVNode(_component_ColorsPicker, {
+                  modelValue: $data.colorList,
+                  "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.colorList) = $event)),
+                  name: " 色系配置",
+                  "color-list": $options.colorsList,
+                  onColorChange: $options.colorsChange
+                }, null, 8, ["modelValue", "color-list", "onColorChange"])
               ])
-            }), 128)),
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_4$s, [
-              vue.createVNode(_component_ColorsPicker, {
-                modelValue: $data.colorList,
-                "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.colorList) = $event)),
-                name: " 色系配置",
-                "color-list": $options.colorsList,
-                onColorChange: $options.colorsChange
-              }, null, 8, ["modelValue", "color-list", "onColorChange"])
-            ], 512), [
-              [vue.vShow, $data.activeConfig==='basic']
             ]),
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_5$l, [
-              vue.createVNode(_component_el_button, {
-                type: "primary",
-                size: "small",
-                onClick: _cache[4] || (_cache[4] = $event => (_ctx.copyConfig('polarSeries')))
-              }, {
-                default: vue.withCtx(() => [...(_cache[9] || (_cache[9] = [
-                  vue.createTextVNode(" 复制系列配置 ", -1)
-                ]))]),
-                _: 1
-              }),
-              vue.createVNode(_component_el_button, {
-                type: "primary",
-                size: "small",
-                disabled: !$props.saveAble,
-                onClick: _cache[5] || (_cache[5] = $event => (_ctx.pasteConfig('polarSeries')))
-              }, {
-                default: vue.withCtx(() => [...(_cache[10] || (_cache[10] = [
-                  vue.createTextVNode(" 粘贴系列配置 ", -1)
-                ]))]),
-                _: 1
-              }, 8, ["disabled"])
-            ], 512), [
-              [vue.vShow, $data.activeConfig==='series']
+            ($options.axisComps.length)
+              ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_8$b, [
+                  _cache[9] || (_cache[9] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "坐标轴", -1)),
+                  (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.axisComps, (name, index) => {
+                    return (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(name+'-config'), {
+                      key: 'a'+index,
+                      ref_for: true,
+                      ref: name+'form',
+                      "save-able": $props.saveAble,
+                      "series-length": $data.seriesList.length||0,
+                      onChartChange: $options.getChartBasicConfigData
+                    }, null, 40, ["save-able", "series-length", "onChartChange"]))
+                  }), 128))
+                ]))
+              : vue.createCommentVNode("", true),
+            vue.createElementVNode("div", _hoisted_9$a, [
+              _cache[12] || (_cache[12] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "系列", -1)),
+              vue.createElementVNode("div", _hoisted_10$7, [
+                vue.createVNode(_component_el_button, {
+                  type: "primary",
+                  size: "small",
+                  onClick: _cache[3] || (_cache[3] = $event => (_ctx.copyConfig('polarSeries')))
+                }, {
+                  default: vue.withCtx(() => [...(_cache[10] || (_cache[10] = [
+                    vue.createTextVNode(" 复制系列配置 ", -1)
+                  ]))]),
+                  _: 1
+                }),
+                vue.createVNode(_component_el_button, {
+                  type: "primary",
+                  size: "small",
+                  disabled: !$props.saveAble,
+                  onClick: _cache[4] || (_cache[4] = $event => (_ctx.pasteConfig('polarSeries')))
+                }, {
+                  default: vue.withCtx(() => [...(_cache[11] || (_cache[11] = [
+                    vue.createTextVNode(" 粘贴系列配置 ", -1)
+                  ]))]),
+                  _: 1
+                }, 8, ["disabled"])
+              ]),
+              vue.createVNode(_component_barSeriesConfig, {
+                ref: "seriesConfigRef",
+                "save-able": $props.saveAble,
+                "color-list": $data.colorList,
+                "series-length": $data.seriesList.length||0,
+                "branch-type": $props.configs.branchType,
+                type: $props.configs.type,
+                onChartChange: $options.getChartBasicConfigData
+              }, null, 8, ["save-able", "color-list", "series-length", "branch-type", "type", "onChartChange"])
             ]),
-            vue.withDirectives(vue.createVNode(_component_barSeriesConfig, {
-              ref: "seriesConfigRef",
-              "save-able": $props.saveAble,
-              "color-list": $data.colorList,
-              "series-length": $data.seriesList.length||0,
-              "branch-type": $props.configs.branchType,
-              type: $props.configs.type,
-              onChartChange: $options.getChartBasicConfigData
-            }, null, 8, ["save-able", "color-list", "series-length", "branch-type", "type", "onChartChange"]), [
-              [vue.vShow, $data.activeConfig==='series']
-            ])
-          ])
+            ($options.otherComps.length)
+              ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_11$5, [
+                  _cache[13] || (_cache[13] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "其他", -1)),
+                  (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.otherComps, (name, index) => {
+                    return (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(name+'-config'), {
+                      key: 'o'+index,
+                      ref_for: true,
+                      ref: name+'form',
+                      "save-able": $props.saveAble,
+                      "series-length": $data.seriesList.length||0,
+                      onChartChange: $options.getChartBasicConfigData
+                    }, null, 40, ["save-able", "series-length", "onChartChange"]))
+                  }), 128))
+                ]))
+              : vue.createCommentVNode("", true)
+          ], 512)
         ])
       ]),
       _: 1
     }, 16, ["configs", "page-config", "save-able", "items", "rules", "tjb-u-r-l", "onChangeBranchType", "onSaveChartConfig", "onConfigOptionInit", "onBuildChartSeriesData"]))
   }
-  const PolarChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$Q, [['render',_sfc_render$P],['__scopeId',"data-v-3dafb80c"]]);
+  const PolarChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$Q, [['render',_sfc_render$P],['__scopeId',"data-v-7f2431fb"]]);
 
   PolarChartConfig.install = function (Vue) {
     Vue.component(libPrefix + PolarChartConfig.name, PolarChartConfig);
@@ -75729,6 +76552,10 @@
 
               }
             }
+            // 数据自带经纬度时,散点直接落在该经纬度(用于逐点实例散点,如测站坐标)
+            if (ele.lng != null && ele.lat != null && !isNaN(Number(ele.lng)) && !isNaN(Number(ele.lat))) {
+              return { name: ele.name, value: [Number(ele.lng), Number(ele.lat)].concat(value), originData: ele }
+            }
             if (ele.code) {
               const form = this.areaList.find(item => { return item.adcode.toString() === ele.code });
               return { name: form?.name || ele.name, value: [form?.lng, form?.lat].concat(value), originData: ele }
@@ -75739,6 +76566,30 @@
           });
           if (option.scatterSeries?.length) {
             option.scatterSeries[0].data = scatterList;
+            // 数值有差异时,散点大小随数值缩放(6~26);全相同则保持预设固定大小
+            const vals = scatterList.map(p => Number(p.value && p.value[2])).filter(v => !isNaN(v));
+            const mn = Math.min(...vals);
+            const mx = Math.max(...vals);
+            if (vals.length && mx > mn) {
+              option.scatterSeries[0].symbolSize = (val) => {
+                const v = Number(Array.isArray(val) ? val[2] : val);
+                if (isNaN(v)) return 8
+                return 6 + ((v - mn) / (mx - mn)) * 20
+              };
+              // 颜色随数值:浅蓝 → 深蓝(与大小一起双编码)
+              const lerp = (a, b, t) => {
+                const pa = [parseInt(a.slice(1, 3), 16), parseInt(a.slice(3, 5), 16), parseInt(a.slice(5, 7), 16)];
+                const pb = [parseInt(b.slice(1, 3), 16), parseInt(b.slice(3, 5), 16), parseInt(b.slice(5, 7), 16)];
+                const c = pa.map((x, i) => Math.round(x + (pb[i] - x) * t));
+                return `rgb(${c[0]},${c[1]},${c[2]})`
+              };
+              option.scatterSeries[0].itemStyle = { ...(option.scatterSeries[0].itemStyle || {}) };
+              option.scatterSeries[0].itemStyle.color = (params) => {
+                const v = Number(params.value && params.value[2]);
+                if (isNaN(v)) return '#5b9bff'
+                return lerp('#a8c8ff', '#0b4bd6', (v - mn) / (mx - mn))
+              };
+            }
             option.scatterSeries.forEach(ele => {
               ele.emphasis.disabled = !ele.emphasis.show;
               ele.select.disabled = !ele.select.show;
@@ -75880,7 +76731,7 @@
       vue.createElementVNode("a", _hoisted_3$w, null, 512)
     ], 512))
   }
-  const MapChart = /*#__PURE__*/_export_sfc(_sfc_main$P, [['render',_sfc_render$O],['__scopeId',"data-v-0ab883cb"]]);
+  const MapChart = /*#__PURE__*/_export_sfc(_sfc_main$P, [['render',_sfc_render$O],['__scopeId',"data-v-e3cab6bf"]]);
 
   MapChart.install = function (Vue) {
     Vue.component(libPrefix + MapChart.name, MapChart);
@@ -76010,18 +76861,18 @@
   const _hoisted_1$Z = { style: {"width":"100%"} };
   const _hoisted_2$C = { class: "d-flex-c" };
   const _hoisted_3$v = { class: "d-flex-c" };
-  const _hoisted_4$r = {
+  const _hoisted_4$s = {
     class: "axis-item-title",
     style: {"display":"inline-block","width":"90px","padding-left":"20px","text-align":"left"}
   };
-  const _hoisted_5$k = {
+  const _hoisted_5$m = {
     class: "series-header flex-between",
     style: {"width":"100%"}
   };
-  const _hoisted_6$i = { style: {"display":"inline-block","width":"90px","padding-left":"20px","text-align":"left"} };
-  const _hoisted_7$d = { class: "d-flex-c" };
-  const _hoisted_8$8 = { class: "d-flex-c" };
-  const _hoisted_9$8 = { class: "d-flex-c" };
+  const _hoisted_6$k = { style: {"display":"inline-block","width":"90px","padding-left":"20px","text-align":"left"} };
+  const _hoisted_7$f = { class: "d-flex-c" };
+  const _hoisted_8$a = { class: "d-flex-c" };
+  const _hoisted_9$9 = { class: "d-flex-c" };
 
   function _sfc_render$N(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
@@ -76170,7 +77021,7 @@
               vue.createVNode(_component_el_collapse_item, { name: "1" }, {
                 title: vue.withCtx(() => [
                   vue.createElementVNode("div", null, [
-                    vue.createElementVNode("span", _hoisted_4$r, [
+                    vue.createElementVNode("span", _hoisted_4$s, [
                       _cache[19] || (_cache[19] = vue.createTextVNode(" 区间 ", -1)),
                       vue.withDirectives(vue.createVNode(_component_el_button, {
                         size: "small",
@@ -76200,8 +77051,8 @@
                       (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.piecewiseForm.pieces, (ele, index) => {
                         return (vue.openBlock(), vue.createBlock(_component_el_collapse_item, { key: index }, {
                           title: vue.withCtx(() => [
-                            vue.createElementVNode("div", _hoisted_5$k, [
-                              vue.createElementVNode("span", _hoisted_6$i, "区间" + vue.toDisplayString(index + 1), 1),
+                            vue.createElementVNode("div", _hoisted_5$m, [
+                              vue.createElementVNode("span", _hoisted_6$k, "区间" + vue.toDisplayString(index + 1), 1),
                               vue.createElementVNode("div", null, [
                                 vue.createVNode(_component_el_button, {
                                   size: "small",
@@ -76242,7 +77093,7 @@
                               default: vue.withCtx(() => [
                                 vue.createVNode(_component_el_col, { span: 12 }, {
                                   default: vue.withCtx(() => [
-                                    vue.createElementVNode("div", _hoisted_7$d, [
+                                    vue.createElementVNode("div", _hoisted_7$f, [
                                       vue.createVNode(_component_el_input_number, {
                                         modelValue: ele.gt,
                                         "onUpdate:modelValue": $event => ((ele.gt) = $event),
@@ -76257,7 +77108,7 @@
                                 }, 1024),
                                 vue.createVNode(_component_el_col, { span: 12 }, {
                                   default: vue.withCtx(() => [
-                                    vue.createElementVNode("div", _hoisted_8$8, [
+                                    vue.createElementVNode("div", _hoisted_8$a, [
                                       vue.createVNode(_component_el_input_number, {
                                         modelValue: ele.lte,
                                         "onUpdate:modelValue": $event => ((ele.lte) = $event),
@@ -76280,7 +77131,7 @@
                               default: vue.withCtx(() => [
                                 vue.createVNode(_component_el_col, { span: 12 }, {
                                   default: vue.withCtx(() => [
-                                    vue.createElementVNode("div", _hoisted_9$8, [
+                                    vue.createElementVNode("div", _hoisted_9$9, [
                                       vue.createVNode(_component_CommonColorPicker, {
                                         modelValue: ele.color,
                                         "onUpdate:modelValue": $event => ((ele.color) = $event),
@@ -76502,20 +77353,20 @@
   const _hoisted_1$Y = { style: {"width":"100%"} };
   const _hoisted_2$B = { class: "plane-inner-bg" };
   const _hoisted_3$u = { style: {"width":"80px","margin-bottom":"10px"} };
-  const _hoisted_4$q = { class: "d-flex" };
-  const _hoisted_5$j = { style: {"width":"80px"} };
-  const _hoisted_6$h = { class: "d-flex-c" };
-  const _hoisted_7$c = { class: "d-flex-c" };
-  const _hoisted_8$7 = { class: "d-flex-c" };
-  const _hoisted_9$7 = { class: "plane-inner-bg" };
-  const _hoisted_10$5 = { class: "d-flex" };
+  const _hoisted_4$r = { class: "d-flex" };
+  const _hoisted_5$l = { style: {"width":"80px"} };
+  const _hoisted_6$j = { class: "d-flex-c" };
+  const _hoisted_7$e = { class: "d-flex-c" };
+  const _hoisted_8$9 = { class: "d-flex-c" };
+  const _hoisted_9$8 = { class: "plane-inner-bg" };
+  const _hoisted_10$6 = { class: "d-flex" };
   const _hoisted_11$4 = { style: {"width":"80px"} };
-  const _hoisted_12$3 = { class: "d-flex-c" };
-  const _hoisted_13$3 = { class: "d-flex-c" };
-  const _hoisted_14$3 = { class: "d-flex-c" };
-  const _hoisted_15$3 = { class: "d-flex" };
-  const _hoisted_16$3 = { style: {"width":"80px"} };
-  const _hoisted_17$2 = { class: "d-flex-c" };
+  const _hoisted_12$4 = { class: "d-flex-c" };
+  const _hoisted_13$4 = { class: "d-flex-c" };
+  const _hoisted_14$4 = { class: "d-flex-c" };
+  const _hoisted_15$4 = { class: "d-flex" };
+  const _hoisted_16$4 = { style: {"width":"80px"} };
+  const _hoisted_17$3 = { class: "d-flex-c" };
   const _hoisted_18$2 = { class: "d-flex-c" };
   const _hoisted_19$2 = { class: "d-flex-c" };
 
@@ -76578,8 +77429,8 @@
                       }, null, 8, ["modelValue"]),
                       _cache[42] || (_cache[42] = vue.createElementVNode("span", { class: "chart-config-title" }, " 标签内容", -1))
                     ]),
-                    vue.createElementVNode("div", _hoisted_4$q, [
-                      vue.createElementVNode("div", _hoisted_5$j, [
+                    vue.createElementVNode("div", _hoisted_4$r, [
+                      vue.createElementVNode("div", _hoisted_5$l, [
                         vue.createVNode(_component_el_switch, {
                           modelValue: $data.form.label.show,
                           "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.label.show) = $event)),
@@ -76615,7 +77466,7 @@
                           default: vue.withCtx(() => [
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_6$h, [
+                                vue.createElementVNode("div", _hoisted_6$j, [
                                   vue.createVNode(_component_CommonColorPicker, {
                                     modelValue: $data.form.itemStyle.areaColor,
                                     "onUpdate:modelValue": _cache[10] || (_cache[10] = $event => (($data.form.itemStyle.areaColor) = $event)),
@@ -76636,7 +77487,7 @@
                           default: vue.withCtx(() => [
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_7$c, [
+                                vue.createElementVNode("div", _hoisted_7$e, [
                                   vue.createVNode(_component_el_input_number, {
                                     modelValue: $data.form.itemStyle.borderWidth,
                                     "onUpdate:modelValue": _cache[12] || (_cache[12] = $event => (($data.form.itemStyle.borderWidth) = $event)),
@@ -76652,7 +77503,7 @@
                             }),
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_8$7, [
+                                vue.createElementVNode("div", _hoisted_8$9, [
                                   vue.createVNode(_component_CommonColorPicker, {
                                     modelValue: $data.form.itemStyle.borderColor,
                                     "onUpdate:modelValue": _cache[14] || (_cache[14] = $event => (($data.form.itemStyle.borderColor) = $event)),
@@ -76678,8 +77529,8 @@
                   vue.createElementVNode("div", { class: "collapse-title-common" }, " 选中样式 ", -1)
                 ]))]),
                 default: vue.withCtx(() => [
-                  vue.createElementVNode("div", _hoisted_9$7, [
-                    vue.createElementVNode("div", _hoisted_10$5, [
+                  vue.createElementVNode("div", _hoisted_9$8, [
+                    vue.createElementVNode("div", _hoisted_10$6, [
                       vue.createElementVNode("div", _hoisted_11$4, [
                         vue.createVNode(_component_el_switch, {
                           modelValue: $data.form.select.label.show,
@@ -76729,7 +77580,7 @@
                           default: vue.withCtx(() => [
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_12$3, [
+                                vue.createElementVNode("div", _hoisted_12$4, [
                                   vue.createVNode(_component_CommonColorPicker, {
                                     modelValue: $data.form.select.itemStyle.areaColor,
                                     "onUpdate:modelValue": _cache[21] || (_cache[21] = $event => (($data.form.select.itemStyle.areaColor) = $event)),
@@ -76750,7 +77601,7 @@
                           default: vue.withCtx(() => [
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_13$3, [
+                                vue.createElementVNode("div", _hoisted_13$4, [
                                   vue.createVNode(_component_el_input_number, {
                                     modelValue: $data.form.select.itemStyle.borderWidth,
                                     "onUpdate:modelValue": _cache[23] || (_cache[23] = $event => (($data.form.select.itemStyle.borderWidth) = $event)),
@@ -76766,7 +77617,7 @@
                             }),
                             vue.createVNode(_component_el_col, { span: 12 }, {
                               default: vue.withCtx(() => [
-                                vue.createElementVNode("div", _hoisted_14$3, [
+                                vue.createElementVNode("div", _hoisted_14$4, [
                                   vue.createVNode(_component_CommonColorPicker, {
                                     modelValue: $data.form.select.itemStyle.borderColor,
                                     "onUpdate:modelValue": _cache[25] || (_cache[25] = $event => (($data.form.select.itemStyle.borderColor) = $event)),
@@ -76797,8 +77648,8 @@
             onChange: _cache[40] || (_cache[40] = $event => (_ctx.$emit('chartChange')))
           }, {
             default: vue.withCtx(() => [
-              vue.createElementVNode("div", _hoisted_15$3, [
-                vue.createElementVNode("div", _hoisted_16$3, [
+              vue.createElementVNode("div", _hoisted_15$4, [
+                vue.createElementVNode("div", _hoisted_16$4, [
                   vue.createVNode(_component_el_switch, {
                     modelValue: $data.form.emphasis.label.show,
                     "onUpdate:modelValue": _cache[28] || (_cache[28] = $event => (($data.form.emphasis.label.show) = $event)),
@@ -76847,7 +77698,7 @@
                     default: vue.withCtx(() => [
                       vue.createVNode(_component_el_col, { span: 12 }, {
                         default: vue.withCtx(() => [
-                          vue.createElementVNode("div", _hoisted_17$2, [
+                          vue.createElementVNode("div", _hoisted_17$3, [
                             vue.createVNode(_component_CommonColorPicker, {
                               modelValue: $data.form.emphasis.itemStyle.areaColor,
                               "onUpdate:modelValue": _cache[33] || (_cache[33] = $event => (($data.form.emphasis.itemStyle.areaColor) = $event)),
@@ -77174,10 +78025,10 @@
   const _hoisted_1$W = { class: "d-flex-c" };
   const _hoisted_2$z = { class: "d-flex-c" };
   const _hoisted_3$t = { class: "d-flex-c" };
-  const _hoisted_4$p = { class: "d-flex-c" };
-  const _hoisted_5$i = { class: "d-flex-c" };
-  const _hoisted_6$g = { class: "d-flex-c" };
-  const _hoisted_7$b = { class: "d-flex-c" };
+  const _hoisted_4$q = { class: "d-flex-c" };
+  const _hoisted_5$k = { class: "d-flex-c" };
+  const _hoisted_6$i = { class: "d-flex-c" };
+  const _hoisted_7$d = { class: "d-flex-c" };
 
   function _sfc_render$K(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
@@ -77308,7 +78159,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_4$p, [
+                    vue.createElementVNode("div", _hoisted_4$q, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.itemStyle.borderWidth,
                         "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.itemStyle.borderWidth) = $event)),
@@ -77324,7 +78175,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5$i, [
+                    vue.createElementVNode("div", _hoisted_5$k, [
                       vue.createVNode(_component_CommonColorPicker, {
                         modelValue: $data.form.itemStyle.borderColor,
                         "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.itemStyle.borderColor) = $event)),
@@ -77350,7 +78201,7 @@
               default: vue.withCtx(() => [
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_6$g, [
+                    vue.createElementVNode("div", _hoisted_6$i, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.symbolOffset[0],
                         "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.symbolOffset[0]) = $event)),
@@ -77366,7 +78217,7 @@
                 }),
                 vue.createVNode(_component_el_col, { span: 12 }, {
                   default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_7$b, [
+                    vue.createElementVNode("div", _hoisted_7$d, [
                       vue.createVNode(_component_el_input_number, {
                         modelValue: $data.form.symbolOffset[1],
                         "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.symbolOffset[1]) = $event)),
@@ -77501,7 +78352,39 @@
       this.showFlag = true;
     },
 
+    computed: {
+      otherComps () { return this.componentsList.filter(n => this.configType[n] === 'other') }
+    },
+    mounted () {
+      this.$nextTick(() => {
+        this.scrollEl = this.$refs.cfgScroll?.closest('.base-flow') || this.$refs.cfgScroll;
+        if (this.scrollEl) this.scrollEl.addEventListener('scroll', this.onCfgScroll, { passive: true });
+      });
+    },
+    beforeUnmount () {
+      if (this.scrollEl) this.scrollEl.removeEventListener('scroll', this.onCfgScroll);
+    },
     methods: {
+      scrollToSec (key) {
+        const sc = this.scrollEl;
+        const el = document.getElementById('cfgsec-' + key);
+        if (sc && el) {
+          this.activeConfig = key;
+          const top = el.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop;
+          sc.scrollTo({ top: Math.max(0, top - 8), behavior: 'smooth' });
+        }
+      },
+      onCfgScroll () {
+        const sc = this.scrollEl;
+        if (!sc) return
+        const base = sc.getBoundingClientRect().top + 24;
+        let cur = this.chartMenu[0].key;
+        for (const t of this.chartMenu) {
+          const el = document.getElementById('cfgsec-' + t.key);
+          if (el && el.getBoundingClientRect().top <= base) cur = t.key;
+        }
+        this.activeConfig = cur;
+      },
       buildChartData (type, data) {
         const option = efficientSuite.utils.deepClone(this.configs.configOption);
 
@@ -77613,16 +78496,37 @@
     }
   };
 
-  const _hoisted_1$V = { class: "map-config-container" };
-  const _hoisted_2$y = { class: "map-config-main" };
-  const _hoisted_3$s = { class: "copy-button-box" };
+  const _hoisted_1$V = { class: "cfg-anchor-wrap" };
+  const _hoisted_2$y = { class: "cfg-anchor-nav" };
+  const _hoisted_3$s = ["onClick"];
+  const _hoisted_4$p = {
+    class: "map-config-main cfg-scroll",
+    ref: "cfgScroll"
+  };
+  const _hoisted_5$j = {
+    id: "cfgsec-basic",
+    class: "cfg-sec"
+  };
+  const _hoisted_6$h = { class: "copy-button-box" };
+  const _hoisted_7$c = {
+    id: "cfgsec-colorField",
+    class: "cfg-sec"
+  };
+  const _hoisted_8$8 = {
+    id: "cfgsec-scatter",
+    class: "cfg-sec"
+  };
+  const _hoisted_9$7 = {
+    key: 0,
+    id: "cfgsec-other",
+    class: "cfg-sec"
+  };
 
   function _sfc_render$J(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_SidebarTabs = vue.resolveComponent("SidebarTabs");
     const _component_el_button = vue.resolveComponent("el-button");
+    const _component_BasicConfig = vue.resolveComponent("BasicConfig");
     const _component_VisualMap = vue.resolveComponent("VisualMap");
     const _component_ScatterConfig = vue.resolveComponent("ScatterConfig");
-    const _component_BasicConfig = vue.resolveComponent("BasicConfig");
     const _component_BKBasicChartConfig = vue.resolveComponent("BKBasicChartConfig");
 
     return ($data.showFlag)
@@ -77636,90 +78540,103 @@
           rules: $data.rules,
           "tjb-u-r-l": $props.tjbURL
         }, _ctx.$attrs, {
-          onSetExpand: _cache[5] || (_cache[5] = $event => (_ctx.$emit('setExpand'))),
+          onSetExpand: _cache[4] || (_cache[4] = $event => (_ctx.$emit('setExpand'))),
           onSaveChartConfig: $options.saveChartCfg,
           onBuildChartSeriesData: $options.buildChartData,
           onConfigOptionInit: $options.configOptionInit
         }), {
           default: vue.withCtx(() => [
             vue.createElementVNode("div", _hoisted_1$V, [
-              vue.createVNode(_component_SidebarTabs, {
-                modelValue: $data.activeConfig,
-                "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.activeConfig) = $event)),
-                menu: $data.chartMenu
-              }, null, 8, ["modelValue", "menu"]),
               vue.createElementVNode("div", _hoisted_2$y, [
-                vue.withDirectives(vue.createElementVNode("div", _hoisted_3$s, [
-                  vue.createVNode(_component_el_button, {
-                    type: "primary",
-                    size: "small",
-                    onClick: _cache[1] || (_cache[1] = $event => (_ctx.copyConfig('mapBasic')))
-                  }, {
-                    default: vue.withCtx(() => [...(_cache[6] || (_cache[6] = [
-                      vue.createTextVNode(" 复制基础配置 ", -1)
-                    ]))]),
-                    _: 1
-                  }),
-                  vue.createVNode(_component_el_button, {
-                    type: "primary",
-                    size: "small",
-                    disabled: !$props.saveAble,
-                    onClick: _cache[2] || (_cache[2] = $event => (_ctx.pasteConfig('mapBasic')))
-                  }, {
-                    default: vue.withCtx(() => [...(_cache[7] || (_cache[7] = [
-                      vue.createTextVNode(" 粘贴基础配置 ", -1)
-                    ]))]),
-                    _: 1
-                  }, 8, ["disabled"])
-                ], 512), [
-                  [vue.vShow, $data.activeConfig==='basic']
-                ]),
-                (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.componentsList, (name, index) => {
-                  return vue.withDirectives((vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(name+'-config'), {
-                    key: index,
-                    ref_for: true,
-                    ref: name+'form',
-                    "save-able": $props.saveAble,
+                (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.chartMenu, (t) => {
+                  return (vue.openBlock(), vue.createElementBlock("div", {
+                    key: t.key,
+                    class: vue.normalizeClass(['cfg-anchor-item', $data.activeConfig===t.key && 'is-on']),
+                    onClick: $event => ($options.scrollToSec(t.key))
+                  }, [
+                    vue.createElementVNode("i", {
+                      class: vue.normalizeClass(["am-iconfont cfg-anchor-ic", t.icon])
+                    }, null, 2),
+                    vue.createElementVNode("span", null, vue.toDisplayString(t.name), 1)
+                  ], 10, _hoisted_3$s))
+                }), 128))
+              ]),
+              vue.createElementVNode("div", _hoisted_4$p, [
+                vue.createElementVNode("div", _hoisted_5$j, [
+                  _cache[7] || (_cache[7] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "图表", -1)),
+                  vue.createElementVNode("div", _hoisted_6$h, [
+                    vue.createVNode(_component_el_button, {
+                      type: "primary",
+                      size: "small",
+                      onClick: _cache[0] || (_cache[0] = $event => (_ctx.copyConfig('mapBasic')))
+                    }, {
+                      default: vue.withCtx(() => [...(_cache[5] || (_cache[5] = [
+                        vue.createTextVNode(" 复制基础配置 ", -1)
+                      ]))]),
+                      _: 1
+                    }),
+                    vue.createVNode(_component_el_button, {
+                      type: "primary",
+                      size: "small",
+                      disabled: !$props.saveAble,
+                      onClick: _cache[1] || (_cache[1] = $event => (_ctx.pasteConfig('mapBasic')))
+                    }, {
+                      default: vue.withCtx(() => [...(_cache[6] || (_cache[6] = [
+                        vue.createTextVNode(" 粘贴基础配置 ", -1)
+                      ]))]),
+                      _: 1
+                    }, 8, ["disabled"])
+                  ]),
+                  vue.createVNode(_component_BasicConfig, {
+                    ref: "basicConfigRef",
+                    "form-data": $data.geo,
                     onChartChange: $options.getChartBasicConfigData
-                  }, null, 40, ["save-able", "onChartChange"])), [
-                    [vue.vShow, $data.activeConfig===$data.configType[name]]
-                  ])
-                }), 128)),
-                vue.withDirectives(vue.createVNode(_component_VisualMap, {
-                  ref: "visualMapRef",
-                  modelValue: $data.showVisualMap,
-                  "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.showVisualMap) = $event)),
-                  "form-data": $data.visualMap,
-                  onChartChange: $options.getChartBasicConfigData,
-                  onShowChange: $options.visualMapChange
-                }, null, 8, ["modelValue", "form-data", "onChartChange", "onShowChange"]), [
-                  [vue.vShow, $data.activeConfig==='colorField']
+                  }, null, 8, ["form-data", "onChartChange"])
                 ]),
-                vue.withDirectives(vue.createVNode(_component_ScatterConfig, {
-                  ref: "scatterRef",
-                  modelValue: $data.showScatter,
-                  "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.showScatter) = $event)),
-                  series: $data.scatterSeries,
-                  onShowChange: $options.scatterChange,
-                  onScatterChange: $options.getChartBasicConfigData
-                }, null, 8, ["modelValue", "series", "onShowChange", "onScatterChange"]), [
-                  [vue.vShow, $data.activeConfig==='scatter']
+                vue.createElementVNode("div", _hoisted_7$c, [
+                  _cache[8] || (_cache[8] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "颜色映射", -1)),
+                  vue.createVNode(_component_VisualMap, {
+                    ref: "visualMapRef",
+                    modelValue: $data.showVisualMap,
+                    "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.showVisualMap) = $event)),
+                    "form-data": $data.visualMap,
+                    onChartChange: $options.getChartBasicConfigData,
+                    onShowChange: $options.visualMapChange
+                  }, null, 8, ["modelValue", "form-data", "onChartChange", "onShowChange"])
                 ]),
-                vue.withDirectives(vue.createVNode(_component_BasicConfig, {
-                  ref: "basicConfigRef",
-                  "form-data": $data.geo,
-                  onChartChange: $options.getChartBasicConfigData
-                }, null, 8, ["form-data", "onChartChange"]), [
-                  [vue.vShow, $data.activeConfig==='basic']
-                ])
-              ])
+                vue.createElementVNode("div", _hoisted_8$8, [
+                  _cache[9] || (_cache[9] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "散点配置", -1)),
+                  vue.createVNode(_component_ScatterConfig, {
+                    ref: "scatterRef",
+                    modelValue: $data.showScatter,
+                    "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.showScatter) = $event)),
+                    series: $data.scatterSeries,
+                    onShowChange: $options.scatterChange,
+                    onScatterChange: $options.getChartBasicConfigData
+                  }, null, 8, ["modelValue", "series", "onShowChange", "onScatterChange"])
+                ]),
+                ($options.otherComps.length)
+                  ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_9$7, [
+                      _cache[10] || (_cache[10] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "其他", -1)),
+                      (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.otherComps, (name, index) => {
+                        return (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(name+'-config'), {
+                          key: 'o'+index,
+                          ref_for: true,
+                          ref: name+'form',
+                          "save-able": $props.saveAble,
+                          onChartChange: $options.getChartBasicConfigData
+                        }, null, 40, ["save-able", "onChartChange"]))
+                      }), 128))
+                    ]))
+                  : vue.createCommentVNode("", true)
+              ], 512)
             ])
           ]),
           _: 1
         }, 16, ["configs", "page-config", "save-able", "items", "rules", "tjb-u-r-l", "onSaveChartConfig", "onBuildChartSeriesData", "onConfigOptionInit"]))
       : vue.createCommentVNode("", true)
   }
-  const MapChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$K, [['render',_sfc_render$J],['__scopeId',"data-v-7512f398"]]);
+  const MapChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$K, [['render',_sfc_render$J],['__scopeId',"data-v-16d942f0"]]);
 
   MapChartConfig.install = function (Vue) {
     Vue.component(libPrefix + MapChartConfig.name, MapChartConfig);
@@ -78214,18 +79131,18 @@
   const _hoisted_2$x = { class: "d-flex-c" };
   const _hoisted_3$r = { class: "d-flex-c" };
   const _hoisted_4$o = { class: "d-flex-c" };
-  const _hoisted_5$h = { class: "d-flex-c" };
-  const _hoisted_6$f = { class: "d-flex-c" };
-  const _hoisted_7$a = { class: "d-flex-c" };
-  const _hoisted_8$6 = { class: "d-flex-c" };
+  const _hoisted_5$i = { class: "d-flex-c" };
+  const _hoisted_6$g = { class: "d-flex-c" };
+  const _hoisted_7$b = { class: "d-flex-c" };
+  const _hoisted_8$7 = { class: "d-flex-c" };
   const _hoisted_9$6 = { class: "d-flex-c" };
-  const _hoisted_10$4 = { class: "d-flex-c" };
+  const _hoisted_10$5 = { class: "d-flex-c" };
   const _hoisted_11$3 = { class: "d-flex-c" };
-  const _hoisted_12$2 = { class: "d-flex-c" };
-  const _hoisted_13$2 = { class: "d-flex-c" };
-  const _hoisted_14$2 = { class: "d-flex-c" };
-  const _hoisted_15$2 = { class: "d-flex-c" };
-  const _hoisted_16$2 = { class: "d-flex-c" };
+  const _hoisted_12$3 = { class: "d-flex-c" };
+  const _hoisted_13$3 = { class: "d-flex-c" };
+  const _hoisted_14$3 = { class: "d-flex-c" };
+  const _hoisted_15$3 = { class: "d-flex-c" };
+  const _hoisted_16$3 = { class: "d-flex-c" };
 
   function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_el_switch = vue.resolveComponent("el-switch");
@@ -78327,7 +79244,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_5$h, [
+                      vue.createElementVNode("div", _hoisted_5$i, [
                         vue.createVNode(_component_el_switch, {
                           modelValue: $data.form.hasSeq,
                           "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form.hasSeq) = $event)),
@@ -78344,7 +79261,7 @@
                   _cache[48] || (_cache[48] = vue.createTextVNode()),
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_6$f, [
+                      vue.createElementVNode("div", _hoisted_6$g, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.seqWidth,
                           "onUpdate:modelValue": _cache[11] || (_cache[11] = $event => (($data.form.seqWidth) = $event)),
@@ -78373,7 +79290,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_7$a, [
+                      vue.createElementVNode("div", _hoisted_7$b, [
                         vue.createVNode(_component_el_switch, {
                           modelValue: $data.form.highlightCurrentRow,
                           "onUpdate:modelValue": _cache[13] || (_cache[13] = $event => (($data.form.highlightCurrentRow) = $event)),
@@ -78392,7 +79309,7 @@
                     style: {"padding-right":"10px"}
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_8$6, [
+                      vue.createElementVNode("div", _hoisted_8$7, [
                         vue.createVNode(_component_CommonColorPicker, {
                           modelValue: $data.styles['--rowCurrentColor'],
                           "onUpdate:modelValue": _cache[16] || (_cache[16] = $event => (($data.styles['--rowCurrentColor']) = $event)),
@@ -78444,7 +79361,7 @@
                   }),
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_10$4, [
+                      vue.createElementVNode("div", _hoisted_10$5, [
                         vue.createVNode(_component_CommonColorPicker, {
                           modelValue: $data.styles['--borderColor'],
                           "onUpdate:modelValue": _cache[20] || (_cache[20] = $event => (($data.styles['--borderColor']) = $event)),
@@ -78494,7 +79411,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_12$2, [
+                      vue.createElementVNode("div", _hoisted_12$3, [
                         vue.createVNode(_component_el_switch, {
                           modelValue: $data.form.stripe,
                           "onUpdate:modelValue": _cache[24] || (_cache[24] = $event => (($data.form.stripe) = $event)),
@@ -78510,7 +79427,7 @@
                   }),
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_13$2, [
+                      vue.createElementVNode("div", _hoisted_13$3, [
                         vue.createVNode(_component_CommonColorPicker, {
                           modelValue: $data.styles['--stripeColor'],
                           "onUpdate:modelValue": _cache[27] || (_cache[27] = $event => (($data.styles['--stripeColor']) = $event)),
@@ -78531,7 +79448,7 @@
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_14$2, [
+                      vue.createElementVNode("div", _hoisted_14$3, [
                         vue.createVNode(_component_CommonColorPicker, {
                           modelValue: $data.styles['--bodyBg'],
                           "onUpdate:modelValue": _cache[29] || (_cache[29] = $event => (($data.styles['--bodyBg']) = $event)),
@@ -78544,7 +79461,7 @@
                   }),
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_15$2, [
+                      vue.createElementVNode("div", _hoisted_15$3, [
                         vue.createVNode(_component_el_select, {
                           modelValue: $data.form.align,
                           "onUpdate:modelValue": _cache[31] || (_cache[31] = $event => (($data.form.align) = $event)),
@@ -78606,7 +79523,7 @@
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_el_col, { span: 12 }, {
                             default: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_16$2, [
+                              vue.createElementVNode("div", _hoisted_16$3, [
                                 vue.createVNode(_component_el_input_number, {
                                   modelValue: $data.styles['--headercellheight'],
                                   "onUpdate:modelValue": _cache[34] || (_cache[34] = $event => (($data.styles['--headercellheight']) = $event)),
@@ -79243,7 +80160,36 @@
     },
     created () {
     },
+    mounted () {
+      this.$nextTick(() => {
+        this.scrollEl = this.$refs.cfgScroll?.closest('.base-flow') || this.$refs.cfgScroll;
+        if (this.scrollEl) this.scrollEl.addEventListener('scroll', this.onCfgScroll, { passive: true });
+      });
+    },
+    beforeUnmount () {
+      if (this.scrollEl) this.scrollEl.removeEventListener('scroll', this.onCfgScroll);
+    },
     methods: {
+      scrollToSec (key) {
+        const sc = this.scrollEl;
+        const el = document.getElementById('cfgsec-' + key);
+        if (sc && el) {
+          this.activeConfig = key;
+          const top = el.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop;
+          sc.scrollTo({ top: Math.max(0, top - 8), behavior: 'smooth' });
+        }
+      },
+      onCfgScroll () {
+        const sc = this.scrollEl;
+        if (!sc) return
+        const base = sc.getBoundingClientRect().top + 24;
+        let cur = this.chartMenu[0].key;
+        for (const t of this.chartMenu) {
+          const el = document.getElementById('cfgsec-' + t.key);
+          if (el && el.getBoundingClientRect().top <= base) cur = t.key;
+        }
+        this.activeConfig = cur;
+      },
       getTypeText (value, list) {
         const data = list.find(c => c.value === value);
         return data ? data.label : ''
@@ -79307,13 +80253,25 @@
     }
   };
 
-  const _hoisted_1$Q = { class: "table-config-content" };
-  const _hoisted_2$u = { class: "table-config-table" };
-  const _hoisted_3$p = { class: "copy-button-box" };
-  const _hoisted_4$m = { class: "copy-button-box" };
+  const _hoisted_1$Q = { class: "cfg-anchor-wrap" };
+  const _hoisted_2$u = { class: "cfg-anchor-nav" };
+  const _hoisted_3$p = ["onClick"];
+  const _hoisted_4$m = {
+    class: "table-config-table cfg-scroll",
+    ref: "cfgScroll"
+  };
+  const _hoisted_5$h = {
+    id: "cfgsec-basic",
+    class: "cfg-sec"
+  };
+  const _hoisted_6$f = { class: "copy-button-box" };
+  const _hoisted_7$a = {
+    id: "cfgsec-columns",
+    class: "cfg-sec"
+  };
+  const _hoisted_8$6 = { class: "copy-button-box" };
 
   function _sfc_render$E(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_SidebarTabs = vue.resolveComponent("SidebarTabs");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_ChartTypeChange = vue.resolveComponent("ChartTypeChange");
     const _component_tablePropsConfig = vue.resolveComponent("tablePropsConfig");
@@ -79330,98 +80288,103 @@
       "tjb-u-r-l": $props.tjbURL
     }, _ctx.$attrs, {
       onChangeBranchType: $options.changeBranchType,
-      onSetExpand: _cache[5] || (_cache[5] = $event => (_ctx.$emit('setExpand'))),
+      onSetExpand: _cache[4] || (_cache[4] = $event => (_ctx.$emit('setExpand'))),
       onSaveChartConfig: $options.saveChartCfg,
       onConfigOptionInit: $options.configOptionInit,
       onBuildChartSeriesData: $options.buildChartData
     }), {
       default: vue.withCtx(() => [
         vue.createElementVNode("div", _hoisted_1$Q, [
-          vue.createVNode(_component_SidebarTabs, {
-            modelValue: $data.activeConfig,
-            "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.activeConfig) = $event)),
-            menu: $data.chartMenu
-          }, null, 8, ["modelValue", "menu"]),
           vue.createElementVNode("div", _hoisted_2$u, [
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_3$p, [
-              vue.createVNode(_component_el_button, {
-                type: "primary",
-                size: "small",
-                onClick: _cache[1] || (_cache[1] = $event => (_ctx.copyConfig('tableBasic')))
-              }, {
-                default: vue.withCtx(() => [...(_cache[6] || (_cache[6] = [
-                  vue.createTextVNode(" 复制基础配置 ", -1)
-                ]))]),
-                _: 1
-              }),
-              vue.createVNode(_component_el_button, {
-                type: "primary",
-                size: "small",
-                disabled: !$props.saveAble,
-                onClick: _cache[2] || (_cache[2] = $event => (_ctx.pasteConfig('tableBasic')))
-              }, {
-                default: vue.withCtx(() => [...(_cache[7] || (_cache[7] = [
-                  vue.createTextVNode(" 粘贴基础配置 ", -1)
-                ]))]),
-                _: 1
-              }, 8, ["disabled"])
-            ], 512), [
-              [vue.vShow, $data.activeConfig==='basic']
+            (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.chartMenu, (t) => {
+              return (vue.openBlock(), vue.createElementBlock("div", {
+                key: t.key,
+                class: vue.normalizeClass(['cfg-anchor-item', $data.activeConfig===t.key && 'is-on']),
+                onClick: $event => ($options.scrollToSec(t.key))
+              }, [
+                vue.createElementVNode("i", {
+                  class: vue.normalizeClass(["am-iconfont cfg-anchor-ic", t.icon])
+                }, null, 2),
+                vue.createElementVNode("span", null, vue.toDisplayString(t.name), 1)
+              ], 10, _hoisted_3$p))
+            }), 128))
+          ]),
+          vue.createElementVNode("div", _hoisted_4$m, [
+            vue.createElementVNode("div", _hoisted_5$h, [
+              _cache[7] || (_cache[7] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "表格", -1)),
+              vue.createElementVNode("div", _hoisted_6$f, [
+                vue.createVNode(_component_el_button, {
+                  type: "primary",
+                  size: "small",
+                  onClick: _cache[0] || (_cache[0] = $event => (_ctx.copyConfig('tableBasic')))
+                }, {
+                  default: vue.withCtx(() => [...(_cache[5] || (_cache[5] = [
+                    vue.createTextVNode(" 复制基础配置 ", -1)
+                  ]))]),
+                  _: 1
+                }),
+                vue.createVNode(_component_el_button, {
+                  type: "primary",
+                  size: "small",
+                  disabled: !$props.saveAble,
+                  onClick: _cache[1] || (_cache[1] = $event => (_ctx.pasteConfig('tableBasic')))
+                }, {
+                  default: vue.withCtx(() => [...(_cache[6] || (_cache[6] = [
+                    vue.createTextVNode(" 粘贴基础配置 ", -1)
+                  ]))]),
+                  _: 1
+                }, 8, ["disabled"])
+              ]),
+              vue.createVNode(_component_ChartTypeChange, {
+                style: {"margin-bottom":"10px"},
+                type: $props.configs.branchType,
+                onChangeType: $options.changeChartType
+              }, null, 8, ["type", "onChangeType"]),
+              vue.createVNode(_component_tablePropsConfig, {
+                ref: "propsConfig",
+                onPasteConfig: _ctx.pasteConfig,
+                onPropsChange: $options.getBasicConfigData
+              }, null, 8, ["onPasteConfig", "onPropsChange"])
             ]),
-            vue.withDirectives(vue.createVNode(_component_ChartTypeChange, {
-              style: {"margin-bottom":"10px"},
-              type: $props.configs.branchType,
-              onChangeType: $options.changeChartType
-            }, null, 8, ["type", "onChangeType"]), [
-              [vue.vShow, $data.activeConfig==='basic']
-            ]),
-            vue.withDirectives(vue.createVNode(_component_tablePropsConfig, {
-              ref: "propsConfig",
-              onPasteConfig: _ctx.pasteConfig,
-              onPropsChange: $options.getBasicConfigData
-            }, null, 8, ["onPasteConfig", "onPropsChange"]), [
-              [vue.vShow, $data.activeConfig==='basic']
-            ]),
-            vue.withDirectives(vue.createElementVNode("div", _hoisted_4$m, [
-              vue.createVNode(_component_el_button, {
-                type: "primary",
-                size: "small",
-                onClick: _cache[3] || (_cache[3] = $event => (_ctx.copyConfig('tableColumns')))
-              }, {
-                default: vue.withCtx(() => [...(_cache[8] || (_cache[8] = [
-                  vue.createTextVNode(" 复制列配置 ", -1)
-                ]))]),
-                _: 1
-              }),
-              vue.createVNode(_component_el_button, {
-                type: "primary",
-                size: "small",
-                disabled: !$props.saveAble,
-                onClick: _cache[4] || (_cache[4] = $event => (_ctx.pasteConfig('tableColumns')))
-              }, {
-                default: vue.withCtx(() => [...(_cache[9] || (_cache[9] = [
-                  vue.createTextVNode(" 粘贴列配置 ", -1)
-                ]))]),
-                _: 1
-              }, 8, ["disabled"])
-            ], 512), [
-              [vue.vShow, $data.activeConfig==='columns']
-            ]),
-            vue.withDirectives(vue.createVNode(_component_tableColumnsConfig, {
-              ref: "columnConfigRef",
-              "save-able": $props.saveAble,
-              onSyncColumn: $options.syncColumn,
-              onChartChange: $options.getBasicConfigData
-            }, null, 8, ["save-able", "onSyncColumn", "onChartChange"]), [
-              [vue.vShow, $data.activeConfig==='columns']
+            vue.createElementVNode("div", _hoisted_7$a, [
+              _cache[10] || (_cache[10] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "表格列", -1)),
+              vue.createElementVNode("div", _hoisted_8$6, [
+                vue.createVNode(_component_el_button, {
+                  type: "primary",
+                  size: "small",
+                  onClick: _cache[2] || (_cache[2] = $event => (_ctx.copyConfig('tableColumns')))
+                }, {
+                  default: vue.withCtx(() => [...(_cache[8] || (_cache[8] = [
+                    vue.createTextVNode(" 复制列配置 ", -1)
+                  ]))]),
+                  _: 1
+                }),
+                vue.createVNode(_component_el_button, {
+                  type: "primary",
+                  size: "small",
+                  disabled: !$props.saveAble,
+                  onClick: _cache[3] || (_cache[3] = $event => (_ctx.pasteConfig('tableColumns')))
+                }, {
+                  default: vue.withCtx(() => [...(_cache[9] || (_cache[9] = [
+                    vue.createTextVNode(" 粘贴列配置 ", -1)
+                  ]))]),
+                  _: 1
+                }, 8, ["disabled"])
+              ]),
+              vue.createVNode(_component_tableColumnsConfig, {
+                ref: "columnConfigRef",
+                "save-able": $props.saveAble,
+                onSyncColumn: $options.syncColumn,
+                onChartChange: $options.getBasicConfigData
+              }, null, 8, ["save-able", "onSyncColumn", "onChartChange"])
             ])
-          ])
+          ], 512)
         ])
       ]),
       _: 1
     }, 16, ["configs", "page-config", "save-able", "items", "rules", "tjb-u-r-l", "onChangeBranchType", "onSaveChartConfig", "onConfigOptionInit", "onBuildChartSeriesData"]))
   }
-  const TableChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$F, [['render',_sfc_render$E],['__scopeId',"data-v-3d459ab7"]]);
+  const TableChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$F, [['render',_sfc_render$E],['__scopeId',"data-v-75318e51"]]);
 
   TableChartConfig.install = function (Vue) {
     Vue.component(libPrefix + TableChartConfig.name, TableChartConfig);
@@ -81229,6 +82192,8 @@
     data () {
       return {
         pickerOpen: false,
+        pickerActive: '',            // 选择图表弹框:左侧锚点列当前激活分组
+        pickerClickLock: false,      // 点击锚点触发的平滑滚动期间,忽略滚动高亮回写
         focusFlag: false,
         currentTab: '',
         tabList: [],
@@ -81247,7 +82212,7 @@
     computed: {
       // 就近添加图表:图表选择弹层的分组数据(与左侧图表资源同源)
       pickerGroups () {
-        const LINE = ['lineChart', 'smoothLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap'];
+        const LINE = ['lineChart', 'smoothLineChart', 'markLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap'];
         const ADV = ['bubbleChart', 'calendarHeatmap', 'polarChart'];
         const bars = chartComponents$1.filter(c => (c.type === 'BKBarChart' || c.type === 'BKPolarChart') && !LINE.includes(c.branchType) && !ADV.includes(c.branchType));
         const lines = chartComponents$1.filter(c => LINE.includes(c.branchType));
@@ -81256,7 +82221,10 @@
           { key: 'bar', name: '柱状图', items: bars },
           { key: 'line', name: '折线图', items: lines },
           { key: 'pie', name: '饼形图', items: ringComponents || [] },
-          { key: 'adv', name: '高级图表', items: adv }
+          { key: 'adv', name: '高级图表', items: adv },
+          { key: 'table', name: '表格', items: tableComponents || [] },
+          { key: 'map', name: '地图', items: mapComponents || [] },
+          { key: 'com', name: '其他', items: customComponents || [] }
         ].filter(g => g.items && g.items.length)
       },
       mergeChild () {
@@ -81562,7 +82530,40 @@
       },
       // —— 就近添加图表 ——
       chartImg (it) { return it && it.img ? imgObject[it.img] : '' },
-      openPicker () { this.pickerOpen = true; },
+      openPicker () {
+        this.pickerOpen = true;
+        this.pickerActive = this.pickerGroups[0]?.key || '';
+        this.$nextTick(() => { if (this.$refs.bcpBody) this.$refs.bcpBody.scrollTop = 0; });
+      },
+      // 左侧锚点点击:平滑滚动到对应分组
+      scrollToPickerGroup (key) {
+        this.pickerActive = key;
+        const body = this.$refs.bcpBody;
+        if (!body) return
+        const el = body.querySelector(`[data-key="${key}"]`);
+        if (!el) return
+        this.pickerClickLock = true;
+        body.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
+        clearTimeout(this._bcpLockTimer);
+        this._bcpLockTimer = setTimeout(() => { this.pickerClickLock = false; }, 400);
+      },
+      // 右侧滚动:高亮当前分组锚点
+      onPickerScroll () {
+        if (this.pickerClickLock) return
+        const body = this.$refs.bcpBody;
+        if (!body) return
+        const groups = body.querySelectorAll('.bcp-group');
+        const top = body.scrollTop;
+        let active = this.pickerActive;
+        for (const g of groups) {
+          if (g.offsetTop - 8 <= top) active = g.dataset.key;
+          else break
+        }
+        if (top + body.clientHeight >= body.scrollHeight - 2 && groups.length) {
+          active = groups[groups.length - 1].dataset.key;
+        }
+        this.pickerActive = active;
+      },
       // 从弹层选中图表 → 加入本区域(等效拖入),并打开其配置
       pickChart (item) {
         this.pickerOpen = false;
@@ -81673,14 +82674,20 @@
   const _hoisted_1$N = ["label", "onClick"];
   const _hoisted_2$t = { style: {"width":"100%","height":"100%"} };
   const _hoisted_3$o = { class: "empty-container" };
-  const _hoisted_4$l = { class: "bk-chart-picker" };
-  const _hoisted_5$g = { class: "bcp-head" };
-  const _hoisted_6$e = { class: "bcp-body" };
-  const _hoisted_7$9 = { class: "bcp-title" };
-  const _hoisted_8$5 = { class: "bcp-grid" };
-  const _hoisted_9$5 = ["title", "onClick"];
-  const _hoisted_10$3 = ["src"];
-  const _hoisted_11$2 = { class: "bcp-name" };
+  const _hoisted_4$l = { class: "empty-opts" };
+  const _hoisted_5$g = { class: "bk-chart-picker" };
+  const _hoisted_6$e = { class: "bcp-head" };
+  const _hoisted_7$9 = { class: "bcp-main" };
+  const _hoisted_8$5 = { class: "bcp-nav" };
+  const _hoisted_9$5 = ["onClick"];
+  const _hoisted_10$4 = { class: "bcp-nav-txt" };
+  const _hoisted_11$2 = { class: "bcp-nav-count" };
+  const _hoisted_12$2 = ["data-key"];
+  const _hoisted_13$2 = { class: "bcp-title" };
+  const _hoisted_14$2 = { class: "bcp-grid" };
+  const _hoisted_15$2 = ["title", "onClick"];
+  const _hoisted_16$2 = ["src"];
+  const _hoisted_17$2 = { class: "bcp-name" };
 
   function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_Close = vue.resolveComponent("Close");
@@ -81699,7 +82706,7 @@
 
     return (vue.openBlock(), vue.createElementBlock("div", {
       class: "chart-content-panel",
-      onClick: _cache[7] || (_cache[7] = (...args) => ($options.clickChart && $options.clickChart(...args)))
+      onClick: _cache[8] || (_cache[8] = (...args) => ($options.clickChart && $options.clickChart(...args)))
     }, [
       vue.createVNode(_component_el_container, {
         class: vue.normalizeClass(["chart-content", [!$props.isModal ? 'set-chart-content':'',$data.focusFlag ? 'foucs-chart-content':'']]),
@@ -81895,12 +82902,47 @@
                     ]),
                     footer: vue.withCtx(() => [
                       vue.withDirectives(vue.createElementVNode("div", _hoisted_3$o, [
-                        _cache[8] || (_cache[8] = vue.createElementVNode("div", { class: "empty-img" }, null, -1)),
-                        _cache[9] || (_cache[9] = vue.createElementVNode("span", null, "拖拽左侧组件到此区域", -1)),
-                        vue.createElementVNode("button", {
-                          class: "bk-add-chart-btn",
-                          onClick: _cache[1] || (_cache[1] = vue.withModifiers((...args) => ($options.openPicker && $options.openPicker(...args)), ["stop"]))
-                        }, "＋ 添加图表")
+                        vue.createElementVNode("div", _hoisted_4$l, [
+                          _cache[10] || (_cache[10] = vue.createElementVNode("div", { class: "empty-opt empty-opt-drag" }, [
+                            vue.createElementVNode("div", { class: "empty-opt-ic" }, [
+                              vue.createElementVNode("svg", {
+                                width: "26",
+                                height: "26",
+                                viewBox: "0 0 24 24",
+                                fill: "none",
+                                stroke: "#4080ff",
+                                "stroke-width": "1.6",
+                                "stroke-linecap": "round",
+                                "stroke-linejoin": "round"
+                              }, [
+                                vue.createElementVNode("path", { d: "M12 3v18M3 12h18M12 3 9 6M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3" })
+                              ])
+                            ]),
+                            vue.createElementVNode("div", { class: "empty-opt-tt" }, "拖拽组件"),
+                            vue.createElementVNode("div", { class: "empty-opt-sub" }, "从左侧面板拖到此处")
+                          ], -1)),
+                          _cache[11] || (_cache[11] = vue.createElementVNode("div", { class: "empty-or" }, "或", -1)),
+                          vue.createElementVNode("div", {
+                            class: "empty-opt empty-opt-click",
+                            onClick: _cache[1] || (_cache[1] = vue.withModifiers((...args) => ($options.openPicker && $options.openPicker(...args)), ["stop"]))
+                          }, [...(_cache[9] || (_cache[9] = [
+                            vue.createElementVNode("div", { class: "empty-opt-ic" }, [
+                              vue.createElementVNode("svg", {
+                                width: "26",
+                                height: "26",
+                                viewBox: "0 0 24 24",
+                                fill: "none",
+                                stroke: "#4080ff",
+                                "stroke-width": "1.8",
+                                "stroke-linecap": "round"
+                              }, [
+                                vue.createElementVNode("path", { d: "M12 5v14M5 12h14" })
+                              ])
+                            ], -1),
+                            vue.createElementVNode("div", { class: "empty-opt-tt" }, "添加图表", -1),
+                            vue.createElementVNode("div", { class: "empty-opt-sub" }, "从图表库中选择", -1)
+                          ]))])
+                        ])
                       ], 512), [
                         [vue.vShow, $data.tabList.length === 0 && $props.setMode]
                       ])
@@ -81928,44 +82970,63 @@
           ? (vue.openBlock(), vue.createElementBlock("div", {
               key: 0,
               class: "bk-chart-picker-mask",
-              onClick: _cache[6] || (_cache[6] = vue.withModifiers($event => ($data.pickerOpen=false), ["self"]))
+              onClick: _cache[7] || (_cache[7] = vue.withModifiers($event => ($data.pickerOpen=false), ["self"]))
             }, [
-              vue.createElementVNode("div", _hoisted_4$l, [
-                vue.createElementVNode("div", _hoisted_5$g, [
-                  _cache[10] || (_cache[10] = vue.createElementVNode("span", null, "选择图表", -1)),
+              vue.createElementVNode("div", _hoisted_5$g, [
+                vue.createElementVNode("div", _hoisted_6$e, [
+                  _cache[12] || (_cache[12] = vue.createElementVNode("span", null, "选择图表", -1)),
                   vue.createElementVNode("button", {
                     class: "bcp-x",
                     onClick: _cache[5] || (_cache[5] = $event => ($data.pickerOpen=false))
                   }, "✕")
                 ]),
-                vue.createElementVNode("div", _hoisted_6$e, [
-                  (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.pickerGroups, (g) => {
-                    return (vue.openBlock(), vue.createElementBlock("div", {
-                      key: g.key,
-                      class: "bcp-group"
-                    }, [
-                      vue.createElementVNode("div", _hoisted_7$9, vue.toDisplayString(g.name), 1),
-                      vue.createElementVNode("div", _hoisted_8$5, [
-                        (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(g.items, (it) => {
-                          return (vue.openBlock(), vue.createElementBlock("div", {
-                            key: it.chartComId,
-                            class: "bcp-card",
-                            title: it.title,
-                            onClick: $event => ($options.pickChart(it))
-                          }, [
-                            ($options.chartImg(it))
-                              ? (vue.openBlock(), vue.createElementBlock("img", {
-                                  key: 0,
-                                  src: $options.chartImg(it),
-                                  class: "bcp-img"
-                                }, null, 8, _hoisted_10$3))
-                              : vue.createCommentVNode("", true),
-                            vue.createElementVNode("span", _hoisted_11$2, vue.toDisplayString(it.title), 1)
-                          ], 8, _hoisted_9$5))
-                        }), 128))
-                      ])
-                    ]))
-                  }), 128))
+                vue.createElementVNode("div", _hoisted_7$9, [
+                  vue.createElementVNode("div", _hoisted_8$5, [
+                    (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.pickerGroups, (g) => {
+                      return (vue.openBlock(), vue.createElementBlock("div", {
+                        key: g.key,
+                        class: vue.normalizeClass(['bcp-nav-item', $data.pickerActive === g.key && 'is-active']),
+                        onClick: $event => ($options.scrollToPickerGroup(g.key))
+                      }, [
+                        vue.createElementVNode("span", _hoisted_10$4, vue.toDisplayString(g.name), 1),
+                        vue.createElementVNode("span", _hoisted_11$2, vue.toDisplayString(g.items.length), 1)
+                      ], 10, _hoisted_9$5))
+                    }), 128))
+                  ]),
+                  vue.createElementVNode("div", {
+                    ref: "bcpBody",
+                    class: "bcp-body",
+                    onScroll: _cache[6] || (_cache[6] = (...args) => ($options.onPickerScroll && $options.onPickerScroll(...args)))
+                  }, [
+                    (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.pickerGroups, (g) => {
+                      return (vue.openBlock(), vue.createElementBlock("div", {
+                        key: g.key,
+                        class: "bcp-group",
+                        "data-key": g.key
+                      }, [
+                        vue.createElementVNode("div", _hoisted_13$2, vue.toDisplayString(g.name), 1),
+                        vue.createElementVNode("div", _hoisted_14$2, [
+                          (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(g.items, (it) => {
+                            return (vue.openBlock(), vue.createElementBlock("div", {
+                              key: it.chartComId,
+                              class: "bcp-card",
+                              title: it.title,
+                              onClick: $event => ($options.pickChart(it))
+                            }, [
+                              ($options.chartImg(it))
+                                ? (vue.openBlock(), vue.createElementBlock("img", {
+                                    key: 0,
+                                    src: $options.chartImg(it),
+                                    class: "bcp-img"
+                                  }, null, 8, _hoisted_16$2))
+                                : vue.createCommentVNode("", true),
+                              vue.createElementVNode("span", _hoisted_17$2, vue.toDisplayString(it.title), 1)
+                            ], 8, _hoisted_15$2))
+                          }), 128))
+                        ])
+                      ], 8, _hoisted_12$2))
+                    }), 128))
+                  ], 544)
                 ])
               ])
             ]))
@@ -81973,7 +83034,7 @@
       ]))
     ]))
   }
-  const ChartContent = /*#__PURE__*/_export_sfc(_sfc_main$B, [['render',_sfc_render$A],['__scopeId',"data-v-e1ed3441"]]);
+  const ChartContent = /*#__PURE__*/_export_sfc(_sfc_main$B, [['render',_sfc_render$A],['__scopeId',"data-v-96a1ae54"]]);
 
   const _imports_0$1 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAtCAYAAADV2ImkAAAAAXNSR0IArs4c6QAAA1VJREFUaEPtmU1ME1EQx2febukHaCvxpvHogYORhANeaLkSVA58JF6MF/XgQZBooompBw8aQeLF6EUxHkgrMcavcLFo9EgkxMSEsxq/ggXjdrfd3TGvUGiXdnm7S0qr7PF13rzf/jsznXnF8JBCYPMgw870jeC0nY3dZ5HhTIxMStnZLI6GUNQ/bgNbpNoShU0jMMcwMy76tRXsTAoeZ5J6oOohITNzPqfjZ6fAPpn26Cbbvw28UZVAKfDe1NXrThVmcuA8GWpr1RWuqbLGs9hWOT0wmx7DtFN1C/aRsxQBWT1ot9+JICUFe+cgNTf4lAB3bmDoz69ruOgW1Lpv1wUKS6Q08vVsLqQu3cQFN75LgCNDylMC6M47Qry7OBI85cZpuT3hc5k7QHQy7xrgWXo0dNiN7/8L+MgT2pHWtKWCUgylzuk+X9m+oyYU/qeBayLpnCgcjxN71ZJNIJDfTbIR4B8m4ZijpOOAxYdputKUMaQvhTUZ5a6mBultsY1fAyXZjwZf60ioPL6jboBXqssnR8AdCdW22S8HIgFrS/U3zOSBk+ptIDjtFngFem37RnXYK3A0qV0loot1A1x1hWPJXEnfwQCDOukv1uowDAJIs8UK5hrkmXdH8fdKDD8HgK6qKWw9yEmViN2jgNmY/QFATfUBnFB6TWBJL7Drks5ptyaqcF+CpG+gzQFAi2dgL/2wKHD0kXaZTLriFTavsJd7Ca7cT8itNudZv2++kGAFuM5J7Zhh0MPlrtL7IwRsnen4rLZRc89f5jtkLxFQfLNghRW2jvl8fD8TCn2Nx9G0asarATRmuk1gPAQ8x6zVv5DC5YBb2uRbALQbED4i4AIBNQPBPv4LDACeSpdd4AgBW29++I1O6yFtfHWc8h6awh6EgMtNtdGEujb/CR/n3XAb2LuG9h5c18bNCwk0EeABIX0QedktB0bA+6/7/SdEYNf1EqKbuN2mKYww/KYvMCJ69pYrDEXAsccUAV2vfA/HSK0t4GQuZpJR6Q8cVWJST70A52FTvb6pegBeha25pOMzoyUkSmBrHXgdbC0Dl4X1BNyR0CYAaEC0fla0Ky5ryyHxUiLoSQ0EpsrtcZ10sclsOxlmkgD2eoIuBp5Q2hFZuBIsP+cvt32jwdmnaOMAAAAASUVORK5CYII=";
 
@@ -83091,7 +84152,7 @@
   const _hoisted_7$8 = { class: "d-flex-c" };
   const _hoisted_8$4 = { class: "d-flex-c" };
   const _hoisted_9$4 = { class: "d-flex-c" };
-  const _hoisted_10$2 = { class: "d-flex-c" };
+  const _hoisted_10$3 = { class: "d-flex-c" };
   const _hoisted_11$1 = { class: "d-flex-c" };
   const _hoisted_12$1 = { class: "d-flex-c" };
   const _hoisted_13$1 = { class: "d-flex-c" };
@@ -83105,10 +84166,10 @@
   const _hoisted_21$1 = { class: "d-flex" };
   const _hoisted_22$1 = { style: {"width":"80px"} };
   const _hoisted_23$1 = { class: "d-flex-c" };
-  const _hoisted_24 = { class: "d-flex-c" };
-  const _hoisted_25 = { class: "d-flex" };
-  const _hoisted_26 = { style: {"width":"80px"} };
-  const _hoisted_27 = { class: "d-flex-c" };
+  const _hoisted_24$1 = { class: "d-flex-c" };
+  const _hoisted_25$1 = { class: "d-flex" };
+  const _hoisted_26$1 = { style: {"width":"80px"} };
+  const _hoisted_27$1 = { class: "d-flex-c" };
   const _hoisted_28 = { class: "d-flex-c" };
   const _hoisted_29 = { class: "d-flex-c" };
   const _hoisted_30 = { class: "plane-inner-bg" };
@@ -83342,7 +84403,7 @@
                   }),
                   vue.createVNode(_component_el_col, { span: 12 }, {
                     default: vue.withCtx(() => [
-                      vue.createElementVNode("div", _hoisted_10$2, [
+                      vue.createElementVNode("div", _hoisted_10$3, [
                         vue.createVNode(_component_el_input_number, {
                           modelValue: $data.form.max,
                           "onUpdate:modelValue": _cache[16] || (_cache[16] = $event => (($data.form.max) = $event)),
@@ -83651,7 +84712,7 @@
                                   }),
                                   vue.createVNode(_component_el_col, { span: 12 }, {
                                     default: vue.withCtx(() => [
-                                      vue.createElementVNode("div", _hoisted_24, [
+                                      vue.createElementVNode("div", _hoisted_24$1, [
                                         vue.createVNode(_component_el_input_number, {
                                           modelValue: $data.form.splitLine.distance,
                                           "onUpdate:modelValue": _cache[49] || (_cache[49] = $event => (($data.form.splitLine.distance) = $event)),
@@ -83685,8 +84746,8 @@
                         _: 1
                       }, 8, ["disabled"])
                     ]),
-                    vue.createElementVNode("div", _hoisted_25, [
-                      vue.createElementVNode("div", _hoisted_26, [
+                    vue.createElementVNode("div", _hoisted_25$1, [
+                      vue.createElementVNode("div", _hoisted_26$1, [
                         vue.createVNode(_component_el_switch, {
                           modelValue: $data.form.axisTick.show,
                           "onUpdate:modelValue": _cache[52] || (_cache[52] = $event => (($data.form.axisTick.show) = $event)),
@@ -83711,7 +84772,7 @@
                                 default: vue.withCtx(() => [
                                   vue.createVNode(_component_el_col, { span: 12 }, {
                                     default: vue.withCtx(() => [
-                                      vue.createElementVNode("div", _hoisted_27, [
+                                      vue.createElementVNode("div", _hoisted_27$1, [
                                         vue.createVNode(_component_el_input_number, {
                                           modelValue: $data.form.axisTick.length,
                                           "onUpdate:modelValue": _cache[55] || (_cache[55] = $event => (($data.form.axisTick.length) = $event)),
@@ -84634,7 +85695,36 @@
     },
     created () {
     },
+    mounted () {
+      this.$nextTick(() => {
+        this.scrollEl = this.$refs.cfgScroll?.closest('.base-flow') || this.$refs.cfgScroll;
+        if (this.scrollEl) this.scrollEl.addEventListener('scroll', this.onCfgScroll, { passive: true });
+      });
+    },
+    beforeUnmount () {
+      if (this.scrollEl) this.scrollEl.removeEventListener('scroll', this.onCfgScroll);
+    },
     methods: {
+      scrollToSec (key) {
+        const sc = this.scrollEl;
+        const el = document.getElementById('cfgsec-' + key);
+        if (sc && el) {
+          this.activeConfig = key;
+          const top = el.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop;
+          sc.scrollTo({ top: Math.max(0, top - 8), behavior: 'smooth' });
+        }
+      },
+      onCfgScroll () {
+        const sc = this.scrollEl;
+        if (!sc) return
+        const base = sc.getBoundingClientRect().top + 24;
+        let cur = this.chartMenu[0].key;
+        for (const t of this.chartMenu) {
+          const el = document.getElementById('cfgsec-' + t.key);
+          if (el && el.getBoundingClientRect().top <= base) cur = t.key;
+        }
+        this.activeConfig = cur;
+      },
       configOptionInit () {
         this.$nextTick(() => {
           this.form = Object.assign(this.form, this.configs.configOption);
@@ -84675,35 +85765,47 @@
     }
   };
 
-  const _hoisted_1$G = { style: {"display":"flex","flex-direction":"column","height":"100%"} };
-  const _hoisted_2$m = { style: {"flex":"1","height":"100%"} };
-  const _hoisted_3$k = { class: "copy-button-box" };
-  const _hoisted_4$i = { class: "d-flex-c" };
-  const _hoisted_5$e = { class: "d-flex-c" };
-  const _hoisted_6$c = { class: "d-flex-c" };
+  const _hoisted_1$G = { class: "cfg-anchor-wrap" };
+  const _hoisted_2$m = { class: "cfg-anchor-nav" };
+  const _hoisted_3$k = ["onClick"];
+  const _hoisted_4$i = {
+    class: "stat-config-main cfg-scroll",
+    ref: "cfgScroll"
+  };
+  const _hoisted_5$e = {
+    id: "cfgsec-basic",
+    class: "cfg-sec"
+  };
+  const _hoisted_6$c = { class: "copy-button-box" };
   const _hoisted_7$7 = { class: "d-flex-c" };
   const _hoisted_8$3 = { class: "d-flex-c" };
   const _hoisted_9$3 = { class: "d-flex-c" };
-  const _hoisted_10$1 = { class: "d-flex-c" };
+  const _hoisted_10$2 = { class: "d-flex-c" };
   const _hoisted_11 = { class: "d-flex-c" };
-  const _hoisted_12 = { class: "plane-inner-bg" };
+  const _hoisted_12 = { class: "d-flex-c" };
   const _hoisted_13 = { class: "d-flex-c" };
   const _hoisted_14 = { class: "d-flex-c" };
   const _hoisted_15 = { class: "plane-inner-bg" };
-  const _hoisted_16 = { class: "plane-inner-bg" };
-  const _hoisted_17 = { class: "plane-inner-bg" };
-  const _hoisted_18 = {
+  const _hoisted_16 = { class: "d-flex-c" };
+  const _hoisted_17 = { class: "d-flex-c" };
+  const _hoisted_18 = { class: "plane-inner-bg" };
+  const _hoisted_19 = { class: "plane-inner-bg" };
+  const _hoisted_20 = { class: "plane-inner-bg" };
+  const _hoisted_21 = {
+    id: "cfgsec-colorField",
+    class: "cfg-sec"
+  };
+  const _hoisted_22 = {
     class: "series-header flex-between",
     style: {"width":"100%"}
   };
-  const _hoisted_19 = { style: {"display":"inline-block","width":"90px","padding-left":"20px","text-align":"left"} };
-  const _hoisted_20 = { class: "d-flex-c" };
-  const _hoisted_21 = { class: "d-flex-c" };
-  const _hoisted_22 = { class: "d-flex-c" };
-  const _hoisted_23 = { class: "d-flex-c" };
+  const _hoisted_23 = { style: {"display":"inline-block","width":"90px","padding-left":"20px","text-align":"left"} };
+  const _hoisted_24 = { class: "d-flex-c" };
+  const _hoisted_25 = { class: "d-flex-c" };
+  const _hoisted_26 = { class: "d-flex-c" };
+  const _hoisted_27 = { class: "d-flex-c" };
 
   function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_SidebarTabs = vue.resolveComponent("SidebarTabs");
     const _component_el_button = vue.resolveComponent("el-button");
     const _component_el_input_number = vue.resolveComponent("el-input-number");
     const _component_el_form_item = vue.resolveComponent("el-form-item");
@@ -84734,663 +85836,672 @@
       rules: $data.rules,
       "tjb-u-r-l": $props.tjbURL
     }, _ctx.$attrs, {
-      onSetExpand: _cache[27] || (_cache[27] = $event => (_ctx.$emit('setExpand'))),
+      onSetExpand: _cache[26] || (_cache[26] = $event => (_ctx.$emit('setExpand'))),
       onConfigOptionInit: $options.configOptionInit,
       onSaveChartConfig: $options.saveChartCfg
     }), {
       default: vue.withCtx(() => [
         vue.createElementVNode("div", _hoisted_1$G, [
-          vue.createVNode(_component_SidebarTabs, {
-            modelValue: $data.activeConfig,
-            "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.activeConfig) = $event)),
-            menu: $data.chartMenu
-          }, null, 8, ["modelValue", "menu"]),
           vue.createElementVNode("div", _hoisted_2$m, [
-            vue.withDirectives(vue.createVNode(_component_el_form, {
-              ref: "customForm",
-              model: $data.form,
-              "label-width": "80px",
-              size: "small",
-              class: "full-box",
-              disabled: !$options.saveAble,
-              style: {"padding":"10px","overflow":"auto"}
-            }, {
-              default: vue.withCtx(() => [
-                vue.createElementVNode("div", _hoisted_3$k, [
-                  vue.createVNode(_component_el_button, {
-                    type: "primary",
-                    size: "small",
-                    onClick: _cache[1] || (_cache[1] = $event => (_ctx.copyConfig('gaugeBasic')))
-                  }, {
-                    default: vue.withCtx(() => [...(_cache[28] || (_cache[28] = [
-                      vue.createTextVNode(" 复制基础配置 ", -1)
-                    ]))]),
+            (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.chartMenu, (t) => {
+              return (vue.openBlock(), vue.createElementBlock("div", {
+                key: t.key,
+                class: vue.normalizeClass(['cfg-anchor-item', $data.activeConfig===t.key && 'is-on']),
+                onClick: $event => ($options.scrollToSec(t.key))
+              }, [
+                vue.createElementVNode("i", {
+                  class: vue.normalizeClass(["am-iconfont cfg-anchor-ic", t.icon])
+                }, null, 2),
+                vue.createElementVNode("span", null, vue.toDisplayString(t.name), 1)
+              ], 10, _hoisted_3$k))
+            }), 128))
+          ]),
+          vue.createElementVNode("div", _hoisted_4$i, [
+            vue.createElementVNode("div", _hoisted_5$e, [
+              _cache[47] || (_cache[47] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "基础样式", -1)),
+              vue.createVNode(_component_el_form, {
+                ref: "customForm",
+                model: $data.form,
+                "label-width": "80px",
+                size: "small",
+                class: "full-box",
+                disabled: !$options.saveAble
+              }, {
+                default: vue.withCtx(() => [
+                  vue.createElementVNode("div", _hoisted_6$c, [
+                    vue.createVNode(_component_el_button, {
+                      type: "primary",
+                      size: "small",
+                      onClick: _cache[0] || (_cache[0] = $event => (_ctx.copyConfig('gaugeBasic')))
+                    }, {
+                      default: vue.withCtx(() => [...(_cache[27] || (_cache[27] = [
+                        vue.createTextVNode(" 复制基础配置 ", -1)
+                      ]))]),
+                      _: 1
+                    }),
+                    vue.createVNode(_component_el_button, {
+                      type: "primary",
+                      size: "small",
+                      disabled: !$options.saveAble,
+                      onClick: _cache[1] || (_cache[1] = $event => (_ctx.pasteConfig('gaugeBasic')))
+                    }, {
+                      default: vue.withCtx(() => [...(_cache[28] || (_cache[28] = [
+                        vue.createTextVNode(" 粘贴基础配置 ", -1)
+                      ]))]),
+                      _: 1
+                    }, 8, ["disabled"])
+                  ]),
+                  vue.createVNode(_component_el_form_item, { label: "间隔" }, {
+                    default: vue.withCtx(() => [
+                      vue.createVNode(_component_el_input_number, {
+                        modelValue: $data.form.styles.gap,
+                        "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.form.styles.gap) = $event)),
+                        size: "small",
+                        class: "input-number-box-px",
+                        "controls-position": "right",
+                        onChange:  $options.getChartBasicConfigData
+                      }, null, 8, ["modelValue", "onChange"])
+                    ]),
                     _: 1
                   }),
-                  vue.createVNode(_component_el_button, {
-                    type: "primary",
-                    size: "small",
-                    disabled: !$options.saveAble,
-                    onClick: _cache[2] || (_cache[2] = $event => (_ctx.pasteConfig('gaugeBasic')))
-                  }, {
-                    default: vue.withCtx(() => [...(_cache[29] || (_cache[29] = [
-                      vue.createTextVNode(" 粘贴基础配置 ", -1)
-                    ]))]),
-                    _: 1
-                  }, 8, ["disabled"])
-                ]),
-                vue.createVNode(_component_el_form_item, { label: "间隔" }, {
-                  default: vue.withCtx(() => [
-                    vue.createVNode(_component_el_input_number, {
-                      modelValue: $data.form.styles.gap,
-                      "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.styles.gap) = $event)),
-                      size: "small",
-                      class: "input-number-box-px",
-                      "controls-position": "right",
-                      onChange:  $options.getChartBasicConfigData
-                    }, null, 8, ["modelValue", "onChange"])
-                  ]),
-                  _: 1
-                }),
-                vue.createVNode(_component_el_form_item, { label: "宽度" }, {
-                  default: vue.withCtx(() => [
-                    vue.createVNode(_component_el_row, {
-                      gutter: 10,
-                      type: "flex",
-                      style: {"width":"100%","margin-bottom":"10px"}
-                    }, {
-                      default: vue.withCtx(() => [
-                        vue.createVNode(_component_el_col, { span: 24 }, {
-                          default: vue.withCtx(() => [
-                            vue.createVNode(_component_el_radio_group, {
-                              modelValue: $data.form.widthType,
-                              "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.widthType) = $event)),
-                              size: "small",
-                              onChange: $options.getChartBasicConfigData
-                            }, {
-                              default: vue.withCtx(() => [
-                                vue.createVNode(_component_el_radio_button, { value: "adaptive" }, {
-                                  default: vue.withCtx(() => [...(_cache[30] || (_cache[30] = [
-                                    vue.createTextVNode(" 自适应 ", -1)
-                                  ]))]),
-                                  _: 1
-                                }),
-                                vue.createVNode(_component_el_radio_button, { value: "custom" }, {
-                                  default: vue.withCtx(() => [...(_cache[31] || (_cache[31] = [
-                                    vue.createTextVNode(" 自定义 ", -1)
-                                  ]))]),
-                                  _: 1
-                                })
-                              ]),
-                              _: 1
-                            }, 8, ["modelValue", "onChange"])
-                          ]),
-                          _: 1
-                        })
-                      ]),
-                      _: 1
-                    }),
-                    vue.createVNode(_component_el_row, {
-                      gutter: 10,
-                      type: "flex"
-                    }, {
-                      default: vue.withCtx(() => [
-                        vue.createVNode(_component_el_col, { span: 24 }, {
-                          default: vue.withCtx(() => [
-                            vue.withDirectives(vue.createElementVNode("div", _hoisted_4$i, [
-                              vue.createVNode(_component_PercPxInput, {
-                                modelValue: $data.form.styles.width,
-                                "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.styles.width) = $event)),
-                                onChange: $options.getChartBasicConfigData
-                              }, null, 8, ["modelValue", "onChange"]),
-                              _cache[32] || (_cache[32] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "宽度", -1))
-                            ], 512), [
-                              [vue.vShow, $data.form.widthType==='custom']
-                            ]),
-                            vue.withDirectives(vue.createElementVNode("div", _hoisted_5$e, [
-                              vue.createVNode(_component_el_input_number, {
-                                modelValue: $data.form.widthNum,
-                                "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.widthNum) = $event)),
-                                size: "small",
-                                class: "input-number-box",
-                                "controls-position": "right",
-                                onChange: $options.getChartBasicConfigData
-                              }, null, 8, ["modelValue", "onChange"]),
-                              _cache[33] || (_cache[33] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "行个数", -1))
-                            ], 512), [
-                              [vue.vShow, $data.form.widthType==='adaptive']
-                            ])
-                          ]),
-                          _: 1
-                        })
-                      ]),
-                      _: 1
-                    })
-                  ]),
-                  _: 1
-                }),
-                vue.createVNode(_component_el_form_item, { label: "高度" }, {
-                  default: vue.withCtx(() => [
-                    vue.createVNode(_component_el_row, {
-                      gutter: 10,
-                      type: "flex",
-                      style: {"width":"100%","margin-bottom":"10px"}
-                    }, {
-                      default: vue.withCtx(() => [
-                        vue.createVNode(_component_el_col, { span: 24 }, {
-                          default: vue.withCtx(() => [
-                            vue.createVNode(_component_el_radio_group, {
-                              modelValue: $data.form.heightType,
-                              "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.heightType) = $event)),
-                              size: "small",
-                              onChange: $options.getChartBasicConfigData
-                            }, {
-                              default: vue.withCtx(() => [
-                                vue.createVNode(_component_el_radio_button, { value: "adaptive" }, {
-                                  default: vue.withCtx(() => [...(_cache[34] || (_cache[34] = [
-                                    vue.createTextVNode(" 自适应 ", -1)
-                                  ]))]),
-                                  _: 1
-                                }),
-                                vue.createVNode(_component_el_radio_button, { value: "custom" }, {
-                                  default: vue.withCtx(() => [...(_cache[35] || (_cache[35] = [
-                                    vue.createTextVNode(" 自定义 ", -1)
-                                  ]))]),
-                                  _: 1
-                                })
-                              ]),
-                              _: 1
-                            }, 8, ["modelValue", "onChange"])
-                          ]),
-                          _: 1
-                        })
-                      ]),
-                      _: 1
-                    }),
-                    vue.createVNode(_component_el_row, {
-                      gutter: 10,
-                      type: "flex",
-                      style: {"width":"100%"}
-                    }, {
-                      default: vue.withCtx(() => [
-                        vue.createVNode(_component_el_col, { span: 24 }, {
-                          default: vue.withCtx(() => [
-                            vue.withDirectives(vue.createElementVNode("div", _hoisted_6$c, [
-                              vue.createVNode(_component_PercPxInput, {
-                                modelValue: $data.form.styles.height,
-                                "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form.styles.height) = $event)),
-                                onChange: $options.getChartBasicConfigData
-                              }, null, 8, ["modelValue", "onChange"]),
-                              _cache[36] || (_cache[36] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "高度", -1))
-                            ], 512), [
-                              [vue.vShow, $data.form.heightType==='custom']
-                            ]),
-                            vue.withDirectives(vue.createElementVNode("div", _hoisted_7$7, [
-                              vue.createVNode(_component_el_input_number, {
-                                modelValue: $data.form.heightNum,
-                                "onUpdate:modelValue": _cache[9] || (_cache[9] = $event => (($data.form.heightNum) = $event)),
-                                size: "small",
-                                class: "input-number-box",
-                                "controls-position": "right",
-                                onChange: $options.getChartBasicConfigData
-                              }, null, 8, ["modelValue", "onChange"]),
-                              _cache[37] || (_cache[37] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "列个数", -1))
-                            ], 512), [
-                              [vue.vShow, $data.form.heightType==='adaptive']
-                            ])
-                          ]),
-                          _: 1
-                        })
-                      ]),
-                      _: 1
-                    })
-                  ]),
-                  _: 1
-                }),
-                vue.createVNode(_component_el_form_item, { label: "基础样式" }, {
-                  default: vue.withCtx(() => [
-                    vue.createVNode(_component_el_row, {
-                      gutter: 10,
-                      type: "flex"
-                    }, {
-                      default: vue.withCtx(() => [
-                        vue.createVNode(_component_el_col, { span: 12 }, {
-                          default: vue.withCtx(() => [
-                            vue.createElementVNode("div", _hoisted_8$3, [
-                              vue.createVNode(_component_el_input_number, {
-                                modelValue: $data.form.styles.borderWidth,
-                                "onUpdate:modelValue": _cache[10] || (_cache[10] = $event => (($data.form.styles.borderWidth) = $event)),
-                                size: "small",
-                                class: "input-number-box-px",
-                                "controls-position": "right",
-                                onChange: $options.getChartBasicConfigData
-                              }, null, 8, ["modelValue", "onChange"]),
-                              _cache[38] || (_cache[38] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "边框粗细", -1))
-                            ])
-                          ]),
-                          _: 1
-                        }),
-                        vue.createVNode(_component_el_col, { span: 12 }, {
-                          default: vue.withCtx(() => [
-                            vue.createElementVNode("div", _hoisted_9$3, [
-                              vue.createVNode(_component_CommonColorPicker, {
-                                modelValue: $data.form.styles.borderColor,
-                                "onUpdate:modelValue": _cache[11] || (_cache[11] = $event => (($data.form.styles.borderColor) = $event)),
-                                onChange: $options.getChartBasicConfigData
-                              }, null, 8, ["modelValue", "onChange"]),
-                              _cache[39] || (_cache[39] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "边框颜色", -1))
-                            ])
-                          ]),
-                          _: 1
-                        })
-                      ]),
-                      _: 1
-                    }),
-                    vue.createVNode(_component_el_row, {
-                      gutter: 10,
-                      type: "flex"
-                    }, {
-                      default: vue.withCtx(() => [
-                        vue.createVNode(_component_el_col, { span: 12 }, {
-                          default: vue.withCtx(() => [
-                            vue.createElementVNode("div", _hoisted_10$1, [
-                              vue.createVNode(_component_el_input_number, {
-                                modelValue: $data.form.styles.borderRadius,
-                                "onUpdate:modelValue": _cache[12] || (_cache[12] = $event => (($data.form.styles.borderRadius) = $event)),
-                                size: "small",
-                                class: "input-number-box-px",
-                                "controls-position": "right",
-                                onChange: $options.getChartBasicConfigData
-                              }, null, 8, ["modelValue", "onChange"]),
-                              _cache[40] || (_cache[40] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "圆角大小", -1))
-                            ])
-                          ]),
-                          _: 1
-                        }),
-                        vue.createVNode(_component_el_col, { span: 12 }, {
-                          default: vue.withCtx(() => [
-                            vue.createElementVNode("div", _hoisted_11, [
-                              vue.createVNode(_component_CommonColorPicker, {
-                                modelValue: $data.form.styles.backgroundColor,
-                                "onUpdate:modelValue": _cache[13] || (_cache[13] = $event => (($data.form.styles.backgroundColor) = $event)),
-                                onChange:  $options.getChartBasicConfigData
-                              }, null, 8, ["modelValue", "onChange"]),
-                              _cache[41] || (_cache[41] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "背景色", -1))
-                            ])
-                          ]),
-                          _: 1
-                        })
-                      ]),
-                      _: 1
-                    })
-                  ]),
-                  _: 1
-                }),
-                vue.createVNode(_component_CollapseItem, {
-                  modelValue: $data.form.image.show,
-                  "onUpdate:modelValue": _cache[17] || (_cache[17] = $event => (($data.form.image.show) = $event)),
-                  name: " 图片样式",
-                  onChange: $options.getChartBasicConfigData
-                }, {
-                  default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_12, [
-                      vue.createVNode(_component_el_form_item, { label: "尺寸" }, {
+                  vue.createVNode(_component_el_form_item, { label: "宽度" }, {
+                    default: vue.withCtx(() => [
+                      vue.createVNode(_component_el_row, {
+                        gutter: 10,
+                        type: "flex",
+                        style: {"width":"100%","margin-bottom":"10px"}
+                      }, {
                         default: vue.withCtx(() => [
-                          vue.createVNode(_component_el_row, {
-                            gutter: 10,
-                            type: "flex"
-                          }, {
+                          vue.createVNode(_component_el_col, { span: 24 }, {
                             default: vue.withCtx(() => [
-                              vue.createVNode(_component_el_col, { span: 24 }, {
+                              vue.createVNode(_component_el_radio_group, {
+                                modelValue: $data.form.widthType,
+                                "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => (($data.form.widthType) = $event)),
+                                size: "small",
+                                onChange: $options.getChartBasicConfigData
+                              }, {
                                 default: vue.withCtx(() => [
-                                  vue.createElementVNode("div", _hoisted_13, [
-                                    vue.createVNode(_component_PercPxInput, {
-                                      modelValue: $data.form.image.width,
-                                      "onUpdate:modelValue": _cache[14] || (_cache[14] = $event => (($data.form.image.width) = $event)),
-                                      onChange: $options.getChartBasicConfigData
-                                    }, null, 8, ["modelValue", "onChange"]),
-                                    _cache[42] || (_cache[42] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "宽", -1))
-                                  ])
+                                  vue.createVNode(_component_el_radio_button, { value: "adaptive" }, {
+                                    default: vue.withCtx(() => [...(_cache[29] || (_cache[29] = [
+                                      vue.createTextVNode(" 自适应 ", -1)
+                                    ]))]),
+                                    _: 1
+                                  }),
+                                  vue.createVNode(_component_el_radio_button, { value: "custom" }, {
+                                    default: vue.withCtx(() => [...(_cache[30] || (_cache[30] = [
+                                      vue.createTextVNode(" 自定义 ", -1)
+                                    ]))]),
+                                    _: 1
+                                  })
                                 ]),
                                 _: 1
-                              })
-                            ]),
-                            _: 1
-                          }),
-                          vue.createVNode(_component_el_row, {
-                            gutter: 10,
-                            type: "flex"
-                          }, {
-                            default: vue.withCtx(() => [
-                              vue.createVNode(_component_el_col, { span: 24 }, {
-                                default: vue.withCtx(() => [
-                                  vue.createElementVNode("div", _hoisted_14, [
-                                    vue.createVNode(_component_PercPxInput, {
-                                      modelValue: $data.form.image.height,
-                                      "onUpdate:modelValue": _cache[15] || (_cache[15] = $event => (($data.form.image.height) = $event)),
-                                      onChange: $options.getChartBasicConfigData
-                                    }, null, 8, ["modelValue", "onChange"]),
-                                    _cache[43] || (_cache[43] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "高", -1))
-                                  ])
-                                ]),
-                                _: 1
-                              })
+                              }, 8, ["modelValue", "onChange"])
                             ]),
                             _: 1
                           })
                         ]),
                         _: 1
                       }),
-                      vue.createVNode(_component_el_form_item, { label: "位置" }, {
+                      vue.createVNode(_component_el_row, {
+                        gutter: 10,
+                        type: "flex"
+                      }, {
                         default: vue.withCtx(() => [
-                          vue.createVNode(_component_PositionStyle, {
-                            modelValue: $data.form.image.position,
-                            "onUpdate:modelValue": _cache[16] || (_cache[16] = $event => (($data.form.image.position) = $event)),
-                            onPositionStyleChange: $options.getChartBasicConfigData
-                          }, null, 8, ["modelValue", "onPositionStyleChange"])
-                        ]),
-                        _: 1
-                      })
-                    ])
-                  ]),
-                  _: 1
-                }, 8, ["modelValue", "onChange"]),
-                vue.createVNode(_component_el_collapse, null, {
-                  default: vue.withCtx(() => [
-                    vue.createVNode(_component_el_collapse_item, null, {
-                      title: vue.withCtx(() => [...(_cache[44] || (_cache[44] = [
-                        vue.createElementVNode("div", { class: "collapse-title-common" }, " 数字样式 ", -1)
-                      ]))]),
-                      default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_15, [
-                          vue.createVNode(_component_el_form_item, { label: "数字样式" }, {
+                          vue.createVNode(_component_el_col, { span: 24 }, {
                             default: vue.withCtx(() => [
-                              vue.createVNode(_component_TextStyle, {
-                                modelValue: $data.form.number.textStyle,
-                                "onUpdate:modelValue": _cache[18] || (_cache[18] = $event => (($data.form.number.textStyle) = $event)),
-                                onTextStyleChange: $options.getChartBasicConfigData
-                              }, null, 8, ["modelValue", "onTextStyleChange"])
-                            ]),
-                            _: 1
-                          }),
-                          vue.createVNode(_component_el_form_item, { label: "位置" }, {
-                            default: vue.withCtx(() => [
-                              vue.createVNode(_component_PositionStyle, {
-                                modelValue: $data.form.number.position,
-                                "onUpdate:modelValue": _cache[19] || (_cache[19] = $event => (($data.form.number.position) = $event)),
-                                onPositionStyleChange: $options.getChartBasicConfigData
-                              }, null, 8, ["modelValue", "onPositionStyleChange"])
-                            ]),
-                            _: 1
-                          })
-                        ])
-                      ]),
-                      _: 1
-                    }),
-                    vue.createVNode(_component_el_collapse_item, null, {
-                      title: vue.withCtx(() => [...(_cache[45] || (_cache[45] = [
-                        vue.createElementVNode("div", { class: "collapse-title-common" }, " 文本样式 ", -1)
-                      ]))]),
-                      default: vue.withCtx(() => [
-                        vue.createElementVNode("div", _hoisted_16, [
-                          vue.createVNode(_component_el_form_item, { label: "文本样式" }, {
-                            default: vue.withCtx(() => [
-                              vue.createVNode(_component_TextStyle, {
-                                modelValue: $data.form.text.textStyle,
-                                "onUpdate:modelValue": _cache[20] || (_cache[20] = $event => (($data.form.text.textStyle) = $event)),
-                                onTextStyleChange: $options.getChartBasicConfigData
-                              }, null, 8, ["modelValue", "onTextStyleChange"])
-                            ]),
-                            _: 1
-                          }),
-                          vue.createVNode(_component_el_form_item, { label: "位置" }, {
-                            default: vue.withCtx(() => [
-                              vue.createVNode(_component_PositionStyle, {
-                                modelValue: $data.form.text.position,
-                                "onUpdate:modelValue": _cache[21] || (_cache[21] = $event => (($data.form.text.position) = $event)),
-                                onPositionStyleChange: $options.getChartBasicConfigData
-                              }, null, 8, ["modelValue", "onPositionStyleChange"])
-                            ]),
-                            _: 1
-                          })
-                        ])
-                      ]),
-                      _: 1
-                    })
-                  ]),
-                  _: 1
-                }),
-                vue.createVNode(_component_CollapseItem, {
-                  modelValue: $data.form.unit.show,
-                  "onUpdate:modelValue": _cache[25] || (_cache[25] = $event => (($data.form.unit.show) = $event)),
-                  name: " 单位样式",
-                  onChange: $options.getChartBasicConfigData
-                }, {
-                  default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_17, [
-                      vue.createVNode(_component_el_form_item, { label: "文本样式" }, {
-                        default: vue.withCtx(() => [
-                          vue.createVNode(_component_TextStyle, {
-                            modelValue: $data.form.unit.textStyle,
-                            "onUpdate:modelValue": _cache[22] || (_cache[22] = $event => (($data.form.unit.textStyle) = $event)),
-                            onTextStyleChange: $options.getChartBasicConfigData
-                          }, null, 8, ["modelValue", "onTextStyleChange"])
-                        ]),
-                        _: 1
-                      }),
-                      vue.createVNode(_component_el_form_item, { label: "位置" }, {
-                        default: vue.withCtx(() => [
-                          vue.createVNode(_component_el_radio_group, {
-                            modelValue: $data.form.unit.posi,
-                            "onUpdate:modelValue": _cache[23] || (_cache[23] = $event => (($data.form.unit.posi) = $event)),
-                            size: "small",
-                            style: {"margin-bottom":"10px"},
-                            onChange: $options.getChartBasicConfigData
-                          }, {
-                            default: vue.withCtx(() => [
-                              vue.createVNode(_component_el_radio_button, { value: "text" }, {
-                                default: vue.withCtx(() => [...(_cache[46] || (_cache[46] = [
-                                  vue.createTextVNode(" 文本 ", -1)
-                                ]))]),
-                                _: 1
-                              }),
-                              vue.createVNode(_component_el_radio_button, { value: "number" }, {
-                                default: vue.withCtx(() => [...(_cache[47] || (_cache[47] = [
-                                  vue.createTextVNode(" 数字 ", -1)
-                                ]))]),
-                                _: 1
-                              })
-                            ]),
-                            _: 1
-                          }, 8, ["modelValue", "onChange"]),
-                          vue.createVNode(_component_PositionStyle, {
-                            modelValue: $data.form.unit.position,
-                            "onUpdate:modelValue": _cache[24] || (_cache[24] = $event => (($data.form.unit.position) = $event)),
-                            type: "absolute",
-                            onPositionStyleChange: $options.getChartBasicConfigData
-                          }, null, 8, ["modelValue", "onPositionStyleChange"])
-                        ]),
-                        _: 1
-                      })
-                    ])
-                  ]),
-                  _: 1
-                }, 8, ["modelValue", "onChange"])
-              ]),
-              _: 1
-            }, 8, ["model", "disabled"]), [
-              [vue.vShow, $data.activeConfig==='basic']
-            ]),
-            vue.withDirectives(vue.createVNode(_component_el_form, {
-              disabled: !$options.saveAble,
-              "label-width": "80px",
-              class: "full-box",
-              style: {"padding":"10px","overflow":"auto"}
-            }, {
-              default: vue.withCtx(() => [
-                vue.createVNode(_component_CollapseItem, {
-                  modelValue: $data.form.isPieces,
-                  "onUpdate:modelValue": _cache[26] || (_cache[26] = $event => (($data.form.isPieces) = $event)),
-                  class: "pieces-collapse",
-                  name: "区间",
-                  onChange: $options.getChartBasicConfigData
-                }, {
-                  titleRight: vue.withCtx(({show}) => [
-                    vue.withDirectives(vue.createVNode(_component_el_button, {
-                      size: "small",
-                      text: "",
-                      class: "add-seris-btn",
-                      type: "primary",
-                      onClick: vue.withModifiers($options.addPieces, ["stop"])
-                    }, {
-                      default: vue.withCtx(() => [
-                        vue.createVNode(_component_el_icon, null, {
-                          default: vue.withCtx(() => [
-                            vue.createVNode(_component_CirclePlusFilled)
-                          ]),
-                          _: 1
-                        })
-                      ]),
-                      _: 1
-                    }, 8, ["onClick"]), [
-                      [vue.vShow, show.length]
-                    ])
-                  ]),
-                  default: vue.withCtx(() => [
-                    vue.createVNode(_component_el_collapse, null, {
-                      default: vue.withCtx(() => [
-                        (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.pieces, (ele, index) => {
-                          return (vue.openBlock(), vue.createBlock(_component_el_collapse_item, { key: index }, {
-                            title: vue.withCtx(() => [
-                              vue.createElementVNode("div", _hoisted_18, [
-                                vue.createElementVNode("span", _hoisted_19, "区间" + vue.toDisplayString(index + 1), 1),
-                                vue.createElementVNode("div", null, [
-                                  vue.createVNode(_component_el_button, {
-                                    size: "small",
-                                    text: "",
-                                    class: "add-seris-btn",
-                                    type: "primary",
-                                    onClick: vue.withModifiers($event => ($options.copyPieces(ele)), ["stop"])
-                                  }, {
-                                    default: vue.withCtx(() => [
-                                      vue.createVNode(_component_i_ri_file_copy_2_fill)
-                                    ]),
-                                    _: 1
-                                  }, 8, ["onClick"]),
-                                  vue.createVNode(_component_el_button, {
-                                    size: "small",
-                                    text: "",
-                                    class: "del-seris-btn",
-                                    onClick: vue.withModifiers($event => ($options.delPieces(index)), ["stop"])
-                                  }, {
-                                    default: vue.withCtx(() => [
-                                      vue.createVNode(_component_el_icon, null, {
-                                        default: vue.withCtx(() => [
-                                          vue.createVNode(_component_DeleteFilled)
-                                        ]),
-                                        _: 1
-                                      })
-                                    ]),
-                                    _: 1
-                                  }, 8, ["onClick"])
-                                ])
+                              vue.withDirectives(vue.createElementVNode("div", _hoisted_7$7, [
+                                vue.createVNode(_component_PercPxInput, {
+                                  modelValue: $data.form.styles.width,
+                                  "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.form.styles.width) = $event)),
+                                  onChange: $options.getChartBasicConfigData
+                                }, null, 8, ["modelValue", "onChange"]),
+                                _cache[31] || (_cache[31] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "宽度", -1))
+                              ], 512), [
+                                [vue.vShow, $data.form.widthType==='custom']
+                              ]),
+                              vue.withDirectives(vue.createElementVNode("div", _hoisted_8$3, [
+                                vue.createVNode(_component_el_input_number, {
+                                  modelValue: $data.form.widthNum,
+                                  "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => (($data.form.widthNum) = $event)),
+                                  size: "small",
+                                  class: "input-number-box",
+                                  "controls-position": "right",
+                                  onChange: $options.getChartBasicConfigData
+                                }, null, 8, ["modelValue", "onChange"]),
+                                _cache[32] || (_cache[32] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "行个数", -1))
+                              ], 512), [
+                                [vue.vShow, $data.form.widthType==='adaptive']
                               ])
                             ]),
+                            _: 1
+                          })
+                        ]),
+                        _: 1
+                      })
+                    ]),
+                    _: 1
+                  }),
+                  vue.createVNode(_component_el_form_item, { label: "高度" }, {
+                    default: vue.withCtx(() => [
+                      vue.createVNode(_component_el_row, {
+                        gutter: 10,
+                        type: "flex",
+                        style: {"width":"100%","margin-bottom":"10px"}
+                      }, {
+                        default: vue.withCtx(() => [
+                          vue.createVNode(_component_el_col, { span: 24 }, {
                             default: vue.withCtx(() => [
-                              vue.createVNode(_component_el_row, {
-                                gutter: 10,
-                                type: "flex"
+                              vue.createVNode(_component_el_radio_group, {
+                                modelValue: $data.form.heightType,
+                                "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.form.heightType) = $event)),
+                                size: "small",
+                                onChange: $options.getChartBasicConfigData
                               }, {
                                 default: vue.withCtx(() => [
-                                  vue.createVNode(_component_el_col, { span: 12 }, {
-                                    default: vue.withCtx(() => [
-                                      vue.createElementVNode("div", _hoisted_20, [
-                                        vue.createVNode(_component_el_input_number, {
-                                          modelValue: ele.gt,
-                                          "onUpdate:modelValue": $event => ((ele.gt) = $event),
-                                          "controls-position": "right",
-                                          size: "small",
-                                          onChange: $options.getChartBasicConfigData
-                                        }, null, 8, ["modelValue", "onUpdate:modelValue", "onChange"]),
-                                        _cache[48] || (_cache[48] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "大于", -1))
-                                      ])
-                                    ]),
-                                    _: 2
-                                  }, 1024),
-                                  vue.createVNode(_component_el_col, { span: 12 }, {
-                                    default: vue.withCtx(() => [
-                                      vue.createElementVNode("div", _hoisted_21, [
-                                        vue.createVNode(_component_el_input_number, {
-                                          modelValue: ele.lte,
-                                          "onUpdate:modelValue": $event => ((ele.lte) = $event),
-                                          "controls-position": "right",
-                                          size: "small",
-                                          onChange: $options.getChartBasicConfigData
-                                        }, null, 8, ["modelValue", "onUpdate:modelValue", "onChange"]),
-                                        _cache[49] || (_cache[49] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "小于", -1))
-                                      ])
-                                    ]),
-                                    _: 2
-                                  }, 1024)
+                                  vue.createVNode(_component_el_radio_button, { value: "adaptive" }, {
+                                    default: vue.withCtx(() => [...(_cache[33] || (_cache[33] = [
+                                      vue.createTextVNode(" 自适应 ", -1)
+                                    ]))]),
+                                    _: 1
+                                  }),
+                                  vue.createVNode(_component_el_radio_button, { value: "custom" }, {
+                                    default: vue.withCtx(() => [...(_cache[34] || (_cache[34] = [
+                                      vue.createTextVNode(" 自定义 ", -1)
+                                    ]))]),
+                                    _: 1
+                                  })
                                 ]),
-                                _: 2
-                              }, 1024),
-                              vue.createVNode(_component_el_row, {
-                                gutter: 10,
-                                type: "flex"
-                              }, {
-                                default: vue.withCtx(() => [
-                                  vue.createVNode(_component_el_col, { span: 12 }, {
-                                    default: vue.withCtx(() => [
-                                      vue.createElementVNode("div", _hoisted_22, [
-                                        vue.createVNode(_component_CommonColorPicker, {
-                                          modelValue: ele.numberColor,
-                                          "onUpdate:modelValue": $event => ((ele.numberColor) = $event),
-                                          onChange: $options.getChartBasicConfigData
-                                        }, null, 8, ["modelValue", "onUpdate:modelValue", "onChange"]),
-                                        _cache[50] || (_cache[50] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "数字颜色", -1))
-                                      ])
-                                    ]),
-                                    _: 2
-                                  }, 1024),
-                                  vue.createVNode(_component_el_col, { span: 12 }, {
-                                    default: vue.withCtx(() => [
-                                      vue.createElementVNode("div", _hoisted_23, [
-                                        vue.createVNode(_component_CommonColorPicker, {
-                                          modelValue: ele.textColor,
-                                          "onUpdate:modelValue": $event => ((ele.textColor) = $event),
-                                          onChange: $options.getChartBasicConfigData
-                                        }, null, 8, ["modelValue", "onUpdate:modelValue", "onChange"]),
-                                        _cache[51] || (_cache[51] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "文字颜色", -1))
-                                      ])
-                                    ]),
-                                    _: 2
-                                  }, 1024)
-                                ]),
-                                _: 2
-                              }, 1024)
+                                _: 1
+                              }, 8, ["modelValue", "onChange"])
                             ]),
-                            _: 2
-                          }, 1024))
-                        }), 128))
-                      ]),
-                      _: 1
-                    })
-                  ]),
-                  _: 1
-                }, 8, ["modelValue", "onChange"])
-              ]),
-              _: 1
-            }, 8, ["disabled"]), [
-              [vue.vShow, $data.activeConfig==='colorField']
+                            _: 1
+                          })
+                        ]),
+                        _: 1
+                      }),
+                      vue.createVNode(_component_el_row, {
+                        gutter: 10,
+                        type: "flex",
+                        style: {"width":"100%"}
+                      }, {
+                        default: vue.withCtx(() => [
+                          vue.createVNode(_component_el_col, { span: 24 }, {
+                            default: vue.withCtx(() => [
+                              vue.withDirectives(vue.createElementVNode("div", _hoisted_9$3, [
+                                vue.createVNode(_component_PercPxInput, {
+                                  modelValue: $data.form.styles.height,
+                                  "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => (($data.form.styles.height) = $event)),
+                                  onChange: $options.getChartBasicConfigData
+                                }, null, 8, ["modelValue", "onChange"]),
+                                _cache[35] || (_cache[35] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "高度", -1))
+                              ], 512), [
+                                [vue.vShow, $data.form.heightType==='custom']
+                              ]),
+                              vue.withDirectives(vue.createElementVNode("div", _hoisted_10$2, [
+                                vue.createVNode(_component_el_input_number, {
+                                  modelValue: $data.form.heightNum,
+                                  "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.form.heightNum) = $event)),
+                                  size: "small",
+                                  class: "input-number-box",
+                                  "controls-position": "right",
+                                  onChange: $options.getChartBasicConfigData
+                                }, null, 8, ["modelValue", "onChange"]),
+                                _cache[36] || (_cache[36] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "列个数", -1))
+                              ], 512), [
+                                [vue.vShow, $data.form.heightType==='adaptive']
+                              ])
+                            ]),
+                            _: 1
+                          })
+                        ]),
+                        _: 1
+                      })
+                    ]),
+                    _: 1
+                  }),
+                  vue.createVNode(_component_el_form_item, { label: "基础样式" }, {
+                    default: vue.withCtx(() => [
+                      vue.createVNode(_component_el_row, {
+                        gutter: 10,
+                        type: "flex"
+                      }, {
+                        default: vue.withCtx(() => [
+                          vue.createVNode(_component_el_col, { span: 12 }, {
+                            default: vue.withCtx(() => [
+                              vue.createElementVNode("div", _hoisted_11, [
+                                vue.createVNode(_component_el_input_number, {
+                                  modelValue: $data.form.styles.borderWidth,
+                                  "onUpdate:modelValue": _cache[9] || (_cache[9] = $event => (($data.form.styles.borderWidth) = $event)),
+                                  size: "small",
+                                  class: "input-number-box-px",
+                                  "controls-position": "right",
+                                  onChange: $options.getChartBasicConfigData
+                                }, null, 8, ["modelValue", "onChange"]),
+                                _cache[37] || (_cache[37] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "边框粗细", -1))
+                              ])
+                            ]),
+                            _: 1
+                          }),
+                          vue.createVNode(_component_el_col, { span: 12 }, {
+                            default: vue.withCtx(() => [
+                              vue.createElementVNode("div", _hoisted_12, [
+                                vue.createVNode(_component_CommonColorPicker, {
+                                  modelValue: $data.form.styles.borderColor,
+                                  "onUpdate:modelValue": _cache[10] || (_cache[10] = $event => (($data.form.styles.borderColor) = $event)),
+                                  onChange: $options.getChartBasicConfigData
+                                }, null, 8, ["modelValue", "onChange"]),
+                                _cache[38] || (_cache[38] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "边框颜色", -1))
+                              ])
+                            ]),
+                            _: 1
+                          })
+                        ]),
+                        _: 1
+                      }),
+                      vue.createVNode(_component_el_row, {
+                        gutter: 10,
+                        type: "flex"
+                      }, {
+                        default: vue.withCtx(() => [
+                          vue.createVNode(_component_el_col, { span: 12 }, {
+                            default: vue.withCtx(() => [
+                              vue.createElementVNode("div", _hoisted_13, [
+                                vue.createVNode(_component_el_input_number, {
+                                  modelValue: $data.form.styles.borderRadius,
+                                  "onUpdate:modelValue": _cache[11] || (_cache[11] = $event => (($data.form.styles.borderRadius) = $event)),
+                                  size: "small",
+                                  class: "input-number-box-px",
+                                  "controls-position": "right",
+                                  onChange: $options.getChartBasicConfigData
+                                }, null, 8, ["modelValue", "onChange"]),
+                                _cache[39] || (_cache[39] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "圆角大小", -1))
+                              ])
+                            ]),
+                            _: 1
+                          }),
+                          vue.createVNode(_component_el_col, { span: 12 }, {
+                            default: vue.withCtx(() => [
+                              vue.createElementVNode("div", _hoisted_14, [
+                                vue.createVNode(_component_CommonColorPicker, {
+                                  modelValue: $data.form.styles.backgroundColor,
+                                  "onUpdate:modelValue": _cache[12] || (_cache[12] = $event => (($data.form.styles.backgroundColor) = $event)),
+                                  onChange:  $options.getChartBasicConfigData
+                                }, null, 8, ["modelValue", "onChange"]),
+                                _cache[40] || (_cache[40] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "背景色", -1))
+                              ])
+                            ]),
+                            _: 1
+                          })
+                        ]),
+                        _: 1
+                      })
+                    ]),
+                    _: 1
+                  }),
+                  vue.createVNode(_component_CollapseItem, {
+                    modelValue: $data.form.image.show,
+                    "onUpdate:modelValue": _cache[16] || (_cache[16] = $event => (($data.form.image.show) = $event)),
+                    name: " 图片样式",
+                    onChange: $options.getChartBasicConfigData
+                  }, {
+                    default: vue.withCtx(() => [
+                      vue.createElementVNode("div", _hoisted_15, [
+                        vue.createVNode(_component_el_form_item, { label: "尺寸" }, {
+                          default: vue.withCtx(() => [
+                            vue.createVNode(_component_el_row, {
+                              gutter: 10,
+                              type: "flex"
+                            }, {
+                              default: vue.withCtx(() => [
+                                vue.createVNode(_component_el_col, { span: 24 }, {
+                                  default: vue.withCtx(() => [
+                                    vue.createElementVNode("div", _hoisted_16, [
+                                      vue.createVNode(_component_PercPxInput, {
+                                        modelValue: $data.form.image.width,
+                                        "onUpdate:modelValue": _cache[13] || (_cache[13] = $event => (($data.form.image.width) = $event)),
+                                        onChange: $options.getChartBasicConfigData
+                                      }, null, 8, ["modelValue", "onChange"]),
+                                      _cache[41] || (_cache[41] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "宽", -1))
+                                    ])
+                                  ]),
+                                  _: 1
+                                })
+                              ]),
+                              _: 1
+                            }),
+                            vue.createVNode(_component_el_row, {
+                              gutter: 10,
+                              type: "flex"
+                            }, {
+                              default: vue.withCtx(() => [
+                                vue.createVNode(_component_el_col, { span: 24 }, {
+                                  default: vue.withCtx(() => [
+                                    vue.createElementVNode("div", _hoisted_17, [
+                                      vue.createVNode(_component_PercPxInput, {
+                                        modelValue: $data.form.image.height,
+                                        "onUpdate:modelValue": _cache[14] || (_cache[14] = $event => (($data.form.image.height) = $event)),
+                                        onChange: $options.getChartBasicConfigData
+                                      }, null, 8, ["modelValue", "onChange"]),
+                                      _cache[42] || (_cache[42] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "高", -1))
+                                    ])
+                                  ]),
+                                  _: 1
+                                })
+                              ]),
+                              _: 1
+                            })
+                          ]),
+                          _: 1
+                        }),
+                        vue.createVNode(_component_el_form_item, { label: "位置" }, {
+                          default: vue.withCtx(() => [
+                            vue.createVNode(_component_PositionStyle, {
+                              modelValue: $data.form.image.position,
+                              "onUpdate:modelValue": _cache[15] || (_cache[15] = $event => (($data.form.image.position) = $event)),
+                              onPositionStyleChange: $options.getChartBasicConfigData
+                            }, null, 8, ["modelValue", "onPositionStyleChange"])
+                          ]),
+                          _: 1
+                        })
+                      ])
+                    ]),
+                    _: 1
+                  }, 8, ["modelValue", "onChange"]),
+                  vue.createVNode(_component_el_collapse, null, {
+                    default: vue.withCtx(() => [
+                      vue.createVNode(_component_el_collapse_item, null, {
+                        title: vue.withCtx(() => [...(_cache[43] || (_cache[43] = [
+                          vue.createElementVNode("div", { class: "collapse-title-common" }, " 数字样式 ", -1)
+                        ]))]),
+                        default: vue.withCtx(() => [
+                          vue.createElementVNode("div", _hoisted_18, [
+                            vue.createVNode(_component_el_form_item, { label: "数字样式" }, {
+                              default: vue.withCtx(() => [
+                                vue.createVNode(_component_TextStyle, {
+                                  modelValue: $data.form.number.textStyle,
+                                  "onUpdate:modelValue": _cache[17] || (_cache[17] = $event => (($data.form.number.textStyle) = $event)),
+                                  onTextStyleChange: $options.getChartBasicConfigData
+                                }, null, 8, ["modelValue", "onTextStyleChange"])
+                              ]),
+                              _: 1
+                            }),
+                            vue.createVNode(_component_el_form_item, { label: "位置" }, {
+                              default: vue.withCtx(() => [
+                                vue.createVNode(_component_PositionStyle, {
+                                  modelValue: $data.form.number.position,
+                                  "onUpdate:modelValue": _cache[18] || (_cache[18] = $event => (($data.form.number.position) = $event)),
+                                  onPositionStyleChange: $options.getChartBasicConfigData
+                                }, null, 8, ["modelValue", "onPositionStyleChange"])
+                              ]),
+                              _: 1
+                            })
+                          ])
+                        ]),
+                        _: 1
+                      }),
+                      vue.createVNode(_component_el_collapse_item, null, {
+                        title: vue.withCtx(() => [...(_cache[44] || (_cache[44] = [
+                          vue.createElementVNode("div", { class: "collapse-title-common" }, " 文本样式 ", -1)
+                        ]))]),
+                        default: vue.withCtx(() => [
+                          vue.createElementVNode("div", _hoisted_19, [
+                            vue.createVNode(_component_el_form_item, { label: "文本样式" }, {
+                              default: vue.withCtx(() => [
+                                vue.createVNode(_component_TextStyle, {
+                                  modelValue: $data.form.text.textStyle,
+                                  "onUpdate:modelValue": _cache[19] || (_cache[19] = $event => (($data.form.text.textStyle) = $event)),
+                                  onTextStyleChange: $options.getChartBasicConfigData
+                                }, null, 8, ["modelValue", "onTextStyleChange"])
+                              ]),
+                              _: 1
+                            }),
+                            vue.createVNode(_component_el_form_item, { label: "位置" }, {
+                              default: vue.withCtx(() => [
+                                vue.createVNode(_component_PositionStyle, {
+                                  modelValue: $data.form.text.position,
+                                  "onUpdate:modelValue": _cache[20] || (_cache[20] = $event => (($data.form.text.position) = $event)),
+                                  onPositionStyleChange: $options.getChartBasicConfigData
+                                }, null, 8, ["modelValue", "onPositionStyleChange"])
+                              ]),
+                              _: 1
+                            })
+                          ])
+                        ]),
+                        _: 1
+                      })
+                    ]),
+                    _: 1
+                  }),
+                  vue.createVNode(_component_CollapseItem, {
+                    modelValue: $data.form.unit.show,
+                    "onUpdate:modelValue": _cache[24] || (_cache[24] = $event => (($data.form.unit.show) = $event)),
+                    name: " 单位样式",
+                    onChange: $options.getChartBasicConfigData
+                  }, {
+                    default: vue.withCtx(() => [
+                      vue.createElementVNode("div", _hoisted_20, [
+                        vue.createVNode(_component_el_form_item, { label: "文本样式" }, {
+                          default: vue.withCtx(() => [
+                            vue.createVNode(_component_TextStyle, {
+                              modelValue: $data.form.unit.textStyle,
+                              "onUpdate:modelValue": _cache[21] || (_cache[21] = $event => (($data.form.unit.textStyle) = $event)),
+                              onTextStyleChange: $options.getChartBasicConfigData
+                            }, null, 8, ["modelValue", "onTextStyleChange"])
+                          ]),
+                          _: 1
+                        }),
+                        vue.createVNode(_component_el_form_item, { label: "位置" }, {
+                          default: vue.withCtx(() => [
+                            vue.createVNode(_component_el_radio_group, {
+                              modelValue: $data.form.unit.posi,
+                              "onUpdate:modelValue": _cache[22] || (_cache[22] = $event => (($data.form.unit.posi) = $event)),
+                              size: "small",
+                              style: {"margin-bottom":"10px"},
+                              onChange: $options.getChartBasicConfigData
+                            }, {
+                              default: vue.withCtx(() => [
+                                vue.createVNode(_component_el_radio_button, { value: "text" }, {
+                                  default: vue.withCtx(() => [...(_cache[45] || (_cache[45] = [
+                                    vue.createTextVNode(" 文本 ", -1)
+                                  ]))]),
+                                  _: 1
+                                }),
+                                vue.createVNode(_component_el_radio_button, { value: "number" }, {
+                                  default: vue.withCtx(() => [...(_cache[46] || (_cache[46] = [
+                                    vue.createTextVNode(" 数字 ", -1)
+                                  ]))]),
+                                  _: 1
+                                })
+                              ]),
+                              _: 1
+                            }, 8, ["modelValue", "onChange"]),
+                            vue.createVNode(_component_PositionStyle, {
+                              modelValue: $data.form.unit.position,
+                              "onUpdate:modelValue": _cache[23] || (_cache[23] = $event => (($data.form.unit.position) = $event)),
+                              type: "absolute",
+                              onPositionStyleChange: $options.getChartBasicConfigData
+                            }, null, 8, ["modelValue", "onPositionStyleChange"])
+                          ]),
+                          _: 1
+                        })
+                      ])
+                    ]),
+                    _: 1
+                  }, 8, ["modelValue", "onChange"])
+                ]),
+                _: 1
+              }, 8, ["model", "disabled"])
+            ]),
+            vue.createElementVNode("div", _hoisted_21, [
+              _cache[52] || (_cache[52] = vue.createElementVNode("div", { class: "cfg-sec-title" }, "颜色映射", -1)),
+              vue.createVNode(_component_el_form, {
+                disabled: !$options.saveAble,
+                "label-width": "80px",
+                class: "full-box"
+              }, {
+                default: vue.withCtx(() => [
+                  vue.createVNode(_component_CollapseItem, {
+                    modelValue: $data.form.isPieces,
+                    "onUpdate:modelValue": _cache[25] || (_cache[25] = $event => (($data.form.isPieces) = $event)),
+                    class: "pieces-collapse",
+                    name: "区间",
+                    onChange: $options.getChartBasicConfigData
+                  }, {
+                    titleRight: vue.withCtx(({show}) => [
+                      vue.withDirectives(vue.createVNode(_component_el_button, {
+                        size: "small",
+                        text: "",
+                        class: "add-seris-btn",
+                        type: "primary",
+                        onClick: vue.withModifiers($options.addPieces, ["stop"])
+                      }, {
+                        default: vue.withCtx(() => [
+                          vue.createVNode(_component_el_icon, null, {
+                            default: vue.withCtx(() => [
+                              vue.createVNode(_component_CirclePlusFilled)
+                            ]),
+                            _: 1
+                          })
+                        ]),
+                        _: 1
+                      }, 8, ["onClick"]), [
+                        [vue.vShow, show.length]
+                      ])
+                    ]),
+                    default: vue.withCtx(() => [
+                      vue.createVNode(_component_el_collapse, null, {
+                        default: vue.withCtx(() => [
+                          (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($data.pieces, (ele, index) => {
+                            return (vue.openBlock(), vue.createBlock(_component_el_collapse_item, { key: index }, {
+                              title: vue.withCtx(() => [
+                                vue.createElementVNode("div", _hoisted_22, [
+                                  vue.createElementVNode("span", _hoisted_23, "区间" + vue.toDisplayString(index + 1), 1),
+                                  vue.createElementVNode("div", null, [
+                                    vue.createVNode(_component_el_button, {
+                                      size: "small",
+                                      text: "",
+                                      class: "add-seris-btn",
+                                      type: "primary",
+                                      onClick: vue.withModifiers($event => ($options.copyPieces(ele)), ["stop"])
+                                    }, {
+                                      default: vue.withCtx(() => [
+                                        vue.createVNode(_component_i_ri_file_copy_2_fill)
+                                      ]),
+                                      _: 1
+                                    }, 8, ["onClick"]),
+                                    vue.createVNode(_component_el_button, {
+                                      size: "small",
+                                      text: "",
+                                      class: "del-seris-btn",
+                                      onClick: vue.withModifiers($event => ($options.delPieces(index)), ["stop"])
+                                    }, {
+                                      default: vue.withCtx(() => [
+                                        vue.createVNode(_component_el_icon, null, {
+                                          default: vue.withCtx(() => [
+                                            vue.createVNode(_component_DeleteFilled)
+                                          ]),
+                                          _: 1
+                                        })
+                                      ]),
+                                      _: 1
+                                    }, 8, ["onClick"])
+                                  ])
+                                ])
+                              ]),
+                              default: vue.withCtx(() => [
+                                vue.createVNode(_component_el_row, {
+                                  gutter: 10,
+                                  type: "flex"
+                                }, {
+                                  default: vue.withCtx(() => [
+                                    vue.createVNode(_component_el_col, { span: 12 }, {
+                                      default: vue.withCtx(() => [
+                                        vue.createElementVNode("div", _hoisted_24, [
+                                          vue.createVNode(_component_el_input_number, {
+                                            modelValue: ele.gt,
+                                            "onUpdate:modelValue": $event => ((ele.gt) = $event),
+                                            "controls-position": "right",
+                                            size: "small",
+                                            onChange: $options.getChartBasicConfigData
+                                          }, null, 8, ["modelValue", "onUpdate:modelValue", "onChange"]),
+                                          _cache[48] || (_cache[48] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "大于", -1))
+                                        ])
+                                      ]),
+                                      _: 2
+                                    }, 1024),
+                                    vue.createVNode(_component_el_col, { span: 12 }, {
+                                      default: vue.withCtx(() => [
+                                        vue.createElementVNode("div", _hoisted_25, [
+                                          vue.createVNode(_component_el_input_number, {
+                                            modelValue: ele.lte,
+                                            "onUpdate:modelValue": $event => ((ele.lte) = $event),
+                                            "controls-position": "right",
+                                            size: "small",
+                                            onChange: $options.getChartBasicConfigData
+                                          }, null, 8, ["modelValue", "onUpdate:modelValue", "onChange"]),
+                                          _cache[49] || (_cache[49] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "小于", -1))
+                                        ])
+                                      ]),
+                                      _: 2
+                                    }, 1024)
+                                  ]),
+                                  _: 2
+                                }, 1024),
+                                vue.createVNode(_component_el_row, {
+                                  gutter: 10,
+                                  type: "flex"
+                                }, {
+                                  default: vue.withCtx(() => [
+                                    vue.createVNode(_component_el_col, { span: 12 }, {
+                                      default: vue.withCtx(() => [
+                                        vue.createElementVNode("div", _hoisted_26, [
+                                          vue.createVNode(_component_CommonColorPicker, {
+                                            modelValue: ele.numberColor,
+                                            "onUpdate:modelValue": $event => ((ele.numberColor) = $event),
+                                            onChange: $options.getChartBasicConfigData
+                                          }, null, 8, ["modelValue", "onUpdate:modelValue", "onChange"]),
+                                          _cache[50] || (_cache[50] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "数字颜色", -1))
+                                        ])
+                                      ]),
+                                      _: 2
+                                    }, 1024),
+                                    vue.createVNode(_component_el_col, { span: 12 }, {
+                                      default: vue.withCtx(() => [
+                                        vue.createElementVNode("div", _hoisted_27, [
+                                          vue.createVNode(_component_CommonColorPicker, {
+                                            modelValue: ele.textColor,
+                                            "onUpdate:modelValue": $event => ((ele.textColor) = $event),
+                                            onChange: $options.getChartBasicConfigData
+                                          }, null, 8, ["modelValue", "onUpdate:modelValue", "onChange"]),
+                                          _cache[51] || (_cache[51] = vue.createElementVNode("span", { class: "extra-bottom-text" }, "文字颜色", -1))
+                                        ])
+                                      ]),
+                                      _: 2
+                                    }, 1024)
+                                  ]),
+                                  _: 2
+                                }, 1024)
+                              ]),
+                              _: 2
+                            }, 1024))
+                          }), 128))
+                        ]),
+                        _: 1
+                      })
+                    ]),
+                    _: 1
+                  }, 8, ["modelValue", "onChange"])
+                ]),
+                _: 1
+              }, 8, ["disabled"])
             ])
-          ])
+          ], 512)
         ])
       ]),
       _: 1
     }, 16, ["configs", "page-config", "save-able", "items", "rules", "tjb-u-r-l", "onConfigOptionInit", "onSaveChartConfig"]))
   }
-  const StatisticsChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$t, [['render',_sfc_render$s],['__scopeId',"data-v-929fd9ca"]]);
+  const StatisticsChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$t, [['render',_sfc_render$s],['__scopeId',"data-v-25147ed6"]]);
 
   StatisticsChartConfig.install = function (Vue) {
     Vue.component(libPrefix + StatisticsChartConfig.name, StatisticsChartConfig);
@@ -89737,7 +90848,7 @@ onDestroy(function () {
       _: 3
     }))
   }
-  const BasicChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$h, [['render',_sfc_render$g],['__scopeId',"data-v-90338376"]]);
+  const BasicChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$h, [['render',_sfc_render$g],['__scopeId',"data-v-4ec38ddc"]]);
 
   BasicChartConfig.install = function (Vue) {
     Vue.component(libPrefix + BasicChartConfig.name, BasicChartConfig);
@@ -91114,6 +92225,22 @@ onDestroy(function () {
           if (v && !seen.has(v)) { seen.add(v); opts.push({ label: c.label || v, value: v }); }
         });
         return opts
+      },
+      // 散点地图(逐点经纬度)判定:隐藏聚合/分组/排序,只留"大小/颜色数值字段"
+      isScatterMap () {
+        const bt = this.configs && this.configs.branchType;
+        return bt === 'scatterMap' || /\/geo-points/.test(this.interfacePath || '')
+      },
+      // 可作散点大小/颜色的数值字段(排除经纬度)
+      geoNumericFields () {
+        return (this.metricFieldOptions || []).filter(o =>
+          ['int', 'decimal', 'number'].includes(o.dataType) &&
+          !/经度|纬度|lng|lat|longitude|latitude/i.test((o.value || '') + ' ' + (o.label || '')))
+      },
+      // 当前散点数值字段(从 geo-points URL 的 valueField 解析)
+      geoValueField () {
+        const m = /[?&]valueField=([^&]*)/.exec(this.interfacePath || '');
+        return m ? decodeURIComponent(m[1]) : ''
       }
     },
     watch: {
@@ -91625,6 +92752,19 @@ onDestroy(function () {
         this.configs.dataSourceConfig.metrics = efficientSuite.utils.deepClone(list);
         this.applyToChart();
       },
+      // 散点地图:切换数值字段 → 重建 geo-points 的 valueField 并重新取数
+      onGeoValueChange (field) {
+        let path = this.interfacePath || '';
+        if (/[?&]valueField=/.test(path)) {
+          path = path.replace(/([?&]valueField=)[^&]*/, `$1${field ? encodeURIComponent(field) : ''}`);
+        } else if (field) {
+          path += (path.includes('?') ? '&' : '?') + 'valueField=' + encodeURIComponent(field);
+        }
+        this.interfacePath = path;
+        if (!this.configs.dataSourceConfig) this.configs.dataSourceConfig = {};
+        this.configs.dataSourceConfig.interfacePath = path;
+        this.getData(true);
+      },
       // 分组与筛选变化:写回 configs.dataSourceConfig.grouping;维度变化则重新拉取分组取值
       onGroupingChange (g) {
         const oldField = this.grouping && this.grouping.field;
@@ -91678,23 +92818,29 @@ onDestroy(function () {
   };
 
   const _hoisted_1$a = { class: "data-source-wrapper" };
-  const _hoisted_2$7 = { class: "icon" };
-  const _hoisted_3$7 = { class: "data-source-main" };
-  const _hoisted_4$5 = { key: 2 };
-  const _hoisted_5$2 = {
+  const _hoisted_2$7 = {
+    key: 0,
+    class: "geo-value-setting"
+  };
+  const _hoisted_3$7 = { class: "icon" };
+  const _hoisted_4$5 = { class: "data-source-main" };
+  const _hoisted_5$2 = { key: 2 };
+  const _hoisted_6$2 = {
     key: 0,
     class: "main-label"
   };
-  const _hoisted_6$2 = { class: "main-label" };
   const _hoisted_7$1 = { class: "main-label" };
   const _hoisted_8$1 = { class: "main-label" };
-  const _hoisted_9$1 = {
+  const _hoisted_9$1 = { class: "main-label" };
+  const _hoisted_10$1 = {
     key: 0,
     class: "right-container",
     style: {flex: '0 0 245px', width: '245px'}
   };
 
   function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
+    const _component_el_option = vue.resolveComponent("el-option");
+    const _component_el_select = vue.resolveComponent("el-select");
     const _component_MetricSetting = vue.resolveComponent("MetricSetting");
     const _component_GroupFilter = vue.resolveComponent("GroupFilter");
     const _component_SortSetting = vue.resolveComponent("SortSetting");
@@ -91716,18 +92862,44 @@ onDestroy(function () {
         class: "left-container",
         style: vue.normalizeStyle({flex: $data.dataMappingVisible ? '0 0 500px' : '1'})
       }, [
-        (!$data.dataMappingVisible)
+        (!$data.dataMappingVisible && $options.isScatterMap)
+          ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_2$7, [
+              _cache[15] || (_cache[15] = vue.createElementVNode("div", { class: "gvs-title" }, "大小 / 颜色 数值字段", -1)),
+              vue.createVNode(_component_el_select, {
+                "model-value": $options.geoValueField,
+                placeholder: "选择数值字段(散点大小/深浅随其变化)",
+                size: "small",
+                clearable: "",
+                style: {"width":"100%"},
+                disabled: !$props.saveAble,
+                onChange: $options.onGeoValueChange
+              }, {
+                default: vue.withCtx(() => [
+                  (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.geoNumericFields, (o) => {
+                    return (vue.openBlock(), vue.createBlock(_component_el_option, {
+                      key: o.value,
+                      label: o.label,
+                      value: o.value
+                    }, null, 8, ["label", "value"]))
+                  }), 128))
+                ]),
+                _: 1
+              }, 8, ["model-value", "disabled", "onChange"]),
+              _cache[16] || (_cache[16] = vue.createElementVNode("div", { class: "gvs-hint" }, "按每个实例的经纬度打点;大小与深浅随所选数值变化。散点无需聚合/分组。", -1))
+            ]))
+          : vue.createCommentVNode("", true),
+        (!$data.dataMappingVisible && !$options.isScatterMap)
           ? (vue.openBlock(), vue.createBlock(_component_MetricSetting, {
-              key: 0,
+              key: 1,
               metrics: $data.metrics,
               "field-options": $options.metricFieldOptions,
               "set-mode": $props.saveAble,
               "onUpdate:metrics": $options.onMetricsChange
             }, null, 8, ["metrics", "field-options", "set-mode", "onUpdate:metrics"]))
           : vue.createCommentVNode("", true),
-        (!$data.dataMappingVisible)
+        (!$data.dataMappingVisible && !$options.isScatterMap)
           ? (vue.openBlock(), vue.createBlock(_component_GroupFilter, {
-              key: 1,
+              key: 2,
               grouping: $data.grouping,
               "dimension-options": $options.metricFieldOptions,
               "group-values": $data.groupValues,
@@ -91735,9 +92907,9 @@ onDestroy(function () {
               "onUpdate:grouping": $options.onGroupingChange
             }, null, 8, ["grouping", "dimension-options", "group-values", "set-mode", "onUpdate:grouping"]))
           : vue.createCommentVNode("", true),
-        (!$data.dataMappingVisible)
+        (!$data.dataMappingVisible && !$options.isScatterMap)
           ? (vue.openBlock(), vue.createBlock(_component_SortSetting, {
-              key: 2,
+              key: 3,
               sorts: $data.sorts,
               "field-options": $options.metricFieldOptions,
               "set-mode": $props.saveAble,
@@ -91745,8 +92917,8 @@ onDestroy(function () {
             }, null, 8, ["sorts", "field-options", "set-mode", "onUpdate:sorts"]))
           : vue.createCommentVNode("", true),
         ($data.showRawSource)
-          ? (vue.openBlock(), vue.createElementBlock(vue.Fragment, { key: 3 }, [
-              _cache[19] || (_cache[19] = vue.createElementVNode("div", { class: "data-source-title" }, " ① 设置数据源 ", -1)),
+          ? (vue.openBlock(), vue.createElementBlock(vue.Fragment, { key: 4 }, [
+              _cache[21] || (_cache[21] = vue.createElementVNode("div", { class: "data-source-title" }, " ① 设置数据源 ", -1)),
               vue.withDirectives(vue.createElementVNode("div", {
                 class: "data-map",
                 onClick: _cache[0] || (_cache[0] = $event => ($options.openNext($data.dataSourceType === 'tjb'?'1' : '2')))
@@ -91757,15 +92929,15 @@ onDestroy(function () {
                 class: vue.normalizeClass(["data-map", $options.showSelectData ? 'data-map-bottom':'']),
                 onClick: _cache[1] || (_cache[1] = $event => ($options.openNext('3')))
               }, [
-                vue.createElementVNode("div", _hoisted_2$7, [
+                vue.createElementVNode("div", _hoisted_3$7, [
                   vue.createVNode(_component_i_ri_menu_fold_line)
                 ]),
                 vue.createTextVNode(" " + vue.toDisplayString($options.showSelectData ? '③数据映射' : '②数据映射'), 1)
               ], 2), [
                 [vue.vShow, $data.dataSourceType && !$data.dataMappingVisible]
               ]),
-              vue.createElementVNode("div", _hoisted_3$7, [
-                _cache[18] || (_cache[18] = vue.createElementVNode("div", { class: "main-label" }, " 数据源类型 ", -1)),
+              vue.createElementVNode("div", _hoisted_4$5, [
+                _cache[20] || (_cache[20] = vue.createElementVNode("div", { class: "main-label" }, " 数据源类型 ", -1)),
                 vue.createVNode(_component_EfSelect, {
                   modelValue: $data.dataSourceType,
                   "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.dataSourceType) = $event)),
@@ -91804,9 +92976,9 @@ onDestroy(function () {
                     }, null, 8, ["columns", "data", "style"]))
                   : vue.createCommentVNode("", true),
                 ($data.dataSourceType != 'static')
-                  ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_4$5, [
+                  ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_5$2, [
                       (['post', 'get', 'tjb', 'fetch-get', 'fetch-post', 'fetch-post-form'].includes($data.dataSourceType))
-                        ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_5$2, " URL "))
+                        ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_6$2, " URL "))
                         : vue.createCommentVNode("", true),
                       vue.createElementVNode("div", {
                         class: "d-flex",
@@ -91835,14 +93007,14 @@ onDestroy(function () {
                             }, null, 8, ["modelValue", "mock", "disabled"]))
                           : vue.createCommentVNode("", true)
                       ], 4),
-                      vue.createElementVNode("div", _hoisted_6$2, [
+                      vue.createElementVNode("div", _hoisted_7$1, [
                         vue.createVNode(_component_el_checkbox, {
                           modelValue: $data.interfaceFilterVisible,
                           "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => (($data.interfaceFilterVisible) = $event)),
                           style: {"margin-right":"5px"},
                           disabled: !$props.saveAble
                         }, null, 8, ["modelValue", "disabled"]),
-                        _cache[15] || (_cache[15] = vue.createTextVNode("过滤器 ", -1))
+                        _cache[17] || (_cache[17] = vue.createTextVNode("过滤器 ", -1))
                       ]),
                       ($data.interfaceFilterVisible)
                         ? (vue.openBlock(), vue.createBlock(_component_InterfaceFilterConfig, {
@@ -91854,7 +93026,7 @@ onDestroy(function () {
                             onSave: $options.saveInterfaceFilter
                           }, null, 8, ["visible", "interface-filter", "set-mode", "onSave"]))
                         : vue.createCommentVNode("", true),
-                      vue.createElementVNode("div", _hoisted_7$1, [
+                      vue.createElementVNode("div", _hoisted_8$1, [
                         vue.createVNode(_component_el_checkbox, {
                           modelValue: $data.interfaceTempParamsVisible,
                           "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => (($data.interfaceTempParamsVisible) = $event)),
@@ -91878,14 +93050,14 @@ onDestroy(function () {
                         : vue.createCommentVNode("", true)
                     ]))
                   : vue.createCommentVNode("", true),
-                vue.createElementVNode("div", _hoisted_8$1, [
+                vue.createElementVNode("div", _hoisted_9$1, [
                   vue.createVNode(_component_el_checkbox, {
                     modelValue: $data.paramHandlerVisible,
                     "onUpdate:modelValue": _cache[10] || (_cache[10] = $event => (($data.paramHandlerVisible) = $event)),
                     style: {"margin-right":"5px"},
                     disabled: !$props.saveAble
                   }, null, 8, ["modelValue", "disabled"]),
-                  _cache[16] || (_cache[16] = vue.createTextVNode("参数处理器 ", -1))
+                  _cache[18] || (_cache[18] = vue.createTextVNode("参数处理器 ", -1))
                 ]),
                 ($data.paramHandlerVisible)
                   ? (vue.openBlock(), vue.createBlock(_component_InterfaceFilterConfig, {
@@ -91908,7 +93080,7 @@ onDestroy(function () {
                 }, {
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_i_ri_eye_fill, { class: "am-btn-icon" }),
-                    _cache[17] || (_cache[17] = vue.createTextVNode("提取数据 ", -1))
+                    _cache[19] || (_cache[19] = vue.createTextVNode("提取数据 ", -1))
                   ]),
                   _: 1
                 }, 8, ["disabled"]), [
@@ -91919,7 +93091,7 @@ onDestroy(function () {
           : vue.createCommentVNode("", true)
       ], 4),
       ($data.dataMappingVisible && $data.showRawSource)
-        ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_9$1, [
+        ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_10$1, [
             vue.createVNode(_component_DataMapping, {
               visible: $data.dataMappingVisible,
               "set-mode": $props.saveAble,
@@ -91943,7 +93115,7 @@ onDestroy(function () {
         : vue.createCommentVNode("", true)
     ]))
   }
-  const DataSourceConfig = /*#__PURE__*/_export_sfc(_sfc_main$a, [['render',_sfc_render$9],['__scopeId',"data-v-084bb4b8"]]);
+  const DataSourceConfig = /*#__PURE__*/_export_sfc(_sfc_main$a, [['render',_sfc_render$9],['__scopeId',"data-v-89b7c227"]]);
 
   DataSourceConfig.install = function (Vue) {
     Vue.component(libPrefix + DataSourceConfig.name, DataSourceConfig);

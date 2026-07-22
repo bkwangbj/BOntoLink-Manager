@@ -14,72 +14,75 @@
     @config-option-init="configOptionInit"
     @build-chart-series-data="buildChartData"
   >
-    <div class="table-config-content">
-      <SidebarTabs
-        v-model="activeConfig"
-        :menu="chartMenu"
-      />
-      <div class="table-config-table">
+    <div class="cfg-anchor-wrap">
+      <div class="cfg-anchor-nav">
         <div
-          v-show="activeConfig==='basic'"
-          class="copy-button-box"
+          v-for="t in chartMenu"
+          :key="t.key"
+          :class="['cfg-anchor-item', activeConfig===t.key && 'is-on']"
+          @click="scrollToSec(t.key)"
         >
-          <el-button
-            type="primary"
-            size="small"
-
-            @click="copyConfig('tableBasic')"
-          >
-            复制基础配置
-          </el-button>
-          <el-button
-            type="primary"
-            size="small"
-            :disabled="!saveAble"
-            @click="pasteConfig('tableBasic')"
-          >
-            粘贴基础配置
-          </el-button>
+          <i class="am-iconfont cfg-anchor-ic" :class="t.icon" />
+          <span>{{ t.name }}</span>
         </div>
-        <ChartTypeChange
-          v-show="activeConfig==='basic'"
-          style="margin-bottom: 10px;"
-          :type="configs.branchType"
-          @change-type="changeChartType"
-        />
-        <tablePropsConfig
-          v-show="activeConfig==='basic'"
-          ref="propsConfig"
-          @paste-config="pasteConfig"
-          @props-change="getBasicConfigData"
-        />
-        <div
-          v-show="activeConfig==='columns'"
-          class="copy-button-box"
-        >
-          <el-button
-            type="primary"
-            size="small"
-            @click="copyConfig('tableColumns')"
-          >
-            复制列配置
-          </el-button>
-          <el-button
-            type="primary"
-            size="small"
-            :disabled="!saveAble"
-            @click="pasteConfig('tableColumns')"
-          >
-            粘贴列配置
-          </el-button>
+      </div>
+      <div class="table-config-table cfg-scroll" ref="cfgScroll">
+        <div id="cfgsec-basic" class="cfg-sec">
+          <div class="cfg-sec-title">表格</div>
+          <div class="copy-button-box">
+            <el-button
+              type="primary"
+              size="small"
+              @click="copyConfig('tableBasic')"
+            >
+              复制基础配置
+            </el-button>
+            <el-button
+              type="primary"
+              size="small"
+              :disabled="!saveAble"
+              @click="pasteConfig('tableBasic')"
+            >
+              粘贴基础配置
+            </el-button>
+          </div>
+          <ChartTypeChange
+            style="margin-bottom: 10px;"
+            :type="configs.branchType"
+            @change-type="changeChartType"
+          />
+          <tablePropsConfig
+            ref="propsConfig"
+            @paste-config="pasteConfig"
+            @props-change="getBasicConfigData"
+          />
         </div>
-        <tableColumnsConfig
-          v-show="activeConfig==='columns'"
-          ref="columnConfigRef"
-          :save-able="saveAble"
-          @sync-column="syncColumn"
-          @chart-change="getBasicConfigData"
-        />
+        <div id="cfgsec-columns" class="cfg-sec">
+          <div class="cfg-sec-title">表格列</div>
+          <div class="copy-button-box">
+            <el-button
+              type="primary"
+              size="small"
+              @click="copyConfig('tableColumns')"
+            >
+              复制列配置
+            </el-button>
+            <el-button
+              type="primary"
+              size="small"
+              :disabled="!saveAble"
+              @click="pasteConfig('tableColumns')"
+            >
+              粘贴列配置
+            </el-button>
+          </div>
+          <tableColumnsConfig
+            ref="columnConfigRef"
+            :save-able="saveAble"
+            @sync-column="syncColumn"
+            @chart-change="getBasicConfigData"
+          />
+        </div>
       </div>
     </div>
   </BKBasicChartConfig>
@@ -141,7 +144,36 @@ export default {
   },
   created () {
   },
+  mounted () {
+    this.$nextTick(() => {
+      this.scrollEl = this.$refs.cfgScroll?.closest('.base-flow') || this.$refs.cfgScroll
+      if (this.scrollEl) this.scrollEl.addEventListener('scroll', this.onCfgScroll, { passive: true })
+    })
+  },
+  beforeUnmount () {
+    if (this.scrollEl) this.scrollEl.removeEventListener('scroll', this.onCfgScroll)
+  },
   methods: {
+    scrollToSec (key) {
+      const sc = this.scrollEl
+      const el = document.getElementById('cfgsec-' + key)
+      if (sc && el) {
+        this.activeConfig = key
+        const top = el.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop
+        sc.scrollTo({ top: Math.max(0, top - 8), behavior: 'smooth' })
+      }
+    },
+    onCfgScroll () {
+      const sc = this.scrollEl
+      if (!sc) return
+      const base = sc.getBoundingClientRect().top + 24
+      let cur = this.chartMenu[0].key
+      for (const t of this.chartMenu) {
+        const el = document.getElementById('cfgsec-' + t.key)
+        if (el && el.getBoundingClientRect().top <= base) cur = t.key
+      }
+      this.activeConfig = cur
+    },
     getTypeText (value, list) {
       const data = list.find(c => c.value === value)
       return data ? data.label : ''
@@ -208,23 +240,59 @@ export default {
 
 <style lang="scss" scoped>
 // @import "../../styles/index.css";
-.table-config-content {
+/* 锚点导航布局:左侧固定锚点 + 右侧滚动配置(依次往下排) */
+.cfg-anchor-wrap {
+  display: flex;
+  align-items: flex-start;
+}
+.cfg-anchor-nav {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  flex-shrink: 0;
+  width: 62px;
+  padding: 8px 0;
+  box-sizing: border-box;
+  background: #fafbfc;
+  border-right: 1px solid #eef0f3;
+  align-self: flex-start;
+}
+.cfg-anchor-item {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
-
-  .table-config-tools {
-    // padding: 5px;
-    // border-top: 1px solid #e8eaec;
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .table-config-table {
-    flex: 1;
-    padding: 10px;
-    overflow: auto;
-  }
+  align-items: center;
+  gap: 4px;
+  padding: 10px 4px;
+  font-size: 12px;
+  color: #86909c;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: color .15s, background .15s;
+}
+.cfg-anchor-item:hover { color: #1f6aff; }
+.cfg-anchor-item.is-on {
+  color: #1f6aff;
+  background: #eef4ff;
+  border-left-color: #1f6aff;
+}
+.cfg-anchor-ic { font-size: 16px; }
+.cfg-sec + .cfg-sec {
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f2f5;
+}
+.cfg-sec-title {
+  margin: 6px 0 12px;
+  padding-left: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #1a1a1a;
+  border-left: 3px solid #1f6aff;
+}
+.table-config-table {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 16px 12px 12px;
 }
 </style>

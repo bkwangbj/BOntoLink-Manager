@@ -352,7 +352,7 @@ async function reloadDict(d) {
 .dm-panel-title { font-size:14px;font-weight:600; }
 .dm-tree-wrap { flex:1;overflow-y:auto;padding:4px 0; }
 .dm-item-table { width:100%;font-size:12px; }
-.dm-item-table th { background:var(--bl-bg-2);padding:5px 8px;font-weight:600;position:sticky;top:0;z-index:1; }
+.dm-item-table th { background:var(--bl-thead-bg);padding:5px 8px;font-weight:600;position:sticky;top:0;z-index:1; }
 .dm-item-table td { padding:4px 8px;border-bottom:1px solid var(--bl-divider); }
 .dm-item-table tr:hover td { background:var(--bl-bg-hover); }
 .dm-item-table tr.is-editing td { background:var(--bl-primary-soft); }

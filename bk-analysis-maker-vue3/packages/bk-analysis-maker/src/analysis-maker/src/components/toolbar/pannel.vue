@@ -4,7 +4,7 @@
     class="toolbar-pannel-wrapper"
   >
     <div class="title">
-      <span v-show="!showSearch">看板组件</span>
+      <span v-show="!showSearch">组件</span>
       <div
         v-show="!showSearch"
         class="icons"
@@ -40,19 +40,23 @@
       v-model="activeNames"
       class="content"
     >
-      <el-collapse-item
-        v-for="(m, key) in finalMenus"
-        v-show="m.children.length"
-        :key="key"
-        :ref="m.key"
-        class="group"
-        :name="m.key"
+      <template
+        v-for="grp in menuCats"
+        :key="grp.cat"
       >
+        <div class="menu-cat">{{ grp.cat }}</div>
+        <el-collapse-item
+          v-for="m in grp.items"
+          :key="m.key"
+          :ref="m.key"
+          class="group"
+          :name="m.key"
+        >
         <template #title>
           <div
             class="group-name"
           >
-            {{ m.name }}
+            {{ m.name }}<span class="group-count">{{ m.children.length }}</span>
           </div>
         </template>
         <div
@@ -158,7 +162,8 @@
             </div>
           </template>
         </draggable>
-      </el-collapse-item>
+        </el-collapse-item>
+      </template>
     </el-collapse>
   </div>
 </template>
@@ -228,7 +233,7 @@ export default {
       searchResult: [],
       panelHeight: 0,
       topMap: {},
-      activeNames: []
+      activeNames: ['layout', 'line']
     }
   },
   computed: {
@@ -238,6 +243,17 @@ export default {
       } else {
         return this.menus
       }
+    },
+    // 分组按两大类拆分:画布(布局/模板) + 图表(其余全部),小标题占位分隔
+    menuCats () {
+      const isCanvas = m => m.key === 'layout' || m.key === 'template'
+      const withChildren = this.finalMenus.filter(m => m.children.length)
+      const canvas = withChildren.filter(isCanvas)
+      const charts = withChildren.filter(m => !isCanvas(m))
+      const arr = []
+      if (canvas.length) arr.push({ cat: '画布', items: canvas })
+      if (charts.length) arr.push({ cat: '图表', items: charts })
+      return arr
     },
     customChartList () {
       return this.customChart.filter(c => c.type !== 'decorate')
@@ -270,7 +286,8 @@ export default {
       }
     },
     finalMenus () {
-      this.activeNames = this.finalMenus.map(item => item.key)
+      // 搜索态:展开所有命中分组;默认态:展开「布局 + 折线图」两组
+      this.activeNames = this.keywords ? this.searchResult.map(m => m.key) : ['layout', 'line']
     }
   },
   created () {
@@ -349,7 +366,7 @@ export default {
       }
 
       // 折线图(折线类 branchType)
-      const LINE_TYPES = ['lineChart', 'smoothLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap']
+      const LINE_TYPES = ['lineChart', 'smoothLineChart', 'markLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap']
       const lineMenu = this.menus.find(c => c.key === 'line')
       if (lineMenu) {
         lineMenu.children = this.chartData.filter(item => LINE_TYPES.indexOf(item.branchType) !== -1).map(item => ({
@@ -624,7 +641,7 @@ export default {
 
   .content {
     flex: 1;
-    padding-right: 10px;
+    padding-right: 0px;
     padding-bottom: 12px;
     overflow: auto;
     background: #f7f7f7;
@@ -645,6 +662,13 @@ export default {
       }
     }
 
+    .menu-cat {
+      padding: 12px 10px 4px;
+      font-size: 11px;
+      color: #b0b4bd;
+      letter-spacing: 1px;
+    }
+
     .group {
       // padding: 0 12px;
       .group-name {
@@ -656,6 +680,21 @@ export default {
 
         & + :deep(i) {
           color: #1a1a1a;
+        }
+
+        .group-count {
+          margin-left: 6px;
+          padding: 0 6px;
+          min-width: 16px;
+          height: 16px;
+          line-height: 16px;
+          display: inline-block;
+          text-align: center;
+          font-size: 11px;
+          font-weight: normal;
+          color: #86909c;
+          background: #f2f3f5;
+          border-radius: 8px;
         }
       }
 

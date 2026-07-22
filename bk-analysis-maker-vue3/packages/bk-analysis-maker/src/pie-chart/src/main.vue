@@ -81,6 +81,7 @@ export default {
       }
     },
     customResetChart (config) {
+      this.clearCarousel()
       if (!this.relList) {
         return
       }
@@ -231,6 +232,9 @@ export default {
             option.tooltip.formatter = function ({ data, color }) {
               return '<div style="display:flex;align-items:center;"> <div style="height:10px;width:10px;border-radius:5px;margin-right:10px;background:' + color + ';"></div>' + data.originData.name + '<div style="width:10px;"></div>' + data.originData.value + ' </div>'
             }
+          } else if (config.branchType === 'carouselPieChart') {
+            option.series[0].data = formData
+            this._carouselLen = Array.isArray(formData) ? formData.length : 0
           } else {
             option.series[0].data = formData
             // 圆角饼图/圆角环图:强制给饼图 series 上圆角(默认配置已带,这里兜底,避免配置面板剥离)
@@ -292,6 +296,9 @@ export default {
           this.option = option
 
           this.$refs.chart.setOption && this.$refs.chart.setOption(option, true)
+          if (config.branchType === 'carouselPieChart' && this._carouselLen > 0) {
+            this.startCarousel()
+          }
         }
       })
       // if (Object.keys(this.option).length === 0) {
@@ -301,7 +308,38 @@ export default {
     },
     buildSeriesConfig () {
       return [{ type: 'pie', radius: 100 }]
+    },
+    // 轮播饼图:定时高亮各扇区,emphasis 中心标签显示当前项占比+名称
+    startCarousel () {
+      this.clearCarousel()
+      const len = this._carouselLen
+      if (!len || !this.$refs.chart) {
+        return
+      }
+      let idx = 0
+      const tick = () => {
+        const chart = this.$refs.chart
+        if (!chart || !chart.dispatchAction) {
+          this.clearCarousel()
+          return
+        }
+        chart.dispatchAction({ type: 'downplay', seriesIndex: 0 })
+        chart.dispatchAction({ type: 'highlight', seriesIndex: 0, dataIndex: idx })
+        chart.dispatchAction({ type: 'showTip', seriesIndex: 0, dataIndex: idx })
+        idx = (idx + 1) % len
+      }
+      tick()
+      this._carouselTimer = setInterval(tick, 2500)
+    },
+    clearCarousel () {
+      if (this._carouselTimer) {
+        clearInterval(this._carouselTimer)
+        this._carouselTimer = null
+      }
     }
+  },
+  beforeUnmount () {
+    this.clearCarousel()
   }
 }
 </script>

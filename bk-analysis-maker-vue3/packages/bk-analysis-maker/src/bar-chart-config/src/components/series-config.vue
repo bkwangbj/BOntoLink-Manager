@@ -23,6 +23,21 @@
       <span class="chart-config-title">
         自生成系列</span>
     </div>
+    <div
+      v-if="isLineChart"
+      style="width: 100px; margin-top: 10px;"
+    >
+      <el-switch
+        v-model="smoothAll"
+        :disabled="!saveAble"
+        class="am-switch active-switch"
+        size="small"
+        @click.stop.prevent
+        @change="toggleSmoothAll"
+      />
+      <span class="chart-config-title">
+        平滑曲线</span>
+    </div>
     <SeriesPlane
       name="数据系列"
       :series-list="seriesList"
@@ -276,6 +291,7 @@ export default {
       show: [],
       seriesList: [],
       autoSeries: false,
+      smoothAll: false,
       filterDataEmpty: false,
       symbolOptions: [{ label: '默认', value: '' }, { label: '空', value: 'none' }, { label: '空心圆环', value: 'emptyCircle' }, { label: '圆点', value: 'circle' }, { label: '方形', value: 'rect' }, { label: '圆角方形', value: 'roundRect' }, { label: '三角形', value: 'triangle' }, { label: '菱形', value: 'diamond' }, { label: '箭头', value: 'arrow' }]
     }
@@ -283,6 +299,12 @@ export default {
   computed: {
     saveAble () {
       return this.getSaveAble()
+    },
+    // 是否折线类图表(用于显示「平滑曲线」总开关):已知折线 branchType 或存在 line 系列
+    isLineChart () {
+      const LINE = ['lineChart', 'smoothLineChart', 'markLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap', 'mixChart']
+      if (LINE.includes(this.branchType)) return true
+      return this.seriesList.some(s => s?.basic?.type === 'line')
     }
   },
   watch: {
@@ -303,6 +325,13 @@ export default {
         form.lineSeries = { ...ele }
         return form
       })
+      // 「平滑曲线」总开关初值:任一 line 系列已开平滑则勾选
+      this.smoothAll = this.seriesList.some(s => s.basic.type === 'line' && s.lineSeries && s.lineSeries.smooth)
+    },
+    // 「平滑曲线」总开关:对所有系列的折线配置统一设置 smooth(自生成系列取 series[0] 作模板,同样生效)
+    toggleSmoothAll (val) {
+      this.seriesList = this.seriesList.map(s => ({ ...s, lineSeries: { ...s.lineSeries, smooth: val } }))
+      this.$emit('chartChange')
     },
     setFilterDataEmpty (e) {
       this.filterDataEmpty = e

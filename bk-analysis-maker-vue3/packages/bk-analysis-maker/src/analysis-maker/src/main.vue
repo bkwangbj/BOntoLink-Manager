@@ -36,7 +36,7 @@
             trigger="click"
             class="add-area-dropdown"
             popper-class="add-area-dd"
-            @visible-change="addPanelOpen = $event"
+            @visible-change="onAddPanelToggle"
           >
             <button :class="['add-area-trigger', addPanelOpen && 'is-active']" title="添加">
               <i-ri-add-line />
@@ -44,54 +44,79 @@
             <template #dropdown>
               <div class="aac-panel">
                 <div class="aac-head">
-                  <span class="aac-head-title">看板组件</span>
+                  <span class="aac-head-title">组件</span>
                   <label class="aac-head-toggle">
                     <span>固定面板</span>
                     <el-switch v-model="showBodyPannel" size="small" />
                   </label>
                 </div>
-                <div class="aac-body">
-                <div class="aac-group-name">布局</div>
-                <div class="aac-grid">
-                  <div
-                    v-for="it in addAreaCards.layout"
-                    :key="it.key"
-                    class="aac-card"
-                    @click="onAddCardClick(it)"
-                  >
-                    <img :src="it.img" :title="it.name" class="aac-img">
-                    <span class="aac-name">{{ it.name }}</span>
+                <div class="aac-main">
+                  <!-- 左侧分组锚点列:分「画布 / 图表」两大类,点击滚动定位,右侧滚动时高亮当前分组 -->
+                  <div class="aac-nav">
+                    <template v-for="cat in addAreaNavGroups" :key="cat.cat">
+                      <div class="aac-nav-cat">{{ cat.cat }}</div>
+                      <div
+                        v-for="s in cat.items"
+                        :key="s.key"
+                        :class="['aac-nav-item', addAreaActive === s.key && 'is-active']"
+                        @click="scrollToSection(s.key)"
+                      >
+                        <span class="aac-nav-txt">{{ s.name }}</span>
+                        <span class="aac-nav-count">{{ s.count }}</span>
+                      </div>
+                    </template>
                   </div>
-                </div>
-                <template v-if="addAreaCards.tpl.length">
-                  <div class="aac-group-name">布局模版</div>
-                  <div class="aac-grid">
+                  <!-- 右侧内容 -->
+                  <div ref="aacBody" class="aac-body" @scroll="onAacScroll">
+                    <div class="aac-sec" data-key="layout">
+                      <div class="aac-group-name">布局</div>
+                      <div class="aac-grid">
+                        <div
+                          v-for="it in addAreaCards.layout"
+                          :key="it.key"
+                          class="aac-card"
+                          @click="onAddCardClick(it)"
+                        >
+                          <img :src="it.img" :title="it.name" class="aac-img">
+                          <span class="aac-name">{{ it.name }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div v-if="addAreaCards.tpl.length" class="aac-sec" data-key="tpl">
+                      <div class="aac-group-name">布局模版</div>
+                      <div class="aac-grid">
+                        <div
+                          v-for="(it, i) in addAreaCards.tpl"
+                          :key="'tpl' + i"
+                          class="aac-card"
+                          @click="onAddCardClick(it)"
+                        >
+                          <img :src="it.img" :title="it.name" class="aac-img">
+                          <span class="aac-name">{{ it.name }}</span>
+                        </div>
+                      </div>
+                    </div>
                     <div
-                      v-for="(it, i) in addAreaCards.tpl"
-                      :key="'tpl' + i"
-                      class="aac-card"
-                      @click="onAddCardClick(it)"
+                      v-for="(g, gi) in addAreaCards.charts"
+                      :key="g.name"
+                      class="aac-sec"
+                      :data-key="'chart-' + gi"
                     >
-                      <img :src="it.img" :title="it.name" class="aac-img">
-                      <span class="aac-name">{{ it.name }}</span>
+                      <div class="aac-group-name">{{ g.name }}</div>
+                      <div class="aac-grid">
+                        <div
+                          v-for="(it, i) in g.items"
+                          :key="g.name + i"
+                          class="aac-card"
+                          :title="it.name"
+                          @click="onAddChartCard(it)"
+                        >
+                          <img v-if="it.img" :src="it.img" class="aac-img">
+                          <span class="aac-name">{{ it.name }}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </template>
-                <template v-for="g in addAreaCards.charts" :key="g.name">
-                  <div class="aac-group-name">{{ g.name }}</div>
-                  <div class="aac-grid">
-                    <div
-                      v-for="(it, i) in g.items"
-                      :key="g.name + i"
-                      class="aac-card"
-                      :title="it.name"
-                      @click="onAddChartCard(it)"
-                    >
-                      <img v-if="it.img" :src="it.img" class="aac-img">
-                      <span class="aac-name">{{ it.name }}</span>
-                    </div>
-                  </div>
-                </template>
                 </div>
               </div>
             </template>
@@ -148,17 +173,10 @@
               <el-dropdown-menu>
                 <el-dropdown-item command="save"><i-ri-save-fill /><span>保存</span></el-dropdown-item>
                 <el-dropdown-item command="saveAs"><i-ri-file-copy-2-fill /><span>另存为</span></el-dropdown-item>
+                <el-dropdown-item v-if="embedOnNewDashboard" command="newDash" divided><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg><span>新建看板</span></el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <div
-            v-if="setMode && embedOnNewDashboard"
-            class="text-button"
-            title="新建看板"
-            @click="embedOnNewDashboard()"
-          >
-            <i-ri-add-box-line />
-          </div>
           <span class="tb-divider"></span>
         </template>
         <!-- 模式切换(单按钮):显示「要切换过去」的目标模式,点击直接切换 -->
@@ -166,7 +184,7 @@
           v-if="setMode"
           type="button"
           class="mode-toggle"
-          :title="designMode ? '切换到预览' : '切换到设计'"
+          :title="designMode ? '切换到预览模式' : '切换到设计模式'"
           @click="onModeCommand(designMode ? 'preview' : 'design')"
         >
           <i-ri-eye-line v-if="designMode" />
@@ -217,6 +235,52 @@
             :style="`padding: ${(isModal || !designMode) ? '0' : '30px 40px'}; height:  ${!layoutConfig.layout.length ? '100%' : 'auto'};${styleText}`"
             @scroll="handleScroll"
           >
+            <!-- 空看板引导:设计模式且画布无任何卡片时,居中显示操作提示 -->
+            <div
+              v-if="designMode && !isModal && !layoutConfig.layout.length"
+              class="bk-empty-guide"
+            >
+              <div class="beg-card">
+                <div class="beg-icon">
+                  <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="6" y="6" width="44" height="44" rx="8" fill="#eaf2ff" />
+                    <rect x="14" y="28" width="6" height="14" rx="2" fill="#6aa1ff" />
+                    <rect x="25" y="20" width="6" height="22" rx="2" fill="#4080ff" />
+                    <rect x="36" y="14" width="6" height="28" rx="2" fill="#1c5ce6" />
+                  </svg>
+                </div>
+                <div class="beg-title">开始设计你的看板</div>
+                <div class="beg-desc">这是一块空白画布,任选下面一种方式添加第一个图表</div>
+                <div class="beg-steps">
+                  <div class="beg-step">
+                    <span class="beg-step-no">1</span>
+                    <div class="beg-step-txt"><b>添加图表</b><span>点击顶部「+」或下方按钮,从「看板组件」中挑选图表 / 布局</span></div>
+                  </div>
+                  <div class="beg-step">
+                    <span class="beg-step-no">2</span>
+                    <div class="beg-step-txt"><b>调整布局</b><span>拖拽卡片移动位置,拖右下角缩放大小</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 预览态空看板:只读,给一个简洁提示 -->
+            <div
+              v-if="!designMode && !isModal && !layoutConfig.layout.length"
+              class="bk-empty-guide"
+            >
+              <div class="beg-card beg-card-simple">
+                <div class="beg-icon">
+                  <svg width="52" height="52" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="6" y="6" width="44" height="44" rx="8" fill="#eef0f3" />
+                    <rect x="14" y="28" width="6" height="14" rx="2" fill="#c9cdd4" />
+                    <rect x="25" y="20" width="6" height="22" rx="2" fill="#b0b5be" />
+                    <rect x="36" y="14" width="6" height="28" rx="2" fill="#c9cdd4" />
+                  </svg>
+                </div>
+                <div class="beg-title">看板暂无内容</div>
+                <div class="beg-desc">点击右上角「设计」进入编辑,添加图表后即可在此查看</div>
+              </div>
+            </div>
             <!-- <div
               class="empty-area"
               v-if="!layoutConfig.layout.length"
@@ -637,6 +701,8 @@ export default {
       previewModalConfig: null,
       openPageModalVisible: false,
       addPanelOpen: false,         // 顶部「+」看板组件浮窗是否打开(用于按钮激活态)
+      addAreaActive: 'layout',     // 看板组件浮窗:左侧锚点列当前激活分组
+      aacClickLock: false,         // 点击锚点触发的平滑滚动期间,忽略滚动高亮回写
       gridSettingActive: false,    // 栅格设置栏是否打开(用于栅格按钮激活态)
       pageSettingVisible: false,
       pageSettingMounted: false,   // 首次打开后常驻挂载,避免每次重建 monaco 编辑器导致卡顿
@@ -680,7 +746,7 @@ export default {
         name: item.title, key: 'setLayout', payload: item.configs, img: item.img ? imgObject[item.img] : ''
       }))
       // 图表分组(与左侧图表资源同源、同分组)
-      const LINE = ['lineChart', 'smoothLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap']
+      const LINE = ['lineChart', 'smoothLineChart', 'markLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap']
       const ADV = ['bubbleChart', 'calendarHeatmap', 'polarChart']
       const toCard = c => ({ name: c.title, img: c.img ? imgObject[c.img] : '', chart: c })
       const bars = chartComponents.filter(c => (c.type === 'BKBarChart' || c.type === 'BKPolarChart') && !LINE.includes(c.branchType) && !ADV.includes(c.branchType))
@@ -691,9 +757,25 @@ export default {
         { name: '高级图表', items: chartComponents.filter(c => ADV.includes(c.branchType)).map(toCard) },
         { name: '表格', items: (tableComponents || []).map(toCard) },
         { name: '地图', items: (mapComponents || []).map(toCard) },
-        { name: '组件', items: (customComponents || []).map(toCard) }
+        { name: '其他', items: (customComponents || []).map(toCard) }
       ].filter(g => g.items.length)
       return { layout, tpl, charts }
+    },
+    // 看板组件浮窗:左侧锚点列(布局 / 布局模版 / 各图表分组),与右侧内容分组一一对应
+    addAreaSections () {
+      const secs = [{ key: 'layout', name: '布局', count: this.addAreaCards.layout.length }]
+      if (this.addAreaCards.tpl.length) secs.push({ key: 'tpl', name: '布局模版', count: this.addAreaCards.tpl.length })
+      this.addAreaCards.charts.forEach((g, i) => secs.push({ key: 'chart-' + i, name: g.name, count: g.items.length }))
+      return secs
+    },
+    // 左侧锚点列按两大类分组:画布(布局/布局模版) + 图表(各图表分组)
+    addAreaNavGroups () {
+      const secs = this.addAreaSections
+      const isCanvas = s => s.key === 'layout' || s.key === 'tpl'
+      return [
+        { cat: '画布', items: secs.filter(isCanvas) },
+        { cat: '图表', items: secs.filter(s => !isCanvas(s)) }
+      ].filter(c => c.items.length)
     },
     layoutWrapperWidth () {
       if (this.layoutConfig?.themeConfigs?.pageLayout?.pageWidthMode === 'custom' && this.layoutConfig?.themeConfigs?.pageLayout?.pageWidth) {
@@ -1454,12 +1536,52 @@ export default {
     closeAddDropdown () {
       this.$refs.addAreaDropdown && this.$refs.addAreaDropdown.handleClose && this.$refs.addAreaDropdown.handleClose()
     },
+    // 看板组件浮窗开合:打开时复位到第一个分组
+    onAddPanelToggle (open) {
+      this.addPanelOpen = open
+      if (open) {
+        this.addAreaActive = 'layout'
+        this.$nextTick(() => { if (this.$refs.aacBody) this.$refs.aacBody.scrollTop = 0 })
+      }
+    },
+    // 左侧锚点点击:平滑滚动到对应分组
+    scrollToSection (key) {
+      this.addAreaActive = key
+      const body = this.$refs.aacBody
+      if (!body) return
+      const el = body.querySelector(`[data-key="${key}"]`)
+      if (!el) return
+      this.aacClickLock = true
+      body.scrollTo({ top: el.offsetTop, behavior: 'smooth' })
+      clearTimeout(this._aacLockTimer)
+      this._aacLockTimer = setTimeout(() => { this.aacClickLock = false }, 400)
+    },
+    // 右侧滚动:高亮当前分组锚点
+    onAacScroll () {
+      if (this.aacClickLock) return
+      const body = this.$refs.aacBody
+      if (!body) return
+      const secs = body.querySelectorAll('.aac-sec')
+      const top = body.scrollTop
+      let active = this.addAreaActive
+      for (const sec of secs) {
+        if (sec.offsetTop - 8 <= top) active = sec.dataset.key
+        else break
+      }
+      // 已滚到底:强制激活最后一个分组(末组太短时也能高亮)
+      if (top + body.clientHeight >= body.scrollHeight - 2 && secs.length) {
+        active = secs[secs.length - 1].dataset.key
+      }
+      this.addAreaActive = active
+    },
     onSaveCommand (cmd) {
       if (cmd === 'save') {
         this.savePageConfig(false)
       } else if (cmd === 'saveAs') {
         if (this.embedOnSaveAs) this.embedOnSaveAs()
         else this.savePageConfig(true)
+      } else if (cmd === 'newDash') {
+        if (this.embedOnNewDashboard) this.embedOnNewDashboard()
       }
     },
     onModeCommand (cmd) {

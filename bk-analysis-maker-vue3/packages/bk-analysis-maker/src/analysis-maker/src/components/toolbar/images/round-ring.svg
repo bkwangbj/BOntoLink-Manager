@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180" viewBox="0 0 320 180">
+  <!-- 圆角环图:四段圆角环形 + 白缝分隔(中心留空) -->
+  <g stroke="#fff" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M160 26 A64 64 0 0 1 224 90 L196 90 A36 36 0 0 0 160 54 Z" fill="#4080FF"/>
+    <path d="M224 90 A64 64 0 0 1 160 154 L160 126 A36 36 0 0 0 196 90 Z" fill="#6AA1FF"/>
+    <path d="M160 154 A64 64 0 0 1 96 90 L124 90 A36 36 0 0 0 160 126 Z" fill="#A9C9FF"/>
+    <path d="M96 90 A64 64 0 0 1 160 26 L160 54 A36 36 0 0 0 124 90 Z" fill="#C7DBFF"/>
+  </g>
+</svg>

@@ -1069,7 +1069,7 @@ onBeforeUnmount(() => {
 
 .list-scroll { flex: 1; min-height: 0; overflow: auto; }
 .vt-table { width: 100%; }
-.vt-table thead th { position: sticky; top: 0; background: var(--bl-bg-2); z-index: 2; box-shadow: inset 0 -1px 0 var(--bl-divider); }
+.vt-table thead th { position: sticky; top: 0; background: var(--bl-thead-bg); z-index: 2; }
 .th-sort { cursor: pointer; user-select: none; display: inline-flex; align-items: center; white-space: nowrap; }
 .th-sort:hover { color: var(--bl-primary); }
 .th-arrow { color: var(--bl-text-4); font-size: 11px; margin-left: 2px; }

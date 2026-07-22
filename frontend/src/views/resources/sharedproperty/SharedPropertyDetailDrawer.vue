@@ -644,7 +644,7 @@ function propTypeColor(p) {
 /* 引用表 */
 .sp-ref-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .sp-ref-table th, .sp-ref-table td { padding: 8px; border-bottom: 1px solid var(--bl-divider); text-align: left; }
-.sp-ref-table th { background: var(--bl-bg-2); font-weight: 500; color: var(--bl-text-3); }
+.sp-ref-table th { background: var(--bl-thead-bg); font-weight: 500; color: var(--bl-text-3); }
 
 /* ============ 底部 ============ */
 .detail-ft {

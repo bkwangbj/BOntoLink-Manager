@@ -2125,7 +2125,7 @@ async function confirmPasteImport() {
 .et-clear-btn:hover { color: var(--bl-primary); }
 
 .t-center { text-align: center; }
-.et-table thead th { position: sticky; top: 0; background: var(--bl-bg-2); z-index: 1; box-shadow: inset 0 -1px 0 var(--bl-divider); }
+.et-table thead th { position: sticky; top: 0; background: var(--bl-thead-bg); z-index: 1; }
 .th-sort { cursor: pointer; user-select: none; display: inline-flex; align-items: center; white-space: nowrap; }
 .th-sort:hover { color: var(--bl-primary); }
 .th-arrow { color: var(--bl-text-4); font-size: 11px; margin-left: 2px; }

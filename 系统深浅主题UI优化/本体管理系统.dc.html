@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="#1c46c9">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#1c46c9"/>
+    <rect x="0" y="0" width="1200" height="120" fill="#153aae"/>
+    <circle cx="90" cy="60" r="30" fill="#ffffff" opacity="0.9"/>
+    <rect x="150" y="45" width="260" height="30" rx="8" fill="#ffffff" opacity="0.85"/>
+    <rect x="470" y="34" width="380" height="52" rx="14" fill="#ffffff" opacity="0.22"/>
+    <rect x="0" y="120" width="300" height="680" fill="#ffffff" opacity="0.95"/>
+    <rect x="40" y="180" width="220" height="40" rx="10" fill="#e9f0ff"/>
+    <rect x="40" y="250" width="180" height="20" rx="6" fill="#dde3ec"/>
+    <rect x="40" y="300" width="180" height="20" rx="6" fill="#dde3ec"/>
+    <rect x="40" y="350" width="180" height="20" rx="6" fill="#dde3ec"/>
+    <rect x="360" y="200" width="800" height="560" rx="20" fill="#ffffff"/>
+    <rect x="400" y="250" width="720" height="24" rx="6" fill="#eceff5"/>
+    <rect x="400" y="330" width="720" height="24" rx="6" fill="#eceff5"/>
+    <rect x="400" y="410" width="720" height="24" rx="6" fill="#eceff5"/>
+    <rect x="400" y="490" width="720" height="24" rx="6" fill="#eceff5"/>
+  </svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..0&display=block" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:'Inter','PingFang SC','Microsoft YaHei',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+:root{
+--bg:#eceff5;--sidebar-bg:#ffffff;--panel:#ffffff;--panel-2:#f8fafc;
+--border:#e7ecf3;--border-strong:#dde3ec;--text:#1f2a3d;--text-2:#5c6b82;--text-3:#94a1b5;
+--head-grad:linear-gradient(100deg,#1c46c9 0%,#2a63e0 55%,#3a7bef 100%);--head-border:rgba(255,255,255,0);
+--header-text:#ffffff;--header-search-bg:rgba(255,255,255,.16);--header-search-border:rgba(255,255,255,.22);
+--accent:#2563eb;--active-bg:#e9f0ff;--active-fg:#1d4ed8;
+--row-hover:#f2f7fd;--row-alt:#fbfcfe;--input-bg:#ffffff;
+--ok-bg:#e6f6ec;--ok-fg:#159a49;--dep-bg:#edf1f5;--dep-fg:#8593a8;
+--shadow:0 1px 2px rgba(20,36,64,.05),0 12px 32px -14px rgba(20,36,64,.14);--scroll:#cdd6e2;--rowpad:13px;
+}
+[data-theme="dark"]{
+--bg:#070d1a;--sidebar-bg:#0c1424;--panel:#0f1829;--panel-2:#0c1424;
+--border:#1c2740;--border-strong:#26324c;--text:#e6edfa;--text-2:#94a6c2;--text-3:#5c6e8c;
+--head-grad:linear-gradient(100deg,#0a1526 0%,#0e1f38 100%);--head-border:rgba(255,255,255,.05);
+--header-text:#e6eefb;--header-search-bg:rgba(255,255,255,.05);--header-search-border:rgba(255,255,255,.09);
+--accent:#3b82f6;--active-bg:rgba(59,130,246,.16);--active-fg:#7cadff;
+--row-hover:#14213b;--row-alt:#0d1626;--input-bg:#0c1728;
+--ok-bg:rgba(34,197,94,.15);--ok-fg:#4ad182;--dep-bg:rgba(148,163,184,.14);--dep-fg:#8496af;
+--shadow:0 1px 2px rgba(0,0,0,.4),0 14px 34px -16px rgba(0,0,0,.65);--scroll:#26324c;
+}
+[data-density="compact"]{--rowpad:8px}
+[data-accent="blue"]{--accent:#2563eb;--active-bg:#e9f0ff;--active-fg:#1d4ed8;--head-grad:linear-gradient(100deg,#1c46c9 0%,#2a63e0 55%,#3a7bef 100%)}
+[data-accent="green"]{--accent:#16a34a;--active-bg:#e5f7ec;--active-fg:#15803d;--head-grad:linear-gradient(100deg,#0f7a37 0%,#16a34a 55%,#22c55e 100%)}
+[data-accent="purple"]{--accent:#7c3aed;--active-bg:#f1eafe;--active-fg:#6d28d9;--head-grad:linear-gradient(100deg,#5b21b6 0%,#7c3aed 55%,#9061f9 100%)}
+[data-accent="orange"]{--accent:#ea580c;--active-bg:#fdeee2;--active-fg:#c2410c;--head-grad:linear-gradient(100deg,#c2410c 0%,#ea580c 55%,#f97316 100%)}
+[data-accent="red"]{--accent:#dc2626;--active-bg:#fdeaea;--active-fg:#b91c1c;--head-grad:linear-gradient(100deg,#b91c1c 0%,#dc2626 55%,#ef4444 100%)}
+[data-accent="graphite"]{--accent:#334155;--active-bg:#eef1f5;--active-fg:#334155;--head-grad:linear-gradient(100deg,#1e293b 0%,#334155 55%,#475569 100%)}
+[data-theme="dark"][data-accent="blue"]{--accent:#3b82f6;--active-bg:rgba(59,130,246,.16);--active-fg:#7cadff;--head-grad:linear-gradient(100deg,#0a1526 0%,#0e1f38 100%)}
+[data-theme="dark"][data-accent="green"]{--accent:#22c55e;--active-bg:rgba(34,197,94,.16);--active-fg:#56d98a;--head-grad:linear-gradient(100deg,#08160f 0%,#0d2a1a 100%)}
+[data-theme="dark"][data-accent="purple"]{--accent:#8b5cf6;--active-bg:rgba(139,92,246,.18);--active-fg:#b393fb;--head-grad:linear-gradient(100deg,#140e26 0%,#1e123f 100%)}
+[data-theme="dark"][data-accent="orange"]{--accent:#f97316;--active-bg:rgba(249,115,22,.18);--active-fg:#fb9a52;--head-grad:linear-gradient(100deg,#1f1206 0%,#33200c 100%)}
+[data-theme="dark"][data-accent="red"]{--accent:#ef4444;--active-bg:rgba(239,68,68,.18);--active-fg:#f87171;--head-grad:linear-gradient(100deg,#210b0b 0%,#361212 100%)}
+[data-theme="dark"][data-accent="graphite"]{--accent:#94a3b8;--active-bg:rgba(148,163,184,.16);--active-fg:#cbd5e1;--head-grad:linear-gradient(100deg,#0b1220 0%,#141c2b 100%)}
+.app *::-webkit-scrollbar{width:10px;height:10px}
+.app *::-webkit-scrollbar-thumb{background:var(--scroll);border-radius:20px;border:3px solid transparent;background-clip:content-box}
+.app *::-webkit-scrollbar-track{background:transparent}
+[data-ph="head"]::placeholder{color:rgba(255,255,255,.72)}
+[data-ph="body"]::placeholder{color:var(--text-3)}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--active-fg)}
+</style>
+</helmet>
+<div class="app" data-theme="{{ theme }}" data-accent="{{ accent }}" data-density="{{ density }}" style="height:100vh;display:flex;flex-direction:column;background:var(--bg);color:var(--text)">
+
+  <header style="display:flex;align-items:center;gap:24px;height:58px;padding:0 20px;background:var(--head-grad);color:var(--header-text);position:relative;z-index:20;border-bottom:1px solid var(--head-border);flex:0 0 auto">
+    <div style="display:flex;align-items:center;gap:11px;width:224px;flex:0 0 auto">
+      <div style="width:36px;height:36px;border-radius:11px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center">
+        <span style="font-family:'Material Symbols Outlined';font-size:22px;color:#fff">hub</span>
+      </div>
+      <div style="display:flex;flex-direction:column;line-height:1.15">
+        <span style="font-size:8px;letter-spacing:2.5px;opacity:.72;font-family:'JetBrains Mono',monospace">BONTOLINK</span>
+        <span style="font-size:17px;font-weight:600;letter-spacing:.5px">动态本体管理系统</span>
+      </div>
+    </div>
+    <div style="flex:1;max-width:640px;margin:0 auto">
+      <div style="display:flex;align-items:center;gap:11px;height:40px;padding:0 14px;border-radius:11px;background:var(--header-search-bg);border:1px solid var(--header-search-border)">
+        <span style="font-family:'Material Symbols Outlined';font-size:19px;opacity:.85">search</span>
+        <input data-ph="head" placeholder="全局搜索（对象、关系、动作、数据源…）" style="flex:1;background:transparent;border:none;outline:none;color:var(--header-text);font-size:13.5px">
+        <span style="font-size:11px;font-family:'JetBrains Mono',monospace;padding:2px 7px;border-radius:6px;background:rgba(255,255,255,.14);opacity:.9">⌘ K</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:4px;width:224px;flex:0 0 auto;justify-content:flex-end">
+      <button style="width:38px;height:38px;border-radius:10px;border:none;background:transparent;color:var(--header-text);cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:rgba(255,255,255,.15)"><span style="font-family:'Material Symbols Outlined';font-size:21px">notifications</span></button>
+      <button onClick="{{ toggle }}" style="width:38px;height:38px;border-radius:10px;border:none;background:transparent;color:var(--header-text);cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:rgba(255,255,255,.15)"><span style="font-family:'Material Symbols Outlined';font-size:21px">{{ themeIcon }}</span></button>
+      <button style="width:38px;height:38px;border-radius:10px;border:none;background:transparent;color:var(--header-text);cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:rgba(255,255,255,.15)"><span style="font-family:'Material Symbols Outlined';font-size:21px">fullscreen</span></button>
+    </div>
+  </header>
+
+  <div style="display:flex;flex:1;min-height:0">
+
+    <aside style="width:236px;flex:0 0 auto;display:flex;flex-direction:column;background:var(--sidebar-bg);border-right:1px solid var(--border)">
+      <div style="margin:14px 12px 6px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;gap:11px;cursor:pointer;background:var(--panel-2)" style-hover="border-color:var(--accent)">
+        <span style="width:32px;height:32px;border-radius:9px;background:var(--active-bg);color:var(--active-fg);display:flex;align-items:center;justify-content:center;font-family:'Material Symbols Outlined';font-size:19px;flex:0 0 auto">layers</span>
+        <div style="flex:1;min-width:0;line-height:1.25">
+          <div style="font-size:11px;color:var(--text-3)">领域</div>
+          <div style="font-size:13.5px;font-weight:600;color:var(--text)">请选择常用领域</div>
+        </div>
+        <span style="font-family:'Material Symbols Outlined';font-size:20px;color:var(--text-3)">expand_more</span>
+      </div>
+
+      <nav style="flex:1;overflow-y:auto;padding-bottom:8px">
+        <sc-for list="{{ navGroups }}" as="g" hint-placeholder-count="4">
+          <div style="padding:13px 20px 5px;font-size:11.5px;font-weight:600;letter-spacing:.6px;color:var(--text-3)">{{ g.title }}</div>
+          <sc-for list="{{ g.items }}" as="item" hint-placeholder-count="4">
+            <div style="{{ item.style }}" style-hover="{{ item.hover }}">
+              <span style="font-family:'Material Symbols Outlined';font-size:19px;flex:0 0 auto">{{ item.icon }}</span>
+              <span>{{ item.label }}</span>
+            </div>
+          </sc-for>
+        </sc-for>
+      </nav>
+
+      <div style="border-top:1px solid var(--border);padding:10px 12px;display:flex;align-items:center;gap:10px">
+        <span style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;flex:0 0 auto">G</span>
+        <div style="flex:1;min-width:0;line-height:1.3">
+          <div style="font-size:13.5px;font-weight:600;color:var(--text)">Gary</div>
+          <div style="font-size:11px;color:var(--text-3)">本体管理员</div>
+        </div>
+        <span style="font-family:'Material Symbols Outlined';font-size:19px;color:var(--text-3);cursor:pointer">unfold_more</span>
+      </div>
+    </aside>
+
+    <main style="flex:1;min-width:0;display:flex;flex-direction:column;padding:16px 20px;gap:14px;overflow:hidden">
+
+      <div style="display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;flex:0 0 auto">
+        <div style="flex:0 0 auto">
+          <div style="display:flex;align-items:baseline;gap:12px">
+            <h1 style="margin:0;font-size:22px;font-weight:700;color:var(--text);letter-spacing:.5px">类型类</h1>
+            <span style="font-size:13px;color:var(--text-3);font-family:'JetBrains Mono',monospace">Type classes</span>
+          </div>
+          <div style="margin-top:5px;font-size:12.5px;color:var(--text-2)">属性 / 关系 / 操作 · 三类元数据扩展</div>
+        </div>
+        <div style="flex:1"></div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:14px;padding:0 6px;font-size:13px;color:var(--text-2)">
+            <span>总数 <b style="color:var(--text);font-weight:700">44</b></span>
+            <span style="width:1px;height:14px;background:var(--border-strong)"></span>
+            <span>可用 <b style="color:var(--ok-fg);font-weight:700">41</b></span>
+            <span>已弃用 <b style="color:var(--text-3);font-weight:700">3</b></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border-strong);border-radius:9px;background:var(--input-bg);color:var(--text-2);font-size:13px;cursor:pointer;justify-content:space-between;min-width:112px" style-hover="border-color:var(--accent)"><span>全部类别</span><span style="font-family:'Material Symbols Outlined';font-size:18px;color:var(--text-3)">expand_more</span></div>
+          <div style="display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border-strong);border-radius:9px;background:var(--input-bg);color:var(--text-2);font-size:13px;cursor:pointer;justify-content:space-between;min-width:112px" style-hover="border-color:var(--accent)"><span>全部状态</span><span style="font-family:'Material Symbols Outlined';font-size:18px;color:var(--text-3)">expand_more</span></div>
+          <div style="display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border-strong);border-radius:9px;background:var(--input-bg);width:228px">
+            <span style="font-family:'Material Symbols Outlined';font-size:18px;color:var(--text-3)">search</span>
+            <input data-ph="body" placeholder="搜索（种类 / 名称 / 说明）" style="flex:1;border:none;outline:none;background:transparent;color:var(--text);font-size:13px">
+          </div>
+          <button style="display:flex;align-items:center;gap:6px;height:38px;padding:0 16px;border:none;border-radius:9px;background:var(--accent);color:#fff;font-size:13.5px;font-weight:600;cursor:pointer;box-shadow:0 3px 10px -3px var(--accent)" style-hover="filter:brightness(1.08)"><span style="font-family:'Material Symbols Outlined';font-size:19px">add</span>新建</button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;flex:1;min-height:0">
+
+        <section style="width:264px;flex:0 0 auto;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)">
+            <span style="font-size:14px;font-weight:600;color:var(--text)">大类</span>
+            <span style="width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--panel-2);color:var(--text-2);cursor:pointer;font-family:'Material Symbols Outlined';font-size:18px" style-hover="background:var(--active-bg);color:var(--active-fg)">add</span>
+          </div>
+          <div style="flex:1;overflow-y:auto;padding:8px">
+            <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="12">
+              <div style="{{ cat.rowStyle }}" style-hover="background:var(--row-hover)">
+                <span style="{{ cat.tileStyle }}">{{ cat.icon }}</span>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:13.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ cat.name }}</div>
+                  <div style="font-size:10.5px;color:var(--text-3);font-family:'JetBrains Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px">{{ cat.code }}</div>
+                </div>
+                <span style="{{ cat.countStyle }}">{{ cat.count }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="border-top:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:8px;color:var(--text-2);font-size:13px;cursor:pointer" style-hover="color:var(--active-fg)">
+            <span style="font-family:'Material Symbols Outlined';font-size:19px">list_alt</span>枚举管理
+          </div>
+        </section>
+
+        <section style="flex:1;min-width:0;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden">
+          <div style="flex:1;overflow:auto">
+            <div style="display:grid;grid-template-columns:44px 128px 224px minmax(190px,1fr) minmax(300px,1.6fr) 92px;align-items:center;column-gap:8px;padding:12px 18px;position:sticky;top:0;background:var(--panel);border-bottom:1px solid var(--border-strong);z-index:2">
+              <div><span style="width:15px;height:15px;border-radius:4px;border:1.5px solid var(--border-strong);background:var(--input-bg);display:block"></span></div>
+              <span style="font-size:12px;font-weight:600;color:var(--text-2);display:flex;align-items:center;gap:3px">适用类型<span style="font-family:'Material Symbols Outlined';font-size:15px;color:var(--text-3)">unfold_more</span></span>
+              <span style="font-size:12px;font-weight:600;color:var(--text-2);display:flex;align-items:center;gap:3px">种类<span style="font-family:'Material Symbols Outlined';font-size:15px;color:var(--text-3)">unfold_more</span></span>
+              <span style="font-size:12px;font-weight:600;color:var(--text-2);display:flex;align-items:center;gap:3px">名称<span style="font-family:'Material Symbols Outlined';font-size:15px;color:var(--text-3)">unfold_more</span></span>
+              <span style="font-size:12px;font-weight:600;color:var(--text-2)">参数 / 可选值</span>
+              <span style="font-size:12px;font-weight:600;color:var(--text-2);display:flex;align-items:center;gap:3px">状态<span style="font-family:'Material Symbols Outlined';font-size:15px;color:var(--text-3)">unfold_more</span></span>
+            </div>
+
+            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="12">
+              <div style="{{ r.rowStyle }}" style-hover="background:var(--row-hover)">
+                <div><span style="width:15px;height:15px;border-radius:4px;border:1.5px solid var(--border-strong);background:var(--input-bg);display:block"></span></div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap">
+                  <sc-for list="{{ r.badgesR }}" as="b" hint-placeholder-count="1"><span style="{{ b.style }}">{{ b.label }}</span></sc-for>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;min-width:0">
+                  <span style="{{ r.dotStyle }}"></span>
+                  <div style="min-width:0">
+                    <div style="font-size:13px;color:var(--text);white-space:nowrap">{{ r.kindLabel }}</div>
+                    <div style="font-size:10.5px;color:var(--text-3);font-family:'JetBrains Mono',monospace;margin-top:1px">{{ r.kindCode }}</div>
+                  </div>
+                </div>
+                <div style="min-width:0">
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</div>
+                  <div style="font-size:12px;color:var(--text-2);margin-top:2px">{{ r.cn }}</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:9px;min-width:0">
+                  <span style="{{ r.tagStyle }}">{{ r.paramType }}</span>
+                  <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12.5px">
+                    <sc-if value="{{ r.exPrefix }}" hint-placeholder-val="示例:"><span style="color:var(--text-3)">{{ r.exPrefix }}</span></sc-if>
+                    <span style="font-family:'JetBrains Mono',monospace;color:var(--text-2)">{{ r.exValue }}</span>
+                  </span>
+                </div>
+                <div style="display:flex">
+                  <sc-if value="{{ r.avail }}" hint-placeholder-val="{{ true }}"><span style="font-size:11.5px;font-weight:600;padding:3px 11px;border-radius:6px;background:var(--ok-bg);color:var(--ok-fg)">可用</span></sc-if>
+                  <sc-if value="{{ r.notAvail }}"><span style="font-size:11.5px;font-weight:600;padding:3px 11px;border-radius:6px;background:var(--dep-bg);color:var(--dep-fg)">已弃用</span></sc-if>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;defaultTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light'|'dark'&quot;,&quot;section&quot;:&quot;主题&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#2563eb&quot;,&quot;#16a34a&quot;,&quot;#7c3aed&quot;,&quot;#ea580c&quot;,&quot;#dc2626&quot;,&quot;#334155&quot;],&quot;default&quot;:&quot;#2563eb&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;主题&quot;},&quot;density&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;comfortable&quot;,&quot;compact&quot;],&quot;default&quot;:&quot;comfortable&quot;,&quot;tsType&quot;:&quot;'comfortable'|'compact'&quot;,&quot;section&quot;:&quot;主题&quot;}}">
+class Component extends DCLogic {
+  renderVals(){
+    const theme = this.state.theme ?? this.props.defaultTheme ?? 'light';
+    const density = this.props.density ?? 'comfortable';
+    const ACCENTS={'#2563eb':'blue','#16a34a':'green','#7c3aed':'purple','#ea580c':'orange','#dc2626':'red','#334155':'graphite'};
+    const accent = ACCENTS[this.props.accent] ?? (['blue','green','purple','orange','red','graphite'].includes(this.props.accent)?this.props.accent:'blue');
+    const hex={blue:'#3b82f6',teal:'#14b8a6',violet:'#8b5cf6',amber:'#f59e0b',green:'#22c55e',cyan:'#06b6d4',indigo:'#6366f1',rose:'#f43f5e',slate:'#7b8aa3',emerald:'#10b981',prop:'#2563eb'};
+    const rgba=(h,a)=>{const n=parseInt(h.slice(1),16);return 'rgba('+(n>>16&255)+','+(n>>8&255)+','+(n&255)+','+a+')';};
+    const GRID='44px 128px 224px minmax(190px,1fr) minmax(300px,1.6fr) 92px';
+
+    const navBase={display:'flex',alignItems:'center',gap:'11px',padding:'8px 12px',margin:'2px 8px',borderRadius:'9px',fontSize:'13.5px',cursor:'pointer',color:'var(--text-2)',fontWeight:500};
+    const mkNav=(items)=>items.map(it=>({icon:it[0],label:it[1],
+      style:it[2]?Object.assign({},navBase,{background:'var(--active-bg)',color:'var(--active-fg)',fontWeight:600,boxShadow:'inset 2px 0 0 var(--accent)'}):navBase,
+      hover:it[2]?{}:{background:'var(--row-hover)',color:'var(--text)'}}));
+    const navGroups=[
+      {title:'工作区',items:mkNav([['space_dashboard','总览'],['hub','图谱'],['travel_explore','实例探索']])},
+      {title:'资源',items:mkNav([['deployed_code','对象类型'],['link','链接'],['bolt','动作类型'],['sell','值类型'],['format_list_bulleted','枚举类型'],['share','共享属性'],['functions','函数'],['cable','接口'],['database','数据源']])},
+      {title:'辅助工具',items:mkNav([['smart_toy','AI 助手'],['import_export','导入导出']])},
+      {title:'系统配置',items:mkNav([['folder','行业分类'],['label','类型类',true],['shield','权限安全'],['menu_book','字典管理']])},
+    ];
+
+    const catBase={display:'flex',alignItems:'center',gap:'11px',padding:'8px 9px',borderRadius:'10px',cursor:'pointer',marginBottom:'2px'};
+    const CAT=[
+      ['grid_view','全部','',44,'slate',true],['visibility','可视化展示类','hubble',2,'blue'],
+      ['search','索引分析类','analyzer',3,'teal'],['business_center','业务语义类','business',0,'violet'],
+      ['tune','自定义类型类','custom',0,'amber'],['location_on','地理坐标类','geo',2,'emerald'],
+      ['map','等值热力地图类','choropleth_map_config_id',0,'cyan'],['hub','知识图谱类','vertex',16,'indigo'],
+      ['timeline','时间序列类','timeseries',18,'amber'],['account_tree','层级导航类','hierarchy',1,'rose'],
+      ['touch_app','对象操作展示类','hubble-oe',1,'blue'],['auto_awesome','通用操作能力类','actions',1,'green'],
+    ];
+    const categories=CAT.map(c=>{const col=hex[c[4]];return {icon:c[0],name:c[1],code:c[2],count:c[3],active:!!c[5],
+      rowStyle:c[5]?Object.assign({},catBase,{background:'var(--active-bg)'}):catBase,
+      tileStyle:{width:'32px',height:'32px',borderRadius:'9px',display:'flex',alignItems:'center',justifyContent:'center',flex:'0 0 auto',fontFamily:"'Material Symbols Outlined'",fontSize:'18px',background:rgba(col,0.14),color:col},
+      countStyle:{fontSize:'12.5px',fontWeight:700,minWidth:'22px',textAlign:'right',color:c[3]?(c[5]?'var(--active-fg)':'var(--text-2)'):'var(--text-3)'}};});
+
+    const KIND={hubble:['可视化展示类','hubble',hex.blue],timeseries:['时间序列类','timeseries',hex.amber],vertex:['知识图谱类','vertex',hex.green],analyzer:['索引分析类','analyzer',hex.teal],geo:['地理坐标类','geo',hex.emerald]};
+    const PT={'文本':hex.slate,'JSON':hex.blue,'枚举':hex.violet,'数值':hex.teal,'布尔':hex.amber,'RID':hex.rose};
+    const BADGE={'属性':hex.prop,'关系':hex.violet};
+    const RAW=[
+      ['hubble','icon','图标','文本','示例:','shturl.cc/WonxnSlV8HkgNg',1,['属性']],
+      ['timeseries','timeseries_measure','序列度量显示字段','JSON','示例:','{"default_color":"#3b82f6","line_type":"solid","axis_position":"left"}',1,['属性']],
+      ['vertex','component_subtype','组件子类型','JSON','示例:','{"subtype_code":"centrifugal_pump","group_color":"#3b82f6","group_name":"离心泵"}',1,['属性']],
+      ['analyzer','not_analyzed','不分词','文本','','',1,['属性']],
+      ['analyzer','analyzed','全文检索分词','JSON','示例:','{"analyzer_name":["ik_max_word","pinyin","stop"]}',1,['属性']],
+      ['analyzer','analyzer_name','指定分词器','枚举','','简单分词器 / 标准分词器 / 空格分词器 / 法语分词器 / 日语分词器',1,['属性']],
+      ['geo','altitude','海拔','数值','示例:','100.5',1,['属性']],
+      ['vertex','link_merge','链接合并','文本','','',1,['属性']],
+      ['vertex','event_intent.<intent_>','事件意图','枚举','','危险 / 预警 / 重大 / 正常',1,['属性']],
+      ['vertex','min','阈值最小值','数值','示例:','10',1,['属性']],
+      ['vertex','max','阈值最大值','数值','示例:','100',1,['属性']],
+      ['vertex','link_merge_incoming','入向链接合并','文本','','',1,['关系']],
+      ['timeseries','timeseries_id','时间序列唯一 ID','文本','','',1,['属性']],
+      ['timeseries','timeseries_units','序列数值单位','JSON','示例:','{"unit_text":"m³/h","conversion_ratio":0.001,"decimal_places":2}',1,['属性']],
+      ['timeseries','timeseries_internal_interpolation','内部插值方式','枚举','示例:','{"interpolation_type":"step"}',1,['属性']],
+      ['timeseries','timeseries_root_object_id','序列根对象 ID','RID','','',1,['属性','关系']],
+      ['timeseries','timeseries_is_deprecated','序列是否弃用','布尔','示例:','{"is_deprecated":true}',0,['属性']],
+      ['timeseries','timeseries_is_value_inverted','Y 轴数值反转','布尔','示例:','{"is_inverted":true}',1,['属性']],
+      ['timeseries','timeseries_depth_units','深度单位','JSON','示例:','{"depth_unit_text":"km","depth_conversion_ratio":0.001,"depth_decimal_places":3}',1,['属性']],
+    ];
+    const rowBase={display:'grid',gridTemplateColumns:GRID,alignItems:'center',columnGap:'8px',padding:'var(--rowpad) 18px',borderBottom:'1px solid var(--border)',fontSize:'13px'};
+    const rows=RAW.map((r,i)=>{const k=KIND[r[0]];const avail=!!r[6];return {
+      name:r[1],cn:r[2],paramType:r[3],exPrefix:r[4],exValue:r[5],avail,notAvail:!avail,
+      kindLabel:k[0],kindCode:k[1],
+      dotStyle:{width:'8px',height:'8px',borderRadius:'50%',flex:'0 0 auto',background:k[2]},
+      tagStyle:{fontSize:'11px',fontWeight:600,padding:'2px 8px',borderRadius:'6px',flex:'0 0 auto',background:rgba(PT[r[3]],0.13),color:PT[r[3]]},
+      badgesR:r[7].map(b=>({label:b,style:{fontSize:'11px',fontWeight:600,padding:'2px 9px',borderRadius:'6px',border:'1px solid '+rgba(BADGE[b],0.30),background:rgba(BADGE[b],0.12),color:BADGE[b]}})),
+      rowStyle:avail?(i%2?Object.assign({},rowBase,{background:'var(--row-alt)'}):rowBase):Object.assign({},rowBase,{opacity:0.58})
+    };});
+
+    return {theme,density,accent,navGroups,categories,rows,
+      toggle:()=>this.setState(s=>({theme:(s.theme??this.props.defaultTheme??'light')==='dark'?'light':'dark'})),
+      themeIcon:theme==='dark'?'light_mode':'dark_mode'};
+  }
+}
+</script>
+</body>
+</html>

@@ -1,4 +1,5 @@
 import XEUtils from 'xe-utils'
+import { paletteColorStrings } from './chart-palettes'
 // import Vue from 'vue'
 
 // const themeModeConfig = {
@@ -332,19 +333,19 @@ import XEUtils from 'xe-utils'
 //       tabStyle: {
 //         type: 'underline', // underline 下划线, splitline 分割线,block 选中块, custom 自定义
 //         underlineStyle: {
-//           textColor: '#1f6aff', // 选中文字颜色
+//           textColor: '#303133', // 选中文字颜色
 //           lineColor: '#1f6aff', // 选中下划线颜色
 //           lineWidth: '2' // 选中下划线宽度
 //         },
 //         splitlineStyle: {
 //           lineWidth: '1', // 分割线宽度
 //           lineColor: '#d2d3d9', // 分割线颜色
-//           textColor: '#1f6aff' // 选中文字颜色
+//           textColor: '#303133' // 选中文字颜色
 //         },
 //         blockStyle: {
 //           radius: '4', // 圆角
 //           padding: '0', // 间距
-//           textColor: '#1f6aff', // 选中文字颜色
+//           textColor: '#303133', // 选中文字颜色
 //           backgroundColor: 'rgba(31,106,255,0.1)', // 选中背景颜色
 //           borderWidth: 0, // 边框
 //           borderColor: '#d2d3d9',
@@ -561,19 +562,19 @@ export const defaultThemeList = [
               tabStyle: {
                 type: 'underline', // underline 下划线, splitline 分割线,block 选中块, custom 自定义
                 underlineStyle: {
-                  textColor: '#1f6aff', // 选中文字颜色
+                  textColor: '#303133', // 选中文字颜色
                   lineColor: '#1f6aff', // 选中下划线颜色
                   lineWidth: 2 // 选中下划线宽度
                 },
                 splitlineStyle: {
                   lineWidth: 1, // 分割线宽度
                   lineColor: '#d2d3d9', // 分割线颜色
-                  textColor: '#1f6aff' // 选中文字颜色
+                  textColor: '#303133' // 选中文字颜色
                 },
                 blockStyle: {
                   radius: 4, // 圆角
                   padding: 0, // 间距
-                  textColor: '#1f6aff', // 选中文字颜色
+                  textColor: '#303133', // 选中文字颜色
                   backgroundColor: 'rgba(31,106,255,0.1)', // 选中背景颜色
                   borderWidth: 0, // 边框
                   borderColor: '#d2d3d9',
@@ -667,26 +668,19 @@ export const defaultThemeList = [
             }
           }`,
             chartStyle: {
-              defaultColors: [
-                '#409EFF,#67C23A,#E6A23C,#F56C6C,#39D895,#ba55d3',
-                '#E6A23C,#F56C6C,#909399,#E6A23C,#409EFF,#67C23A',
-                '#ff7f50,#87cefa,#da70d6,#32cd32,#6495ed,#ff69b4,#ba55d3,#cd5c5c,#ffa500,#40e0d0',
-                '#F5A3A3,#F7C685,#85AEEA,#6FD2C3,#BBA0E2,#A8D5A2',
-                '#516b91,#59c4e6,#edafda,#93b7e3,#a5e7f0,#cbb0e3',
-                '#3fb1e3,#6be6c1,#626c91,#a0a7e6,#c4ebad,#96dee8'
-              ],
+              defaultColors: paletteColorStrings,
               themeStyle: {
                 textColor: '#7A7A7A',
                 backgroundColor: '#fff',
                 borderColor: '#333',
                 fontSize: 12,
                 colorList: [
-                  '#00E4BF',
-                  '#FFC72F',
-                  '#008FFF',
-                  '#3ED848',
-                  '#C96765',
-                  '#D8E5FA'
+                  '#409EFF',
+                  '#67C23A',
+                  '#E6A23C',
+                  '#F56C6C',
+                  '#39D895',
+                  '#ba55d3'
                 ]
               },
               BKGaugeChart: {
@@ -1211,14 +1205,7 @@ export const defaultThemeList = [
             }
           }`,
             chartStyle: {
-              defaultColors: [
-                '#409EFF,#67C23A,#E6A23C,#F56C6C,#39D895,#ba55d3',
-                '#E6A23C,#F56C6C,#909399,#E6A23C,#409EFF,#67C23A',
-                '#ff7f50,#87cefa,#da70d6,#32cd32,#6495ed,#ff69b4,#ba55d3,#cd5c5c,#ffa500,#40e0d0',
-                '#F5A3A3,#F7C685,#85AEEA,#6FD2C3,#BBA0E2,#A8D5A2',
-                '#516b91,#59c4e6,#edafda,#93b7e3,#a5e7f0,#cbb0e3',
-                '#3fb1e3,#6be6c1,#626c91,#a0a7e6,#c4ebad,#96dee8'
-              ],
+              defaultColors: paletteColorStrings,
               themeStyle: {
                 textColor: '#FFF',
                 backgroundColor: 'rgba(0, 54, 176, 0.5)',
@@ -1604,19 +1591,19 @@ export const defaultThemeList = [
               tabStyle: {
                 type: 'underline', // underline 下划线, splitline 分割线,block 选中块, custom 自定义
                 underlineStyle: {
-                  textColor: '#1f6aff', // 选中文字颜色
+                  textColor: '#303133', // 选中文字颜色
                   lineColor: '#1f6aff', // 选中下划线颜色
                   lineWidth: 2 // 选中下划线宽度
                 },
                 splitlineStyle: {
                   lineWidth: 1, // 分割线宽度
                   lineColor: '#d2d3d9', // 分割线颜色
-                  textColor: '#1f6aff' // 选中文字颜色
+                  textColor: '#303133' // 选中文字颜色
                 },
                 blockStyle: {
                   radius: 4, // 圆角
                   padding: 0, // 间距
-                  textColor: '#1f6aff', // 选中文字颜色
+                  textColor: '#303133', // 选中文字颜色
                   backgroundColor: 'rgba(31,106,255,0.1)', // 选中背景颜色
                   borderWidth: 0, // 边框
                   borderColor: '#d2d3d9',
@@ -1710,26 +1697,19 @@ export const defaultThemeList = [
             }
           }`,
             chartStyle: {
-              defaultColors: [
-                '#409EFF,#67C23A,#E6A23C,#F56C6C,#39D895,#ba55d3',
-                '#E6A23C,#F56C6C,#909399,#E6A23C,#409EFF,#67C23A',
-                '#ff7f50,#87cefa,#da70d6,#32cd32,#6495ed,#ff69b4,#ba55d3,#cd5c5c,#ffa500,#40e0d0',
-                '#F5A3A3,#F7C685,#85AEEA,#6FD2C3,#BBA0E2,#A8D5A2',
-                '#516b91,#59c4e6,#edafda,#93b7e3,#a5e7f0,#cbb0e3',
-                '#3fb1e3,#6be6c1,#626c91,#a0a7e6,#c4ebad,#96dee8'
-              ],
+              defaultColors: paletteColorStrings,
               themeStyle: {
                 textColor: '#7A7A7A',
                 backgroundColor: '#fff',
                 borderColor: '#333',
                 fontSize: 12,
                 colorList: [
-                  '#00E4BF',
-                  '#FFC72F',
-                  '#008FFF',
-                  '#3ED848',
-                  '#C96765',
-                  '#D8E5FA'
+                  '#409EFF',
+                  '#67C23A',
+                  '#E6A23C',
+                  '#F56C6C',
+                  '#39D895',
+                  '#ba55d3'
                 ]
               },
               BKGaugeChart: {
@@ -2254,14 +2234,7 @@ export const defaultThemeList = [
             }
           }`,
             chartStyle: {
-              defaultColors: [
-                '#409EFF,#67C23A,#E6A23C,#F56C6C,#39D895,#ba55d3',
-                '#E6A23C,#F56C6C,#909399,#E6A23C,#409EFF,#67C23A',
-                '#ff7f50,#87cefa,#da70d6,#32cd32,#6495ed,#ff69b4,#ba55d3,#cd5c5c,#ffa500,#40e0d0',
-                '#F5A3A3,#F7C685,#85AEEA,#6FD2C3,#BBA0E2,#A8D5A2',
-                '#516b91,#59c4e6,#edafda,#93b7e3,#a5e7f0,#cbb0e3',
-                '#3fb1e3,#6be6c1,#626c91,#a0a7e6,#c4ebad,#96dee8'
-              ],
+              defaultColors: paletteColorStrings,
               themeStyle: {
                 textColor: '#FFF',
                 backgroundColor: 'rgba(0, 54, 176, 0.5)',

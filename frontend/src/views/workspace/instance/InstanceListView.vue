@@ -258,11 +258,15 @@
               <span class="bl-grow"></span>
               <button class="ilv-cfg-addg" title="新建分组" @click="addGroup" v-html="BL.icon('plus', 14)"></button>
             </div>
-            <div class="ilv-cfg-list" @dragover.prevent @drop="cfgDrop(null)">
+            <div class="ilv-cfg-list" @dragover.prevent="cfgAutoScroll" @dragleave="cfgAutoScrollLeave" @dragend="cfgAutoScrollStop" @drop="cfgDrop(null)">
               <template v-for="node in cfgTree" :key="node.type==='group' ? 'g'+node.id : node.col.key">
                 <!-- 分组行 -->
                 <template v-if="node.type==='group'">
-                  <div class="ilv-cfg-group" @dragover.prevent @drop.stop="dropToGroup(node.id)">
+                  <div class="ilv-cfg-group" :class="cfgDragGroup===node.id && 'is-dragging'"
+                       :draggable="renameId!==node.id"
+                       @dragstart.stop="cfgDragGroup=node.id" @dragend="cfgDragGroup=null"
+                       @dragover.prevent @drop.stop="dropToGroup(node.id)">
+                    <span class="ilv-cfg-grip" title="拖动整组排序" v-html="BL.icon('grip', 12, 'var(--bl-text-3)')"></span>
                     <button class="ilv-cfg-fold" @click="toggleGroup(node.id)"
                             v-html="BL.icon(node.collapsed?'chevronRight':'chevronDown', 12, 'var(--bl-text-3)')"></button>
                     <span class="ilv-cfg-folder" v-html="BL.icon('folder', 13, '#ff7d00')"></span>
@@ -270,6 +274,8 @@
                            @keyup.enter="commitRename" @keyup.esc="renameId=null" @blur="commitRename" v-focus />
                     <span v-else class="bl-grow bl-truncate" @dblclick="startRename(node.id, node.name)">{{ node.name }}</span>
                     <span class="ilv-cfg-gn">{{ node.children.length }}</span>
+                    <button class="ilv-cfg-gdel" title="删除分组(组内列移出为独立列)"
+                            @click.stop="removeGroup(node.id)" v-html="BL.icon('trash', 13, 'var(--bl-text-3)')"></button>
                   </div>
                   <template v-if="!node.collapsed">
                     <div v-for="c in node.children" :key="c.key"
@@ -322,9 +328,10 @@ const props = defineProps({
   classId: { type: String, required: true },
   typeName: { type: String, default: '' },
   columns: { type: Array, default: () => [] },
-  filterParams: { type: Object, default: () => ({}) }
+  filterParams: { type: Object, default: () => ({}) },
+  defaultConfig: { type: Object, default: null }   // 持久化的默认列配置(列序/分组/冻结/排序/不截断)
 })
-const emit = defineEmits(['open-instance', 'selection-change'])
+const emit = defineEmits(['open-instance', 'selection-change', 'config-change'])
 
 function iconText(ic, t) { return `${BL.icon(ic, 12)}<span style="margin-left:4px">${t}</span>` }
 
@@ -386,12 +393,17 @@ function defWidth(dt) {
   return 150
 }
 const cols = ref([])
-function buildCols() {
-  cols.value = [
+// 由 props.columns 构建一份全新的列(未套用任何持久化配置)
+function baseCols() {
+  return [
     { key: '__name__', label: '名称', dataType: 'string', system: true, visible: true, removed: false, width: 220, groupId: null },
     { key: '__code__', label: '编码', dataType: 'string', system: true, visible: true, removed: false, width: 130, groupId: null },
     ...props.columns.map(c => ({ key: c.field, label: c.label, dataType: c.dataType, system: false, visible: true, removed: false, width: defWidth(c.dataType), groupId: null }))
   ]
+}
+function buildCols() {
+  if (props.defaultConfig) { applyListConfig(props.defaultConfig); return }
+  cols.value = baseCols()
   groups.value = []
 }
 const businessCols = computed(() => cols.value.filter(c => !c.system && !c.removed))
@@ -402,6 +414,7 @@ const tableWidth = computed(() => 44 + renderCols.value.reduce((s, c) => s + c.w
 let gidSeq = 0
 const groups = ref([])   // [{ id, name, collapsed }]
 function groupName(id) { const g = groups.value.find(x => x.id === id); return g ? g.name : '分组' }
+function gCount(id) { return cols.value.filter(c => !c.removed && c.groupId === id).length }
 // 表头两行布局:top = 分组段(colspan)/独立列(rowspan2);bottom = 分组内的二级列
 const headerLayout = computed(() => {
   const rc = renderCols.value, top = [], bottom = []
@@ -540,8 +553,27 @@ function moveToSelected() { cfgPickL.value.forEach(k => { const c = cols.value.f
 function moveToAvailable() { cfgPickR.value.forEach(k => { const c = cols.value.find(x => x.key === k); if (c && !c.system) { c.removed = true; c.groupId = null } }); cfgPickR.value = new Set() }
 function toggleEye(key) { const c = cols.value.find(x => x.key === key); if (c && !c.system) c.visible = !c.visible }
 const cfgDrag = ref(null)
+const cfgDragGroup = ref(null)   // 正在拖动的分组 id(整组移动)
+// 整组移动:把该组所有列作为连续块,移到目标(列/组)之前,保持各组连续不割裂
+function moveGroup(groupId, target) {
+  const arr = [...cols.value]
+  const block = arr.filter(c => c.groupId === groupId)
+  if (!block.length) return
+  const rest = arr.filter(c => c.groupId !== groupId)
+  let ti = rest.length
+  if (target && target.type === 'group') {
+    if (target.id !== groupId) ti = rest.findIndex(c => c.groupId === target.id)
+  } else if (target && target.key) {
+    const tcol = rest.find(c => c.key === target.key)
+    ti = (tcol && tcol.groupId) ? rest.findIndex(c => c.groupId === tcol.groupId) : rest.findIndex(c => c.key === target.key)
+  }
+  if (ti < 0) ti = rest.length
+  rest.splice(ti, 0, ...block)
+  cols.value = rest
+}
 // 拖到列上:重排到其位置并继承其分组(拖到独立列=移出分组);拖到空白=末尾、移出分组
 function cfgDrop(target) {
+  if (cfgDragGroup.value) { moveGroup(cfgDragGroup.value, target ? { key: target.key } : null); cfgDragGroup.value = null; return }
   if (!cfgDrag.value) return
   const dk = cfgDrag.value; cfgDrag.value = null
   const dragCol = cols.value.find(c => c.key === dk)
@@ -551,9 +583,84 @@ function cfgDrop(target) {
   dragCol.groupId = target.groupId || null
   reorderCols(dk, target.key)
 }
-function dropToGroup(groupId) { if (cfgDrag.value) { assignGroup(cfgDrag.value, groupId); cfgDrag.value = null } }
-function restoreDefault() { buildCols(); sorts.value = []; freezeCount.value = 2; cfgNoTruncate.value = false; cfgGroupsSnap = [] }
-function applyConfig() { noTruncate.value = cfgNoTruncate.value; cfgSnapshot = null; cfgGroupsSnap = null; configOpen.value = false }
+function dropToGroup(groupId) {
+  if (cfgDragGroup.value) {
+    if (cfgDragGroup.value !== groupId) moveGroup(cfgDragGroup.value, { type: 'group', id: groupId })
+    cfgDragGroup.value = null; return
+  }
+  if (cfgDrag.value) { assignGroup(cfgDrag.value, groupId); cfgDrag.value = null }
+}
+
+/* 已选列拖拽:指针靠近上/下边缘时自动滚动,长列表无需手动滚 */
+let cfgScrollRAF = null
+let cfgScrollDir = 0
+let cfgScrollEl = null
+function cfgAutoScroll(e) {
+  if (!cfgDrag.value && !cfgDragGroup.value) { cfgAutoScrollStop(); return }   // 非拖拽态不自动滚
+  cfgScrollEl = e.currentTarget
+  const rect = cfgScrollEl.getBoundingClientRect()
+  const zone = 44
+  if (e.clientY < rect.top + zone) cfgScrollDir = -1
+  else if (e.clientY > rect.bottom - zone) cfgScrollDir = 1
+  else cfgScrollDir = 0
+  if (cfgScrollDir && !cfgScrollRAF) {
+    const step = () => {
+      // 拖拽结束(cfgDrag/cfgDragGroup 被 drop/dragend 清空)即停,避免循环卡住导致滚不回顶部
+      if (!cfgScrollDir || !cfgScrollEl || (!cfgDrag.value && !cfgDragGroup.value)) { cfgScrollRAF = null; return }
+      cfgScrollEl.scrollTop += cfgScrollDir * 9
+      cfgScrollRAF = requestAnimationFrame(step)
+    }
+    cfgScrollRAF = requestAnimationFrame(step)
+  }
+}
+function cfgAutoScrollStop() {
+  cfgScrollDir = 0
+  if (cfgScrollRAF) { cancelAnimationFrame(cfgScrollRAF); cfgScrollRAF = null }
+}
+function cfgAutoScrollLeave(e) {
+  // 真正离开容器(而非切换到子元素)才停
+  if (!e.currentTarget.contains(e.relatedTarget)) cfgAutoScrollStop()
+}
+// 恢复默认 = 重置为系统默认(忽略持久化配置);点确定后会把该重置态存为新的默认
+function restoreDefault() { cols.value = baseCols(); groups.value = []; sorts.value = []; freezeCount.value = 2; cfgNoTruncate.value = false; cfgGroupsSnap = [] }
+function applyConfig() {
+  noTruncate.value = cfgNoTruncate.value; cfgSnapshot = null; cfgGroupsSnap = null; configOpen.value = false
+  emit('config-change', getListConfig())   // 确定 → 通知父级持久化为默认列表
+}
+
+/* —— 列配置的读出/套用(供父级持久化「默认列表」/命名设计) —— */
+function getListConfig() {
+  return {
+    cols: cols.value.map(c => ({ key: c.key, visible: c.visible, removed: c.removed, width: c.width, groupId: c.groupId })),
+    groups: groups.value.map(g => ({ id: g.id, name: g.name, collapsed: !!g.collapsed })),
+    sorts: sorts.value.map(s => ({ ...s })),
+    freezeCount: freezeCount.value,
+    noTruncate: noTruncate.value
+  }
+}
+function applyListConfig(cfg) {
+  if (!cfg) return
+  const base = baseCols()
+  const byKey = new Map(base.map(c => [c.key, c]))
+  const ordered = []
+  for (const sc of (cfg.cols || [])) {
+    const c = byKey.get(sc.key)
+    if (!c) continue
+    c.visible = sc.visible !== false
+    c.removed = !!sc.removed
+    if (sc.width) c.width = sc.width
+    c.groupId = sc.groupId != null ? sc.groupId : null
+    ordered.push(c); byKey.delete(sc.key)
+  }
+  for (const c of base) if (byKey.has(c.key)) ordered.push(c)   // 保存里没有的新列追加末尾
+  cols.value = ordered
+  groups.value = (cfg.groups || []).map(g => ({ id: g.id, name: g.name, collapsed: !!g.collapsed }))
+  const maxGid = groups.value.reduce((m, g) => Math.max(m, parseInt(String(g.id).replace(/\D/g, ''), 10) || 0), 0)
+  if (maxGid > gidSeq) gidSeq = maxGid
+  sorts.value = (cfg.sorts || []).map(s => ({ ...s }))
+  if (cfg.freezeCount != null) freezeCount.value = cfg.freezeCount
+  if (cfg.noTruncate != null) { noTruncate.value = !!cfg.noTruncate; cfgNoTruncate.value = !!cfg.noTruncate }
+}
 function cancelConfig() {
   if (cfgSnapshot) { cols.value = cfgSnapshot.map(c => ({ ...c })); cfgSnapshot = null }   // 回退实时预览
   if (cfgGroupsSnap) { groups.value = cfgGroupsSnap.map(g => ({ ...g })); cfgGroupsSnap = null }
@@ -591,6 +698,12 @@ function addGroup() {
   renameId.value = id; renameText.value = '新分组'
 }
 function toggleGroup(id) { const g = groups.value.find(x => x.id === id); if (g) g.collapsed = !g.collapsed }
+// 删除分组:组内列移出(groupId=null,回到独立列),再删掉该分组
+function removeGroup(id) {
+  cols.value.forEach(c => { if (c.groupId === id) c.groupId = null })
+  groups.value = groups.value.filter(g => g.id !== id)
+  if (renameId.value === id) renameId.value = null
+}
 function startRename(id, name) { renameId.value = id; renameText.value = name }
 function commitRename() {
   const g = groups.value.find(x => x.id === renameId.value)
@@ -725,6 +838,10 @@ watch(() => [props.classId, props.filterParams], () => {
   fetchAll(); loadRenderCfg()
 }, { deep: true, immediate: true })
 watch(() => props.columns, buildCols, { immediate: true })
+// 持久化默认列配置异步到达时套用
+watch(() => props.defaultConfig, (v) => { if (v) applyListConfig(v) })
+
+defineExpose({ getListConfig, applyListConfig })
 
 /* —— 展示辅助 —— */
 function typeIcon(dt) {
@@ -759,11 +876,13 @@ const vFocus = { mounted(el) { setTimeout(() => el.focus && el.focus(), 0) } }
 .ilv-table-wrap { flex: 1; min-width: 0; overflow: auto; }
 .ilv-table { border-collapse: separate; border-spacing: 0; table-layout: fixed; font-size: 12.5px; }
 .ilv-table thead th {
-  position: sticky; top: 0; z-index: 3; background: var(--bl-bg-2);
+  position: sticky; top: 0; z-index: 3; background: var(--bl-thead-bg);
   text-align: center; padding: 0; font-weight: 600; color: var(--bl-text-2);
-  border-bottom: 1px solid var(--bl-border); border-right: 1px solid var(--bl-border);
+  border-bottom: 1px solid var(--bl-thead-border); border-right: 1px solid var(--bl-border);
   height: 38px; box-sizing: border-box; white-space: nowrap;
 }
+/* 两行表头(分组):第二行(分组内二级列)吸附在第一行下方 38px,避免与分组行重叠、数据穿透 */
+.ilv-table thead tr:nth-child(2) th { top: 38px; }
 .ilv-th { position: relative; }
 .ilv-th-in { display: flex; align-items: center; gap: 4px; padding: 0 8px; height: 100%; }
 .ilv-th-grip { cursor: grab; display: inline-flex; opacity: .9; }
@@ -901,15 +1020,19 @@ thead .ilv-frozen { z-index: 5 !important; }
 .ilv-cfg-x { width: 28px; height: 28px; border: 0; background: transparent; border-radius: 6px; color: var(--bl-text-3); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
 .ilv-cfg-x:hover { background: var(--bl-bg-hover); }
 .ilv-cfg-body { flex: 1; min-height: 0; display: flex; gap: 0; padding: 14px 16px; }
-.ilv-cfg-pane { flex: 1; min-width: 0; display: flex; flex-direction: column; border: 1px solid var(--bl-border); border-radius: 8px; padding: 10px; }
+.ilv-cfg-pane { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; border: 1px solid var(--bl-border); border-radius: 8px; padding: 10px; }
 .ilv-cfg-pt { font-size: 12px; font-weight: 600; color: var(--bl-text-2); margin-bottom: 8px; display: flex; align-items: center; }
 .ilv-cfg-addg { width: 22px; height: 22px; border: 1px solid var(--bl-border); background: var(--bl-bg-1); border-radius: 5px; color: var(--bl-text-2); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
 .ilv-cfg-addg:hover { border-color: var(--bl-primary); color: var(--bl-primary); }
-.ilv-cfg-group { display: flex; align-items: center; gap: 5px; padding: 6px 6px; border-radius: 6px; font-size: 12.5px; font-weight: 600; color: var(--bl-text-1); background: var(--bl-bg-2); }
+.ilv-cfg-group { display: flex; align-items: center; gap: 5px; padding: 6px 6px; border-radius: 6px; font-size: 12.5px; font-weight: 600; color: var(--bl-text-1); background: var(--bl-bg-2); cursor: grab; }
+.ilv-cfg-group.is-dragging { opacity: .5; }
 .ilv-cfg-fold { width: 18px; height: 18px; border: 0; background: transparent; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0; }
 .ilv-cfg-folder { display: inline-flex; }
 .ilv-cfg-rename { flex: 1; min-width: 0; height: 22px; border: 1px solid var(--bl-primary); border-radius: 4px; padding: 0 6px; font-size: 12.5px; }
 .ilv-cfg-gn { font-size: 10px; color: var(--bl-text-3); background: var(--bl-bg-3,#f0f2f5); border-radius: 8px; padding: 0 6px; }
+.ilv-cfg-gdel { width: 22px; height: 22px; padding: 0; border: 0; background: transparent; color: var(--bl-text-3); border-radius: 5px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .12s; }
+.ilv-cfg-group:hover .ilv-cfg-gdel { opacity: 1; }
+.ilv-cfg-gdel:hover { background: rgba(245,63,63,.12); color: #f53f3f; }
 .ilv-cfg-item.is-child { margin-left: 18px; }
 .ilv-cfg-gempty { margin-left: 18px; font-size: 11px; color: var(--bl-text-3); padding: 8px; border: 1px dashed var(--bl-border); border-radius: 6px; text-align: center; }
 .ilv-cfg-list { flex: 1; min-height: 220px; max-height: 360px; overflow: auto; display: flex; flex-direction: column; gap: 2px; }

@@ -14,14 +14,22 @@
     @save-chart-config="saveChartCfg"
     @build-chart-series-data="buildChartData"
   >
-    <div style="display: flex;flex-direction: column;height: 100%;">
-      <SidebarTabs
-        v-model="activeConfig"
-        :menu="chartMenu"
-      />
-      <div class="pie-basic-config ">
+    <div class="cfg-anchor-wrap">
+      <div class="cfg-anchor-nav">
         <div
-          v-show="activeConfig==='basic'"
+          v-for="t in chartMenu"
+          :key="t.key"
+          :class="['cfg-anchor-item', activeConfig===t.key && 'is-on']"
+          @click="scrollToSec(t.key)"
+        >
+          <i class="am-iconfont cfg-anchor-ic" :class="t.icon" />
+          <span>{{ t.name }}</span>
+        </div>
+      </div>
+      <div class="pie-basic-config cfg-scroll" ref="cfgScroll">
+        <div id="cfgsec-basic" class="cfg-sec">
+        <div class="cfg-sec-title">图表</div>
+        <div
           class="copy-button-box"
         >
           <el-button
@@ -41,25 +49,20 @@
           </el-button>
         </div>
         <ChartTypeChange
-          v-show="activeConfig==='basic'"
           style="margin-bottom: 10px;"
           :type="configs.branchType"
           @change-type="changeChartType"
         />
         <component
           :is="name+'-config'"
-          v-for="(name,index) in componentsList"
-          v-show="activeConfig===configType[name]"
-          :key="index"
+          v-for="(name,index) in basicComps"
+          :key="'b'+index"
           :ref="name+'form'"
           :save-able="saveAble"
-          :is-expand="name==='legend'"
-          @legend-show-change="legendShowChange"
           @chart-change="getChartBasicConfigData"
         />
         <div
           v-if="configs.branchType!='progressChart'"
-          v-show="activeConfig==='basic'"
         >
           <ColorsPicker
             v-model="color"
@@ -69,28 +72,7 @@
           />
         </div>
         <div
-          v-show="activeConfig==='series'"
-          class="copy-button-box"
-        >
-          <el-button
-            type="primary"
-            size="small"
-            @click="copyConfig('pieSeries')"
-          >
-            复制系列配置
-          </el-button>
-          <el-button
-            type="primary"
-            size="small"
-            :disabled="!saveAble"
-            @click="pasteConfig('pieSeries')"
-          >
-            粘贴系列配置
-          </el-button>
-        </div>
-        <div
           v-if="configs.branchType==='ringChart2' "
-          v-show="activeConfig==='basic'"
           style="padding-top: 10px;"
         >
           <el-form label-width="80px">
@@ -174,41 +156,91 @@
             </el-form-item>
           </el-form>
         </div>
-        <SeriesConfig
-          v-if="configs.branchType==='multiplePieChart'"
-          v-show="activeConfig==='series'"
-          ref="seriesConfigRef"
-          style="padding-top: 10px;"
-          @chart-change="getChartBasicConfigData"
-        />
-
         <ProgressSeriesConfig
           v-if="configs.branchType==='progressChart'"
-          v-show="activeConfig==='basic'"
           ref="progressSeries"
           style="padding-top: 10px;"
           @pie-series-change="getChartBasicConfigData"
         />
         <PieSeriesConfig
-          v-if="configs.branchType==='ringChart'||configs.branchType==='pieChart'||configs.branchType==='roundPieChart'||configs.branchType==='roundRingChart'"
-          v-show="activeConfig==='basic'"
+          v-if="configs.branchType==='ringChart'||configs.branchType==='pieChart'||configs.branchType==='roundPieChart'||configs.branchType==='roundRingChart'||configs.branchType==='carouselPieChart'||configs.branchType==='petalPieChart'"
           ref="singleSeries"
           style="padding-top: 10px;"
           @pie-series-change="getChartBasicConfigData"
         />
         <Pie3dConfig
           v-if="configs.branchType==='3dPieChart'"
-          v-show="activeConfig==='basic'"
           ref="pie3dRef"
           style="margin-top: 10px;"
           @chart-change="getChartBasicConfigData"
         />
         <ExLegendConfig
-          v-show="activeConfig==='basic'&&configs.branchType!='progressChart'"
+          v-if="configs.branchType!='progressChart'"
           ref="exLegendConfig"
           @ex-legend-show-change="exLegendShowChange"
           @chart-change="getChartBasicConfigData"
         />
+        </div>
+        <div
+          v-if="configs.branchType==='multiplePieChart'"
+          id="cfgsec-series"
+          class="cfg-sec"
+        >
+          <div class="cfg-sec-title">系列</div>
+          <div class="copy-button-box">
+            <el-button
+              type="primary"
+              size="small"
+              @click="copyConfig('pieSeries')"
+            >
+              复制系列配置
+            </el-button>
+            <el-button
+              type="primary"
+              size="small"
+              :disabled="!saveAble"
+              @click="pasteConfig('pieSeries')"
+            >
+              粘贴系列配置
+            </el-button>
+          </div>
+          <SeriesConfig
+            ref="seriesConfigRef"
+            @chart-change="getChartBasicConfigData"
+          />
+        </div>
+        <div
+          v-if="legendComps.length"
+          id="cfgsec-legend"
+          class="cfg-sec"
+        >
+          <div class="cfg-sec-title">图例</div>
+          <component
+            :is="name+'-config'"
+            v-for="(name,index) in legendComps"
+            :key="'l'+index"
+            :ref="name+'form'"
+            :save-able="saveAble"
+            :is-expand="true"
+            @legend-show-change="legendShowChange"
+            @chart-change="getChartBasicConfigData"
+          />
+        </div>
+        <div
+          v-if="otherComps.length"
+          id="cfgsec-other"
+          class="cfg-sec"
+        >
+          <div class="cfg-sec-title">其他</div>
+          <component
+            :is="name+'-config'"
+            v-for="(name,index) in otherComps"
+            :key="'o'+index"
+            :ref="name+'form'"
+            :save-able="saveAble"
+            @chart-change="getChartBasicConfigData"
+          />
+        </div>
       </div>
     </div>
   </BKBasicChartConfig>
@@ -286,6 +318,9 @@ export default {
   },
 
   computed: {
+    basicComps () { return this.componentsList.filter(n => this.configType[n] === 'basic') },
+    legendComps () { return this.componentsList.filter(n => this.configType[n] === 'legend') },
+    otherComps () { return this.componentsList.filter(n => this.configType[n] === 'other') },
     chartMenu () {
       if (this.configs.branchType === 'multiplePieChart') {
         return [{ name: '图表', key: 'basic', icon: 'icon-tuxing' }, { name: '系列', key: 'series', icon: 'icon-a-shujuyuan2' }, { name: '图例', key: 'legend', icon: 'ri-list-unordered' }, { name: '其他', key: 'other', icon: 'icon-qita' }]
@@ -308,7 +343,36 @@ export default {
       return itemsConfig.basicConfig[ele] && this.chartMenu.find(el => { return el.key === this.configType[ele] })
     })
   },
+  mounted () {
+    this.$nextTick(() => {
+      this.scrollEl = this.$refs.cfgScroll?.closest('.base-flow') || this.$refs.cfgScroll
+      if (this.scrollEl) this.scrollEl.addEventListener('scroll', this.onCfgScroll, { passive: true })
+    })
+  },
+  beforeUnmount () {
+    if (this.scrollEl) this.scrollEl.removeEventListener('scroll', this.onCfgScroll)
+  },
   methods: {
+    scrollToSec (key) {
+      const sc = this.scrollEl
+      const el = document.getElementById('cfgsec-' + key)
+      if (sc && el) {
+        this.activeConfig = key
+        const top = el.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop
+        sc.scrollTo({ top: Math.max(0, top - 8), behavior: 'smooth' })
+      }
+    },
+    onCfgScroll () {
+      const sc = this.scrollEl
+      if (!sc) return
+      const base = sc.getBoundingClientRect().top + 24
+      let cur = this.chartMenu[0].key
+      for (const t of this.chartMenu) {
+        const el = document.getElementById('cfgsec-' + t.key)
+        if (el && el.getBoundingClientRect().top <= base) cur = t.key
+      }
+      this.activeConfig = cur
+    },
     buildChartData (type, data) {
       if (!this.configs.dataSourceConfig) {
         return
@@ -459,11 +523,61 @@ export default {
   display: flex;
 }
 
+/* 锚点导航布局:左侧固定锚点 + 右侧滚动配置(依次往下排) */
+.cfg-anchor-wrap {
+  display: flex;
+  align-items: flex-start;
+}
+.cfg-anchor-nav {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  flex-shrink: 0;
+  width: 62px;
+  padding: 8px 0;
+  box-sizing: border-box;
+  background: #fafbfc;
+  border-right: 1px solid #eef0f3;
+  align-self: flex-start;
+}
+.cfg-anchor-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 4px;
+  font-size: 12px;
+  color: #86909c;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: color .15s, background .15s;
+}
+.cfg-anchor-item:hover { color: #1f6aff; }
+.cfg-anchor-item.is-on {
+  color: #1f6aff;
+  background: #eef4ff;
+  border-left-color: #1f6aff;
+}
+.cfg-anchor-ic { font-size: 16px; }
+.cfg-sec + .cfg-sec {
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f2f5;
+}
+.cfg-sec-title {
+  margin: 6px 0 12px;
+  padding-left: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #1a1a1a;
+  border-left: 3px solid #1f6aff;
+}
+
 .pie-basic-config {
-  width: 100%;
-  padding: 10px 16px 10px 24px;
-  // padding: 0 4px 12px 12px;
-  overflow: auto;
+  flex: 1;
+  min-width: 0;
+  padding: 12px 16px 12px 12px;
 
   :deep(.el-collapse-item__arrow) {
     margin-right: 0;

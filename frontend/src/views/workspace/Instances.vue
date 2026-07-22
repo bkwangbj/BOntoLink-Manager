@@ -3,11 +3,16 @@
     <!-- 顶部浏览器风格页签栏 -->
     <div class="ix-tabs">
       <button class="ix-back" title="返回" @click="goBack" v-html="BL.icon('arrowLeft', 16)"></button>
+      <!-- 模块标题:图标 + 名称(位于返回按钮后、页签前);点击回到概览首页 -->
+      <div class="ix-modtitle" title="回到探索实例总览页" @click="goHome">
+        <span class="ix-modtitle-ic" v-html="BL.icon('database', 15, 'var(--bl-primary)')"></span>
+        <span class="ix-modtitle-txt">实例探索</span>
+      </div>
       <div class="ix-tabs-list">
         <div v-for="t in tabs" :key="t.id" :class="['ix-tab', t.id===activeId && 'is-active']" @click="activeId=t.id">
           <span class="ix-tab-ic" v-html="BL.icon(t.icon, 13, t.id===activeId ? (t.color||'var(--bl-primary)') : 'var(--bl-text-3)')"></span>
           <span class="ix-tab-title bl-truncate">{{ t.title }}</span>
-          <button v-if="tabs.length>1" class="ix-tab-x" @click.stop="closeTab(t.id)" v-html="BL.icon('x', 17)"></button>
+          <button v-if="tabs.length>1" class="ix-tab-x" @click.stop="closeTab(t.id)" v-html="BL.icon('x', 15)"></button>
         </div>
         <button class="ix-tab-add" title="新建探索" @click="addTab()" v-html="BL.icon('plus', 14)"></button>
       </div>
@@ -179,6 +184,18 @@ function closeTab(id) {
   if (activeId.value === id) activeId.value = tabs.value[Math.max(0, i - 1)].id
 }
 function setView(v) { activeTab.value.view = v }
+// 点击模块标题:回到概览首页(激活一个非探索的概览页签,没有则新建)
+function goHome() {
+  searchView.value = null
+  graphView.value = null
+  const home = tabs.value.find(t => t.kind !== 'explore')
+  if (home) {
+    activeId.value = home.id
+    home.view = 'overview'
+  } else {
+    addTab()
+  }
+}
 
 /* —— 范围选择 —— */
 const scopeOpen = ref(false)
@@ -312,6 +329,13 @@ onBeforeUnmount(() => document.removeEventListener('fullscreenchange', onFsChang
 .ix-gbtn { width: 28px; height: 28px; border: 0; background: transparent; color: var(--bl-text-3); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
 .ix-gbtn:hover { background: var(--bl-bg-hover); color: var(--bl-primary); }
 
+/* 模块标题:图标 + 名称,内联在页签栏(返回按钮之后、页签之前) */
+.ix-modtitle { display: flex; align-items: center; gap: 6px; flex-shrink: 0; padding-right: 12px; margin-right: 8px; border-right: 1px solid var(--bl-border); cursor: pointer; }
+.ix-modtitle:hover .ix-modtitle-txt { color: var(--bl-primary); }
+.ix-modtitle:hover .ix-modtitle-ic { color: var(--bl-primary); }
+.ix-modtitle-ic { display: inline-flex; }
+.ix-modtitle-txt { font-size: 15px; font-weight: 600; color: var(--bl-text-1); white-space: nowrap; }
+
 /* 顶部页签栏 */
 .ix-tabs {
   display: flex; align-items: center; gap: 8px; height: 40px; flex-shrink: 0;
@@ -320,7 +344,8 @@ onBeforeUnmount(() => document.removeEventListener('fullscreenchange', onFsChang
 .ix-tabs-list { flex: 1; display: flex; align-items: center; gap: 2px; overflow-x: auto; scrollbar-width: none; }
 .ix-tabs-list::-webkit-scrollbar { display: none; }
 .ix-tab {
-  display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 8px 0 10px;
+  position: relative;
+  display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 26px 0 10px;
   background: var(--bl-bg-2); border: 1px solid transparent; border-radius: 7px; cursor: pointer; font-size: 12.5px;
   color: var(--bl-text-3); max-width: 180px; flex-shrink: 0;
 }
@@ -329,11 +354,20 @@ onBeforeUnmount(() => document.removeEventListener('fullscreenchange', onFsChang
 .ix-tab-ic { display: inline-flex; flex-shrink: 0; }
 .ix-tab-title { min-width: 0; }
 /* 关闭按钮:不占位,hover 当前页签才显示 */
-.ix-tab-x { width: 22px; height: 22px; border: 0; background: transparent; color: var(--bl-text-2); border-radius: 5px; cursor: pointer; display: none; align-items: center; justify-content: center; flex-shrink: 0; }
-.ix-tab:hover .ix-tab-x, .ix-tab.is-active .ix-tab-x { display: inline-flex; }
-.ix-tab-x:hover { background: var(--bl-bg-3,#e5e6eb); color: var(--bl-text-1); }
-.ix-tab-add { width: 24px; height: 24px; border: 0; background: transparent; color: var(--bl-text-3); border-radius: 5px; cursor: pointer; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
-.ix-tab-add:hover { background: var(--bl-bg-hover); color: var(--bl-primary); }
+/* 关闭按钮:绝对定位到页签右上角,鼠标经过淡入,不占位、不改变页签宽度 */
+.ix-tab-x {
+  position: absolute; top: 6px; right: 3px;
+  width: 16px; height: 16px; padding: 0; border: 0; border-radius: 4px;
+  background: rgba(0, 0, 0, .06); color: var(--bl-text-2);
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden; transition: opacity .12s; z-index: 2; padding: 2px;
+}
+.ix-tab-x svg { display: block; }
+.ix-tab:hover .ix-tab-x, .ix-tab.is-active .ix-tab-x { opacity: 1; visibility: visible; }
+.ix-tab-x:hover { background: rgba(0, 0, 0, .12); color: var(--bl-text-1); }
+.ix-tab-add { width: 26px; height: 26px; padding: 0; border: 1px solid var(--bl-border); background: var(--bl-bg-2); color: var(--bl-text-2); border-radius: 6px; cursor: pointer; flex-shrink: 0; margin-left: 2px; display: inline-flex; align-items: center; justify-content: center; }
+.ix-tab-add:hover { background: var(--bl-primary-soft); border-color: var(--bl-primary-border); color: var(--bl-primary); }
+.ix-tab-add svg { display: block; }
 
 /* 搜索栏(内嵌二级标签行右侧，靠右对齐、垂直居中) */
 /* 通栏搜索条：范围选择 + 全宽搜索合并为一条，占满整行 */

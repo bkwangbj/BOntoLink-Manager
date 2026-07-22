@@ -167,14 +167,29 @@
               v-show="tabList.length === 0 && setMode"
               class="empty-container"
             >
-              <div
-                class="empty-img"
-              />
-              <span>拖拽左侧组件到此区域</span>
-              <button
-                class="bk-add-chart-btn"
-                @click.stop="openPicker"
-              >＋ 添加图表</button>
+              <div class="empty-opts">
+                <!-- 方式一:从左侧拖拽 -->
+                <div class="empty-opt empty-opt-drag">
+                  <div class="empty-opt-ic">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4080ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 3v18M3 12h18M12 3 9 6M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3" />
+                    </svg>
+                  </div>
+                  <div class="empty-opt-tt">拖拽组件</div>
+                  <div class="empty-opt-sub">从左侧面板拖到此处</div>
+                </div>
+                <div class="empty-or">或</div>
+                <!-- 方式二:点击从图表库添加 -->
+                <div class="empty-opt empty-opt-click" @click.stop="openPicker">
+                  <div class="empty-opt-ic">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4080ff" stroke-width="1.8" stroke-linecap="round">
+                      <path d="M12 5v14M5 12h14" />
+                    </svg>
+                  </div>
+                  <div class="empty-opt-tt">添加图表</div>
+                  <div class="empty-opt-sub">从图表库中选择</div>
+                </div>
+              </div>
             </div>
           </template>
         </draggable>
@@ -199,23 +214,38 @@
             <span>选择图表</span>
             <button class="bcp-x" @click="pickerOpen=false">✕</button>
           </div>
-          <div class="bcp-body">
-            <div v-for="g in pickerGroups" :key="g.key" class="bcp-group">
-              <div class="bcp-title">{{ g.name }}</div>
-              <div class="bcp-grid">
-                <div
-                  v-for="it in g.items"
-                  :key="it.chartComId"
-                  class="bcp-card"
-                  :title="it.title"
-                  @click="pickChart(it)"
-                >
-                  <img
-                    v-if="chartImg(it)"
-                    :src="chartImg(it)"
-                    class="bcp-img"
+          <div class="bcp-main">
+            <!-- 左侧分组锚点列:点击滚动定位,右侧滚动时高亮当前分组 -->
+            <div class="bcp-nav">
+              <div
+                v-for="g in pickerGroups"
+                :key="g.key"
+                :class="['bcp-nav-item', pickerActive === g.key && 'is-active']"
+                @click="scrollToPickerGroup(g.key)"
+              >
+                <span class="bcp-nav-txt">{{ g.name }}</span>
+                <span class="bcp-nav-count">{{ g.items.length }}</span>
+              </div>
+            </div>
+            <!-- 右侧内容 -->
+            <div ref="bcpBody" class="bcp-body" @scroll="onPickerScroll">
+              <div v-for="g in pickerGroups" :key="g.key" class="bcp-group" :data-key="g.key">
+                <div class="bcp-title">{{ g.name }}</div>
+                <div class="bcp-grid">
+                  <div
+                    v-for="it in g.items"
+                    :key="it.chartComId"
+                    class="bcp-card"
+                    :title="it.title"
+                    @click="pickChart(it)"
                   >
-                  <span class="bcp-name">{{ it.title }}</span>
+                    <img
+                      v-if="chartImg(it)"
+                      :src="chartImg(it)"
+                      class="bcp-img"
+                    >
+                    <span class="bcp-name">{{ it.title }}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -231,7 +261,7 @@ import draggable from 'vuedraggable'
 import { v4 as uuidv4 } from 'uuid'
 import emitter from '../../../configs/emitter'
 import { getVarAndEvent, getDefaultConfig } from '../../../configs/common-func'
-import { chartComponents, ringComponents, imgObject } from '../../../configs/chart-com'
+import { chartComponents, ringComponents, mapComponents, tableComponents, customComponents, imgObject } from '../../../configs/chart-com'
 import OperatorContent from './operator-content.vue'
 import ExplainContent from './explain-content.vue'
 import QueryArea from './query-area.vue'
@@ -294,6 +324,8 @@ export default {
   data () {
     return {
       pickerOpen: false,
+      pickerActive: '',            // 选择图表弹框:左侧锚点列当前激活分组
+      pickerClickLock: false,      // 点击锚点触发的平滑滚动期间,忽略滚动高亮回写
       focusFlag: false,
       currentTab: '',
       tabList: [],
@@ -312,7 +344,7 @@ export default {
   computed: {
     // 就近添加图表:图表选择弹层的分组数据(与左侧图表资源同源)
     pickerGroups () {
-      const LINE = ['lineChart', 'smoothLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap']
+      const LINE = ['lineChart', 'smoothLineChart', 'markLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap']
       const ADV = ['bubbleChart', 'calendarHeatmap', 'polarChart']
       const bars = chartComponents.filter(c => (c.type === 'BKBarChart' || c.type === 'BKPolarChart') && !LINE.includes(c.branchType) && !ADV.includes(c.branchType))
       const lines = chartComponents.filter(c => LINE.includes(c.branchType))
@@ -321,7 +353,10 @@ export default {
         { key: 'bar', name: '柱状图', items: bars },
         { key: 'line', name: '折线图', items: lines },
         { key: 'pie', name: '饼形图', items: ringComponents || [] },
-        { key: 'adv', name: '高级图表', items: adv }
+        { key: 'adv', name: '高级图表', items: adv },
+        { key: 'table', name: '表格', items: tableComponents || [] },
+        { key: 'map', name: '地图', items: mapComponents || [] },
+        { key: 'com', name: '其他', items: customComponents || [] }
       ].filter(g => g.items && g.items.length)
     },
     mergeChild () {
@@ -627,7 +662,40 @@ export default {
     },
     // —— 就近添加图表 ——
     chartImg (it) { return it && it.img ? imgObject[it.img] : '' },
-    openPicker () { this.pickerOpen = true },
+    openPicker () {
+      this.pickerOpen = true
+      this.pickerActive = this.pickerGroups[0]?.key || ''
+      this.$nextTick(() => { if (this.$refs.bcpBody) this.$refs.bcpBody.scrollTop = 0 })
+    },
+    // 左侧锚点点击:平滑滚动到对应分组
+    scrollToPickerGroup (key) {
+      this.pickerActive = key
+      const body = this.$refs.bcpBody
+      if (!body) return
+      const el = body.querySelector(`[data-key="${key}"]`)
+      if (!el) return
+      this.pickerClickLock = true
+      body.scrollTo({ top: el.offsetTop, behavior: 'smooth' })
+      clearTimeout(this._bcpLockTimer)
+      this._bcpLockTimer = setTimeout(() => { this.pickerClickLock = false }, 400)
+    },
+    // 右侧滚动:高亮当前分组锚点
+    onPickerScroll () {
+      if (this.pickerClickLock) return
+      const body = this.$refs.bcpBody
+      if (!body) return
+      const groups = body.querySelectorAll('.bcp-group')
+      const top = body.scrollTop
+      let active = this.pickerActive
+      for (const g of groups) {
+        if (g.offsetTop - 8 <= top) active = g.dataset.key
+        else break
+      }
+      if (top + body.clientHeight >= body.scrollHeight - 2 && groups.length) {
+        active = groups[groups.length - 1].dataset.key
+      }
+      this.pickerActive = active
+    },
     // 从弹层选中图表 → 加入本区域(等效拖入),并打开其配置
     pickChart (item) {
       this.pickerOpen = false
@@ -811,38 +879,55 @@ export default {
     height: 100%;
   }
 
-  .bk-add-chart-btn {
-    margin-top: 12px;
-    padding: 6px 16px;
-    border: 1px solid #1f6aff;
-    border-radius: 6px;
-    background: #fff;
-    color: #1f6aff;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all .15s;
-  }
-  .bk-add-chart-btn:hover { background: #1f6aff; color: #fff; }
-
   .empty-container {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 100%;
     background: transparent;
-    border-radius: 8px;
 
-    > .empty-img {
-      width: 155px;
-      height: 116px;
+    .empty-opts {
+      display: flex;
+      align-items: stretch;
+      gap: 12px;
     }
 
-    > span {
+    .empty-opt {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      width: 128px;
+      padding: 16px 12px;
+      border: 1px dashed #d5dce6;
+      border-radius: 10px;
+      background: #fbfcfe;
+      transition: border-color .15s, background .15s, box-shadow .15s;
+    }
+
+    .empty-opt-click {
+      cursor: pointer;
+      border-style: solid;
+      border-color: #c9dbff;
+    }
+
+    .empty-opt-click:hover {
+      border-color: #1f6aff;
+      background: #f2f7ff;
+      box-shadow: 0 4px 14px rgba(31, 106, 255, .12);
+    }
+
+    .empty-opt-ic { line-height: 0; margin-bottom: 2px; }
+    .empty-opt-tt { font-size: 13px; font-weight: 600; color: #1d2129; }
+    .empty-opt-sub { font-size: 11px; color: #86909c; text-align: center; line-height: 1.4; }
+
+    .empty-or {
+      display: flex;
+      align-items: center;
       font-size: 12px;
-      /* stylelint-disable-next-line custom-property-pattern */
-      color: var(--textStylecolor) !important;
+      color: #a9afba;
     }
   }
 }
@@ -858,7 +943,7 @@ export default {
   background: rgba(0, 0, 0, .35);
 }
 .bk-chart-picker {
-  width: 520px;
+  width: 620px;
   max-height: 72vh;
   display: flex;
   flex-direction: column;
@@ -867,6 +952,44 @@ export default {
   box-shadow: 0 8px 30px rgba(0, 0, 0, .18);
   overflow: hidden;
 }
+/* 主体:左锚点列 + 右内容 */
+.bcp-main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+/* 左侧分组锚点列 */
+.bcp-nav {
+  flex: 0 0 100px;
+  width: 100px;
+  overflow-y: auto;
+  padding: 8px 0;
+  border-right: 1px solid #eef0f3;
+  background: #fafafa;
+}
+.bcp-nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  height: 34px;
+  padding: 0 12px 0 16px;
+  font-size: 13px;
+  color: #4e5969;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  white-space: nowrap;
+  transition: background .15s, color .15s;
+}
+.bcp-nav-item:hover { background: #f0f2f5; color: #1a1a1a; }
+.bcp-nav-item.is-active {
+  color: #1f6aff;
+  font-weight: 600;
+  background: #fff;
+  border-left-color: #1f6aff;
+}
+.bcp-nav-txt { overflow: hidden; text-overflow: ellipsis; }
+.bcp-nav-count { flex-shrink: 0; font-size: 11px; font-weight: normal; color: #a8adb7; }
 .bcp-head {
   display: flex;
   align-items: center;
@@ -879,7 +1002,7 @@ export default {
 }
 .bcp-x { border: 0; background: transparent; color: #86909c; font-size: 14px; cursor: pointer; }
 .bcp-x:hover { color: #1f6aff; }
-.bcp-body { padding: 8px 16px 16px; overflow-y: auto; }
+.bcp-body { position: relative; flex: 1; min-width: 0; padding: 8px 16px 16px; overflow-y: auto; }
 .bcp-title { margin: 12px 0 8px; font-size: 12px; color: #8a8f99; }
 .bcp-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 .bcp-card {

@@ -6,12 +6,12 @@
    ========================================================== */
 
 :root {
-  /* —— 主题色（默认科技蓝） —— */
-  --bl-primary: #165DFF;
-  --bl-primary-hover: #4080FF;
-  --bl-primary-active: #0E42D2;
-  --bl-primary-soft: rgba(22, 93, 255, 0.08);
-  --bl-primary-border: rgba(22, 93, 255, 0.24);
+  /* —— 主题色（默认皇家蓝, 对标 demo #2563EB, 比原电光蓝 #165DFF 柔和不刺眼） —— */
+  --bl-primary: #2563EB;
+  --bl-primary-hover: #4F83F1;
+  --bl-primary-active: #1D4ED8;
+  --bl-primary-soft: rgba(37, 99, 235, 0.08);
+  --bl-primary-border: rgba(37, 99, 235, 0.24);
    --bl-primary-soft-ss: #EDF2FF;
 
   /* —— 语义色（只有 4 种） —— */
@@ -25,17 +25,20 @@
   --bl-ai-soft: rgba(114, 46, 209, 0.10);
 
   /* —— 中性色（文本 4 级 + 背景 3 层 + 边框） —— */
-  --bl-text-1: #1D2129;
-  --bl-text-2: #4E5969;
-  --bl-text-3: #86909C;
-  --bl-text-4: #C9CDD4;
-  --bl-bg-0: #F7F8FA;       /* 页面 */
+  /* 基础色调取冷蓝灰(带一丝蓝), 对标原型 UI demo 浅色 —— 非纯中性灰 */
+  --bl-text-1: #1f2a3d;     /* 主文字 — 微蓝墨 */
+  --bl-text-2: #5c6b82;
+  --bl-text-3: #94a1b5;
+  --bl-text-4: #b9c3d3;
+  --bl-bg-0: #eceff5;       /* 页面 — 冷蓝灰 */
   --bl-bg-1: #FFFFFF;       /* 卡片 */
-  --bl-bg-2: #F2F3F5;       /* 软底 */
-  --bl-bg-hover: #F7F8FA;
-  --bl-border: #E5E6EB;
-  --bl-border-strong: #C9CDD4;
-  --bl-divider: #F2F3F5;
+  --bl-bg-2: #e6ecf5;       /* 软底 / 表头 / 选中分组 — 加深一档, 与白色表体/页底拉开 */
+  --bl-bg-hover: #f2f7fd;   /* 行 hover — 微蓝 */
+  --bl-border: #e7ecf3;
+  --bl-border-strong: #d6deea;
+  --bl-divider: #eef1f6;
+  --bl-thead-bg: #ffffff;       /* 表头底 — 白(对标 demo 干净表头) */
+  --bl-thead-border: #cdd6e4;   /* 表头底边线 — 清晰冷灰, 划出头带 */
 
   /* —— 业务对象循环色 8 种 —— */
   --bl-obj-1: #165DFF;
@@ -84,29 +87,37 @@
 }
 
 /* —— 暗色模式 —— */
-/* 调色思路: 拉开三层底色差 (页面/卡片/软底) + 边框上提一档,
-   让"区域感"明显. 老板反馈"整体不是看的很清楚" — 之前 bg-0/1/2
-   只差 5-6 个色阶, 卡片与页面糊在一起. 现按 ~10 色阶递进. */
+/* 调色思路: 基础色调取"蓝色系里的黑"(navy), 参考原型 UI demo —— 不用中性灰黑.
+   仍保留三层底色拉开层差 (页面/卡片/软底) + 边框可见, 只是色相整体转蓝. */
 :root[data-theme="dark"] {
-  --bl-text-1: #ffffff;     /* 主文字提到 F2 提高清晰度 */
-  --bl-text-2: #C9CDD4;
-  --bl-text-3: #bfc4c9;
-  --bl-text-4: #4E5969;
-  --bl-bg-0: #0E1015;       /* 页面 — 更深, 让卡片浮起来 */
-  --bl-bg-1: #1A1D24;       /* 卡片 — 中等 */
-  --bl-bg-2: #242832;       /* 软底 / 表头 / 选中分组 */
-  --bl-bg-hover: #2E323D;   /* 行 hover — 与表行明显区分 */
-  --bl-border: #363B47;     /* 主边框 — 加亮一档保证可见 */
-  --bl-border-strong: #4A5060;
-  --bl-divider: #2A2E37;
+  --bl-text-1: #eaf1fc;     /* 主文字 — 微蓝白 */
+  --bl-text-2: #aab8d0;
+  --bl-text-3: #8494b0;
+  --bl-text-4: #4a5876;
+  --bl-bg-0: #070d1a;       /* 页面 — 最深 navy */
+  --bl-bg-1: #0f1829;       /* 卡片 — navy */
+  --bl-bg-2: #182742;       /* 软底 / 表头 / 选中分组 — 提一档 */
+  --bl-bg-hover: #1f3050;   /* 行 hover — 与表行明显区分 */
+  --bl-border: #223052;     /* 主边框 — 蓝调, 保证可见 */
+  --bl-border-strong: #324263;
+  --bl-divider: #172440;
+  --bl-thead-bg: #182742;       /* 表头底 — 深蓝(比卡片浅一档, 本就分明) */
+  --bl-thead-border: #33456a;   /* 表头底边线 */
   --bl-shadow-1: 0 1px 2px rgba(0,0,0,0.5);
   --bl-shadow-2: 0 4px 12px rgba(0,0,0,0.6);
   --bl-shadow-3: 0 12px 32px rgba(0,0,0,0.8);
+  /* 默认蓝在深色下提亮一档(blue-500, 对标 demo 深色), 清爽不扎眼也不惨淡(仅默认蓝) */
+  --bl-primary: #3B82F6;
+  --bl-primary-hover: #60A5FA;
+  --bl-primary-active: #2563EB;
+  --bl-primary-soft: rgba(59,130,246,.14);
+  --bl-primary-border: rgba(59,130,246,.30);
 }
 
 /* —— 主题色变量（强调色）切换 —— */
-:root[data-accent="green"]  { --bl-primary:#00B42A; --bl-primary-hover:#23C343; --bl-primary-active:#009A29; --bl-primary-soft: rgba(0,180,42,.08); --bl-primary-border: rgba(0,180,42,.24); }
-:root[data-accent="purple"] { --bl-primary:#722ED1; --bl-primary-hover:#8D4EDA; --bl-primary-active:#551DB0; --bl-primary-soft: rgba(114,46,209,.08); --bl-primary-border: rgba(114,46,209,.24); }
-:root[data-accent="orange"] { --bl-primary:#FF7D00; --bl-primary-hover:#FF9A2E; --bl-primary-active:#D25F00; --bl-primary-soft: rgba(255,125,0,.08); --bl-primary-border: rgba(255,125,0,.24); }
-:root[data-accent="red"]    { --bl-primary:#F53F3F; --bl-primary-hover:#F76560; --bl-primary-active:#CB272D; --bl-primary-soft: rgba(245,63,63,.08); --bl-primary-border: rgba(245,63,63,.24); }
+/* 主题色统一取 Tailwind-600 沉稳系列, 与默认蓝 #2563EB 同调, 避免高饱和刺眼(尤其头部渐变) */
+:root[data-accent="green"]  { --bl-primary:#16A34A; --bl-primary-hover:#22C55E; --bl-primary-active:#15803D; --bl-primary-soft: rgba(22,163,74,.08); --bl-primary-border: rgba(22,163,74,.24); }
+:root[data-accent="purple"] { --bl-primary:#7C3AED; --bl-primary-hover:#8B5CF6; --bl-primary-active:#6D28D9; --bl-primary-soft: rgba(124,58,237,.08); --bl-primary-border: rgba(124,58,237,.24); }
+:root[data-accent="orange"] { --bl-primary:#EA580C; --bl-primary-hover:#F97316; --bl-primary-active:#C2410C; --bl-primary-soft: rgba(234,88,12,.08); --bl-primary-border: rgba(234,88,12,.24); }
+:root[data-accent="red"]    { --bl-primary:#DC2626; --bl-primary-hover:#EF4444; --bl-primary-active:#B91C1C; --bl-primary-soft: rgba(220,38,38,.08); --bl-primary-border: rgba(220,38,38,.24); }
 :root[data-accent="black"]  { --bl-primary:#1D2129; --bl-primary-hover:#4E5969; --bl-primary-active:#0F1116; --bl-primary-soft: rgba(29,33,41,.08); --bl-primary-border: rgba(29,33,41,.24); }

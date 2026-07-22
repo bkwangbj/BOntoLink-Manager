@@ -28,7 +28,7 @@
       v-model="collapseModel"
       class="page-setting-container"
     >
-      <el-collapse-item>
+      <el-collapse-item name="preTheme">
         <template #title>
           预置主题
         </template>
@@ -43,7 +43,71 @@
             :style="t.config.imgPath ? {background:'url('+t.config.imgPath+') no-repeat'} : {}"
             @click="changePreTheme(t)"
           >
+            <div
+              v-if="!t.config.imgPath"
+              class="theme-preview"
+              :style="{ background: getThemePreview(t).page }"
+            >
+              <div
+                v-for="n in 2"
+                :key="n"
+                class="tp-card"
+                :style="{ background: getThemePreview(t).card, borderColor: getThemePreview(t).border }"
+              >
+                <span
+                  class="tp-bar"
+                  :style="{ background: getThemePreview(t).accent }"
+                />
+                <div class="tp-dots">
+                  <i
+                    v-for="(c,ci) in getThemePreview(t).palette"
+                    :key="ci"
+                    :style="{ background: c }"
+                  />
+                </div>
+              </div>
+            </div>
             <span>{{ t.name }}</span>
+          </div>
+        </div>
+      </el-collapse-item>
+      <el-collapse-item name="chartPalette">
+        <template #title>
+          图表配色模版
+        </template>
+        <div
+          class="collapse-item chart-palette-container"
+          :class="{'is-disabled':disabled}"
+        >
+          <div
+            v-for="p in visiblePalettes"
+            :key="p.key"
+            :class="['palette-item', isPaletteActive(p) ? 'active' : '', disabled?'is-disabled':'']"
+            @click="selectChartPalette(p)"
+          >
+            <div class="palette-name">
+              <span>{{ p.name }}</span>
+              <i
+                v-if="isPaletteActive(p)"
+                class="am-iconfont icon-a-yingyong palette-check"
+              />
+            </div>
+            <div class="palette-swatches">
+              <i
+                v-for="(c,ci) in p.colors"
+                :key="ci"
+                :style="{ background: c }"
+              />
+            </div>
+          </div>
+          <!-- 默认显示前两行(6 个),更多按钮展开/收起 -->
+          <div
+            v-if="chartPaletteList.length > 6"
+            class="palette-more"
+            @click="palettesExpanded = !palettesExpanded"
+          >
+            <span>{{ palettesExpanded ? '收起' : `展开更多(${chartPaletteList.length - 6})` }}</span>
+            <span class="palette-more-ic">{{ palettesExpanded ? '︿' : '﹀' }}</span>
           </div>
         </div>
       </el-collapse-item>
@@ -206,8 +270,9 @@
         </div>
       </el-collapse-item>
     </el-collapse>
+    <!-- 「另存为」= 另存自定义主题模版;当前宿主未接持久化,暂时隐藏(恢复:改回 v-if="hasSaveAsPermission") -->
     <div
-      v-if="hasSaveAsPermission"
+      v-if="false"
       class="page-setting-footer"
     >
       <el-button
@@ -233,7 +298,9 @@ import ChildStyle from '../../../chart-common-config/components/style-config/chi
 import BackgroundStyle from '../../../chart-common-config/components/style-config/background-style.vue'
 import QueryStyle from '../../../chart-common-config/components/style-config/query-style.vue'
 import chartThemeConfig from './chart-config/chart-theme-config.vue'
+import { CHART_PALETTES } from '../../../configs/chart-palettes'
 import { ElMessage } from 'element-plus'
+
 export default {
   name: 'PageSetting',
   components: {
@@ -283,6 +350,7 @@ export default {
   data () {
     return {
       preThemeList: [],
+      chartPaletteList: CHART_PALETTES,
       cardRadiusList,
       spaceModeList,
       pageHeightList,
@@ -327,7 +395,8 @@ export default {
       cardBorderBox: null,
       cardShadowBox: null,
       tabSplitStyleBox: null,
-      collapseModel: [],
+      collapseModel: ['preTheme', 'chartPalette'],   // 预置主题 + 图表配色模版 默认展开
+      palettesExpanded: false,                        // 图表配色模版:默认只显示前两行(6 个)
       themeModeDisabled: false,
       themeModeValue: 'default',
       spaceModeDisabled: false,
@@ -343,6 +412,10 @@ export default {
 
     hasSaveAsPermission () {
       return hasPermission(this.operPermission, 'theme.saveAs')
+    },
+    // 图表配色模版:未展开只显示前两行(6 个)
+    visiblePalettes () {
+      return this.palettesExpanded ? this.chartPaletteList : this.chartPaletteList.slice(0, 6)
     }
   },
   watch: {
@@ -370,6 +443,24 @@ export default {
     this.init(this.theme)
   },
   methods: {
+    // 当前整页图表配色(用于高亮选中的配色模版)
+    isPaletteActive (p) {
+      const active = this.theme?.chartStyle?.themeStyle?.colorList || []
+      return JSON.stringify(active) === JSON.stringify(p.colors)
+    },
+    // 选定一套配色模版 → 整页图表默认配色切换(单图表自定义配色仍优先)
+    selectChartPalette (p) {
+      if (this.disabled) return
+      this.chartStyleChange({ form: [...p.colors], path: 'themeStyle', field: 'colorList' })
+    },
+    // 预置主题效果示意图配色(浅色 default / 深色 blue),自定义主题回退到浅色
+    getThemePreview (t) {
+      const presets = {
+        default: { page: '#eef1f6', card: '#ffffff', border: '#e6e9f0', accent: '#1f6aff', palette: ['#5b9bff', '#3fd08a', '#f7b955', '#f2637b'] },
+        blue: { page: '#0f1c30', card: '#1b2b45', border: '#2b3e5d', accent: '#4d8bff', palette: ['#4d8bff', '#3fd0c9', '#f7b955', '#ef6a7a'] }
+      }
+      return presets[t.key] || presets.default
+    },
     async init (theme) {
       const preTheme = this.getThemeConfig(theme.preTheme, theme.globalCss?.themeMode || '', true)
       this.preThemeData = preTheme.config
@@ -1119,6 +1210,7 @@ export default {
   .page-setting-container {
     flex: 1;
     overflow: auto;
+       padding: 0 12px;
 
     :deep(.el-collapse-item__header) {
       // flex-direction: row-reverse;
@@ -1134,7 +1226,7 @@ export default {
     }
 
     :deep(.el-collapse-item__content) {
-      padding: 0 12px 12px;
+       padding: 0 20px 20px;
     }
 
     :deep(.el-collapse) {
@@ -1432,14 +1524,54 @@ export default {
       .theme-item {
         position: relative;
         flex: 1;
-        height: 47px;
+        height: 64px;
+        overflow: hidden;
         cursor: pointer;
         border: 1px solid #c7c7c7;
         border-radius: 4px;
 
+        .theme-preview {
+          position: absolute;
+          inset: 0 0 18px;
+          display: flex;
+          gap: 4px;
+          align-items: stretch;
+          justify-content: center;
+          padding: 5px 6px;
+          overflow: hidden;
+
+          .tp-card {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 3px;
+            border: 1px solid transparent;
+            border-radius: 2px;
+          }
+
+          .tp-bar {
+            width: 55%;
+            height: 3px;
+            border-radius: 2px;
+          }
+
+          .tp-dots {
+            display: flex;
+            gap: 2px;
+
+            i {
+              flex: 1;
+              height: 7px;
+              border-radius: 1px;
+            }
+          }
+        }
+
         > span {
           position: absolute;
           bottom: 0;
+          z-index: 1;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -1470,6 +1602,88 @@ export default {
             background: rgba($color: #1f6aff, $alpha: 50%);
           }
         }
+      }
+    }
+
+    .collapse-item.chart-palette-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+
+      &.is-disabled {
+        pointer-events: none;
+        opacity: .6;
+      }
+
+      .palette-item {
+        padding: 7px 8px;
+        cursor: pointer;
+        background: #fff;
+        border: 1px solid #e2e5ec;
+        border-radius: 5px;
+        transition: border-color .15s, box-shadow .15s;
+
+        &:hover {
+          border-color: #1f6aff;
+        }
+
+        &.active {
+          border-color: #1f6aff;
+          box-shadow: 0 0 0 1px #1f6aff inset;
+        }
+
+        &.is-disabled {
+          cursor: not-allowed;
+        }
+
+        .palette-name {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 6px;
+          font-size: 12px;
+          color: #4a4a4a;
+
+          .palette-check {
+            font-size: 13px;
+            color: #1f6aff;
+          }
+        }
+
+        &.active .palette-name {
+          color: #1f6aff;
+        }
+
+        .palette-swatches {
+          display: flex;
+          height: 14px;
+          overflow: hidden;
+          border-radius: 3px;
+
+          i {
+            flex: 1;
+            height: 100%;
+          }
+        }
+      }
+
+      .palette-more {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        height: 28px;
+        margin-top: 2px;
+        font-size: 12px;
+        color: #1f6aff;
+        cursor: pointer;
+        border: 1px dashed #d2d7e0;
+        border-radius: 6px;
+
+        &:hover { background: #f2f6ff; border-color: #1f6aff; }
+
+        .palette-more-ic { font-size: 12px; }
       }
     }
 

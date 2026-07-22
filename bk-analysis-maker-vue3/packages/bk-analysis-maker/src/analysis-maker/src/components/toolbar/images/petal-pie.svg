@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180" viewBox="0 0 320 180">
+  <!-- 四花瓣(圆角饼)围绕圆心发散 -->
+  <g stroke="#fff" stroke-width="3">
+    <ellipse cx="160" cy="56" rx="24" ry="34" fill="#4080FF"/>
+    <ellipse cx="196" cy="90" rx="34" ry="24" fill="#6AA1FF"/>
+    <ellipse cx="160" cy="124" rx="24" ry="34" fill="#9DBEFF"/>
+    <ellipse cx="124" cy="90" rx="34" ry="24" fill="#A9C9FF"/>
+  </g>
+  <!-- 中心留白 -->
+  <circle cx="160" cy="90" r="9" fill="#fff"/>
+</svg>

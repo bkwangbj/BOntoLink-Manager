@@ -261,8 +261,10 @@ export default {
   }
 }
 </script>
-// <style lang="scss" scoped>
-// :deep() {
-
-// }
-// </style>
+<style lang="scss" scoped>
+/* 内嵌在 .el-form-item__content(flex 布局)中时,inline 表单无显式宽度会被挤成细条,强制占满整行 */
+.inline-col-form {
+  width: 100%;
+  box-sizing: border-box;
+}
+</style>

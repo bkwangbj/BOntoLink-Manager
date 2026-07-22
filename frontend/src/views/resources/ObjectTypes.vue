@@ -1344,22 +1344,33 @@ watch(() => route.query.openId, applyOpenId)
 .ot-body { flex: 1; position: relative; display: flex; gap: 12px; padding: 12px; overflow: hidden; }
 .ot-pane { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
 
-/* —— 视图切换 tabs —— */
-.ot-tabs { display: flex; gap: 4px; padding:0; }
+/* —— 视图切换 tabs:白底条, 与下方列表连为一体的整体白卡片 —— */
+.ot-tabs {
+  display: flex; gap: 2px;
+  padding: 4px 10px 0;
+  background: var(--bl-bg-1);
+  border: 1px solid var(--bl-border);
+  border-bottom: 1px solid var(--bl-divider);
+  border-radius: var(--bl-radius-3) var(--bl-radius-3) 0 0;
+}
 .ot-tab {
   display: inline-flex; align-items: center; gap: 4px;
-  padding: 6px 12px; border-radius: var(--bl-radius-2) var(--bl-radius-2) 0 0;
-  border: 1px solid transparent; border-bottom: 0;
-  background: transparent; color: var(--bl-text-3); cursor: pointer;
+  padding: 8px 14px;
+  border: 0; background: transparent;
+  color: var(--bl-text-3); cursor: pointer;
   font-size: var(--bl-fs-13);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;   /* 激活下划线压住页签栏底边线 */
 }
 .ot-tab:hover { color: var(--bl-text-1); }
-.ot-tab.is-on { color: var(--bl-primary); background: var(--bl-bg-1); border-color: var(--bl-divider); }
+.ot-tab.is-on { color: var(--bl-primary); border-bottom-color: var(--bl-primary); font-weight: 600; }
 
-/* —— 列表 —— */
+/* —— 列表:平顶(接页签栏)、圆角底 —— */
 .ot-list-card {
   flex: 1; margin: 0; display: flex; flex-direction: column;
-  background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: var(--bl-radius-3);
+  background: var(--bl-bg-1);
+  border: 1px solid var(--bl-border); border-top: 0;
+  border-radius: 0 0 var(--bl-radius-3) var(--bl-radius-3);
   overflow: hidden; min-height: 0;
 }
 .ot-list-scroll { flex: 1; min-height: 0; overflow: auto; }
@@ -1368,8 +1379,7 @@ watch(() => route.query.openId, applyOpenId)
 /* 滚动表头固定 */
 .ot-table thead th {
   position: sticky; top: 0; z-index: 2;
-  background: var(--bl-bg-2);
-  box-shadow: inset 0 -1px 0 var(--bl-divider);
+  background: var(--bl-thead-bg);
 }
 /* 表头排序 */
 .th-sort { cursor: pointer; user-select: none; display: inline-flex; align-items: center; white-space: nowrap; }

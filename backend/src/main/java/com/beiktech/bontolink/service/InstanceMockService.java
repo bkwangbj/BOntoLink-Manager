@@ -284,6 +284,27 @@ public class InstanceMockService {
      * 核心生成逻辑：按对象类型 classId 的属性定义确定性生成实例列表，结果写入 cache。
      * <p>实例数量由 classId.hashCode() 决定（18~107 条），保证同一类型每次重启结果一致。</p>
      */
+    /** 真实中国城市坐标 {经度, 纬度}(省会/主要城市),用于让经纬度成对落在陆地上 */
+    private static final double[][] CHINA_CITIES = {
+        {116.40, 39.90}, {121.47, 31.23}, {113.26, 23.13}, {114.06, 22.55}, {104.07, 30.57},
+        {106.55, 29.56}, {114.30, 30.59}, {108.94, 34.34}, {120.15, 30.28}, {118.80, 32.06},
+        {113.62, 34.75}, {112.94, 28.23}, {123.43, 41.80}, {126.64, 45.76}, {102.83, 24.88},
+        {108.37, 22.82}, {106.71, 26.65}, {103.83, 36.06}, {112.55, 37.87}, {114.51, 38.05},
+        {117.00, 36.65}, {117.28, 31.86}, {119.30, 26.08}, {115.86, 28.68}, {125.32, 43.82},
+        {111.75, 40.84}, {106.23, 38.49}, {101.78, 36.62}, {87.62, 43.79}, {91.11, 29.65},
+        {110.35, 20.02}, {121.50, 25.05}
+    };
+    /** 经度/纬度属性识别(按 api_name / 显示名) */
+    private static boolean isLngProp(Map<String, Object> p) {
+        String s = str(p.get("api_name")) + " " + str(p.get("display_name"));
+        return s.matches("(?i).*(经度|longitude|\\blng\\b|\\blon\\b).*");
+    }
+    private static boolean isLatProp(Map<String, Object> p) {
+        String s = str(p.get("api_name")) + " " + str(p.get("display_name"));
+        return s.matches("(?i).*(纬度|latitude|\\blat\\b).*");
+    }
+    private static double round4(double v) { return Math.round(v * 10000.0) / 10000.0; }
+
     private List<Map<String, Object>> generate(String classId) {
         Map<String, Object> cls = ontologyMapper.findClassById(classId);
         if (cls == null) return Collections.emptyList();
@@ -299,6 +320,9 @@ public class InstanceMockService {
         Map<String, Object> nameProp = pickNameProp(props);
         Map<String, Object> codeProp = pickCodeProp(props);
         String codePrefix = codePrefix(apiName);
+        // 经纬度属性:成对从真实城市坐标生成,避免散点飘到海里/国界外
+        Map<String, Object> lngProp = props.stream().filter(InstanceMockService::isLngProp).findFirst().orElse(null);
+        Map<String, Object> latProp = props.stream().filter(InstanceMockService::isLatProp).findFirst().orElse(null);
 
         // 数量由 classId 哈希值决定，保证同类型结果稳定
         int n = 18 + Math.floorMod(classId.hashCode(), 90);   // 18..107 条
@@ -306,11 +330,18 @@ public class InstanceMockService {
         for (int i = 0; i < n; i++) {
             Map<String, Object> row = new LinkedHashMap<>();
             String code = codePrefix + "-" + pad(i + 1, 3);
+            // 本行的经纬度:选一个真实城市 + 微抖动(经纬成对,确保落在陆地)
+            double[] geoCity = (lngProp != null && latProp != null)
+                    ? CHINA_CITIES[seeded(classId, "__geo__", i).nextInt(CHINA_CITIES.length)] : null;
             for (Map<String, Object> p : props) {
                 String field = str(p.get("api_name"));
                 if (field.isEmpty()) continue;
                 Object val;
-                if (p == codeProp) {
+                if (geoCity != null && p == lngProp) {
+                    val = round4(geoCity[0] + (seeded(classId, field, i).nextDouble() - 0.5) * 0.6);
+                } else if (geoCity != null && p == latProp) {
+                    val = round4(geoCity[1] + (seeded(classId, field, i).nextDouble() - 0.5) * 0.6);
+                } else if (p == codeProp) {
                     val = code;
                 } else if (p == nameProp) {
                     val = genName(displayName, classId, i);

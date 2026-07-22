@@ -1056,8 +1056,7 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
 /* 滚动时表头固定 */
 .pt-table thead th {
   position: sticky; top: 0; z-index: 2;
-  background: var(--bl-bg-2);
-  box-shadow: inset 0 -1px 0 var(--bl-divider);
+  background: var(--bl-thead-bg);
 }
 /* 分页钉底 */
 .pt-pager {
@@ -1095,8 +1094,7 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
 /* 滚动时表头固定 */
 .ds-table thead th {
   position: sticky; top: 0; z-index: 2;
-  background: var(--bl-bg-2);
-  box-shadow: inset 0 -1px 0 var(--bl-divider);   /* 用 inset 阴影代替 border，避免 sticky 下 border 失效 */
+  background: var(--bl-thead-bg);
 }
 .ds-row { cursor: pointer; }
 .ds-row.is-active { background: var(--bl-primary-soft); }

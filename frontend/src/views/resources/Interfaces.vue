@@ -1013,7 +1013,7 @@ watch(() => route.query.openId, applyOpenId)
 }
 .if-row.is-grouped td:nth-child(2) { padding-left: 22px; }
 
-.if-table thead th { position: sticky; top: 0; background: var(--bl-bg-2); z-index: 1; }
+.if-table thead th { position: sticky; top: 0; background: var(--bl-thead-bg); z-index: 1; }
 .if-row { cursor: pointer; }
 .if-row.is-active { background: var(--bl-primary-soft); }
 .if-row.is-active td { color: var(--bl-primary); }

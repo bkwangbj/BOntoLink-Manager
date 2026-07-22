@@ -97,14 +97,21 @@ onBeforeUnmount(() => {
 <style scoped>
 .topbar {
   height: var(--bl-topbar-h);
-  /* 主题色渐变背景 — 上→下 15%→3% 衰减, 头部与内容区分层更明显 */
+  /* 头部彩色渐变条:跟随主题色(accent)自动变化, 白字 —— 参考 UI demo 头部色系 */
+  --hdr-text: #ffffff;
+  --hdr-text-dim: rgba(255,255,255,.72);
+  --hdr-search-bg: rgba(255,255,255,.16);
+  --hdr-search-bg-hover: rgba(255,255,255,.24);
+  --hdr-search-border: rgba(255,255,255,.24);
+  --hdr-btn-hover: rgba(255,255,255,.16);
+  /* 对标 demo:沉稳皇家蓝渐变(左略深→中主色→右略浅), 不提亮不发光, 避免刺眼 */
   background:
-    linear-gradient(180deg,
-      color-mix(in srgb, var(--bl-primary) 15%, var(--bl-bg-1)) 0%,
-      color-mix(in srgb, var(--bl-primary) 8%,  var(--bl-bg-1)) 60%,
-      color-mix(in srgb, var(--bl-primary) 3%,  var(--bl-bg-1)) 100%);
-  border-bottom: 1px solid color-mix(in srgb, var(--bl-primary) 25%, var(--bl-border));
-  box-shadow: 0 2px 6px color-mix(in srgb, var(--bl-primary) 12%, transparent);
+    linear-gradient(100deg,
+      color-mix(in srgb, var(--bl-primary) 88%, #071b52) 0%,
+      var(--bl-primary) 52%,
+      color-mix(in srgb, var(--bl-primary) 86%, #ffffff) 100%);
+  border-bottom: 1px solid rgba(255,255,255,0);
+  box-shadow: 0 1px 4px rgba(20,36,64,.14);
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
@@ -112,30 +119,34 @@ onBeforeUnmount(() => {
   position: sticky; top: 0; z-index: 50;
   flex-shrink: 0;
   gap: var(--bl-sp-4);
+  color: var(--hdr-text);
 }
-/* 深色下: 用 bg-2 为基底 + 更高的 primary 混色比, 让顶栏与主内容 (bg-0) 拉开明显层差 */
+/* 深色下: 头部转为深 navy(带一丝主题色), 与主内容拉开层差 */
 :root[data-theme="dark"] .topbar {
+  --hdr-search-bg: rgba(255,255,255,.05);
+  --hdr-search-bg-hover: rgba(255,255,255,.10);
+  --hdr-search-border: rgba(255,255,255,.10);
+  --hdr-btn-hover: rgba(255,255,255,.08);
+  /* 对标 demo:很深的 navy(近黑,仅一丝蓝), 只掺极少 accent 保留色系跟随 */
   background:
-    linear-gradient(180deg,
-      color-mix(in srgb, var(--bl-primary) 24%, var(--bl-bg-2)) 0%,
-      color-mix(in srgb, var(--bl-primary) 16%, var(--bl-bg-2)) 60%,
-      color-mix(in srgb, var(--bl-primary) 10%, var(--bl-bg-2)) 100%);
-  border-bottom-color: color-mix(in srgb, var(--bl-primary) 45%, var(--bl-border-strong));
-  box-shadow:
-    0 2px 8px rgba(0,0,0,0.45),
-    0 4px 16px color-mix(in srgb, var(--bl-primary) 18%, transparent);
+    linear-gradient(100deg,
+      color-mix(in srgb, var(--bl-primary) 6%, #0a1526) 0%,
+      color-mix(in srgb, var(--bl-primary) 10%, #0e1f38) 100%);
+  border-bottom-color: rgba(255,255,255,.06);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
 }
 .topbar-l { display: flex; align-items: center; }
 .topbar-c { display: flex; justify-content: center; }
 .topbar-r { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
 
 .brand { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; }
-.brand-img { height: 36px; width: auto; display: block; }
-.brand-sep { color: var(--bl-text-4); font-size: var(--bl-fs-24); line-height: 1; }
+/* logo 含蓝色元素, 在彩色头部上会糊 —— 转为纯白剪影, 与 demo 白色字标一致 */
+.brand-img { height: 36px; width: auto; display: block; filter: brightness(0) invert(1); }
+.brand-sep { color: var(--hdr-text-dim); font-size: var(--bl-fs-24); line-height: 1; }
 .brand-suffix {
   font-size: var(--bl-fs-20);
   font-weight: 600;
-  color: var(--bl-text-1);
+  color: var(--hdr-text);
   letter-spacing: .5px;
   white-space: nowrap;
 }
@@ -143,14 +154,16 @@ onBeforeUnmount(() => {
 .search { position: relative; width: 480px; max-width: 100%; }
 .search-trigger { position: relative; width: 100%; }
 .search-trigger .search-input { width: 100%; box-sizing: border-box; }
-.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--bl-text-3); pointer-events: none; }
+.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--hdr-text-dim); pointer-events: none; }
 .search-input {
   padding-left: 32px; padding-right: 84px;
-  /* 搜索框背景跟随头部主题色, 微透白让 placeholder 仍清晰 */
-  background: color-mix(in srgb, var(--bl-primary) 5%, var(--bl-bg-1));
-  border: 1px solid color-mix(in srgb, var(--bl-primary) 20%, var(--bl-border));
+  /* 半透明白搜索框, 悬浮于彩色头部之上 */
+  background: var(--hdr-search-bg);
+  border: 1px solid var(--hdr-search-border);
+  color: var(--hdr-text);
   transition: background-color .15s, border-color .15s;
 }
+.search-input::placeholder { color: var(--hdr-text-dim); }
 /* 仿 input 容器: 点击打开搜索弹框, 不接受键盘输入 */
 .search-input-fake {
   display: flex; align-items: center;
@@ -162,45 +175,31 @@ onBeforeUnmount(() => {
   user-select: none;
 }
 .search-input:hover {
-  background: color-mix(in srgb, var(--bl-primary) 8%, var(--bl-bg-1));
-  border-color: color-mix(in srgb, var(--bl-primary) 35%, var(--bl-border));
+  background: var(--hdr-search-bg-hover);
+  border-color: rgba(255,255,255,.34);
 }
 .search-input:focus {
-  background: var(--bl-bg-1);
-  border-color: var(--bl-primary);
-}
-/* 深色下: 搜索框与顶栏渐变中段同基底, 视觉融合, focus 时凹入感更明显 */
-:root[data-theme="dark"] .search-input {
-  background: color-mix(in srgb, var(--bl-primary) 10%, var(--bl-bg-2));
-  border-color: color-mix(in srgb, var(--bl-primary) 30%, var(--bl-border-strong));
-}
-:root[data-theme="dark"] .search-input:hover {
-  background: color-mix(in srgb, var(--bl-primary) 16%, var(--bl-bg-2));
-  border-color: color-mix(in srgb, var(--bl-primary) 50%, var(--bl-border-strong));
-}
-:root[data-theme="dark"] .search-input:focus {
-  background: var(--bl-bg-1);
-  border-color: var(--bl-primary);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--bl-primary) 25%, transparent);
+  background: var(--hdr-search-bg-hover);
+  border-color: rgba(255,255,255,.5);
+  box-shadow: 0 0 0 2px rgba(255,255,255,.14);
 }
 .search-clear {
   position: absolute; right: 44px; top: 50%; transform: translateY(-50%);
   width: 18px; height: 18px; border: 0; padding: 0; border-radius: 50%;
-  background: var(--bl-fill-2, rgba(0,0,0,.06)); color: var(--bl-text-3);
+  background: rgba(255,255,255,.24); color: #fff;
   cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
 }
-.search-clear:hover { background: color-mix(in srgb, #f53f3f 14%, var(--bl-bg-1)); color: #f53f3f; }
+.search-clear:hover { background: rgba(255,255,255,.4); color: #fff; }
 .search-kbd {
   position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-  font-size: var(--bl-fs-11); color: var(--bl-text-3);
-  background: color-mix(in srgb, var(--bl-primary) 3%, var(--bl-bg-1));
+  font-size: var(--bl-fs-11); color: var(--hdr-text-dim);
+  background: rgba(255,255,255,.14);
   padding: 2px 6px; border-radius: 4px;
-  border: 1px solid color-mix(in srgb, var(--bl-primary) 15%, var(--bl-border));
+  border: 1px solid rgba(255,255,255,.2);
 }
-:root[data-theme="dark"] .search-kbd {
-  background: color-mix(in srgb, var(--bl-primary) 8%, var(--bl-bg-1));
-  border-color: color-mix(in srgb, var(--bl-primary) 25%, var(--bl-border-strong));
-}
+/* 右侧图标按钮: 白色, hover 半透明白底 */
+.topbar-r :deep(.bl-btn) { color: var(--hdr-text); }
+.topbar-r :deep(.bl-btn:hover) { background: var(--hdr-btn-hover); color: #fff; }
 
 /* 小屏自动让搜索框缩 */
 @media (max-width: 1100px) {

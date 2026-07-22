@@ -7,6 +7,14 @@ import { chartList } from './maker-presets'
 
 const BAR_TPL = chartList?.[0]?.children?.[1]   // BKBarChart 模板(菜单态,扁平)
 const PIE_TPL = chartList?.[0]?.children?.[0]   // BKPieChart 模板
+const LINE_TPL = chartList?.[0]?.children?.[2]  // BKBarChart(branchType lineChart)折线模板
+
+// 按图表类型取模板
+function tplFor (kind) {
+  if (kind === 'pie') return PIE_TPL || BAR_TPL
+  if (kind === 'line') return LINE_TPL || BAR_TPL
+  return BAR_TPL
+}
 
 function uid () { return (crypto.randomUUID ? crypto.randomUUID() : 'id-' + Math.random().toString(36).slice(2) + Date.now().toString(36)) }
 // 日历热力图演示数据:当年全年每 2~3 天一个点、值 5~95(确定性生成)
@@ -68,7 +76,7 @@ function makeTab (tpl, classId, dim, baseQuery, kind, titlePrefix, isDark, cols)
   c.id = id
   c.chartId = uid()
   const base = titlePrefix ? `${titlePrefix} · ${dim.label}` : dim.label
-  c.title = kind === 'pie' ? `${base} 占比` : `${base} 分布`
+  c.title = kind === 'pie' ? `${base} 占比` : kind === 'line' ? `${base} 趋势` : `${base} 分布`
   c.isShowTitle = '1'
   c.varListener = []
   c.eventConfig = []
@@ -118,37 +126,73 @@ function kindFor (col) {
  * 同时分析:主对象类型 + 链接对象类型 的属性/枚举,自动选图表类型。
  * @param {Array} linkGroups [{ classId, name, columns }] 链接对象类型及其列
  */
-export function buildPageConfig (classId, columns, baseQuery = {}, linkGroups = [], isDark = false) {
-  if (!classId || !BAR_TPL) return null
-  const mainDims = pickDims(columns)
-  const useMain = mainDims.length ? mainDims.slice(0, 4) : (columns || []).slice(0, 1)
-  if (!useMain.length || !useMain[0].field) return null
+// 数值字段(排除编码/编号类),按数值分布出柱图
+function pickNums (columns) {
+  return (columns || []).filter(c =>
+    ['int', 'decimal'].includes(c.dataType) && !DIM_RE.test((c.label || '') + ' ' + (c.field || '')))
+}
+// 日期/时间字段,按时间趋势出折线
+function pickDates (columns) {
+  return (columns || []).filter(c => ['date', 'datetime', 'time'].includes(c.dataType))
+}
 
-  // 收集图表规格(specs):主对象 + 链接对象
-  const specs = []
-  // 主对象首维:柱图 + 饼图 并排(便于同时看分布与占比)
-  specs.push({ classId, dim: useMain[0], kind: 'bar', main: true, cols: columns })
-  if (PIE_TPL) specs.push({ classId, dim: useMain[0], kind: 'pie', main: true, cols: columns })
-  // 主对象其余维度:按类型选图
-  for (let i = 1; i < useMain.length; i++) specs.push({ classId, dim: useMain[i], kind: kindFor(useMain[i]), main: true, cols: columns })
-  // 链接对象:每个关联类型取前 2 个可视维度,标题带关联对象名
-  for (const g of (linkGroups || []).slice(0, 3)) {
-    if (!g || !g.classId) continue
-    const dims = pickDims(g.columns).slice(0, 2)
-    for (const d of dims) specs.push({ classId: g.classId, dim: d, kind: kindFor(d), prefix: g.name, cols: g.columns })
+/**
+ * 生成「推荐图表候选列表」(供推荐弹框勾选)。覆盖:
+ *  - 分类统计:枚举/布尔 → 占比(饼)+ 分布(柱);字符串 → 分布(柱)
+ *  - 数值分布:数值字段 → 分布(柱)
+ *  - 时间趋势:日期/时间字段 → 趋势(折线)
+ *  - 关联对象:每个关联类型的前 3 个分类维度
+ * 候选项:{ key, classId, field, label, kind, group, prefix?, cols, main }
+ */
+export function buildRecommendations (classId, columns, linkGroups = []) {
+  const out = []
+  for (const c of pickDims(columns)) {
+    const label = c.label || c.field
+    if (c.dataType === 'enum' || c.dataType === 'boolean') {
+      out.push({ key: `m-${c.field}-pie`, classId, field: c.field, label, kind: 'pie', group: '分类统计', cols: columns, main: true })
+      out.push({ key: `m-${c.field}-bar`, classId, field: c.field, label, kind: 'bar', group: '分类统计', cols: columns, main: true })
+    } else {
+      out.push({ key: `m-${c.field}-bar`, classId, field: c.field, label, kind: 'bar', group: '分类统计', cols: columns, main: true })
+    }
   }
+  for (const c of pickNums(columns)) {
+    out.push({ key: `n-${c.field}`, classId, field: c.field, label: c.label || c.field, kind: 'bar', group: '数值分布', cols: columns, main: true })
+  }
+  for (const c of pickDates(columns)) {
+    out.push({ key: `d-${c.field}`, classId, field: c.field, label: c.label || c.field, kind: 'line', group: '时间趋势', cols: columns, main: true })
+  }
+  for (const g of (linkGroups || [])) {
+    if (!g || !g.classId) continue
+    for (const d of pickDims(g.columns).slice(0, 3)) {
+      out.push({ key: `l-${g.classId}-${d.field}`, classId: g.classId, field: d.field, label: d.label || d.field, kind: kindFor(d), group: `关联 · ${g.name}`, prefix: g.name, cols: g.columns })
+    }
+  }
+  return out
+}
 
-  // 两列网格依次排布(每图 6 列宽 × 9 行高)
-  // 一行三列:每图 4 列宽(12/3),按 3 个一行排布
-  const layout = specs.map((s, idx) => {
+/** 由「选中的推荐候选」组装看板 pageConfig(最多 6 个,3 列网格)。 */
+export function buildPageConfigFrom (selected, { isDark = false, baseQuery = {} } = {}) {
+  const list = (selected || []).slice(0, 6)
+  const layout = list.map((s, idx) => {
     const x = (idx % 3) * 4
     const y = Math.floor(idx / 3) * 9
-    const tpl = (s.kind === 'pie' && PIE_TPL) ? PIE_TPL : BAR_TPL
-    // 链接对象的聚合用其自身实例(mock 无联表),不套主对象筛选
     const q = s.main ? baseQuery : {}
-    return gridItem(makeTab(tpl, s.classId, s.dim, q, s.kind, s.prefix, isDark, s.cols), x, y, 4)
+    const tab = makeTab(tplFor(s.kind), s.classId, { field: s.field, label: s.label }, q, s.kind, s.prefix, isDark, s.cols)
+    return gridItem(tab, x, y, 4)
   })
   return { layout, decorateLayout: [], colNum: 12, rowHeight: 30, autoRowHeight: 30, maxRows: Infinity, varConfig: [], margin: [10, 10] }
+}
+
+/** 兜底:无用户选择时按推荐前 6 自动出图(保留旧签名与行为) */
+export function buildPageConfig (classId, columns, baseQuery = {}, linkGroups = [], isDark = false) {
+  if (!classId || !BAR_TPL) return null
+  let recs = buildRecommendations(classId, columns, linkGroups)
+  if (!recs.length) {
+    const c0 = (columns || []).find(c => c.field)
+    if (!c0) return null
+    recs = [{ classId, field: c0.field, label: c0.label || c0.field, kind: 'bar', cols: columns, main: true }]
+  }
+  return buildPageConfigFrom(recs.slice(0, 6), { isDark, baseQuery })
 }
 
 /** 空白看板配置:layout 为空,用于「新建看板」打开全空设计画布(区别于按数据自动出图) */
@@ -157,7 +201,23 @@ export function buildBlankPageConfig () {
 }
 
 // 可绑实例数据的图表类型(数据形态 = 分组 + 计数,{name,value});其它(地图/仪表盘/排名/代码…)跳过
-const EMBED_BINDABLE = ['BKBarChart', 'BKPieChart']
+const EMBED_BINDABLE = ['BKBarChart', 'BKPieChart', 'BKMapChart']
+
+// 逐点经纬度数据源(散点地图):/instance/geo-points 返回 [{name,lng,lat,value}]
+function geoDataSource (classId, lngField, latField, nameField, valueField, baseQuery) {
+  let qs = `classId=${encodeURIComponent(classId)}&lngField=${encodeURIComponent(lngField)}&latField=${encodeURIComponent(latField)}`
+  if (nameField) qs += `&nameField=${encodeURIComponent(nameField)}`
+  if (valueField) qs += `&valueField=${encodeURIComponent(valueField)}`
+  if (baseQuery && baseQuery.filter) qs += `&filter=${encodeURIComponent(baseQuery.filter)}`
+  if (baseQuery && baseQuery.q) qs += `&q=${encodeURIComponent(baseQuery.q)}`
+  return {
+    type: 'get', interfacePath: `/instance/geo-points?${qs}`, paramsType: 'json',
+    interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {}
+  }
+}
+const LNG_RE = /经度|lng|longitude/i
+const LAT_RE = /纬度|lat|latitude/i
+const NAME_RE = /名称|名字|标题|name|title/i
 
 /**
  * 生成「新增图表默认数据源」工厂,供 maker 在新增图表时回调(embedDefaultDataSource 钩子)。
@@ -196,6 +256,27 @@ export function buildEmbedDefaultDataSource (classId, columns, filterParams = {}
       return {
         dataSourceConfig: { type: 'static', data: demo, value: JSON.stringify(demo), paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {}, fieldOptions },
         items: [{ label: '日期', field: 'date', value: 'date' }, { label: '数值', field: 'value', value: 'value' }]
+      }
+    }
+    // 地图:仅散点地图(scatterMap)绑逐点经纬度;需对象类型有经度/纬度字段,否则保持静态演示
+    if (chartConfig.type === 'BKMapChart') {
+      if (chartConfig.branchType !== 'scatterMap') return null
+      const lngCol = (columns || []).find(c => LNG_RE.test((c.label || '') + ' ' + (c.field || '')))
+      const latCol = (columns || []).find(c => LAT_RE.test((c.label || '') + ' ' + (c.field || '')))
+      if (!lngCol || !latCol) return null
+      const nameCol = (columns || []).find(c => NAME_RE.test((c.label || '') + ' ' + (c.field || '')))
+      // 数值字段(排除经纬度)→ 散点大小随其值变化
+      const valCol = (columns || []).find(c => ['int', 'decimal'].includes(c.dataType) && c.field !== lngCol.field && c.field !== latCol.field)
+      const gds = geoDataSource(classId, lngCol.field, latCol.field, nameCol ? nameCol.field : '', valCol ? valCol.field : '', filterParams)
+      gds.fieldOptions = fieldOptions
+      return {
+        dataSourceConfig: gds,
+        items: [
+          { label: '名称', field: 'name', value: 'name' },
+          { label: '数值', field: 'value', value: 'value' },
+          { label: '经度', field: 'lng', value: 'lng' },
+          { label: '纬度', field: 'lat', value: 'lat' }
+        ]
       }
     }
     const ds = dataSource(classId, dim.field, filterParams)

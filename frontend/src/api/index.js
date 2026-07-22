@@ -344,7 +344,7 @@ export const instanceApi = {
    default: 每对象类型一份默认看板(maker 保存写回);命名设计走 listNamed/create/update/remove */
 export const exploreDesignApi = {
   listNamed:   (classId) => http.get('/explore-design', { params: { classId } }),
-  getDefault:  (classId) => http.get('/explore-design/default', { params: { classId } }),
+  getDefault:  (classId, kind = 'query') => http.get('/explore-design/default', { params: { classId, kind } }),
   saveDefault: (classId, config, kind = 'query') => http.put('/explore-design/default', { classId, config, kind }),
   create:      (data) => http.post('/explore-design', data),
   update:      (id, data) => http.put(`/explore-design/${id}`, data),

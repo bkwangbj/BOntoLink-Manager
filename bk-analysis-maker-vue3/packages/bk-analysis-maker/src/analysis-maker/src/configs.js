@@ -84,7 +84,7 @@ const menuList = [
     children: []
   },
   {
-    name: '组件',
+    name: '其他',
 
     key: 'component',
     draggable: true,

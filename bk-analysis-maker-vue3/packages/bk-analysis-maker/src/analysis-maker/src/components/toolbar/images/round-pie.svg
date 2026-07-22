@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180" viewBox="0 0 320 180">
+  <!-- 圆角饼图:四段圆角扇形 + 白缝分隔(极小内圆呈现圆角尖端) -->
+  <g stroke="#fff" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M160 26 A64 64 0 0 1 224 90 L174 90 A14 14 0 0 0 160 76 Z" fill="#4080FF"/>
+    <path d="M224 90 A64 64 0 0 1 160 154 L160 104 A14 14 0 0 0 174 90 Z" fill="#6AA1FF"/>
+    <path d="M160 154 A64 64 0 0 1 96 90 L146 90 A14 14 0 0 0 160 104 Z" fill="#A9C9FF"/>
+    <path d="M96 90 A64 64 0 0 1 160 26 L160 76 A14 14 0 0 0 146 90 Z" fill="#C7DBFF"/>
+  </g>
+</svg>

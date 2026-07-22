@@ -1,5 +1,5 @@
 <template>
-  <div class="ixe-root" :class="{ 'is-dashfull': dashFull }" ref="rootEl">
+  <div class="ixe-root" ref="rootEl">
     <!-- 头部:对象名/类型(标题) + 搜索(含菜单面板) + 保存 -->
     <div class="ixe-head">
       <!-- 从某实例进入:固定标题(不可选择) -->
@@ -142,6 +142,9 @@
           <span v-html="BL.icon('barChart', 14)"></span>看板
         </button>
       </div>
+      <button v-if="viewMode==='charts'" class="ixe-recommend-btn" @click="openRecommend" title="按数据重新推荐图表并保存为默认看板">
+        <span v-html="BL.icon('chart', 13)"></span>推荐图表
+      </button>
       <span class="bl-grow"></span>
       <!-- maker 顶栏 Teleport 到这里(看板模式,靠右,与布局选择同行) -->
       <div v-show="viewMode==='charts'" id="ixe-maker-tools" class="ixe-maker-tools"></div>
@@ -170,8 +173,6 @@
         </div>
       </div>
       <span v-if="viewMode!=='charts'" class="ixe-result-badge">{{ total.toLocaleString() }} 条结果</span>
-      <button v-if="classId" class="ixe-full-btn" :title="dashFull ? '还原' : '最大化'"
-              @click="toggleDashFull" v-html="BL.icon(dashFull ? 'winRestore' : 'winMax', 18)"></button>
     </div>
 
     <!-- 主体:图表看板 + 右结果列 -->
@@ -184,9 +185,10 @@
                   @save-as="saveAs" @save-page="onSavePage" @new-dashboard="newDashboard" />
 
       <!-- 列表模式:列表探索(滚动加载 + 预览/多实例/比较) -->
-      <InstanceListView v-else class="ixe-listview" :class-id="classId" :type-name="curType?.display_name"
-                        :columns="displayColumns" :filter-params="filterParams"
+      <InstanceListView v-else ref="listRef" class="ixe-listview" :class-id="classId" :type-name="curType?.display_name"
+                        :columns="displayColumns" :filter-params="filterParams" :default-config="listDefaultConfig"
                         @open-instance="(p)=>$emit('open-instance', p)"
+                        @config-change="onListConfigChange"
                         @selection-change="(ids)=>listSelectedIds=ids" />
     </div>
     <div v-else class="ixe-pick bl-empty">从左上角下拉选择一个对象类型开始探索</div>
@@ -263,18 +265,23 @@
         </div>
       </div>
     </div>
+
+    <!-- 图表推荐弹框:切到看板且无默认板时弹出,选 ≤6 存为默认看板 -->
+    <ChartRecommendModal v-if="recommendOpen" :recommendations="recommendList" :type-name="curType?.display_name || ''"
+                         @confirm="onRecommendConfirm" @skip="onRecommendSkip" @close="recommendOpen=false" />
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, reactive, computed, watch, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { BL } from '@/lib/bl.js'
 import { instanceApi } from '@/api'
 import FilterDrawer from './FilterDrawer.vue'
 import MakerEmbed from '../MakerEmbed.vue'
 import InstanceListView from './InstanceListView.vue'
-import { buildBlankPageConfig } from '../maker-instance'
+import ChartRecommendModal from './ChartRecommendModal.vue'
+import { buildBlankPageConfig, buildRecommendations, buildPageConfigFrom } from '../maker-instance'
 import { useDesigns } from './designs.js'
 
 const props = defineProps({
@@ -286,15 +293,7 @@ defineEmits(['open-instance'])
 
 const viewMode = ref('list')   // list(列表,默认) | charts(看板/可视化设计器)
 
-/* 看板全屏(整块实例探索区,工具栏一并全屏)
-   用 CSS 全屏(position:fixed 铺满)而非浏览器 requestFullscreen:
-   后者会让工具栏下拉/颜色选择等 teleport 到 body 的弹层落在全屏元素之外被遮挡 */
 const rootEl = ref(null)
-const dashFull = ref(false)
-function toggleDashFull () {
-  dashFull.value = !dashFull.value
-}
-function onEscExit (e) { if (e.key === 'Escape' && dashFull.value) dashFull.value = false }
 const searchPanelOpen = ref(false)
 const layoutMenu = ref(false)
 const designName = ref('默认探索布局')
@@ -333,6 +332,58 @@ async function loadDefaultDash() {
   try { savedConfig.value = classId.value ? await getDefault(classId.value) : null }
   catch { savedConfig.value = null }
 }
+
+/* ===== 默认列表(列配置持久化) ===== */
+const listRef = ref(null)
+const listDefaultConfig = ref(null)   // 该对象类型的默认列配置(kind=list)
+async function loadDefaultList() {
+  try { listDefaultConfig.value = classId.value ? await getDefault(classId.value, 'list') : null }
+  catch { listDefaultConfig.value = null }
+}
+/* 列表「配置列 → 确定」→ 自动存为该对象类型的默认列表 */
+async function onListConfigChange(cfg) {
+  if (!classId.value || !cfg) return
+  listDefaultConfig.value = cfg
+  try { await saveDefault(classId.value, cfg, 'list') } catch { /* 拦截器已弹错误 */ }
+}
+
+/* ===== 推荐图表 / 默认看板 ===== */
+const recommendOpen = ref(false)
+const recommendList = ref([])
+/* 进入看板模式:已存默认看板→直接加载;否则弹推荐弹框(未选命名设计时) */
+async function enterChartsDefault() {
+  if (currentDesignId.value) return            // 已选命名看板,交由 applyDesign 处理
+  let def = null
+  try { def = classId.value ? await getDefault(classId.value) : null } catch { def = null }
+  if (def) { savedConfig.value = def; return }  // 已存默认看板 → 直接用
+  savedConfig.value = null                       // 先按自动出图垫底(弹框后面覆盖)
+  openRecommend()
+}
+/* 组装关联对象类型(前 3 含列)+ 生成推荐候选,打开弹框 */
+async function openRecommend() {
+  if (!classId.value) return
+  let linkGroups = []
+  try {
+    const top = (links.value || []).slice(0, 3)
+    const cols = await Promise.all(top.map(l => instanceApi.columns(l.targetClassId).catch(() => [])))
+    linkGroups = top.map((l, i) => ({ classId: l.targetClassId, name: l.targetClassName || l.targetClassId, columns: cols[i] || [] }))
+  } catch { linkGroups = [] }
+  recommendList.value = buildRecommendations(classId.value, displayColumns.value, linkGroups)
+  recommendOpen.value = true
+}
+/* 弹框确认:选中项(≤6)组装看板 → 存为默认看板 → 渲染 */
+async function onRecommendConfirm(selected) {
+  recommendOpen.value = false
+  const cfg = buildPageConfigFrom(selected, { baseQuery: filterParams.value })
+  currentDesignId.value = null
+  savedConfig.value = cfg
+  try { await saveDefault(classId.value, cfg); BL.success('已保存为默认看板') } catch { /* 拦截器已弹错误 */ }
+}
+/* 跳过:按数据自动出图(前 6),不持久化 */
+function onRecommendSkip() {
+  recommendOpen.value = false
+  savedConfig.value = null
+}
 /* maker「保存」→ 选中命名看板则原地更新该看板;默认看板保持自动生成不被覆盖(手动保存转另存为) */
 async function onSavePage(config, isAuto) {
   if (!classId.value || !config) return
@@ -349,9 +400,12 @@ async function onSavePage(config, isAuto) {
       await loadDesigns()
       BL.success(`已保存到「${designName.value}」`)
     } catch { /* http 拦截器已弹错误 */ }
-  } else if (!isAuto) {
-    // 默认看板是系统自动生成视图,不覆盖:手动保存 → 另存为命名看板
-    saveAs()
+  } else {
+    // 默认看板:手动/自动保存都直接覆盖该对象类型的默认看板
+    try {
+      await saveDefault(classId.value, config)
+      if (!isAuto) BL.success('已保存为默认看板')
+    } catch { /* http 拦截器已弹错误 */ }
   }
 }
 
@@ -498,15 +552,21 @@ function applyDesign(d) {
   savedConfig.value = d.layoutConfig || null
   reload()
 }
-function resetDesign() {
+async function resetDesign() {
   layoutMenu.value = false
   dashStartDesign.value = false
   draftName.value = ''
   currentDesignId.value = null
   designName.value = '默认探索布局'
   pills.value = []; kw.value = ''; sort.value = ''; page.value = 1
-  // 默认看板 = 按数据自动生成(不加载/覆盖存档)
-  savedConfig.value = null
+  // 默认看板 = 已保存的默认看板(与自动打开一致);无存档则按数据自动生成
+  if (viewMode.value === 'charts') {
+    let def = null
+    try { def = classId.value ? await getDefault(classId.value) : null } catch { def = null }
+    savedConfig.value = def || null
+  } else {
+    savedConfig.value = null
+  }
   reload()
 }
 /* 新建:全新空白列表/看板(清空筛选/关联列/排序,不加载默认布局,未保存) */
@@ -684,7 +744,9 @@ async function loadMeta() {
     links.value = lk || []
   } catch { columns.value = []; links.value = [] }
   loadDesigns()
-  savedConfig.value = null   // 默认看板 = 按数据自动生成
+  loadDefaultList()   // 加载该对象类型的默认列表列配置
+  if (viewMode.value === 'charts') enterChartsDefault()   // 看板:有默认板→加载,无→弹推荐
+  else savedConfig.value = null
   reload()
 }
 
@@ -820,19 +882,15 @@ watch(viewMode, (nv, ov) => {
   designName.value = '默认探索布局'
   draftName.value = ''
   dashStartDesign.value = false
-  savedConfig.value = null   // 默认看板/列表默认:看板按数据自动生成
+  if (nv === 'charts') enterChartsDefault()   // 看板:有默认板→加载,无→弹推荐
+  else savedConfig.value = null
 })
 watch(() => props.initialClassId, (v) => { if (v && v !== classId.value) selectType(v) })
-onMounted(() => { if (classId.value) loadMeta(); document.addEventListener('keydown', onEscExit) })
-onBeforeUnmount(() => { document.removeEventListener('keydown', onEscExit) })
+onMounted(() => { if (classId.value) loadMeta() })
 </script>
 
 <style scoped>
 .ixe-root { flex: 1; display: flex; flex-direction: column; min-height: 0; background: var(--bl-bg-2); }
-/* CSS 全屏:铺满视口;z-index 适中(低于 element-plus 弹层默认 2000),保证下拉/颜色选择等弹层仍显示在其上 */
-.ixe-root.is-dashfull { position: fixed; inset: 0; z-index: 1000; background: var(--bl-bg-2); }
-/* 全屏时隐藏搜索/类型行,看板/列表内容铺满 */
-.ixe-root.is-dashfull .ixe-head { display: none; }
 
 /* —— 头部:对象类型 + 搜索 + 保存 —— */
 .ixe-head { flex-shrink: 0; display: flex; align-items: center; gap: 10px; padding: 8px 16px; background: var(--bl-bg-1); border-bottom: 1px solid var(--bl-border); }
@@ -1003,6 +1061,8 @@ onBeforeUnmount(() => { document.removeEventListener('keydown', onEscExit) })
 .ixe-vtab:hover:not(.is-on) { color: var(--bl-text-1); }
 .ixe-vtab.is-on { color: var(--bl-primary); font-weight: 600; }
 .ixe-vtab.is-on::after { content: ''; position: absolute; left: 0; right: 0; bottom: -5px; height: 2px; background: var(--bl-primary); border-radius: 2px; }
+.ixe-recommend-btn { display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 10px; flex-shrink: 0; border: 1px solid var(--bl-border); background: var(--bl-bg-1); color: var(--bl-text-2); border-radius: 6px; font-size: 12.5px; cursor: pointer; }
+.ixe-recommend-btn:hover { border-color: var(--bl-primary); color: var(--bl-primary); }
 
 .ixe-seg { display: inline-flex; border: 1px solid var(--bl-border); border-radius: 6px; overflow: hidden; flex-shrink: 0; }
 .ixe-seg button {
@@ -1067,8 +1127,6 @@ onBeforeUnmount(() => { document.removeEventListener('keydown', onEscExit) })
 .ixe-code-col { width: 90px; }
 .ixe-pager { display: flex; align-items: center; gap: 12px; justify-content: center; padding: 8px; border-top: 1px solid var(--bl-divider); }
 .ixe-pick { flex: 1; padding: 80px 20px; }
-.ixe-full-btn { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; margin-left: 0px; border: 0; background: transparent; color: var(--bl-text-2); cursor: pointer; border-radius: 5px; }
-.ixe-full-btn:hover { background: var(--bl-bg-hover); color: var(--bl-primary); }
 </style>
 
 <!-- 非 scoped:maker 顶栏 Teleport 到看板子头后,子 app 的 scoped 样式失效,这里全局还原工具栏外观 -->

@@ -285,6 +285,10 @@ export default {
 
             }
           }
+          // 数据自带经纬度时,散点直接落在该经纬度(用于逐点实例散点,如测站坐标)
+          if (ele.lng != null && ele.lat != null && !isNaN(Number(ele.lng)) && !isNaN(Number(ele.lat))) {
+            return { name: ele.name, value: [Number(ele.lng), Number(ele.lat)].concat(value), originData: ele }
+          }
           if (ele.code) {
             const form = this.areaList.find(item => { return item.adcode.toString() === ele.code })
             return { name: form?.name || ele.name, value: [form?.lng, form?.lat].concat(value), originData: ele }
@@ -295,6 +299,30 @@ export default {
         })
         if (option.scatterSeries?.length) {
           option.scatterSeries[0].data = scatterList
+          // 数值有差异时,散点大小随数值缩放(6~26);全相同则保持预设固定大小
+          const vals = scatterList.map(p => Number(p.value && p.value[2])).filter(v => !isNaN(v))
+          const mn = Math.min(...vals)
+          const mx = Math.max(...vals)
+          if (vals.length && mx > mn) {
+            option.scatterSeries[0].symbolSize = (val) => {
+              const v = Number(Array.isArray(val) ? val[2] : val)
+              if (isNaN(v)) return 8
+              return 6 + ((v - mn) / (mx - mn)) * 20
+            }
+            // 颜色随数值:浅蓝 → 深蓝(与大小一起双编码)
+            const lerp = (a, b, t) => {
+              const pa = [parseInt(a.slice(1, 3), 16), parseInt(a.slice(3, 5), 16), parseInt(a.slice(5, 7), 16)]
+              const pb = [parseInt(b.slice(1, 3), 16), parseInt(b.slice(3, 5), 16), parseInt(b.slice(5, 7), 16)]
+              const c = pa.map((x, i) => Math.round(x + (pb[i] - x) * t))
+              return `rgb(${c[0]},${c[1]},${c[2]})`
+            }
+            option.scatterSeries[0].itemStyle = { ...(option.scatterSeries[0].itemStyle || {}) }
+            option.scatterSeries[0].itemStyle.color = (params) => {
+              const v = Number(params.value && params.value[2])
+              if (isNaN(v)) return '#5b9bff'
+              return lerp('#a8c8ff', '#0b4bd6', (v - mn) / (mx - mn))
+            }
+          }
           option.scatterSeries.forEach(ele => {
             ele.emphasis.disabled = !ele.emphasis.show
             ele.select.disabled = !ele.select.show

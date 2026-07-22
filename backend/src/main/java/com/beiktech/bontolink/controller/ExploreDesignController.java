@@ -50,19 +50,20 @@ public class ExploreDesignController {
         return R.ok(rows);
     }
 
-    /** 某对象类型的默认看板(无则返回 null) */
+    /** 某对象类型指定 kind 的默认(无则返回 null);kind 默认 query(图表默认板),list=列表默认 */
     @GetMapping("/default")
-    public R<Map<String, Object>> getDefault(@RequestParam String classId) {
-        return R.ok(unwrap(mapper.getDefault(classId)));
+    public R<Map<String, Object>> getDefault(@RequestParam String classId,
+                                             @RequestParam(defaultValue = "query") String kind) {
+        return R.ok(unwrap(mapper.getDefault(classId, kind)));
     }
 
-    /** upsert 默认看板:body { classId, config, kind? } */
+    /** upsert 默认(按 classId + kind 区分):body { classId, config, kind? } */
     @PutMapping("/default")
     public R<Map<String, Object>> saveDefault(@RequestBody Map<String, Object> body) {
         String classId = String.valueOf(body.get("classId"));
         String kind = body.get("kind") != null ? String.valueOf(body.get("kind")) : "query";
         String config = toJson(body.get("config"));
-        Map<String, Object> exist = mapper.getDefault(classId);
+        Map<String, Object> exist = mapper.getDefault(classId, kind);
         if (exist != null) {
             Map<String, Object> row = new HashMap<>();
             row.put("id", exist.get("id"));

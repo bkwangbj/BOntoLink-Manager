@@ -142,6 +142,44 @@ public class InstanceController {
         return R.ok(mock.aggregate(rows, groupBy, metric, agg, limit));
     }
 
+    /**
+     * 逐点经纬度(散点地图用):按 lngField/latField 取每个实例的经纬度,
+     * 返回扁平数组 [{name, lng, lat, value:1}];经纬度缺失或非数值的行跳过。
+     */
+    @GetMapping("/geo-points")
+    public R<List<Map<String, Object>>> geoPoints(
+            @RequestParam String classId,
+            @RequestParam String lngField,
+            @RequestParam String latField,
+            @RequestParam(required = false) String nameField,
+            @RequestParam(required = false) String valueField,
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false) String filter) {
+        List<Map<String, Object>> rows = mock.query(classId, q, parseFilter(filter));
+        List<Map<String, Object>> out = new ArrayList<>();
+        for (Map<String, Object> r : rows) {
+            Double lng = numOrNull(r.get(lngField));
+            Double lat = numOrNull(r.get(latField));
+            if (lng == null || lat == null) continue;
+            Map<String, Object> o = new LinkedHashMap<>();
+            o.put("name", (nameField != null && !nameField.isBlank()) ? r.get(nameField) : r.get("title"));
+            o.put("lng", lng);
+            o.put("lat", lat);
+            // 有指定数值字段则取其值(散点大小随之变化),否则固定 1(仅打点)
+            Double v = (valueField != null && !valueField.isBlank()) ? numOrNull(r.get(valueField)) : null;
+            o.put("value", v != null ? v : 1);
+            out.add(o);
+        }
+        return R.ok(out);
+    }
+
+    /** 数值或 null(非数值返回 null,便于跳过无坐标的行) */
+    private static Double numOrNull(Object o) {
+        if (o == null) return null;
+        if (o instanceof Number n) return n.doubleValue();
+        try { return Double.parseDouble(String.valueOf(o)); } catch (Exception e) { return null; }
+    }
+
     /* ============ 可视化制作(analysis-maker)图表数据:返回 [{name, value}] ============ */
     /**
      * 为可视化制作页面提供图表数据，输出长格式 [{name, value, x, y, colorField}]，前端按 colorField 自动分组为多序列。

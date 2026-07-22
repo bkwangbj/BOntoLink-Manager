@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180" viewBox="0 0 320 180">
+  <!-- 坐标轴 -->
+  <path d="M72 30 V150 H262" fill="none" stroke="#D6E4FF" stroke-width="4" stroke-linecap="round"/>
+  <!-- 平滑折线 -->
+  <path d="M85 116 C105 86 112 72 132 72 C152 72 160 100 180 104 C200 108 204 66 222 60 C238 55 244 82 258 86"
+        fill="none" stroke="#4080FF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- 数值标签 -->
+  <text x="132" y="60" font-family="Arial" font-size="14" fill="#6AA1FF" text-anchor="middle">82</text>
+  <text x="222" y="48" font-family="Arial" font-size="14" fill="#6AA1FF" text-anchor="middle">96</text>
+  <!-- 标点 -->
+  <circle cx="85" cy="116" r="5" fill="#fff" stroke="#4080FF" stroke-width="3"/>
+  <circle cx="132" cy="72" r="5" fill="#fff" stroke="#4080FF" stroke-width="3"/>
+  <circle cx="180" cy="104" r="5" fill="#fff" stroke="#4080FF" stroke-width="3"/>
+  <circle cx="222" cy="60" r="5" fill="#fff" stroke="#4080FF" stroke-width="3"/>
+  <circle cx="258" cy="86" r="5" fill="#fff" stroke="#4080FF" stroke-width="3"/>
+</svg>
