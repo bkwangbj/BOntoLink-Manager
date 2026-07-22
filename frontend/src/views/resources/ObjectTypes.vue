@@ -1618,10 +1618,13 @@ watch(() => route.query.openId, applyOpenId)
 .ot-tab-side {
   background: var(--bl-bg-2); border-right: 1px solid var(--bl-border);
   overflow: auto; padding: 6px 0;
+  /* 顶边线:与右侧内容区顶部对齐. 浅色用白(bg-2 与 border 近似色看不见, 需更亮) */
+  border-top: 1px solid var(--bl-bg-1);
 }
-/* 深色: 侧边栏与内容区分界更明显 */
+/* 深色: 侧边栏与内容区分界更明显 + 顶边线改用比 navy 底亮的边框色 */
 :root[data-theme="dark"] .ot-tab-side {
   box-shadow: inset -1px 0 0 rgba(255,255,255,0.03);
+  border-top-color: var(--bl-border-strong);
 }
 .ot-tab-group { padding: 0; }
 /* 分组之间用顶部分隔线区分 (无左侧竖条) */

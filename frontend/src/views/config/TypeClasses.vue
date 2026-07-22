@@ -82,7 +82,7 @@
                   <input type="checkbox" :value="r.id" v-model="selectedIds" />
                 </td>
                 <td class="col-apt">
-                  <span v-for="a in applyTypes(r)" :key="a" class="apt-tag" :style="aptStyle(a)">{{ aptLabel(a) }}</span>
+                  <span v-for="a in applyTypes(r)" :key="a" :class="['apt-tag', 'apt-' + a]">{{ aptLabel(a) }}</span>
                 </td>
                 <td class="col-cat">
                   <span class="cat-dot" :style="{ background: catColor(r.category_code) }"></span>
@@ -246,7 +246,7 @@
             </div>
             <div class="ref-list">
               <div v-for="b in bind.list" :key="b.id" class="ref-item">
-                <span class="apt-tag" :style="aptStyle(b.applicable_type)">{{ aptLabel(b.applicable_type) }}</span>
+                <span :class="['apt-tag', 'apt-' + b.applicable_type]">{{ aptLabel(b.applicable_type) }}</span>
                 <span class="ref-owner">{{ bindOwner(b) }}</span>
                 <span class="ref-el bl-mono">{{ b.property_id || b.link_type_id || b.action_type_id || '—' }}</span>
                 <span v-if="b.remark" class="ref-remark">{{ b.remark }}</span>
@@ -670,20 +670,30 @@ onMounted(async () => { await Promise.all([loadCategories(), loadRows(), loadEnu
 .tc-batch-btn.del { border-color: #f53f3f; color: #f53f3f; }
 .tc-table-scroll { flex: 1; overflow: auto; }
 .tc-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.tc-table th { position: sticky; top: 0; background: var(--bl-thead-bg); text-align: left; padding: 8px 10px; font-weight: 600; color: var(--bl-text-2); font-size: 12px; border-bottom: 1px solid var(--bl-thead-border); z-index: 1; }
+.tc-table th { position: sticky; top: 0; background: var(--bl-thead-bg); text-align: left; padding: 0 10px; height: 40px; font-weight: 600; color: var(--bl-text-2); font-size: 12px; border-bottom: 1px solid var(--bl-thead-border); z-index: 1; }
 .tc-table td { padding: 8px 10px; border-bottom: 1px solid var(--bl-divider); vertical-align: middle; }
 .tc-table tbody tr { cursor: pointer; }
 .tc-table tbody tr:hover { background: var(--bl-bg-hover); }
 .tc-table tbody tr.is-sel { background: var(--bl-primary-soft); }
 .col-chk { width: 36px; } .col-apt { width: 130px; } .col-cat { width: 150px; } .col-st { width: 80px; }
-.apt-tag { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 10px; margin-right: 4px; }
+.apt-tag { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 10px; margin-right: 4px; border: 1px solid transparent; color: var(--bl-text-2); }
+/* 适用类型标签:浅色沉稳色 / 深色改浅柔和色, 避免深底上刺眼 */
+.apt-tag.apt-property { color: #2563EB; background: rgba(37,99,235,.08); border-color: rgba(37,99,235,.25); }
+.apt-tag.apt-relation { color: #7C3AED; background: rgba(124,58,237,.08); border-color: rgba(124,58,237,.25); }
+.apt-tag.apt-action   { color: #16A34A; background: rgba(22,163,74,.08); border-color: rgba(22,163,74,.25); }
+:root[data-theme="dark"] .apt-tag.apt-property { color: #3585fb; background: rgba(59, 131, 246, 0.222); border-color: rgba(48, 125, 248, 0.491); }
+:root[data-theme="dark"] .apt-tag.apt-relation { color: #B197E8; background: rgba(124,58,237,.20); border-color: rgba(124,58,237,.34); }
+:root[data-theme="dark"] .apt-tag.apt-action   { color: #5CC088; background: rgba(22,163,74,.20); border-color: rgba(22,163,74,.34); }
 .cat-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
 .cat-cn { font-size: 12.5px; } .cat-en { font-size: 10px; color: var(--bl-text-3); margin-left: 5px; font-family: var(--bl-mono, monospace); }
 .nm-en { font-size: 12.5px; color: var(--bl-text-1); } .nm-cn { font-size: 11px; color: var(--bl-text-3); }
 .param-type { font-size: 11px; color: var(--bl-text-2); background: var(--bl-bg-2); padding: 1px 6px; border-radius: 4px; margin-right: 6px; }
 .param-opts { font-size: 11px; color: var(--bl-text-3); } .param-demo { font-size: 11px; color: var(--bl-text-3); }
-.st-badge { font-size: 11px; padding: 2px 9px; border-radius: 10px; }
+.st-badge { font-size: 11px; padding: 2px 9px; border-radius: 10px; border: 1px solid transparent; }
 .st-ok { color: #00b42a; background: rgba(0,180,42,.1); } .st-dep { color: #86909c; background: rgba(134,144,156,.12); }
+/* 深色: 底提亮 + 边框 + 文字提亮 */
+:root[data-theme="dark"] .st-ok  { color: #58d68a; background: rgba(34,197,94,.18); border-color: rgba(34,197,94,.36); }
+:root[data-theme="dark"] .st-dep { color: #aeb9cf; background: rgba(148,163,184,.16); border-color: rgba(148,163,184,.3); }
 .tc-empty { text-align: center; color: var(--bl-text-3); padding: 30px 0; font-size: 13px; }
 
 /* 右:抽屉 */
@@ -693,7 +703,9 @@ onMounted(async () => { await Promise.all([loadCategories(), loadRows(), loadEnu
 .tc-dr-drag:hover, .tc-dr-drag.is-resizing { background: var(--bl-primary); }
 .tc-dr-main { flex: 1; min-height: 0; display: flex; }
 .tc-dr-col-l { flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden; }
-.tc-dr-col-r { width: 44%; max-width: 520px; flex-shrink: 0; border-left: 1px solid var(--bl-border); overflow: auto; padding: 14px 16px; background: var(--bl-bg-2); }
+/* 参数预览面板:单独取一个更浅的背景色, 区别于左侧表单区(不跟随加深后的 bg-2) */
+.tc-dr-col-r { width: 44%; max-width: 520px; flex-shrink: 0; border-left: 1px solid var(--bl-border); overflow: auto; padding: 14px 16px; background: #f4f7fc; }
+:root[data-theme="dark"] .tc-dr-col-r { background: #131d33; }
 .tc-dr-pv-hd { font-size: 14px; font-weight: 600; color: var(--bl-text-1); margin-bottom: 12px; }
 .tc-pv-sub { font-size: 12px; font-weight: 600; color: var(--bl-text-2); margin-bottom: 8px; }
 .tc-pv-sub2 { margin-top: 14px; }

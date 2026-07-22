@@ -141,7 +141,9 @@ onBeforeUnmount(() => {
 
 .brand { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; }
 /* logo 含蓝色元素, 在彩色头部上会糊 —— 转为纯白剪影, 与 demo 白色字标一致 */
-.brand-img { height: 36px; width: auto; display: block; filter: brightness(0) invert(1); }
+.brand-img { height: 36px; width: auto; display: block; 
+  /* filter: brightness(0) invert(1);  */
+}
 .brand-sep { color: var(--hdr-text-dim); font-size: var(--bl-fs-24); line-height: 1; }
 .brand-suffix {
   font-size: var(--bl-fs-20);

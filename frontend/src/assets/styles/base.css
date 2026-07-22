@@ -134,6 +134,13 @@ button { font-family: inherit; }
 .bl-tag-warning { background: var(--bl-warning-soft); color: var(--bl-warning); }
 .bl-tag-danger  { background: var(--bl-danger-soft);  color: var(--bl-danger); }
 .bl-tag-ai      { background: var(--bl-ai-soft);      color: var(--bl-ai); }
+/* 深色: soft 底(~10%)在 navy 上几乎看不见 → 提高底透明度 + 加边框 + 文字提亮, 保证可区分 */
+:root[data-theme="dark"] .bl-tag-primary { background: rgba(59,130,246,.18);  color: #7fb0ff; border-color: rgba(59,130,246,.35); }
+:root[data-theme="dark"] .bl-tag-success { background: rgba(34,197,94,.18);   color: #58d68a; border-color: rgba(34,197,94,.36); }
+:root[data-theme="dark"] .bl-tag-warning { background: rgba(234,88,12,.20);   color: #fb923c; border-color: rgba(234,88,12,.38); }
+:root[data-theme="dark"] .bl-tag-danger  { background: rgba(220,38,38,.20);   color: #f87171; border-color: rgba(220,38,38,.38); }
+:root[data-theme="dark"] .bl-tag-ai      { background: rgba(124,58,237,.22);  color: #a78bfa; border-color: rgba(124,58,237,.38); }
+:root[data-theme="dark"] .bl-tag-muted   { background: var(--bl-bg-2); color: var(--bl-text-3); border-color: var(--bl-border); }
 
 /* ---------- 卡片 ---------- */
 .bl-card {
@@ -174,6 +181,7 @@ button { font-family: inherit; }
   font-weight: 600; color: var(--bl-text-2);
   background: var(--bl-thead-bg);
   border-bottom: 1px solid var(--bl-thead-border);
+  height: 40px;
 }
 .bl-table tbody tr:hover { background: var(--bl-bg-hover); }
 
@@ -450,22 +458,53 @@ button { font-family: inherit; }
 }
 
 /* ---------- 表单原生控件全局主题适配 ---------- */
-/* checkbox / radio 用 accent-color 跟随主题色, 默认浅模式 OK
-   深色模式: 加暗框 + 加深 accent, 避免白底过亮割裂 */
+/* checkbox / radio 自绘: 完全用主题变量控色, 深浅一致(不依赖浏览器 color-scheme) */
 input[type="checkbox"],
 input[type="radio"] {
-  accent-color: var(--bl-primary);
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  width: 15px; height: 15px;
+  margin: 0;
+  border: 1.5px solid var(--bl-border-strong);
+  background: var(--bl-bg-1);
+  cursor: pointer;
+  vertical-align: middle;
+  position: relative;
+  flex-shrink: 0;
+  transition: background .15s, border-color .15s;
 }
-:root[data-theme="dark"] input[type="checkbox"]:not(:checked),
-:root[data-theme="dark"] input[type="radio"]:not(:checked) {
-  /* 未勾选: 用 color-scheme 让浏览器渲染暗色复选框 */
-  color-scheme: dark;
+input[type="checkbox"] { border-radius: 3px; }
+input[type="radio"] { border-radius: 50%; }
+input[type="checkbox"]:hover,
+input[type="radio"]:hover { border-color: var(--bl-primary); }
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+  background: var(--bl-primary);
+  border-color: var(--bl-primary);
 }
-:root[data-theme="dark"] input[type="checkbox"],
-:root[data-theme="dark"] input[type="radio"] {
-  color-scheme: dark;
-  filter: brightness(0.95);
+/* checkbox 勾 */
+input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px; top: 1px;
+  width: 4px; height: 8px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
+/* radio 圆点 */
+input[type="radio"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  transform: translate(-50%, -50%);
+}
+input[type="checkbox"]:disabled,
+input[type="radio"]:disabled { opacity: .5; cursor: not-allowed; }
 /* select / input 在暗模式下底色统一 */
 :root[data-theme="dark"] input[type="text"],
 :root[data-theme="dark"] input[type="search"],

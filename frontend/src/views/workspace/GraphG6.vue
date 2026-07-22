@@ -313,6 +313,12 @@ const RELATIONS = [
 const RELATION_MAP = Object.fromEntries(RELATIONS.map(r => [r.key, r]))
 const relOn = reactive(Object.fromEntries(RELATIONS.map(r => [r.key, r.on])))
 
+/* 深色适配:画布节点卡片/文字/边标签底色随主题(绘制时读取, 进入深色页即生效) */
+const isDarkG = () => document.documentElement.getAttribute('data-theme') === 'dark'
+const cvCardBg = () => isDarkG() ? '#1a2942' : '#ffffff'   // 节点卡片/边标签底
+const cvText1  = () => isDarkG() ? '#eaf1fc' : '#1d2129'   // 主文字
+const cvText2  = () => isDarkG() ? '#aeb9cf' : '#4e5969'   // 次文字
+
 /* —— 自定义左侧节点:圆圈 + 名称 + 折叠标识(+/-) —— */
 let _g6Registered = false
 function ensureNode() {
@@ -341,14 +347,14 @@ function ensureNode() {
       if (hasCh) {
         group.addShape('marker', {
           attrs: { x: r, y: 0, r: 5.5, symbol: cfg.collapsed ? G6.Marker.expand : G6.Marker.collapse,
-            stroke: '#86909c', fill: '#fff', lineWidth: 1.2, cursor: 'pointer' },
+            stroke: '#86909c', fill: cvCardBg(), lineWidth: 1.2, cursor: 'pointer' },
           name: 'collapse-marker'
         })
         lx = r + 12
       }
       if (cfg.label) {
         group.addShape('text', {
-          attrs: { x: lx, y: 0, text: cfg.label, fontSize: 11, fill: '#4e5969', textAlign: 'left', textBaseline: 'middle', cursor: 'pointer' },
+          attrs: { x: lx, y: 0, text: cfg.label, fontSize: 11, fill: cvText2(), textAlign: 'left', textBaseline: 'middle', cursor: 'pointer' },
           name: 'node-label'
         })
       }
@@ -379,7 +385,7 @@ function ensureNode() {
       const w = PAD + ICON + GAP + textW + PAD
       const h = 40
       const rect = group.addShape('rect', {
-        attrs: { x: -w / 2, y: -h / 2, width: w, height: h, radius: 6, fill: cfg._agg ? color + '1f' : '#fff',
+        attrs: { x: -w / 2, y: -h / 2, width: w, height: h, radius: 6, fill: cfg._agg ? color + '1f' : cvCardBg(),
           stroke: color, lineWidth: cfg._agg ? 1.6 : 1.6, lineDash: cfg._agg ? [4, 3] : null,
           cursor: 'pointer', shadowColor: 'rgba(0,0,0,0.08)', shadowBlur: 4, shadowOffsetY: 1 },
         name: 'card-rect', draggable: true
@@ -396,11 +402,11 @@ function ensureNode() {
       })
       const tx = bx + ICON + GAP
       group.addShape('text', {
-        attrs: { x: tx, y: en ? -6 : 0, text: cn, fontSize: 12, fontWeight: 600, fill: '#1d2129', textAlign: 'left', textBaseline: 'middle', cursor: 'pointer' },
+        attrs: { x: tx, y: en ? -6 : 0, text: cn, fontSize: 12, fontWeight: 600, fill: cvText1(), textAlign: 'left', textBaseline: 'middle', cursor: 'pointer' },
         name: 'card-cn'
       })
       if (en) group.addShape('text', {
-        attrs: { x: tx, y: 9, text: en, fontSize: 9, fill: '#86909c', textAlign: 'left', textBaseline: 'middle', cursor: 'pointer' },
+        attrs: { x: tx, y: 9, text: en, fontSize: 9, fill: cvText2(), textAlign: 'left', textBaseline: 'middle', cursor: 'pointer' },
         name: 'card-en'
       })
       return rect
@@ -733,8 +739,8 @@ function initRight() {
       id: 'e' + i, source: first.source, target: first.target, kind: first.kind, pairKey: pk,
       label: lbl, style: mergedEdgeStyle(group),
       labelCfg: lbl ? { refY: 0, autoRotate: false, style: {
-        fontSize: 11, fontWeight: 600, fill: '#165DFF', cursor: 'pointer',
-        background: { fill: '#fff', stroke: '#c9cdd4', lineWidth: 1, padding: [3, 7, 3, 7], radius: 10 }
+        fontSize: 11, fontWeight: 600, fill: isDarkG() ? '#92BEFF' : '#2563EB', cursor: 'pointer',
+        background: { fill: cvCardBg(), stroke: isDarkG() ? '#33456a' : '#c9cdd4', lineWidth: 1, padding: [3, 7, 3, 7], radius: 10 }
       } } : undefined
     }
   })
@@ -878,8 +884,8 @@ function applyRelFilter() {
       label: lbl,
       style: mergedEdgeStyle(group),
       labelCfg: lbl ? { refY: 0, autoRotate: false, style: {
-        fontSize: 11, fontWeight: 600, fill: '#165DFF', cursor: 'pointer',
-        background: { fill: '#fff', stroke: '#c9cdd4', lineWidth: 1, padding: [3, 7, 3, 7], radius: 10 }
+        fontSize: 11, fontWeight: 600, fill: isDarkG() ? '#92BEFF' : '#2563EB', cursor: 'pointer',
+        background: { fill: cvCardBg(), stroke: isDarkG() ? '#33456a' : '#c9cdd4', lineWidth: 1, padding: [3, 7, 3, 7], radius: 10 }
       } } : undefined
     })
   })
@@ -964,15 +970,23 @@ function resizeAll() {
   })
 }
 
+let themeObs = null
 onMounted(async () => {
   try { await load() } catch { BL.error('图谱加载失败') }
   ro = new ResizeObserver(() => resizeAll())
   if (leftCanvas.value) ro.observe(leftCanvas.value)
   if (rightCanvas.value) ro.observe(rightCanvas.value)
   document.addEventListener('fullscreenchange', onFsChange)
+  // 深浅主题切换 → 画布节点用 CSS 变量色重绘(canvas 不会自动响应, 需重建)
+  themeObs = new MutationObserver(() => {
+    if (leftTreeData && leftCanvas.value) initLeft(leftTreeData)
+    if (rightCanvas.value) initRight()
+  })
+  themeObs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 })
 onBeforeUnmount(() => {
   ro?.disconnect()
+  themeObs?.disconnect()
   document.removeEventListener('fullscreenchange', onFsChange)
   ;[leftG.value, rightG.value].forEach(g => { if (g && !g.get('destroyed')) g.destroy() })
 })
@@ -1001,7 +1015,8 @@ const vClickOutside = {
 .gx-toolbar { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--bl-border); flex-wrap: nowrap; min-height: 46px; position: relative; z-index: 6; }
 .gx-search { position: relative; display: flex; align-items: center; flex-shrink: 0; }
 .gx-search-ic { position: absolute; left: 8px; display: inline-flex; }
-.gx-search input { width: 128px; height: 30px; box-sizing: border-box; padding: 0 26px 0 26px; border: 1px solid var(--bl-border); border-radius: 6px; font-size: 12.5px; outline: none; }
+.gx-search input { width: 128px; height: 30px; box-sizing: border-box; padding: 0 26px 0 26px; border: 1px solid var(--bl-border); border-radius: 6px; font-size: 12.5px; outline: none; background: var(--bl-bg-1); color: var(--bl-text-1); }
+.gx-search input::placeholder { color: var(--bl-text-3); }
 .gx-search-wide input { width: 240px; }
 /* 工具条纯图标按钮 */
 .gx-tb-ic { flex-shrink: 0; padding: 0 !important; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; }
@@ -1051,7 +1066,7 @@ const vClickOutside = {
 .gx-layout-dd-item.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); font-weight: 500; }
 
 /* 右画布关系图例(左下角竖排) */
-.gx-rel-legend { position: absolute; bottom: 12px; left: 12px; display: flex; flex-direction: column; gap: 7px; background: rgba(255,255,255,.9); border: 1px solid var(--bl-border); border-radius: 8px; padding: 6px 10px; backdrop-filter: blur(2px); z-index: 5; }
+.gx-rel-legend { position: absolute; bottom: 12px; left: 12px; display: flex; flex-direction: column; gap: 7px; background: color-mix(in srgb, var(--bl-bg-1) 90%, transparent); border: 1px solid var(--bl-border); border-radius: 8px; padding: 6px 10px; backdrop-filter: blur(2px); z-index: 5; }
 .gx-rel-legend-toggle { display: inline-flex; align-items: center; gap: 4px; border: 0; background: transparent; color: var(--bl-text-2); font-size: 12px; cursor: pointer; padding: 0; }
 .gx-rel-legend-toggle:hover { color: var(--bl-primary); }
 .gx-rel-legend-hd { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--bl-text-3); margin-bottom: 1px; }
@@ -1076,12 +1091,12 @@ const vClickOutside = {
 .gx-divider:hover, .gx-divider.is-active { background: var(--bl-primary); }
 .gx-divider.is-collapsed { cursor: default; }
 .gx-divider.is-collapsed:hover { background: var(--bl-border); }
-.gx-divider-grip { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 2px; height: 28px; background: rgba(255,255,255,.6); border-radius: 2px; pointer-events: none; }
+.gx-divider-grip { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 2px; height: 28px; background: var(--bl-border-strong); border-radius: 2px; pointer-events: none; }
 .gx-collapse { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 18px; height: 36px; border: 1px solid var(--bl-border); background: var(--bl-bg-1); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: var(--bl-text-3); z-index: 3; }
 .gx-collapse:hover { color: var(--bl-primary); border-color: var(--bl-primary); }
 
 /* 图例:左下角,竖排(展开方向朝上:底部固定,内容向上增高) */
-.gx-legend { position: absolute; bottom: 12px; left: 12px; display: inline-flex; flex-direction: column; align-items: flex-start; gap: 6px; background: rgba(255,255,255,.85); border: 1px solid var(--bl-border); border-radius: 8px; padding: 6px 9px; backdrop-filter: blur(2px); }
+.gx-legend { position: absolute; bottom: 12px; left: 12px; display: inline-flex; flex-direction: column; align-items: flex-start; gap: 6px; background: color-mix(in srgb, var(--bl-bg-1) 88%, transparent); border: 1px solid var(--bl-border); border-radius: 8px; padding: 6px 9px; backdrop-filter: blur(2px); }
 .gx-leg { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--bl-text-2); white-space: nowrap; }
 .gx-legend-toggle { display: inline-flex; align-items: center; gap: 4px; border: 0; background: transparent; color: var(--bl-text-2); font-size: 12px; cursor: pointer; padding: 0; }
 .gx-legend-toggle:hover { color: var(--bl-primary); }
