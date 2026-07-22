@@ -382,8 +382,10 @@ async function onValueTypeConfirm({ ids, rows: picked }) {
   // 同步 data_type:值类型自带 data_type 时优先采用,保证表格「数据类型」列同步刷新
   const patch = { value_type: newId || null }
   if (pickedRow?.data_type) patch.data_type = pickedRow.data_type
+  // 发送完整记录,避免后端全量UPDATE时丢失其他字段(physical_table/physical_column等)
+  const payload = { ...p, ...patch }
   try {
-    await classMetaApi.updateProp(p.id, patch)
+    await classMetaApi.updateProp(p.id, payload)
     BL.success('值类型已更新')
     vtpOpen.value = false
     // 先把已加载的值类型选项纳入缓存,避免标签短暂回退到 id

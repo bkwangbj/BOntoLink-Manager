@@ -63,43 +63,10 @@
                 </select>
               </FieldRow>
               <FieldRow label="值类型" inline>
-                <div style="flex:1;position:relative">
-                  <div class="pd-vt-selector" @click="vtDropdownOpen = !vtDropdownOpen">
-                    <span class="pd-vt-sel-text">{{ selectedValueTypeLabel }}</span>
-                    <span class="pd-vt-sel-arrow" v-html="BL.icon('chevron-down', 12)"></span>
-                  </div>
-                  <!-- 下拉面板 -->
-                  <transition name="pd-vt-dropdown">
-                    <div v-if="vtDropdownOpen" class="pd-vt-dropdown" @click.stop>
-                      <!-- 搜索框 + 领域开关 -->
-                      <div class="pd-vt-toolbar">
-                        <div class="pd-vt-search">
-                          <span class="pd-vt-search-icon" v-html="BL.icon('search', 12)"></span>
-                          <input class="bl-input bl-input-sm" v-model="vtSearchQuery" placeholder="搜索值类型..." />
-                          <button v-if="vtSearchQuery" class="pd-vt-clear" @click="vtSearchQuery=''" v-html="BL.icon('x', 10)"></button>
-                        </div>
-                        <label class="pd-vt-switch" :title="vtShowAllDomains ? '仅显示本领域' : '显示所有领域'">
-                          <input type="checkbox" v-model="vtShowAllDomains" />
-                          <span>全部领域</span>
-                        </label>
-                      </div>
-                      <!-- 选项列表 -->
-                      <div class="pd-vt-list">
-                        <div class="pd-vt-item" :class="{ 'is-selected': !form.value_type }" @click="selectValueType('')">
-                          <span class="pd-vt-item-label">— 无 —</span>
-                        </div>
-                        <div v-for="vt in filteredValueTypeOptions" :key="vt.id"
-                             class="pd-vt-item"
-                             :class="{ 'is-selected': form.value_type === vt.id }"
-                             @click="selectValueType(vt.id)">
-                          <span class="pd-vt-item-label">{{ vt.rdfs_label || vt.api_name }}</span>
-                          <span class="pd-vt-item-domain bl-muted" v-if="vt.category_label">{{ vt.category_label }}</span>
-                        </div>
-                        <div v-if="!filteredValueTypeOptions.length" class="pd-vt-empty">无匹配结果</div>
-                      </div>
-                    </div>
-                  </transition>
-                </div>
+                <button class="bl-btn bl-btn-secondary" @click="vtModalOpen = true" style="justify-content: space-between; width: 100%;">
+                  <span>{{ selectedValueTypeLabel }}</span>
+                  <span v-html="BL.icon('chevron-down', 12)"></span>
+                </button>
               </FieldRow>
               <FieldRow label="是否主键" inline>
                 <label class="pd-switch"><input type="checkbox" :checked="form.is_key" :disabled="form.prop_type!=='data'" @change="form.is_key = $event.target.checked ? 1 : 0" />主键</label>
@@ -300,6 +267,13 @@
       </div>
     </aside>
   </transition>
+
+  <!-- 值类型选择模态 -->
+  <ValueTypePickerModal v-model:open="vtModalOpen"
+                        v-model="form.value_type"
+                        :multi="false"
+                        :subtitle="`为「${form.display_name || form.api_name}」选择值类型`"
+                        @confirm="onValueTypeConfirm" />
 </template>
 
 <script setup>
@@ -308,8 +282,9 @@ import FieldRow from '@/views/config/category/FieldRow.vue'
 import CodeEditor from '@/components/CodeEditor.vue'
 import FilterableSelect from '@/components/FilterableSelect.vue'
 import BoundTypeClassList from '@/components/typeclass/BoundTypeClassList.vue'
+import ValueTypePickerModal from '@/components/ValueTypePickerModal.vue'
 import { BL } from '@/lib/bl.js'
-import { classMetaApi, valueTypeApi, datasourceApi } from '@/api'
+import { classMetaApi, valueTypeApi, datasourceApi, categoryApi } from '@/api'
 
 const props = defineProps({
   open: { type: Boolean, default: false },
@@ -410,9 +385,14 @@ const equivList = ref([])
 const disjointList = ref([])
 
 // 值类型选择器状态
-const vtDropdownOpen = ref(false)
-const vtSearchQuery = ref('')
-const vtShowAllDomains = ref(false)
+// 值类型选择模态
+const vtModalOpen = ref(false)
+function onValueTypeConfirm({ ids }) {
+  const newId = Array.isArray(ids) ? ids[0] : ids
+  form.value_type = newId || null
+  vtModalOpen.value = false
+}
+
 const currentClassCategoryCode = ref('') // 当前对象类的领域代码
 
 // 值类型选择器: 当前选中的显示文本
@@ -421,33 +401,6 @@ const selectedValueTypeLabel = computed(() => {
   const vt = valueTypeOptions.value.find(v => v.id === form.value_type)
   return vt ? (vt.rdfs_label || vt.api_name) : '— 无 —'
 })
-
-// 值类型选择器: 过滤后的选项
-const filteredValueTypeOptions = computed(() => {
-  let list = valueTypeOptions.value
-
-  // 领域过滤：默认只显示本领域，开关打开后显示所有
-  if (!vtShowAllDomains.value && currentClassCategoryCode.value) {
-    list = list.filter(vt => vt.category_code === currentClassCategoryCode.value)
-  }
-
-  // 搜索过滤
-  const k = vtSearchQuery.value.trim().toLowerCase()
-  if (k) {
-    list = list.filter(vt => {
-      return [vt.rdfs_label, vt.api_name, vt.category_label]
-        .filter(Boolean).some(s => String(s).toLowerCase().includes(k))
-    })
-  }
-
-  return list
-})
-
-function selectValueType(id) {
-  form.value_type = id
-  vtDropdownOpen.value = false
-  vtSearchQuery.value = ''
-}
 
 /* —— 表映射: 数据源 → 物理表 → 物理字段 三级联动 ——
    数据来源为类已绑定的物理数据集 (props.datasources / ont_class_ds):
@@ -701,21 +654,11 @@ function onDragEnd() {
 }
 watch(() => props.open, (v) => { if (v) ensureSize() })
 
-// 点击外部关闭值类型下拉框
-function onClickOutsideVtDropdown(e) {
-  if (!vtDropdownOpen.value) return
-  const dropdown = e.target.closest('.pd-vt-dropdown')
-  const selector = e.target.closest('.pd-vt-selector')
-  if (!dropdown && !selector) {
-    vtDropdownOpen.value = false
-  }
-}
 onMounted(() => {
-  document.addEventListener('click', onClickOutsideVtDropdown)
+  // 事件监听器（如需）
 })
 onBeforeUnmount(() => {
   window.removeEventListener('mousemove', onDragMove); window.removeEventListener('mouseup', onDragEnd)
-  document.removeEventListener('click', onClickOutsideVtDropdown)
 })
 
 /* —— 保存 / 取消 —— */

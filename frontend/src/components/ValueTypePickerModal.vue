@@ -239,13 +239,27 @@ const treeRoot = computed(() => tree.value)
 /* —— 过滤 —— */
 function isUnderNode(row, node) {
   if (!node) return true
-  // 命中节点的 categoryCode 或其后代任一节点的 categoryCode
+  // 收集节点及其所有后代的 categoryCode
   const codes = new Set()
   const walk = (n) => {
     if (n.categoryCode) codes.add(n.categoryCode)
     if (n.children) n.children.forEach(walk)
   }
   walk(node)
+  if (codes.has(row.category_code)) return true
+  // 还需检查：如果 row 的 category_code 属于选中节点的某个祖先，也应显示
+  // (例如值类型挂在"水利统计"，点击子节点"服务业统计"时仍应可见)
+  function findAncestorCodes(nodes, target, chain) {
+    for (const n of nodes) {
+      if (n.id === target.id) {
+        chain.forEach(a => { if (a.categoryCode) codes.add(a.categoryCode) })
+        return true
+      }
+      if (n.children && findAncestorCodes(n.children, target, [...chain, n])) return true
+    }
+    return false
+  }
+  findAncestorCodes(tree.value, node, [])
   return codes.has(row.category_code)
 }
 const filtered = computed(() => {
