@@ -125,7 +125,7 @@ public interface BizGroupMapper {
     @Update("""
         UPDATE ont_biz_group_class
            SET group_id = #{group_id}, category_code = #{category_code}, g_sort = #{g_sort},
-               update_time = datetime('now','localtime')
+               update_time = CURRENT_TIMESTAMP
          WHERE id = #{id}
     """)
     int updateRef(Map<String, Object> row);

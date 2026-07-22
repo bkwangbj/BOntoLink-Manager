@@ -233,7 +233,7 @@ public interface ClassMetaMapper {
             owl_transitive = #{owl_transitive}, owl_symmetric = #{owl_symmetric},
             owl_asymmetric = #{owl_asymmetric}, owl_reflexive = #{owl_reflexive}, owl_irreflexive = #{owl_irreflexive},
             metadata = #{metadata}, sort = #{sort}, status = #{status},
-            update_time = datetime('now','localtime')
+            update_time = CURRENT_TIMESTAMP
         WHERE id = #{id}
     """)
     int updateClassProperty(Map<String, Object> row);
@@ -243,7 +243,7 @@ public interface ClassMetaMapper {
     int deleteClassProperty(@Param("id") String id);
 
     /** 仅更新单条属性的 sort 值 (用于拖拽排序) */
-    @Update("UPDATE ont_class_property SET sort = #{sort}, update_time = datetime('now','localtime') WHERE id = #{id}")
+    @Update("UPDATE ont_class_property SET sort = #{sort}, update_time = CURRENT_TIMESTAMP WHERE id = #{id}")
     int updateClassPropertySort(@Param("id") String id, @Param("sort") int sort);
 
     /* ============ ont_class extended fields (类表达式 / 其他) ============ */
@@ -257,7 +257,7 @@ public interface ClassMetaMapper {
             metadata = #{metadata}, parent_class_id = #{parent_class_id}, category_code = #{category_code},
             ns_code = #{ns_code}, class_expr_type = #{class_expr_type}, class_expr_content = #{class_expr_content},
             is_thing = #{is_thing}, is_nothing = #{is_nothing}, is_common = #{is_common},
-            update_time = datetime('now','localtime')
+            update_time = CURRENT_TIMESTAMP
         WHERE id = #{id}
     """)
     int updateClassFull(Map<String, Object> row);
@@ -288,7 +288,7 @@ public interface ClassMetaMapper {
     /* ============ 对象类状态切换 / 删除 ============ */
 
     /** 仅切换类状态 (启用 1 / 禁用 0)，不触碰其他字段 */
-    @Update("UPDATE ont_class SET status = #{status}, update_time = datetime('now','localtime') WHERE id = #{id}")
+    @Update("UPDATE ont_class SET status = #{status}, update_time = CURRENT_TIMESTAMP WHERE id = #{id}")
     int updateClassStatus(@Param("id") String id, @Param("status") int status);
 
     /** 按 id 取对象类的显示名称（删除确认弹框用） */

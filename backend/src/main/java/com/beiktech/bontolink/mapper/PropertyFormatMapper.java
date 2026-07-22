@@ -51,7 +51,7 @@ public interface PropertyFormatMapper {
             fraction_type = #{fraction_type}, special_type = #{special_type}, custom_format = #{custom_format},
             text_force = #{text_force}, text_max_length = #{text_max_length}, text_regex = #{text_regex},
             percent_auto_multiply = #{percent_auto_multiply},
-            update_time = datetime('now','localtime')
+            update_time = CURRENT_TIMESTAMP
         WHERE property_id = #{property_id}
     """)
     int updateByProperty(Map<String, Object> row);

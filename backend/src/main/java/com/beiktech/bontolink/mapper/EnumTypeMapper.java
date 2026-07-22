@@ -49,7 +49,7 @@ public interface EnumTypeMapper {
             category_code=#{category_code},
             top_code=#{top_code}, status=#{status}, rdfs_label=#{rdfs_label}, rdfs_comment=#{rdfs_comment},
             rdfs_see_also=#{rdfs_see_also}, rdfs_defined_by=#{rdfs_defined_by},
-            update_time = datetime('now','localtime')
+            update_time = CURRENT_TIMESTAMP
         WHERE id=#{id}
     """)
     int updateType(Map<String, Object> row);
@@ -90,7 +90,7 @@ public interface EnumTypeMapper {
     @Update("""
         UPDATE ont_enum_items SET label=#{label}, api_name=#{api_name}, parent_code=#{parent_code},
             level=#{level}, sort_num=#{sort_num}, status=#{status},
-            update_time = datetime('now','localtime')
+            update_time = CURRENT_TIMESTAMP
         WHERE id=#{id}
     """)
     int updateItem(Map<String, Object> row);
@@ -145,7 +145,7 @@ public interface EnumTypeMapper {
           field_status=#{field_status}, field_parent=#{field_parent}, filter_sql=#{filter_sql},
           sync_mode=#{sync_mode}, sync_strategy=#{sync_strategy},
           sync_source_type=#{sync_source_type}, custom_sql=#{custom_sql},
-          update_time = datetime('now','localtime')
+          update_time = CURRENT_TIMESTAMP
         WHERE id=#{id}
     """)
     int updateSyncConfig(Map<String, Object> row);

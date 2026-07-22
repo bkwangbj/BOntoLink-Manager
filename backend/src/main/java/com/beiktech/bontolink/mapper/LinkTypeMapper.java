@@ -80,7 +80,7 @@ public interface LinkTypeMapper {
           is_data_source_rel = #{is_data_source_rel}, rel_data_table = #{rel_data_table},
           rdfs_label = #{rdfs_label}, rdfs_comment = #{rdfs_comment},
           category_code = #{category_code},
-          updated_at = datetime('now','localtime'),
+          updated_at = CURRENT_TIMESTAMP,
           updated_by = #{updated_by}
         WHERE id = #{id}
     """)

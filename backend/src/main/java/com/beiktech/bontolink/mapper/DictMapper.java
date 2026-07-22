@@ -31,7 +31,7 @@ public interface DictMapper {
             dict_code=#{dictCode,jdbcType=VARCHAR}, dict_name=#{dictName,jdbcType=VARCHAR},
             rdfs_comment=#{rdfsComment,jdbcType=VARCHAR}, status=#{status,jdbcType=INTEGER},
             sort_no=#{sortNo,jdbcType=INTEGER},
-            update_time=datetime('now','localtime')
+            update_time=CURRENT_TIMESTAMP
         WHERE id=#{id}
     """)
     int updateDef(Map<String, Object> body);
@@ -62,7 +62,7 @@ public interface DictMapper {
             item_value=#{itemValue,jdbcType=VARCHAR}, sort_no=#{sortNo,jdbcType=INTEGER},
             status=#{status,jdbcType=INTEGER}, color=#{color,jdbcType=VARCHAR},
             ext_data=#{extData,jdbcType=VARCHAR},
-            update_time=datetime('now','localtime')
+            update_time=CURRENT_TIMESTAMP
         WHERE id=#{id}
     """)
     int updateItem(Map<String, Object> body);

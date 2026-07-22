@@ -44,7 +44,7 @@ public interface ValueTypeMapper {
           constraint_type = #{constraint_type}, constraint_config = #{constraint_config},
           enum_id = #{enum_id}, default_usage_config_id = #{default_usage_config_id},
           category_code = #{category_code}, status = #{status},
-          update_time = datetime('now','localtime')
+          update_time = CURRENT_TIMESTAMP
         WHERE id = #{id}
     """)
     int update(Map<String, Object> row);
@@ -70,6 +70,6 @@ public interface ValueTypeMapper {
     // 更新枚举使用配置
     @Update("UPDATE ont_valuetypes_usage_config SET max_select_level = #{max_select_level}, " +
             "allow_non_leaf = #{allow_non_leaf}, display_format = #{display_format}, " +
-            "is_system_default = #{is_system_default}, update_time = datetime('now','localtime') WHERE id = #{id}")
+            "is_system_default = #{is_system_default}, update_time = CURRENT_TIMESTAMP WHERE id = #{id}")
     int updateUsageConfig(Map<String, Object> row);
 }

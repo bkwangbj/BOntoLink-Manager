@@ -61,7 +61,7 @@ public interface StructTypeMapper {
           category_code = #{category_code}, status = #{status},
           rdfs_label = #{rdfs_label}, rdfs_comment = #{rdfs_comment},
           rdfs_see_also = #{rdfs_see_also}, rdfs_defined_by = #{rdfs_defined_by},
-          update_time = datetime('now','localtime')
+          update_time = CURRENT_TIMESTAMP
         WHERE id = #{id}
     """)
     int update(Map<String, Object> row);

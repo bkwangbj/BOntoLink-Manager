@@ -41,7 +41,7 @@ public interface IconLibMapper {
     void insertGroup(IconLibGroup g);
 
     // 更新分组名称和排序
-    @Update("UPDATE icon_lib_group SET name=#{name}, sort=#{sort}, update_time=datetime('now','localtime') WHERE id=#{id}")
+    @Update("UPDATE icon_lib_group SET name=#{name}, sort=#{sort}, update_time=CURRENT_TIMESTAMP WHERE id=#{id}")
     void updateGroup(IconLibGroup g);
 
     // 删除单个分组
