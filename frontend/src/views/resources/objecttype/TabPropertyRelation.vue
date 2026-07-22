@@ -360,17 +360,17 @@ async function submit() {
 .pr-hd {
   display: flex; justify-content: space-between; align-items: center; gap: 12px;
 
-  background: #fff; border-radius: 8px;
+  background: var(--bl-bg-1); border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
-.pr-title { font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; color: #333; }
+.pr-title { font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; color: var(--bl-text-1); }
 .bl-help { color: #999; cursor: help; display: inline-flex; }
 .bl-help:hover { color: var(--bl-primary); }
 .pr-search { position: relative; width: 240px; }
 .pr-search .bl-input { padding-left: 28px; height: 32px; }
 .pr-search .ot-ic { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: #999; }
 .pr-del-btn {
-  background: #fff; border: 1px solid var(--bl-border); color: var(--bl-text-2);
+  background: var(--bl-bg-1); border: 1px solid var(--bl-border); color: var(--bl-text-2);
 }
 .pr-del-btn:not(:disabled):hover { border-color: #f56c6c; color: #f56c6c; }
 .pr-del-btn:disabled { opacity: .4; cursor: not-allowed; }
@@ -378,7 +378,7 @@ async function submit() {
 /* —— 表格主体: 占满 toolbar / pager 之间剩余空间 —— */
 .pr-table-wrap {
   flex: 1; min-height: 0;
-  background: #fff; border-radius: 8px;
+  background: var(--bl-bg-1); border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   overflow: auto;
   position: relative;
@@ -389,7 +389,7 @@ async function submit() {
   flex-shrink: 0;
   display: flex; justify-content: space-between; align-items: center;
   padding: 8px 12px;
-  background: #fff; border-radius: 8px;
+  background: var(--bl-bg-1); border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 .pr-page-size { width: 64px; height: 26px; }
@@ -402,22 +402,22 @@ async function submit() {
 /* 表头 */
 .pr-table thead th {
   position: sticky; top: 0; z-index: 3;
-  background: #f5f7fa;
+  background: var(--bl-bg-2);
   font-weight: 600; padding: 0 10px;
   font-size: 12px; height: 38px;
-  color: #333;
+  color: var(--bl-text-1);
   white-space: nowrap;
   border-bottom: 1px solid #eee;
 }
 .pr-table thead th.t-left { text-align: left; }
 .pr-table thead th.t-center { text-align: center; }
 /* L 蓝 / R 绿色块 */
-.pr-table thead th.bg-l { background: #e8f4ff; }
-.pr-table thead th.bg-r { background: #f0fff4; }
+.pr-table thead th.bg-l { background: color-mix(in srgb, var(--bl-primary) 14%, var(--bl-bg-1)); }
+.pr-table thead th.bg-r { background: color-mix(in srgb, var(--bl-success) 12%, var(--bl-bg-1)); }
 
 /* 表体 */
-.pr-table tbody tr.pr-row { background: #fff; }
-.pr-table tbody tr.pr-row:hover { background: #f5f7fa; }
+.pr-table tbody tr.pr-row { background: var(--bl-bg-1); }
+.pr-table tbody tr.pr-row:hover { background: var(--bl-bg-2); }
 .pr-table td {
   padding: 8px 10px; vertical-align: middle;
   height: 76px;  /* 容纳 3 行组合信息 */
@@ -436,12 +436,12 @@ async function submit() {
 .pr-sym {
   font-size: 18px; font-weight: 700;
   color: var(--bl-primary);
-  background: #fafafa;
+  background: var(--bl-bg-2);
 }
 
 /* 组合信息 cell: 3 行垂直层级 */
 .pr-combo { display: flex; flex-direction: column; gap: 2px; line-height: 1.2; }
-.pr-combo-l1 { color: #333; font-weight: 500; font-size: 13px; }
+.pr-combo-l1 { color: var(--bl-text-1); font-weight: 500; font-size: 13px; }
 .pr-combo-l2 { color: #666; font-size: 12px; }
 .pr-combo-l3 { font-size: 11px; }
 
@@ -449,9 +449,9 @@ async function submit() {
   display: inline-block; padding: 1px 6px;
   font-size: 10.5px; border-radius: 9px; font-weight: 500;
 }
-.pr-type-tag.is-data { background: #e8f3ff; color: #1677ff; }
-.pr-type-tag.is-object { background: #fff5e6; color: #FF7D00; }
-.pr-type-tag.is-annotation { background: #e8fff4; color: #00B42A; }
+.pr-type-tag.is-data { background: color-mix(in srgb, var(--bl-primary) 14%, var(--bl-bg-1)); color: #1677ff; }
+.pr-type-tag.is-object { background: color-mix(in srgb, var(--bl-warning) 14%, var(--bl-bg-1)); color: #FF7D00; }
+.pr-type-tag.is-annotation { background: color-mix(in srgb, var(--bl-success) 14%, var(--bl-bg-1)); color: #00B42A; }
 
 /* —— 状态: 下拉切换 —— */
 .pr-status {
@@ -460,7 +460,7 @@ async function submit() {
   padding: 3px 8px; border-radius: 4px; cursor: pointer;
   border: 1px solid transparent;
 }
-.pr-status:hover { background: #f5f7fa; border-color: #eee; }
+.pr-status:hover { background: var(--bl-bg-2); border-color: #eee; }
 .pr-status-dot {
   width: 6px; height: 6px; border-radius: 50%;
   display: inline-block; flex-shrink: 0;
@@ -474,7 +474,7 @@ async function submit() {
 .pr-status-menu {
   position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
   margin-top: 4px; min-width: 120px;
-  background: #fff; border-radius: 8px;
+  background: var(--bl-bg-1); border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   z-index: 20;
   padding: 4px;
@@ -484,8 +484,8 @@ async function submit() {
   padding: 8px 12px; border-radius: 4px; cursor: pointer;
   font-size: 12px;
 }
-.pr-status-item:hover { background: #f5f7fa; }
-.pr-status-item.is-sel { background: #e8f3ff; color: #409eff; font-weight: 500; }
+.pr-status-item:hover { background: var(--bl-bg-2); }
+.pr-status-item.is-sel { background: color-mix(in srgb, var(--bl-primary) 14%, var(--bl-bg-1)); color: #409eff; font-weight: 500; }
 
 /* —— 冻结列: ☐ + L 全部 + 关系 列 (spec §二.6 锁定列) —— */
 .pr-stk-l1, .pr-stk-l2, .pr-stk-l3, .pr-stk-l4, .pr-stk-l5 {
@@ -497,18 +497,18 @@ async function submit() {
 .pr-stk-l4 { left: 410px; }
 .pr-stk-l5 { left: 570px; box-shadow: 2px 0 4px -2px rgba(0,0,0,0.08); }
 /* 表头粘性列背景 */
-.pr-table thead th.pr-stk-l1 { background: #f5f7fa; z-index: 4; }
-.pr-table thead th.pr-stk-l2 { background: #e8f4ff; z-index: 4; }
-.pr-table thead th.pr-stk-l3 { background: #e8f4ff; z-index: 4; }
-.pr-table thead th.pr-stk-l4 { background: #e8f4ff; z-index: 4; }
-.pr-table thead th.pr-stk-l5 { background: #fafafa; z-index: 4; box-shadow: 2px 0 4px -2px rgba(0,0,0,0.08); }
+.pr-table thead th.pr-stk-l1 { background: var(--bl-bg-2); z-index: 4; }
+.pr-table thead th.pr-stk-l2 { background: color-mix(in srgb, var(--bl-primary) 14%, var(--bl-bg-1)); z-index: 4; }
+.pr-table thead th.pr-stk-l3 { background: color-mix(in srgb, var(--bl-primary) 14%, var(--bl-bg-1)); z-index: 4; }
+.pr-table thead th.pr-stk-l4 { background: color-mix(in srgb, var(--bl-primary) 14%, var(--bl-bg-1)); z-index: 4; }
+.pr-table thead th.pr-stk-l5 { background: var(--bl-bg-2); z-index: 4; box-shadow: 2px 0 4px -2px rgba(0,0,0,0.08); }
 /* 表体粘性列默认背景 */
-.pr-table tbody td.pr-stk-l1 { background: #fff; }
+.pr-table tbody td.pr-stk-l1 { background: var(--bl-bg-1); }
 .pr-table tbody td.pr-stk-l2.bg-l { background: #f3f9ff; }
 .pr-table tbody td.pr-stk-l3.bg-l { background: #f3f9ff; }
 .pr-table tbody td.pr-stk-l4.bg-l { background: #f3f9ff; }
-.pr-table tbody td.pr-stk-l5 { background: #fafafa; }
-.pr-table tbody tr.pr-row:hover td.pr-stk-l1 { background: #f5f7fa; }
+.pr-table tbody td.pr-stk-l5 { background: var(--bl-bg-2); }
+.pr-table tbody tr.pr-row:hover td.pr-stk-l1 { background: var(--bl-bg-2); }
 .pr-table tbody tr.pr-row:hover td.pr-stk-l2.bg-l,
 .pr-table tbody tr.pr-row:hover td.pr-stk-l3.bg-l,
 .pr-table tbody tr.pr-row:hover td.pr-stk-l4.bg-l { background: #e0eeff; }

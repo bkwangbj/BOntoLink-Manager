@@ -1018,7 +1018,7 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
 .ds-drawer-title { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
 /* 头部"测试"按钮: 主色描边,与右上角 × 关闭并列 */
 .ds-test-btn {
-  background: #fff; border: 1px solid var(--bl-primary); color: var(--bl-primary);
+  background: var(--bl-bg-1); border: 1px solid var(--bl-primary); color: var(--bl-primary);
   flex-shrink: 0;
 }
 .ds-test-btn:hover { background: var(--bl-primary-soft); }
@@ -1079,12 +1079,12 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
 .ds-page-size { width: 64px; height: 26px; }
 
 /* 批量操作按钮 (统一 outline 配色) */
-.ds-del-btn { background: #fff; border: 1px solid #f53f3f; color: #f53f3f; }
+.ds-del-btn { background: var(--bl-bg-1); border: 1px solid #f53f3f; color: #f53f3f; }
 .ds-del-btn:hover { background: #fff1f0; }
-.ds-ena-btn { background: #fff; border: 1px solid #00b42a; color: #00b42a; }
-.ds-ena-btn:hover { background: #e8fff4; }
-.ds-dis-btn { background: #fff; border: 1px solid #86909c; color: #4e5969; }
-.ds-dis-btn:hover { background: #f7f8fa; }
+.ds-ena-btn { background: var(--bl-bg-1); border: 1px solid #00b42a; color: #00b42a; }
+.ds-ena-btn:hover { background: color-mix(in srgb, var(--bl-success) 14%, var(--bl-bg-1)); }
+.ds-dis-btn { background: var(--bl-bg-1); border: 1px solid #86909c; color: #4e5969; }
+.ds-dis-btn:hover { background: var(--bl-bg-2); }
 .ds-clear-btn { color: var(--bl-text-3); }
 .ds-clear-btn:hover { color: var(--bl-primary); }
 .t-center { text-align: center; }

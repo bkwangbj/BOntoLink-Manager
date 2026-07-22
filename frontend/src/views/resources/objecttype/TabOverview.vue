@@ -288,7 +288,7 @@ async function copy(t) {
 }
 .ov-switch-slider::before {
   content: ''; position: absolute; top: 2px; left: 2px;
-  width: 14px; height: 14px; background: #fff; border-radius: 50%;
+  width: 14px; height: 14px; background: var(--bl-bg-1); border-radius: 50%;
   transition: transform .15s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 .ov-switch input:checked + .ov-switch-slider { background: var(--bl-primary); }

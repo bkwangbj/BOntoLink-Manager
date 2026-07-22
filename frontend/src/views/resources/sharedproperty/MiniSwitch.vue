@@ -26,7 +26,7 @@ function onClick() { if (!props.disabled) emit('change', !props.checked) }
 .mini-sw-dot {
   position: absolute; left: 2px; top: 2px;
   width: 10px; height: 10px; border-radius: 50%;
-  background: #fff; transition: left .15s;
+  background: var(--bl-bg-1); transition: left .15s;
   box-shadow: 0 1px 2px rgba(0,0,0,.2);
 }
 .mini-sw.is-on .mini-sw-dot { left: 16px; }

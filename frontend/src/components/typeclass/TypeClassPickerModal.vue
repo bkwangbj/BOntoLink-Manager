@@ -179,6 +179,6 @@ onMounted(async () => {
 .tcp-st.is-dep { color: var(--bl-text-3); background: var(--bl-bg-3, #f0f2f5); }
 .tcp-bound { font-size: 10.5px; color: var(--bl-primary); margin-left: 5px; }
 .tcp-empty { text-align: center; color: var(--bl-text-3); padding: 40px; }
-.tcp-ft { display: flex; align-items: center; gap: 10px; padding: 12px 20px; border-top: 1px solid var(--bl-divider); background: var(--bl-bg-2); }
+.tcp-ft { display: flex; align-items: center; gap: 10px; padding: 12px 20px; border-top: 1px solid var(--bl-divider); background: var(--bl-bg-1); }
 .tcp-selinfo { flex: 1; font-size: 12.5px; color: var(--bl-primary); }
 </style>

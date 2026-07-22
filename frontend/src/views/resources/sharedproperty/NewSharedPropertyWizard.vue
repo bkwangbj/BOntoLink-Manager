@@ -287,7 +287,7 @@ function close() { emit('update:open', false) }
 .nsp-modal {
   width: 720px; max-width: 95vw;
   max-height: calc(100vh - 80px);
-  background: #fff; border-radius: 12px;
+  background: var(--bl-bg-1); border-radius: 12px;
   display: flex; flex-direction: column;
   overflow: hidden;
   box-shadow: 0 12px 40px rgba(0,0,0,.20);
@@ -297,7 +297,7 @@ function close() { emit('update:open', false) }
 .nsp-title { font-size: 16px; font-weight: 600; }
 
 /* 步骤条 */
-.nsp-steps { display: flex; padding: 14px 24px; background: #fafbfc; gap: 0; }
+.nsp-steps { display: flex; padding: 14px 24px; background: var(--bl-bg-2); gap: 0; }
 .nsp-step { display: inline-flex; align-items: center; gap: 8px; color: var(--bl-text-3); font-size: 12.5px; flex: 1; }
 .nsp-step-num {
   width: 22px; height: 22px; border-radius: 50%;
@@ -322,7 +322,7 @@ function close() { emit('update:open', false) }
 .nsp-type-card {
   display: flex; align-items: center; gap: 8px;
   padding: 10px; border: 1px solid var(--bl-border); border-radius: 6px;
-  cursor: pointer; background: #fff;
+  cursor: pointer; background: var(--bl-bg-1);
   transition: border-color .12s, box-shadow .12s;
 }
 .nsp-type-card:hover { border-color: var(--bl-primary); }
@@ -346,7 +346,7 @@ function close() { emit('update:open', false) }
 .nsp-summary td { padding: 6px 8px; border-bottom: 1px dashed var(--bl-divider); }
 .nsp-summary td:first-child { color: var(--bl-text-3); width: 90px; }
 
-.nsp-ft { padding: 12px 16px; border-top: 1px solid var(--bl-divider); display: flex; gap: 8px; align-items: center; background: #fafbfc; }
+.nsp-ft { padding: 12px 16px; border-top: 1px solid var(--bl-divider); display: flex; gap: 8px; align-items: center; background: var(--bl-bg-2); }
 
 /* 文本域 (与抽屉一致, 高度更大 + 可拖高) */
 .bl-textarea {
@@ -355,7 +355,7 @@ function close() { emit('update:open', false) }
   padding: 8px 10px;
   border: 1px solid var(--bl-border);
   border-radius: 4px;
-  background: #fff;
+  background: var(--bl-bg-1);
   font-family: inherit;
   font-size: 13px;
   line-height: 1.55;

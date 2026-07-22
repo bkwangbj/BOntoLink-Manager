@@ -768,7 +768,7 @@ async function onExport() {
     const html = node.outerHTML.replace(/<svg /g, '<svg xmlns="http://www.w3.org/2000/svg" ')
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
       <foreignObject width="100%" height="100%">
-        <div xmlns="http://www.w3.org/1999/xhtml" style="width:${w}px;height:${h}px;background:#f8f9fa">${html}</div>
+        <div xmlns="http://www.w3.org/1999/xhtml" style="width:${w}px;height:${h}px;background: var(--bl-bg-2)">${html}</div>
       </foreignObject>
     </svg>`
     const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' })
@@ -905,7 +905,7 @@ const highlightFields = computed(() => {
 /* 画布 */
 .er-canvas {
   flex: 1; position: relative; overflow: auto;
-  background: #f8f9fa;
+  background: var(--bl-bg-2);
   min-height: 400px;
 }
 .er-canvas.is-grid {
@@ -922,7 +922,7 @@ const highlightFields = computed(() => {
 
 /* 卡片 */
 .er-card {
-  position: absolute; border-radius: 8px; background: #fff;
+  position: absolute; border-radius: 8px; background: var(--bl-bg-1);
   border: 2px solid transparent;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   z-index: 2;
@@ -953,9 +953,9 @@ const highlightFields = computed(() => {
   border-top: 1px solid #f0f0f0;
 }
 .er-prow:first-child, .er-frow:first-child { border-top: 0; }
-.er-prow:hover, .er-frow:hover { background: #f5f7fa; }
-.er-prow.is-mapped, .er-frow.is-mapped { background: #f0fff4; }
-.er-prow.is-sel, .er-frow.is-sel { background: #e6f7ff !important; box-shadow: inset 3px 0 0 var(--bl-primary); }
+.er-prow:hover, .er-frow:hover { background: var(--bl-bg-2); }
+.er-prow.is-mapped, .er-frow.is-mapped { background: color-mix(in srgb, var(--bl-success) 12%, var(--bl-bg-1)); }
+.er-prow.is-sel, .er-frow.is-sel { background: color-mix(in srgb, var(--bl-primary) 12%, var(--bl-bg-1)) !important; box-shadow: inset 3px 0 0 var(--bl-primary); }
 
 .er-row-no {
   width: 20px; height: 20px; border-radius: 50%;
@@ -999,7 +999,7 @@ const highlightFields = computed(() => {
 .er-canvas.is-mode-delete .er-svg .er-line:hover { stroke-width: 4 !important; }
 
 /* —— 选中映射线时双端高亮 (浅蓝) —— */
-.er-prow.is-hl, .er-frow.is-hl { background: #e6f7ff !important; }
+.er-prow.is-hl, .er-frow.is-hl { background: color-mix(in srgb, var(--bl-primary) 12%, var(--bl-bg-1)) !important; }
 
 /* —— 排序模式拖拽插入指示 —— */
 .er-sort-hint {
@@ -1013,7 +1013,7 @@ const highlightFields = computed(() => {
 /* 选中信息卡片 */
 .er-sel-card {
   position: absolute; right: 16px; top: 16px;
-  width: 280px; background: #fff; border-radius: 8px;
+  width: 280px; background: var(--bl-bg-1); border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.10);
   z-index: 10; font-size: 12px;
   border: 1px solid var(--bl-divider);

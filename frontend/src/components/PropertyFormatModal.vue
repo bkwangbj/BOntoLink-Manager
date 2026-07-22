@@ -464,7 +464,7 @@ function onCancel() { emit('cancel'); emit('update:open', false) }
 .pf-toggle { padding: 10px 16px; background: var(--bl-bg-2); border-bottom: 1px solid var(--bl-divider); font-size: 13px; }
 .pf-body { flex: 1; display: grid; grid-template-columns: 130px 1fr; gap: 0; overflow: hidden; }
 .pf-body.is-disabled { opacity: .55; pointer-events: none; }
-.pf-cats { border-right: 1px solid var(--bl-divider); padding: 6px 4px; overflow: auto; background: #f5f7fa; display: flex; flex-direction: column; gap: 2px; }
+.pf-cats { border-right: 1px solid var(--bl-divider); padding: 6px 4px; overflow: auto; background: var(--bl-bg-2); display: flex; flex-direction: column; gap: 2px; }
 .pf-cats-title { font-size: 11px; color: var(--bl-text-3); padding: 4px 8px 6px; }
 .pf-cat { text-align: left; padding: 7px 12px; border: 0; background: transparent; cursor: pointer;
   font-size: 13px; color: var(--bl-text-2); border-radius: 4px; border-left: 3px solid transparent; }

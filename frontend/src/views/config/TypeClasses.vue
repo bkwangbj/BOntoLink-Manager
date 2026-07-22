@@ -666,7 +666,7 @@ onMounted(async () => { await Promise.all([loadCategories(), loadRows(), loadEnu
 .tc-list-wrap { flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 8px; overflow: hidden; }
 .tc-batch { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--bl-primary-soft); border-bottom: 1px solid var(--bl-border); }
 .tc-batch-n { font-size: 12px; color: var(--bl-primary); font-weight: 600; }
-.tc-batch-btn { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; padding: 3px 10px; border-radius: 4px; background: #fff; border: 1px solid var(--bl-border); color: var(--bl-text-2); cursor: pointer; }
+.tc-batch-btn { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; padding: 3px 10px; border-radius: 4px; background: var(--bl-bg-1); border: 1px solid var(--bl-border); color: var(--bl-text-2); cursor: pointer; }
 .tc-batch-btn.del { border-color: #f53f3f; color: #f53f3f; }
 .tc-table-scroll { flex: 1; overflow: auto; }
 .tc-table { width: 100%; border-collapse: collapse; font-size: 13px; }

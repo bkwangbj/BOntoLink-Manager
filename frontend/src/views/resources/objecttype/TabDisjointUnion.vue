@@ -213,16 +213,16 @@ async function batchDisable() {
   flex-shrink: 0;
   display: flex; justify-content: space-between; align-items: center; gap: 12px;
 
-  background: #fff; border-radius: 8px;
+  background: var(--bl-bg-1); border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 .du-head-l { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
-.du-title { font-size: 14px; font-weight: 600; color: #333; }
+.du-title { font-size: 14px; font-weight: 600; color: var(--bl-text-1); }
 .bl-help { color: #999; cursor: help; display: inline-flex; }
 .bl-help:hover { color: var(--bl-primary); }
 .du-subtitle { font-size: 12px; color: #999; }
 /* 危险按钮: 白底红框 (与属性列表 / 等价属性 一致) */
-.du-danger-btn { background: #fff; border: 1px solid #f5222d; color: #f5222d; }
+.du-danger-btn { background: var(--bl-bg-1); border: 1px solid #f5222d; color: #f5222d; }
 .du-danger-btn:not(:disabled):hover { background: #fff1f0; }
 .du-danger-btn:disabled { opacity: .4; cursor: not-allowed; }
 
@@ -235,7 +235,7 @@ async function batchDisable() {
 }
 .du-pane { display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
 .du-pane-hd { display: flex; justify-content: space-between; align-items: center; gap: 8px;
-  padding: 8px 12px; background: #fafafa; border-bottom: 1px solid var(--bl-divider); }
+  padding: 8px 12px; background: var(--bl-bg-2); border-bottom: 1px solid var(--bl-divider); }
 .du-pane-title { font-size: 13px; font-weight: 600; }
 .du-pane-body { flex: 1; overflow: auto; padding: 10px; }
 
@@ -253,6 +253,6 @@ async function batchDisable() {
 .du-search .ot-ic { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: var(--bl-text-3); }
 
 .du-table { width: 100%; font-size: 12px; }
-.du-table th { background: #e8f3ff; padding: 8px; font-weight: 600; }
+.du-table th { background: color-mix(in srgb, var(--bl-primary) 14%, var(--bl-bg-1)); padding: 8px; font-weight: 600; }
 .du-table td { padding: 6px 8px; }
 </style>

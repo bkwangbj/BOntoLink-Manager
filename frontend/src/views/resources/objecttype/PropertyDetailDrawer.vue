@@ -713,14 +713,14 @@ function onCancel() { emit('update:open', false) }
 .pd-title { font-size: 15px; font-weight: 600; }
 
 .pd-type-tag { display: inline-block; padding: 1px 7px; border-radius: 9px; font-size: 10.5px; font-weight: 500; }
-.pd-type-tag.is-data { background: #e8f3ff; color: #1677ff; }
-.pd-type-tag.is-object { background: #fff5e6; color: #FF7D00; }
-.pd-type-tag.is-annotation { background: #e8fff4; color: #00B42A; }
-.pd-type-tag.is-derived { background: #f5edff; color: #722ED1; }
+.pd-type-tag.is-data { background: color-mix(in srgb, #1677ff 14%, var(--bl-bg-1)); color: #1677ff; }
+.pd-type-tag.is-object { background: color-mix(in srgb, #FF7D00 14%, var(--bl-bg-1)); color: #FF7D00; }
+.pd-type-tag.is-annotation { background: color-mix(in srgb, #00B42A 14%, var(--bl-bg-1)); color: #00B42A; }
+.pd-type-tag.is-derived { background: color-mix(in srgb, #722ED1 14%, var(--bl-bg-1)); color: #722ED1; }
 
 .pd-body { flex: 1; display: grid; grid-template-columns: 160px 1fr; overflow: hidden; min-height: 0; }
 .pd-nav {
-  background: #f8f9fb; border-right: 1px solid var(--bl-divider);
+  background: var(--bl-bg-2); border-right: 1px solid var(--bl-divider);
   padding: 8px 6px; display: flex; flex-direction: column; gap: 2px; overflow: auto;
 }
 .pd-nav-item {
@@ -730,10 +730,10 @@ function onCancel() { emit('update:open', false) }
   display: inline-flex; align-items: center;
 }
 .pd-nav-item:hover { background: var(--bl-bg-1); color: var(--bl-text-1); }
-.pd-nav-item.is-on { background: #e8f3ff; color: #1677ff; font-weight: 500; border-left-color: #1677ff; }
-.pd-badge { margin-left: auto; font-size: 11px; color: #999;
+.pd-nav-item.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); font-weight: 500; border-left-color: var(--bl-primary); }
+.pd-badge { margin-left: auto; font-size: 11px; color: var(--bl-text-3);
   background: var(--bl-bg-2); border-radius: 9px; padding: 0 7px; min-width: 18px; text-align: center; }
-.pd-nav-item.is-on .pd-badge { background: #fff; color: #1677ff; }
+.pd-nav-item.is-on .pd-badge { background: var(--bl-bg-1); color: var(--bl-primary); }
 
 .pd-pane { overflow: auto; padding: 12px 18px; min-width: 0; position: relative; }
 .pd-pane > section { padding: 8px 0 14px; border-bottom: 1px dashed var(--bl-divider); margin-bottom: 4px; }
@@ -773,7 +773,7 @@ function onCancel() { emit('update:open', false) }
   user-select: none;
   transition: background-color .15s;
 }
-.pd-hint-item:hover { background: #f5f7fa; }
+.pd-hint-item:hover { background: var(--bl-bg-2); }
 .pd-hint-item.is-disabled,
 .pd-hint-item.is-locked {
   cursor: not-allowed;
@@ -801,7 +801,7 @@ function onCancel() { emit('update:open', false) }
   display: inline-block;
   padding: 2px 8px;
   border-radius: 10px;
-  background: #f0f2f5;
+  background: var(--bl-bg-2);
   color: #909399;
   font-size: 10px;
   font-weight: 500;
@@ -811,14 +811,14 @@ function onCancel() { emit('update:open', false) }
   margin-top: 8px;
   padding: 6px 8px;
   font-size: 11px;
-  background: #fafafa;
+  background: var(--bl-bg-2);
   border-radius: 3px;
   display: flex; align-items: center; gap: 4px;
 }
 .pd-hint-tip > :first-child { display: inline-flex; }
 
 .pd-mini-table { width: 100%; font-size: 12px; }
-.pd-mini-table th { background: #fafafa; padding: 6px 8px; font-weight: 600; text-align: left; }
+.pd-mini-table th { background: var(--bl-bg-2); padding: 6px 8px; font-weight: 600; text-align: left; }
 .pd-mini-table td { padding: 6px 8px; border-top: 1px solid var(--bl-divider); }
 
 .pd-ft {
@@ -836,8 +836,8 @@ function onCancel() { emit('update:open', false) }
 
 /* 借用 pp-status 样式定义 (复用 TabProps 中的状态样式) */
 .pp-status { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 500; }
-.pp-status.is-on  { background: #e8fff4; color: #00b42a; }
-.pp-status.is-off { background: #f2f3f5; color: #666; }
+.pp-status.is-on  { background: color-mix(in srgb, var(--bl-success) 14%, var(--bl-bg-1)); color: #00b42a; }
+.pp-status.is-off { background: var(--bl-bg-2); color: #666; }
 
 /* 值类型选择器 */
 .pd-vt-selector {
@@ -894,7 +894,7 @@ function onCancel() { emit('update:open', false) }
 }
 .pd-vt-item:hover { background: var(--bl-bg-2); }
 .pd-vt-item.is-selected {
-  background: #e8f3ff; color: #1677ff; font-weight: 500;
+  background: color-mix(in srgb, var(--bl-primary) 14%, var(--bl-bg-1)); color: #1677ff; font-weight: 500;
 }
 .pd-vt-item-label { flex: 1; font-size: 13px; }
 .pd-vt-item-domain {

@@ -370,7 +370,7 @@ const EpTreeRow = {
   position: relative;
   width: 1220px; max-width: 95vw;
   height: calc(100vh - 80px); max-height: 820px;
-  background: #fff; border-radius: 12px;
+  background: var(--bl-bg-1); border-radius: 12px;
   box-shadow: 0 12px 48px rgba(0,0,0,.18);
   display: flex; flex-direction: column;
   overflow: hidden;
@@ -399,7 +399,7 @@ const EpTreeRow = {
 .ep-tree {
   width: 230px; flex-shrink: 0;
   border-right: 1px solid var(--bl-divider);
-  background: #fafbfc;
+  background: color-mix(in srgb, var(--bl-bg-2) 45%, var(--bl-bg-1));
   display: flex; flex-direction: column;
 }
 .ep-tree-hd { padding: 10px 14px; font-size: 12px; color: var(--bl-text-3); border-bottom: 1px solid var(--bl-divider); }
@@ -427,14 +427,14 @@ const EpTreeRow = {
 .ep-clear:hover { background: var(--bl-bg-2); }
 
 /* ============ 卡片网格 ============ */
-.ep-grid-wrap { flex: 1; overflow: auto; padding: 14px; background: #f7f8fa; }
+.ep-grid-wrap { flex: 1; overflow: auto; padding: 14px; background: var(--bl-bg-2); }
 .ep-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 12px;
 }
 .ep-card {
-  background: #fff; border: 1px solid var(--bl-border); border-radius: 8px;
+  background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 8px;
   padding: 12px 14px;
   cursor: pointer;
   transition: border-color .12s, box-shadow .12s, background-color .12s;
@@ -476,8 +476,8 @@ const EpTreeRow = {
 
 /* 状态 pill */
 .ep-status { display: inline-block; padding: 1px 8px; border-radius: 8px; font-size: 11px; font-weight: 500; }
-.ep-status.is-on  { background: #e8fff4; color: #00b42a; }
-.ep-status.is-off { background: #f2f3f5; color: #888; }
+.ep-status.is-on  { background: color-mix(in srgb, var(--bl-success) 14%, var(--bl-bg-1)); color: #00b42a; }
+.ep-status.is-off { background: var(--bl-bg-2); color: var(--bl-text-3); }
 
 /* 说明: 截断 + 悬浮 title */
 .ep-desc {
@@ -498,7 +498,7 @@ const EpTreeRow = {
   display: flex; align-items: center; justify-content: space-between;
   padding: 10px 16px;
   border-top: 1px solid var(--bl-divider);
-  background: #fafbfc;
+  background: var(--bl-bg-2);
 }
 .ep-ft-l { font-size: 12px; }
 .ep-ft-r { display: inline-flex; gap: 8px; }

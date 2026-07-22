@@ -336,7 +336,7 @@ const TreeRow = {
 .otp-tree {
   border-right: 1px solid var(--bl-border);
   padding: 8px 6px; overflow: auto;
-  background: #f5f7fa;
+  background: color-mix(in srgb, var(--bl-bg-2) 45%, var(--bl-bg-1));
   min-height: 0;
 }
 .otp-tree-title {
@@ -446,7 +446,7 @@ const TreeRow = {
 .otp-tree .otp-tn-toggle:hover { color: var(--bl-primary); }
 /* 有箭头的 toggle 盖一层本地背景色，让竖虚线被向外延展 3px 遮住 */
 .otp-tree .otp-tn-toggle:not(.otp-tn-toggle-empty) {
-  background: #f5f7fa;
+  background: var(--bl-bg-2);
   border-radius: 3px;
   outline: 3px solid #f5f7fa;
 }

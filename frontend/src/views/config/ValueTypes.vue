@@ -1089,12 +1089,12 @@ onBeforeUnmount(() => {
 .vt-page-size { width: 64px; height: 26px; }
 
 /* 批量操作按钮 (统一 outline 配色: 删除红 / 启用绿 / 禁用灰 / 取消选择纯文字) */
-.vt-del-btn { background: #fff; border: 1px solid #f53f3f; color: #f53f3f; }
+.vt-del-btn { background: var(--bl-bg-1); border: 1px solid #f53f3f; color: #f53f3f; }
 .vt-del-btn:hover { background: #fff1f0; }
-.vt-ena-btn { background: #fff; border: 1px solid #00b42a; color: #00b42a; }
-.vt-ena-btn:hover { background: #e8fff4; }
-.vt-dis-btn { background: #fff; border: 1px solid #86909c; color: #4e5969; }
-.vt-dis-btn:hover { background: #f7f8fa; }
+.vt-ena-btn { background: var(--bl-bg-1); border: 1px solid #00b42a; color: #00b42a; }
+.vt-ena-btn:hover { background: color-mix(in srgb, var(--bl-success) 14%, var(--bl-bg-1)); }
+.vt-dis-btn { background: var(--bl-bg-1); border: 1px solid #86909c; color: #4e5969; }
+.vt-dis-btn:hover { background: var(--bl-bg-2); }
 .vt-clear-btn { color: var(--bl-text-3); }
 .vt-clear-btn:hover { color: var(--bl-primary); }
 
@@ -1102,9 +1102,18 @@ onBeforeUnmount(() => {
 .vt-drawer {
   position: fixed; top: 0; right: 0; bottom: 0;
   background: var(--bl-bg-1);
-  border-left: 1px solid var(--bl-border);
-  box-shadow: -4px 0 16px rgba(0,0,0,.10);
+  border-left: 1px solid var(--bl-border-strong);
+  /* 复用对象类型抽屉的双层左阴影, 让抽屉立体浮起 */
+  box-shadow:
+    -12px 0 32px rgba(0,0,0,0.22),
+    -2px 0 6px rgba(0,0,0,0.12);
   display: flex; flex-direction: column; min-width: 480px; z-index: 1000;
+}
+:root[data-theme="dark"] .vt-drawer {
+  box-shadow:
+    -16px 0 48px rgba(0,0,0,0.65),
+    -2px 0 8px rgba(0,0,0,0.5),
+    inset 1px 0 0 rgba(255,255,255,0.05);
 }
 .vt-drag-handle { position: absolute; left: -2px; top: 0; bottom: 0; width: 5px;
   cursor: col-resize; transition: background-color .15s; z-index: 6; }
@@ -1115,7 +1124,7 @@ onBeforeUnmount(() => {
 .vt-title { font-size: 14px; font-weight: 600; }
 
 .vt-body-2col { flex: 1; display: grid; grid-template-columns: 140px 1fr; overflow: hidden; min-height: 0; }
-.vt-tabs { background: #f5f7fa; border-right: 1px solid var(--bl-divider);
+.vt-tabs { background: var(--bl-bg-2); border-right: 1px solid var(--bl-divider);
   padding: 8px 6px; display: flex; flex-direction: column; gap: 2px; overflow: auto; }
 .vt-tab {
   text-align: left; padding: 8px 12px; border: 0; background: transparent;
@@ -1202,7 +1211,7 @@ onBeforeUnmount(() => {
   display: inline-flex; align-items: center; gap: 8px;
   height: 32px; padding: 0 10px;
   border: 1px solid var(--bl-border); border-radius: 4px;
-  background: #fff;
+  background: var(--bl-bg-1);
   cursor: pointer;
   font-size: 13px;
   transition: border-color .12s, background-color .12s;

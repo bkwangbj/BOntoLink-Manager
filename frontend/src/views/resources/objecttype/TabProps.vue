@@ -551,7 +551,7 @@ document.addEventListener('click', () => { addMenu.value = false })
   display: flex; justify-content: space-between; align-items: center;
   gap: 12px; flex-wrap: wrap;
   padding: 6px 0px;
-  /* background: #fff; border-radius: 8px;
+  /* background: var(--bl-bg-1); border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05); */
 }
 .pp-filters { display: inline-flex; gap: 8px; align-items: center; }
@@ -563,11 +563,11 @@ document.addEventListener('click', () => { addMenu.value = false })
 .pp-add-wrap { position: relative; }
 
 /* 按钮区: 批量格式化 / 删除 (仅选中后显示) / 新增属性 */
-.pp-batch-fmt { background: #fff; border: 1px solid var(--bl-border); color: var(--bl-text-1); }
+.pp-batch-fmt { background: var(--bl-bg-1); border: 1px solid var(--bl-border); color: var(--bl-text-1); }
 .pp-batch-fmt:hover { border-color: var(--bl-primary); color: var(--bl-primary); }
 /* 危险按钮: 白底红框红字 (per 截图) */
 .pp-del-btn {
-  background: #fff;
+  background: var(--bl-bg-1);
   border: 1px solid #f53f3f;
   color: #f53f3f;
 }
@@ -578,8 +578,8 @@ document.addEventListener('click', () => { addMenu.value = false })
 
 .pp-add-menu {
   position: absolute; top: 38px; right: 0; min-width: 240px;
-  background: #fff; border: 1px solid var(--bl-border); border-radius: 6px;
-  box-shadow: 0 4px 16px rgba(0,0,0,.10); padding: 4px; z-index: 10;
+  background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 6px;
+  box-shadow: var(--bl-shadow-2); padding: 4px; z-index: 10;
 }
 .pp-add-item { display: flex; gap: 10px; padding: 8px 10px; border-radius: 4px; cursor: pointer; font-size: 13px; }
 .pp-add-item:hover { background: var(--bl-bg-hover); }
@@ -599,7 +599,7 @@ document.addEventListener('click', () => { addMenu.value = false })
 /* === (3) 表格展示区 (spec §一(3) + §五) === */
 .pp-table-wrap {
   flex: 1; min-height: 0;
-  background: #fff; border-radius: 8px;
+  background: var(--bl-bg-1); border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   overflow: auto;
   position: relative;
@@ -608,6 +608,10 @@ document.addEventListener('click', () => { addMenu.value = false })
   width: 100%; min-width: 1500px;
   border-collapse: separate; border-spacing: 0;
   table-layout: fixed; /* 严格按 colgroup 分配宽度,避免列错位 */
+  /* 蓝调表头:跟随主题色, 深浅都成立(原来写死 #e8f3ff 深色下浅底浅字看不见) */
+  --pp-th-bg: color-mix(in srgb, var(--bl-primary) 10%, var(--bl-bg-1));
+  --pp-th-bg-hover: color-mix(in srgb, var(--bl-primary) 18%, var(--bl-bg-1));
+  --pp-th-line: color-mix(in srgb, var(--bl-primary) 24%, var(--bl-border));
 }
 /* 合并图标 + 名称 单元格 */
 .pp-name-cell { display: flex; align-items: center; gap: 8px; min-width: 0; }
@@ -615,25 +619,25 @@ document.addEventListener('click', () => { addMenu.value = false })
 /* 表头 */
 .pp-table thead th {
   position: sticky; top: 0; z-index: 3;
-  background: #e8f3ff;
+  background: var(--pp-th-bg);
   font-weight: 600; padding: 0 8px;
   font-size: 12px; height: 36px;
-  color: #333;
+  color: var(--bl-text-1);
   text-align: center;
   white-space: nowrap;
-  border-bottom: 1px solid #d6e8ff;
+  border-bottom: 1px solid var(--pp-th-line);
 }
-.pp-table thead th:hover { background: #d6e8ff; }
+.pp-table thead th:hover { background: var(--pp-th-bg-hover); }
 .pp-table thead th.t-left { text-align: left; }
 .th-sort { cursor: pointer; user-select: none; display: inline-flex; align-items: center; white-space: nowrap; }
 .th-sort:hover { color: var(--bl-primary); }
 .th-arrow { color: var(--bl-text-4); font-size: 11px; margin-left: 2px; }
 
 /* 表体 */
-.pp-table tbody tr { background: #fff; }
-.pp-table tbody tr:nth-child(even) { background: #fafafa; }
-.pp-table tbody tr:hover { background: #f5f7fa; }
-.pp-table tbody tr.is-selected { background: #e6f7ff !important; }
+.pp-table tbody tr { background: var(--bl-bg-1); }
+.pp-table tbody tr:nth-child(even) { background: var(--bl-bg-2); }
+.pp-table tbody tr:hover { background: var(--bl-bg-2); }
+.pp-table tbody tr.is-selected { background: color-mix(in srgb, var(--bl-primary) 12%, var(--bl-bg-1)) !important; }
 .pp-table tbody tr.is-editing { background: var(--bl-primary-soft) !important; }
 .pp-table td { padding: 0 8px; font-size: 12px; height: 36px; vertical-align: middle; }
 .pp-table td.t-left { text-align: left; }
@@ -648,8 +652,8 @@ document.addEventListener('click', () => { addMenu.value = false })
   display: inline-block; padding: 2px 10px; border-radius: 10px;
   font-size: 11px; font-weight: 500;
 }
-.pp-status.is-on  { background: #e8fff4; color: #00b42a; }
-.pp-status.is-off { background: #f2f3f5; color: #666; }
+.pp-status.is-on  { background: color-mix(in srgb, var(--bl-success) 14%, var(--bl-bg-1)); color: #00b42a; }
+.pp-status.is-off { background: var(--bl-bg-2); color: #666; }
 
 /* 锁定列: 左侧 3 列 (复选框 / 名称+图标 / 编码) + 右侧 1 列 (操作) */
 .pp-stk-l1, .pp-stk-l2, .pp-stk-l3 {
@@ -663,26 +667,26 @@ document.addEventListener('click', () => { addMenu.value = false })
 .pp-table tbody tr:hover .pp-stk-l1,
 .pp-table tbody tr:hover .pp-stk-l2,
 .pp-table tbody tr:hover .pp-stk-l3,
-.pp-table tbody tr:hover .pp-stk-r1 { background: #f5f7fa; }
+.pp-table tbody tr:hover .pp-stk-r1 { background: var(--bl-bg-2); }
 .pp-table tbody tr:nth-child(even) .pp-stk-l1,
 .pp-table tbody tr:nth-child(even) .pp-stk-l2,
 .pp-table tbody tr:nth-child(even) .pp-stk-l3,
-.pp-table tbody tr:nth-child(even) .pp-stk-r1 { background: #fafafa; }
+.pp-table tbody tr:nth-child(even) .pp-stk-r1 { background: var(--bl-bg-2); }
 .pp-table tbody tr.is-selected .pp-stk-l1,
 .pp-table tbody tr.is-selected .pp-stk-l2,
 .pp-table tbody tr.is-selected .pp-stk-l3,
-.pp-table tbody tr.is-selected .pp-stk-r1 { background: #e6f7ff !important; }
+.pp-table tbody tr.is-selected .pp-stk-r1 { background: color-mix(in srgb, var(--bl-primary) 12%, var(--bl-bg-1)) !important; }
 /* 表头锁定列: 角落 sticky-corner 需要 z-index 高于普通 sticky-top 表头,
    否则横向滚动时非锁定列表头会盖住锁定列表头 */
 .pp-table thead th.pp-stk-l1,
 .pp-table thead th.pp-stk-l2,
 .pp-table thead th.pp-stk-l3,
 .pp-table thead th.pp-stk-r1 {
-  background: #e8f3ff;
+  background: var(--pp-th-bg);
   z-index: 4 !important;  /* 角落: 同时 sticky top + left/right,层级最高 */
 }
-.pp-table thead th.pp-stk-l3 { box-shadow: 2px 0 4px -2px rgba(0,0,0,0.1), inset 0 -1px 0 #d6e8ff; }
-.pp-table thead th.pp-stk-r1 { box-shadow: -2px 0 4px -2px rgba(0,0,0,0.1), inset 0 -1px 0 #d6e8ff; }
+.pp-table thead th.pp-stk-l3 { box-shadow: 2px 0 4px -2px rgba(0,0,0,0.1), inset 0 -1px 0 var(--pp-th-line); }
+.pp-table thead th.pp-stk-r1 { box-shadow: -2px 0 4px -2px rgba(0,0,0,0.1), inset 0 -1px 0 var(--pp-th-line); }
 
 /* 拖拽视觉 */
 .pp-table tbody tr[draggable="true"] { cursor: grab; }

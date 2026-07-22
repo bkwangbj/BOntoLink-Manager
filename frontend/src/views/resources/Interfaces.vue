@@ -939,12 +939,12 @@ watch(() => route.query.openId, applyOpenId)
 .list-ft > div:first-child { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 0; }
 
 /* 批量操作按钮 (统一 outline 配色) */
-.if-del-btn { background: #fff; border: 1px solid #f53f3f; color: #f53f3f; }
+.if-del-btn { background: var(--bl-bg-1); border: 1px solid #f53f3f; color: #f53f3f; }
 .if-del-btn:hover { background: #fff1f0; }
-.if-ena-btn { background: #fff; border: 1px solid #00b42a; color: #00b42a; }
-.if-ena-btn:hover { background: #e8fff4; }
-.if-dis-btn { background: #fff; border: 1px solid #86909c; color: #4e5969; }
-.if-dis-btn:hover { background: #f7f8fa; }
+.if-ena-btn { background: var(--bl-bg-1); border: 1px solid #00b42a; color: #00b42a; }
+.if-ena-btn:hover { background: color-mix(in srgb, var(--bl-success) 14%, var(--bl-bg-1)); }
+.if-dis-btn { background: var(--bl-bg-1); border: 1px solid #86909c; color: #4e5969; }
+.if-dis-btn:hover { background: var(--bl-bg-2); }
 .if-clear-btn { color: var(--bl-text-3); }
 .if-clear-btn:hover { color: var(--bl-primary); }
 

@@ -407,7 +407,7 @@ const VtpTreeRow = {
   position: relative;  /* 缩放热区基于此绝对定位 */
   width: 1180px; max-width: 95vw;
   height: calc(100vh - 80px); max-height: 800px;
-  background: #fff; border-radius: 12px;
+  background: var(--bl-bg-1); border-radius: 12px;
   box-shadow: 0 12px 48px rgba(0,0,0,.18);
   display: flex; flex-direction: column;
   overflow: hidden;
@@ -440,7 +440,7 @@ const VtpTreeRow = {
 
 /* 左树 */
 .vtp-tree {
-  background: #fafbfc;
+  background: color-mix(in srgb, var(--bl-bg-2) 45%, var(--bl-bg-1));
   border-right: 1px solid var(--bl-divider);
   display: flex; flex-direction: column;
   overflow: hidden;
@@ -450,7 +450,7 @@ const VtpTreeRow = {
   padding: 8px 12px;
   font-size: 12px; color: var(--bl-text-3);
   border-bottom: 1px solid var(--bl-divider);
-  background: #fff;
+  background: var(--bl-bg-1);
 }
 .vtp-tree-wrap { flex: 1; min-height: 0; overflow: auto; padding: 6px 8px; }
 
@@ -461,7 +461,7 @@ const VtpTreeRow = {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   padding: 10px 14px;
   border-bottom: 1px solid var(--bl-divider);
-  background: #fff;
+  background: var(--bl-bg-1);
 }
 .vtp-bread { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--bl-text-1); flex-wrap: wrap; }
 .vtp-bread-sep { color: var(--bl-text-3); }
@@ -479,7 +479,7 @@ const VtpTreeRow = {
 }
 
 /* 列表 */
-.vtp-list-wrap { flex: 1; min-height: 0; overflow: auto; background: #fff; }
+.vtp-list-wrap { flex: 1; min-height: 0; overflow: auto; background: var(--bl-bg-1); }
 .vtp-table {
   width: 100%; min-width: 1280px;
   border-collapse: separate; border-spacing: 0;
@@ -488,7 +488,7 @@ const VtpTreeRow = {
 }
 .vtp-table thead th {
   position: sticky; top: 0; z-index: 2;
-  background: #f5f7fa;
+  background: var(--bl-bg-2);
   padding: 0 10px; height: 36px;
   font-weight: 600; color: var(--bl-text-1);
   border-bottom: 1px solid var(--bl-divider);
@@ -496,10 +496,10 @@ const VtpTreeRow = {
 }
 .vtp-table thead th.t-left { text-align: left; }
 .vtp-table thead th.t-center { text-align: center; }
-.vtp-table tbody tr { background: #fff; cursor: pointer; }
-.vtp-table tbody tr:nth-child(even) { background: #fafbfc; }
-.vtp-table tbody tr:hover { background: #f5f7fa; }
-.vtp-table tbody tr.is-on { background: #e6f7ff !important; }
+.vtp-table tbody tr { background: var(--bl-bg-1); cursor: pointer; }
+.vtp-table tbody tr:nth-child(even) { background: var(--bl-bg-2); }
+.vtp-table tbody tr:hover { background: var(--bl-bg-2); }
+.vtp-table tbody tr.is-on { background: color-mix(in srgb, var(--bl-primary) 12%, var(--bl-bg-1)) !important; }
 .vtp-table td { padding: 0 10px; height: 38px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
 .vtp-table td.t-left { text-align: left; }
 .vtp-table td.t-center { text-align: center; }
@@ -558,6 +558,6 @@ const VtpTreeRow = {
   border-radius: 9px; padding: 0 7px; min-width: 18px;
   height: 16px; line-height: 16px; text-align: center;
 }
-.vtp-tn.is-active .vtp-tn-count { background: #fff; color: var(--bl-primary); }
+.vtp-tn.is-active .vtp-tn-count { background: var(--bl-bg-1); color: var(--bl-primary); }
 .vtp-tn-kids { /* 子级缩进由 inline padding-left 控制 */ }
 </style>

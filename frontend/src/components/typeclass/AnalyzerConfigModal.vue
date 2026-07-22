@@ -142,7 +142,7 @@ const vClickOutside = {
 .acm-right { flex: 1; min-width: 0; padding: 14px 18px; overflow: auto; display: flex; flex-direction: column; }
 .acm-sec { font-size: 14px; font-weight: 600; color: var(--bl-text-1); margin-bottom: 8px; }
 .acm-sec2 { margin-top: 14px; }
-.acm-note { font-size: 12px; color: #00875a; background: #e8fff4; border-radius: 6px; padding: 7px 10px; margin-bottom: 10px; }
+.acm-note { font-size: 12px; color: #00875a; background: color-mix(in srgb, var(--bl-success) 14%, var(--bl-bg-1)); border-radius: 6px; padding: 7px 10px; margin-bottom: 10px; }
 .acm-mode { display: inline-flex; border: 1px solid var(--bl-border); border-radius: 6px; overflow: hidden; margin-bottom: 12px; }
 .acm-mode button { height: 28px; padding: 0 16px; border: 0; background: var(--bl-bg-1); color: var(--bl-text-2); cursor: pointer; font-size: 13px; }
 .acm-mode button + button { border-left: 1px solid var(--bl-border); }

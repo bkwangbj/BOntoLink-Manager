@@ -2115,12 +2115,12 @@ async function confirmPasteImport() {
 .et-pager-r { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; }
 
 /* 批量操作按钮 (统一 outline 配色) */
-.et-del-btn { background: #fff; border: 1px solid #f53f3f; color: #f53f3f; }
+.et-del-btn { background: var(--bl-bg-1); border: 1px solid #f53f3f; color: #f53f3f; }
 .et-del-btn:hover { background: #fff1f0; }
-.et-ena-btn { background: #fff; border: 1px solid #00b42a; color: #00b42a; }
-.et-ena-btn:hover { background: #e8fff4; }
-.et-dis-btn { background: #fff; border: 1px solid #86909c; color: #4e5969; }
-.et-dis-btn:hover { background: #f7f8fa; }
+.et-ena-btn { background: var(--bl-bg-1); border: 1px solid #00b42a; color: #00b42a; }
+.et-ena-btn:hover { background: color-mix(in srgb, var(--bl-success) 14%, var(--bl-bg-1)); }
+.et-dis-btn { background: var(--bl-bg-1); border: 1px solid #86909c; color: #4e5969; }
+.et-dis-btn:hover { background: var(--bl-bg-2); }
 .et-clear-btn { color: var(--bl-text-3); }
 .et-clear-btn:hover { color: var(--bl-primary); }
 
@@ -2148,7 +2148,7 @@ async function confirmPasteImport() {
 .sec { font-size: 12px; color: var(--bl-text-3); margin: 12px 0 6px;
   padding-left: 8px; border-left: 3px solid var(--bl-primary); font-weight: 500; }
 .mini-table { width: 100%; font-size: 12px; }
-.mini-table th { background: #fafafa; padding: 6px 8px; }
+.mini-table th { background: var(--bl-bg-2); padding: 6px 8px; }
 .mini-table td { padding: 6px 8px; }
 .item-table .bl-input.bl-input-xs { height: 26px; padding: 0 6px; font-size: 12px; width: 100%; min-width: 80px; }
 .item-row.is-editing { background: var(--bl-primary-soft) !important; }
@@ -2165,7 +2165,7 @@ async function confirmPasteImport() {
 }
 .item-table-scroll .item-table thead th {
   position: sticky; top: 0; z-index: 2;
-  background: #fafafa;
+  background: var(--bl-bg-2);
   box-shadow: inset 0 -1px 0 var(--bl-divider);
 }
 /* 分页钉条 */
@@ -2175,7 +2175,7 @@ async function confirmPasteImport() {
 }
 .et-page-size { width: 64px; height: 26px; }
 .item-row { cursor: default; }
-.item-row:hover { background: #f5f7fa; }
+.item-row:hover { background: var(--bl-bg-2); }
 
 .radio-group { display: inline-flex; gap: 20px; }
 .radio-item { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; }
@@ -2283,7 +2283,7 @@ async function confirmPasteImport() {
 .sync-actions { display: flex; gap: 8px; align-items: center; margin-top: 16px;
   padding-top: 14px; border-top: 1px dashed var(--bl-divider); }
 .sync-mode-btn { height: 30px; padding: 0 14px; font-size: 13px; border: 1px solid var(--bl-border);
-  background: #fff; color: var(--bl-text-secondary); cursor: pointer; transition: all .15s; }
+  background: var(--bl-bg-1); color: var(--bl-text-secondary); cursor: pointer; transition: all .15s; }
 .sync-mode-btn:first-child { border-radius: 4px 0 0 4px; }
 .sync-mode-btn:last-child  { border-radius: 0 4px 4px 0; border-left: none; }
 .sync-mode-btn.active { background: var(--bl-primary); color: #fff; border-color: var(--bl-primary); }
@@ -2312,7 +2312,7 @@ async function confirmPasteImport() {
 .et-paste-hd {
   display: flex; align-items: center; justify-content: space-between;
   padding: 14px 18px; border-bottom: 1px solid var(--bl-divider);
-  flex-shrink: 0; background: #fafbfc;
+  flex-shrink: 0; background: var(--bl-bg-2);
 }
 .et-paste-hd.is-draggable { cursor: move; }
 
@@ -2339,7 +2339,7 @@ async function confirmPasteImport() {
 
 .et-paste-tip {
   display: flex; align-items: center; gap: 8px;
-  padding: 12px 16px; background: #f7f8fa; border-radius: 6px;
+  padding: 12px 16px; background: var(--bl-bg-2); border-radius: 6px;
   font-size: 13px; color: var(--bl-text-2); margin-bottom: 16px;
 }
 
@@ -2362,7 +2362,7 @@ async function confirmPasteImport() {
 .et-paste-preview-toolbar {
   display: flex; align-items: center; justify-content: space-between;
   padding: 12px 20px; border-bottom: 1px solid var(--bl-divider);
-  background: #fafbfc; flex-shrink: 0;
+  background: var(--bl-bg-2); flex-shrink: 0;
 }
 
 .et-paste-preview-info {
@@ -2380,7 +2380,7 @@ async function confirmPasteImport() {
 
 .et-paste-table thead th {
   position: sticky; top: 0; z-index: 2;
-  background: #f7f8fa; border-bottom: 1px solid var(--bl-divider);
+  background: var(--bl-bg-2); border-bottom: 1px solid var(--bl-divider);
   padding: 0; height: 44px; text-align: left; font-size: 13px; font-weight: 500;
 }
 
@@ -2391,7 +2391,7 @@ async function confirmPasteImport() {
 .et-paste-field-select {
   flex: 1; height: 32px; border: 1px solid #d0d5dd; border-radius: 4px;
   padding: 0 8px; font-size: 13px; outline: none; cursor: pointer;
-  background: white; transition: border-color .2s;
+  background: var(--bl-bg-1); transition: border-color .2s;
 }
 .et-paste-field-select:hover { border-color: #165dff; }
 .et-paste-field-select:focus { border-color: #165dff; }
@@ -2409,7 +2409,7 @@ async function confirmPasteImport() {
 
 .et-paste-row-num {
   text-align: center; font-size: 12px; color: var(--bl-text-3);
-  background: #fafbfc; font-weight: 500;
+  background: var(--bl-bg-2); font-weight: 500;
 }
 
 .et-paste-cell-input {
@@ -2417,15 +2417,15 @@ async function confirmPasteImport() {
   border-radius: 4px; padding: 0 8px; font-size: 13px;
   outline: none; transition: border-color .2s, background .2s;
 }
-.et-paste-cell-input:hover { background: #f7f8fa; }
+.et-paste-cell-input:hover { background: var(--bl-bg-2); }
 .et-paste-cell-input:focus {
-  border-color: #165dff; background: white;
+  border-color: #165dff; background: var(--bl-bg-1);
 }
 
 .et-paste-preview-ft {
   display: flex; gap: 8px; padding: 14px 20px;
   border-top: 1px solid var(--bl-divider); justify-content: flex-end;
-  flex-shrink: 0; background: #fafbfc;
+  flex-shrink: 0; background: var(--bl-bg-2);
 }
 
 /* 动画 */

@@ -72,7 +72,7 @@ function reset() { dragIdx.value = -1; overIdx.value = -1 }
 /* 卡片高度由 X6 节点尺寸决定; 这里行高/表头高必须与编排组件的 HH/ROWH 常量一致, 否则端口与行错位 */
 .erx-card {
   width: 100%; height: 100%; box-sizing: border-box;
-  background: #fff; border: 2px solid transparent; border-radius: 8px;
+  background: var(--bl-bg-1); border: 2px solid transparent; border-radius: 8px;
   overflow: hidden; display: flex; flex-direction: column;
   font-size: 12.5px; box-shadow: 0 2px 8px rgba(0,0,0,.06);
 }
@@ -101,9 +101,9 @@ function reset() { dragIdx.value = -1; overIdx.value = -1 }
   padding: 0 14px; border-top: 1px solid #f0f0f0;
 }
 .erx-row:first-child { border-top: 0; }
-.erx-row.is-mapped { background: #f0fff4; }
+.erx-row.is-mapped { background: color-mix(in srgb, var(--bl-success) 12%, var(--bl-bg-1)); }
 .erx-row.is-sortable { cursor: grab; }
-.erx-row.is-sortable:hover { background: #f5f7fa; }
+.erx-row.is-sortable:hover { background: var(--bl-bg-2); }
 .erx-row.is-dragging { opacity: .4; }
 .erx-drop-line { position: absolute; left: 6px; right: 6px; top: -1px; height: 2px; background: #1677ff; border-radius: 1px; }
 .erx-no {
@@ -117,10 +117,10 @@ function reset() { dragIdx.value = -1; overIdx.value = -1 }
 }
 .erx-dt {
   font-size: 10px; color: #86909c; flex-shrink: 0;
-  background: #f2f3f5; padding: 1px 6px; border-radius: 3px;
+  background: var(--bl-bg-2); padding: 1px 6px; border-radius: 3px;
   font-family: ui-monospace, Consolas, monospace;
 }
-.erx-text { flex: 1; min-width: 0; color: #1d2129; }
+.erx-text { flex: 1; min-width: 0; color: var(--bl-text-1); }
 .erx-api { color: #86909c; font-family: ui-monospace, Consolas, monospace; }
 .erx-empty { padding: 16px; color: #86909c; font-size: 12px; text-align: center; }
 </style>

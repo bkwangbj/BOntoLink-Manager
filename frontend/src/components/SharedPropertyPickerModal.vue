@@ -384,7 +384,7 @@ const SppTreeRow = {
   position: relative;
   width: 1280px; max-width: 96vw;
   height: calc(100vh - 60px); max-height: 880px;
-  background: #fff; border-radius: 12px;
+  background: var(--bl-bg-1); border-radius: 12px;
   box-shadow: 0 12px 48px rgba(0,0,0,.18);
   display: flex; flex-direction: column;
   overflow: hidden;
@@ -430,11 +430,11 @@ const SppTreeRow = {
 .spp-chip {
   display: inline-flex; align-items: center; gap: 4px;
   padding: 2px 8px; border-radius: 12px;
-  background: #fff; border: 1px solid var(--bl-primary);
+  background: var(--bl-bg-1); border: 1px solid var(--bl-primary);
   color: var(--bl-primary); font-size: 12px;
   max-width: 200px;
 }
-.spp-chip.is-locked { background: #f2f3f5; border-color: #c9cdd4; color: var(--bl-text-3); }
+.spp-chip.is-locked { background: var(--bl-bg-2); border-color: #c9cdd4; color: var(--bl-text-3); }
 .spp-chip-ic { width: 14px; height: 14px; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .spp-chip-name { flex: 1; min-width: 0; }
 .spp-chip-x, .spp-chip-lock {
@@ -450,7 +450,7 @@ const SppTreeRow = {
 .spp-tree {
   width: 230px; flex-shrink: 0;
   border-right: 1px solid var(--bl-divider);
-  background: #fafbfc;
+  background: color-mix(in srgb, var(--bl-bg-2) 45%, var(--bl-bg-1));
   display: flex; flex-direction: column;
 }
 .spp-tree-hd { padding: 10px 14px; font-size: 12px; color: var(--bl-text-3); border-bottom: 1px solid var(--bl-divider); }
@@ -458,7 +458,7 @@ const SppTreeRow = {
 
 .spp-list {
   flex: 1; display: flex; flex-direction: column;
-  min-width: 0; background: #fff;
+  min-width: 0; background: var(--bl-bg-1);
 }
 .spp-list-hd {
   flex-shrink: 0; display: flex; align-items: center;
@@ -472,14 +472,14 @@ const SppTreeRow = {
   background: var(--bl-bg-2);
   box-shadow: inset 0 -1px 0 var(--bl-divider);
   font-weight: 600; padding: 0 8px;
-  font-size: 12px; height: 32px; color: #333;
+  font-size: 12px; height: 32px; color: var(--bl-text-1);
   white-space: nowrap;
 }
 .spp-table thead th.t-left { text-align: left; }
-.spp-table tbody tr { background: #fff; cursor: pointer; }
-.spp-table tbody tr:hover { background: #f5f7fa; }
+.spp-table tbody tr { background: var(--bl-bg-1); cursor: pointer; }
+.spp-table tbody tr:hover { background: var(--bl-bg-2); }
 .spp-table tbody tr.is-picked { background: var(--bl-primary-soft); }
-.spp-table tbody tr.is-picked.is-locked { background: #f2f3f5; opacity: .85; cursor: not-allowed; }
+.spp-table tbody tr.is-picked.is-locked { background: var(--bl-bg-2); opacity: .85; cursor: not-allowed; }
 .spp-table td { padding: 0 8px; font-size: 12px; height: 34px; vertical-align: middle; }
 .spp-table td.t-left { text-align: left; }
 .spp-table td.t-center { text-align: center; }
@@ -487,7 +487,7 @@ const SppTreeRow = {
 .spp-name-cell { display: inline-flex; align-items: center; gap: 6px; min-width: 0; max-width: 100%; }
 .spp-pic { width: 18px; height: 18px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .spp-locked-tag {
-  font-size: 10px; color: #86909c; background: #f2f3f5;
+  font-size: 10px; color: #86909c; background: var(--bl-bg-2);
   padding: 1px 6px; border-radius: 8px; margin-left: 4px; flex-shrink: 0;
 }
 
@@ -502,7 +502,7 @@ const SppTreeRow = {
 .spp-ft-r { display: inline-flex; gap: 8px; }
 
 /* tag-muted */
-:deep(.bl-tag-muted) { background: #f2f3f5; color: #86909c; }
+:deep(.bl-tag-muted) { background: var(--bl-bg-2); color: #86909c; }
 
 /* fade */
 .spp-fade-enter-active, .spp-fade-leave-active { transition: opacity .18s ease; }
@@ -537,6 +537,6 @@ const SppTreeRow = {
   padding: 0 7px; min-width: 18px; height: 17px;
   line-height: 17px; text-align: center;
 }
-.spp-tn.is-active .spp-tn-cnt { background: #fff; color: var(--bl-primary); }
+.spp-tn.is-active .spp-tn-cnt { background: var(--bl-bg-1); color: var(--bl-primary); }
 .spp-tn-kids { padding-left: 14px; }
 </style>

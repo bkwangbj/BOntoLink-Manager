@@ -629,7 +629,7 @@ function propTypeColor(p) {
   padding: 8px 10px;
   border: 1px solid var(--bl-border);
   border-radius: 4px;
-  background: #fff;
+  background: var(--bl-bg-1);
   font-family: inherit;
   font-size: 13px;
   line-height: 1.55;

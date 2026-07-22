@@ -224,7 +224,7 @@ function iconText(ic, t) { return `${BL.icon(ic, 12, '#fff')}<span>${t}</span>` 
 .toggle-knob {
   position: absolute; top: 2px; left: 2px;
   width: 18px; height: 18px; border-radius: 50%;
-  background: #fff;
+  background: var(--bl-bg-1);
   transition: transform .15s;
 }
 .toggle.is-on .toggle-knob { transform: translateX(16px); }

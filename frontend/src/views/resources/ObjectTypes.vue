@@ -1448,12 +1448,12 @@ watch(() => route.query.openId, applyOpenId)
 .ot-page-size { width: 64px; height: 26px; }
 
 /* 批量操作按钮 (删除红 outline / 启用绿 outline / 禁用灰 outline / 取消选择纯文字) */
-.ot-del-btn { background: #fff; border: 1px solid #f53f3f; color: #f53f3f; }
+.ot-del-btn { background: var(--bl-bg-1); border: 1px solid #f53f3f; color: #f53f3f; }
 .ot-del-btn:hover { background: #fff1f0; }
-.ot-ena-btn { background: #fff; border: 1px solid #00b42a; color: #00b42a; }
-.ot-ena-btn:hover { background: #e8fff4; }
-.ot-dis-btn { background: #fff; border: 1px solid #86909c; color: #4e5969; }
-.ot-dis-btn:hover { background: #f7f8fa; }
+.ot-ena-btn { background: var(--bl-bg-1); border: 1px solid #00b42a; color: #00b42a; }
+.ot-ena-btn:hover { background: color-mix(in srgb, var(--bl-success) 14%, var(--bl-bg-1)); }
+.ot-dis-btn { background: var(--bl-bg-1); border: 1px solid #86909c; color: #4e5969; }
+.ot-dis-btn:hover { background: var(--bl-bg-2); }
 .ot-clear-btn { color: var(--bl-text-3); }
 .ot-clear-btn:hover { color: var(--bl-primary); }
 

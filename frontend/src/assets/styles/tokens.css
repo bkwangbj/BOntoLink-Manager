@@ -34,7 +34,7 @@
   --bl-text-4: #b9c3d3;
   --bl-bg-0: #eceff5;       /* 页面 — 冷蓝灰 */
   --bl-bg-1: #FFFFFF;       /* 卡片 */
-  --bl-bg-2: #e6ecf5;       /* 软底 / 表头 / 选中分组 — 加深一档, 与白色表体/页底拉开 */
+  --bl-bg-2: #ebeff7;       /* 软底 / 选中分组 — 表头已用独立 thead-bg, 此处调淡一点点 */
   --bl-bg-hover: #f2f7fd;   /* 行 hover — 微蓝 */
   --bl-border: #e7ecf3;
   --bl-border-strong: #d6deea;
