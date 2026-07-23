@@ -81,19 +81,28 @@ foreach ($cls in $allClasses) {
     # 获取属性
     $propsUrl = "$BaseUrl/class-meta/classes/$($cls.id)/properties"
     $propsResp = Invoke-RestMethod -Uri $propsUrl -ErrorAction SilentlyContinue
+    if (-not $propsResp.data) {
+        Write-Host "    跳过(无属性数据): $($cls.display_name)" -ForegroundColor Yellow
+        continue
+    }
     $props = $propsResp.data | Where-Object { $_.status -eq 1 }
 
-    # 获取数据集(物理表)
-    $detailUrl = "$BaseUrl/resources/object-types/$($cls.id)"
-    $detail = (Invoke-RestMethod -Uri $detailUrl -ErrorAction SilentlyContinue).data
+    # 从属性中提取物理表信息(取第一个有 physical_table 的属性)
+    $primaryTable = $null
+    $primaryDs = "default_db"  # 默认数据源
 
-    if (-not $detail.classDatasources -or $detail.classDatasources.Count -eq 0) {
+    foreach ($p in $props) {
+        if ($p.physical_table) {
+            $primaryTable = $p.physical_table
+            # 尝试从 class_ds_id 映射获取数据源(如果有 API 支持)
+            break
+        }
+    }
+
+    if (-not $primaryTable) {
         Write-Host "    跳过(无物理表): $($cls.display_name)" -ForegroundColor Yellow
         continue
     }
-
-    $primaryTable = $detail.classDatasources[0].physical_table
-    $primaryDs = $detail.classDatasources[0].ds_code
 
     # 字段转换
     $fields = @()
