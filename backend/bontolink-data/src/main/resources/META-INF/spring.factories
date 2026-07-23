@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.beiktech.bontolink.data.config.BontoLinkDataAutoConfiguration

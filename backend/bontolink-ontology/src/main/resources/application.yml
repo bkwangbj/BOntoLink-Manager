@@ -1,0 +1,33 @@
+server:
+  port: 8089
+  servlet:
+    context-path: /bontolink-ontology
+
+spring:
+  application:
+    name: bontolink-ontology
+  profiles:
+    active: postgresql
+  flyway:
+    enabled: false  # 数据层模块已管理 Flyway
+  jackson:
+    default-property-inclusion: non_null
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+
+mybatis:
+  type-aliases-package: com.beiktech.bontolink.data.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 30
+
+# 本体服务配置
+bontolink:
+  ontology:
+    # Jena 存储模式: memory / tdb2
+    storage-mode: memory
+    # TDB2 目录（storage-mode=tdb2 时生效）
+    tdb2-location: ./data/tdb2
+    # 推理器类型: none / rdfs / owl
+    reasoner-type: rdfs

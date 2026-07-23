@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+export JAVA_HOME="D:/soft/Java/jdk-21.0.8+9"
+exec mvn "$@"

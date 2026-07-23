@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:${user.dir}/bontolink.db?journal_mode=WAL&busy_timeout=30000&foreign_keys=on
+    username:
+    password:
+    hikari:
+      maximum-pool-size: 1
+      minimum-idle: 1
+      pool-name: BontoLinkSQLitePool
+      connection-test-query: SELECT 1
+      connection-timeout: 30000
