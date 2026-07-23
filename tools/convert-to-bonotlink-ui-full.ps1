@@ -60,8 +60,8 @@ foreach ($et in $enumTypes) {
     $entries = @()
     foreach ($item in $items) {
         $entries += @{
-            code = $item.code_value
-            label = $item.display_label ?? $item.code_value
+            code = $item.code
+            label = $item.label ?? $item.code
         }
     }
 
