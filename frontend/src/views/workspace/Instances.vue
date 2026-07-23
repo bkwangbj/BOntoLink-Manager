@@ -5,12 +5,12 @@
       <button class="ix-back" title="返回" @click="goBack" v-html="BL.icon('arrowLeft', 16)"></button>
       <!-- 模块标题:图标 + 名称(位于返回按钮后、页签前);点击回到概览首页 -->
       <div class="ix-modtitle" title="回到探索实例总览页" @click="goHome">
-        <span class="ix-modtitle-ic" v-html="BL.icon('database', 15, 'var(--bl-primary)')"></span>
+        <span class="ix-modtitle-ic" v-html="BL.icon('database', 15, '#fff')"></span>
         <span class="ix-modtitle-txt">实例探索</span>
       </div>
       <div class="ix-tabs-list">
         <div v-for="t in tabs" :key="t.id" :class="['ix-tab', t.id===activeId && 'is-active']" @click="activeId=t.id">
-          <span class="ix-tab-ic" v-html="BL.icon(t.icon, 13, t.id===activeId ? (t.color||'var(--bl-primary)') : 'var(--bl-text-3)')"></span>
+          <span class="ix-tab-ic" v-html="BL.icon(t.icon, 13, t.id===activeId ? (t.color||'var(--bl-primary)') : 'rgba(255,255,255,.72)')"></span>
           <span class="ix-tab-title bl-truncate">{{ t.title }}</span>
           <button v-if="tabs.length>1" class="ix-tab-x" @click.stop="closeTab(t.id)" v-html="BL.icon('x', 15)"></button>
         </div>
@@ -324,33 +324,51 @@ onBeforeUnmount(() => document.removeEventListener('fullscreenchange', onFsChang
 .ix-root.is-max { position: fixed; inset: 0; z-index: 200; height: 100vh; }
 
 .ix-tabs-actions { display: flex; align-items: center; gap: 2px; padding-left: 8px; flex-shrink: 0; margin-left: auto; }
-.ix-back { width: 28px; height: 28px; margin: 0 6px 0 6px; border: 0; background: transparent; color: var(--bl-text-2); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.ix-back:hover { background: var(--bl-bg-hover); color: var(--bl-primary); }
+.ix-back { width: 28px; height: 28px; margin: 0 6px 0 6px; border: 0; background: transparent; color: #fff; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ix-back:hover { background: var(--hdr-btn-hover); color: #fff; }
 .ix-gbtn { width: 28px; height: 28px; border: 0; background: transparent; color: var(--bl-text-3); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
 .ix-gbtn:hover { background: var(--bl-bg-hover); color: var(--bl-primary); }
 
 /* 模块标题:图标 + 名称,内联在页签栏(返回按钮之后、页签之前) */
-.ix-modtitle { display: flex; align-items: center; gap: 6px; flex-shrink: 0; padding-right: 12px; margin-right: 8px; border-right: 1px solid var(--bl-border); cursor: pointer; }
-.ix-modtitle:hover .ix-modtitle-txt { color: var(--bl-primary); }
-.ix-modtitle:hover .ix-modtitle-ic { color: var(--bl-primary); }
-.ix-modtitle-ic { display: inline-flex; }
-.ix-modtitle-txt { font-size: 15px; font-weight: 600; color: var(--bl-text-1); white-space: nowrap; }
+.ix-modtitle { display: flex; align-items: center; gap: 6px; flex-shrink: 0; padding-right: 12px; margin-right: 8px; border-right: 1px solid rgba(255,255,255,.22); cursor: pointer; }
+.ix-modtitle:hover .ix-modtitle-txt { color: rgba(255,255,255,.82); }
+.ix-modtitle:hover .ix-modtitle-ic { color: rgba(255,255,255,.82); }
+.ix-modtitle-ic { display: inline-flex; color: #fff; }
+.ix-modtitle-txt { font-size: 15px; font-weight: 600; color: #fff; white-space: nowrap; }
 
 /* 顶部页签栏 */
+/* 顶栏与系统头部同色系:主题色渐变条 + 白字 */
 .ix-tabs {
   display: flex; align-items: center; gap: 8px; height: 40px; flex-shrink: 0;
-  background: var(--bl-bg-1); border-bottom: 1px solid var(--bl-border); padding: 0 10px;
+  padding: 0 10px; color: #fff;
+  --hdr-btn-hover: rgba(255,255,255,.16);
+  background:
+    linear-gradient(100deg,
+      color-mix(in srgb, var(--bl-primary) 88%, #071b52) 0%,
+      var(--bl-primary) 52%,
+      color-mix(in srgb, var(--bl-primary) 86%, #ffffff) 100%);
+  border-bottom: 1px solid rgba(255,255,255,0);
+  box-shadow: 0 1px 4px rgba(20,36,64,.14);
+}
+:root[data-theme="dark"] .ix-tabs {
+  --hdr-btn-hover: rgba(255,255,255,.08);
+  background:
+    linear-gradient(100deg,
+      color-mix(in srgb, var(--bl-primary) 6%, #0a1526) 0%,
+      color-mix(in srgb, var(--bl-primary) 10%, #0e1f38) 100%);
+  border-bottom-color: rgba(255,255,255,.06);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
 }
 .ix-tabs-list { flex: 1; display: flex; align-items: center; gap: 2px; overflow-x: auto; scrollbar-width: none; }
 .ix-tabs-list::-webkit-scrollbar { display: none; }
 .ix-tab {
   position: relative;
   display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 26px 0 10px;
-  background: var(--bl-bg-2); border: 1px solid transparent; border-radius: 7px; cursor: pointer; font-size: 12.5px;
-  color: var(--bl-text-3); max-width: 180px; flex-shrink: 0;
+  background: rgba(255,255,255,.14); border: 1px solid transparent; border-radius: 7px; cursor: pointer; font-size: 12.5px;
+  color: rgba(255,255,255,.82); max-width: 180px; flex-shrink: 0;
 }
-.ix-tab:hover { background: var(--bl-bg-hover); }
-.ix-tab.is-active { background: var(--bl-primary-soft); color: var(--bl-primary); font-weight: 600; border-color: var(--bl-primary-border); }
+.ix-tab:hover { background: rgba(255,255,255,.24); color: #fff; }
+.ix-tab.is-active { background: rgba(255,255,255,.95); color: var(--bl-primary); font-weight: 600; border-color: transparent; }
 .ix-tab-ic { display: inline-flex; flex-shrink: 0; }
 .ix-tab-title { min-width: 0; }
 /* 关闭按钮:不占位,hover 当前页签才显示 */
@@ -358,15 +376,22 @@ onBeforeUnmount(() => document.removeEventListener('fullscreenchange', onFsChang
 .ix-tab-x {
   position: absolute; top: 6px; right: 3px;
   width: 16px; height: 16px; padding: 0; border: 0; border-radius: 4px;
-  background: rgba(0, 0, 0, .06); color: var(--bl-text-2);
+  background: rgba(255, 255, 255, .18); color: rgba(255,255,255,.85);
   cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
   opacity: 0; visibility: hidden; transition: opacity .12s; z-index: 2; padding: 2px;
 }
 .ix-tab-x svg { display: block; }
 .ix-tab:hover .ix-tab-x, .ix-tab.is-active .ix-tab-x { opacity: 1; visibility: visible; }
-.ix-tab-x:hover { background: rgba(0, 0, 0, .12); color: var(--bl-text-1); }
-.ix-tab-add { width: 26px; height: 26px; padding: 0; border: 1px solid var(--bl-border); background: var(--bl-bg-2); color: var(--bl-text-2); border-radius: 6px; cursor: pointer; flex-shrink: 0; margin-left: 2px; display: inline-flex; align-items: center; justify-content: center; }
-.ix-tab-add:hover { background: var(--bl-primary-soft); border-color: var(--bl-primary-border); color: var(--bl-primary); }
+.ix-tab-x:hover { background: rgba(255, 255, 255, .32); color: #fff; }
+/* 激活态白胶囊内的关闭键改用深色, 保证在白底上可见 */
+.ix-tab.is-active .ix-tab-x { background: rgba(0,0,0,.08); color: var(--bl-text-2); }
+.ix-tab.is-active .ix-tab-x:hover { background: rgba(0,0,0,.16); color: var(--bl-text-1); }
+/* 深色: 激活胶囊改成比头部亮一档的 navy 卡(白胶囊太刺眼), 关闭键改浅色 */
+:root[data-theme="dark"] .ix-tab.is-active { background: #26324c; color: var(--bl-primary); }
+:root[data-theme="dark"] .ix-tab.is-active .ix-tab-x { background: rgba(255,255,255,.12); color: rgba(255,255,255,.8); }
+:root[data-theme="dark"] .ix-tab.is-active .ix-tab-x:hover { background: rgba(255,255,255,.22); color: #fff; }
+.ix-tab-add { width: 26px; height: 26px; padding: 0; border: 1px solid rgba(255,255,255,.24); background: rgba(255,255,255,.14); color: #fff; border-radius: 6px; cursor: pointer; flex-shrink: 0; margin-left: 2px; display: inline-flex; align-items: center; justify-content: center; }
+.ix-tab-add:hover { background: rgba(255,255,255,.26); border-color: rgba(255,255,255,.4); color: #fff; }
 .ix-tab-add svg { display: block; }
 
 /* 搜索栏(内嵌二级标签行右侧，靠右对齐、垂直居中) */

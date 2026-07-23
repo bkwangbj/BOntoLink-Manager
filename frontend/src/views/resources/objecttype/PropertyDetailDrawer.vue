@@ -707,7 +707,7 @@ function onCancel() { emit('update:open', false) }
 .pd-drag:hover, .pd-drag.is-resizing { background: var(--bl-primary); }
 
 .pd-hd { flex-shrink: 0; display: flex; align-items: center; gap: 8px;
-  padding: 10px 14px; border-bottom: 1px solid var(--bl-divider); }
+  padding: 10px 14px; border-bottom: 1px solid var(--bl-border-strong); background: var(--bl-bg-2); }
 .pd-ic { width: 32px; height: 32px; border-radius: 6px;
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .pd-title { font-size: 15px; font-weight: 600; }

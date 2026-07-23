@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180" viewBox="0 0 320 180">
+  <!-- 坐标轴 -->
+  <path d="M72 30 V150 H262" fill="none" stroke="#D6E4FF" stroke-width="4" stroke-linecap="round"/>
+  <!-- 散点 -->
+  <circle cx="104" cy="118" r="9" fill="#4080FF"/>
+  <circle cx="134" cy="92" r="9" fill="#6AA1FF"/>
+  <circle cx="118" cy="134" r="9" fill="#A9C9FF"/>
+  <circle cx="168" cy="104" r="9" fill="#4080FF"/>
+  <circle cx="190" cy="66" r="9" fill="#0E42D2"/>
+  <circle cx="210" cy="120" r="9" fill="#6AA1FF"/>
+  <circle cx="232" cy="82" r="9" fill="#4080FF"/>
+  <circle cx="150" cy="70" r="9" fill="#A9C9FF"/>
+</svg>

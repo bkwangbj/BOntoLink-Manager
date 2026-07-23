@@ -338,6 +338,21 @@ button { font-family: inherit; }
     inset 1px 0 0 rgba(255,255,255,0.05) !important;
 }
 
+:root[data-theme="light"] .ot-drawer-hd,
+:root[data-theme="light"] .et-drawer-hd,
+:root[data-theme="light"] .ds-drawer-hd,
+:root[data-theme="light"] .og-drawer-hd,
+:root[data-theme="light"] .gr-drawer-hd,
+:root[data-theme="light"] .vt-hd,
+:root[data-theme="light"] .tc-d-hd,
+:root[data-theme="light"] .pd-hd,
+:root[data-theme="light"] .lke-hd,
+:root[data-theme="light"] .detail-hd,
+:root[data-theme="light"] .et-detail-hd {
+  /* background: var(--bl-bg-2) !important; */
+  border-bottom: 1px solid var(--bl-border-strong) !important;
+  background: linear-gradient(270deg, #ebeff71a 25% 10%, rgb(235 239 247) 80%, rgb(235 239 247) 100%);
+}
 /* 所有抽屉头部 (各模块命名不一: -drawer-hd / -hd / detail-hd / pd-hd / lke-hd / tc-d-hd)
    在深色下用 bg-2 底色, 与抽屉体形成层次, 增强分区感. */
 :root[data-theme="dark"] .ot-drawer-hd,
@@ -349,9 +364,11 @@ button { font-family: inherit; }
 :root[data-theme="dark"] .tc-d-hd,
 :root[data-theme="dark"] .pd-hd,
 :root[data-theme="dark"] .lke-hd,
-:root[data-theme="dark"] .detail-hd {
-  background: var(--bl-bg-2) !important;
+:root[data-theme="dark"] .detail-hd,
+:root[data-theme="dark"] .et-detail-hd {
+  /* background: var(--bl-bg-2) !important; */
   border-bottom: 1px solid var(--bl-border) !important;
+  background: linear-gradient(275deg, #021334 10%, rgb(25 48 90) 80%,rgb(25 48 90) 100%);
 }
 
 /* 所有抽屉内部的 Tab 侧边栏 (xx-tab-side) 在深色下右边线 + 1px 高光分割. */

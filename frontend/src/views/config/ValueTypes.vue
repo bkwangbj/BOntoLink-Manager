@@ -1118,7 +1118,7 @@ onBeforeUnmount(() => {
 .vt-drag-handle { position: absolute; left: -2px; top: 0; bottom: 0; width: 5px;
   cursor: col-resize; transition: background-color .15s; z-index: 6; }
 .vt-drag-handle:hover, .vt-drag-handle.is-resizing { background: var(--bl-primary); }
-.vt-hd { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--bl-divider); flex-shrink: 0; }
+.vt-hd { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--bl-border-strong); flex-shrink: 0; background: var(--bl-bg-2); }
 .vt-ic { width: 32px; height: 32px; border-radius: 6px; background: var(--bl-primary);
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .vt-title { font-size: 14px; font-weight: 600; }

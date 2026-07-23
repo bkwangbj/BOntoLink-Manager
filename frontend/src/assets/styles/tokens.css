@@ -95,8 +95,8 @@
   /* 原生控件整页走深色渲染(复选框深底/滚动条/下拉) */
   color-scheme: dark;
   --bl-text-1: #eaf1fc;     /* 主文字 — 微蓝白 */
-  --bl-text-2: #aab8d0;
-  --bl-text-3: #8494b0;
+  --bl-text-2: #bac6dc;
+  --bl-text-3: #94a4bf;
   --bl-text-4: #4a5876;
   --bl-bg-0: #070d1a;       /* 页面 — 最深 navy */
   --bl-bg-1: #0f1829;       /* 卡片 — navy */

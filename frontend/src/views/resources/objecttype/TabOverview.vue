@@ -13,7 +13,7 @@
         <FieldRow label="API" inline hint="api_name · snake_case · 程序唯一标识 · 不可修改"><input class="bl-input bl-mono" :value="form.api_name" disabled /></FieldRow>
         <FieldRow label="标准名" inline hint="rdfs:label · 本体标准展示标签"><input class="bl-input" v-model="form.rdfs_label" /></FieldRow>
         <FieldRow label="命名空间" inline hint="ns_code · 绑定的命名空间编码"><input class="bl-input bl-mono" v-model="form.ns_code" /></FieldRow>
-        <FieldRow label="领域" inline hint="category_code · 所属业务领域"><span class="bl-tag">{{ form.categoryLabel || form.category_code || '—' }}</span></FieldRow>
+        <FieldRow label="领域" inline hint="category_code · 所属业务领域"><span class="ov-domain-val">{{ form.categoryLabel || form.category_code || '—' }}</span></FieldRow>
         <FieldRow label="所属分组" inline>
           <select class="bl-input" v-model="form.group_id">
             <option value="">— 未分组 —</option>
@@ -275,8 +275,8 @@ async function copy(t) {
 .ov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 16px; }
 
 .ov-flags { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.flag-grp { display: inline-flex; align-items: center; gap: 10px; padding: 8px 12px;
-  background: var(--bl-bg-2); border-radius: 4px; }
+.flag-grp { display: inline-flex; align-items: center; gap: 10px; padding: 8px 4px; }
+.ov-domain-val { font-size: 13px; color: var(--bl-text-1); }
 .flag-lbl { font-size: 12px; color: var(--bl-text-3); min-width: 60px; }
 
 /* 开关键 (统一替代之前的二选一块状按钮) */

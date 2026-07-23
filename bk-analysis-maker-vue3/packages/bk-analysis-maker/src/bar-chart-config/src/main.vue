@@ -17,7 +17,7 @@
     <div class="cfg-anchor-wrap">
       <div class="cfg-anchor-nav">
         <div
-          v-for="t in chartMenu"
+          v-for="t in visibleMenu"
           :key="t.key"
           :class="['cfg-anchor-item', activeConfig===t.key && 'is-on']"
           @click="scrollToSec(t.key)"
@@ -66,7 +66,7 @@
         />
 
         <CollapseItem
-          v-if="configs.branchType!=='stackedChart'"
+          v-if="configs.branchType!=='stackedChart' && !isRawEChart"
           v-model="showBorderRadius"
           name="柱图样式"
           @change="getChartBasicConfigData"
@@ -163,7 +163,7 @@
         </div>
         </div>
         <div
-          v-if="axisComps.length"
+          v-if="axisComps.length && !isRawEChart"
           id="cfgsec-axis"
           class="cfg-sec"
         >
@@ -178,7 +178,7 @@
             @chart-change="getChartBasicConfigData"
           />
         </div>
-        <div id="cfgsec-series" class="cfg-sec">
+        <div v-if="!isRawEChart" id="cfgsec-series" class="cfg-sec">
         <div class="cfg-sec-title">系列</div>
         <div
           class="copy-button-box"
@@ -291,6 +291,9 @@ export default {
     }
   },
   computed: {
+    // 桑基/矩形树/旭日/关系图:rawEChart 直通,坐标轴/系列/柱样式不适用 → 配置面板隐藏这些区块
+    isRawEChart () { return ['sankeyChart', 'treemapChart', 'sunburstChart', 'graphChart', 'themeRiverChart', 'boxplotChart', 'gradeGaugeChart'].includes(this.configs.branchType) },
+    visibleMenu () { return this.isRawEChart ? this.chartMenu.filter(t => t.key !== 'axis' && t.key !== 'series') : this.chartMenu },
     basicComps () { return this.componentsList.filter(n => this.configType[n] === 'basic') },
     axisComps () { return this.componentsList.filter(n => this.configType[n] === 'axis') },
     otherComps () { return this.componentsList.filter(n => this.configType[n] === 'other') },
@@ -424,7 +427,10 @@ export default {
     async saveChartCfg (data) {
       let form = {}
       this.componentsList.forEach(name => {
-        const formData = this.$refs[name + 'form'][0].saveFormData()
+        // rawEChart 图隐藏了坐标轴/系列等配置组件, 对应 ref 不存在 → 跳过, 避免保存报错
+        const ref = this.$refs[name + 'form']
+        if (!ref || !ref[0] || typeof ref[0].saveFormData !== 'function') return
+        const formData = ref[0].saveFormData()
         if (name === 'axis') {
           form = { ...form, ...formData }
         } else if (name === 'tooltip') {
@@ -434,14 +440,17 @@ export default {
           form[name] = formData
         }
       })
-      const { series, filterDataEmpty, autoSeries } = this.$refs.seriesConfigRef.saveFormData()
-      form.series = series
-      form.filterDataEmpty = filterDataEmpty
-      form.autoSeries = autoSeries
+      // 系列配置(rawEChart 图已隐藏,ref 不存在时跳过,保留原 series 不动)
+      if (this.$refs.seriesConfigRef && typeof this.$refs.seriesConfigRef.saveFormData === 'function') {
+        const { series, filterDataEmpty, autoSeries } = this.$refs.seriesConfigRef.saveFormData()
+        form.series = series
+        form.filterDataEmpty = filterDataEmpty
+        form.autoSeries = autoSeries
+        this.seriesList = utils.deepClone(form.series)
+      }
       form.color = this.colorList
       form.borderRadius = this.borderRadius
       form.showBorderRadius = this.showBorderRadius
-      this.seriesList = utils.deepClone(form.series)
       const config = utils.deepClone(data)
       config.configOption = Object.assign(config.configOption, form)
       this.$emit('saveChartCfg', config)
@@ -454,16 +463,16 @@ export default {
     configOptionInit () {
       this.$nextTick(() => {
         if (this.configs.configOption) {
-          if (!this.$refs.seriesConfigRef) {
-            return
-          }
           this.componentsList.forEach(name => {
+            // rawEChart 图隐藏了坐标轴/系列等组件, 对应 ref 不存在 → 跳过(避免提前中断,漏掉色系回填)
+            const ref = this.$refs[name + 'form']
+            if (!ref || !ref[0] || typeof ref[0].setFormData !== 'function') return
             if (name === 'axis') {
-              this.$refs[name + 'form'][0].setFormData(this.configs.configOption)
+              ref[0].setFormData(this.configs.configOption)
             } else if (name === 'tooltip') {
-              this.$refs[name + 'form'][0].setFormData(this.configs.configOption[name] || {}, this.configs.configOption.customConfig || {})
+              ref[0].setFormData(this.configs.configOption[name] || {}, this.configs.configOption.customConfig || {})
             } else {
-              this.$refs[name + 'form'][0].setFormData(this.configs.configOption[name] || {})
+              ref[0].setFormData(this.configs.configOption[name] || {})
             }
           })
         }
@@ -471,9 +480,12 @@ export default {
         this.borderRadius = this.configs.configOption?.borderRadius || [0, 0, 0, 0]
         this.colorList = this.configs.configOption?.color || this.pageConfig?.themeConfigs?.chartStyle?.themeStyle.colorList || []
         this.seriesList = utils.deepClone(this.configs.configOption?.series || [])
-        this.$refs.seriesConfigRef.setSeries(this.seriesList)
-        this.$refs.seriesConfigRef.setFilterDataEmpty(this.configs.configOption?.filterDataEmpty || false)
-        this.$refs.seriesConfigRef.setAutoSeries(this.configs.configOption?.autoSeries || false)
+        // 系列配置组件(rawEChart 图已隐藏 → ref 不存在时跳过)
+        if (this.$refs.seriesConfigRef) {
+          this.$refs.seriesConfigRef.setSeries(this.seriesList)
+          this.$refs.seriesConfigRef.setFilterDataEmpty(this.configs.configOption?.filterDataEmpty || false)
+          this.$refs.seriesConfigRef.setAutoSeries(this.configs.configOption?.autoSeries || false)
+        }
       })
     }
 

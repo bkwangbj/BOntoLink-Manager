@@ -518,8 +518,8 @@ function propTypeColor(p) {
 .detail-hd {
   height: 56px; padding: 0 14px;
   display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid var(--bl-divider);
-  gap: 8px; flex-shrink: 0;
+  border-bottom: 1px solid var(--bl-border-strong);
+  gap: 8px; flex-shrink: 0; background: var(--bl-bg-2);
 }
 .dh-title { font-size: var(--bl-fs-14); font-weight: 600; }
 .sp-ic {

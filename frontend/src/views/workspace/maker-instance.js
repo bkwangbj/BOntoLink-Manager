@@ -258,6 +258,18 @@ export function buildEmbedDefaultDataSource (classId, columns, filterParams = {}
         items: [{ label: '日期', field: 'date', value: 'date' }, { label: '数值', field: 'value', value: 'value' }]
       }
     }
+    // 散点图:需 x/y 两个数值轴,实例单维聚合(类目+计数)喂不了 → 静态演示
+    if (chartConfig.branchType === 'scatterChart') {
+      const demo = [{ x: 10, y: 20 }, { x: 25, y: 35 }, { x: 40, y: 15 }, { x: 55, y: 48 }, { x: 70, y: 30 }, { x: 85, y: 55 }]
+      return {
+        dataSourceConfig: { type: 'static', data: demo, value: JSON.stringify(demo), paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {}, fieldOptions },
+        items: [{ label: 'X轴', field: 'x', value: 'x' }, { label: 'Y轴', field: 'y', value: 'y' }]
+      }
+    }
+    // 漏斗图 / 热力图(funnelChart/heatmapChart)不特判 → 走下方默认绑定(维度→x, 计数→y),
+    // renderFunnel/renderHeatmap 直接读 x/y(/value), 与看板数据一致
+    // 桑基/矩形树/旭日/关系/主题河流/箱线/分段仪表:rawEChart 直通 + 内置 demo(结构特殊,实例聚合喂不了) → 不绑定
+    if (['sankeyChart', 'treemapChart', 'sunburstChart', 'graphChart', 'themeRiverChart', 'boxplotChart', 'gradeGaugeChart'].includes(chartConfig.branchType)) return null
     // 地图:仅散点地图(scatterMap)绑逐点经纬度;需对象类型有经度/纬度字段,否则保持静态演示
     if (chartConfig.type === 'BKMapChart') {
       if (chartConfig.branchType !== 'scatterMap') return null

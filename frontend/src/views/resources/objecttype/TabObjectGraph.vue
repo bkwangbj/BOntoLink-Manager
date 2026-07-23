@@ -636,7 +636,7 @@ watch(() => props.classId, () => {
   width: 100%;
   height: 100%;
   min-height: 600px;
-  background: var(--bl-bg-0);
+  /* background: var(--bl-bg-0); */
   overflow: hidden;
   font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
 }

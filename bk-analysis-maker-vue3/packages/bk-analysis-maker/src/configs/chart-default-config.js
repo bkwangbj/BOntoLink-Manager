@@ -1747,6 +1747,174 @@ export const chartDefaultConfig = new Map([
       }
     }]
 
+  }],
+  ['scatterChart', {
+    color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],
+    tooltip: { trigger: 'item' },
+    legend: { show: false, alignPosition: 'topCenter' },
+    grid: { top: 40, left: 50, right: 40, bottom: 40, containLabel: true },
+    xAxis: {
+      show: true, type: 'value', scale: true, name: '',
+      axisLabel: { show: true }, axisLine: { show: true, lineStyle: { color: '#999' } },
+      splitLine: { show: true, lineStyle: { color: '#eee', type: 'dashed' } }
+    },
+    yAxis: {
+      show: true, type: 'value', scale: true, name: '',
+      axisLabel: { show: true }, axisLine: { show: false },
+      splitLine: { show: true, lineStyle: { color: '#eee', type: 'dashed' } }
+    },
+    series: [{ type: 'scatter', symbolSize: 14, data: [] }]
+  }],
+  ['funnelChart', {
+    color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],
+    tooltip: { trigger: 'item', formatter: '{b}: {c}' },
+    legend: { show: true, alignPosition: 'topCenter' },
+    series: [{
+      type: 'funnel', left: '10%', right: '10%', top: 40, bottom: 20,
+      minSize: '0%', maxSize: '100%', sort: 'descending', gap: 2,
+      label: { show: true, position: 'inside' },
+      labelLine: { length: 10, lineStyle: { width: 1, type: 'solid' } },
+      itemStyle: { borderColor: '#fff', borderWidth: 1 },
+      data: []
+    }]
+  }],
+  ['heatmapChart', {
+    color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],
+    tooltip: { trigger: 'item' },
+    legend: { show: false, alignPosition: 'topCenter' },
+    grid: { top: 40, left: 60, right: 30, bottom: 66, containLabel: true },
+    xAxis: {
+      show: true, type: 'category', data: [], name: '',
+      axisLabel: { show: true }, splitArea: { show: true }
+    },
+    yAxis: {
+      show: true, type: 'category', data: [], name: '',
+      axisLabel: { show: true }, splitArea: { show: true }
+    },
+    visualMap: {
+      show: true, min: 0, max: 100, calculable: true, orient: 'horizontal',
+      left: 'center', bottom: 6, itemWidth: 14, itemHeight: 90,
+      inRange: { color: ['#E8F3FF', '#4080FF', '#0E42D2'] }
+    },
+    series: [{
+      type: 'heatmap', data: [], label: { show: true },
+      emphasis: { itemStyle: { shadowBlur: 8, shadowColor: 'rgba(0,0,0,.3)' } }
+    }]
+  }],
+  ['sankeyChart', {
+    rawEChart: true, noGrid: true,
+    color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],
+    tooltip: { trigger: 'item', triggerOn: 'mousemove' },
+    series: [{
+      type: 'sankey', left: 20, right: 110, top: 24, bottom: 24,
+      emphasis: { focus: 'adjacency' },
+      lineStyle: { color: 'gradient', curveness: 0.5 },
+      label: { fontSize: 12 },
+      data: [{ name: '水库' }, { name: '河流' }, { name: '水厂' }, { name: '泵站' }, { name: '生活用水' }, { name: '工业用水' }, { name: '农业用水' }],
+      links: [
+        { source: '水库', target: '水厂', value: 60 }, { source: '河流', target: '水厂', value: 40 },
+        { source: '河流', target: '泵站', value: 30 }, { source: '水厂', target: '生活用水', value: 55 },
+        { source: '水厂', target: '工业用水', value: 45 }, { source: '泵站', target: '农业用水', value: 30 }
+      ]
+    }]
+  }],
+  ['treemapChart', {
+    rawEChart: true, noGrid: true,
+    color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],
+    tooltip: { trigger: 'item', formatter: '{b}: {c}' },
+    series: [{
+      type: 'treemap', roam: false, nodeClick: false, breadcrumb: { show: false },
+      label: { show: true, formatter: '{b}' },
+      levels: [{ itemStyle: { borderColor: '#fff', borderWidth: 2, gapWidth: 2 } }],
+      data: [
+        { name: '水利工程', value: 100, children: [{ name: '水库', value: 40 }, { name: '泵站', value: 20 }, { name: '水闸', value: 15 }, { name: '堤防', value: 25 }] },
+        { name: '水资源', value: 80, children: [{ name: '地表水', value: 50 }, { name: '地下水', value: 30 }] },
+        { name: '水环境', value: 50, children: [{ name: '水质', value: 30 }, { name: '污染源', value: 20 }] }
+      ]
+    }]
+  }],
+  ['sunburstChart', {
+    rawEChart: true, noGrid: true,
+    color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],
+    tooltip: { trigger: 'item' },
+    series: [{
+      type: 'sunburst', radius: [0, '92%'], label: { rotate: 'radial', minAngle: 8 },
+      itemStyle: { borderColor: '#fff', borderWidth: 1 },
+      data: [
+        { name: '水文', value: 30, children: [{ name: '测站', value: 15 }, { name: '河流', value: 15 }] },
+        { name: '水利工程', value: 40, children: [{ name: '水库', value: 20 }, { name: '泵站', value: 10 }, { name: '水闸', value: 10 }] },
+        { name: '水环境', value: 30, children: [{ name: '水质', value: 18 }, { name: '污染源', value: 12 }] }
+      ]
+    }]
+  }],
+  ['graphChart', {
+    rawEChart: true, noGrid: true,
+    color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],
+    tooltip: { trigger: 'item' },
+    legend: { show: true, top: 6 },
+    series: [{
+      type: 'graph', layout: 'force', roam: true,
+      label: { show: true, position: 'right' },
+      force: { repulsion: 140, edgeLength: 90, gravity: 0.1 },
+      lineStyle: { color: 'source', curveness: 0.12, width: 1.5 },
+      emphasis: { focus: 'adjacency' },
+      data: [
+        { name: '水文测站', symbolSize: 44, category: 0 }, { name: '河流', symbolSize: 34, category: 1 },
+        { name: '水库', symbolSize: 30, category: 1 }, { name: '水质指标', symbolSize: 26, category: 2 },
+        { name: '泵站', symbolSize: 24, category: 3 }, { name: '污染源', symbolSize: 22, category: 2 }
+      ],
+      categories: [{ name: '测站' }, { name: '水体' }, { name: '监测' }, { name: '设施' }],
+      links: [
+        { source: '水文测站', target: '河流' }, { source: '河流', target: '水库' },
+        { source: '河流', target: '水质指标' }, { source: '水库', target: '泵站' },
+        { source: '水质指标', target: '污染源' }, { source: '水文测站', target: '水质指标' }
+      ]
+    }]
+  }],
+  ['themeRiverChart', {
+    rawEChart: true, noGrid: true,
+    color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],
+    tooltip: { trigger: 'axis', axisPointer: { type: 'line', lineStyle: { color: 'rgba(0,0,0,0.2)', width: 1 } } },
+    legend: { show: true, top: 6 },
+    singleAxis: { type: 'time', top: 40, bottom: 40, axisTick: {}, axisLabel: {}, splitLine: { show: true, lineStyle: { color: ['#eee'] } } },
+    series: [{
+      type: 'themeRiver', label: { show: false },
+      emphasis: { itemStyle: { shadowBlur: 20, shadowColor: 'rgba(0,0,0,0.4)' } },
+      data: [
+        ['2024-01-01', 30, '降雨量'], ['2024-02-01', 45, '降雨量'], ['2024-03-01', 60, '降雨量'], ['2024-04-01', 40, '降雨量'], ['2024-05-01', 55, '降雨量'], ['2024-06-01', 70, '降雨量'],
+        ['2024-01-01', 20, '蒸发量'], ['2024-02-01', 28, '蒸发量'], ['2024-03-01', 35, '蒸发量'], ['2024-04-01', 50, '蒸发量'], ['2024-05-01', 42, '蒸发量'], ['2024-06-01', 38, '蒸发量'],
+        ['2024-01-01', 15, '径流量'], ['2024-02-01', 22, '径流量'], ['2024-03-01', 40, '径流量'], ['2024-04-01', 30, '径流量'], ['2024-05-01', 48, '径流量'], ['2024-06-01', 60, '径流量']
+      ]
+    }]
+  }],
+  ['boxplotChart', {
+    rawEChart: true,
+    color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],
+    tooltip: { trigger: 'item' },
+    grid: { top: 40, left: 60, right: 30, bottom: 40, containLabel: true },
+    xAxis: { type: 'category', data: ['测站A', '测站B', '测站C', '测站D'], boundaryGap: true, axisLabel: { show: true }, splitArea: { show: false }, splitLine: { show: false } },
+    yAxis: { type: 'value', name: '水位', splitArea: { show: true }, axisLabel: { show: true } },
+    series: [{
+      type: 'boxplot', itemStyle: { color: '#D6E4FF', borderColor: '#4080FF', borderWidth: 1.5 },
+      data: [[60, 75, 85, 95, 110], [50, 65, 78, 88, 100], [70, 82, 90, 100, 118], [55, 70, 80, 92, 105]]
+    }]
+  }],
+  ['gradeGaugeChart', {
+    rawEChart: true, noGrid: true, keepColor: true,
+    color: ['#F56C6C', '#FFC72F', '#3ED848'],
+    tooltip: { show: false },
+    series: [{
+      type: 'gauge', center: ['50%', '58%'], radius: '82%',
+      startAngle: 200, endAngle: -20, min: 0, max: 100, splitNumber: 10,
+      axisLine: { lineStyle: { width: 16, color: [[0.3, '#F56C6C'], [0.7, '#FFC72F'], [1, '#3ED848']] } },
+      pointer: { itemStyle: { color: 'auto' }, length: '62%', width: 5 },
+      axisTick: { distance: -22, length: 6, lineStyle: { color: '#fff', width: 1 } },
+      splitLine: { distance: -22, length: 16, lineStyle: { color: '#fff', width: 2 } },
+      axisLabel: { color: 'inherit', distance: 26, fontSize: 11 },
+      detail: { valueAnimation: true, formatter: '{value}%', color: 'inherit', fontSize: 24, offsetCenter: [0, '46%'] },
+      title: { offsetCenter: [0, '74%'], fontSize: 13, color: '#666' },
+      data: [{ value: 68, name: '水质达标率' }]
+    }]
   }]
 
 ])

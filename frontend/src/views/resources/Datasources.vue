@@ -1013,7 +1013,8 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
 .ds-drag-handle:hover, .ds-drag-handle.is-resizing { background: var(--bl-primary); }
 .ds-drawer-hd {
   flex-shrink: 0; display: flex; align-items: center; gap: 10px;
-  padding: 10px 14px; border-bottom: 1px solid var(--bl-divider);
+  padding: 10px 14px; border-bottom: 1px solid var(--bl-border-strong);
+  background: var(--bl-bg-2);
 }
 .ds-drawer-title { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
 /* 头部"测试"按钮: 主色描边,与右上角 × 关闭并列 */

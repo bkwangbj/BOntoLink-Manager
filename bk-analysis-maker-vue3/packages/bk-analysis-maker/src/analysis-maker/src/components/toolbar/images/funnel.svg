@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180" viewBox="0 0 320 180">
+  <!-- 漏斗四层 -->
+  <path d="M60 32 H260 L226 66 H94 Z" fill="#0E42D2"/>
+  <path d="M96 72 H224 L198 106 H122 Z" fill="#4080FF"/>
+  <path d="M124 112 H196 L178 146 H142 Z" fill="#6AA1FF"/>
+  <path d="M144 152 H176 L166 172 H154 Z" fill="#A9C9FF"/>
+</svg>

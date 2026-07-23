@@ -704,13 +704,13 @@ onMounted(async () => { await Promise.all([loadCategories(), loadRows(), loadEnu
 .tc-dr-main { flex: 1; min-height: 0; display: flex; }
 .tc-dr-col-l { flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden; }
 /* 参数预览面板:单独取一个更浅的背景色, 区别于左侧表单区(不跟随加深后的 bg-2) */
-.tc-dr-col-r { width: 44%; max-width: 520px; flex-shrink: 0; border-left: 1px solid var(--bl-border); overflow: auto; padding: 14px 16px; background: #f4f7fc; }
+.tc-dr-col-r { width: 44%; max-width: 520px; flex-shrink: 0; border-left: 1px solid var(--bl-border); overflow: auto; padding: 14px 16px; background: #f4f7fc90; }
 :root[data-theme="dark"] .tc-dr-col-r { background: #131d33; }
 .tc-dr-pv-hd { font-size: 14px; font-weight: 600; color: var(--bl-text-1); margin-bottom: 12px; }
 .tc-pv-sub { font-size: 12px; font-weight: 600; color: var(--bl-text-2); margin-bottom: 8px; }
 .tc-pv-sub2 { margin-top: 14px; }
 .tc-pv-empty { font-size: 12.5px; color: var(--bl-text-3); line-height: 1.8; padding: 20px 10px; background: var(--bl-bg-1); border: 1px dashed var(--bl-border); border-radius: 8px; }
-.tc-dr-hd { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--bl-divider); }
+.tc-dr-hd { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--bl-border-strong); background: var(--bl-bg-2); }
 .tc-dr-ic { width: 36px; height: 36px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .tc-dr-title { flex: 1; min-width: 0; } .tc-dr-cn { font-size: 14px; font-weight: 600; } .tc-dr-en { font-size: 11px; color: var(--bl-text-3); }
 .tc-dr-x { border: 0; background: transparent; cursor: pointer; color: var(--bl-text-3); padding: 4px; border-radius: 4px; }

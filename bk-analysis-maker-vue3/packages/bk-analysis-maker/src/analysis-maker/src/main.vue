@@ -747,7 +747,7 @@ export default {
       }))
       // 图表分组(与左侧图表资源同源、同分组)
       const LINE = ['lineChart', 'smoothLineChart', 'markLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap']
-      const ADV = ['bubbleChart', 'calendarHeatmap', 'polarChart']
+      const ADV = ['bubbleChart', 'calendarHeatmap', 'polarChart', 'scatterChart', 'funnelChart', 'heatmapChart', 'sankeyChart', 'treemapChart', 'sunburstChart', 'graphChart', 'themeRiverChart', 'boxplotChart', 'gradeGaugeChart']
       const toCard = c => ({ name: c.title, img: c.img ? imgObject[c.img] : '', chart: c })
       const bars = chartComponents.filter(c => (c.type === 'BKBarChart' || c.type === 'BKPolarChart') && !LINE.includes(c.branchType) && !ADV.includes(c.branchType))
       const charts = [

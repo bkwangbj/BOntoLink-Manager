@@ -138,7 +138,10 @@ onMounted(async () => {
 
 <style scoped>
 .tcp-mask { position: fixed; inset: 0; z-index: 1300; background: rgba(0,0,0,.36); display: flex; align-items: center; justify-content: center; }
-.tcp { width: 96vw; height: 92vh; max-width: 1280px; background: var(--bl-bg-1); border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.28); display: flex; flex-direction: column; overflow: hidden; }
+.tcp { width: 96vw; height: 92vh; max-width: 1280px; background: var(--bl-bg-1); border: 1px solid var(--bl-border-strong); border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.28); display: flex; flex-direction: column; overflow: hidden; }
+/* 深色: navy 弹框贴暗背景不明显 → 加深蒙层 + 浅色描边 + 更深阴影, 拉开层次 */
+:root[data-theme="dark"] .tcp-mask { background: rgba(0,0,0,.6); }
+:root[data-theme="dark"] .tcp { border-color: rgba(255,255,255,.12); box-shadow: 0 24px 70px rgba(0,0,0,.65); }
 .tcp-hd { display: flex; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--bl-divider); }
 .tcp-title { flex: 1; font-size: 16px; font-weight: 600; color: var(--bl-text-1); }
 .tcp-x { width: 30px; height: 30px; border: 0; background: transparent; border-radius: 6px; color: var(--bl-text-3); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }

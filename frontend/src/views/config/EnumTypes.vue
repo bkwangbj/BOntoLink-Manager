@@ -2200,7 +2200,8 @@ async function confirmPasteImport() {
 .et-drag-handle:hover, .et-drag-handle.is-resizing { background: var(--bl-primary); }
 .et-drawer-hd {
   display: flex; align-items: center; gap: 8px;
-  padding: 10px 14px; border-bottom: 1px solid var(--bl-divider);
+  padding: 10px 14px; border-bottom: 1px solid var(--bl-border-strong);
+  background: var(--bl-bg-2);
 }
 .et-drawer-ic {
   width: 32px; height: 32px; border-radius: 6px; background: var(--bl-primary);
