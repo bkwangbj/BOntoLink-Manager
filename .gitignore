@@ -1,4 +1,5 @@
-.claude/
+.claude/*
+!.claude/skills/
 frontend/dist/
 frontend/node_modules/
 .vscode/
