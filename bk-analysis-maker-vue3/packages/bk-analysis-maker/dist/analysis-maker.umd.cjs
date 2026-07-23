@@ -15569,34 +15569,54 @@
   }
   const chartItemList = ['BKBarChart', 'BKPieChart', 'BKRadarChart', 'BKPolarChart'];
 
+  // rawEChart 图(桑基/树图/旭日/关系图/主题河流/箱线/分段仪表盘)统一套主题:
+  // 跳过 BKBarChartThemeInit(会把 series 当柱图重建、丢失节点标签),只套 配色 / 坐标轴 / 图例 / 节点标签 的主题色。
+  // getDefaultOption(创建时) 与 getConfigTheme(切主题时) 共用, 保证两条路径行为一致。
+  function applyRawEChartTheme (option, theme, type, branchType) {
+    const chartTheme = getChartTheme(theme, type, branchType);
+    const boardColors0 = theme?.themeStyle?.colorList;
+    // keepColor 图(分段仪表盘)保留自带默认配色(红黄绿语义段),不套用看板通用色;其余 rawEChart 图跟随看板
+    if (!option.keepColor && Array.isArray(boardColors0) && boardColors0.length) option.color = XEUtils.clone(boardColors0, true);
+    // 坐标轴跟随主题:箱线图直角轴 / 主题河流 singleAxis 的文字/轴线/分隔线色随深浅主题
+    const tc = chartTheme.textColor; const alc = chartTheme.axisLineColor; const slc = chartTheme.splitLineColor; const fs = chartTheme.fontSize;
+    const applyAxis = (ax) => {
+      if (!ax || typeof ax !== 'object') return
+      if (tc) { ax.axisLabel = { ...(ax.axisLabel || {}), color: tc, fontSize: fs }; ax.nameTextStyle = { ...(ax.nameTextStyle || {}), color: tc, fontSize: fs }; }
+      if (alc) ax.axisLine = { ...(ax.axisLine || {}), lineStyle: { ...((ax.axisLine && ax.axisLine.lineStyle) || {}), color: alc } };
+      if (slc && ax.splitLine && ax.splitLine.show !== false) ax.splitLine = { ...ax.splitLine, lineStyle: { ...((ax.splitLine && ax.splitLine.lineStyle) || {}), color: slc } };
+    }
+    ;[].concat(option.xAxis || [], option.yAxis || [], option.singleAxis || []).forEach(applyAxis);
+    // 图例文字跟随主题
+    if (option.legend && tc) option.legend = { ...option.legend, textStyle: { ...(option.legend.textStyle || {}), color: tc } };
+    // tooltip 跟随主题(深色下白底→深底), 保留图表自己的 trigger/formatter/axisPointer, 只套配色
+    if (option.tooltip && option.tooltip.show !== false) {
+      const tt = chartTheme.tooltip || {};
+      const bg = tt.backgroundColor || chartTheme.backgroundColor;
+      const bc = tt.borderColor || chartTheme.borderColor;
+      const txc = (tt.textStyle && tt.textStyle.color) || tc;
+      option.tooltip = {
+        ...option.tooltip,
+        ...(bg ? { backgroundColor: bg } : {}),
+        ...(bc ? { borderColor: bc } : {}),
+        textStyle: { ...(option.tooltip.textStyle || {}), ...(txc ? { color: txc } : {}) }
+      };
+    }
+    // series 节点标签显式套色, 防止被全局 textStyle / themeInit 顶成不可见色(桑基/关系图白底→主题文字色;树图/旭日压色块→白字)
+    const onFillLabel = branchType === 'treemapChart' || branchType === 'sunburstChart';
+    if (Array.isArray(option.series)) {
+      option.series.forEach(s => {
+        if (s && s.label && s.label.show !== false) s.label = { ...s.label, show: true, color: onFillLabel ? '#fff' : (tc || s.label.color) };
+      });
+    }
+    return chartTheme
+  }
   async function getDefaultOption (tab, data, theme) {
     const option = XEUtils.clone(chartDefaultConfig.get(tab?.branchType || tab.type));
     const explainConfig = tab.explainConfig;
     // rawEChart 原始 option 图(桑基/树图/旭日/关系图等):整套 option 已内置,跳过 series 重建与 themeInit 合并
     // (themeInit 会往 series 展开 lineStyle,可能覆盖 type;这里只套用看板配色)
     if (option.rawEChart) {
-      const chartTheme = getChartTheme(theme, tab.type, tab.branchType);
-      const boardColors0 = theme?.themeStyle?.colorList;
-      // keepColor 图(分段仪表盘)保留自带默认配色(红黄绿语义段),不套用看板通用色;其余 rawEChart 图跟随看板
-      if (!option.keepColor && Array.isArray(boardColors0) && boardColors0.length) option.color = XEUtils.clone(boardColors0, true);
-      // 坐标轴跟随主题(基础配置):箱线图直角轴 / 主题河流 singleAxis 的文字/轴线/分隔线色随深浅主题, 避免深色模式下轴不自适应
-      const tc = chartTheme.textColor; const alc = chartTheme.axisLineColor; const slc = chartTheme.splitLineColor; const fs = chartTheme.fontSize;
-      const applyAxis = (ax) => {
-        if (!ax || typeof ax !== 'object') return
-        if (tc) { ax.axisLabel = { ...(ax.axisLabel || {}), color: tc, fontSize: fs }; ax.nameTextStyle = { ...(ax.nameTextStyle || {}), color: tc, fontSize: fs }; }
-        if (alc) ax.axisLine = { ...(ax.axisLine || {}), lineStyle: { ...((ax.axisLine && ax.axisLine.lineStyle) || {}), color: alc } };
-        if (slc && ax.splitLine && ax.splitLine.show !== false) ax.splitLine = { ...ax.splitLine, lineStyle: { ...((ax.splitLine && ax.splitLine.lineStyle) || {}), color: slc } };
-      }
-      ;[].concat(option.xAxis || [], option.yAxis || [], option.singleAxis || []).forEach(applyAxis);
-      // 图例文字跟随主题
-      if (option.legend && tc) option.legend = { ...option.legend, textStyle: { ...(option.legend.textStyle || {}), color: tc } };
-      // series 节点标签显式套色, 防止被全局 textStyle 顶成不可见色(桑基/关系图白底→主题文字色;树图/旭日压色块→白字)
-      const onFillLabel = tab.branchType === 'treemapChart' || tab.branchType === 'sunburstChart';
-      if (Array.isArray(option.series)) {
-        option.series.forEach(s => {
-          if (s && s.label && s.label.show !== false) s.label = { ...s.label, color: onFillLabel ? '#fff' : (tc || s.label.color) };
-        });
-      }
+      const chartTheme = applyRawEChartTheme(option, theme, tab.type, tab.branchType);
       explainConfig.textStyle = { color: chartTheme.textColor, fontSize: chartTheme.fontSize };
       return { configOption: option, chartTheme, explainConfig }
     }
@@ -15661,6 +15681,11 @@
 
   // 读取主题
   function getConfigTheme (option = {}, theme, type, branchType) {
+    // rawEChart 图:切主题时也走短路, 跳过 themeInit 重建 series, 只套主题色(否则节点标签会被当柱图重建而丢失)
+    if (option.rawEChart) {
+      const chartTheme = applyRawEChartTheme(option, theme, type, branchType);
+      return { configOption: option, chartTheme }
+    }
     const defaultStyle = getChartTheme(theme, type, branchType);
     let form = {};
     if (type === 'BKRankChart') {
@@ -32270,7 +32295,7 @@
       [vue.vShow, $props.appendToBody || $data.show]
     ])
   }
-  const ToolbarPannel = /*#__PURE__*/_export_sfc(_sfc_main$1x, [['render',_sfc_render$1w],['__scopeId',"data-v-6a6ca47c"]]);
+  const ToolbarPannel = /*#__PURE__*/_export_sfc(_sfc_main$1x, [['render',_sfc_render$1w],['__scopeId',"data-v-08887526"]]);
 
   /* unplugin-vue-components disabled */
 
@@ -37876,12 +37901,12 @@
             }, [
               ($data.designMode && !$props.isModal && !$data.layoutConfig.layout.length)
                 ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_35$1, [...(_cache[38] || (_cache[38] = [
-                    vue.createStaticVNode("<div class=\"beg-card\" data-v-38341111><div class=\"beg-icon\" data-v-38341111><svg width=\"56\" height=\"56\" viewBox=\"0 0 56 56\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" data-v-38341111><rect x=\"6\" y=\"6\" width=\"44\" height=\"44\" rx=\"8\" fill=\"#eaf2ff\" data-v-38341111></rect><rect x=\"14\" y=\"28\" width=\"6\" height=\"14\" rx=\"2\" fill=\"#6aa1ff\" data-v-38341111></rect><rect x=\"25\" y=\"20\" width=\"6\" height=\"22\" rx=\"2\" fill=\"#4080ff\" data-v-38341111></rect><rect x=\"36\" y=\"14\" width=\"6\" height=\"28\" rx=\"2\" fill=\"#1c5ce6\" data-v-38341111></rect></svg></div><div class=\"beg-title\" data-v-38341111>开始设计你的看板</div><div class=\"beg-desc\" data-v-38341111>这是一块空白画布,任选下面一种方式添加第一个图表</div><div class=\"beg-steps\" data-v-38341111><div class=\"beg-step\" data-v-38341111><span class=\"beg-step-no\" data-v-38341111>1</span><div class=\"beg-step-txt\" data-v-38341111><b data-v-38341111>添加图表</b><span data-v-38341111>点击顶部「+」或下方按钮,从「看板组件」中挑选图表 / 布局</span></div></div><div class=\"beg-step\" data-v-38341111><span class=\"beg-step-no\" data-v-38341111>2</span><div class=\"beg-step-txt\" data-v-38341111><b data-v-38341111>调整布局</b><span data-v-38341111>拖拽卡片移动位置,拖右下角缩放大小</span></div></div></div></div>", 1)
+                    vue.createStaticVNode("<div class=\"beg-card\" data-v-38461d96><div class=\"beg-icon\" data-v-38461d96><svg width=\"56\" height=\"56\" viewBox=\"0 0 56 56\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" data-v-38461d96><rect x=\"6\" y=\"6\" width=\"44\" height=\"44\" rx=\"8\" fill=\"#eaf2ff\" data-v-38461d96></rect><rect x=\"14\" y=\"28\" width=\"6\" height=\"14\" rx=\"2\" fill=\"#6aa1ff\" data-v-38461d96></rect><rect x=\"25\" y=\"20\" width=\"6\" height=\"22\" rx=\"2\" fill=\"#4080ff\" data-v-38461d96></rect><rect x=\"36\" y=\"14\" width=\"6\" height=\"28\" rx=\"2\" fill=\"#1c5ce6\" data-v-38461d96></rect></svg></div><div class=\"beg-title\" data-v-38461d96>开始设计你的看板</div><div class=\"beg-desc\" data-v-38461d96>这是一块空白画布,任选下面一种方式添加第一个图表</div><div class=\"beg-steps\" data-v-38461d96><div class=\"beg-step\" data-v-38461d96><span class=\"beg-step-no\" data-v-38461d96>1</span><div class=\"beg-step-txt\" data-v-38461d96><b data-v-38461d96>添加图表</b><span data-v-38461d96>点击顶部「+」或下方按钮,从「看板组件」中挑选图表 / 布局</span></div></div><div class=\"beg-step\" data-v-38461d96><span class=\"beg-step-no\" data-v-38461d96>2</span><div class=\"beg-step-txt\" data-v-38461d96><b data-v-38461d96>调整布局</b><span data-v-38461d96>拖拽卡片移动位置,拖右下角缩放大小</span></div></div></div></div>", 1)
                   ]))]))
                 : vue.createCommentVNode("", true),
               (!$data.designMode && !$props.isModal && !$data.layoutConfig.layout.length)
                 ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_36$1, [...(_cache[39] || (_cache[39] = [
-                    vue.createStaticVNode("<div class=\"beg-card beg-card-simple\" data-v-38341111><div class=\"beg-icon\" data-v-38341111><svg width=\"52\" height=\"52\" viewBox=\"0 0 56 56\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" data-v-38341111><rect x=\"6\" y=\"6\" width=\"44\" height=\"44\" rx=\"8\" fill=\"#eef0f3\" data-v-38341111></rect><rect x=\"14\" y=\"28\" width=\"6\" height=\"14\" rx=\"2\" fill=\"#c9cdd4\" data-v-38341111></rect><rect x=\"25\" y=\"20\" width=\"6\" height=\"22\" rx=\"2\" fill=\"#b0b5be\" data-v-38341111></rect><rect x=\"36\" y=\"14\" width=\"6\" height=\"28\" rx=\"2\" fill=\"#c9cdd4\" data-v-38341111></rect></svg></div><div class=\"beg-title\" data-v-38341111>看板暂无内容</div><div class=\"beg-desc\" data-v-38341111>点击右上角「设计」进入编辑,添加图表后即可在此查看</div></div>", 1)
+                    vue.createStaticVNode("<div class=\"beg-card beg-card-simple\" data-v-38461d96><div class=\"beg-icon\" data-v-38461d96><svg width=\"52\" height=\"52\" viewBox=\"0 0 56 56\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" data-v-38461d96><rect x=\"6\" y=\"6\" width=\"44\" height=\"44\" rx=\"8\" fill=\"#eef0f3\" data-v-38461d96></rect><rect x=\"14\" y=\"28\" width=\"6\" height=\"14\" rx=\"2\" fill=\"#c9cdd4\" data-v-38461d96></rect><rect x=\"25\" y=\"20\" width=\"6\" height=\"22\" rx=\"2\" fill=\"#b0b5be\" data-v-38461d96></rect><rect x=\"36\" y=\"14\" width=\"6\" height=\"28\" rx=\"2\" fill=\"#c9cdd4\" data-v-38461d96></rect></svg></div><div class=\"beg-title\" data-v-38461d96>看板暂无内容</div><div class=\"beg-desc\" data-v-38461d96>点击右上角「设计」进入编辑,添加图表后即可在此查看</div></div>", 1)
                   ]))]))
                 : vue.createCommentVNode("", true),
               vue.withDirectives(vue.createElementVNode("div", {
@@ -38097,7 +38122,7 @@
         : vue.createCommentVNode("", true)
     ], 2))
   }
-  const AnalysisMaker = /*#__PURE__*/_export_sfc(_sfc_main$1s, [['render',_sfc_render$1r],['__scopeId',"data-v-38341111"]]);
+  const AnalysisMaker = /*#__PURE__*/_export_sfc(_sfc_main$1s, [['render',_sfc_render$1r],['__scopeId',"data-v-38461d96"]]);
 
   AnalysisMaker.install = function (Vue) {
     Vue.component(AnalysisMaker.name, AnalysisMaker);
@@ -50424,7 +50449,7 @@
       _: 1
     }, 16, ["configs", "page-config", "save-able", "items", "rules", "tjb-u-r-l", "onChangeBranchType", "onSaveChartConfig", "onConfigOptionInit", "onBuildChartSeriesData"]))
   }
-  const BarChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$T, [['render',_sfc_render$S],['__scopeId',"data-v-c491ec31"]]);
+  const BarChartConfig = /*#__PURE__*/_export_sfc(_sfc_main$T, [['render',_sfc_render$S],['__scopeId',"data-v-595de915"]]);
 
   BarChartConfig.install = function (Vue) {
     Vue.component(libPrefix + BarChartConfig.name, BarChartConfig);
@@ -82986,6 +83011,7 @@
   /* unplugin-vue-components disabled */
 
   /* unplugin-vue-components disabled */
+
   const _sfc_main$B = {
     name: 'ChartContent',
 
@@ -83885,7 +83911,7 @@
       ]))
     ]))
   }
-  const ChartContent = /*#__PURE__*/_export_sfc(_sfc_main$B, [['render',_sfc_render$A],['__scopeId',"data-v-749ce60a"]]);
+  const ChartContent = /*#__PURE__*/_export_sfc(_sfc_main$B, [['render',_sfc_render$A],['__scopeId',"data-v-5d141a4d"]]);
 
   const _imports_0$1 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAtCAYAAADV2ImkAAAAAXNSR0IArs4c6QAAA1VJREFUaEPtmU1ME1EQx2febukHaCvxpvHogYORhANeaLkSVA58JF6MF/XgQZBooompBw8aQeLF6EUxHkgrMcavcLFo9EgkxMSEsxq/ggXjdrfd3TGvUGiXdnm7S0qr7PF13rzf/jsznXnF8JBCYPMgw870jeC0nY3dZ5HhTIxMStnZLI6GUNQ/bgNbpNoShU0jMMcwMy76tRXsTAoeZ5J6oOohITNzPqfjZ6fAPpn26Cbbvw28UZVAKfDe1NXrThVmcuA8GWpr1RWuqbLGs9hWOT0wmx7DtFN1C/aRsxQBWT1ot9+JICUFe+cgNTf4lAB3bmDoz69ruOgW1Lpv1wUKS6Q08vVsLqQu3cQFN75LgCNDylMC6M47Qry7OBI85cZpuT3hc5k7QHQy7xrgWXo0dNiN7/8L+MgT2pHWtKWCUgylzuk+X9m+oyYU/qeBayLpnCgcjxN71ZJNIJDfTbIR4B8m4ZijpOOAxYdputKUMaQvhTUZ5a6mBultsY1fAyXZjwZf60ioPL6jboBXqssnR8AdCdW22S8HIgFrS/U3zOSBk+ptIDjtFngFem37RnXYK3A0qV0loot1A1x1hWPJXEnfwQCDOukv1uowDAJIs8UK5hrkmXdH8fdKDD8HgK6qKWw9yEmViN2jgNmY/QFATfUBnFB6TWBJL7Drks5ptyaqcF+CpG+gzQFAi2dgL/2wKHD0kXaZTLriFTavsJd7Ca7cT8itNudZv2++kGAFuM5J7Zhh0MPlrtL7IwRsnen4rLZRc89f5jtkLxFQfLNghRW2jvl8fD8TCn2Nx9G0asarATRmuk1gPAQ8x6zVv5DC5YBb2uRbALQbED4i4AIBNQPBPv4LDACeSpdd4AgBW29++I1O6yFtfHWc8h6awh6EgMtNtdGEujb/CR/n3XAb2LuG9h5c18bNCwk0EeABIX0QedktB0bA+6/7/SdEYNf1EqKbuN2mKYww/KYvMCJ69pYrDEXAsccUAV2vfA/HSK0t4GQuZpJR6Q8cVWJST70A52FTvb6pegBeha25pOMzoyUkSmBrHXgdbC0Dl4X1BNyR0CYAaEC0fla0Ky5ryyHxUiLoSQ0EpsrtcZ10sclsOxlmkgD2eoIuBp5Q2hFZuBIsP+cvt32jwdmnaOMAAAAASUVORK5CYII=";
 

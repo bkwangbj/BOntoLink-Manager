@@ -378,34 +378,54 @@ function getVar (configVarListener, varConfig) {
 }
 const chartItemList = ['BKBarChart', 'BKPieChart', 'BKRadarChart', 'BKPolarChart']
 
+// rawEChart 图(桑基/树图/旭日/关系图/主题河流/箱线/分段仪表盘)统一套主题:
+// 跳过 BKBarChartThemeInit(会把 series 当柱图重建、丢失节点标签),只套 配色 / 坐标轴 / 图例 / 节点标签 的主题色。
+// getDefaultOption(创建时) 与 getConfigTheme(切主题时) 共用, 保证两条路径行为一致。
+function applyRawEChartTheme (option, theme, type, branchType) {
+  const chartTheme = getChartTheme(theme, type, branchType)
+  const boardColors0 = theme?.themeStyle?.colorList
+  // keepColor 图(分段仪表盘)保留自带默认配色(红黄绿语义段),不套用看板通用色;其余 rawEChart 图跟随看板
+  if (!option.keepColor && Array.isArray(boardColors0) && boardColors0.length) option.color = XEUtils.clone(boardColors0, true)
+  // 坐标轴跟随主题:箱线图直角轴 / 主题河流 singleAxis 的文字/轴线/分隔线色随深浅主题
+  const tc = chartTheme.textColor; const alc = chartTheme.axisLineColor; const slc = chartTheme.splitLineColor; const fs = chartTheme.fontSize
+  const applyAxis = (ax) => {
+    if (!ax || typeof ax !== 'object') return
+    if (tc) { ax.axisLabel = { ...(ax.axisLabel || {}), color: tc, fontSize: fs }; ax.nameTextStyle = { ...(ax.nameTextStyle || {}), color: tc, fontSize: fs } }
+    if (alc) ax.axisLine = { ...(ax.axisLine || {}), lineStyle: { ...((ax.axisLine && ax.axisLine.lineStyle) || {}), color: alc } }
+    if (slc && ax.splitLine && ax.splitLine.show !== false) ax.splitLine = { ...ax.splitLine, lineStyle: { ...((ax.splitLine && ax.splitLine.lineStyle) || {}), color: slc } }
+  }
+  ;[].concat(option.xAxis || [], option.yAxis || [], option.singleAxis || []).forEach(applyAxis)
+  // 图例文字跟随主题
+  if (option.legend && tc) option.legend = { ...option.legend, textStyle: { ...(option.legend.textStyle || {}), color: tc } }
+  // tooltip 跟随主题(深色下白底→深底), 保留图表自己的 trigger/formatter/axisPointer, 只套配色
+  if (option.tooltip && option.tooltip.show !== false) {
+    const tt = chartTheme.tooltip || {}
+    const bg = tt.backgroundColor || chartTheme.backgroundColor
+    const bc = tt.borderColor || chartTheme.borderColor
+    const txc = (tt.textStyle && tt.textStyle.color) || tc
+    option.tooltip = {
+      ...option.tooltip,
+      ...(bg ? { backgroundColor: bg } : {}),
+      ...(bc ? { borderColor: bc } : {}),
+      textStyle: { ...(option.tooltip.textStyle || {}), ...(txc ? { color: txc } : {}) }
+    }
+  }
+  // series 节点标签显式套色, 防止被全局 textStyle / themeInit 顶成不可见色(桑基/关系图白底→主题文字色;树图/旭日压色块→白字)
+  const onFillLabel = branchType === 'treemapChart' || branchType === 'sunburstChart'
+  if (Array.isArray(option.series)) {
+    option.series.forEach(s => {
+      if (s && s.label && s.label.show !== false) s.label = { ...s.label, show: true, color: onFillLabel ? '#fff' : (tc || s.label.color) }
+    })
+  }
+  return chartTheme
+}
 async function getDefaultOption (tab, data, theme) {
   const option = XEUtils.clone(chartDefaultConfig.get(tab?.branchType || tab.type))
   const explainConfig = tab.explainConfig
   // rawEChart 原始 option 图(桑基/树图/旭日/关系图等):整套 option 已内置,跳过 series 重建与 themeInit 合并
   // (themeInit 会往 series 展开 lineStyle,可能覆盖 type;这里只套用看板配色)
   if (option.rawEChart) {
-    const chartTheme = getChartTheme(theme, tab.type, tab.branchType)
-    const boardColors0 = theme?.themeStyle?.colorList
-    // keepColor 图(分段仪表盘)保留自带默认配色(红黄绿语义段),不套用看板通用色;其余 rawEChart 图跟随看板
-    if (!option.keepColor && Array.isArray(boardColors0) && boardColors0.length) option.color = XEUtils.clone(boardColors0, true)
-    // 坐标轴跟随主题(基础配置):箱线图直角轴 / 主题河流 singleAxis 的文字/轴线/分隔线色随深浅主题, 避免深色模式下轴不自适应
-    const tc = chartTheme.textColor; const alc = chartTheme.axisLineColor; const slc = chartTheme.splitLineColor; const fs = chartTheme.fontSize
-    const applyAxis = (ax) => {
-      if (!ax || typeof ax !== 'object') return
-      if (tc) { ax.axisLabel = { ...(ax.axisLabel || {}), color: tc, fontSize: fs }; ax.nameTextStyle = { ...(ax.nameTextStyle || {}), color: tc, fontSize: fs } }
-      if (alc) ax.axisLine = { ...(ax.axisLine || {}), lineStyle: { ...((ax.axisLine && ax.axisLine.lineStyle) || {}), color: alc } }
-      if (slc && ax.splitLine && ax.splitLine.show !== false) ax.splitLine = { ...ax.splitLine, lineStyle: { ...((ax.splitLine && ax.splitLine.lineStyle) || {}), color: slc } }
-    }
-    ;[].concat(option.xAxis || [], option.yAxis || [], option.singleAxis || []).forEach(applyAxis)
-    // 图例文字跟随主题
-    if (option.legend && tc) option.legend = { ...option.legend, textStyle: { ...(option.legend.textStyle || {}), color: tc } }
-    // series 节点标签显式套色, 防止被全局 textStyle 顶成不可见色(桑基/关系图白底→主题文字色;树图/旭日压色块→白字)
-    const onFillLabel = tab.branchType === 'treemapChart' || tab.branchType === 'sunburstChart'
-    if (Array.isArray(option.series)) {
-      option.series.forEach(s => {
-        if (s && s.label && s.label.show !== false) s.label = { ...s.label, color: onFillLabel ? '#fff' : (tc || s.label.color) }
-      })
-    }
+    const chartTheme = applyRawEChartTheme(option, theme, tab.type, tab.branchType)
     explainConfig.textStyle = { color: chartTheme.textColor, fontSize: chartTheme.fontSize }
     return { configOption: option, chartTheme, explainConfig }
   }
@@ -470,6 +490,11 @@ function formatInt (num, ceil = true) {
 
 // 读取主题
 function getConfigTheme (option = {}, theme, type, branchType) {
+  // rawEChart 图:切主题时也走短路, 跳过 themeInit 重建 series, 只套主题色(否则节点标签会被当柱图重建而丢失)
+  if (option.rawEChart) {
+    const chartTheme = applyRawEChartTheme(option, theme, type, branchType)
+    return { configOption: option, chartTheme }
+  }
   const defaultStyle = getChartTheme(theme, type, branchType)
   let form = {}
   if (type === 'BKRankChart') {
