@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.beiktech</groupId>
+        <artifactId>bontolink-backend</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>bontolink-admin</artifactId>
+    <packaging>jar</packaging>
+    <name>BOntoLink Admin</name>
+    <description>BOntoLink 管理后台服务</description>
+
+    <dependencies>
+        <!-- 依赖基础设施层 -->
+        <dependency>
+            <groupId>com.beiktech</groupId>
+            <artifactId>bontolink-base</artifactId>
+        </dependency>
+
+        <!-- 依赖本体服务层 -->
+        <dependency>
+            <groupId>com.beiktech</groupId>
+            <artifactId>bontolink-ontology</artifactId>
+        </dependency>
+
+        <!-- 依赖公共数据层 -->
+        <dependency>
+            <groupId>com.beiktech</groupId>
+            <artifactId>bontolink-data</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- 缓存（JetCache） -->
+        <dependency>
+            <groupId>com.alicp.jetcache</groupId>
+            <artifactId>jetcache-starter-redis-springdata</artifactId>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>bontolink-admin</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

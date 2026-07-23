@@ -280,12 +280,15 @@ PageHeader (标题 + 统计 + 筛选 + 搜索 + 新建按钮)
 | 文件 | 内容 |
 |---|---|
 | [UI规范.md](UI规范.md) | 完整视觉/交互/组件规范(19 章) |
+| [API_NAME_CODING_STANDARD.md](API_NAME_CODING_STANDARD.md) | **全局 api_name 编码规范**(10 模块命名规则 + 冲突检测 + 迁移方案) |
+| [API_NAME_CHEATSHEET.md](API_NAME_CHEATSHEET.md) | **api_name 速查表**(决策树 + 场景示例 + 禁止事项,新增实体前必看) |
 | [ClaudeCode使用指南.md](ClaudeCode使用指南.md) | 通用 Claude Code 协作方法论 |
 | [help.md](help.md) | 个人协作复盘 + 业界经验 + 行动项 |
 | `frontend/src/api/index.js` | 所有 API 客户端定义 |
 | `backend/src/main/resources/db/migration/sqlite/V1__baseline_schema.sql` | SQLite 表结构(Flyway baseline) |
 | `backend/src/main/resources/db/migration/common/V2__baseline_seed.sql` | 种子数据(两方言共用) |
 | [`_idx/`](_idx/README.md) | 模块预索引(10 文件,AI 快速定位各模块 API/页面/数据库) |
+| [`tools/`](tools/README.md) | **冲突检测工具**(SQL + PowerShell + Java 三种方式) |
 
 ---
 
