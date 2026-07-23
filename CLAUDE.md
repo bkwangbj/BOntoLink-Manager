@@ -289,6 +289,7 @@ PageHeader (标题 + 统计 + 筛选 + 搜索 + 新建按钮)
 | `backend/src/main/resources/db/migration/common/V2__baseline_seed.sql` | 种子数据(两方言共用) |
 | [`_idx/`](_idx/README.md) | 模块预索引(10 文件,AI 快速定位各模块 API/页面/数据库) |
 | [`tools/`](tools/README.md) | **冲突检测工具**(SQL + PowerShell + Java 三种方式) |
+| [`.claude/skills/maker-add-chart/`](.claude/skills/maker-add-chart/SKILL.md) | **maker 加图表 skill**(触点清单 + rawEChart 主题/标签/tooltip 坑 + 验证流程,`/maker-add-chart` 调用) |
 
 ---
 
