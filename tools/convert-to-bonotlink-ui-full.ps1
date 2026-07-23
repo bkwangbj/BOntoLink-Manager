@@ -179,6 +179,9 @@ foreach ($link in $linksResp.data) {
     $mappings = (Invoke-RestMethod -Uri $mappingsUrl -ErrorAction SilentlyContinue).data
 
     foreach ($m in $mappings) {
+        # 跳过无效映射(缺少源或目标类ID)
+        if (-not $m.class_from_id -or -not $m.class_to_id) { continue }
+
         $fromEntity = $classIdMap[$m.class_from_id]
         $toEntity = $classIdMap[$m.class_to_id]
         if (-not $fromEntity -or -not $toEntity) { continue }
