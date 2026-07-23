@@ -184,45 +184,36 @@ $linksResp = Invoke-RestMethod -Uri "$BaseUrl/link-types"
 foreach ($link in $linksResp.data) {
     if ($link.status -ne "active") { continue }
 
-    $mappingsUrl = "$BaseUrl/link-types/$($link.id)/mappings"
-    $mappings = (Invoke-RestMethod -Uri $mappingsUrl -ErrorAction SilentlyContinue).data
+    $fromEntity = $classIdMap[$link.l_object_type_id]
+    $toEntity   = $classIdMap[$link.r_object_type_id]
+    if (-not $fromEntity -or -not $toEntity) { continue }
 
-    foreach ($m in $mappings) {
-        # 跳过无效映射(缺少源或目标类ID)
-        if (-not $m.class_from_id -or -not $m.class_to_id) { continue }
+    $fromDs = ($entities | Where-Object { $_.name -eq $fromEntity }).dataSource
+    $toDs   = ($entities | Where-Object { $_.name -eq $toEntity }).dataSource
 
-        $fromEntity = $classIdMap[$m.class_from_id]
-        $toEntity = $classIdMap[$m.class_to_id]
-        if (-not $fromEntity -or -not $toEntity) { continue }
+    $joinType = if ($fromDs -ne $toDs) {
+        "CROSS_DB_WEAK"
+    } elseif ($link.l_cardinality -eq "one" -and $link.r_cardinality -eq "one") {
+        "SAME_DB_STRONG"
+    } else {
+        "SAME_DB_WEAK"
+    }
 
-        # 判断 JOIN 类型
-        # SAME_DB_STRONG: 同数据源 + 强关联(is_identifying=true)
-        # SAME_DB_WEAK: 同数据源 + 弱关联
-        # CROSS_DB_WEAK: 跨数据源
-        $fromDs = ($entities | Where-Object { $_.name -eq $fromEntity }).dataSource
-        $toDs = ($entities | Where-Object { $_.name -eq $toEntity }).dataSource
+    $fromField = $link.l_api_name ?? ""
+    $toField   = $link.r_api_name ?? ""
 
-        $joinType = if ($fromDs -ne $toDs) {
-            "CROSS_DB_WEAK"
-        } elseif ($link.is_identifying) {
-            "SAME_DB_STRONG"
-        } else {
-            "SAME_DB_WEAK"
+    $relationships += @{
+        name = "$fromEntity→$toEntity"
+        from = @{
+            entity = $fromEntity
+            field  = $fromField
         }
-
-        $relationships += @{
-            name = "$fromEntity→$toEntity"
-            from = @{
-                entity = $fromEntity
-                field = $m.field_from ?? ""
-            }
-            to = @{
-                entity = $toEntity
-                field = $m.field_to ?? ""
-            }
-            joinType = $joinType
-            description = $link.rdfs_comment ?? "$fromEntity 通过 $($m.field_from) 关联 $toEntity 的 $($m.field_to)"
+        to = @{
+            entity = $toEntity
+            field  = $toField
         }
+        joinType    = $joinType
+        description = if ($link.rdfs_comment) { $link.rdfs_comment } else { "$fromEntity.$fromField 关联 $toEntity.$toField" }
     }
 }
 Write-Host "    转换 $($relationships.Count) 个关系" -ForegroundColor Gray
