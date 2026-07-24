@@ -112,16 +112,28 @@ Remove-Item -Recurse -Force c:\beiktech-jyx\BOntoLink02\frontend\node_modules\.v
 | 仪表盘想默认红黄绿又可改 | 被看板色板覆盖 | `keepColor:true` + 渲染时把 color[0..2] 映射到 3 段 |
 | `getDefaultConfig` 报 series 相关 TDZ/undefined | rawEChart 短路未在 series 重建之前 | 短路必须在 getChartSeries/themeInit **之前** return |
 | **build 报 `Cannot resolve entry index.html` / vite 8** | `npx vite build` 拉到全局 vite 8, 把 lib 构建当 app 构建 | **必用 `npm run build`**(本地 vite 5.x, 走包内 lib 配置), 别用 npx |
-| **rawEChart 图图例位置配置不生效/乱跳** | `alignPosition→位置` 转换器在 `customResetChart` 里 rawEChart 短路**之后**, rawEChart 图走不到 | ①rawEChart 分支内补 alignPosition 转换 ②baked legend 统一用 `alignPosition`(顶部/底部×左中右, 表单可往返), 别用裸 `top/left` |
+| 图例位置不生效/乱跳(含自定义 render 图如玫瑰) | `alignPosition→位置` 转换器只在标准/rawEChart 分支, 自定义 render 图走不到 | 转换**统一提到 customResetChart 最前**(deepClone 后), 转换完 `delete alignPosition` 让下游同名转换 no-op;自定义 render 里重设的 legend 直接用 `left:'center'` |
 | 象形柱/箱线 等 symbol 色不随色系 | itemStyle 写死颜色 | 渲染时 `itemStyle.color = option.color[0]`(path:///内置形状可染色, image:// 不可) |
+| **rawEChart 图触发设置(改色/应用)后变空白** | **漏登记 isRawEChart** → 坐标轴/系列表单用标准结构覆盖 baked(尤其多网格数组被单 grid 覆盖) | ①新增 rawEChart 图**必须**登记 `isRawEChart` ②`basicComps` 对 rawEChart 过滤掉 `grid`(图表边距表单会覆盖多网格) |
+| **改配置后图例消失** | 图例配置表单 `show` 默认 `false`, baked legend 没写 `show:true` → 存回变 `show:false` | baked legend 必须带 `show: true`(+ alignPosition) |
+| **rawEChart 图 series 写死色 → 色系配置失效** | series 的 itemStyle/lineStyle/areaStyle 写死 color, 不吃 option.color | 移除 series 写死色让其跟随 `option.color[i]`;要保留语义默认色则 `keepColor:true`(默认色进 baked `color`, 色系配置改仍生效) |
+| **新增图型分组不同步**(某个添加面板里没归对组) | 图表分组逻辑**三处独立重复** | 改 LINE_TYPES/ADV/新分组要同步三处:`toolbar/pannel.vue`(左栏)、`analysis-maker/src/main.vue`(+组件浮层)、`grid-layout-content/chart-content.vue`(就近添加) |
 
 ---
 
-## 六、rawEChart 图当前名单(改动时一并考虑)
+## 六、rawEChart 图当前名单 + 铁律
 
-`sankeyChart` `treemapChart` `sunburstChart` `graphChart` `themeRiverChart` `boxplotChart` `gradeGaugeChart` `parallelChart` `pictorialBarChart` `candlestickChart` `treeChart`
-(以上在 `isRawEChart`、`applyRawEChartTheme`、`buildEmbedDefaultDataSource` return null、ADV 数组中均需登记)
+**当前名单**(21):`rainfallEvap` `sankeyChart` `treemapChart` `sunburstChart` `graphChart` `themeRiverChart` `boxplotChart` `gradeGaugeChart` `parallelChart` `pictorialBarChart` `candlestickChart` `treeChart` + 仪表盘 6(`speed/stage/temp/ring/barometer/multiGaugeChart`)+ 折线 rawEChart(`gradientStackAreaChart` `rainfallFlowChart` `timeAxisLineChart` `rainfallRunoffChart`)
 
-**图例位置约定**:baked legend 用 `alignPosition`(如 `'topCenter'`/`'bottomCenter'`),不要裸 `top:6`。顶部有轴名的图(平行坐标)图例放 `bottomCenter` 避让。rawEChart 分支已内置 alignPosition→echarts 位置转换。
+**新增一个 rawEChart 图, 必须同步登记 5 处**(漏一处就出 bug):
+1. `bar-chart-config` 的 **`isRawEChart`**(否则配置表单覆盖 baked → 空白)
+2. `buildEmbedDefaultDataSource` 的 **return null 名单**(否则实例绑定破坏结构)
+3. **ADV 数组 ×3**(pannel/main/chart-content, 否则某面板不归高级图表组)
+4. `applyRawEChartTheme` 自动处理(靠 `option.rawEChart` 标记, 无需登记)
+5. baked 配置本身要「**表单完整**」:legend 带 `show:true`+`alignPosition`;series **不写死色**(除非 `keepColor`);多网格/无网格结构靠 `basicComps` 过滤 grid 保护
 
-**展示型 vs 可绑数**:结构特殊图(桑基/树/关系/旭日/平行/K线/象形柱等)先做展示型 = rawEChart + 内置 demo + `buildEmbedDefaultDataSource` return null;直角系图要接实例数据时再写绑定映射。
+**图例位置约定**:baked legend 用 `alignPosition`(`'topCenter'`/`'bottomCenter'`),不要裸 `top:6`。顶部有轴名的图(平行坐标)放 `bottomCenter` 避让。转换器已统一在 customResetChart 最前。
+
+**分组三处重复**:图表分组(折线/柱/饼/仪表盘/高级/表格/地图/其他)在三个添加面板里各写一遍(pannel.vue 左栏 / main.vue +组件浮层 / chart-content.vue 就近添加)。**加分组或调 LINE_TYPES/ADV/GAUGE 名单要同步三处**, 否则某面板不同步。
+
+**展示型 vs 可绑数**:结构特殊图(桑基/树/关系/旭日/平行/K线/象形柱/仪表盘/双轴等)先做展示型 = rawEChart + 内置 demo + return null;直角系/饼(玫瑰/瀑布/标注折线等)可走默认绑定(x/y)或自定义 render 读 relList;需二维/多序列/多值的(凹凸/嵌套环/置信带)仍走内置 demo。
