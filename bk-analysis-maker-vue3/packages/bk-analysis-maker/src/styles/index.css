@@ -255,6 +255,7 @@
 :deep(.analysis-maker-wrapper .chart-cfg-wrap .chart-config-title) {
   font-size: 12px;
   color: #1a1a1a;
+  white-space: nowrap;
 }
 :deep(.analysis-maker-wrapper .chart-cfg-wrap .custom-group.inline-col-form .d-flex.ai-c.collapse-item-title .chart-config-title) {
   padding-left: 18px;

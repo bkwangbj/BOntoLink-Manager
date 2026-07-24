@@ -366,7 +366,7 @@ export default {
       }
 
       // 折线图(折线类 branchType)
-      const LINE_TYPES = ['lineChart', 'smoothLineChart', 'markLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap']
+      const LINE_TYPES = ['lineChart', 'smoothLineChart', 'markLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap', 'stackLineChart', 'markerLineChart', 'sectionsLineChart', 'gradientStackAreaChart', 'rainfallFlowChart', 'timeAxisLineChart', 'rainfallRunoffChart']
       const lineMenu = this.menus.find(c => c.key === 'line')
       if (lineMenu) {
         lineMenu.children = this.chartData.filter(item => LINE_TYPES.indexOf(item.branchType) !== -1).map(item => ({
@@ -377,7 +377,7 @@ export default {
         }))
       }
       // 高级图表(气泡图/日历热力图等,虽为 BKBarChart 但单独归组)
-      const ADVANCED_TYPES = ['bubbleChart', 'calendarHeatmap', 'polarChart', 'scatterChart', 'funnelChart', 'heatmapChart', 'sankeyChart', 'treemapChart', 'sunburstChart', 'graphChart', 'themeRiverChart', 'boxplotChart', 'gradeGaugeChart', 'parallelChart', 'pictorialBarChart', 'candlestickChart', 'treeChart', 'roseChart', 'waterfallChart', 'bumpChart', 'nestPieChart', 'effectScatterChart', 'gradientAreaChart', 'thresholdAreaChart', 'confidenceBandChart']
+      const ADVANCED_TYPES = ['bubbleChart', 'calendarHeatmap', 'polarChart', 'scatterChart', 'funnelChart', 'heatmapChart', 'sankeyChart', 'treemapChart', 'sunburstChart', 'graphChart', 'themeRiverChart', 'boxplotChart', 'gradeGaugeChart', 'parallelChart', 'pictorialBarChart', 'candlestickChart', 'treeChart', 'roseChart', 'waterfallChart', 'bumpChart', 'nestPieChart', 'effectScatterChart', 'gradientAreaChart', 'thresholdAreaChart', 'confidenceBandChart', 'speedGaugeChart', 'stageGaugeChart', 'tempGaugeChart', 'ringGaugeChart', 'barometerGaugeChart', 'multiGaugeChart']
       // 柱状图(其余 BKBarChart / 极坐标,排除折线类与高级图表)
       const barMenu = this.menus.find(c => c.key === 'chart')
       if (barMenu) {
@@ -388,14 +388,27 @@ export default {
           pKey: barMenu.key
         }))
       }
-      // 高级图表
+      // 仪表盘(从高级图表拆出:等级/速度/色阶/气温/得分环/气压/多标题 + 基础仪表盘 BKGaugeChart)
+      const GAUGE_TYPES = ['gradeGaugeChart', 'speedGaugeChart', 'stageGaugeChart', 'tempGaugeChart', 'ringGaugeChart', 'barometerGaugeChart', 'multiGaugeChart']
+      const isGauge = (item) => item.type === 'BKGaugeChart' || GAUGE_TYPES.indexOf(item.branchType) !== -1
+      // 高级图表(排除仪表盘)
       const advancedMenu = this.menus.find(c => c.key === 'advanced')
       if (advancedMenu) {
-        advancedMenu.children = this.chartData.filter(item => ADVANCED_TYPES.indexOf(item.branchType) !== -1).map(item => ({
+        advancedMenu.children = this.chartData.filter(item => ADVANCED_TYPES.indexOf(item.branchType) !== -1 && !isGauge(item)).map(item => ({
           name: item.title,
           img: item.img ? imgObject[item.img] : '',
           payload: item,
           pKey: advancedMenu.key
+        }))
+      }
+      // 仪表盘组
+      const gaugeMenu = this.menus.find(c => c.key === 'gauge')
+      if (gaugeMenu) {
+        gaugeMenu.children = this.chartData.filter(isGauge).map(item => ({
+          name: item.title,
+          img: item.img ? imgObject[item.img] : '',
+          payload: item,
+          pKey: gaugeMenu.key
         }))
       }
       // 饼形图

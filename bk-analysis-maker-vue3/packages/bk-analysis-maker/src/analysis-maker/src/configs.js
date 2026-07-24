@@ -63,6 +63,13 @@ const menuList = [
     children: []
   },
   {
+    name: '仪表盘',
+    key: 'gauge',
+    hasParent: true,
+    draggable: true,
+    children: []
+  },
+  {
     name: '高级图表',
     key: 'advanced',
     hasParent: true,

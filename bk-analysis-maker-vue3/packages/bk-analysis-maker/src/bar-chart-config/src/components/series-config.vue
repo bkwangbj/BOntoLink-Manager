@@ -1,42 +1,60 @@
 <template>
   <div class="full-box">
-    <div style="width: 100px; margin-bottom: 10px;">
-      <el-switch
-        v-model="filterDataEmpty"
-        :disabled="!saveAble"
-        class="am-switch active-switch"
-        @click.stop.prevent
-        @change="$emit('chartChange')"
-      />
-      <span class="chart-config-title">
-        无数据列过滤 </span>
+    <div class="ser-switch-row">
+      <span class="chart-config-title">无数据列过滤</span>
+      <div class="ser-switch-op">
+        <el-switch
+          v-model="filterDataEmpty"
+          :disabled="!saveAble"
+          class="am-switch active-switch"
+          @click.stop.prevent
+          @change="$emit('chartChange')"
+        />
+        <span
+          class="ser-enable"
+          :class="{ 'is-on': filterDataEmpty }"
+          @click.stop.prevent="saveAble && (filterDataEmpty = !filterDataEmpty, $emit('chartChange'))"
+        >启用</span>
+      </div>
     </div>
-    <div style="width: 100px;">
-      <el-switch
-        v-model="autoSeries"
-        :disabled="!saveAble"
-        class="am-switch active-switch"
-        size="small"
-        @click.stop.prevent
-        @change="$emit('chartChange')"
-      />
-      <span class="chart-config-title">
-        自生成系列</span>
+    <div class="ser-switch-row">
+      <span class="chart-config-title">自生成系列</span>
+      <div class="ser-switch-op">
+        <el-switch
+          v-model="autoSeries"
+          :disabled="!saveAble"
+          class="am-switch active-switch"
+          size="small"
+          @click.stop.prevent
+          @change="$emit('chartChange')"
+        />
+        <span
+          class="ser-enable"
+          :class="{ 'is-on': autoSeries }"
+          @click.stop.prevent="saveAble && (autoSeries = !autoSeries, $emit('chartChange'))"
+        >启用</span>
+      </div>
     </div>
     <div
       v-if="isLineChart"
-      style="width: 100px; margin-top: 10px;"
+      class="ser-switch-row"
     >
-      <el-switch
-        v-model="smoothAll"
-        :disabled="!saveAble"
-        class="am-switch active-switch"
-        size="small"
-        @click.stop.prevent
-        @change="toggleSmoothAll"
-      />
-      <span class="chart-config-title">
-        平滑曲线</span>
+      <span class="chart-config-title">平滑曲线</span>
+      <div class="ser-switch-op">
+        <el-switch
+          v-model="smoothAll"
+          :disabled="!saveAble"
+          class="am-switch active-switch"
+          size="small"
+          @click.stop.prevent
+          @change="toggleSmoothAll"
+        />
+        <span
+          class="ser-enable"
+          :class="{ 'is-on': smoothAll }"
+          @click.stop.prevent="saveAble && (smoothAll = !smoothAll, toggleSmoothAll(smoothAll))"
+        >启用</span>
+      </div>
     </div>
     <SeriesPlane
       name="数据系列"
@@ -419,5 +437,30 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+/* 系列开关行:标签左对齐(与数据系列/轴配置一致), 开关+「启用」文字靠右, 与上方轴配置视觉统一 */
+.ser-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  white-space: nowrap;
+  margin-bottom: 10px;
+  padding-right: 18px;
+  border-bottom: 1px #f2f3f5 solid;
+}
+.ser-switch-op {
+  display: flex;
+  align-items: center;
+}
+.ser-enable {
+  font-size: 12px;
+  line-height: 1;
+  color: #c0c4cc;
+  cursor: pointer;
+  user-select: none;
+  transition: color .15s;
+}
+.ser-enable.is-on {
+  color: #4e5969;
 }
 </style>

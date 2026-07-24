@@ -270,7 +270,7 @@ export function buildEmbedDefaultDataSource (classId, columns, filterParams = {}
     // renderFunnel/renderHeatmap 直接读 x/y(/value), 与看板数据一致
     // 桑基/矩形树/旭日/关系/主题河流/箱线/分段仪表:rawEChart 直通 + 内置 demo(结构特殊,实例聚合喂不了) → 不绑定
     // 凹凸图/嵌套环:结构特殊(时间×系列 / 两级分组), 单维聚合喂不了 → 内置 demo 不绑定;玫瑰/瀑布走下方默认绑定(x/y)
-    if (['sankeyChart', 'treemapChart', 'sunburstChart', 'graphChart', 'themeRiverChart', 'boxplotChart', 'gradeGaugeChart', 'parallelChart', 'pictorialBarChart', 'candlestickChart', 'treeChart', 'bumpChart', 'nestPieChart', 'confidenceBandChart'].includes(chartConfig.branchType)) return null
+    if (['rainfallEvap', 'sankeyChart', 'treemapChart', 'sunburstChart', 'graphChart', 'themeRiverChart', 'boxplotChart', 'gradeGaugeChart', 'parallelChart', 'pictorialBarChart', 'candlestickChart', 'treeChart', 'bumpChart', 'nestPieChart', 'confidenceBandChart', 'speedGaugeChart', 'stageGaugeChart', 'tempGaugeChart', 'ringGaugeChart', 'barometerGaugeChart', 'multiGaugeChart', 'gradientStackAreaChart', 'rainfallFlowChart', 'timeAxisLineChart', 'rainfallRunoffChart'].includes(chartConfig.branchType)) return null
     // 地图:仅散点地图(scatterMap)绑逐点经纬度;需对象类型有经度/纬度字段,否则保持静态演示
     if (chartConfig.type === 'BKMapChart') {
       if (chartConfig.branchType !== 'scatterMap') return null

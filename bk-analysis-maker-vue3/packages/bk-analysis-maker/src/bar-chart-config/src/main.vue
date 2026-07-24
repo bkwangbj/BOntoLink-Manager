@@ -324,9 +324,10 @@ export default {
   },
   computed: {
     // 桑基/矩形树/旭日/关系图:rawEChart 直通,坐标轴/系列/柱样式不适用 → 配置面板隐藏这些区块
-    isRawEChart () { return ['sankeyChart', 'treemapChart', 'sunburstChart', 'graphChart', 'themeRiverChart', 'boxplotChart', 'gradeGaugeChart', 'parallelChart', 'pictorialBarChart', 'candlestickChart', 'treeChart'].includes(this.configs.branchType) },
+    isRawEChart () { return ['rainfallEvap', 'sankeyChart', 'treemapChart', 'sunburstChart', 'graphChart', 'themeRiverChart', 'boxplotChart', 'gradeGaugeChart', 'parallelChart', 'pictorialBarChart', 'candlestickChart', 'treeChart', 'speedGaugeChart', 'stageGaugeChart', 'tempGaugeChart', 'ringGaugeChart', 'barometerGaugeChart', 'multiGaugeChart', 'gradientStackAreaChart', 'rainfallFlowChart', 'timeAxisLineChart', 'rainfallRunoffChart'].includes(this.configs.branchType) },
     visibleMenu () { return this.isRawEChart ? this.chartMenu.filter(t => t.key !== 'axis' && t.key !== 'series') : this.chartMenu },
-    basicComps () { return this.componentsList.filter(n => this.configType[n] === 'basic') },
+    // rawEChart 图:隐藏「图表边距(grid)」配置——其 baked 结构可能是多网格数组/无网格, 单 grid 表单会覆盖破坏(如雨量蒸发双网格)
+    basicComps () { return this.componentsList.filter(n => this.configType[n] === 'basic' && !(this.isRawEChart && n === 'grid')) },
     axisComps () { return this.componentsList.filter(n => this.configType[n] === 'axis') },
     otherComps () { return this.componentsList.filter(n => this.configType[n] === 'other') },
     colorsList () {

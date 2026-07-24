@@ -130,6 +130,16 @@ export default {
       } else {
         return
       }
+      // 图例 alignPosition → echarts 位置:统一在最前转换, 覆盖 rawEChart / 自定义 render / 标准 三条渲染路径
+      // (转换后删 alignPosition, 使下游 rawEChart 分支 / 标准分支的同名转换成为 no-op, 避免重复)
+      if (option.legend && option.legend.alignPosition) {
+        const alignList = {
+          topLeft: { left: 'left', top: 10, bottom: undefined }, topCenter: { left: 'center', top: 10, bottom: undefined }, topRight: { left: 'right', top: 10, bottom: undefined },
+          bottomLeft: { left: 'left', bottom: 5, top: undefined }, bottomCenter: { left: 'center', bottom: 5, top: undefined }, bottomRight: { left: 'right', bottom: 5, top: undefined }
+        }
+        option.legend = { ...option.legend, ...(alignList[option.legend.alignPosition] || {}) }
+        delete option.legend.alignPosition
+      }
       // 原始 echarts option 直通(双坐标/多 grid 等特殊结构):跳过单坐标系的 series/轴重建
       if (option.rawEChart) {
         // 非直角系图(桑基/树图/旭日/关系图等)剥离 themeInit 残留的直角坐标, 避免叠出空网格
@@ -241,6 +251,16 @@ export default {
       // 置信带:上/下限区间 + 均值线(需三值,走内置 demo)
       if (config.branchType === 'confidenceBandChart') {
         await this.renderConfidenceBand(option)
+        return
+      }
+      // 标注折线:折线 + 最高/最低点标注 + 均值线
+      if (config.branchType === 'markerLineChart') {
+        await this.renderMarkerLine(option)
+        return
+      }
+      // 分时段折线:折线 + markArea 时段带(正常/关注/超警)
+      if (config.branchType === 'sectionsLineChart') {
+        await this.renderSectionsLine(option)
         return
       }
       // 配置特殊处理
@@ -589,7 +609,7 @@ export default {
         const order = stations.slice().sort((a, b) => raw[b][mi] - raw[a][mi])
         order.forEach((s, idx) => { ranks[s][mi] = idx + 1 })
       })
-      option.legend = { show: true, alignPosition: 'topCenter', data: stations }
+      option.legend = { show: true, left: 'center', top: 10, data: stations }
       if (option.xAxis) { const x = Array.isArray(option.xAxis) ? option.xAxis[0] : option.xAxis; x.type = 'category'; x.data = months; x.boundaryGap = true }
       if (option.yAxis) { const y = Array.isArray(option.yAxis) ? option.yAxis[0] : option.yAxis; y.type = 'value'; y.inverse = true; y.min = 1; y.max = stations.length; y.interval = 1; y.name = '排名'; y.data = undefined }
       option.tooltip = { trigger: 'item', formatter: (p) => `${p.seriesName}<br/>${p.name}: 第 ${p.value} 名` }
@@ -693,13 +713,56 @@ export default {
       const toRgba = (hex, a) => { const h = String(hex).replace('#', ''); if (h.length !== 6) return hex; const n = parseInt(h, 16); return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})` }
       if (option.xAxis) { const x = Array.isArray(option.xAxis) ? option.xAxis[0] : option.xAxis; x.type = 'category'; x.data = days; x.boundaryGap = false }
       if (option.yAxis) { const y = Array.isArray(option.yAxis) ? option.yAxis[0] : option.yAxis; y.type = 'value'; y.scale = true; y.data = undefined }
-      option.legend = { show: true, alignPosition: 'topCenter', data: ['均值'] }
+      option.legend = { show: true, left: 'center', top: 10, data: ['均值'] }
       option.tooltip = { trigger: 'axis' }
       option.series = [
         { name: '下限', type: 'line', stack: 'conf', symbol: 'none', lineStyle: { opacity: 0 }, silent: true, data: lower },
         { name: '区间', type: 'line', stack: 'conf', symbol: 'none', lineStyle: { opacity: 0 }, areaStyle: { color: toRgba(c, 0.18) }, silent: true, data: band },
         { name: '均值', type: 'line', smooth: true, symbol: 'none', lineStyle: { width: 2, color: c }, itemStyle: { color: c }, data: mean }
       ]
+      this.option = option
+      await this.$nextTick()
+      if (this.$refs.chart && this.$refs.chart.setOption) this.$refs.chart.setOption(option, true)
+    },
+    // 标注折线:relList { x, y } → 折线 + 最高/最低点标注(markPoint) + 均值线(markLine)
+    async renderMarkerLine (option) {
+      const rows = (this.relList || []).map(it => ({ name: String(it.x ?? it.name ?? ''), value: Number(it.y ?? it.value) })).filter(d => d.name && !isNaN(d.value))
+      const c = (option.color && option.color[0]) || '#4080FF'
+      if (option.xAxis) { const x = Array.isArray(option.xAxis) ? option.xAxis[0] : option.xAxis; x.type = 'category'; x.data = rows.map(r => r.name); x.boundaryGap = false }
+      if (option.yAxis) { const y = Array.isArray(option.yAxis) ? option.yAxis[0] : option.yAxis; y.type = 'value'; y.scale = true; y.data = undefined }
+      option.legend = { show: false }
+      option.tooltip = { trigger: 'axis' }
+      option.series = [{
+        type: 'line', smooth: true, symbol: 'circle', symbolSize: 6, lineStyle: { width: 2, color: c }, itemStyle: { color: c },
+        markPoint: { symbolSize: 44, label: { fontSize: 11 }, data: [{ type: 'max', name: '最高' }, { type: 'min', name: '最低' }] },
+        markLine: { silent: true, symbol: 'none', label: { formatter: '均值 {c}', position: 'insideEndTop', fontSize: 11 }, lineStyle: { type: 'dashed', color: '#FF9F40' }, data: [{ type: 'average', name: '均值' }] },
+        data: rows.map(r => r.value)
+      }]
+      this.option = option
+      await this.$nextTick()
+      if (this.$refs.chart && this.$refs.chart.setOption) this.$refs.chart.setOption(option, true)
+    },
+    // 分时段折线:relList { x, y } → 折线 + markArea 时段带(按 y 的 60%/82% 分 正常/关注/超警)
+    async renderSectionsLine (option) {
+      const rows = (this.relList || []).map(it => ({ name: String(it.x ?? it.name ?? ''), value: Number(it.y ?? it.value) })).filter(d => d.name && !isNaN(d.value))
+      const vals = rows.map(r => r.value)
+      const maxV = vals.length ? Math.max(...vals) : 100
+      const warn = Math.round(maxV * 0.6); const alert = Math.round(maxV * 0.82)
+      const c = (option.color && option.color[0]) || '#4080FF'
+      if (option.xAxis) { const x = Array.isArray(option.xAxis) ? option.xAxis[0] : option.xAxis; x.type = 'category'; x.data = rows.map(r => r.name); x.boundaryGap = false }
+      if (option.yAxis) { const y = Array.isArray(option.yAxis) ? option.yAxis[0] : option.yAxis; y.type = 'value'; y.data = undefined }
+      option.legend = { show: false }
+      option.tooltip = { trigger: 'axis' }
+      option.series = [{
+        type: 'line', smooth: true, symbol: 'none', lineStyle: { width: 2.5, color: c }, itemStyle: { color: c },
+        markArea: { silent: true, data: [
+          [{ yAxis: 0, itemStyle: { color: 'rgba(62,216,72,0.10)' } }, { yAxis: warn }],
+          [{ yAxis: warn, itemStyle: { color: 'rgba(255,199,47,0.12)' } }, { yAxis: alert }],
+          [{ yAxis: alert, itemStyle: { color: 'rgba(245,108,108,0.12)' } }, { yAxis: maxV * 1.05 }]
+        ] },
+        markLine: { silent: true, symbol: 'none', label: { formatter: '{b}', position: 'insideEndTop', fontSize: 11 }, lineStyle: { type: 'dashed' }, data: [{ yAxis: alert, name: '超警', lineStyle: { color: '#F56C6C' } }, { yAxis: warn, name: '关注', lineStyle: { color: '#FFC72F' } }] },
+        data: vals
+      }]
       this.option = option
       await this.$nextTick()
       if (this.$refs.chart && this.$refs.chart.setOption) this.$refs.chart.setOption(option, true)

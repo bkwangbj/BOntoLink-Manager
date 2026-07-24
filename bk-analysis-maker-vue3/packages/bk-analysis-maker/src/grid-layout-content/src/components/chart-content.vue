@@ -344,15 +344,20 @@ export default {
   computed: {
     // 就近添加图表:图表选择弹层的分组数据(与左侧图表资源同源)
     pickerGroups () {
-      const LINE = ['lineChart', 'smoothLineChart', 'markLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap']
-      const ADV = ['bubbleChart', 'calendarHeatmap', 'polarChart', 'scatterChart', 'funnelChart', 'heatmapChart', 'sankeyChart', 'treemapChart', 'sunburstChart', 'graphChart', 'themeRiverChart', 'boxplotChart', 'gradeGaugeChart', 'parallelChart', 'pictorialBarChart', 'candlestickChart', 'treeChart', 'roseChart', 'waterfallChart', 'bumpChart', 'nestPieChart', 'effectScatterChart', 'gradientAreaChart', 'thresholdAreaChart', 'confidenceBandChart']
+      const LINE = ['lineChart', 'smoothLineChart', 'markLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap', 'stackLineChart', 'markerLineChart', 'sectionsLineChart', 'gradientStackAreaChart', 'rainfallFlowChart', 'timeAxisLineChart', 'rainfallRunoffChart']
+      const ADV = ['bubbleChart', 'calendarHeatmap', 'polarChart', 'scatterChart', 'funnelChart', 'heatmapChart', 'sankeyChart', 'treemapChart', 'sunburstChart', 'graphChart', 'themeRiverChart', 'boxplotChart', 'gradeGaugeChart', 'parallelChart', 'pictorialBarChart', 'candlestickChart', 'treeChart', 'roseChart', 'waterfallChart', 'bumpChart', 'nestPieChart', 'effectScatterChart', 'gradientAreaChart', 'thresholdAreaChart', 'confidenceBandChart', 'speedGaugeChart', 'stageGaugeChart', 'tempGaugeChart', 'ringGaugeChart', 'barometerGaugeChart', 'multiGaugeChart']
+      // 仪表盘(从高级图表拆出 + 基础仪表盘 BKGaugeChart)
+      const GAUGES = ['gradeGaugeChart', 'speedGaugeChart', 'stageGaugeChart', 'tempGaugeChart', 'ringGaugeChart', 'barometerGaugeChart', 'multiGaugeChart']
+      const isGauge = c => c.type === 'BKGaugeChart' || GAUGES.includes(c.branchType)
       const bars = chartComponents.filter(c => (c.type === 'BKBarChart' || c.type === 'BKPolarChart') && !LINE.includes(c.branchType) && !ADV.includes(c.branchType))
       const lines = chartComponents.filter(c => LINE.includes(c.branchType))
-      const adv = chartComponents.filter(c => ADV.includes(c.branchType))
+      const adv = chartComponents.filter(c => ADV.includes(c.branchType) && !isGauge(c))
+      const gauges = chartComponents.filter(isGauge)
       return [
         { key: 'bar', name: '柱状图', items: bars },
         { key: 'line', name: '折线图', items: lines },
         { key: 'pie', name: '饼形图', items: ringComponents || [] },
+        { key: 'gauge', name: '仪表盘', items: gauges },
         { key: 'adv', name: '高级图表', items: adv },
         { key: 'table', name: '表格', items: tableComponents || [] },
         { key: 'map', name: '地图', items: mapComponents || [] },

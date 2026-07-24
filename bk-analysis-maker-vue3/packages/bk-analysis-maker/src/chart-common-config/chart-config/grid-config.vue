@@ -1,6 +1,6 @@
 <template>
   <div class="grid-config">
-    <div style="width: 80px;">
+    <div style="white-space: nowrap;">
       <el-switch
         v-model="form.show"
         :disabled="!saveAble"

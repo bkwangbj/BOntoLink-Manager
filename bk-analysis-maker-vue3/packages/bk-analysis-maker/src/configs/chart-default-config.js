@@ -123,7 +123,7 @@ export const chartDefaultConfig = new Map([
     rawEChart: true,
     color: ['#008FFF', '#FFC72F', '#00E4BF'],
     tooltip: { trigger: 'axis', axisPointer: { type: 'cross' } },
-    legend: { data: ['降雨量', '蒸发量', '降水量'], top: 6 },
+    legend: { show: true, alignPosition: 'topCenter', data: ['降雨量', '蒸发量', '降水量'] },
     axisPointer: { link: [{ xAxisIndex: 'all' }] },
     dataZoom: [{ show: true, realtime: true, type: 'slider', bottom: 6, height: 14, start: 0, end: 100, xAxisIndex: [0, 1] }],
     grid: [
@@ -1866,6 +1866,192 @@ export const chartDefaultConfig = new Map([
     xAxis: { show: true, type: 'category', data: [], boundaryGap: false, axisLabel: { show: true }, axisLine: { show: true, lineStyle: { color: '#999' } } },
     yAxis: { show: true, type: 'value', scale: true, axisLabel: { show: true }, splitLine: { show: true, lineStyle: { color: '#eee', type: 'dashed' } } },
     series: [{ type: 'line', data: [] }]
+  }],
+  ['speedGaugeChart', {
+    rawEChart: true, noGrid: true, tooltip: { show: false },
+    series: [{
+      type: 'gauge', startAngle: 200, endAngle: -20, min: 0, max: 120, splitNumber: 6, radius: '92%', center: ['50%', '58%'],
+      itemStyle: { color: '#4080FF' }, progress: { show: true, roundCap: true, width: 14 },
+      axisLine: { roundCap: true, lineStyle: { width: 14, color: [[1, '#E3ECFF']] } },
+      axisTick: { splitNumber: 2, lineStyle: { width: 2, color: '#ccc' } },
+      splitLine: { length: 10, lineStyle: { width: 2, color: '#ccc' } },
+      axisLabel: { distance: 16, color: '#999', fontSize: 11 },
+      pointer: { length: '62%', width: 5, itemStyle: { color: 'auto' } },
+      anchor: { show: true, size: 14, itemStyle: { color: '#4080FF' } },
+      title: { offsetCenter: [0, '72%'], fontSize: 13, color: '#666' },
+      detail: { valueAnimation: true, formatter: '{value} m³/s', fontSize: 20, offsetCenter: [0, '44%'], color: 'inherit' },
+      data: [{ value: 68, name: '断面流量' }]
+    }]
+  }],
+  ['stageGaugeChart', {
+    rawEChart: true, noGrid: true, tooltip: { show: false },
+    series: [{
+      type: 'gauge', min: 0, max: 100, radius: '92%', center: ['50%', '56%'],
+      axisLine: { lineStyle: { width: 24, color: [[0.3, '#3ED848'], [0.7, '#FFC72F'], [1, '#F56C6C']] } },
+      pointer: { itemStyle: { color: 'auto' }, length: '62%', width: 5 },
+      axisTick: { distance: -24, length: 6, lineStyle: { color: '#fff', width: 2 } },
+      splitLine: { distance: -24, length: 24, lineStyle: { color: '#fff', width: 3 } },
+      axisLabel: { color: 'inherit', distance: 28, fontSize: 11 },
+      detail: { valueAnimation: true, formatter: '{value}', color: 'inherit', fontSize: 22, offsetCenter: [0, '42%'] },
+      title: { offsetCenter: [0, '70%'], fontSize: 13, color: '#666' },
+      data: [{ value: 62, name: '水位分级' }]
+    }]
+  }],
+  ['tempGaugeChart', {
+    rawEChart: true, noGrid: true, tooltip: { show: false },
+    series: [{
+      type: 'gauge', center: ['50%', '60%'], startAngle: 200, endAngle: -20, min: 0, max: 40, splitNumber: 8, radius: '90%',
+      itemStyle: { color: '#FF9F7F' }, progress: { show: true, width: 22 }, pointer: { show: false },
+      axisLine: { lineStyle: { width: 22 } },
+      axisTick: { distance: -34, splitNumber: 5, lineStyle: { width: 2, color: '#ccc' } },
+      splitLine: { distance: -40, length: 12, lineStyle: { width: 3, color: '#ccc' } },
+      axisLabel: { distance: -16, color: '#999', fontSize: 11 },
+      anchor: { show: false }, title: { offsetCenter: [0, '72%'], fontSize: 13, color: '#666' },
+      detail: { valueAnimation: true, formatter: '{value} °C', fontSize: 24, offsetCenter: [0, '-6%'], color: '#FF7A45' },
+      data: [{ value: 23.5, name: '水温' }]
+    }]
+  }],
+  ['ringGaugeChart', {
+    rawEChart: true, noGrid: true, tooltip: { show: false },
+    color: ['#4080FF', '#3ED848'],
+    series: [{
+      type: 'gauge', startAngle: 90, endAngle: -270, radius: '78%', center: ['50%', '52%'], min: 0, max: 100,
+      pointer: { show: false },
+      progress: { show: true, overlap: false, roundCap: true, clip: false, itemStyle: { borderWidth: 1, borderColor: '#fff' } },
+      axisLine: { lineStyle: { width: 16 } },
+      splitLine: { show: false }, axisTick: { show: false }, axisLabel: { show: false },
+      title: { fontSize: 12, color: '#666' },
+      detail: { width: 40, height: 12, fontSize: 14, color: 'inherit', formatter: '{value}%' },
+      data: [
+        { value: 86, name: '达标率', title: { offsetCenter: ['0%', '-16%'] }, detail: { valueAnimation: true, offsetCenter: ['0%', '-2%'] } },
+        { value: 72, name: '优良率', title: { offsetCenter: ['0%', '18%'] }, detail: { valueAnimation: true, offsetCenter: ['0%', '32%'] } }
+      ]
+    }]
+  }],
+  ['barometerGaugeChart', {
+    rawEChart: true, noGrid: true, tooltip: { show: false },
+    series: [{
+      type: 'gauge', min: 0, max: 100, splitNumber: 10, radius: '82%', center: ['50%', '54%'],
+      axisLine: { lineStyle: { color: [[1, '#F56C6C']], width: 3 } },
+      splitLine: { distance: -16, length: 16, lineStyle: { color: '#F56C6C' } },
+      axisTick: { distance: -10, length: 8, lineStyle: { color: '#F56C6C' } },
+      axisLabel: { distance: -32, color: '#F56C6C', fontSize: 13 },
+      anchor: { show: true, size: 16, itemStyle: { borderColor: '#333', borderWidth: 2, color: '#fff' } },
+      pointer: { offsetCenter: [0, '8%'], length: '78%', width: 4, itemStyle: { color: '#333' } },
+      detail: { valueAnimation: true, precision: 1, offsetCenter: [0, '38%'], fontSize: 18, color: '#333' },
+      title: { offsetCenter: [0, '58%'], fontSize: 12, color: '#666' },
+      data: [{ value: 58.5, name: '管网压力(kPa)' }]
+    }]
+  }],
+  ['multiGaugeChart', {
+    rawEChart: true, noGrid: true, tooltip: { show: false },
+    color: ['#4080FF', '#3ED848', '#FFC72F'],
+    series: [{
+      type: 'gauge', min: 0, max: 100, radius: '86%', center: ['50%', '52%'],
+      anchor: { show: true, showAbove: true, size: 14, itemStyle: { color: '#8C8C8C' } },
+      pointer: { width: 6, length: '68%', offsetCenter: [0, '8%'] },
+      progress: { show: true, overlap: true, roundCap: true },
+      axisLine: { roundCap: true, lineStyle: { width: 12 } },
+      axisTick: { show: false }, splitLine: { length: 8, lineStyle: { width: 2, color: '#999' } },
+      axisLabel: { distance: 12, color: '#999', fontSize: 10 },
+      title: { fontSize: 12 },
+      detail: { width: 30, height: 12, fontSize: 12, color: '#fff', backgroundColor: 'inherit', borderRadius: 3, formatter: '{value}' },
+      data: [
+        { value: 78, name: '测站A', title: { offsetCenter: ['-42%', '80%'] }, detail: { offsetCenter: ['-42%', '95%'] } },
+        { value: 64, name: '测站B', title: { offsetCenter: ['0%', '80%'] }, detail: { offsetCenter: ['0%', '95%'] } },
+        { value: 88, name: '测站C', title: { offsetCenter: ['42%', '80%'] }, detail: { offsetCenter: ['42%', '95%'] } }
+      ]
+    }]
+  }],
+  ['stackLineChart', { ..._lineBaseOption(), series: _lineSeries({ stack: 'total', smooth: false }) }],
+  ['markerLineChart', {
+    color: ['#4080FF', '#3ED848', '#FFC72F'],
+    tooltip: { trigger: 'axis' }, legend: { show: false, alignPosition: 'topCenter' },
+    grid: { top: 40, left: 50, right: 40, bottom: 30, containLabel: true },
+    xAxis: { show: true, type: 'category', data: [], boundaryGap: false, axisLabel: { show: true }, axisLine: { show: true, lineStyle: { color: '#999' } } },
+    yAxis: { show: true, type: 'value', scale: true, axisLabel: { show: true }, splitLine: { show: true, lineStyle: { color: '#eee', type: 'dashed' } } },
+    series: [{ type: 'line', data: [] }]
+  }],
+  ['sectionsLineChart', {
+    color: ['#4080FF'],
+    tooltip: { trigger: 'axis' }, legend: { show: false, alignPosition: 'topCenter' },
+    grid: { top: 30, left: 50, right: 30, bottom: 30, containLabel: true },
+    xAxis: { show: true, type: 'category', data: [], boundaryGap: false, axisLabel: { show: true }, axisLine: { show: true, lineStyle: { color: '#999' } } },
+    yAxis: { show: true, type: 'value', axisLabel: { show: true }, splitLine: { show: true, lineStyle: { color: '#eee', type: 'dashed' } } },
+    series: [{ type: 'line', data: [] }]
+  }],
+  ['gradientStackAreaChart', {
+    rawEChart: true,
+    color: ['#4080FF', '#3ED848', '#FF9F40'],
+    tooltip: { trigger: 'axis', axisPointer: { type: 'cross' } },
+    legend: { show: true, alignPosition: 'topCenter', data: ['上游', '中游', '下游'] },
+    grid: { top: 40, left: 50, right: 30, bottom: 30, containLabel: true },
+    xAxis: { type: 'category', boundaryGap: false, data: ['1月', '2月', '3月', '4月', '5月', '6月'] },
+    yAxis: { type: 'value', name: '径流量(m³/s)' },
+    series: [
+      { name: '上游', type: 'line', stack: 'total', smooth: true, symbol: 'none', lineStyle: { width: 0 }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(64,128,255,0.85)' }, { offset: 1, color: 'rgba(64,128,255,0.25)' }] } }, data: [30, 45, 60, 40, 55, 70] },
+      { name: '中游', type: 'line', stack: 'total', smooth: true, symbol: 'none', lineStyle: { width: 0 }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(62,216,72,0.85)' }, { offset: 1, color: 'rgba(62,216,72,0.25)' }] } }, data: [20, 28, 35, 50, 42, 38] },
+      { name: '下游', type: 'line', stack: 'total', smooth: true, symbol: 'none', lineStyle: { width: 0 }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(255,159,64,0.85)' }, { offset: 1, color: 'rgba(255,159,64,0.25)' }] } }, data: [15, 22, 40, 30, 48, 60] }
+    ]
+  }],
+  ['rainfallFlowChart', {
+    rawEChart: true, keepColor: true,
+    color: ['#008FFF', '#00E4BF'],
+    tooltip: { trigger: 'axis', axisPointer: { type: 'cross' } },
+    legend: { show: true, alignPosition: 'topCenter', data: ['雨量', '流量'] },
+    grid: { top: 40, left: 55, right: 55, bottom: 30, containLabel: true },
+    xAxis: { type: 'category', boundaryGap: true, data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'] },
+    yAxis: [
+      { type: 'value', name: '雨量(mm)', splitLine: { lineStyle: { type: 'dashed', color: '#eee' } } },
+      { type: 'value', name: '流量(m³/s)', position: 'right', splitLine: { show: false } }
+    ],
+    series: [
+      { name: '雨量', type: 'bar', barMaxWidth: 22, data: [42, 38, 65, 88, 120, 175, 210, 198, 142, 96, 58, 40] },
+      { name: '流量', type: 'line', yAxisIndex: 1, smooth: true, symbolSize: 5, lineStyle: { width: 2 }, areaStyle: { opacity: 0.12 }, data: [55, 48, 80, 110, 155, 220, 268, 250, 180, 120, 72, 52] }
+    ]
+  }],
+  ['timeAxisLineChart', {
+    rawEChart: true,
+    color: ['#4080FF'],
+    tooltip: { trigger: 'axis' }, legend: { show: false },
+    grid: { top: 30, left: 55, right: 30, bottom: 30, containLabel: true },
+    xAxis: { type: 'time' },
+    yAxis: { type: 'value', name: '水位(m)', scale: true, splitLine: { lineStyle: { type: 'dashed', color: '#eee' } } },
+    series: [{
+      type: 'line', smooth: true, symbol: 'none', lineStyle: { width: 2, color: '#4080FF' },
+      areaStyle: { opacity: 0.15, color: '#4080FF' },
+      data: [['2024-06-01', 82], ['2024-06-02', 85], ['2024-06-03', 88], ['2024-06-05', 84], ['2024-06-07', 90], ['2024-06-09', 95], ['2024-06-11', 92], ['2024-06-14', 98], ['2024-06-17', 94], ['2024-06-20', 100], ['2024-06-24', 96], ['2024-06-28', 91]]
+    }]
+  }],
+  ['rainfallRunoffChart', {
+    rawEChart: true, keepColor: true,
+    color: ['#008FFF', '#3ED848'],
+    tooltip: { trigger: 'axis', axisPointer: { type: 'cross', animation: false } },
+    legend: { show: true, alignPosition: 'topCenter', data: ['径流量', '雨量'] },
+    grid: { left: 55, right: 55, top: 40, bottom: 64, containLabel: true },
+    dataZoom: [
+      { show: true, realtime: true, type: 'slider', bottom: 8, height: 16, start: 15, end: 85 },
+      { type: 'inside', realtime: true, start: 15, end: 85 }
+    ],
+    xAxis: [{
+      type: 'category', boundaryGap: false, axisLine: { onZero: false },
+      data: ['6/12 0时', '6/12 6时', '6/12 12时', '6/12 18时', '6/13 0时', '6/13 6时', '6/13 12时', '6/13 18时', '6/14 0时', '6/14 6时', '6/14 12时', '6/14 18时', '6/15 0时', '6/15 6时', '6/15 12时', '6/15 18时', '6/16 0时', '6/16 6时', '6/16 12时', '6/16 18时', '6/17 0时', '6/17 6时', '6/17 12时', '6/17 18时']
+    }],
+    yAxis: [
+      { name: '径流量(m³/s)', type: 'value' },
+      { name: '雨量(mm)', nameLocation: 'start', alignTicks: true, type: 'value', inverse: true }
+    ],
+    series: [
+      {
+        name: '径流量', type: 'line', smooth: true, symbol: 'none', lineStyle: { width: 1.5 }, areaStyle: { opacity: 0.5 }, emphasis: { focus: 'series' },
+        markArea: { silent: true, itemStyle: { color: 'rgba(120,140,170,0.08)' }, data: [[{ xAxis: '6/12 12时' }, { xAxis: '6/14 6时' }]] },
+        data: [5, 6, 8, 12, 20, 40, 90, 180, 280, 300, 260, 190, 130, 90, 64, 46, 34, 26, 20, 16, 12, 9, 7, 6]
+      },
+      {
+        name: '雨量', type: 'line', yAxisIndex: 1, smooth: true, symbol: 'none', lineStyle: { width: 1.5 }, areaStyle: { opacity: 0.5 }, emphasis: { focus: 'series' },
+        data: [0, 3, 10, 26, 40, 38, 22, 10, 3, 0, 0, 2, 6, 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]
+      }
+    ]
   }],
   ['sankeyChart', {
     rawEChart: true, noGrid: true,

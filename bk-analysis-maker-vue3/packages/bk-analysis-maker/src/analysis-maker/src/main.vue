@@ -746,15 +746,19 @@ export default {
         name: item.title, key: 'setLayout', payload: item.configs, img: item.img ? imgObject[item.img] : ''
       }))
       // 图表分组(与左侧图表资源同源、同分组)
-      const LINE = ['lineChart', 'smoothLineChart', 'markLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap']
-      const ADV = ['bubbleChart', 'calendarHeatmap', 'polarChart', 'scatterChart', 'funnelChart', 'heatmapChart', 'sankeyChart', 'treemapChart', 'sunburstChart', 'graphChart', 'themeRiverChart', 'boxplotChart', 'gradeGaugeChart', 'parallelChart', 'pictorialBarChart', 'candlestickChart', 'treeChart', 'roseChart', 'waterfallChart', 'bumpChart', 'nestPieChart', 'effectScatterChart', 'gradientAreaChart', 'thresholdAreaChart', 'confidenceBandChart']
+      const LINE = ['lineChart', 'smoothLineChart', 'markLineChart', 'areaChart', 'stackAreaChart', 'stepLineChart', 'rainfallEvap', 'stackLineChart', 'markerLineChart', 'sectionsLineChart', 'gradientStackAreaChart', 'rainfallFlowChart', 'timeAxisLineChart', 'rainfallRunoffChart']
+      const ADV = ['bubbleChart', 'calendarHeatmap', 'polarChart', 'scatterChart', 'funnelChart', 'heatmapChart', 'sankeyChart', 'treemapChart', 'sunburstChart', 'graphChart', 'themeRiverChart', 'boxplotChart', 'gradeGaugeChart', 'parallelChart', 'pictorialBarChart', 'candlestickChart', 'treeChart', 'roseChart', 'waterfallChart', 'bumpChart', 'nestPieChart', 'effectScatterChart', 'gradientAreaChart', 'thresholdAreaChart', 'confidenceBandChart', 'speedGaugeChart', 'stageGaugeChart', 'tempGaugeChart', 'ringGaugeChart', 'barometerGaugeChart', 'multiGaugeChart']
       const toCard = c => ({ name: c.title, img: c.img ? imgObject[c.img] : '', chart: c })
+      // 仪表盘(从高级图表拆出:等级/速度/色阶/气温/得分环/气压/多标题 + 基础仪表盘 BKGaugeChart)
+      const GAUGES = ['gradeGaugeChart', 'speedGaugeChart', 'stageGaugeChart', 'tempGaugeChart', 'ringGaugeChart', 'barometerGaugeChart', 'multiGaugeChart']
+      const isGauge = c => c.type === 'BKGaugeChart' || GAUGES.includes(c.branchType)
       const bars = chartComponents.filter(c => (c.type === 'BKBarChart' || c.type === 'BKPolarChart') && !LINE.includes(c.branchType) && !ADV.includes(c.branchType))
       const charts = [
         { name: '折线图', items: chartComponents.filter(c => LINE.includes(c.branchType)).map(toCard) },
         { name: '柱状图', items: bars.map(toCard) },
         { name: '饼形图', items: (ringComponents || []).map(toCard) },
-        { name: '高级图表', items: chartComponents.filter(c => ADV.includes(c.branchType)).map(toCard) },
+        { name: '仪表盘', items: chartComponents.filter(isGauge).map(toCard) },
+        { name: '高级图表', items: chartComponents.filter(c => ADV.includes(c.branchType) && !isGauge(c)).map(toCard) },
         { name: '表格', items: (tableComponents || []).map(toCard) },
         { name: '地图', items: (mapComponents || []).map(toCard) },
         { name: '其他', items: (customComponents || []).map(toCard) }

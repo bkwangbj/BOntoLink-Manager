@@ -20,7 +20,7 @@ import {
 } from 'echarts/charts'
 import {
   GridComponent, TooltipComponent, LegendComponent, TitleComponent, VisualMapComponent, PolarComponent, CalendarComponent,
-  SingleAxisComponent, DataZoomComponent, GraphicComponent, MarkLineComponent, MarkPointComponent, ToolboxComponent,
+  SingleAxisComponent, DataZoomComponent, GraphicComponent, MarkLineComponent, MarkPointComponent, MarkAreaComponent, ToolboxComponent,
   ParallelComponent
 } from 'echarts/components'
 
@@ -30,7 +30,7 @@ use([
   FunnelChart, SankeyChart, GraphChart, TreeChart, TreemapChart, SunburstChart, BoxplotChart, ThemeRiverChart,
   CandlestickChart, PictorialBarChart, ParallelChart, EffectScatterChart,
   GridComponent, TooltipComponent, LegendComponent, TitleComponent, VisualMapComponent, PolarComponent, CalendarComponent,
-  SingleAxisComponent, DataZoomComponent, GraphicComponent, MarkLineComponent, MarkPointComponent, ToolboxComponent,
+  SingleAxisComponent, DataZoomComponent, GraphicComponent, MarkLineComponent, MarkPointComponent, MarkAreaComponent, ToolboxComponent,
   ParallelComponent
 ])
 

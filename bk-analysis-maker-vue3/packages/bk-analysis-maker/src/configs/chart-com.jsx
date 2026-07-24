@@ -291,6 +291,135 @@ const chartComponents = [
     items: [],
     dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
   }, {
+    title: '速度仪表盘',
+    type: 'BKBarChart',
+    branchType: 'speedGaugeChart',
+    img: 'gauge-speed.svg',
+    chartComId: '66',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }] }],
+    items: [],
+    dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '色阶仪表盘',
+    type: 'BKBarChart',
+    branchType: 'stageGaugeChart',
+    img: 'gauge-stage.svg',
+    chartComId: '67',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }] }],
+    items: [],
+    dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '气温仪表盘',
+    type: 'BKBarChart',
+    branchType: 'tempGaugeChart',
+    img: 'gauge-temp.svg',
+    chartComId: '68',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }] }],
+    items: [],
+    dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '得分环',
+    type: 'BKBarChart',
+    branchType: 'ringGaugeChart',
+    img: 'gauge-ring.svg',
+    chartComId: '69',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }] }],
+    items: [],
+    dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '气压表',
+    type: 'BKBarChart',
+    branchType: 'barometerGaugeChart',
+    img: 'gauge-barometer.svg',
+    chartComId: '70',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }] }],
+    items: [],
+    dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '多标题仪表盘',
+    type: 'BKBarChart',
+    branchType: 'multiGaugeChart',
+    img: 'gauge-multi.svg',
+    chartComId: '71',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }] }],
+    items: [],
+    dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '堆叠折线图',
+    type: 'BKBarChart',
+    branchType: 'stackLineChart',
+    img: 'stack-line.svg',
+    chartComId: '72',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
+    items: [{ label: 'x', field: 'x', value: 'x' }, { label: 'y', field: 'y', value: 'y' }, { label: '颜色映射', field: 'colorField', value: 'colorField' }]
+  }, {
+    title: '标注折线图',
+    type: 'BKBarChart',
+    branchType: 'markerLineChart',
+    img: 'line-marker.svg',
+    chartComId: '73',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
+    items: [{ label: '类目', field: 'x', value: 'x' }, { label: '数值', field: 'y', value: 'y' }],
+    dataSourceConfig: { type: 'static', data: [{ x: '周一', y: 82 }, { x: '周二', y: 88 }, { x: '周三', y: 85 }, { x: '周四', y: 95 }, { x: '周五', y: 90 }, { x: '周六', y: 78 }, { x: '周日', y: 93 }], value: '[{"x":"周一","y":82}]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '分时段折线图',
+    type: 'BKBarChart',
+    branchType: 'sectionsLineChart',
+    img: 'line-sections.svg',
+    chartComId: '74',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
+    items: [{ label: '类目', field: 'x', value: 'x' }, { label: '数值', field: 'y', value: 'y' }],
+    dataSourceConfig: { type: 'static', data: [{ x: '0时', y: 45 }, { x: '4时', y: 52 }, { x: '8时', y: 70 }, { x: '12时', y: 88 }, { x: '16时', y: 95 }, { x: '20时', y: 76 }, { x: '24时', y: 58 }], value: '[{"x":"0时","y":45}]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '渐变堆叠面积',
+    type: 'BKBarChart',
+    branchType: 'gradientStackAreaChart',
+    img: 'gradient-stack.svg',
+    chartComId: '75',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }] }],
+    items: [],
+    dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '雨量流量关系图',
+    type: 'BKBarChart',
+    branchType: 'rainfallFlowChart',
+    img: 'rainfall-flow.svg',
+    chartComId: '76',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }] }],
+    items: [],
+    dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '时间轴折线图',
+    type: 'BKBarChart',
+    branchType: 'timeAxisLineChart',
+    img: 'line-time.svg',
+    chartComId: '77',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }] }],
+    items: [],
+    dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '降雨径流对冲图',
+    type: 'BKBarChart',
+    branchType: 'rainfallRunoffChart',
+    img: 'rainfall-runoff.svg',
+    chartComId: '78',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }] }],
+    items: [],
+    dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
     title: '折线图',
     type: 'BKBarChart',
     explainConfig: {

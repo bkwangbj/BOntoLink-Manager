@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180" viewBox="0 0 320 180">
+  <path d="M108 152 A78 78 0 1 1 212 152" fill="none" stroke="#FFE3D6" stroke-width="20" stroke-linecap="round"/>
+  <path d="M108 152 A78 78 0 0 1 96 96" fill="none" stroke="#FF9F7F" stroke-width="20" stroke-linecap="round"/>
+  <text x="160" y="120" font-size="30" fill="#FF7A45" text-anchor="middle" font-family="Arial">23°</text>
+</svg>
