@@ -211,6 +211,86 @@ const chartComponents = [
     items: [],
     dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
   }, {
+    title: '玫瑰图',
+    type: 'BKBarChart',
+    branchType: 'roseChart',
+    img: 'rose.svg',
+    chartComId: '58',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
+    items: [{ label: '名称', field: 'x', value: 'x' }, { label: '数值', field: 'y', value: 'y' }],
+    dataSourceConfig: { type: 'static', data: [{ x: '测站A', y: 45 }, { x: '测站B', y: 62 }, { x: '测站C', y: 38 }, { x: '测站D', y: 70 }, { x: '测站E', y: 55 }], value: '[{"x":"测站A","y":45}]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '瀑布图',
+    type: 'BKBarChart',
+    branchType: 'waterfallChart',
+    img: 'waterfall.svg',
+    chartComId: '59',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
+    items: [{ label: '类目', field: 'x', value: 'x' }, { label: '增量', field: 'y', value: 'y' }],
+    dataSourceConfig: { type: 'static', data: [{ x: '期初', y: 100 }, { x: '1月', y: 20 }, { x: '2月', y: -15 }, { x: '3月', y: 30 }, { x: '4月', y: -10 }, { x: '5月', y: 25 }], value: '[{"x":"期初","y":100}]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '凹凸图',
+    type: 'BKBarChart',
+    branchType: 'bumpChart',
+    img: 'bump.svg',
+    chartComId: '60',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }] }],
+    items: [],
+    dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '嵌套环形图',
+    type: 'BKBarChart',
+    branchType: 'nestPieChart',
+    img: 'nestpie.svg',
+    chartComId: '61',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }] }],
+    items: [],
+    dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '涟漪散点',
+    type: 'BKBarChart',
+    branchType: 'effectScatterChart',
+    img: 'effectscatter.svg',
+    chartComId: '62',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
+    items: [{ label: '类目', field: 'x', value: 'x' }, { label: '数值', field: 'y', value: 'y' }],
+    dataSourceConfig: { type: 'static', data: [{ x: '测站A', y: 30 }, { x: '测站B', y: 68 }, { x: '测站C', y: 45 }, { x: '测站D', y: 90 }, { x: '测站E', y: 52 }], value: '[{"x":"测站A","y":30}]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '渐变面积',
+    type: 'BKBarChart',
+    branchType: 'gradientAreaChart',
+    img: 'gradientarea.svg',
+    chartComId: '63',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
+    items: [{ label: '类目', field: 'x', value: 'x' }, { label: '数值', field: 'y', value: 'y' }],
+    dataSourceConfig: { type: 'static', data: [{ x: '1月', y: 42 }, { x: '2月', y: 55 }, { x: '3月', y: 48 }, { x: '4月', y: 70 }, { x: '5月', y: 62 }, { x: '6月', y: 85 }], value: '[{"x":"1月","y":42}]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '阈值分段折线',
+    type: 'BKBarChart',
+    branchType: 'thresholdAreaChart',
+    img: 'threshold.svg',
+    chartComId: '64',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'x', varField: '' }, { field: 'y', varField: '' }] }],
+    items: [{ label: '类目', field: 'x', value: 'x' }, { label: '数值', field: 'y', value: 'y' }],
+    dataSourceConfig: { type: 'static', data: [{ x: '周一', y: 50 }, { x: '周二', y: 65 }, { x: '周三', y: 78 }, { x: '周四', y: 88 }, { x: '周五', y: 95 }, { x: '周六', y: 82 }, { x: '周日', y: 70 }], value: '[{"x":"周一","y":50}]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '置信带',
+    type: 'BKBarChart',
+    branchType: 'confidenceBandChart',
+    img: 'confidence.svg',
+    chartComId: '65',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }] }],
+    items: [],
+    dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
     title: '折线图',
     type: 'BKBarChart',
     explainConfig: {

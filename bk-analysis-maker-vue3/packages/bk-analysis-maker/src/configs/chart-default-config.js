@@ -1801,6 +1801,72 @@ export const chartDefaultConfig = new Map([
       emphasis: { itemStyle: { shadowBlur: 8, shadowColor: 'rgba(0,0,0,.3)' } }
     }]
   }],
+  ['roseChart', {
+    color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],
+    tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+    legend: { show: true, alignPosition: 'topCenter' },
+    series: [{ type: 'pie', roseType: 'radius', radius: ['18%', '72%'], center: ['50%', '52%'], itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 }, data: [] }]
+  }],
+  ['waterfallChart', {
+    color: ['#4080FF', '#F56C6C'],
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    legend: { show: false, alignPosition: 'topCenter' },
+    grid: { top: 30, left: 50, right: 30, bottom: 40, containLabel: true },
+    xAxis: { show: true, type: 'category', data: [], axisLabel: { show: true }, axisLine: { show: true, lineStyle: { color: '#999' } } },
+    yAxis: { show: true, type: 'value', axisLabel: { show: true }, splitLine: { show: true, lineStyle: { color: '#eee', type: 'dashed' } } },
+    series: [{ type: 'bar', data: [] }]
+  }],
+  ['bumpChart', {
+    color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],
+    tooltip: { trigger: 'item' },
+    legend: { show: true, alignPosition: 'topCenter' },
+    grid: { top: 40, left: 50, right: 40, bottom: 40, containLabel: true },
+    xAxis: { show: true, type: 'category', data: [], boundaryGap: true, axisLabel: { show: true }, axisLine: { show: true, lineStyle: { color: '#999' } } },
+    yAxis: { show: true, type: 'value', axisLabel: { show: true }, splitLine: { show: true, lineStyle: { color: '#eee', type: 'dashed' } } },
+    series: [{ type: 'line', data: [] }]
+  }],
+  ['nestPieChart', {
+    color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],
+    tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+    legend: { show: true, alignPosition: 'topCenter' },
+    series: [{ type: 'pie', radius: [0, '42%'], center: ['50%', '52%'], data: [] }]
+  }],
+  ['effectScatterChart', {
+    color: ['#F56C6C', '#FFC72F', '#008FFF', '#3ED848'],
+    tooltip: { trigger: 'item' },
+    legend: { show: false, alignPosition: 'topCenter' },
+    grid: { top: 36, left: 50, right: 30, bottom: 40, containLabel: true },
+    xAxis: { show: true, type: 'category', data: [], axisLabel: { show: true }, axisLine: { show: true, lineStyle: { color: '#999' } } },
+    yAxis: { show: true, type: 'value', axisLabel: { show: true }, splitLine: { show: true, lineStyle: { color: '#eee', type: 'dashed' } } },
+    series: [{ type: 'effectScatter', data: [] }]
+  }],
+  ['gradientAreaChart', {
+    color: ['#4080FF', '#FFC72F', '#008FFF', '#3ED848'],
+    tooltip: { trigger: 'axis' },
+    legend: { show: false, alignPosition: 'topCenter' },
+    grid: { top: 30, left: 50, right: 30, bottom: 36, containLabel: true },
+    xAxis: { show: true, type: 'category', data: [], boundaryGap: false, axisLabel: { show: true }, axisLine: { show: true, lineStyle: { color: '#999' } } },
+    yAxis: { show: true, type: 'value', axisLabel: { show: true }, splitLine: { show: true, lineStyle: { color: '#eee', type: 'dashed' } } },
+    series: [{ type: 'line', data: [] }]
+  }],
+  ['thresholdAreaChart', {
+    color: ['#4080FF', '#FFC72F', '#008FFF', '#3ED848'],
+    tooltip: { trigger: 'axis' },
+    legend: { show: false, alignPosition: 'topCenter' },
+    grid: { top: 30, left: 50, right: 30, bottom: 36, containLabel: true },
+    xAxis: { show: true, type: 'category', data: [], boundaryGap: false, axisLabel: { show: true }, axisLine: { show: true, lineStyle: { color: '#999' } } },
+    yAxis: { show: true, type: 'value', axisLabel: { show: true }, splitLine: { show: true, lineStyle: { color: '#eee', type: 'dashed' } } },
+    series: [{ type: 'line', data: [] }]
+  }],
+  ['confidenceBandChart', {
+    color: ['#4080FF', '#FFC72F', '#008FFF', '#3ED848'],
+    tooltip: { trigger: 'axis' },
+    legend: { show: true, alignPosition: 'topCenter' },
+    grid: { top: 36, left: 50, right: 30, bottom: 36, containLabel: true },
+    xAxis: { show: true, type: 'category', data: [], boundaryGap: false, axisLabel: { show: true }, axisLine: { show: true, lineStyle: { color: '#999' } } },
+    yAxis: { show: true, type: 'value', scale: true, axisLabel: { show: true }, splitLine: { show: true, lineStyle: { color: '#eee', type: 'dashed' } } },
+    series: [{ type: 'line', data: [] }]
+  }],
   ['sankeyChart', {
     rawEChart: true, noGrid: true,
     color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],

@@ -377,7 +377,7 @@ export default {
         }))
       }
       // 高级图表(气泡图/日历热力图等,虽为 BKBarChart 但单独归组)
-      const ADVANCED_TYPES = ['bubbleChart', 'calendarHeatmap', 'polarChart', 'scatterChart', 'funnelChart', 'heatmapChart', 'sankeyChart', 'treemapChart', 'sunburstChart', 'graphChart', 'themeRiverChart', 'boxplotChart', 'gradeGaugeChart', 'parallelChart', 'pictorialBarChart', 'candlestickChart', 'treeChart']
+      const ADVANCED_TYPES = ['bubbleChart', 'calendarHeatmap', 'polarChart', 'scatterChart', 'funnelChart', 'heatmapChart', 'sankeyChart', 'treemapChart', 'sunburstChart', 'graphChart', 'themeRiverChart', 'boxplotChart', 'gradeGaugeChart', 'parallelChart', 'pictorialBarChart', 'candlestickChart', 'treeChart', 'roseChart', 'waterfallChart', 'bumpChart', 'nestPieChart', 'effectScatterChart', 'gradientAreaChart', 'thresholdAreaChart', 'confidenceBandChart']
       // 柱状图(其余 BKBarChart / 极坐标,排除折线类与高级图表)
       const barMenu = this.menus.find(c => c.key === 'chart')
       if (barMenu) {
