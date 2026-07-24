@@ -1,5 +1,6 @@
 .claude/*
 !.claude/skills/
+开发文档/echarts/
 frontend/dist/
 frontend/node_modules/
 .vscode/
