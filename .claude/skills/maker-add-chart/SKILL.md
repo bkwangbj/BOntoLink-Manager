@@ -76,9 +76,9 @@ rawEChart 的坑几乎都来自「它被当普通柱图处理」。
 ## 四、验证工作流(必跑,别跳)
 
 ```powershell
-# 1. 重建 maker
+# 1. 重建 maker(⚠️ 必用 npm run build, 别用 npx vite build——后者会拉全局 vite 8 报错)
 cd c:\beiktech-jyx\BOntoLink02\bk-analysis-maker-vue3\packages\bk-analysis-maker
-npx vite build
+npm run build
 
 # 2. ⚠️ 清 Vite 预打包缓存(maker 是 file: 依赖,不清则 dist 改动不生效)
 Remove-Item -Recurse -Force c:\beiktech-jyx\BOntoLink02\frontend\node_modules\.vite
@@ -111,10 +111,17 @@ Remove-Item -Recurse -Force c:\beiktech-jyx\BOntoLink02\frontend\node_modules\.v
 | 热力图改色无效 | 热力用 visualMap 非 option.color | 从色系首色派生 visualMap 渐变 |
 | 仪表盘想默认红黄绿又可改 | 被看板色板覆盖 | `keepColor:true` + 渲染时把 color[0..2] 映射到 3 段 |
 | `getDefaultConfig` 报 series 相关 TDZ/undefined | rawEChart 短路未在 series 重建之前 | 短路必须在 getChartSeries/themeInit **之前** return |
+| **build 报 `Cannot resolve entry index.html` / vite 8** | `npx vite build` 拉到全局 vite 8, 把 lib 构建当 app 构建 | **必用 `npm run build`**(本地 vite 5.x, 走包内 lib 配置), 别用 npx |
+| **rawEChart 图图例位置配置不生效/乱跳** | `alignPosition→位置` 转换器在 `customResetChart` 里 rawEChart 短路**之后**, rawEChart 图走不到 | ①rawEChart 分支内补 alignPosition 转换 ②baked legend 统一用 `alignPosition`(顶部/底部×左中右, 表单可往返), 别用裸 `top/left` |
+| 象形柱/箱线 等 symbol 色不随色系 | itemStyle 写死颜色 | 渲染时 `itemStyle.color = option.color[0]`(path:///内置形状可染色, image:// 不可) |
 
 ---
 
 ## 六、rawEChart 图当前名单(改动时一并考虑)
 
-`sankeyChart` `treemapChart` `sunburstChart` `graphChart` `themeRiverChart` `boxplotChart` `gradeGaugeChart`
+`sankeyChart` `treemapChart` `sunburstChart` `graphChart` `themeRiverChart` `boxplotChart` `gradeGaugeChart` `parallelChart` `pictorialBarChart` `candlestickChart` `treeChart`
 (以上在 `isRawEChart`、`applyRawEChartTheme`、`buildEmbedDefaultDataSource` return null、ADV 数组中均需登记)
+
+**图例位置约定**:baked legend 用 `alignPosition`(如 `'topCenter'`/`'bottomCenter'`),不要裸 `top:6`。顶部有轴名的图(平行坐标)图例放 `bottomCenter` 避让。rawEChart 分支已内置 alignPosition→echarts 位置转换。
+
+**展示型 vs 可绑数**:结构特殊图(桑基/树/关系/旭日/平行/K线/象形柱等)先做展示型 = rawEChart + 内置 demo + `buildEmbedDefaultDataSource` return null;直角系图要接实例数据时再写绑定映射。
