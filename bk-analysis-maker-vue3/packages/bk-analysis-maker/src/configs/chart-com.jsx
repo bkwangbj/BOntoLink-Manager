@@ -171,6 +171,46 @@ const chartComponents = [
     items: [],
     dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
   }, {
+    title: '平行坐标',
+    type: 'BKBarChart',
+    branchType: 'parallelChart',
+    img: 'parallel.svg',
+    chartComId: '54',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }] }],
+    items: [],
+    dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '象形柱图',
+    type: 'BKBarChart',
+    branchType: 'pictorialBarChart',
+    img: 'pictorialbar.svg',
+    chartComId: '55',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }] }],
+    items: [],
+    dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: 'K线图',
+    type: 'BKBarChart',
+    branchType: 'candlestickChart',
+    img: 'candlestick.svg',
+    chartComId: '56',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }] }],
+    items: [],
+    dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
+    title: '树图',
+    type: 'BKBarChart',
+    branchType: 'treeChart',
+    img: 'tree.svg',
+    chartComId: '57',
+    explainConfig: { show: false, text: '', position: 'topLeft', x: 0, y: 0 },
+    eventConfig: [{ title: '当数据项被点击时', event: 'click', isActive: false, items: [{ field: 'name', varField: '' }] }],
+    items: [],
+    dataSourceConfig: { type: 'static', data: [], value: '[]', paramsType: 'json', interfaceFilterVisible: false, interfaceTempParamsVisible: false, paramHandlerVisible: false, dataMapping: {} }
+  }, {
     title: '折线图',
     type: 'BKBarChart',
     explainConfig: {

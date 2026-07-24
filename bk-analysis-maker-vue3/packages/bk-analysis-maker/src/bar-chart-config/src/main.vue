@@ -55,6 +55,28 @@
           @change-type="changeChartType"
         />
 
+        <div
+          v-if="configs.branchType === 'pictorialBarChart'"
+          class="pictorial-symbol-row"
+          style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"
+        >
+          <span style="font-size:12px;color:#7a7a7a;white-space:nowrap;">图标</span>
+          <el-select
+            v-model="pictorialSymbol"
+            size="small"
+            :disabled="!saveAble"
+            style="flex:1;"
+            @change="getChartBasicConfigData"
+          >
+            <el-option
+              v-for="s in pictorialSymbols"
+              :key="s.label"
+              :label="s.label"
+              :value="s.value"
+            />
+          </el-select>
+        </div>
+
         <component
           :is="name+'-config'"
           v-for="(name,index) in basicComps"
@@ -286,13 +308,23 @@ export default {
       borderRadius: [0, 0, 0, 0],
       activeConfig: 'basic',
       scrollContainer: null,
+      // 象形柱图内置预设符号(path:// / 内置形状均可被 itemStyle.color 染色, 跟随色系配置)
+      pictorialSymbol: 'roundRect',
+      pictorialSymbols: [
+        { label: '圆角柱', value: 'roundRect' },
+        { label: '圆点', value: 'circle' },
+        { label: '三角', value: 'triangle' },
+        { label: '菱形', value: 'diamond' },
+        { label: '水滴', value: 'path://M512 64 C512 64 192 448 192 640 a320 320 0 1 0 640 0 C832 448 512 64 512 64 Z' },
+        { label: '箭头', value: 'arrow' }
+      ],
       configType: { grid: 'basic', legend: 'basic', axis: 'axis', tooltip: 'other' },
       chartMenu: [{ name: '图表', key: 'basic', icon: 'icon-tuxing' }, { name: '坐标轴', key: 'axis', icon: 'icon-zuobiao' }, { name: '系列', key: 'series', icon: 'icon-a-shujuyuan2' }, { name: '其他', key: 'other', icon: 'icon-qita' }]
     }
   },
   computed: {
     // 桑基/矩形树/旭日/关系图:rawEChart 直通,坐标轴/系列/柱样式不适用 → 配置面板隐藏这些区块
-    isRawEChart () { return ['sankeyChart', 'treemapChart', 'sunburstChart', 'graphChart', 'themeRiverChart', 'boxplotChart', 'gradeGaugeChart'].includes(this.configs.branchType) },
+    isRawEChart () { return ['sankeyChart', 'treemapChart', 'sunburstChart', 'graphChart', 'themeRiverChart', 'boxplotChart', 'gradeGaugeChart', 'parallelChart', 'pictorialBarChart', 'candlestickChart', 'treeChart'].includes(this.configs.branchType) },
     visibleMenu () { return this.isRawEChart ? this.chartMenu.filter(t => t.key !== 'axis' && t.key !== 'series') : this.chartMenu },
     basicComps () { return this.componentsList.filter(n => this.configType[n] === 'basic') },
     axisComps () { return this.componentsList.filter(n => this.configType[n] === 'axis') },
@@ -453,6 +485,10 @@ export default {
       form.showBorderRadius = this.showBorderRadius
       const config = utils.deepClone(data)
       config.configOption = Object.assign(config.configOption, form)
+      // 象形柱图:内置符号选择 → 写入 series[0].symbol(不走系列配置组件)
+      if (this.configs.branchType === 'pictorialBarChart' && config.configOption.series && config.configOption.series[0]) {
+        config.configOption.series[0].symbol = this.pictorialSymbol
+      }
       this.$emit('saveChartCfg', config)
     },
     colorsChange () {
@@ -478,6 +514,10 @@ export default {
         }
         this.showBorderRadius = this.configs.configOption?.showBorderRadius || false
         this.borderRadius = this.configs.configOption?.borderRadius || [0, 0, 0, 0]
+        // 象形柱图:回显当前符号
+        if (this.configs.branchType === 'pictorialBarChart') {
+          this.pictorialSymbol = this.configs.configOption?.series?.[0]?.symbol || 'roundRect'
+        }
         this.colorList = this.configs.configOption?.color || this.pageConfig?.themeConfigs?.chartStyle?.themeStyle.colorList || []
         this.seriesList = utils.deepClone(this.configs.configOption?.series || [])
         // 系列配置组件(rawEChart 图已隐藏 → ref 不存在时跳过)

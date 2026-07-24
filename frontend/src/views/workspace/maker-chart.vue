@@ -15,19 +15,23 @@ import 'echarts-gl'
 import { CanvasRenderer } from 'echarts/renderers'
 import {
   BarChart, LineChart, ScatterChart, PieChart, MapChart, RadarChart, GaugeChart, HeatmapChart,
-  FunnelChart, SankeyChart, GraphChart, TreeChart, TreemapChart, SunburstChart, BoxplotChart, ThemeRiverChart
+  FunnelChart, SankeyChart, GraphChart, TreeChart, TreemapChart, SunburstChart, BoxplotChart, ThemeRiverChart,
+  CandlestickChart, PictorialBarChart, ParallelChart
 } from 'echarts/charts'
 import {
   GridComponent, TooltipComponent, LegendComponent, TitleComponent, VisualMapComponent, PolarComponent, CalendarComponent,
-  SingleAxisComponent, DataZoomComponent, GraphicComponent, MarkLineComponent, MarkPointComponent, ToolboxComponent
+  SingleAxisComponent, DataZoomComponent, GraphicComponent, MarkLineComponent, MarkPointComponent, ToolboxComponent,
+  ParallelComponent
 } from 'echarts/components'
 
 use([
   CanvasRenderer,
   LineChart, BarChart, PieChart, MapChart, RadarChart, GaugeChart, ScatterChart, HeatmapChart,
   FunnelChart, SankeyChart, GraphChart, TreeChart, TreemapChart, SunburstChart, BoxplotChart, ThemeRiverChart,
+  CandlestickChart, PictorialBarChart, ParallelChart,
   GridComponent, TooltipComponent, LegendComponent, TitleComponent, VisualMapComponent, PolarComponent, CalendarComponent,
-  SingleAxisComponent, DataZoomComponent, GraphicComponent, MarkLineComponent, MarkPointComponent, ToolboxComponent
+  SingleAxisComponent, DataZoomComponent, GraphicComponent, MarkLineComponent, MarkPointComponent, ToolboxComponent,
+  ParallelComponent
 ])
 
 export default {

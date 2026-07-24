@@ -1851,7 +1851,7 @@ export const chartDefaultConfig = new Map([
     rawEChart: true, noGrid: true,
     color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],
     tooltip: { trigger: 'item' },
-    legend: { show: true, top: 6 },
+    legend: { show: true, alignPosition: 'topCenter' },
     series: [{
       type: 'graph', layout: 'force', roam: true,
       label: { show: true, position: 'right' },
@@ -1875,7 +1875,7 @@ export const chartDefaultConfig = new Map([
     rawEChart: true, noGrid: true,
     color: ['#00E4BF', '#FFC72F', '#008FFF', '#3ED848', '#C96765', '#D8E5FA'],
     tooltip: { trigger: 'axis', axisPointer: { type: 'line', lineStyle: { color: 'rgba(0,0,0,0.2)', width: 1 } } },
-    legend: { show: true, top: 6 },
+    legend: { show: true, alignPosition: 'topCenter' },
     singleAxis: { type: 'time', top: 40, bottom: 40, axisTick: {}, axisLabel: {}, splitLine: { show: true, lineStyle: { color: ['#eee'] } } },
     series: [{
       type: 'themeRiver', label: { show: false },
@@ -1914,6 +1914,75 @@ export const chartDefaultConfig = new Map([
       detail: { valueAnimation: true, formatter: '{value}%', color: 'inherit', fontSize: 24, offsetCenter: [0, '46%'] },
       title: { offsetCenter: [0, '74%'], fontSize: 13, color: '#666' },
       data: [{ value: 68, name: '水质达标率' }]
+    }]
+  }],
+  ['parallelChart', {
+    rawEChart: true, noGrid: true,
+    color: ['#4080FF', '#3ED848', '#FF9F40'],
+    tooltip: { trigger: 'item' },
+    legend: { show: true, alignPosition: 'bottomCenter', data: ['测站A', '测站B', '测站C'] },
+    parallelAxis: [
+      { dim: 0, name: '水位', min: 0, max: 100 },
+      { dim: 1, name: '流量', min: 0, max: 200 },
+      { dim: 2, name: '浊度', min: 0, max: 50 },
+      { dim: 3, name: '水温', min: 0, max: 30 },
+      { dim: 4, name: 'PH', min: 0, max: 14 }
+    ],
+    parallel: { left: 60, right: 90, top: 40, bottom: 44 },
+    series: [
+      { name: '测站A', type: 'parallel', lineStyle: { width: 2 }, data: [[85, 120, 30, 18, 7.2]] },
+      { name: '测站B', type: 'parallel', lineStyle: { width: 2 }, data: [[72, 150, 22, 21, 6.8]] },
+      { name: '测站C', type: 'parallel', lineStyle: { width: 2 }, data: [[90, 95, 40, 16, 7.6]] }
+    ]
+  }],
+  ['pictorialBarChart', {
+    rawEChart: true,
+    color: ['#4080FF'],
+    tooltip: { trigger: 'axis' },
+    grid: { left: 50, right: 20, top: 24, bottom: 36, containLabel: true },
+    xAxis: { type: 'category', data: ['测站A', '测站B', '测站C', '测站D', '测站E'], axisTick: { show: false } },
+    yAxis: { type: 'value', name: '雨量(mm)', splitLine: { show: false } },
+    series: [{
+      type: 'pictorialBar', name: '雨量',
+      symbol: 'roundRect', symbolSize: ['70%', 6], symbolMargin: 3, symbolRepeat: true,
+      itemStyle: { color: '#4080FF' },
+      data: [45, 62, 38, 70, 55]
+    }]
+  }],
+  ['candlestickChart', {
+    rawEChart: true,
+    color: ['#F56C6C', '#3ED848'],
+    tooltip: { trigger: 'axis', axisPointer: { type: 'cross' } },
+    legend: { show: false },
+    grid: { left: 50, right: 20, top: 24, bottom: 36, containLabel: true },
+    xAxis: { type: 'category', data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'], boundaryGap: true },
+    yAxis: { type: 'value', name: '水位', scale: true },
+    series: [{
+      type: 'candlestick', name: '水位',
+      itemStyle: { color: '#F56C6C', color0: '#3ED848', borderColor: '#F56C6C', borderColor0: '#3ED848' },
+      // [开盘, 收盘, 最低, 最高] = [日初, 日末, 日最低, 日最高]
+      data: [[82, 88, 80, 90], [88, 85, 83, 92], [85, 91, 84, 95], [91, 89, 87, 96], [89, 94, 88, 98], [94, 90, 89, 97], [90, 93, 88, 95]]
+    }]
+  }],
+  ['treeChart', {
+    rawEChart: true, noGrid: true,
+    tooltip: { trigger: 'item', triggerOn: 'mousemove' },
+    series: [{
+      type: 'tree', left: 40, right: 120, top: 16, bottom: 16,
+      symbolSize: 9, orient: 'LR',
+      label: { position: 'left', verticalAlign: 'middle', align: 'right', fontSize: 12 },
+      leaves: { label: { position: 'right', verticalAlign: 'middle', align: 'left' } },
+      lineStyle: { width: 1.2, curveness: 0.5 },
+      expandAndCollapse: true, initialTreeDepth: 3,
+      emphasis: { focus: 'descendant' },
+      data: [{
+        name: '水利枢纽',
+        children: [
+          { name: '水库', children: [{ name: '大坝' }, { name: '溢洪道' }, { name: '输水洞' }] },
+          { name: '泵站', children: [{ name: '进水池' }, { name: '机组' }, { name: '出水管' }] },
+          { name: '管网', children: [{ name: '干管' }, { name: '支管' }, { name: '阀门井' }] }
+        ]
+      }]
     }]
   }]
 

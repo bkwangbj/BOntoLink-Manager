@@ -148,10 +148,24 @@ export default {
             })
           }
         }
+        // 图例位置:rawEChart 不走下方标准的 alignPosition 转换, 这里补上, 保证「图例配置」的顶部/底部×左中右生效且往返一致
+        if (option.legend && option.legend.alignPosition) {
+          const alignList = {
+            topLeft: { left: 'left', top: 10, bottom: undefined }, topCenter: { left: 'center', top: 10, bottom: undefined }, topRight: { left: 'right', top: 10, bottom: undefined },
+            bottomLeft: { left: 'left', bottom: 5, top: undefined }, bottomCenter: { left: 'center', bottom: 5, top: undefined }, bottomRight: { left: 'right', bottom: 5, top: undefined }
+          }
+          option.legend = { ...option.legend, ...(alignList[option.legend.alignPosition] || {}) }
+        }
         // 箱线图:盒体色随「色系配置」首色(仪表盘保留语义红黄绿分段,不跟随)
         if (config.branchType === 'boxplotChart' && option.series && option.series[0] && option.color && option.color[0]) {
           const c = option.color[0]
           option.series[0].itemStyle = { ...(option.series[0].itemStyle || {}), color: c + '33', borderColor: c }
+        }
+        // 象形柱图:symbol 色随「色系配置」首色 + 符号尺寸自适应(圆角柱=扁平层叠, 其它图标=方形堆叠计数)
+        if (config.branchType === 'pictorialBarChart' && option.series && option.series[0]) {
+          const s0 = option.series[0]
+          if (option.color && option.color[0]) s0.itemStyle = { ...(s0.itemStyle || {}), color: option.color[0] }
+          if (s0.symbol && s0.symbol !== 'roundRect') { s0.symbolSize = [22, 22]; s0.symbolMargin = 4 } else { s0.symbolSize = ['70%', 6]; s0.symbolMargin = 3 }
         }
         // 分段仪表盘:默认红黄绿, 但 3 段刻度色跟随「色系配置」前 3 色(可自定义)
         if (config.branchType === 'gradeGaugeChart' && option.series && option.series[0] && Array.isArray(option.color) && option.color.length >= 3) {

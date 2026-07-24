@@ -394,7 +394,7 @@ function applyRawEChartTheme (option, theme, type, branchType) {
     if (alc) ax.axisLine = { ...(ax.axisLine || {}), lineStyle: { ...((ax.axisLine && ax.axisLine.lineStyle) || {}), color: alc } }
     if (slc && ax.splitLine && ax.splitLine.show !== false) ax.splitLine = { ...ax.splitLine, lineStyle: { ...((ax.splitLine && ax.splitLine.lineStyle) || {}), color: slc } }
   }
-  ;[].concat(option.xAxis || [], option.yAxis || [], option.singleAxis || []).forEach(applyAxis)
+  ;[].concat(option.xAxis || [], option.yAxis || [], option.singleAxis || [], option.parallelAxis || []).forEach(applyAxis)
   // 图例文字跟随主题
   if (option.legend && tc) option.legend = { ...option.legend, textStyle: { ...(option.legend.textStyle || {}), color: tc } }
   // tooltip 跟随主题(深色下白底→深底), 保留图表自己的 trigger/formatter/axisPointer, 只套配色
