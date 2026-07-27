@@ -90,7 +90,7 @@ public interface OverviewMapper {
             "SELECT COUNT(*) FROM ont_class_action a",
             "<where>",
             "  <if test='codes != null and codes.size() > 0'>",
-            "    EXISTS (SELECT 1 FROM ont_class c WHERE c.id = a.class_id AND c.category_code IN ",
+            "    EXISTS (SELECT 1 FROM ont_class c WHERE c.id = a.object_class_id AND c.category_code IN ",
             "    <foreach collection='codes' item='c' open='(' separator=',' close=')'>#{c}</foreach>)",
             "  </if>",
             "  <if test='activeOnly'> AND a.status = 1</if>",

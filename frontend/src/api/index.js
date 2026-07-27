@@ -179,6 +179,19 @@ export const linkTypeApi = {
   setStatus:   (id, status) => http.post(`/link-types/${id}/status`, { status }),
 }
 
+/* 动作类型 (Action Types) — ont_class_action 主表 CRUD + 状态/批量 */
+export const actionTypeApi = {
+  list:        () => http.get('/action-types'),
+  get:         (id) => http.get(`/action-types/${id}`),
+  create:      (data) => http.post('/action-types', data),
+  update:      (id, data) => http.put(`/action-types/${id}`, data),
+  remove:      (id) => http.delete(`/action-types/${id}`),
+  batchRemove: (ids) => http.post('/action-types/batch-delete', { ids }),
+  setStatus:   (id, status) => http.post(`/action-types/${id}/status`, { status }),
+  execute:     (id, params, dryRun = true) => http.post(`/action-types/${id}/execute`, { params, dry_run: dryRun }),
+  executions:  (id) => http.get(`/action-types/${id}/executions`),
+}
+
 /* 类型类 (Type Classes) — 升级版:定义 + 大类字典 + 绑定 + 枚举字典 */
 export const typeClassApi = {
   // 定义(元数据);params: { categoryCode, applicableType, deprecated, q }

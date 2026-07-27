@@ -318,7 +318,7 @@ public interface ClassMetaMapper {
     int deleteClassDsByClass(@Param("id") String id);
 
     /** 级联删除该类的全部动作 */
-    @Delete("DELETE FROM ont_class_action WHERE class_id = #{id}")
+    @Delete("DELETE FROM ont_class_action WHERE object_class_id = #{id}")
     int deleteActionsByClass(@Param("id") String id);
 
     /** 级联删除该类参与的全部等价/不相交分组关系（双端匹配） */

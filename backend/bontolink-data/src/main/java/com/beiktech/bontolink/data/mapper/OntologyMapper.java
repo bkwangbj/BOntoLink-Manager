@@ -32,8 +32,8 @@ public interface OntologyMapper {
     @Select("SELECT id, rid, api_name, source_class_id, target_class_id, cardinality, display_name, status FROM ont_class_link ORDER BY create_time DESC")
     List<Map<String, Object>> listLinks();
 
-    /** 查全部类动作（action_kind 区分动作类型） */
-    @Select("SELECT id, rid, api_name, class_id, action_kind, display_name, status FROM ont_class_action ORDER BY create_time DESC")
+    /** 查全部类动作（action_type 区分动作类型；别名兼容图谱旧键 class_id/display_name） */
+    @Select("SELECT id, rid, api_name, object_class_id AS class_id, action_type, rdfs_label AS display_name, status FROM ont_class_action WHERE is_deleted = 0 ORDER BY create_time DESC")
     List<Map<String, Object>> listActions();
 
     /** 查全部接口轻量列表 */
@@ -115,7 +115,7 @@ public interface OntologyMapper {
     int countLinksByCodes(@Param("codes") java.util.Collection<String> codes);
 
     /** 按多个 category_code 统计动作总数（子查询过滤类） */
-    @Select("<script>SELECT COUNT(*) FROM ont_class_action WHERE class_id IN " +
+    @Select("<script>SELECT COUNT(*) FROM ont_class_action WHERE object_class_id IN " +
             "(SELECT id FROM ont_class WHERE category_code IN " +
             "<foreach collection='codes' item='c' open='(' separator=',' close=')'>#{c}</foreach>)" +
             "</script>")
@@ -150,7 +150,7 @@ public interface OntologyMapper {
     int countLinksByClassIds(@Param("ids") java.util.Collection<String> ids);
 
     /** 按 class_id 集合统计动作数 */
-    @Select("<script>SELECT COUNT(*) FROM ont_class_action WHERE class_id IN " +
+    @Select("<script>SELECT COUNT(*) FROM ont_class_action WHERE object_class_id IN " +
             "<foreach collection='ids' item='i' open='(' separator=',' close=')'>#{i}</foreach>" +
             "</script>")
     int countActionsByClassIds(@Param("ids") java.util.Collection<String> ids);
@@ -214,7 +214,7 @@ public interface OntologyMapper {
     int countChildClassesOfClass(@Param("id") String id);
 
     /** 类的动作数 */
-    @Select("SELECT COUNT(*) FROM ont_class_action WHERE class_id = #{id}")
+    @Select("SELECT COUNT(*) FROM ont_class_action WHERE object_class_id = #{id} AND is_deleted = 0")
     int countActionsOfClass(@Param("id") String id);
 
     /** 类实现的接口数 */
@@ -229,7 +229,7 @@ public interface OntologyMapper {
     List<Map<String, Object>> listInterfacesOfClass(@Param("id") String id);
 
     /** 类相关的动作列表 */
-    @Select("SELECT id, rid, api_name, action_kind, display_name, rdfs_label, status FROM ont_class_action WHERE class_id = #{id} ORDER BY create_time")
+    @Select("SELECT id, rid, api_name, action_type, rdfs_label, rdfs_label AS display_name, status FROM ont_class_action WHERE object_class_id = #{id} AND is_deleted = 0 ORDER BY create_time")
     List<Map<String, Object>> listActionsOfClass(@Param("id") String id);
 
     /** 类相关的关系（出向 + 入向） */
