@@ -160,14 +160,18 @@ public class EnumSyncService {
                 mapper.batchInsertItems(insertBatch);
             }
 
-            // 5) level_diff: 删除源中已不存在的非锁定项
+            // 5) level_diff: 批量删除源中已不存在的非锁定项（避免 N+1）
             if ("level_diff".equals(mode)) {
+                List<String> toDelete = new ArrayList<>();
                 for (Map<String, Object> e : existing) {
                     String code = str(e.get("code"));
                     if (!srcCodes.contains(code) && !lockedCodes.contains(code)) {
-                        mapper.deleteItem(str(e.get("id")));
+                        toDelete.add(str(e.get("id")));
                         del++;
                     }
+                }
+                if (!toDelete.isEmpty()) {
+                    mapper.batchDeleteItems(toDelete);
                 }
             }
 

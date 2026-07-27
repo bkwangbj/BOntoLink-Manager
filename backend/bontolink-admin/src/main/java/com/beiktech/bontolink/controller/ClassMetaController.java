@@ -269,10 +269,11 @@ public class ClassMetaController {
     public R<?> reorderClassProps(@PathVariable String classId, @RequestBody Map<String, Object> body) {
         List<String> ids = (List<String>) body.get("ids");
         if (ids == null || ids.isEmpty()) return R.error(400, "ids 必填");
-        int i = 0;
-        for (String pid : ids) {
-            mapper.updateClassPropertySort(pid, i++);
+        List<Map<String, Object>> sortList = new ArrayList<>();
+        for (int i = 0; i < ids.size(); i++) {
+            sortList.add(Map.of("id", ids.get(i), "sort", i));
         }
+        mapper.batchUpdateClassPropertySort(sortList);
         return R.ok();
     }
 

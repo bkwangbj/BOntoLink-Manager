@@ -36,5 +36,10 @@ backend/flyway-run.log
 *.cmd
 backend/mvnw
 
+# JRebel 和临时文件
+**/rebel.xml
+**/classpath.txt
+backend/check_*.sql
+
 # 规格文档(不入库)
 maker统计平台移植改造.pdf

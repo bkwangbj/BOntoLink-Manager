@@ -465,7 +465,7 @@ const filteredGroups = computed(() => {
   const domain = form.category_code || form.categoryCode || ''
   return groups.value.filter(g =>
     g.id === form.group_id ||
-    (g.domain_code ? g.domain_code === domain : g.category_code ? g.category_code === domain : true)
+    (g.domain_code ? g.domain_code === domain : g.category_code ? g.category_code === domain : !domain)
   )
 })
 const usageConfigsCache = ref([])  // 缓存 ont_valuetypes_usage_config,用于 openEdit 时回填 usageCfg
@@ -878,6 +878,12 @@ function formatEnumItem(i) {
   }
 }
 watch(() => form.enum_id, (v) => { if (v) loadEnumItems(v) })
+watch(() => form.category_code, (newDomain, oldDomain) => {
+  if (!drawerOpen.value || newDomain === oldDomain) return
+  loadedDomain.value = ''  // 强制重载
+  form.group_id = ''
+  loadGroupsByDomain(newDomain)
+})
 
 /* —— 测试值: 多级枚举 → 异步树形选择 —— */
 const tvTreeOpen = ref(false)

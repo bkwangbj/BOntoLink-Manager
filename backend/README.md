@@ -77,7 +77,7 @@ backend/
 - **被依赖**：bontolink-admin、bontolink-ontology
 
 ### 3. bontolink-admin（管理后台）
-- **职责**：本体元数据管理 CRUD
+- **职责**：本体元数据管理 CRUD + 搜索服务
 - **端口**：`8088`
 - **路径**：`/bontolink`
 - **功能**：
@@ -87,9 +87,10 @@ backend/
   - 图标库管理
   - 数据源配置
   - 字典管理
+  - 全局搜索（`/api/search/global`，支持关键词 + 智能模式 `smart=true`）
 
 ### 4. bontolink-ontology（本体服务）
-- **职责**：本体推理、查询、SQL 生成
+- **职责**：本体推理、查询、SQL 生成（待实现）
 - **端口**：`8089`
 - **路径**：`/bontolink-ontology`
 - **功能**（待实现）：

@@ -246,6 +246,15 @@ public interface ClassMetaMapper {
     @Update("UPDATE ont_class_property SET sort = #{sort}, update_time = CURRENT_TIMESTAMP WHERE id = #{id}")
     int updateClassPropertySort(@Param("id") String id, @Param("sort") int sort);
 
+    /** 批量更新属性排序 (CASE WHEN 批量，避免 N+1) */
+    @Update("<script>" +
+            "UPDATE ont_class_property SET sort = CASE id " +
+            "<foreach collection='sortList' item='item'>WHEN #{item.id} THEN #{item.sort} </foreach>" +
+            "END, update_time = CURRENT_TIMESTAMP WHERE id IN " +
+            "<foreach collection='sortList' item='item' open='(' separator=',' close=')'>#{item.id}</foreach>" +
+            "</script>")
+    int batchUpdateClassPropertySort(@Param("sortList") java.util.List<java.util.Map<String,Object>> sortList);
+
     /* ============ ont_class extended fields (类表达式 / 其他) ============ */
 
     /** 全量更新对象类（含 RDFS/OWL 表达式/分类/命名空间等所有可编辑字段） */

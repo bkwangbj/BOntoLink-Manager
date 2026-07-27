@@ -1,0 +1,48 @@
+[Unit]
+Description=BOntoLink Ontology Service (Jena TDB2 + pgvector)
+After=network.target postgresql.service redis.service
+Wants=postgresql.service redis.service
+Documentation=https://github.com/beiktech/bontolink
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/bontolink-ontology
+
+# JDK 环境
+Environment="JAVA_HOME=/usr/lib/jvm/jdk-21"
+
+# Embedding API Key（从环境变量读取）
+Environment="OPENAI_API_KEY=your-api-key-here"
+
+# JVM 参数
+Environment="JAVA_OPTS=-Xms512m -Xmx2g"
+Environment="JAVA_OPTS=${JAVA_OPTS} -Djava.security.egd=file:/dev/./urandom"
+Environment="JAVA_OPTS=${JAVA_OPTS} -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
+Environment="JAVA_OPTS=${JAVA_OPTS} -XX:+HeapDumpOnOutOfMemoryError"
+Environment="JAVA_OPTS=${JAVA_OPTS} -XX:HeapDumpPath=/data/bontolink/dumps"
+
+# 启动命令
+ExecStart=/usr/lib/jvm/jdk-21/bin/java ${JAVA_OPTS} \
+    -Dspring.profiles.active=remote \
+    -Dspring.config.additional-location=/opt/bontolink-ontology/config/application-remote.yml \
+    -jar /opt/bontolink-ontology/bontolink-ontology-1.0.0.jar
+
+# 优雅关闭
+ExecStop=/bin/kill -15 $MAINPID
+SuccessExitStatus=143
+
+# 重启策略
+Restart=always
+RestartSec=10
+
+# 日志
+StandardOutput=append:/var/log/bontolink-ontology/stdout.log
+StandardError=append:/var/log/bontolink-ontology/stderr.log
+
+# 安全
+NoNewPrivileges=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

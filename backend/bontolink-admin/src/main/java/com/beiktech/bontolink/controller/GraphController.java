@@ -86,6 +86,13 @@ public class GraphController {
             }
         }
         // 节点: 分组 (来自 ont_biz_group, parent_id = 领域/子领域 的 category id)
+        // 批量查全部分组-对象类关联，避免 N+1
+        Map<String, List<Map<String, Object>>> classesByGroupId = new HashMap<>();
+        bizGroupMapper.listAllGroupClasses().forEach(cls -> {
+            String gid = (String) cls.get("group_id");
+            classesByGroupId.computeIfAbsent(gid, k -> new ArrayList<>()).add(cls);
+        });
+
         for (BizGroup g : bizGroupMapper.listAll()) {
             String gid = g.getId();
             String parentCatId = g.getParentId();
@@ -95,7 +102,7 @@ public class GraphController {
             java.util.LinkedHashSet<String> bound = new java.util.LinkedHashSet<>();
             if (catCode != null) bound.addAll(classIdsByCode.getOrDefault(catCode, Collections.emptyList()));
             // 关联表里通过 group_id 找绑定的 class
-            for (Map<String, Object> cls : bizGroupMapper.listGroupClasses(gid)) {
+            for (Map<String, Object> cls : classesByGroupId.getOrDefault(gid, Collections.emptyList())) {
                 Object idObj = cls.get("id");
                 if (idObj != null) bound.add(idObj.toString());
             }

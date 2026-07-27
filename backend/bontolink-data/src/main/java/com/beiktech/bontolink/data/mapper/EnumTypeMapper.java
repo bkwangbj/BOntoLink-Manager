@@ -99,6 +99,12 @@ public interface EnumTypeMapper {
     @Delete("DELETE FROM ont_enum_items WHERE id = #{id}")
     int deleteItem(@Param("id") String id);
 
+    /** 按 id 列表批量删除枚举项 (level_diff 同步专用，避免 N+1) */
+    @Delete("<script>DELETE FROM ont_enum_items WHERE id IN " +
+            "<foreach collection='ids' item='id' open='(' separator=',' close=')'>#{id}</foreach>" +
+            "</script>")
+    int batchDeleteItems(@Param("ids") java.util.List<String> ids);
+
     /** 批量删除枚举项（全量覆盖同步专用：一次性删除 enumId 下所有非锁定项） */
     @Delete("DELETE FROM ont_enum_items WHERE enum_id = #{enumId} AND is_sync_locked = 0")
     int deleteUnlockedItemsByEnum(@Param("enumId") String enumId);

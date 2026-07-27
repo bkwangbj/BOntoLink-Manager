@@ -92,9 +92,12 @@ public class GroupService {
     public void reorderMembers(String categoryId, List<String> classIds) {
         BizCategory cat = categoryMapper.findById(categoryId);
         if (cat == null) throw new IllegalArgumentException("分类不存在");
-        int sort = 1;
-        for (String classId : classIds) {
-            mapper.updateMemberSort(cat.getCategoryCode(), classId, sort++);
+        List<java.util.Map<String, Object>> sortList = new java.util.ArrayList<>();
+        for (int i = 0; i < classIds.size(); i++) {
+            sortList.add(java.util.Map.of("id", classIds.get(i), "sort", i + 1));
+        }
+        if (!sortList.isEmpty()) {
+            mapper.batchUpdateMemberSort(cat.getCategoryCode(), sortList);
         }
     }
 }

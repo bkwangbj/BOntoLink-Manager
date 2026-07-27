@@ -14,6 +14,7 @@ spring:
     locations: classpath:db/migration/common,classpath:db/migration/{vendor}
     baseline-on-migrate: true
     baseline-version: 0
+    out-of-order: true  # 允许乱序执行迁移，适配 common + vendor 双目录结构
   jackson:
     default-property-inclusion: non_null
     date-format: yyyy-MM-dd HH:mm:ss
@@ -41,6 +42,7 @@ bontolink:
 
 mybatis:
   type-aliases-package: com.beiktech.bontolink.data.entity
+  object-factory: com.beiktech.bontolink.base.mybatis.CaseInsensitiveMapObjectFactory
   configuration:
     map-underscore-to-camel-case: true
     default-fetch-size: 100

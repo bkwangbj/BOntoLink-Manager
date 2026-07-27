@@ -10,5 +10,5 @@ spring:
       pool-name: BontoLinkPGPool
       connection-test-query: SELECT 1
   flyway:
-    # 仅建表，种子数据从 SQLite 迁移
-    locations: classpath:db/migration/postgresql
+    # 包含 PostgreSQL 专用迁移 + 通用种子数据
+    locations: classpath:db/migration/postgresql,classpath:db/migration/common

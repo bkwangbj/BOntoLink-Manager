@@ -11,7 +11,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * 3. 本体驱动的 SQL 生成
  * 4. 数据查询执行
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+    "com.beiktech.bontolink.ontology",
+    "com.beiktech.bontolink.data"
+})
 public class BontoLinkOntologyApplication {
     public static void main(String[] args) {
         SpringApplication.run(BontoLinkOntologyApplication.class, args);

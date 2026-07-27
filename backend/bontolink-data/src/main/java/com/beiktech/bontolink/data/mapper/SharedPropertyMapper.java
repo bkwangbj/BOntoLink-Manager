@@ -21,7 +21,7 @@ public interface SharedPropertyMapper {
                v.api_name   AS value_type_api,
                (SELECT COUNT(1) FROM ont_class_property cp WHERE cp.prop_code = sp.prop_code) AS ref_count,
                (SELECT pf.format_enabled FROM ont_property_format pf
-                 WHERE pf.property_id = sp.id AND pf.src_type = 2 LIMIT 1) AS format_enabled
+                 WHERE pf.property_id = sp.id AND pf.src_type = '2' LIMIT 1) AS format_enabled
         FROM ont_shared_properties sp
         LEFT JOIN ont_value_types v ON v.id = sp.value_type
         ORDER BY sp.update_time DESC
@@ -103,6 +103,26 @@ public interface SharedPropertyMapper {
     /** 同步分组 (调用方先 delete 旧绑定再 insert 新绑定) */
     @Delete("DELETE FROM ont_biz_group_class WHERE ref_id = #{spId} AND group_type = 'shared_props'")
     int deleteGroupRefs(@Param("spId") String spId);
+
+    /** 批量删除多条共享属性的分组绑定 */
+    @Delete("<script>DELETE FROM ont_biz_group_class WHERE group_type = 'shared_props' AND ref_id IN " +
+            "<foreach collection='ids' item='id' open='(' separator=',' close=')'>#{id}</foreach>" +
+            "</script>")
+    int batchDeleteGroupRefs(@Param("ids") java.util.List<String> ids);
+
+    /** 批量删除共享属性主记录 */
+    @Delete("<script>DELETE FROM ont_shared_properties WHERE id IN " +
+            "<foreach collection='ids' item='id' open='(' separator=',' close=')'>#{id}</foreach>" +
+            "</script>")
+    int batchDelete(@Param("ids") java.util.List<String> ids);
+
+    /** 批量查多条共享属性（含引用计数，用于批量删除前校验） */
+    @Select("<script>SELECT sp.id, sp.prop_code, sp.rdfs_label, " +
+            "(SELECT COUNT(1) FROM ont_class_property cp WHERE cp.prop_code = sp.prop_code) AS ref_count " +
+            "FROM ont_shared_properties sp WHERE sp.id IN " +
+            "<foreach collection='ids' item='id' open='(' separator=',' close=')'>#{id}</foreach>" +
+            "</script>")
+    java.util.List<java.util.Map<String, Object>> listByIds(@Param("ids") java.util.List<String> ids);
 
     @Insert("""
         INSERT INTO ont_biz_group_class(id, group_id, ref_id, group_type, category_code, g_sort)

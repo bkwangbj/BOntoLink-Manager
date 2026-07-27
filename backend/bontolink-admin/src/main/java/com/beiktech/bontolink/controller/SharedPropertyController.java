@@ -111,25 +111,32 @@ public class SharedPropertyController {
     public R<Map<String, Object>> batchDelete(@RequestBody Map<String, Object> body) {
         @SuppressWarnings("unchecked")
         List<String> ids = (List<String>) body.getOrDefault("ids", Collections.emptyList());
-        int ok = 0; int blocked = 0;
+        if (ids.isEmpty()) return R.ok(Map.of("deleted", 0, "blocked", 0, "blockedList", Collections.emptyList()));
+
+        // 批量查询（含 ref_count），避免 N+1
+        List<Map<String, Object>> rows = mapper.listByIds(ids);
+        List<String> deletableIds = new ArrayList<>();
         List<String> blockedList = new ArrayList<>();
-        for (String id : ids) {
-            Map<String, Object> row = mapper.findById(id);
-            if (row == null) continue;
+
+        for (Map<String, Object> row : rows) {
             Object cnt = row.get("ref_count");
             long refCount = cnt instanceof Number ? ((Number) cnt).longValue() : 0L;
             if (refCount > 0) {
-                blocked++;
                 blockedList.add(String.valueOf(row.getOrDefault("rdfs_label", row.get("prop_code"))));
-                continue;
+            } else {
+                deletableIds.add((String) row.get("id"));
             }
-            mapper.deleteGroupRefs(id);
-            mapper.delete(id);
-            ok++;
         }
+
+        // 批量删除可删除的
+        if (!deletableIds.isEmpty()) {
+            mapper.batchDeleteGroupRefs(deletableIds);
+            mapper.batchDelete(deletableIds);
+        }
+
         Map<String, Object> result = new LinkedHashMap<>();
-        result.put("deleted", ok);
-        result.put("blocked", blocked);
+        result.put("deleted", deletableIds.size());
+        result.put("blocked", blockedList.size());
         result.put("blockedList", blockedList);
         return R.ok(result);
     }

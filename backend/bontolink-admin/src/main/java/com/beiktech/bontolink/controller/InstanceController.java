@@ -42,8 +42,8 @@ public class InstanceController {
             String categoryCode = (String) c.get("category_code");
             Map<String, Object> row = new LinkedHashMap<>(c);
             row.put("instanceCount", mock.count(id));
-            row.put("propCount", ontologyMapper.countPropertiesOfClass(id));
-            row.put("linkCount", ontologyMapper.countLinksOfClass(id));
+            row.put("propCount", toInt(c.get("prop_total")));
+            row.put("linkCount", toInt(c.get("link_count")));
             String[] labels = categoryLabels(categoryCode, byCode, byId);
             row.put("industryLabel", labels[0]);
             row.put("domainLabel", labels[1]);
@@ -671,5 +671,9 @@ public class InstanceController {
     private static String firstNonBlank(Object... ss) {
         for (Object s : ss) if (s != null && !String.valueOf(s).isBlank()) return String.valueOf(s);
         return "";
+    }
+
+    private static int toInt(Object v) {
+        return v == null ? 0 : ((Number) v).intValue();
     }
 }

@@ -103,6 +103,12 @@ public interface LinkTypeMapper {
     @Delete("DELETE FROM ont_link_mappings WHERE link_id = #{linkId}")
     int deleteMappingsByLink(@Param("linkId") String linkId);
 
+    /** 批量删除多个链接类型的字段映射 (batch delete 避免 N+1) */
+    @Delete("<script>DELETE FROM ont_link_mappings WHERE link_id IN " +
+            "<foreach collection='ids' item='id' open='(' separator=',' close=')'>#{id}</foreach>" +
+            "</script>")
+    int batchDeleteMappings(@Param("ids") java.util.List<String> ids);
+
     /** 新增一条字段映射 */
     @Insert("""
         INSERT INTO ont_link_mappings(mapping_id, link_id, side, seq, object_field, join_table_column)
@@ -126,4 +132,16 @@ public interface LinkTypeMapper {
     /** 删除某链接类型下的全部 relation 类型类绑定 */
     @Delete("DELETE FROM ont_type_class_bind WHERE link_type_id = #{linkId} AND applicable_type = 'relation'")
     int deleteTypeClassesByLink(@Param("linkId") String linkId);
+
+    /** 批量删除多个链接类型的 relation 类型类绑定 (batch delete 避免 N+1) */
+    @Delete("<script>DELETE FROM ont_type_class_bind WHERE applicable_type = 'relation' AND link_type_id IN " +
+            "<foreach collection='ids' item='id' open='(' separator=',' close=')'>#{id}</foreach>" +
+            "</script>")
+    int batchDeleteTypeClasses(@Param("ids") java.util.List<String> ids);
+
+    /** 批量删除链接类型主记录 (batch delete 避免 N+1) */
+    @Delete("<script>DELETE FROM ont_link_types WHERE id IN " +
+            "<foreach collection='ids' item='id' open='(' separator=',' close=')'>#{id}</foreach>" +
+            "</script>")
+    int batchDelete(@Param("ids") java.util.List<String> ids);
 }

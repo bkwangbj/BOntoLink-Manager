@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>语义扩展功能测试</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 24px 32px;
+    }
+    .header h1 { font-size: 24px; margin-bottom: 8px; }
+    .header p { opacity: 0.9; font-size: 14px; }
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #e8e8e8;
+      background: #fafafa;
+    }
+    .tab {
+      padding: 16px 24px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+    .tab:hover { background: #f0f0f0; }
+    .tab.active {
+      color: #667eea;
+      border-bottom-color: #667eea;
+      background: white;
+    }
+    .panel {
+      display: none;
+      padding: 32px;
+    }
+    .panel.active { display: block; }
+    .section {
+      margin-bottom: 32px;
+      padding: 24px;
+      background: #fafafa;
+      border-radius: 6px;
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .badge.get { background: #e6f7ff; color: #1890ff; }
+    .badge.post { background: #d9f7be; color: #52c41a; }
+    .badge.put { background: #fff1b8; color: #faad14; }
+    .badge.delete { background: #ffccc7; color: #f5222d; }
+    .form-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      align-items: flex-start;
+    }
+    .form-row label {
+      min-width: 100px;
+      padding-top: 8px;
+      font-size: 14px;
+      color: #666;
+    }
+    .form-row input,
+    .form-row select,
+    .form-row textarea {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    .form-row textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    .form-row input:focus,
+    .form-row select:focus,
+    .form-row textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+    }
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #5568d3;
+    }
+    .btn-success {
+      background: #52c41a;
+      color: white;
+    }
+    .btn-success:hover {
+      background: #49aa17;
+    }
+    .btn-danger {
+      background: #f5222d;
+      color: white;
+    }
+    .btn-danger:hover {
+      background: #d91f28;
+    }
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+    .result {
+      margin-top: 16px;
+      padding: 16px;
+      background: white;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      font-size: 13px;
+      max-height: 400px;
+      overflow: auto;
+    }
+    .result pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: 'Consolas', 'Monaco', monospace;
+    }
+    .result.success {
+      border-color: #52c41a;
+      background: #f6ffed;
+    }
+    .result.error {
+      border-color: #f5222d;
+      background: #fff1f0;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .status-indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+    .status-indicator.online { background: #52c41a; }
+    .status-indicator.offline { background: #f5222d; }
+    .hint {
+      font-size: 12px;
+      color: #999;
+      margin-top: 4px;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+    .data-table th,
+    .data-table td {
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid #e8e8e8;
+      font-size: 13px;
+    }
+    .data-table th {
+      background: #fafafa;
+      font-weight: 600;
+      color: #333;
+    }
+    .data-table tr:hover {
+      background: #f5f5f5;
+    }
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔍 语义扩展功能测试</h1>
+      <p>BOntoLink02 - 同义词词典 & 领域术语管理</p>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="health">健康检查</div>
+      <div class="tab" data-tab="synonym">同义词词典</div>
+      <div class="tab" data-tab="domain">领域术语</div>
+      <div class="tab" data-tab="ontology">本体查询</div>
+      <div class="tab" data-tab="data">数据查询</div>
+      <div class="tab" data-tab="batch">批量操作</div>
+    </div>
+
+    <!-- 健康检查面板 -->
+    <div class="panel active" id="health">
+      <div class="section">
+        <div class="section-title">
+          <span>服务状态检测</span>
+        </div>
+        <div class="form-row">
+          <label>后端地址</label>
+          <input type="text" id="baseUrl" value="http://localhost:8088/bontolink/api" />
+        </div>
+        <button class="btn btn-primary" onclick="checkHealth()">检测服务状态</button>
+        <div id="healthResult" class="result" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- 同义词词典面板 -->
+    <div class="panel" id="synonym">
+      <div class="section">
+        <div class="section-title">
+          <span class="badge get">GET</span>
+          查询同义词列表
+        </div>
+        <div class="form-row">
+          <label>领域筛选</label>
+          <select id="synonymDomain">
+            <option value="">全部</option>
+            <option value="WATER">水利</option>
+            <option value="FINANCE">财务</option>
+            <option value="GENERAL">通用</option>
+          </select>
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="listSynonyms()">查询列表</button>
+          <button class="btn btn-secondary" onclick="clearResult('synonymListResult')">清空结果</button>
+        </div>
+        <div id="synonymListResult" class="result" style="display:none;"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge post">POST</span>
+          新建同义词
+        </div>
+        <div class="form-row">
+          <label>词条 *</label>
+          <input type="text" id="newSynonymWord" placeholder="例: 水费" />
+        </div>
+        <div class="form-row">
+          <label>同义词 *</label>
+          <input type="text" id="newSynonymList" placeholder="用逗号分隔, 例: 水价,供水费用,水资源费" />
+        </div>
+        <div class="form-row">
+          <label>领域</label>
+          <select id="newSynonymDomain">
+            <option value="GENERAL">通用</option>
+            <option value="WATER">水利</option>
+            <option value="FINANCE">财务</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>置信度</label>
+          <input type="number" id="newSynonymConfidence" value="0.9" min="0" max="1" step="0.1" />
+        </div>
+        <button class="btn btn-success" onclick="createSynonym()">创建</button>
+        <div id="createSynonymResult" class="result" style="display:none;"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge get">GET</span>
+          查询单个同义词
+        </div>
+        <div class="form-row">
+          <label>ID</label>
+          <input type="text" id="getSynonymId" placeholder="从列表中复制ID" />
+        </div>
+        <button class="btn btn-primary" onclick="getSynonym()">查询</button>
+        <div id="getSynonymResult" class="result" style="display:none;"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge put">PUT</span>
+          更新同义词
+        </div>
+        <div class="form-row">
+          <label>ID *</label>
+          <input type="text" id="updateSynonymId" placeholder="要更新的ID" />
+        </div>
+        <div class="form-row">
+          <label>词条</label>
+          <input type="text" id="updateSynonymWord" />
+        </div>
+        <div class="form-row">
+          <label>同义词</label>
+          <input type="text" id="updateSynonymList" placeholder="用逗号分隔" />
+        </div>
+        <div class="form-row">
+          <label>置信度</label>
+          <input type="number" id="updateSynonymConfidence" min="0" max="1" step="0.1" />
+        </div>
+        <button class="btn btn-success" onclick="updateSynonym()">更新</button>
+        <div id="updateSynonymResult" class="result" style="display:none;"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge delete">DELETE</span>
+          删除同义词
+        </div>
+        <div class="form-row">
+          <label>ID *</label>
+          <input type="text" id="deleteSynonymId" placeholder="要删除的ID" />
+        </div>
+        <button class="btn btn-danger" onclick="deleteSynonym()">删除</button>
+        <div id="deleteSynonymResult" class="result" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- 领域术语面板 -->
+    <div class="panel" id="domain">
+      <div class="section">
+        <div class="section-title">
+          <span class="badge get">GET</span>
+          查询领域术语列表
+        </div>
+        <button class="btn btn-primary" onclick="listDomainTerms()">查询列表</button>
+        <div id="domainTermListResult" class="result" style="display:none;"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge post">POST</span>
+          新建领域术语
+        </div>
+        <div class="form-row">
+          <label>标准术语 *</label>
+          <input type="text" id="newTermStandard" placeholder="例: 实际供水量" />
+        </div>
+        <div class="form-row">
+          <label>常用表达 *</label>
+          <input type="text" id="newTermCommon" placeholder="用逗号分隔, 例: 供水量,水量" />
+        </div>
+        <div class="form-row">
+          <label>领域</label>
+          <select id="newTermDomain">
+            <option value="WATER">水利</option>
+            <option value="FINANCE">财务</option>
+            <option value="GENERAL">通用</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>术语类型</label>
+          <select id="newTermType">
+            <option value="ENTITY">实体级</option>
+            <option value="FIELD">字段级</option>
+            <option value="UNIT">单位级</option>
+          </select>
+        </div>
+        <button class="btn btn-success" onclick="createDomainTerm()">创建</button>
+        <div id="createTermResult" class="result" style="display:none;"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge get">GET</span>
+          查询单个领域术语
+        </div>
+        <div class="form-row">
+          <label>ID</label>
+          <input type="text" id="getTermId" placeholder="从列表中复制ID" />
+        </div>
+        <button class="btn btn-primary" onclick="getDomainTerm()">查询</button>
+        <div id="getTermResult" class="result" style="display:none;"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge put">PUT</span>
+          更新领域术语
+        </div>
+        <div class="form-row">
+          <label>ID *</label>
+          <input type="text" id="updateTermId" placeholder="要更新的ID" />
+        </div>
+        <div class="form-row">
+          <label>标准术语</label>
+          <input type="text" id="updateTermStandard" />
+        </div>
+        <div class="form-row">
+          <label>常用表达</label>
+          <input type="text" id="updateTermCommon" placeholder="用逗号分隔" />
+        </div>
+        <button class="btn btn-success" onclick="updateDomainTerm()">更新</button>
+        <div id="updateTermResult" class="result" style="display:none;"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge delete">DELETE</span>
+          删除领域术语
+        </div>
+        <div class="form-row">
+          <label>ID *</label>
+          <input type="text" id="deleteTermId" placeholder="要删除的ID" />
+        </div>
+        <button class="btn btn-danger" onclick="deleteDomainTerm()">删除</button>
+        <div id="deleteTermResult" class="result" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- 本体查询面板 -->
+    <div class="panel" id="ontology">
+      <div class="section" style="background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); border-left: 4px solid #667eea;">
+        <div class="section-title">
+          <span class="badge get">GET</span> 🤖 智能本体查询（NEW）
+        </div>
+        <p style="color: #666; font-size: 13px; margin-bottom: 12px;">
+          输入一段自然语言描述，系统自动提取关键词、扩展同义词，并返回最相关的本体信息
+        </p>
+        <div class="form-row">
+          <input type="text" id="smartQueryInput" placeholder="例如：查询水库的供水量数据" style="flex: 1">
+          <input type="number" id="smartQueryLimit" placeholder="返回数量" value="10" style="width: 100px">
+          <button onclick="smartOntologySearch()">智能查询</button>
+          <button onclick="fillSmartExample()" style="background: #52c41a">示例</button>
+        </div>
+        <pre id="smartQueryResult" class="result"></pre>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge get">GET</span> 对象类型列表
+        </div>
+        <div class="form-row">
+          <input type="text" id="ontCategoryCode" placeholder="行业代码 (可选, 如 WATER)" style="flex: 1">
+          <button onclick="searchOntClasses()">查询</button>
+        </div>
+        <pre id="ontClassesResult" class="result"></pre>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge get">GET</span> 对象类型详情
+        </div>
+        <div class="form-row">
+          <input type="text" id="ontClassId" placeholder="对象类型 ID" style="flex: 1">
+          <button onclick="getOntClassDetail()">查询详情</button>
+        </div>
+        <pre id="ontClassDetailResult" class="result"></pre>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge get">GET</span> 全局搜索
+        </div>
+        <div class="form-row">
+          <input type="text" id="ontSearchKeyword" placeholder="搜索关键词" style="flex: 1">
+          <select id="ontSearchType">
+            <option value="">全部类型</option>
+            <option value="object">对象类型</option>
+            <option value="property">属性</option>
+          </select>
+          <button onclick="globalSearch()">搜索</button>
+        </div>
+        <pre id="globalSearchResult" class="result"></pre>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge get">GET</span> 类属性查询
+        </div>
+        <div class="form-row">
+          <input type="text" id="ontPropertyClassId" placeholder="对象类型 ID" style="flex: 1">
+          <button onclick="getClassProperties()">查询属性</button>
+        </div>
+        <pre id="classPropertiesResult" class="result"></pre>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge get">GET</span> RID 查询 (新接口 - 待修复)
+        </div>
+        <div class="form-row">
+          <input type="text" id="ontRid" placeholder="RID (如 ri.ont.class.xxxx-xxxx)" style="flex: 1">
+          <button onclick="findByRid()">查询</button>
+        </div>
+        <pre id="ridResult" class="result"></pre>
+      </div>
+    </div>
+
+    <!-- 数据查询面板 -->
+    <div class="panel" id="data">
+      <div class="section">
+        <div class="section-title">
+          <span class="badge get">GET</span> 数据源列表
+        </div>
+        <button onclick="getDatasources()">查询所有数据源</button>
+        <pre id="datasourcesResult" class="result"></pre>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge get">GET</span> 数据源详情
+        </div>
+        <div class="form-row">
+          <input type="text" id="datasourceId" placeholder="数据源 ID" style="flex: 1">
+          <button onclick="getDatasourceDetail()">查询详情</button>
+        </div>
+        <pre id="datasourceDetailResult" class="result"></pre>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge get">GET</span> 数据源统计概览
+        </div>
+        <button onclick="getDatasourceOverview()">查询统计</button>
+        <pre id="datasourceOverviewResult" class="result"></pre>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge get">GET</span> 实例数据查询
+        </div>
+        <div class="form-row">
+          <input type="text" id="instanceClassId" placeholder="对象类型 ID" style="flex: 2">
+          <input type="number" id="instancePage" placeholder="页码" value="1" style="flex: 1">
+          <input type="number" id="instanceSize" placeholder="每页数量" value="20" style="flex: 1">
+          <button onclick="getInstanceList()">查询实例</button>
+        </div>
+        <pre id="instanceListResult" class="result"></pre>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge get">GET</span> 对象类型统计
+        </div>
+        <button onclick="getObjectTypesStats()">查询统计</button>
+        <pre id="objectTypesStatsResult" class="result"></pre>
+      </div>
+    </div>
+
+    <!-- 批量操作面板 -->
+    <div class="panel" id="batch">
+      <div class="section">
+        <div class="section-title">
+          <span class="badge post">POST</span>
+          批量导入同义词
+        </div>
+        <div class="form-row">
+          <label>JSON 数组</label>
+          <textarea id="batchSynonymJson" placeholder='[{"word":"水费","synonyms":["水价","供水费用"],"domain":"WATER","confidence":0.95}]'></textarea>
+        </div>
+        <div class="hint">格式: [{"word":"词条","synonyms":["同义词1","同义词2"],"domain":"领域","confidence":0.9}]</div>
+        <button class="btn btn-success" onclick="batchImportSynonyms()">批量导入</button>
+        <div id="batchImportResult" class="result" style="display:none;"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          预置测试数据
+        </div>
+        <p style="margin-bottom: 12px; color: #666; font-size: 14px;">快速填充测试数据到上面的批量导入框</p>
+        <div class="actions">
+          <button class="btn btn-secondary" onclick="fillTestData('water')">水利领域</button>
+          <button class="btn btn-secondary" onclick="fillTestData('finance')">财务领域</button>
+          <button class="btn btn-secondary" onclick="fillTestData('general')">通用领域</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 获取后端地址
+    function getBaseUrl() {
+      return document.getElementById('baseUrl').value.replace(/\/$/, '');
+    }
+
+    // 显示结果
+    function showResult(elementId, data, isError = false) {
+      const el = document.getElementById(elementId);
+      el.style.display = 'block';
+      el.className = 'result ' + (isError ? 'error' : 'success');
+      el.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+    }
+
+    // 清空结果
+    function clearResult(elementId) {
+      const el = document.getElementById(elementId);
+      el.style.display = 'none';
+      el.innerHTML = '';
+    }
+
+    // Tab 切换
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    // ========== 健康检查 ==========
+    async function checkHealth() {
+      try {
+        const baseUrl = getBaseUrl();
+        const response = await fetch(`${baseUrl}/synonym-dict/health`);
+        const data = await response.json();
+        showResult('healthResult', {
+          status: 'online',
+          statusCode: response.status,
+          response: data
+        });
+      } catch (error) {
+        showResult('healthResult', {
+          status: 'offline',
+          error: error.message
+        }, true);
+      }
+    }
+
+    // ========== 同义词词典 ==========
+    async function listSynonyms() {
+      try {
+        const baseUrl = getBaseUrl();
+        const domain = document.getElementById('synonymDomain').value;
+        const url = domain ? `${baseUrl}/synonym-dict?domain=${domain}` : `${baseUrl}/synonym-dict`;
+        const response = await fetch(url);
+        const data = await response.json();
+        showResult('synonymListResult', data);
+      } catch (error) {
+        showResult('synonymListResult', { error: error.message }, true);
+      }
+    }
+
+    async function createSynonym() {
+      try {
+        const word = document.getElementById('newSynonymWord').value.trim();
+        const synonymList = document.getElementById('newSynonymList').value.trim();
+        const domain = document.getElementById('newSynonymDomain').value;
+        const confidence = parseFloat(document.getElementById('newSynonymConfidence').value);
+
+        if (!word || !synonymList) {
+          alert('请填写词条和同义词');
+          return;
+        }
+
+        const synonyms = synonymList.split(',').map(s => s.trim()).filter(s => s);
+
+        const response = await fetch(`${getBaseUrl()}/synonym-dict`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ word, synonyms, domain, confidence })
+        });
+        const data = await response.json();
+        showResult('createSynonymResult', data);
+      } catch (error) {
+        showResult('createSynonymResult', { error: error.message }, true);
+      }
+    }
+
+    async function getSynonym() {
+      try {
+        const id = document.getElementById('getSynonymId').value.trim();
+        if (!id) {
+          alert('请输入ID');
+          return;
+        }
+        const response = await fetch(`${getBaseUrl()}/synonym-dict/${id}`);
+        const data = await response.json();
+        showResult('getSynonymResult', data);
+      } catch (error) {
+        showResult('getSynonymResult', { error: error.message }, true);
+      }
+    }
+
+    async function updateSynonym() {
+      try {
+        const id = document.getElementById('updateSynonymId').value.trim();
+        if (!id) {
+          alert('请输入ID');
+          return;
+        }
+        const word = document.getElementById('updateSynonymWord').value.trim();
+        const synonymList = document.getElementById('updateSynonymList').value.trim();
+        const confidence = document.getElementById('updateSynonymConfidence').value;
+
+        const body = {};
+        if (word) body.word = word;
+        if (synonymList) body.synonyms = synonymList.split(',').map(s => s.trim()).filter(s => s);
+        if (confidence) body.confidence = parseFloat(confidence);
+
+        const response = await fetch(`${getBaseUrl()}/synonym-dict/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await response.json();
+        showResult('updateSynonymResult', data);
+      } catch (error) {
+        showResult('updateSynonymResult', { error: error.message }, true);
+      }
+    }
+
+    async function deleteSynonym() {
+      try {
+        const id = document.getElementById('deleteSynonymId').value.trim();
+        if (!id) {
+          alert('请输入ID');
+          return;
+        }
+        if (!confirm('确认删除该同义词?')) return;
+
+        const response = await fetch(`${getBaseUrl()}/synonym-dict/${id}`, {
+          method: 'DELETE'
+        });
+        const data = await response.json();
+        showResult('deleteSynonymResult', data);
+      } catch (error) {
+        showResult('deleteSynonymResult', { error: error.message }, true);
+      }
+    }
+
+    // ========== 领域术语 ==========
+    async function listDomainTerms() {
+      try {
+        const response = await fetch(`${getBaseUrl()}/domain-term`);
+        const data = await response.json();
+        showResult('domainTermListResult', data);
+      } catch (error) {
+        showResult('domainTermListResult', { error: error.message }, true);
+      }
+    }
+
+    async function createDomainTerm() {
+      try {
+        const standard_term = document.getElementById('newTermStandard').value.trim();
+        const commonList = document.getElementById('newTermCommon').value.trim();
+        const domain = document.getElementById('newTermDomain').value;
+        const term_type = document.getElementById('newTermType').value;
+
+        if (!standard_term || !commonList) {
+          alert('请填写标准术语和常用表达');
+          return;
+        }
+
+        const common_terms = commonList.split(',').map(s => s.trim()).filter(s => s);
+
+        const response = await fetch(`${getBaseUrl()}/domain-term`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ standard_term, common_terms, domain, term_type })
+        });
+        const data = await response.json();
+        showResult('createTermResult', data);
+      } catch (error) {
+        showResult('createTermResult', { error: error.message }, true);
+      }
+    }
+
+    async function getDomainTerm() {
+      try {
+        const id = document.getElementById('getTermId').value.trim();
+        if (!id) {
+          alert('请输入ID');
+          return;
+        }
+        const response = await fetch(`${getBaseUrl()}/domain-term/${id}`);
+        const data = await response.json();
+        showResult('getTermResult', data);
+      } catch (error) {
+        showResult('getTermResult', { error: error.message }, true);
+      }
+    }
+
+    async function updateDomainTerm() {
+      try {
+        const id = document.getElementById('updateTermId').value.trim();
+        if (!id) {
+          alert('请输入ID');
+          return;
+        }
+        const standard_term = document.getElementById('updateTermStandard').value.trim();
+        const commonList = document.getElementById('updateTermCommon').value.trim();
+
+        const body = {};
+        if (standard_term) body.standard_term = standard_term;
+        if (commonList) body.common_terms = commonList.split(',').map(s => s.trim()).filter(s => s);
+
+        const response = await fetch(`${getBaseUrl()}/domain-term/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await response.json();
+        showResult('updateTermResult', data);
+      } catch (error) {
+        showResult('updateTermResult', { error: error.message }, true);
+      }
+    }
+
+    async function deleteDomainTerm() {
+      try {
+        const id = document.getElementById('deleteTermId').value.trim();
+        if (!id) {
+          alert('请输入ID');
+          return;
+        }
+        if (!confirm('确认删除该领域术语?')) return;
+
+        const response = await fetch(`${getBaseUrl()}/domain-term/${id}`, {
+          method: 'DELETE'
+        });
+        const data = await response.json();
+        showResult('deleteTermResult', data);
+      } catch (error) {
+        showResult('deleteTermResult', { error: error.message }, true);
+      }
+    }
+
+    // ========== 批量操作 ==========
+    async function batchImportSynonyms() {
+      try {
+        const json = document.getElementById('batchSynonymJson').value.trim();
+        if (!json) {
+          alert('请输入JSON数据');
+          return;
+        }
+        const data = JSON.parse(json);
+        const response = await fetch(`${getBaseUrl()}/synonym-dict/batch-import`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        showResult('batchImportResult', result);
+      } catch (error) {
+        showResult('batchImportResult', { error: error.message }, true);
+      }
+    }
+
+    function fillTestData(type) {
+      const testData = {
+        water: [
+          {"word":"水费","synonyms":["水价","供水费用","水资源费"],"domain":"WATER","confidence":0.95},
+          {"word":"水库","synonyms":["蓄水池","水利枢纽","水库工程"],"domain":"WATER","confidence":0.9},
+          {"word":"灌溉","synonyms":["浇灌","灌水","浇水"],"domain":"WATER","confidence":0.85}
+        ],
+        finance: [
+          {"word":"收入","synonyms":["营业收入","收益","盈利"],"domain":"FINANCE","confidence":0.9},
+          {"word":"成本","synonyms":["费用","开支","支出"],"domain":"FINANCE","confidence":0.9},
+          {"word":"利润","synonyms":["盈利","净利润","收益"],"domain":"FINANCE","confidence":0.95}
+        ],
+        general: [
+          {"word":"查询","synonyms":["搜索","检索","查找"],"domain":"GENERAL","confidence":0.9},
+          {"word":"删除","synonyms":["移除","清除","去除"],"domain":"GENERAL","confidence":0.85},
+          {"word":"修改","synonyms":["编辑","更新","变更"],"domain":"GENERAL","confidence":0.9}
+        ]
+      };
+      document.getElementById('batchSynonymJson').value = JSON.stringify(testData[type], null, 2);
+    }
+
+    // ==================== 本体查询函数 ====================
+    async function smartOntologySearch() {
+      try {
+        const query = document.getElementById('smartQueryInput').value.trim();
+        if (!query) {
+          alert('请输入查询描述');
+          return;
+        }
+        const limit = document.getElementById('smartQueryLimit').value || 10;
+        // 使用 /api/search/global?smart=true 启用智能模式
+        const response = await fetch(`${getBaseUrl()}/search/global?q=${encodeURIComponent(query)}&smart=true&limit=${limit}`);
+        const data = await response.json();
+        showResult('smartQueryResult', data);
+      } catch (error) {
+        showResult('smartQueryResult', { error: error.message }, true);
+      }
+    }
+
+    function fillSmartExample() {
+      const examples = [
+        '查询水库的供水量数据',
+        '获取供水企业的收费标准信息',
+        '查找水质监测站点的位置和类型',
+        '统计水资源利用率相关指标',
+        '查询防洪预警系统的数据接口'
+      ];
+      const randomExample = examples[Math.floor(Math.random() * examples.length)];
+      document.getElementById('smartQueryInput').value = randomExample;
+    }
+
+    async function searchOntClasses() {
+      try {
+        const categoryCode = document.getElementById('ontCategoryCode').value.trim();
+        const url = categoryCode
+          ? `${getBaseUrl()}/resource/classes?categoryCode=${categoryCode}`
+          : `${getBaseUrl()}/resource/classes`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+        showResult('ontClassesResult', data);
+      } catch (error) {
+        showResult('ontClassesResult', { error: error.message }, true);
+      }
+    }
+
+    async function getOntClassDetail() {
+      try {
+        const classId = document.getElementById('ontClassId').value.trim();
+        if (!classId) {
+          alert('请输入对象类型 ID');
+          return;
+        }
+        const response = await fetch(`${getBaseUrl()}/resource/classes/${classId}`);
+        const data = await response.json();
+        showResult('ontClassDetailResult', data);
+      } catch (error) {
+        showResult('ontClassDetailResult', { error: error.message }, true);
+      }
+    }
+
+    async function globalSearch() {
+      try {
+        const keyword = document.getElementById('ontSearchKeyword').value.trim();
+        if (!keyword) {
+          alert('请输入搜索关键词');
+          return;
+        }
+        const type = document.getElementById('ontSearchType').value;
+        const url = type
+          ? `${getBaseUrl()}/search/global?q=${encodeURIComponent(keyword)}&type=${type}`
+          : `${getBaseUrl()}/search/global?q=${encodeURIComponent(keyword)}`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+        showResult('globalSearchResult', data);
+      } catch (error) {
+        showResult('globalSearchResult', { error: error.message }, true);
+      }
+    }
+
+    async function getClassProperties() {
+      try {
+        const classId = document.getElementById('ontPropertyClassId').value.trim();
+        if (!classId) {
+          alert('请输入对象类型 ID');
+          return;
+        }
+        const response = await fetch(`${getBaseUrl()}/resource/classes/${classId}/properties`);
+        const data = await response.json();
+        showResult('classPropertiesResult', data);
+      } catch (error) {
+        showResult('classPropertiesResult', { error: error.message }, true);
+      }
+    }
+
+    async function findByRid() {
+      try {
+        const rid = document.getElementById('ontRid').value.trim();
+        if (!rid) {
+          alert('请输入 RID');
+          return;
+        }
+        const response = await fetch(`${getBaseUrl()}/semantic-search/by-rid?rid=${encodeURIComponent(rid)}`);
+        const data = await response.json();
+        showResult('ridResult', data);
+      } catch (error) {
+        showResult('ridResult', { error: error.message }, true);
+      }
+    }
+
+    // ==================== 数据查询函数 ====================
+    async function getDatasources() {
+      try {
+        const response = await fetch(`${getBaseUrl()}/datasource`);
+        const data = await response.json();
+        showResult('datasourcesResult', data);
+      } catch (error) {
+        showResult('datasourcesResult', { error: error.message }, true);
+      }
+    }
+
+    async function getDatasourceDetail() {
+      try {
+        const id = document.getElementById('datasourceId').value.trim();
+        if (!id) {
+          alert('请输入数据源 ID');
+          return;
+        }
+        const response = await fetch(`${getBaseUrl()}/datasource/${id}`);
+        const data = await response.json();
+        showResult('datasourceDetailResult', data);
+      } catch (error) {
+        showResult('datasourceDetailResult', { error: error.message }, true);
+      }
+    }
+
+    async function getDatasourceOverview() {
+      try {
+        const response = await fetch(`${getBaseUrl()}/datasource/overview`);
+        const data = await response.json();
+        showResult('datasourceOverviewResult', data);
+      } catch (error) {
+        showResult('datasourceOverviewResult', { error: error.message }, true);
+      }
+    }
+
+    async function getInstanceList() {
+      try {
+        const classId = document.getElementById('instanceClassId').value.trim();
+        if (!classId) {
+          alert('请输入对象类型 ID');
+          return;
+        }
+        const page = document.getElementById('instancePage').value || 1;
+        const size = document.getElementById('instanceSize').value || 20;
+
+        const response = await fetch(`${getBaseUrl()}/instance/list?classId=${classId}&page=${page}&size=${size}`);
+        const data = await response.json();
+        showResult('instanceListResult', data);
+      } catch (error) {
+        showResult('instanceListResult', { error: error.message }, true);
+      }
+    }
+
+    async function getObjectTypesStats() {
+      try {
+        const response = await fetch(`${getBaseUrl()}/instance/object-types`);
+        const data = await response.json();
+        showResult('objectTypesStatsResult', data);
+      } catch (error) {
+        showResult('objectTypesStatsResult', { error: error.message }, true);
+      }
+    }
+
+    // 页面加载时自动检查健康状态
+    window.addEventListener('load', () => {
+      setTimeout(checkHealth, 500);
+    });
+  </script>
+</body>
+</html>

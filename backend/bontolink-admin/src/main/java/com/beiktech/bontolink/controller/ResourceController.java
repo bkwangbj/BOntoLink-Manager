@@ -190,53 +190,59 @@ public class ResourceController {
             @RequestParam(value = "aggregate", required = false, defaultValue = "false") boolean aggregate) {
         List<Map<String, Object>> rows = ontologyMapper.listClasses();
         if (!aggregate) return R.ok(rows);
-        // 聚合附加字段：普通属性数/总属性数、子类数、数据源数、关联表数(列表)、关系数、动作数、接口数、领域中文名
+
+        // 批量加载数据源信息（2 次查询替代 N×7 次）
+        Map<String, List<Map<String, Object>>> dsBriefByClass = new HashMap<>();
+        ontologyMapper.batchListAllClassDsBrief().forEach(ds -> {
+            String cid = (String) ds.get("class_id");
+            dsBriefByClass.computeIfAbsent(cid, k -> new ArrayList<>()).add(ds);
+        });
+
+        // 分类索引（用于 categoryLabel 路径拼接）
         Map<String, com.beiktech.bontolink.data.entity.BizCategory> catByCode = new HashMap<>();
-        categoryMapper.listAll().forEach(c -> { if (c.getCategoryCode() != null) catByCode.put(c.getCategoryCode(), c); });
-        // 为了"领域中文路径"，再准备 id→cat 索引（向上回溯到行业）
-        Map<String, com.beiktech.bontolink.data.entity.BizCategory> catById = new HashMap<>();
-        categoryMapper.listAll().forEach(c -> catById.put(c.getId(), c));
+        Map<String, com.beiktech.bontolink.data.entity.BizCategory> catById   = new HashMap<>();
+        categoryMapper.listAll().forEach(c -> {
+            if (c.getCategoryCode() != null) catByCode.put(c.getCategoryCode(), c);
+            catById.put(c.getId(), c);
+        });
+
         for (Map<String, Object> r : rows) {
-            String id = (String) r.get("id");
+            String id           = (String) r.get("id");
             String categoryCode = (String) r.get("category_code");
-            int total = ontologyMapper.countPropertiesOfClass(id);
-            int normal = ontologyMapper.countNormalPropertiesOfClass(id);
-            r.put("propTotal", total);
-            r.put("propNormal", normal);
-            r.put("childCount", ontologyMapper.countChildClassesOfClass(id));
-            r.put("linkCount", ontologyMapper.countLinksOfClass(id));
-            r.put("actionCount", ontologyMapper.countActionsOfClass(id));
-            r.put("interfaceCount", ontologyMapper.countInterfacesOfClass(id));
-            // 数据源数 / 关联表：按本对象实际挂接的物理表(ont_class_ds)算, 而非按领域(category)推算
-            List<Map<String, Object>> dsBrief = ontologyMapper.listClassDsBrief(id);
-            // 关联表：本对象挂接的物理表名(去重, 过滤空/"null")
+
+            r.put("propTotal",     toInt(r.remove("prop_total")));
+            r.put("propNormal",    toInt(r.remove("prop_normal")));
+            r.put("childCount",    0);
+            r.put("linkCount",     toInt(r.remove("link_count")));
+            r.put("actionCount",   toInt(r.remove("action_count")));
+            r.put("interfaceCount",toInt(r.remove("interface_count")));
+
+            List<Map<String, Object>> dsBrief = dsBriefByClass.getOrDefault(id, Collections.emptyList());
             List<String> relatedTables = dsBrief.stream()
                     .map(x -> String.valueOf(x.get("physical_table")))
                     .filter(s -> s != null && !s.isBlank() && !"null".equals(s))
                     .distinct().toList();
             r.put("relatedTables", relatedTables);
-            // 数据源数：这些表来自多少个不同数据源(distinct ds_code)
             long dsn = dsBrief.stream()
                     .map(x -> String.valueOf(x.get("ds_code")))
                     .filter(s -> s != null && !s.isBlank() && !"null".equals(s))
                     .distinct().count();
             r.put("dsCount", (int) dsn);
-            // 父类暂无 parent_class_id 列，留占位
-            r.put("parentLabel", null);
+            r.put("parentLabel",   null);
             r.put("parentApiName", null);
+
             // 领域中文路径：行业 / 领域
-            String label = null;
             com.beiktech.bontolink.data.entity.BizCategory cat = categoryCode == null ? null : catByCode.get(categoryCode);
+            String label = null;
             if (cat != null) {
                 String domainLabel = cat.getRdfsLabel() != null ? cat.getRdfsLabel() : cat.getCategoryCode();
-                String industryLabel = null;
                 com.beiktech.bontolink.data.entity.BizCategory cur = cat;
                 while (cur.getParentId() != null && !"0".equals(cur.getParentId())) {
                     com.beiktech.bontolink.data.entity.BizCategory p = catById.get(cur.getParentId());
                     if (p == null) break;
                     cur = p;
                 }
-                if (cur != cat) industryLabel = cur.getRdfsLabel() != null ? cur.getRdfsLabel() : cur.getCategoryCode();
+                String industryLabel = (cur != cat) ? (cur.getRdfsLabel() != null ? cur.getRdfsLabel() : cur.getCategoryCode()) : null;
                 label = industryLabel == null ? domainLabel : industryLabel + " / " + domainLabel;
             }
             r.put("categoryLabel", label);
@@ -351,5 +357,9 @@ public class ResourceController {
         g.put("nodes", nodes);
         g.put("edges", edges);
         return R.ok(g);
+    }
+
+    private static int toInt(Object v) {
+        return v == null ? 0 : ((Number) v).intValue();
     }
 }

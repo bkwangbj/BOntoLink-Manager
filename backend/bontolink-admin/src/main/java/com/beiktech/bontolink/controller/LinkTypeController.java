@@ -128,15 +128,12 @@ public class LinkTypeController {
     @SuppressWarnings("unchecked")
     public R<Map<String, Object>> batchDelete(@RequestBody Map<String, Object> body) {
         List<String> ids = (List<String>) body.getOrDefault("ids", Collections.emptyList());
-        int ok = 0;
-        for (String id : ids) {
-            mapper.deleteMappingsByLink(id);
-            mapper.deleteTypeClassesByLink(id);
-            mapper.delete(id);
-            ok++;
-        }
+        if (ids.isEmpty()) return R.ok(Map.of("deleted", 0));
+        mapper.batchDeleteMappings(ids);
+        mapper.batchDeleteTypeClasses(ids);
+        mapper.batchDelete(ids);
         Map<String, Object> result = new LinkedHashMap<>();
-        result.put("deleted", ok);
+        result.put("deleted", ids.size());
         return R.ok(result);
     }
 

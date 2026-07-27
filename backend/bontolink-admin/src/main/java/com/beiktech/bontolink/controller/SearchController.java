@@ -2,6 +2,8 @@ package com.beiktech.bontolink.controller;
 
 import com.beiktech.bontolink.common.R;
 import com.beiktech.bontolink.data.mapper.SearchMapper;
+import com.beiktech.bontolink.data.mapper.SynonymDictMapper;
+import com.alibaba.fastjson2.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +30,7 @@ import java.util.*;
 public class SearchController {
 
     @Autowired private SearchMapper mapper;
+    @Autowired private SynonymDictMapper synonymDictMapper;
 
     /** 每类返回条数上限 (综合模式 5, 单类型 30) */
     private static final int LIMIT_DIGEST = 5;
@@ -36,14 +39,24 @@ public class SearchController {
     /**
      * 全局搜索：按关键字 q 在各类资源表中模糊查询，type 指定范围(all/object/link/prop/ds/other)。
      * 综合模式每类上限 5 条，单类型聚焦时上限 30 条；结果附 kind + route 供前端直接跳转。
+     *
+     * 新增智能模式（smart=true）：自动分词、同义词扩展、多关键词匹配评分
      */
     @GetMapping("/global")
     public R<Map<String, Object>> global(@RequestParam(required = false) String q,
-                                          @RequestParam(required = false, defaultValue = "all") String type) {
+                                          @RequestParam(required = false, defaultValue = "all") String type,
+                                          @RequestParam(required = false, defaultValue = "false") boolean smart) {
         Map<String, Object> result = new LinkedHashMap<>();
         if (q == null || q.trim().isEmpty()) {
             return R.ok(result);
         }
+
+        // 智能模式
+        if (smart) {
+            return smartSearch(q, 10);
+        }
+
+        // 原有逻辑
         String pat = "%" + q.trim() + "%";
         int limit = "all".equals(type) ? LIMIT_DIGEST : LIMIT_FOCUSED;
 
@@ -97,5 +110,95 @@ public class SearchController {
             row.put("route", basePath + (id.isEmpty() ? "" : "?openId=" + id));
         }
         return rows;
+    }
+
+    /**
+     * 智能本体查询 - 输入一段自然语言，返回相关本体信息
+     *
+     * 工作流程:
+     * 1. 分词提取关键词
+     * 2. 使用同义词字典扩展关键词
+     * 3. 多关键词并行搜索本体
+     * 4. 去重、评分、排序
+     */
+    private R<Map<String, Object>> smartSearch(String q, int limit) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        if (q == null || q.trim().isEmpty()) {
+            return R.ok(result);
+        }
+
+        // 1. 简单分词（按空格分割，实际项目可用 IK 分词器）
+        String[] words = q.trim().split("[\\s,，、]+");
+        Set<String> keywords = new HashSet<>(Arrays.asList(words));
+        result.put("originalQuery", q);
+        result.put("extractedKeywords", new ArrayList<>(keywords));
+
+        // 2. 同义词扩展
+        Set<String> expandedKeywords = new HashSet<>(keywords);
+        for (String word : keywords) {
+            if (word.length() < 2) continue; // 跳过单字
+
+            // 查询同义词字典
+            String synonymsJson = synonymDictMapper.findSynonymsByWord(word);
+            if (synonymsJson != null && !synonymsJson.isEmpty()) {
+                try {
+                    List<String> synonyms = JSON.parseArray(synonymsJson, String.class);
+                    expandedKeywords.addAll(synonyms);
+                } catch (Exception e) {
+                    // 忽略 JSON 解析错误
+                }
+            }
+        }
+        result.put("expandedKeywords", new ArrayList<>(expandedKeywords));
+
+        // 3. 多关键词搜索（收集所有匹配项）
+        Map<String, Map<String, Object>> ontologyMap = new LinkedHashMap<>();
+        for (String keyword : expandedKeywords) {
+            String pat = "%" + keyword + "%";
+            List<Map<String, Object>> matches = mapper.searchClasses(pat, 50);
+
+            for (Map<String, Object> match : matches) {
+                String id = (String) match.get("id");
+                if (!ontologyMap.containsKey(id)) {
+                    match.put("matchScore", 1);
+                    match.put("matchedKeywords", new ArrayList<>(Arrays.asList(keyword)));
+                    ontologyMap.put(id, match);
+                } else {
+                    // 累加匹配分数
+                    Map<String, Object> existing = ontologyMap.get(id);
+                    int score = (int) existing.get("matchScore");
+                    existing.put("matchScore", score + 1);
+
+                    @SuppressWarnings("unchecked")
+                    List<String> matchedKws = (List<String>) existing.get("matchedKeywords");
+                    matchedKws.add(keyword);
+                }
+            }
+        }
+
+        // 4. 按匹配分数排序并限制数量
+        List<Map<String, Object>> sortedResults = new ArrayList<>(ontologyMap.values());
+        sortedResults.sort((a, b) -> {
+            int scoreA = (int) a.get("matchScore");
+            int scoreB = (int) b.get("matchScore");
+            return Integer.compare(scoreB, scoreA); // 降序
+        });
+
+        List<Map<String, Object>> topResults = sortedResults.stream()
+            .limit(limit)
+            .map(item -> {
+                // 添加详情路由
+                String id = (String) item.get("id");
+                item.put("kind", "object");
+                item.put("route", "/resources/object-types?openId=" + id);
+                return item;
+            })
+            .toList();
+
+        result.put("ontologies", topResults);
+        result.put("totalMatches", ontologyMap.size());
+        result.put("returnedCount", topResults.size());
+
+        return R.ok(result);
     }
 }

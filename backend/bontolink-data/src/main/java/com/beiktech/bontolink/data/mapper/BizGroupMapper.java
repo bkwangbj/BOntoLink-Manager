@@ -55,6 +55,12 @@ public interface BizGroupMapper {
     """)
     List<Map<String, Object>> listGroupClasses(@Param("groupId") String groupId);
 
+    /** 批量查全部分组与对象类的关联（group_id + class_id），避免 N+1 */
+    @Select("SELECT gc.group_id, c.id, c.api_name, c.display_name, c.icon, c.color, c.status " +
+            " FROM ont_biz_group_class gc JOIN ont_class c ON c.id = gc.ref_id" +
+            " WHERE gc.group_type = 'object_types' ORDER BY gc.group_id, gc.g_sort")
+    List<Map<String, Object>> listAllGroupClasses();
+
     /** 按行业分类编码查询对应的第一个分组 id */
     @Select("SELECT id FROM ont_biz_group WHERE category_code = #{code} LIMIT 1")
     String findGroupIdByCategoryCode(@Param("code") String code);
@@ -89,6 +95,15 @@ public interface BizGroupMapper {
     /** 更新对象类在分组中的排序号 */
     @Update("UPDATE ont_biz_group_class SET g_sort = #{sort} WHERE group_type = 'object_types' AND category_code = #{code} AND ref_id = #{classId}")
     int updateMemberSort(@Param("code") String code, @Param("classId") String classId, @Param("sort") int sort);
+
+    /** 批量更新对象类在分组中的排序号 (CASE WHEN 批量，避免 N+1) */
+    @Update("<script>" +
+            "UPDATE ont_biz_group_class SET g_sort = CASE ref_id " +
+            "<foreach collection='sortList' item='item'>WHEN #{item.id} THEN #{item.sort} </foreach>" +
+            "END WHERE group_type = 'object_types' AND category_code = #{code} AND ref_id IN " +
+            "<foreach collection='sortList' item='item' open='(' separator=',' close=')'>#{item.id}</foreach>" +
+            "</script>")
+    int batchUpdateMemberSort(@Param("code") String code, @Param("sortList") java.util.List<java.util.Map<String,Object>> sortList);
 
     /* ============================================================
      *  统一分组关联表 API (ref_id + group_type)

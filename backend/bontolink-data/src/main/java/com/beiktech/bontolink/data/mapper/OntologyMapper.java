@@ -12,8 +12,23 @@ import java.util.Map;
 @Mapper
 public interface OntologyMapper {
 
-    // 资源列表（轻量行，前端列表展示；不含大字段 description/metadata）
-    @Select("SELECT id, rid, api_name, ns_code, category_code, display_name, rdfs_label, icon, color, status FROM ont_class ORDER BY create_time DESC")
+    // 资源列表（含聚合计数，供 aggregate=true 场景使用；比分两步查少一次 RTT）
+    @Select("SELECT c.id, c.rid, c.api_name, c.ns_code, c.category_code," +
+            "  c.display_name, c.rdfs_label, c.icon, c.color, c.status," +
+            "  COALESCE(p.cnt,  0) AS prop_total," +
+            "  COALESCE(pn.cnt, 0) AS prop_normal," +
+            "  COALESCE(lk.cnt, 0) AS link_count," +
+            "  COALESCE(ac.cnt, 0) AS action_count," +
+            "  COALESCE(ic.cnt, 0) AS interface_count" +
+            " FROM ont_class c" +
+            " LEFT JOIN (SELECT class_id, COUNT(1) AS cnt FROM ont_class_property GROUP BY class_id) p ON p.class_id = c.id" +
+            " LEFT JOIN (SELECT class_id, COUNT(1) AS cnt FROM ont_class_property WHERE is_primary = 0 GROUP BY class_id) pn ON pn.class_id = c.id" +
+            " LEFT JOIN (SELECT class_id, COUNT(1) AS cnt FROM (" +
+            "              SELECT source_class_id AS class_id FROM ont_class_link" +
+            "              UNION ALL SELECT target_class_id FROM ont_class_link) t GROUP BY class_id) lk ON lk.class_id = c.id" +
+            " LEFT JOIN (SELECT class_id, COUNT(1) AS cnt FROM ont_class_action GROUP BY class_id) ac ON ac.class_id = c.id" +
+            " LEFT JOIN (SELECT class_id, COUNT(1) AS cnt FROM ont_interface_class GROUP BY class_id) ic ON ic.class_id = c.id" +
+            " ORDER BY c.create_time DESC")
     List<Map<String, Object>> listClasses();
 
     /* 图谱用: 类含 parent_class_id (用于父子边)、category_code (跨画布联动) */
@@ -194,6 +209,10 @@ public interface OntologyMapper {
     /** 出/入向关系数 */
     @Select("SELECT COUNT(*) FROM ont_class_link WHERE source_class_id = #{id} OR target_class_id = #{id}")
     int countLinksOfClass(@Param("id") String id);
+
+    /** 全表 ont_class_ds 精简信息（列表聚合用） */
+    @Select("SELECT class_id, ds_code, physical_table FROM ont_class_ds ORDER BY rel_type, sort")
+    List<Map<String, Object>> batchListAllClassDsBrief();
 
     /** 同领域(category_code)的数据源数 — 暂用领域归属推算，待 ont_class_ds 落地后改成精确关联 */
     @Select("SELECT COUNT(*) FROM sys_data_source WHERE category_code = #{categoryCode}")
