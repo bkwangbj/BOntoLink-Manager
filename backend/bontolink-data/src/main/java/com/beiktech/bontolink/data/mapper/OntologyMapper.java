@@ -26,7 +26,7 @@ public interface OntologyMapper {
             " LEFT JOIN (SELECT class_id, COUNT(1) AS cnt FROM (" +
             "              SELECT source_class_id AS class_id FROM ont_class_link" +
             "              UNION ALL SELECT target_class_id FROM ont_class_link) t GROUP BY class_id) lk ON lk.class_id = c.id" +
-            " LEFT JOIN (SELECT class_id, COUNT(1) AS cnt FROM ont_class_action GROUP BY class_id) ac ON ac.class_id = c.id" +
+            " LEFT JOIN (SELECT object_class_id AS class_id, COUNT(1) AS cnt FROM ont_class_action GROUP BY object_class_id) ac ON ac.class_id = c.id" +
             " LEFT JOIN (SELECT class_id, COUNT(1) AS cnt FROM ont_interface_class GROUP BY class_id) ic ON ic.class_id = c.id" +
             " ORDER BY c.create_time DESC")
     List<Map<String, Object>> listClasses();

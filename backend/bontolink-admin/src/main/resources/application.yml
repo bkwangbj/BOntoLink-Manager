@@ -72,6 +72,9 @@ jetcache:
   #       maxTotal: 50
 
 logging:
+  charset:
+    console: UTF-8
+    file: UTF-8
   level:
     root: INFO
     com.beiktech.bontolink: DEBUG
