@@ -73,7 +73,7 @@ jetcache:
 
 logging:
   charset:
-    console: UTF-8
+    console: GBK
     file: UTF-8
   level:
     root: INFO
