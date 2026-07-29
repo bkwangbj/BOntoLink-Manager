@@ -164,7 +164,7 @@
                  draggable="true" @dragstart="onRuleDragStart(ri, $event)" @dragover.prevent @drop="onRuleDrop(ri)" @dragend="rDragIdx = null"
                  :class="{ 'is-dragging': rDragIdx === ri, 'is-off': rule.status === 0 }">
               <div class="rl-hd" @click="rule._collapsed = !rule._collapsed">
-                <span class="rl-grip" @mousedown.stop v-html="BL.icon('move', 13)"></span>
+                <span class="rl-grip" @mousedown.stop v-html="BL.icon('grip', 13)"></span>
                 <span class="rl-ic" :style="{ background: kindMeta(rule.kind).color }" v-html="BL.icon(kindMeta(rule.kind).icon, 12, '#fff')"></span>
                 <span class="rl-kind">{{ kindMeta(rule.kind).label }}</span>
                 <input class="rl-name" v-model="rule.rule_name" placeholder="规则名称" @click.stop />
@@ -622,7 +622,7 @@
                   <div v-for="x in paramsOfSection(sec)" :key="x.i" class="fd-row" :class="{ 'is-dragging': fDragIdx === x.i }"
                        draggable="true" @dragstart="onFieldDragStart(x.i, $event)" @dragover.prevent @drop.stop="onFieldDrop(x.p, sec)" @dragend="fDragIdx = null"
                        @click="openParam(x.i)">
-                    <span class="fd-grip" v-html="BL.icon('move', 12)"></span>
+                    <span class="fd-grip" v-html="BL.icon('grip', 12)"></span>
                     <span class="fd-dt" :style="{ background: dtMeta(x.p.param_type).color }" v-html="BL.icon(dtMeta(x.p.param_type).icon, 12, '#fff')"></span>
                     <div class="fd-row-txt">
                       <div class="fd-row-name bl-truncate">{{ x.p.param_name || x.p.param_code || '未命名参数' }}</div>
@@ -743,7 +743,7 @@
                     <div v-else-if="selParam.input_mode === 'multi'" class="fd-mode-body">
                       <div class="fd-src"><label class="fd-src-opt" :class="{'is-on':selParam.option_source==='manual'}" @click="selParam.option_source='manual'">手动定义选项</label><label class="fd-src-opt" :class="{'is-on':selParam.option_source==='objectset'}" @click="selParam.option_source='objectset'">从对象集获取</label></div>
                       <template v-if="selParam.option_source === 'manual'">
-                        <div v-for="(o, oi) in selParam.options" :key="oi" class="fd-opt"><span class="fd-grip" v-html="BL.icon('move', 11)"></span><input class="bl-input bl-input-sm bl-mono" v-model="o.value" placeholder="参数值" /><input class="bl-input bl-input-sm" v-model="o.label" placeholder="显示名称" /><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="selParam.options.splice(oi,1)" v-html="BL.icon('x', 11)"></button></div>
+                        <div v-for="(o, oi) in selParam.options" :key="oi" class="fd-opt"><span class="fd-grip" v-html="BL.icon('grip', 11)"></span><input class="bl-input bl-input-sm bl-mono" v-model="o.value" placeholder="参数值" /><input class="bl-input bl-input-sm" v-model="o.label" placeholder="显示名称" /><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="selParam.options.splice(oi,1)" v-html="BL.icon('x', 11)"></button></div>
                         <button class="bl-btn bl-btn-text bl-btn-sm" @click="addOption(selParam)"><span v-html="BL.icon('plus', 11)"></span><span style="margin-left:3px">添加选项</span></button>
                       </template>
                       <div v-else class="fd-warn">从对象集获取选项:起始对象集 / 按属性过滤 / 关联搜索 / 返回属性 —— 将在后续迭代接入对象集选择器。</div>
@@ -1799,7 +1799,8 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .fd-part { border: 1px solid var(--bl-border); border-radius: 10px; margin-bottom: 12px; overflow: hidden; background: var(--bl-bg-1); }
 .fd-part-hd { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--bl-divider); color: var(--bl-text-2); cursor: pointer; user-select: none; }
 .fd-part-hd:hover { background: var(--bl-bg-hover); }
-.fd-part-grip { color: var(--bl-text-4); display: inline-flex; cursor: grab; }
+.fd-part-grip { color: var(--bl-text-3); display: inline-flex; cursor: grab; }
+.fd-part-hd:hover .fd-part-grip { color: var(--bl-text-2); }
 .fd-part-hd:active .fd-part-grip { cursor: grabbing; }
 .fd-part-chev { color: var(--bl-text-3); display: inline-flex; margin-left: 4px; transition: transform .15s; }
 .fd-part.is-collapsed .fd-part-chev { transform: rotate(-90deg); }
@@ -1821,8 +1822,9 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .fd-row { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-bottom: 1px solid var(--bl-divider); cursor: pointer; background: transparent; transition: background .12s; }
 .fd-row:hover { background: var(--bl-bg-hover); }
 .fd-row.is-dragging { opacity: .4; }
-.fd-grip { color: var(--bl-text-3); cursor: grab; display: inline-flex; flex-shrink: 0; opacity: 0; transition: opacity .12s; }
-.fd-row:hover .fd-grip { opacity: 1; }
+/* 常显但压低不透明度: 拖拽入口需要可被发现, 又不该跟参数名抢注意力 */
+.fd-grip { color: var(--bl-text-3); cursor: grab; display: inline-flex; flex-shrink: 0; opacity: .45; transition: opacity .12s, color .12s; }
+.fd-row:hover .fd-grip, .fd-opt:hover .fd-grip { opacity: 1; color: var(--bl-text-2); }
 .fd-grip:active { cursor: grabbing; }
 /* 分区内添加参数 */
 .fd-part-add { display: flex; align-items: center; justify-content: center; gap: 4px; width: 100%; padding: 9px; background: transparent; border: 0; color: var(--bl-text-3); font-size: 12.5px; cursor: pointer; transition: color .12s, background .12s; }
@@ -2029,7 +2031,8 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .rl-card.is-off .rl-preview, .rl-card.is-off .rl-body { opacity: .5; }
 .rl-hd { display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; user-select: none; }
 .rl-hd:hover { background: var(--bl-bg-hover); }
-.rl-grip { color: var(--bl-text-3); cursor: grab; display: inline-flex; }
+.rl-grip { color: var(--bl-text-3); cursor: grab; display: inline-flex; transition: color .12s; }
+.rl-grip:hover { color: var(--bl-text-2); }
 .rl-ic { width: 22px; height: 22px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .rl-kind { font-size: 12px; font-weight: 600; color: var(--bl-text-2); background: var(--bl-bg-2); padding: 2px 8px; border-radius: 5px; flex-shrink: 0; }
 .rl-name { border: 0; background: transparent; font-size: 13.5px; font-weight: 600; color: var(--bl-text-1); outline: none; min-width: 120px; max-width: 280px; }
