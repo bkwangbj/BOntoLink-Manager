@@ -1033,11 +1033,12 @@ const PARAM_TYPE_OPTS = ['string','number','boolean','object','date'].map(t => (
 /* 表单设计器: 数据类型 / 显示组件 / 录入模式 */
 /* 图标取「类型本身的写法」而非动作: 字母 A=文本 / #=数值 / 勾=布尔 / 立方=对象 / 日历=日期 / 带勾方框=枚举 */
 const DATA_TYPE_META = { string:{icon:'textType',color:'#2563eb',label:'字符串'}, number:{icon:'hash',color:'#1f2937',label:'数值'}, boolean:{icon:'check',color:'#10b981',label:'布尔'}, object:{icon:'cube',color:'#8b5cf6',label:'对象引用'}, date:{icon:'calendar',color:'#0891b2',label:'日期'}, enum:{icon:'checkSquare',color:'#dc2626',label:'枚举'} }
+/* 图标画控件本身的形态: 单选=圆点 / 复选=方框勾, 二者此前同用一个勾无法区分 */
 const DISPLAY_TYPES = [
-  { v:'input', label:'单行输入框', icon:'edit' }, { v:'textarea', label:'多行文本域', icon:'menu' },
-  { v:'select', label:'下拉选择', icon:'chevronDown' }, { v:'radio', label:'单选按钮组', icon:'check' },
-  { v:'number', label:'数字步进器', icon:'code' }, { v:'switch', label:'开关', icon:'zap' },
-  { v:'user', label:'人员选择器', icon:'user' }, { v:'readonly', label:'只读文本', icon:'lock' }, { v:'checkbox', label:'复选框', icon:'check' },
+  { v:'input', label:'单行输入框', icon:'fieldInput' }, { v:'textarea', label:'多行文本域', icon:'fieldTextarea' },
+  { v:'select', label:'下拉选择', icon:'fieldSelect' }, { v:'radio', label:'单选按钮组', icon:'radioDot' },
+  { v:'number', label:'数字步进器', icon:'stepperUpDown' }, { v:'switch', label:'开关', icon:'toggleSwitch' },
+  { v:'user', label:'人员选择器', icon:'user' }, { v:'readonly', label:'只读文本', icon:'lock' }, { v:'checkbox', label:'复选框', icon:'checkSquare' },
 ]
 const INPUT_MODES = [{ v:'input', label:'用户输入' }, { v:'multi', label:'多选' }, { v:'user', label:'用户' }, { v:'usergroup', label:'用户组' }]
 const DETAIL_TABS = [{ k:'value', label:'值' }, { k:'display', label:'显示' }, { k:'override', label:'覆盖' }, { k:'detail', label:'详情' }]
@@ -1890,7 +1891,7 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 
 /* 右预览 */
 .adw-preview { flex: 0 0 384px; background: var(--bl-bg-1); border-left: 1px solid var(--bl-border); display: flex; flex-direction: column; overflow: hidden; }
-.adw-preview-hd { padding: 12px 16px; font-size: 13px; font-weight: 600; border-bottom: 1px solid var(--bl-divider); }
+.adw-preview-hd { padding: 8px 16px; font-size: 13px; font-weight: 600; border-bottom: 1px solid var(--bl-divider); }
 .adw-preview-body { flex: 1; overflow-y: auto; padding: 16px 6px 16px 16px; }
 .adw-preview-form {border-radius: 10px; padding: 0px; }
 .adw-preview-title { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
