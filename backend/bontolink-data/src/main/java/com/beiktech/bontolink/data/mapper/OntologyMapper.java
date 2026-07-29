@@ -47,6 +47,27 @@ public interface OntologyMapper {
     @Select("SELECT id, rid, api_name, source_class_id, target_class_id, cardinality, display_name, status FROM ont_class_link ORDER BY create_time DESC")
     List<Map<String, Object>> listLinks();
 
+    /**
+     * 查全部链接类型（用于 OntModel 构建）
+     * l_api_name = 以左端实体为主语时的 ObjectProperty 名
+     * r_api_name = 以右端实体为主语时的 ObjectProperty 名
+     * 两者不一定互为 owl:inverseOf（主语视角不同，语义不对称）
+     */
+    @Select("SELECT lt.id, lt.link_type_id, lt.status," +
+            " lt.l_object_type_id, lt.r_object_type_id," +
+            " lt.l_cardinality, lt.r_cardinality," +
+            " lt.l_display_name, lt.l_plural_name, lt.l_api_name, lt.l_enabled," +
+            " lt.r_display_name, lt.r_plural_name, lt.r_api_name, lt.r_enabled," +
+            " lt.rdfs_label, lt.rdfs_comment, lt.category_code," +
+            " lc.api_name AS l_class_api, lc.ns_code AS l_ns_code," +
+            " rc.api_name AS r_class_api, rc.ns_code AS r_ns_code" +
+            " FROM ont_link_types lt" +
+            " LEFT JOIN ont_class lc ON lc.id = lt.l_object_type_id" +
+            " LEFT JOIN ont_class rc ON rc.id = lt.r_object_type_id" +
+            " WHERE lt.status != 'deprecated'" +
+            " ORDER BY lt.created_at")
+    List<Map<String, Object>> listLinkTypes();
+
     /** 查全部类动作（action_type 区分动作类型；别名兼容图谱旧键 class_id/display_name） */
     @Select("SELECT id, rid, api_name, object_class_id AS class_id, action_type, rdfs_label AS display_name, status FROM ont_class_action WHERE is_deleted = 0 ORDER BY create_time DESC")
     List<Map<String, Object>> listActions();
@@ -68,15 +89,37 @@ public interface OntologyMapper {
             "(SELECT ref_id FROM ont_biz_group_class WHERE group_type = 'object_types' AND category_code IS NOT NULL)")
     List<Map<String, Object>> listAllClassesLight();
 
-    /** 查某类的属性列表（图谱/详情页用，不含 XSD/OWL 约束字段，字段比 ClassMetaMapper.listClassPropertiesFull 精简） */
-    @Select("SELECT id, class_id, api_name, prop_code, prop_type, data_type, value_type, " +
-            "       display_name, rdfs_label, rdfs_comment, " +
-            "       is_primary, is_required, is_key, is_derived, " +
-            "       is_multi_valued_prop, is_range_constraint_prop, range_class_id, " +
-            "       class_ds_id, physical_table, physical_column, " +
-            "       sort, metadata " +
-            "  FROM ont_class_property WHERE class_id = #{classId} ORDER BY sort, id")
+    /** 查某类的属性列表（图谱/详情页用，JOIN 值类型和枚举以获取枚举信息） */
+    @Select("SELECT cp.id, cp.class_id, cp.api_name, cp.prop_code, cp.prop_type, cp.data_type, cp.value_type, " +
+            "       cp.display_name, cp.rdfs_label, cp.rdfs_comment, " +
+            "       cp.is_primary, cp.is_required, cp.is_key, cp.is_derived, " +
+            "       cp.is_multi_valued_prop, cp.is_range_constraint_prop, cp.range_class_id, " +
+            "       cp.class_ds_id, cp.physical_table, cp.physical_column, " +
+            "       cp.sort, cp.metadata, " +
+            "       vt.constraint_type AS vt_constraint_type, vt.base_type AS vt_base_type, " +
+            "       et.api_name AS enum_api_name, et.rdfs_label AS enum_label " +
+            "  FROM ont_class_property cp " +
+            "  LEFT JOIN ont_value_types vt ON vt.id = cp.value_type " +
+            "  LEFT JOIN ont_enum_types et ON et.id = vt.enum_id " +
+            " WHERE cp.class_id = #{classId} ORDER BY cp.sort, cp.id")
     List<Map<String, Object>> listProperties(@Param("classId") String classId);
+
+    /** 查全部枚举类型（用于 OntModel 构建） */
+    @Select("SELECT id, rid, api_name, enum_type, max_level, rdfs_label, rdfs_comment, status FROM ont_enum_types WHERE status = 'active'")
+    List<Map<String, Object>> listEnumTypes();
+
+    /** 查指定枚举的所有枚举项（用于 OntModel 构建） */
+    @Select("SELECT id, enum_id, code, api_name, label, parent_code, level FROM ont_enum_items WHERE enum_id = #{enumId} AND status = 'active' ORDER BY level, sort_num")
+    List<Map<String, Object>> listEnumItems(@Param("enumId") String enumId);
+
+    /** 查全部值类型（用于 OntModel 构建，JOIN 枚举以获取枚举信息） */
+    @Select("SELECT v.id, v.rid, v.api_name, v.base_type, v.constraint_type, v.constraint_config, " +
+            "v.enum_id, v.rdfs_label, v.rdfs_comment, v.status, " +
+            "e.api_name AS enum_api_name, e.rdfs_label AS enum_label " +
+            "FROM ont_value_types v " +
+            "LEFT JOIN ont_enum_types e ON e.id = v.enum_id " +
+            "WHERE v.status = 1")
+    List<Map<String, Object>> listValueTypes();
 
     // 全局计数（统计面板用）
     /** 查对象类总数 */
@@ -213,6 +256,16 @@ public interface OntologyMapper {
     /** 全表 ont_class_ds 精简信息（列表聚合用） */
     @Select("SELECT class_id, ds_code, physical_table FROM ont_class_ds ORDER BY rel_type, sort")
     List<Map<String, Object>> batchListAllClassDsBrief();
+
+    /** 全表 ont_class_ds 含数据源元信息（OntModel 构建用，JOIN sys_data_source） */
+    @Select("SELECT cd.class_id, cd.ds_code, cd.physical_table, cd.table_label, " +
+            "       cd.rel_type, cd.alias, cd.pk_keys, cd.join_on_keys, cd.join_type, " +
+            "       cd.physical_fields, cd.sort, " +
+            "       ds.ds_name, ds.ds_type, ds.jdbc_url " +
+            "  FROM ont_class_ds cd " +
+            "  LEFT JOIN sys_data_source ds ON ds.ds_code = cd.ds_code " +
+            " ORDER BY cd.class_id, cd.rel_type, cd.sort")
+    List<Map<String, Object>> listAllClassDatasources();
 
     /** 同领域(category_code)的数据源数 — 暂用领域归属推算，待 ont_class_ds 落地后改成精确关联 */
     @Select("SELECT COUNT(*) FROM sys_data_source WHERE category_code = #{categoryCode}")

@@ -222,10 +222,12 @@
 
     <div class="tabs">
       <div class="tab active" data-tab="health">健康检查</div>
+      <div class="tab" data-tab="owl">OWL模型</div>
       <div class="tab" data-tab="synonym">同义词词典</div>
       <div class="tab" data-tab="domain">领域术语</div>
       <div class="tab" data-tab="ontology">本体查询</div>
       <div class="tab" data-tab="data">数据查询</div>
+      <div class="tab" data-tab="ai-synonym">AI同义词</div>
       <div class="tab" data-tab="batch">批量操作</div>
     </div>
 
@@ -241,6 +243,96 @@
         </div>
         <button class="btn btn-primary" onclick="checkHealth()">检测服务状态</button>
         <div id="healthResult" class="result" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- OWL 模型面板 -->
+    <div class="panel" id="owl">
+      <div class="section">
+        <div class="section-title">
+          <span class="badge get">GET</span> OWL 模型状态
+        </div>
+        <p style="color:#666;font-size:13px;margin-bottom:12px;">查看当前 OntModel 的版本号、语句数、类/属性数量及是否正在重建。</p>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="owlHealth()">健康检查</button>
+          <button class="btn btn-secondary" onclick="owlStats()">详细统计</button>
+        </div>
+        <div id="owlStatusResult" class="result" style="display:none;"></div>
+      </div>
+
+      <div class="section" style="border-left:4px solid #f5a623;">
+        <div class="section-title">
+          <span class="badge post">POST</span> 强制重建 OWL 模型
+        </div>
+        <p style="color:#666;font-size:13px;margin-bottom:12px;">
+          从数据库重新构建 OntModel。适用于手动修改了本体数据后需要立即刷新的场景。<br>
+          <span style="color:#f5a623;">注意：重建为同步操作，数据量大时可能耗时数秒。</span>
+        </p>
+        <button class="btn btn-primary" onclick="owlRebuild()">触发重建</button>
+        <div id="owlRebuildResult" class="result" style="display:none;"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge post">POST</span> 本体匹配
+        </div>
+        <p style="color:#666;font-size:13px;margin-bottom:12px;">基于 OntModel 推理进行语义匹配，支持同义词扩展和类层次加权。</p>
+        <div class="form-row">
+          <label>查询文本</label>
+          <input type="text" id="owlMatchQuery" placeholder="例: 水库供水量" />
+        </div>
+        <div class="form-row">
+          <label>返回数量</label>
+          <input type="number" id="owlMatchTopK" value="10" min="1" max="50" style="width:100px;" />
+          <label style="min-width:60px;">阈值</label>
+          <input type="number" id="owlMatchThreshold" value="0.6" min="0" max="1" step="0.05" style="width:100px;" />
+        </div>
+        <button class="btn btn-primary" onclick="owlMatch()">执行匹配</button>
+        <div id="owlMatchResult" class="result" style="display:none;"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge post">POST</span> 语义扩展预览
+        </div>
+        <p style="color:#666;font-size:13px;margin-bottom:12px;">预览查询文本的同义词扩展结果（不触发匹配）。</p>
+        <div class="form-row">
+          <label>查询文本</label>
+          <input type="text" id="owlExpandQuery" placeholder="例: 水费" />
+        </div>
+        <button class="btn btn-primary" onclick="owlPreviewExpansion()">预览扩展</button>
+        <div id="owlExpandResult" class="result" style="display:none;"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge get">GET</span> OWL 类列表
+        </div>
+        <p style="color:#666;font-size:13px;margin-bottom:12px;">列出 OntModel 中所有 OWL 类（localName、label、父类）。</p>
+        <button class="btn btn-primary" onclick="owlListClasses()">加载类列表</button>
+        <div id="owlClassesResult" class="result" style="display:none;"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge get">GET</span> OWL 类详情
+        </div>
+        <p style="color:#666;font-size:13px;margin-bottom:12px;">查看指定类的父类、子类、关联属性（点击类列表中的类名可自动填入）。</p>
+        <div class="form-row">
+          <label>类名 (localName)</label>
+          <input type="text" id="owlClassLocalName" placeholder="从类列表点击填入，或手动输入" />
+        </div>
+        <button class="btn btn-primary" onclick="owlGetClassDetail()">查询详情</button>
+        <div id="owlClassDetailResult" class="result" style="display:none;"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="badge get">GET</span> OWL 属性列表
+        </div>
+        <p style="color:#666;font-size:13px;margin-bottom:12px;">列出 OntModel 中所有 OWL 属性（类型、domain、range）。</p>
+        <button class="btn btn-primary" onclick="owlListProperties()">加载属性列表</button>
+        <div id="owlPropertiesResult" class="result" style="display:none;"></div>
       </div>
     </div>
 
@@ -570,6 +662,81 @@
       </div>
     </div>
 
+    <!-- AI 同义词面板 -->
+    <div class="panel" id="ai-synonym">
+      <!-- 状态栏 -->
+      <div class="section">
+        <div class="section-title">配置状态</div>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="aiSynonymStatus()">检查状态</button>
+        </div>
+        <div id="aiStatusResult" class="result" style="display:none;"></div>
+      </div>
+
+      <!-- 单条生成 -->
+      <div class="section">
+        <div class="section-title">
+          <span class="badge post">POST</span> 单条生成同义词
+        </div>
+        <div class="form-row">
+          <label>实体类型</label>
+          <select id="genEntityType">
+            <option value="biz_category">biz_category（行业分类）</option>
+            <option value="class">class（对象类型）</option>
+            <option value="class_prop">class_prop（类属性）</option>
+            <option value="link_type">link_type（链接类型）</option>
+            <option value="shared_prop">shared_prop（共享属性）</option>
+            <option value="enum_item">enum_item（枚举值）</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>实体 ID</label>
+          <input type="text" id="genEntityId" placeholder="例: biz_category-xxxxxxxx-xxxx-..." />
+        </div>
+        <button class="btn btn-primary" onclick="aiGenerate()">生成</button>
+        <div id="aiGenerateResult" class="result" style="display:none;"></div>
+      </div>
+
+      <!-- 批量生成 -->
+      <div class="section">
+        <div class="section-title">
+          <span class="badge post">POST</span> 批量生成同义词
+        </div>
+        <p style="color:#666;font-size:13px;margin-bottom:12px;">对指定类型的全部（或前 N 条）实体自动生成同义词并写入向量库。limit=0 表示全量。</p>
+        <div class="form-row">
+          <label>实体类型</label>
+          <select id="batchGenEntityType">
+            <option value="biz_category">biz_category（行业分类）</option>
+            <option value="class">class（对象类型）</option>
+            <option value="class_prop">class_prop（类属性）</option>
+            <option value="link_type">link_type（链接类型）</option>
+            <option value="shared_prop">shared_prop（共享属性）</option>
+            <option value="enum_item">enum_item（枚举值）</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>数量限制</label>
+          <input type="number" id="batchGenLimit" value="5" min="0" style="width:120px;" />
+          <span style="padding-top:8px;color:#999;font-size:13px;">0 = 全量（谨慎，会消耗大量 API 配额）</span>
+        </div>
+        <button class="btn btn-success" onclick="aiBatchGenerate()">批量生成</button>
+        <div id="aiBatchResult" class="result" style="display:none;"></div>
+      </div>
+
+      <!-- 重建向量集合 -->
+      <div class="section" style="border-left:4px solid #f5a623;">
+        <div class="section-title">
+          <span class="badge post">POST</span> 重建 Milvus 向量集合
+        </div>
+        <p style="color:#666;font-size:13px;margin-bottom:12px;">
+          Drop 现有集合并重新建 Schema + IVF_FLAT/IP 索引 + Load。<br>
+          <span style="color:#f5a623;">注意：会清空所有已写入的向量，需重新批量生成。</span>
+        </p>
+        <button class="btn btn-danger" onclick="rebuildMilvus()">重建向量集合</button>
+        <div id="rebuildResult" class="result" style="display:none;"></div>
+      </div>
+    </div>
+
     <!-- 批量操作面板 -->
     <div class="panel" id="batch">
       <div class="section">
@@ -630,6 +797,215 @@
         document.getElementById(tab.dataset.tab).classList.add('active');
       });
     });
+
+    // ========== OWL 模型 ==========
+    async function owlHealth() {
+      try {
+        const response = await fetch(`${getBaseUrl()}/ontology/health`);
+        const data = await response.json();
+        showResult('owlStatusResult', data);
+      } catch (error) {
+        showResult('owlStatusResult', { error: error.message }, true);
+      }
+    }
+
+    async function owlStats() {
+      try {
+        const response = await fetch(`${getBaseUrl()}/ontology/stats`);
+        const data = await response.json();
+        showResult('owlStatusResult', data);
+      } catch (error) {
+        showResult('owlStatusResult', { error: error.message }, true);
+      }
+    }
+
+    async function owlRebuild() {
+      const btn = event.target;
+      btn.disabled = true;
+      btn.textContent = '重建中...';
+      try {
+        const response = await fetch(`${getBaseUrl()}/ontology/rebuild`, { method: 'POST' });
+        const data = await response.json();
+        showResult('owlRebuildResult', data, data.code !== 200);
+      } catch (error) {
+        showResult('owlRebuildResult', { error: error.message }, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '触发重建';
+      }
+    }
+
+    async function owlMatch() {
+      try {
+        const query = document.getElementById('owlMatchQuery').value.trim();
+        if (!query) { alert('请输入查询文本'); return; }
+        const topK = parseInt(document.getElementById('owlMatchTopK').value) || 10;
+        const threshold = parseFloat(document.getElementById('owlMatchThreshold').value) || 0.6;
+        const response = await fetch(`${getBaseUrl()}/ontology/match`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query, topK, threshold })
+        });
+        const data = await response.json();
+        showResult('owlMatchResult', data, data.code !== 200);
+      } catch (error) {
+        showResult('owlMatchResult', { error: error.message }, true);
+      }
+    }
+
+    async function owlPreviewExpansion() {
+      try {
+        const query = document.getElementById('owlExpandQuery').value.trim();
+        if (!query) { alert('请输入查询文本'); return; }
+        const response = await fetch(`${getBaseUrl()}/ontology/preview-expansion`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query })
+        });
+        const data = await response.json();
+        showResult('owlExpandResult', data, data.code !== 200);
+      } catch (error) {
+        showResult('owlExpandResult', { error: error.message }, true);
+      }
+    }
+
+    // ========== OWL 类/属性浏览 ==========
+    async function owlListClasses() {
+      try {
+        const response = await fetch(`${getBaseUrl()}/ontology/classes`);
+        const data = await response.json();
+        if (data.code !== 200) {
+          showResult('owlClassesResult', data, true);
+          return;
+        }
+        const classes = data.data;
+        // 渲染为可点击的表格
+        let html = `<table class="data-table">
+          <thead><tr><th>localName</th><th>label</th><th>父类</th></tr></thead><tbody>`;
+        for (const c of classes) {
+          const supers = (c.superClasses || []).join(', ') || '—';
+          html += `<tr style="cursor:pointer;" onclick="owlFillClass('${c.localName}')">
+            <td><code style="color:#667eea">${c.localName}</code></td>
+            <td>${c.label || '—'}</td>
+            <td style="color:#999;font-size:12px;">${supers}</td>
+          </tr>`;
+        }
+        html += `</tbody></table><div style="color:#999;font-size:12px;margin-top:8px;">共 ${classes.length} 个类，点击行查看详情</div>`;
+        const el = document.getElementById('owlClassesResult');
+        el.style.display = 'block';
+        el.className = 'result success';
+        el.innerHTML = html;
+      } catch (error) {
+        showResult('owlClassesResult', { error: error.message }, true);
+      }
+    }
+
+    function owlFillClass(localName) {
+      document.getElementById('owlClassLocalName').value = localName;
+      owlGetClassDetail();
+    }
+
+    async function owlGetClassDetail() {
+      try {
+        const localName = document.getElementById('owlClassLocalName').value.trim();
+        if (!localName) { alert('请输入类名'); return; }
+        const response = await fetch(`${getBaseUrl()}/ontology/class/${encodeURIComponent(localName)}`);
+        const data = await response.json();
+        if (data.code !== 200) {
+          showResult('owlClassDetailResult', data, true);
+          return;
+        }
+        const d = data.data;
+        let html = `<div style="margin-bottom:12px;">
+          <strong>URI:</strong> <code style="font-size:12px;color:#999">${d.uri}</code>
+        </div>`;
+        html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">`;
+
+        // 基础信息
+        html += `<div>
+          <div style="font-weight:600;margin-bottom:8px;color:#333;">基础信息</div>
+          <div><span style="color:#666">label:</span> ${d.label || '—'}</div>
+          <div><span style="color:#666">comment:</span> ${d.comment || '—'}</div>
+        </div>`;
+
+        // 父类 & 子类
+        const supers = (d.superClasses || []).map(s =>
+          `<span onclick="owlFillClass('${s}')" style="cursor:pointer;color:#667eea;margin-right:6px;">${s}</span>`
+        ).join('') || '—';
+        const subs = (d.subClasses || []).map(s =>
+          `<span onclick="owlFillClass('${s}')" style="cursor:pointer;color:#667eea;margin-right:6px;">${s}</span>`
+        ).join('') || '—';
+        html += `<div>
+          <div style="font-weight:600;margin-bottom:8px;color:#333;">层次关系</div>
+          <div><span style="color:#666">父类:</span> ${supers}</div>
+          <div style="margin-top:4px;"><span style="color:#666">子类:</span> ${subs}</div>
+        </div>`;
+        html += `</div>`;
+
+        // 关联属性
+        if (d.properties && d.properties.length > 0) {
+          html += `<div style="margin-top:16px;">
+            <div style="font-weight:600;margin-bottom:8px;color:#333;">关联属性（${d.properties.length}个）</div>
+            <table class="data-table">
+              <thead><tr><th>localName</th><th>label</th><th>类型</th></tr></thead><tbody>`;
+          for (const p of d.properties) {
+            const badge = p.type === 'ObjectProperty' ? 'background:#e6f7ff;color:#1890ff' :
+                          p.type === 'DatatypeProperty' ? 'background:#f6ffed;color:#52c41a' :
+                          'background:#fafafa;color:#666';
+            html += `<tr>
+              <td><code>${p.localName}</code></td>
+              <td>${p.label || '—'}</td>
+              <td><span style="padding:1px 6px;border-radius:3px;font-size:12px;${badge}">${p.type}</span></td>
+            </tr>`;
+          }
+          html += `</tbody></table></div>`;
+        } else {
+          html += `<div style="margin-top:12px;color:#999;font-size:13px;">无直接关联属性</div>`;
+        }
+
+        const el = document.getElementById('owlClassDetailResult');
+        el.style.display = 'block';
+        el.className = 'result success';
+        el.innerHTML = html;
+      } catch (error) {
+        showResult('owlClassDetailResult', { error: error.message }, true);
+      }
+    }
+
+    async function owlListProperties() {
+      try {
+        const response = await fetch(`${getBaseUrl()}/ontology/properties`);
+        const data = await response.json();
+        if (data.code !== 200) {
+          showResult('owlPropertiesResult', data, true);
+          return;
+        }
+        const props = data.data;
+        let html = `<table class="data-table">
+          <thead><tr><th>localName</th><th>label</th><th>类型</th><th>domain</th><th>range</th></tr></thead><tbody>`;
+        for (const p of props) {
+          const badge = p.type === 'ObjectProperty' ? 'background:#e6f7ff;color:#1890ff' :
+                        p.type === 'DatatypeProperty' ? 'background:#f6ffed;color:#52c41a' :
+                        'background:#fafafa;color:#666';
+          const domains = (p.domains || []).join(', ') || '—';
+          const ranges = (p.ranges || []).join(', ') || '—';
+          html += `<tr>
+            <td><code style="font-size:12px">${p.localName}</code></td>
+            <td>${p.label || '—'}</td>
+            <td><span style="padding:1px 6px;border-radius:3px;font-size:11px;${badge}">${p.type}</span></td>
+            <td style="color:#667eea;font-size:12px">${domains}</td>
+            <td style="color:#999;font-size:12px">${ranges}</td>
+          </tr>`;
+        }
+        html += `</tbody></table><div style="color:#999;font-size:12px;margin-top:8px;">共 ${props.length} 个属性</div>`;
+        const el = document.getElementById('owlPropertiesResult');
+        el.style.display = 'block';
+        el.className = 'result success';
+        el.innerHTML = html;
+      } catch (error) {
+        showResult('owlPropertiesResult', { error: error.message }, true);
+      }
+    }
 
     // ========== 健康检查 ==========
     async function checkHealth() {
@@ -1062,6 +1438,86 @@
         showResult('objectTypesStatsResult', data);
       } catch (error) {
         showResult('objectTypesStatsResult', { error: error.message }, true);
+      }
+    }
+
+    // ==================== AI 同义词 ====================
+    async function aiSynonymStatus() {
+      try {
+        const res = await fetch(`${getBaseUrl()}/tool/synonym/status`);
+        const data = await res.json();
+        const d = data.data || data;
+        let html = `<div style="display:flex;gap:24px;align-items:center;">
+          <div><span style="color:#999;">Embedding Provider:</span> <strong>${d.embeddingProvider || '—'}</strong></div>
+          <div><span style="color:#999;">维度:</span> <strong>${d.dimension || '—'}</strong></div>
+          <div>
+            <span class="status-indicator ${d.milvusAvailable ? 'online' : 'offline'}"></span>
+            Milvus: <strong>${d.milvusAvailable ? '可用' : '不可用'}</strong>
+          </div>
+        </div>`;
+        const el = document.getElementById('aiStatusResult');
+        el.style.display = 'block';
+        el.className = 'result success';
+        el.innerHTML = html;
+      } catch (e) {
+        showResult('aiStatusResult', { error: e.message }, true);
+      }
+    }
+
+    async function aiGenerate() {
+      const entityType = document.getElementById('genEntityType').value;
+      const entityId = document.getElementById('genEntityId').value.trim();
+      if (!entityId) { alert('请输入实体 ID'); return; }
+      const btn = event.target;
+      btn.disabled = true; btn.textContent = '生成中…';
+      try {
+        const res = await fetch(`${getBaseUrl()}/tool/synonym/generate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ entityType, entityId })
+        });
+        const data = await res.json();
+        showResult('aiGenerateResult', data, data.code !== 200);
+      } catch (e) {
+        showResult('aiGenerateResult', { error: e.message }, true);
+      } finally {
+        btn.disabled = false; btn.textContent = '生成';
+      }
+    }
+
+    async function aiBatchGenerate() {
+      const entityType = document.getElementById('batchGenEntityType').value;
+      const limit = parseInt(document.getElementById('batchGenLimit').value) || 0;
+      if (limit === 0 && !confirm(`全量生成 ${entityType}，可能耗时较长并消耗大量 API 配额，确认继续？`)) return;
+      const btn = event.target;
+      btn.disabled = true; btn.textContent = '生成中…';
+      try {
+        const res = await fetch(`${getBaseUrl()}/tool/synonym/batch-generate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ entityType, limit })
+        });
+        const data = await res.json();
+        showResult('aiBatchResult', data, data.code !== 200);
+      } catch (e) {
+        showResult('aiBatchResult', { error: e.message }, true);
+      } finally {
+        btn.disabled = false; btn.textContent = '批量生成';
+      }
+    }
+
+    async function rebuildMilvus() {
+      if (!confirm('将 drop 并重建 Milvus 集合，所有已有向量将被清空，确认继续？')) return;
+      const btn = event.target;
+      btn.disabled = true; btn.textContent = '重建中…';
+      try {
+        const res = await fetch(`${getBaseUrl()}/tool/synonym/milvus/rebuild`, { method: 'POST' });
+        const data = await res.json();
+        showResult('rebuildResult', data, data.code !== 200);
+      } catch (e) {
+        showResult('rebuildResult', { error: e.message }, true);
+      } finally {
+        btn.disabled = false; btn.textContent = '重建向量集合';
       }
     }
 

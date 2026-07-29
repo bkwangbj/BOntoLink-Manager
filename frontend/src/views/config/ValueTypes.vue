@@ -144,12 +144,15 @@
                 <div class="sec">元数据</div>
                 <FieldRow label="名称 *" inline><input class="bl-input" v-model="form.rdfs_label" @input="onLabelInput" /></FieldRow>
                 <FieldRow label="描述"><textarea class="bl-textarea" rows="2" v-model="form.rdfs_comment"></textarea></FieldRow>
-                <FieldRow label="API *" inline hint="snake_case · 全局唯一 · 创建后不可修改">
-                  <div class="bl-row" style="gap:6px;flex:1">
-                    <input class="bl-input bl-mono" v-model="form.api_name" :disabled="!!form.id" />
-                    <button v-if="!form.id" class="bl-btn bl-btn-sm bl-btn-text" title="根据名称重新生成" @click="form.api_name = deriveApi(form.rdfs_label)">
-                      <span v-html="BL.icon('refresh', 11)"></span>
-                    </button>
+                <FieldRow label="API *" inline hint="PascalCase · 全局唯一 · 创建后不可修改">
+                  <div style="flex:1">
+                    <div class="bl-row" style="gap:6px">
+                      <input class="bl-input bl-mono" :class="{ 'is-invalid': !form.id && form.api_name && !isValidPascalCase(form.api_name) }" v-model="form.api_name" :disabled="!!form.id" placeholder="如 IntegerRange" />
+                      <button v-if="!form.id" class="bl-btn bl-btn-sm bl-btn-text" title="根据名称重新生成" @click="form.api_name = deriveApi(form.rdfs_label)">
+                        <span v-html="BL.icon('refresh', 11)"></span>
+                      </button>
+                    </div>
+                    <div v-if="!form.id && form.api_name && !isValidPascalCase(form.api_name)" class="vt-field-err">需大写字母开头，仅字母和数字，如 IntegerRange</div>
                   </div>
                 </FieldRow>
                 <FieldRow label="基础类型 *" inline>
@@ -684,13 +687,16 @@ async function findVtGroupRef(id) {
   } catch { form.group_id = '' }
 }
 
+function isValidPascalCase(s) {
+  return !!s && /^[A-Z][A-Za-z0-9]*$/.test(s)
+}
 function deriveApi(label) {
   if (!label) return ''
-  // 简化版:中文 → 取拼音首字母(无库支持时回退到英文/数字+下划线)
-  let s = String(label).trim().toLowerCase()
-  s = s.replace(/[^\w一-龥]+/g, '_')   // 非字母/数字/下划线/中文 → _
-  s = s.replace(/_+/g, '_').replace(/^_|_$/g, '')
-  return s
+  const words = String(label).trim().split(/[\s\-_]+/)
+    .map(w => w.replace(/[^a-zA-Z0-9]/g, ''))
+    .filter(Boolean)
+  if (!words.length) return ''
+  return words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('')
 }
 function onLabelInput() {
   if (!form.id && !form._apiTouched) {
@@ -752,6 +758,7 @@ function onPickConstraint(c) {
 
 async function submitForm() {
   if (!form.rdfs_label || !form.api_name || !form.base_type) { BL.warning('名称 / API / 基础类型为必填'); return }
+  if (!form.id && !isValidPascalCase(form.api_name)) { BL.warning('API 格式错误：需大写字母开头，仅字母和数字（PascalCase，如 IntegerRange）'); return }
   if (form.constraint_type === 'Enum' && !form.enum_id) { BL.warning('请选择关联枚举'); return }
   if (form.constraint_type !== 'Enum') form.constraint_config = JSON.stringify(cfg)
   else form.constraint_config = null
@@ -1263,4 +1270,6 @@ onBeforeUnmount(() => {
   flex: 1; min-width: 0; font-size: 13px; color: var(--bl-text-1);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.bl-input.is-invalid { border-color: var(--bl-danger); }
+.vt-field-err { margin-top: 4px; font-size: 11px; color: var(--bl-danger); line-height: 1.4; }
 </style>

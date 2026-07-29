@@ -603,24 +603,25 @@ function removeTypeClass(side, idx) {
 function isValidApi(s) {
   return !!s && /^[a-z][A-Za-z0-9]*$/.test(s)
 }
-const canSave = computed(() =>
-  form.link_type_id && /^[a-z][a-z0-9-]*$/.test(form.link_type_id)
-  && form.l_object_type_id && form.r_object_type_id
-  && form.l_display_name && form.r_display_name
-  && isValidApi(form.l_api_name) && isValidApi(form.r_api_name)
-  && (!form.is_data_source_rel || form.rel_data_table)
-  // 非中间表模式下两侧数量由 addMapping/removeMapping 自动对齐, 此处不再校验
-)
-// 保存被禁用时, 逐项列出缺失原因 (用于按钮悬停提示)
+// 单侧是否完整(显示名称 + 合法 API 名均已填写)
+function sideValid(displayName, apiName) {
+  return !!displayName && isValidApi(apiName)
+}
+// 左侧=以左端实体为主语的关系; 右侧=以右端实体为主语的关系; 两者不一定可互换
+// 有一侧完整即可保存, 无需两侧都填
+const canSave = computed(() => {
+  if (!form.link_type_id || !/^[a-z][a-z0-9-]*$/.test(form.link_type_id)) return false
+  if (!form.l_object_type_id || !form.r_object_type_id) return false
+  if (form.is_data_source_rel && !form.rel_data_table) return false
+  return sideValid(form.l_display_name, form.l_api_name) || sideValid(form.r_display_name, form.r_api_name)
+})
 const saveBlockers = computed(() => {
   const m = []
   if (!form.link_type_id || !/^[a-z][a-z0-9-]*$/.test(form.link_type_id)) m.push('ID（小写字母开头，仅小写字母/数字/连字符）')
   if (!form.l_object_type_id) m.push('源对象类型')
   if (!form.r_object_type_id) m.push('目标对象类型')
-  if (!form.l_display_name) m.push('源显示名称')
-  if (!form.r_display_name) m.push('目标显示名称')
-  if (!isValidApi(form.l_api_name)) m.push('源 API 名（小写驼峰，无下划线/连字符）')
-  if (!isValidApi(form.r_api_name)) m.push('目标 API 名（小写驼峰，无下划线/连字符）')
+  if (!sideValid(form.l_display_name, form.l_api_name) && !sideValid(form.r_display_name, form.r_api_name))
+    m.push('至少需填写一侧完整信息（显示名称 + API 名称），左侧=以左端实体为主语，右侧=以右端实体为主语')
   if (form.is_data_source_rel && !form.rel_data_table) m.push('中间表')
   return m
 })
@@ -959,11 +960,11 @@ function pickTable(t) {
 }
 .lke-invalid-tag {
   position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-  font-size: 10px; background: var(--bl-danger-soft, #ffece8); color: var(--bl-danger, #f53f3f);
+  font-size: 10px; background: var(--bl-danger-soft); color: var(--bl-danger);
   padding: 1px 6px; border-radius: 3px;
 }
-.lke-input-wrap .bl-input.is-invalid { border-color: var(--bl-danger, #f53f3f); }
-.lke-field-err { margin-top: 4px; font-size: 11px; color: var(--bl-danger, #f53f3f); line-height: 1.4; }
+.lke-input-wrap .bl-input.is-invalid { border-color: var(--bl-danger); }
+.lke-field-err { margin-top: 4px; font-size: 11px; color: var(--bl-danger); line-height: 1.4; }
 
 /* 基数 segmented control */
 .lke-card-seg {

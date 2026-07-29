@@ -35,7 +35,7 @@ backend/db-backup/
 backend/flyway-run.log
 *.cmd
 backend/mvnw
-
+.workbuddy
 # JRebel 和临时文件
 **/rebel.xml
 **/classpath.txt

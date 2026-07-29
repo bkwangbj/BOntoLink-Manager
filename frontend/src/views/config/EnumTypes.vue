@@ -313,7 +313,7 @@
                         <span v-else class="bl-mono">{{ it.code }}</span>
                       </td>
                       <td>
-                        <input v-if="it._editing" class="bl-input bl-input-xs bl-mono" v-model="it.api_name" placeholder="snake_case" />
+                        <input v-if="it._editing" class="bl-input bl-input-xs bl-mono" :class="{ 'is-invalid': it.api_name && !isValidUpperSnake(it.api_name) }" v-model="it.api_name" placeholder="UPPER_SNAKE_CASE" />
                         <span v-else class="bl-mono">{{ it.api_name || '—' }}</span>
                       </td>
                       <td>
@@ -686,8 +686,11 @@
           <div class="et-drawer-body">
             <div class="sec">元数据</div>
             <FieldRow label="名称 *" inline><input class="bl-input" v-model="typeForm.rdfs_label" /></FieldRow>
-            <FieldRow label="API *" inline hint="snake_case · 全局唯一 · 创建后不可改">
-              <input class="bl-input bl-mono" v-model="typeForm.api_name" :disabled="!!typeForm.id" />
+            <FieldRow label="API *" inline hint="PascalCase · 全局唯一 · 创建后不可改">
+              <div style="flex:1">
+                <input class="bl-input bl-mono" :class="{ 'is-invalid': !typeForm.id && typeForm.api_name && !isValidPascalCase(typeForm.api_name) }" v-model="typeForm.api_name" :disabled="!!typeForm.id" placeholder="如 TicketPriority" />
+                <div v-if="!typeForm.id && typeForm.api_name && !isValidPascalCase(typeForm.api_name)" class="et-field-err">需大写字母开头，仅字母和数字，如 TicketPriority</div>
+              </div>
             </FieldRow>
             <FieldRow label="所属领域 *" inline hint="category_code · 归入行业领域分类">
               <select class="bl-input" v-model="typeForm.category_code">
@@ -1605,8 +1608,15 @@ function toggleDetailMax() {
   }
   localStorage.setItem('bl.et.detailW', String(detailDrawerW.value))
 }
+function isValidPascalCase(s) {
+  return !!s && /^[A-Z][A-Za-z0-9]*$/.test(s)
+}
+function isValidUpperSnake(s) {
+  return !!s && /^[A-Z][A-Z0-9_]*$/.test(s)
+}
 async function submitType() {
   if (!typeForm.rdfs_label || !typeForm.api_name) { BL.warning('名称 / API 为必填'); return }
+  if (!typeForm.id && !isValidPascalCase(typeForm.api_name)) { BL.warning('API 格式错误：需大写字母开头，仅字母和数字（PascalCase，如 TicketPriority）'); return }
   if (!typeForm.category_code) { BL.warning('请选择所属领域'); return }
 
   const isNew = !typeForm.id
@@ -1792,6 +1802,7 @@ function cancelItemRow(it) {
 }
 async function saveItemRow(it) {
   if (!it.label || !it.code) { BL.warning('名称、编码必填'); return }
+  if (it.api_name && !isValidUpperSnake(it.api_name)) { BL.warning('枚举项 API 格式错误：需全大写字母开头，仅大写字母、数字、下划线（如 HIGH）'); return }
   const { _editing, _isNew, _backup, ...payload } = it
   try {
     if (it._isNew) {
@@ -1820,6 +1831,10 @@ async function saveAllItems() {
   for (const it of toSave) {
     if (!it.label || !it.code) {
       BL.warning(`第 ${items.value.indexOf(it) + 1} 行：名称、编码必填`)
+      return
+    }
+    if (it.api_name && !isValidUpperSnake(it.api_name)) {
+      BL.warning(`第 ${items.value.indexOf(it) + 1} 行：API 格式错误，需全大写字母/数字/下划线（如 HIGH）`)
       return
     }
   }
@@ -2472,4 +2487,6 @@ async function confirmPasteImport() {
   flex-shrink: 0;
 }
 .item-tree .item-tn-label { color: var(--bl-text-1); flex: 1; font-size: 13px; }
+.bl-input.is-invalid { border-color: var(--bl-danger); }
+.et-field-err { margin-top: 4px; font-size: 11px; color: var(--bl-danger); line-height: 1.4; }
 </style>

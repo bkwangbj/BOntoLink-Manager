@@ -19,6 +19,7 @@ const routes = [
 
   { path: '/tools/ai',            name: 'ai',           component: () => import('@/views/tools/AiAssistant.vue'), meta: { title: 'AI 助手' } },
   { path: '/tools/import-export', name: 'importExport', component: () => import('@/views/tools/ImportExport.vue'), meta: { title: '导入导出' } },
+  { path: '/tools/knowledge',     name: 'knowledge',    component: () => import('@/views/tools/KnowledgeBrowser.vue'), meta: { title: '知识浏览器' } },
 
   { path: '/config/category', name: 'category', component: () => import('@/views/config/Category.vue'), meta: { title: '行业分类' } },
   { path: '/config/type-classes', name: 'typeClasses', component: () => import('@/views/config/TypeClasses.vue'), meta: { title: '类型类' } },

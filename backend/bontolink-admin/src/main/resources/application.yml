@@ -31,6 +31,31 @@ bontolink:
   cache:
     # 缓存类型: local(仅本地Caffeine) / remote(本地+Redis二级缓存) / none(禁用)
     type: local
+  ontology:
+    jena-enabled: false
+    storage-mode: memory
+    reasoner-type: owl
+    vector:
+      type: none
+      milvus-host: 127.0.0.1
+      milvus-port: 19530
+      milvus-collection: ont_entity_embeddings
+      dimension: 768
+    fuseki:
+      enabled: false
+      port: 3030
+      dataset-name: ontology
+  embedding:
+    provider: siliconflow   # mock / siliconflow
+  deepseek:
+    api-key: sk-5f5667ffbfe94c4e924e65de42ab46bd
+    base-url: https://api.deepseek.com/v1/chat/completions
+    model: deepseek-chat
+  siliconflow:
+    api-key: sk-gndwpiiwzjxjwvtqmdlcwbazbmebkzlxtgutenjcsetvaowb
+    base-url: https://api.siliconflow.cn/v1/embeddings
+    model: BAAI/bge-base-zh-v1.5
+    timeout-seconds: 30
   datasource:
     pool:
       max-pool-size: 5

@@ -381,4 +381,44 @@ export const dictApi = {
   refreshCacheByCode: (code) => http.post(`/dict/refresh-cache/${code}`),
 }
 
+/* 工具模块 — 浏览 Jena 本体 / 向量库 / 数据库 (后端 /bontolink/api/tool)
+   注: 前端 baseURL 为 /api, vite 代理到 http://127.0.0.1:8088/bontolink */
+export const toolApi = {
+  /* 三大数据源可用性聚合 */
+  status: () => http.get('/tool/status'),
+
+  /* —— Jena 本体 —— */
+  jenaClasses:    () => http.get('/tool/jena/classes'),
+  jenaProperties: () => http.get('/tool/jena/properties'),
+  jenaClassDetail:(localName) => http.get(`/tool/jena/class/${encodeURIComponent(localName)}`),
+  jenaPropertyDetail:(localName) => http.get(`/tool/jena/property/${encodeURIComponent(localName)}`),
+  /* 通用资源页（仿 Fuseki，出站/入站三元组下钻） */
+  jenaResource:   (uri, page = 1, size = 50) => http.get('/tool/jena/resource', { params: { uri, page, size } }),
+  /* 成员浏览：某类的个体（实例/枚举值通用），关键字+分页 */
+  jenaMembers:    (classRef, keyword = '', page = 1, size = 50) => http.get('/tool/jena/members', { params: { class: classRef, keyword, page, size } }),
+  /* M2 元数据 / 目录 / 类树 */
+  jenaVocab:      () => http.get('/tool/jena/meta/vocab'),
+  jenaKinds:      () => http.get('/tool/jena/meta/kinds'),
+  jenaEntities:   (kind = 'all', ns = '', keyword = '', page = 1, size = 50) => http.get('/tool/jena/entities', { params: { kind, ns, keyword, page, size } }),
+  jenaHierarchy:  (root = '', depth = 0) => http.get('/tool/jena/hierarchy', { params: { root, depth } }),
+  /* M3 查询模板 + 多格式 */
+  jenaQueryTemplates: () => http.get('/tool/jena/query/templates'),
+  jenaSparql:     (sparql, format = 'json') => http.post('/tool/jena/sparql', { sparql, format }),
+
+  /* —— 向量库 (pgvector 余弦相似度检索) —— */
+  vectorSearch:   (text, topK = 10, threshold = 0.6) =>
+    http.post('/tool/vector/search', { text, topK, threshold }),
+  /* M4 向量浏览 */
+  vectorList:     (nsCode = '', page = 1, size = 50) => http.get('/tool/vector/list', { params: { nsCode, page, size } }),
+  vectorDetail:   (classId) => http.get(`/tool/vector/detail/${encodeURIComponent(classId)}`),
+
+  /* —— 数据库 —— */
+  dbTables:       () => http.get('/tool/db/tables'),
+  dbSchema:       (table) => http.get(`/tool/db/schema/${encodeURIComponent(table)}`),
+  dbQuery:        (sql) => http.post('/tool/db/query', { sql }),
+
+  /* 统一入口: { source: 'jena'|'vector'|'db', ... } */
+  unified:        (body) => http.post('/tool/query', body)
+}
+
 export default http

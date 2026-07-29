@@ -159,7 +159,8 @@ const menus = [
   ]},
   { key: 'tools', title: '辅助工具', items: [
     { path: '/tools/ai',            icon: 'ai',       label: 'AI 助手',   en: 'AI Assistant' },
-    { path: '/tools/import-export', icon: 'upload',   label: '导入导出',  en: 'Import & Export' }
+    { path: '/tools/import-export', icon: 'upload',   label: '导入导出',  en: 'Import & Export' },
+    { path: '/tools/knowledge',     icon: 'compass',  label: '知识浏览器', en: 'Knowledge Browser' }
   ]},
   { key: 'config', title: '系统配置', items: [
     { path: '/config/category',    icon: 'folder', label: '行业分类', en: 'Category' },
