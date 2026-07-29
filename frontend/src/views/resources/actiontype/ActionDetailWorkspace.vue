@@ -37,9 +37,6 @@
               </div>
               <!-- 规则结构树: 按 编辑类 / 副作用 分组 -->
               <div v-if="m.k === 'rules' && rulesNavOpen" class="adw-tree">
-                <div :class="['adw-tree-root', activeMenu === 'rules' && ruleView === 'list' && 'is-on']" @click="backToRules(true)">
-                  <span class="adw-tree-ic" v-html="BL.icon('code', 11)"></span>规则总览
-                </div>
                 <template v-for="g in ruleNavGroups" :key="g.label">
                   <div class="adw-tree-sec" :class="{ 'is-fold': isNavFold('rule:' + g.label) }" @click="toggleNavFold('rule:' + g.label)">
                     <span class="adw-tree-sec-chev" v-html="BL.icon('chevronDown', 10)"></span>
@@ -59,9 +56,6 @@
               </div>
               <!-- 表单结构树: 可独立收展 (不依赖当前菜单) -->
               <div v-if="m.k === 'form' && formNavOpen" class="adw-tree">
-                <div :class="['adw-tree-root', activeMenu === 'form' && formView === 'list' && 'is-on']" @click="backToList">
-                  <span class="adw-tree-ic" v-html="BL.icon('menu', 11)"></span>表单内容
-                </div>
                 <template v-for="sec in sections" :key="sec">
                   <div class="adw-tree-sec" :class="{ 'is-fold': isNavFold('form:' + sec) }" @click="toggleNavFold('form:' + sec)">
                     <span class="adw-tree-sec-chev" v-html="BL.icon('chevronDown', 10)"></span>
@@ -1124,10 +1118,11 @@ const submitTree = reactive({ logic:'all', children:[] })
 const activeMenu = ref('overview')
 const formNavOpen = ref(false)
 const rulesNavOpen = ref(false)
+/* 根节点即该模块的列表页入口, 因此点菜单要回到列表视图而不只是切菜单 */
 function onMenuClick(m) {
   activeMenu.value = m.k
-  if (m.k === 'form') formNavOpen.value = true
-  if (m.k === 'rules') { rulesNavOpen.value = true; ruleView.value = 'list'; ruleEditIdx.value = -1; ruleSelKey.value = null }
+  if (m.k === 'form') { formNavOpen.value = true; backToList() }
+  if (m.k === 'rules') { rulesNavOpen.value = true; backToRules(true) }
 }
 const editMode = ref(false)
 const saving = ref(false)
@@ -1727,7 +1722,6 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .adw-tree-item { display: flex; align-items: center; gap: 6px; padding: 6px 12px 6px 20px; font-size: 12.5px; color: var(--bl-text-2); cursor: pointer; border-radius: 6px; }
 .adw-tree-item:hover { background: var(--bl-bg-hover); }
 .adw-tree-item.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); }
-.adw-tree-ic { color: var(--bl-text-3); display: inline-flex; }
 .adw-tree-empty { padding: 8px 20px; font-size: 12px; color: var(--bl-text-3); }
 
 /* 中间内容 */
@@ -1804,9 +1798,6 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .adw-row-sel { background: var(--bl-primary-soft); }
 
 /* 表单结构树 (字段双图标) */
-.adw-tree-root { display: flex; align-items: center; gap: 6px; padding: 7px 12px; font-size: 13px; font-weight: 600; color: var(--bl-text-2); cursor: pointer; border-radius: 6px; }
-.adw-tree-root:hover { background: var(--bl-bg-hover); }
-.adw-tree-root.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); }
 .adw-tree-field { display: flex; align-items: center; gap: 7px; padding: 7px 6px 7px 8px; font-size: 12.5px; color: var(--bl-text-2); cursor: pointer; border-radius: 6px; border-left: 2px solid transparent; }
 .adw-tree-field:hover { background: var(--bl-bg-hover); }
 .adw-tree-field:hover .adw-tree-disp { color: var(--bl-text-1); }
