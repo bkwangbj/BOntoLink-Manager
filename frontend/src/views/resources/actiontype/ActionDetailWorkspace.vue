@@ -648,6 +648,11 @@
                 <div class="gd-sub">表单级样式<span class="bl-muted" style="font-weight:400;font-size:11px;margin-left:6px">无参数级覆盖</span></div>
                 <div class="gd-grid">
                   <label class="adw-fld"><span class="adw-lbl">必填标识</span><BlSelect v-model="globalConf.reqMark" :options="[{value:'prefix',label:'名称前红色星号'},{value:'suffix',label:'名称后红色星号'}]" /></label>
+                  <label class="adw-fld"><span class="adw-lbl">字段间距</span><BlSelect v-model="globalConf.density" :options="[{value:'compact',label:'紧凑'},{value:'normal',label:'标准'},{value:'loose',label:'宽松'}]" /></label>
+                  <label class="adw-fld"><span class="adw-lbl">分区标题</span><span class="adw-showsw" :class="{ 'is-on': globalConf.sectionTitle === 1 }" @click="globalConf.sectionTitle = globalConf.sectionTitle ? 0 : 1"><span class="adw-showsw-dot"></span></span><span class="bl-muted" style="font-size:12px;margin-left:8px">在表单中展示分区标题</span></label>
+                </div>
+                <div class="gd-sub">提交交互</div>
+                <div class="gd-grid">
                   <label class="adw-fld"><span class="adw-lbl">自定义提交按钮</span><span class="adw-showsw" :class="{ 'is-on': globalConf.custom_submit === 1 }" @click="globalConf.custom_submit = globalConf.custom_submit ? 0 : 1"><span class="adw-showsw-dot"></span></span></label>
                   <label class="adw-fld"><span class="adw-lbl">自定义成功提示</span><span class="adw-showsw" :class="{ 'is-on': globalConf.custom_success === 1 }" @click="globalConf.custom_success = globalConf.custom_success ? 0 : 1"><span class="adw-showsw-dot"></span></span></label>
                 </div>
@@ -860,13 +865,19 @@
         </main>
 
         <!-- ===== 右侧预览 384px (仅表单菜单) ===== -->
-        <aside v-if="activeMenu === 'form'" class="adw-preview">
-          <div class="adw-preview-hd">表单预览</div>
+        <aside v-if="activeMenu === 'form'" :class="['adw-preview', previewFull && 'is-full']">
+          <div class="adw-preview-hd adw-card-hd-flex"><span>表单预览</span>
+            <button class="bl-btn bl-btn-text bl-btn-sm" @click="previewFull = !previewFull">{{ previewFull ? '退出全屏' : '全屏预览' }}</button></div>
           <div class="adw-preview-body">
-            <div class="adw-preview-form">
+            <div :class="['adw-preview-form', 'is-' + globalConf.density]">
               <div class="adw-preview-title">{{ form.rdfs_label || '动作表单' }}</div>
-              <div v-for="x in visibleParams" :key="x.i"
+              <div v-if="!previewFull" class="adw-pv-tip">侧栏为单列示意,字段宽度请用「全屏预览」查看真实栅格</div>
+              <template v-for="g in previewGroups" :key="g.sec">
+              <div v-if="globalConf.sectionTitle === 1" class="adw-pv-sec">{{ g.sec }}</div>
+              <div class="adw-pv-grid">
+              <div v-for="x in g.items" :key="x.i"
                    :class="['adw-preview-fld', selIdx === x.i && formView === 'detail' && 'is-sel', dspOf(x.p).labelPos === 'left' && 'is-side']"
+                   :style="previewFull ? { width: widthPct(x.p) } : null"
                    @click="openParam(x.i)">
                 <div v-if="dspOf(x.p).labelPos !== 'none'" class="adw-preview-lbl"
                      :style="dspOf(x.p).labelPos === 'left' ? { flex:`0 0 ${labelWpx(x.p)}px`, textAlign: globalConf.labelAlign } : null">
@@ -892,10 +903,12 @@
                 <div v-if="previewHelp(x.p)" class="adw-pv-help">{{ previewHelp(x.p) }}</div>
                 </div>
               </div>
+              </div>
+              </template>
               <div v-if="!visibleParams.length" class="bl-muted" style="text-align:center;padding:24px;font-size:12px">无表单字段</div>
             </div>
           </div>
-          <div class="adw-preview-ft"><span class="bl-muted" style="font-size:12px">共 {{ visibleParams.length }} 个字段</span></div>
+          <div class="adw-preview-ft"><span class="bl-muted" style="font-size:12px">共 {{ visibleParams.length }} 个字段 · {{ previewGroups.length }} 个分区</span></div>
         </aside>
         </div>
       </aside>
@@ -1235,6 +1248,8 @@ async function load() {
   globalConf.helpOn = fg.helpOn ?? 0
   globalConf.helpText = fg.helpText || '请按要求填写该字段'
   globalConf.reqMark = fg.reqMark || 'prefix'
+  globalConf.density = fg.density || 'normal'
+  globalConf.sectionTitle = fg.sectionTitle ?? 1
   if (form.object_class_id) loadClassProps()
   formSnapshot = JSON.stringify(pickEditable())
   nextTick(() => { fullSnapshot = snapshotAll() })
@@ -1446,6 +1461,7 @@ const globalConf = reactive({
   custom_submit: 0, custom_success: 0,
   width: 'full', labelPos: 'top', labelW: '90', labelAlign: 'left',
   clear: 1, helpOn: 0, helpText: '请按要求填写该字段', reqMark: 'prefix',
+  density: 'normal', sectionTitle: 1,
 })
 const selParam = computed(() => formParams.value[selIdx.value] || null)
 const sections = computed(() => {
@@ -1506,6 +1522,11 @@ function autoLabelW() {
 }
 function labelWpx(p) { const v = dspOf(p).labelW; return v === 'auto' ? autoLabelW() : Number(v) || 90 }
 function previewHelp(p) { return dspOf(p).helpOn ? (p.help_text || globalConf.helpText) : '' }
+function widthPct(p) { return ({ full:'100%', half:'50%', third:'33.33%', quarter:'25%' })[dspOf(p).width] || '100%' }
+const previewFull = ref(false)
+const previewGroups = computed(() => sections.value
+  .map(sec => ({ sec, items: visibleParams.value.filter(x => (x.p.section || '基础参数') === sec) }))
+  .filter(g => g.items.length))
 async function removeParamAt(i) {
   const p = formParams.value[i]
   if (!p) return
@@ -1874,6 +1895,17 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .adw-preview-title { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
 .adw-preview-fld { margin-bottom: 12px; }
 .adw-preview-lbl { font-size: 12px; color: var(--bl-text-2); margin-bottom: 5px; }
+/* 全屏预览: 复用同一段 DOM, 仅改容器形态, 避免与侧栏预览重复维护两套结构 */
+.adw-preview.is-full { position: fixed; inset: 48px; width: auto; z-index: 30; border-radius: var(--bl-radius-3);
+  box-shadow: var(--bl-shadow-3); border: 1px solid var(--bl-border); }
+.adw-preview.is-full .adw-preview-form { max-width: 1000px; margin: 0 auto; }
+.adw-pv-tip { font-size: 11px; color: var(--bl-text-3); margin: -4px 0 10px; line-height: 1.6; }
+.adw-pv-sec { font-size: 11px; color: var(--bl-text-3); margin: 14px 0 8px; padding-bottom: 4px; border-bottom: 1px dashed var(--bl-border); }
+.adw-pv-grid { display: flex; flex-wrap: wrap; margin: 0 -6px; }
+.adw-pv-grid > .adw-preview-fld { padding-left: 6px; padding-right: 6px; }
+/* 字段间距: 表单级样式, 无参数级覆盖 */
+.adw-preview-form.is-compact .adw-preview-fld { margin-bottom: 6px; }
+.adw-preview-form.is-loose .adw-preview-fld { margin-bottom: 20px; }
 /* 标签位于左侧: 标签列定宽 + 控件占满剩余, 宽度由 labelWpx 内联给出 */
 .adw-preview-fld.is-side { display: flex; align-items: flex-start; gap: 8px; }
 .adw-preview-fld.is-side .adw-preview-lbl { margin-bottom: 0; padding-top: 7px; padding-right: 6px; }
