@@ -1902,7 +1902,8 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .adw-pv-tip { font-size: 11px; color: var(--bl-text-3); margin: -4px 0 10px; line-height: 1.6; }
 .adw-pv-sec { font-size: 11px; color: var(--bl-text-3); margin: 14px 0 8px; padding-bottom: 4px; border-bottom: 1px dashed var(--bl-border); }
 .adw-pv-grid { display: flex; flex-wrap: wrap; margin: 0 -6px; }
-.adw-pv-grid > .adw-preview-fld { padding-left: 6px; padding-right: 6px; }
+/* 默认单列; 仅全屏预览时由内联 width 覆盖为真实栅格比例 */
+.adw-pv-grid > .adw-preview-fld { width: 100%; box-sizing: border-box; padding-left: 6px; padding-right: 6px; }
 /* 字段间距: 表单级样式, 无参数级覆盖 */
 .adw-preview-form.is-compact .adw-preview-fld { margin-bottom: 6px; }
 .adw-preview-form.is-loose .adw-preview-fld { margin-bottom: 20px; }
