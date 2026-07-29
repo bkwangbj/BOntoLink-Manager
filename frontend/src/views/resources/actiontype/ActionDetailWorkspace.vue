@@ -41,13 +41,19 @@
                   <span class="adw-tree-ic" v-html="BL.icon('code', 11)"></span>规则总览
                 </div>
                 <template v-for="g in ruleNavGroups" :key="g.label">
-                  <div class="adw-tree-sec">{{ g.label }}</div>
-                  <div v-for="x in g.items" :key="x.r._k"
-                       :class="['adw-tree-field', activeMenu === 'rules' && ruleSelKey === x.r._k && 'is-on', x.r.status === 0 && 'is-off']"
-                       :title="ruleNavLabel(x.r)" @click="openRuleFromNav(x.i)">
-                    <span class="adw-tree-dt" :style="{ background: kindMeta(x.r.kind).color }" v-html="BL.icon(kindMeta(x.r.kind).icon, 11, '#fff')"></span>
-                    <span class="bl-truncate adw-tree-fname">{{ ruleNavLabel(x.r) }}</span>
+                  <div class="adw-tree-sec" :class="{ 'is-fold': isNavFold('rule:' + g.label) }" @click="toggleNavFold('rule:' + g.label)">
+                    <span class="adw-tree-sec-chev" v-html="BL.icon('chevronDown', 10)"></span>
+                    <span class="bl-truncate">{{ g.label }}</span>
+                    <span class="adw-tree-sec-n">{{ g.items.length }}</span>
                   </div>
+                  <template v-if="!isNavFold('rule:' + g.label)">
+                    <div v-for="x in g.items" :key="x.r._k"
+                         :class="['adw-tree-field', activeMenu === 'rules' && ruleSelKey === x.r._k && 'is-on', x.r.status === 0 && 'is-off']"
+                         :title="ruleNavLabel(x.r)" @click="openRuleFromNav(x.i)">
+                      <span class="adw-tree-dt" :style="{ background: kindMeta(x.r.kind).color }" v-html="BL.icon(kindMeta(x.r.kind).icon, 11, '#fff')"></span>
+                      <span class="bl-truncate adw-tree-fname">{{ ruleNavLabel(x.r) }}</span>
+                    </div>
+                  </template>
                 </template>
                 <div v-if="!rules.length" class="adw-tree-empty">暂无规则</div>
               </div>
@@ -57,13 +63,19 @@
                   <span class="adw-tree-ic" v-html="BL.icon('menu', 11)"></span>表单内容
                 </div>
                 <template v-for="sec in sections" :key="sec">
-                  <div class="adw-tree-sec">{{ sec }}</div>
-                  <div v-for="x in paramsOfSection(sec)" :key="x.i"
-                       :class="['adw-tree-field', activeMenu === 'form' && formView === 'detail' && selIdx === x.i && 'is-on']" @click="openParam(x.i)">
-                    <span class="adw-tree-dt" :style="{ background: dtMeta(x.p.param_type).color }" v-html="BL.icon(dtMeta(x.p.param_type).icon, 11, '#fff')"></span>
-                    <span class="bl-truncate adw-tree-fname">{{ x.p.param_name || x.p.param_code || '未命名' }}</span>
-                    <span class="adw-tree-disp" :title="displayMeta(x.p.display_type).label" v-html="BL.icon(displayMeta(x.p.display_type).icon, 12)"></span>
+                  <div class="adw-tree-sec" :class="{ 'is-fold': isNavFold('form:' + sec) }" @click="toggleNavFold('form:' + sec)">
+                    <span class="adw-tree-sec-chev" v-html="BL.icon('chevronDown', 10)"></span>
+                    <span class="bl-truncate">{{ sec }}</span>
+                    <span class="adw-tree-sec-n">{{ paramsOfSection(sec).length }}</span>
                   </div>
+                  <template v-if="!isNavFold('form:' + sec)">
+                    <div v-for="x in paramsOfSection(sec)" :key="x.i"
+                         :class="['adw-tree-field', activeMenu === 'form' && formView === 'detail' && selIdx === x.i && 'is-on']" @click="openParam(x.i)">
+                      <span class="adw-tree-dt" :style="{ background: dtMeta(x.p.param_type).color }" v-html="BL.icon(dtMeta(x.p.param_type).icon, 11, '#fff')"></span>
+                      <span class="bl-truncate adw-tree-fname">{{ x.p.param_name || x.p.param_code || '未命名' }}</span>
+                      <span class="adw-tree-disp" :title="displayMeta(x.p.display_type).label" v-html="BL.icon(displayMeta(x.p.display_type).icon, 12)"></span>
+                    </div>
+                  </template>
                 </template>
                 <div v-if="!formParams.length" class="adw-tree-empty">暂无参数</div>
               </div>
@@ -1550,6 +1562,11 @@ async function removeParamAt(i) {
   formParams.value.splice(i, 1)
   if (selIdx.value === i) backToList()
 }
+/* 左侧导航分组收起状态; 键加 rule:/form: 前缀避免规则分组与同名分区互相干扰 */
+const navFold = reactive(new Set())
+function isNavFold(k) { return navFold.has(k) }
+function toggleNavFold(k) { navFold.has(k) ? navFold.delete(k) : navFold.add(k) }
+
 /* 分区收展仅为配置期视图状态, 不入库 */
 const secCollapsed = reactive(new Set())
 function toggleSec(sec) { secCollapsed.has(sec) ? secCollapsed.delete(sec) : secCollapsed.add(sec) }
@@ -1701,7 +1718,12 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .adw-menu-chev.is-open { transform: rotate(90deg); }
 /* 表单结构树 */
 .adw-tree { padding: 4px 0 4px 10px; }
-.adw-tree-sec { font-size: 12px; color: var(--bl-text-3); font-weight: 600; padding: 6px 12px 4px; }
+.adw-tree-sec { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--bl-text-3); font-weight: 600;
+  padding: 6px 12px 4px; cursor: pointer; user-select: none; border-radius: 6px; }
+.adw-tree-sec:hover { color: var(--bl-text-2); background: var(--bl-bg-hover); }
+.adw-tree-sec-chev { display: inline-flex; color: var(--bl-text-4); transition: transform .15s; }
+.adw-tree-sec.is-fold .adw-tree-sec-chev { transform: rotate(-90deg); }
+.adw-tree-sec-n { margin-left: auto; font-weight: 400; color: var(--bl-text-4); }
 .adw-tree-item { display: flex; align-items: center; gap: 6px; padding: 6px 12px 6px 20px; font-size: 12.5px; color: var(--bl-text-2); cursor: pointer; border-radius: 6px; }
 .adw-tree-item:hover { background: var(--bl-bg-hover); }
 .adw-tree-item.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); }
@@ -1813,6 +1835,8 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .fd-part-op:hover { color: var(--bl-primary); background: var(--bl-primary-soft); }
 .fd-part-name { display: inline-flex; align-items: center; font-size: 13px; font-weight: 600; color: var(--bl-text-1); cursor: pointer; border-radius: 5px; padding: 1px 4px; margin-left: -4px; }
 .fd-part-name:hover { color: var(--bl-primary); background: var(--bl-bg-hover); }
+/* 抽屉可拖窄, 分区名过长时截断而非折行, 否则头部会撑成两行 */
+.fd-part-name { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
 .fd-part-count { padding: 0 7px; border-radius: 10px; background: var(--bl-bg-2); color: var(--bl-text-2); font-size: 11px; flex-shrink: 0; }
 .fd-part-del { margin-left: 6px; padding: 2px; border: 0; background: transparent; color: var(--bl-text-3); cursor: pointer; display: inline-flex; align-items: center; border-radius: 5px; opacity: 0; transition: opacity .12s, color .12s, background .12s; }
 .fd-part:hover .fd-part-del { opacity: 1; }
