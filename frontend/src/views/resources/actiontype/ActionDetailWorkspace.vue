@@ -605,8 +605,19 @@
                 </div>
               </div>
               <div class="fd-detail-body">
-              <div v-for="sec in sections" :key="sec" class="fd-part" @dragover.prevent @drop="onFieldDropSection(sec)">
-                <div class="fd-part-hd"><span v-html="BL.icon('chevronDown', 12)"></span><span class="fd-part-name" title="点击重命名分区" @click.stop="renameSection(sec)">{{ sec }}<span class="fd-part-edit" v-html="BL.icon('edit', 11)"></span></span><span class="fd-part-count">{{ paramsOfSection(sec).length }}</span><button v-if="sections.length > 1" class="fd-part-del" title="删除分区" @click.stop="removeSection(sec)" v-html="BL.icon('trash2', 12)"></button></div>
+              <div v-for="sec in sections" :key="sec"
+                   :class="['fd-part', secCollapsed.has(sec) && 'is-collapsed', secDrag === sec && 'is-secdrag']"
+                   @dragover.prevent @drop="onPartDrop(sec)">
+                <div class="fd-part-hd" draggable="true" title="点击收起/展开, 拖动调整分区顺序"
+                     @dragstart="onSecDragStart(sec, $event)" @dragend="secDrag = null" @click="toggleSec(sec)">
+                  <span class="fd-part-grip" v-html="BL.icon('grip', 12)"></span>
+                  <span class="fd-part-name" title="重命名分区" @click.stop="renameSection(sec)">{{ sec }}</span>
+                  <span class="fd-part-count">{{ paramsOfSection(sec).length }} 个参数</span>
+                  <span style="flex:1"></span>
+                  <button class="fd-part-op" title="重命名分区" @click.stop="renameSection(sec)" v-html="BL.icon('edit', 12)"></button>
+                  <button v-if="sections.length > 1" class="fd-part-del" title="删除分区" @click.stop="removeSection(sec)" v-html="BL.icon('trash2', 12)"></button>
+                  <span class="fd-part-chev" v-html="BL.icon('chevronDown', 13)"></span>
+                </div>
                 <div class="fd-part-body">
                   <div v-for="x in paramsOfSection(sec)" :key="x.i" class="fd-row" :class="{ 'is-dragging': fDragIdx === x.i }"
                        draggable="true" @dragstart="onFieldDragStart(x.i, $event)" @dragover.prevent @drop.stop="onFieldDrop(x.p, sec)" @dragend="fDragIdx = null"
@@ -1539,6 +1550,31 @@ async function removeParamAt(i) {
   formParams.value.splice(i, 1)
   if (selIdx.value === i) backToList()
 }
+/* 分区收展仅为配置期视图状态, 不入库 */
+const secCollapsed = reactive(new Set())
+function toggleSec(sec) { secCollapsed.has(sec) ? secCollapsed.delete(sec) : secCollapsed.add(sec) }
+
+/* 分区顺序由 formParams 中各分区首个参数的位置决定, 因此排序 = 按新分区顺序整体重排参数 */
+const secDrag = ref(null)
+function onSecDragStart(sec, e) { secDrag.value = sec; e.dataTransfer.effectAllowed = 'move' }
+function onPartDrop(sec) {
+  if (secDrag.value) { moveSection(secDrag.value, sec); secDrag.value = null; return }
+  onFieldDropSection(sec)
+}
+function moveSection(src, target) {
+  const order = sections.value.slice()
+  const from = order.indexOf(src), to = order.indexOf(target)
+  if (from < 0 || to < 0 || from === to) return
+  order.splice(from, 1)
+  order.splice(to, 0, src)
+  const bucket = new Map(order.map(s => [s, []]))
+  formParams.value.forEach(p => {
+    const s = p.section || '基础参数'
+    if (!bucket.has(s)) bucket.set(s, [])
+    bucket.get(s).push(p)
+  })
+  formParams.value = order.flatMap(s => bucket.get(s) || [])
+}
 function addSection() {
   let n = sections.value.length + 1, name = `分区 ${n}`
   while (sections.value.includes(name)) { n++; name = `分区 ${n}` }
@@ -1761,13 +1797,22 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 
 /* 表单列表页 - 分区 */
 .fd-part { border: 1px solid var(--bl-border); border-radius: 10px; margin-bottom: 12px; overflow: hidden; background: var(--bl-bg-1); }
-.fd-part-hd { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--bl-divider); color: var(--bl-text-2); }
-.fd-part-hd > span:first-child { color: var(--bl-text-3); display: inline-flex; }
+.fd-part-hd { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--bl-divider); color: var(--bl-text-2); cursor: pointer; user-select: none; }
+.fd-part-hd:hover { background: var(--bl-bg-hover); }
+.fd-part-grip { color: var(--bl-text-4); display: inline-flex; cursor: grab; }
+.fd-part-hd:active .fd-part-grip { cursor: grabbing; }
+.fd-part-chev { color: var(--bl-text-3); display: inline-flex; margin-left: 4px; transition: transform .15s; }
+.fd-part.is-collapsed .fd-part-chev { transform: rotate(-90deg); }
+.fd-part.is-collapsed .fd-part-hd { border-bottom: 0; }
+.fd-part.is-collapsed .fd-part-body { display: none; }
+.fd-part.is-secdrag { opacity: .45; }
+.fd-part-op { padding: 2px; border: 0; background: transparent; color: var(--bl-text-3); cursor: pointer; display: inline-flex;
+  align-items: center; border-radius: 5px; opacity: 0; transition: opacity .12s, color .12s, background .12s; }
+.fd-part:hover .fd-part-op { opacity: 1; }
+.fd-part-op:hover { color: var(--bl-primary); background: var(--bl-primary-soft); }
 .fd-part-name { display: inline-flex; align-items: center; font-size: 13px; font-weight: 600; color: var(--bl-text-1); cursor: pointer; border-radius: 5px; padding: 1px 4px; margin-left: -4px; }
 .fd-part-name:hover { color: var(--bl-primary); background: var(--bl-bg-hover); }
-.fd-part-edit { margin-left: 5px; display: inline-flex; color: var(--bl-text-3); opacity: 0; transition: opacity .12s; }
-.fd-part-name:hover .fd-part-edit { opacity: 1; }
-.fd-part-count { margin-left: auto; padding: 0 7px; border-radius: 10px; background: var(--bl-bg-2); color: var(--bl-text-2); font-size: 11px; }
+.fd-part-count { padding: 0 7px; border-radius: 10px; background: var(--bl-bg-2); color: var(--bl-text-2); font-size: 11px; flex-shrink: 0; }
 .fd-part-del { margin-left: 6px; padding: 2px; border: 0; background: transparent; color: var(--bl-text-3); cursor: pointer; display: inline-flex; align-items: center; border-radius: 5px; opacity: 0; transition: opacity .12s, color .12s, background .12s; }
 .fd-part:hover .fd-part-del { opacity: 1; }
 .fd-part-del:hover { color: #f53f3f; background: color-mix(in srgb, #f53f3f 12%, transparent); }
