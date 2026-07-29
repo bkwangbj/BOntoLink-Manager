@@ -1031,7 +1031,8 @@ const VALUE_SOURCE_OPTS = [1, 5, 2, 3, 4].map(v => ({ value: v, label: VALUE_SOU
 const PROP_OPERATOR_OPTS = Object.entries(PROP_OPERATORS).map(([v, l]) => ({ value: v, label: l }))
 const PARAM_TYPE_OPTS = ['string','number','boolean','object','date'].map(t => ({ value: t, label: t }))
 /* 表单设计器: 数据类型 / 显示组件 / 录入模式 */
-const DATA_TYPE_META = { string:{icon:'edit',color:'#2563eb',label:'字符串'}, number:{icon:'code',color:'#1f2937',label:'数值'}, boolean:{icon:'check',color:'#10b981',label:'布尔'}, object:{icon:'box',color:'#8b5cf6',label:'对象引用'}, date:{icon:'zap',color:'#0891b2',label:'日期'}, enum:{icon:'menu',color:'#dc2626',label:'枚举'} }
+/* 图标取「类型本身的写法」而非动作: 字母 A=文本 / #=数值 / 勾=布尔 / 立方=对象 / 日历=日期 / 带勾方框=枚举 */
+const DATA_TYPE_META = { string:{icon:'textType',color:'#2563eb',label:'字符串'}, number:{icon:'hash',color:'#1f2937',label:'数值'}, boolean:{icon:'check',color:'#10b981',label:'布尔'}, object:{icon:'cube',color:'#8b5cf6',label:'对象引用'}, date:{icon:'calendar',color:'#0891b2',label:'日期'}, enum:{icon:'checkSquare',color:'#dc2626',label:'枚举'} }
 const DISPLAY_TYPES = [
   { v:'input', label:'单行输入框', icon:'edit' }, { v:'textarea', label:'多行文本域', icon:'menu' },
   { v:'select', label:'下拉选择', icon:'chevronDown' }, { v:'radio', label:'单选按钮组', icon:'check' },
