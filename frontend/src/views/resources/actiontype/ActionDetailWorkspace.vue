@@ -221,8 +221,7 @@
                   <div class="rl-row"><span class="rl-lbl">绑定函数</span><input class="bl-input bl-input-sm bl-mono" v-model="rule.func_code" placeholder="函数编码" /></div>
                   <div class="rl-row"><span class="rl-lbl">函数版本</span><input class="bl-input bl-input-sm" v-model="rule.func_version" style="max-width:120px" /><label class="adw-sw" style="margin-left:16px"><input type="checkbox" v-model="rule.func_autoupgrade" :true-value="1" :false-value="0" /> 自动升级到兼容版本</label></div>
                   <div class="rl-sub">必填入参 · {{ (rule.func_params||[]).filter(p=>p.required).length }} 个 <button class="bl-btn bl-btn-text bl-btn-sm" @click="openParamMap(rule)"><span v-html="BL.icon('link', 11)"></span><span style="margin-left:3px">快速入参映射</span></button></div>
-                  <div class="rl-code">// 代码预览(只读) · {{ rule.func_code || '未绑定函数' }}@{{ rule.func_version }}
-// 在代码仓库中编辑函数逻辑</div>
+                  <pre class="fe-code rl-code-blk">{{ funcCodePreview(rule) }}</pre>
                 </template>
                 <!-- 通知规则 (折叠卡片态: 快速配置 + 完整编辑入口) -->
                 <template v-else-if="rule.kind === 'notification'">
@@ -369,35 +368,9 @@
 
                 <!-- 2 入参映射配置 (必选 / 可选分组) -->
                 <div class="adw-card"><div class="adw-card-hd">入参映射配置 <span class="bl-muted" style="font-size:11px;font-weight:400">(值来源与入参类型不匹配会标红)</span></div>
-                  <div class="fe-subhd">必选入参 <span class="bl-muted">(函数定义决定,不可删除)</span></div>
-                  <table class="bl-table ate-mini-table"><thead><tr><th class="t-left">参数名</th><th class="t-left">类型</th><th class="t-center">必填</th><th class="t-left">值来源类型</th><th class="t-left">取值配置</th><th></th></tr></thead>
-                    <tbody>
-                      <tr v-for="(fp, fi) in selEditRule.func_params.filter(p=>p.required)" :key="'req'+fi" :class="{ 'fe-mismatch': paramTypeMismatch(selEditRule, fp) }">
-                        <td><input class="bl-input bl-input-xs bl-mono" v-model="fp.name" placeholder="param_name" /></td>
-                        <td><BlSelect v-model="fp.param_type" :options="FUNC_PTYPE_OPTS" size="sm" /></td>
-                        <td class="t-center"><span class="bl-tag bl-tag-danger">必填</span></td>
-                        <td><BlSelect v-model="fp.value_source" :options="VALUE_SOURCE_OPTS" size="sm" /></td>
-                        <td><BlSelect v-if="Number(fp.value_source)===1" v-model="fp.value_content" :options="formParamOptions" size="sm" clearable placeholder="选表单参数" /><BlSelect v-else-if="Number(fp.value_source)===5" v-model="fp.value_content" :options="objectParamOptions" size="sm" clearable placeholder="选对象引用参数" /><input v-else-if="Number(fp.value_source)===2" class="bl-input bl-input-xs" v-model="fp.value_content" placeholder="静态值" /><span v-else class="bl-muted" style="font-size:12px;padding-left:4px">自动</span></td>
-                        <td class="t-center"><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="selEditRule.func_params.splice(selEditRule.func_params.indexOf(fp),1)" v-html="BL.icon('x', 11)"></button></td>
-                      </tr>
-                      <tr v-if="!selEditRule.func_params.some(p=>p.required)"><td colspan="6" class="bl-muted" style="text-align:center;padding:8px;font-size:12px">暂无必选入参</td></tr>
-                    </tbody></table>
-                  <button class="bl-btn bl-btn-text bl-btn-sm" style="margin-top:4px" @click="addFuncParamRow(selEditRule, 1)"><span v-html="BL.icon('plus', 11)"></span><span style="margin-left:3px">添加必选入参</span></button>
-
-                  <div class="fe-subhd" style="margin-top:14px">可选入参</div>
-                  <table class="bl-table ate-mini-table"><thead><tr><th class="t-left">参数名</th><th class="t-left">类型</th><th class="t-center">必填</th><th class="t-left">值来源类型</th><th class="t-left">取值配置</th><th></th></tr></thead>
-                    <tbody>
-                      <tr v-for="(fp, fi) in selEditRule.func_params.filter(p=>!p.required)" :key="'opt'+fi" :class="{ 'fe-mismatch': paramTypeMismatch(selEditRule, fp) }">
-                        <td><input class="bl-input bl-input-xs bl-mono" v-model="fp.name" placeholder="param_name" /></td>
-                        <td><BlSelect v-model="fp.param_type" :options="FUNC_PTYPE_OPTS" size="sm" /></td>
-                        <td class="t-center"><span class="bl-tag">可选</span></td>
-                        <td><BlSelect v-model="fp.value_source" :options="VALUE_SOURCE_OPTS" size="sm" /></td>
-                        <td><BlSelect v-if="Number(fp.value_source)===1" v-model="fp.value_content" :options="formParamOptions" size="sm" clearable placeholder="选表单参数" /><BlSelect v-else-if="Number(fp.value_source)===5" v-model="fp.value_content" :options="objectParamOptions" size="sm" clearable placeholder="选对象引用参数" /><input v-else-if="Number(fp.value_source)===2" class="bl-input bl-input-xs" v-model="fp.value_content" placeholder="静态值" /><span v-else class="bl-muted" style="font-size:12px;padding-left:4px">自动</span></td>
-                        <td class="t-center"><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="selEditRule.func_params.splice(selEditRule.func_params.indexOf(fp),1)" v-html="BL.icon('x', 11)"></button></td>
-                      </tr>
-                      <tr v-if="!selEditRule.func_params.some(p=>!p.required)"><td colspan="6" class="bl-muted" style="text-align:center;padding:8px;font-size:12px">暂无可选入参</td></tr>
-                    </tbody></table>
-                  <button class="bl-btn bl-btn-text bl-btn-sm" style="margin-top:4px" @click="addFuncParamRow(selEditRule, 0)"><span v-html="BL.icon('plus', 11)"></span><span style="margin-left:3px">添加可选入参</span></button>
+                  <FuncParamMapTable :params="selEditRule.func_params" :required="1" :form-options="formParamOptions" :object-options="objectParamOptions" :mismatch="fp => paramTypeMismatch(selEditRule, fp)" />
+                  <div style="height:14px"></div>
+                  <FuncParamMapTable :params="selEditRule.func_params" :required="0" :form-options="formParamOptions" :object-options="objectParamOptions" :mismatch="fp => paramTypeMismatch(selEditRule, fp)" />
                 </div>
 
                 <!-- 3 函数代码预览 -->
@@ -1023,15 +996,9 @@
         <div class="rlm-hd"><span v-html="BL.icon('link', 14)"></span><span style="margin-left:6px">函数入参映射</span><span style="flex:1"></span><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="paramMapOpen = false" v-html="BL.icon('x', 14)"></button></div>
         <div class="rlm-body" v-if="paramMapRule">
           <div class="fd-warn">为函数 <b>{{ paramMapRule.func_code || '(未绑定)' }}</b> 的入参绑定取值来源;类型不匹配将在校验阶段拦截。</div>
-          <table class="bl-table ate-mini-table"><thead><tr><th class="t-left">入参名</th><th class="t-center">必填</th><th class="t-left">值来源</th><th class="t-left">值内容</th><th></th></tr></thead>
-            <tbody><tr v-for="(fp, fi) in paramMapRule.func_params" :key="fi">
-              <td><input class="bl-input bl-input-xs bl-mono" v-model="fp.name" placeholder="param_name" /></td>
-              <td class="t-center"><input type="checkbox" v-model="fp.required" :true-value="1" :false-value="0" /></td>
-              <td><BlSelect v-model="fp.value_source" :options="VALUE_SOURCE_OPTS" size="sm" /></td>
-              <td><input class="bl-input bl-input-xs" v-model="fp.value_content" :placeholder="valuePlaceholder(fp.value_source)" /></td>
-              <td class="t-center"><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="paramMapRule.func_params.splice(fi,1)" v-html="BL.icon('x', 11)"></button></td>
-            </tr><tr v-if="!paramMapRule.func_params.length"><td colspan="5" class="bl-muted" style="text-align:center;padding:12px;font-size:12px">暂无入参,点下方添加</td></tr></tbody></table>
-          <button class="bl-btn bl-btn-sm" style="margin-top:8px" @click="addFuncParam"><span v-html="BL.icon('plus', 11)"></span><span style="margin-left:3px">添加入参</span></button>
+          <FuncParamMapTable :params="paramMapRule.func_params" :required="1" :form-options="formParamOptions" :object-options="objectParamOptions" :mismatch="fp => paramTypeMismatch(paramMapRule, fp)" />
+          <div style="height:14px"></div>
+          <FuncParamMapTable :params="paramMapRule.func_params" :required="0" :form-options="formParamOptions" :object-options="objectParamOptions" :mismatch="fp => paramTypeMismatch(paramMapRule, fp)" />
         </div>
         <div class="rlm-ft"><button class="bl-btn bl-btn-primary bl-btn-sm" @click="paramMapOpen = false">完成</button></div>
       </div>
@@ -1055,7 +1022,9 @@ import CodeEditor from '@/components/CodeEditor.vue'
 import ConditionGroup from './ConditionGroup.vue'
 import ObjectSetFilter from './ObjectSetFilter.vue'
 import OverrideModal from './OverrideModal.vue'
+import FuncParamMapTable from './FuncParamMapTable.vue'
 import { normalizeOverrides, serializeOverrides, blockTitle, ifSummary, thenSummary, emptyBlock } from './overrideModel.js'
+import { VALUE_SOURCE_OPTS, FUNC_PTYPE_OPTS } from './funcParamModel.js'
 const COMPACT_COLORS = ['#165DFF', '#00B42A', '#722ED1', '#FF7D00', '#EB2F96', '#13C2C2', '#FADB14', '#F53F3F']
 
 const props = defineProps({
@@ -1109,10 +1078,7 @@ const ACTION_TYPES = {
   21:{label:'创建链接',color:'#14C9C9',icon:'link'}, 22:{label:'删除链接',color:'#F53F3F',icon:'link'}, 30:{label:'函数',color:'#722ED1',icon:'code'}, 40:{label:'Webhook',color:'#FF7D00',icon:'zap'},
   51:{label:'接口·创建',color:'#0FC6C2',icon:'plug'}, 52:{label:'接口·修改',color:'#0FC6C2',icon:'plug'}, 53:{label:'接口·删除',color:'#0FC6C2',icon:'plug'}, 54:{label:'接口·查询',color:'#0FC6C2',icon:'plug'}, 60:{label:'通知',color:'#B71DE8',icon:'bell'},
 }
-const VALUE_SOURCES = { 1:'来自参数', 2:'静态值', 3:'当前用户', 4:'系统时间', 5:'对象参数属性' }
 const PROP_OPERATORS = { set:'赋值', add:'增加', sub:'减少', append:'追加', clear:'清空' }
-/* 文档 5.3.3 四类取值来源顺序: 来自参数 / 对象参数属性 / 静态值 / 当前用户 / 系统时间 */
-const VALUE_SOURCE_OPTS = [1, 5, 2, 3, 4].map(v => ({ value: v, label: VALUE_SOURCES[v] }))
 const PROP_OPERATOR_OPTS = Object.entries(PROP_OPERATORS).map(([v, l]) => ({ value: v, label: l }))
 /* 表单设计器: 数据类型 / 显示组件 / 录入模式 */
 /* 图标取「类型本身的写法」而非动作: 字母 A=文本 / #=数值 / 勾=布尔 / 立方=对象 / 日历=日期 / 带勾方框=枚举 */
@@ -1440,12 +1406,10 @@ function rulePreview(r) {
 const paramMapOpen = ref(false)
 const paramMapRule = ref(null)
 function openParamMap(rule) { paramMapRule.value = rule; paramMapOpen.value = true }
-function addFuncParam() { if (paramMapRule.value) paramMapRule.value.func_params.push({ name:'', param_type:'string', required:1, value_source:1, value_content:'' }) }
 /* 函数规则 完整编辑态 */
 const FUNC_UPGRADE_OPTS = [{ value:1, label:'自动升级到兼容版本' }, { value:0, label:'锁定当前版本' }]
 const FUNC_IDENTITY_OPTS = [{ value:'caller', label:'以调用者身份执行' }, { value:'service', label:'以服务账号身份执行' }]
 const FUNC_ERR_OPTS = [{ value:'rollback', label:'中断操作,回滚所有 Ontology 变更' }, { value:'continue', label:'继续执行,记录异常日志' }]
-const FUNC_PTYPE_OPTS = [{ value:'string', label:'字符串' }, { value:'number', label:'数字' }, { value:'boolean', label:'布尔' }, { value:'object', label:'对象' }, { value:'date', label:'日期' }]
 const NOTIFY_RECIPIENT_SRC = [{ value:'object_prop', label:'来自对象参数属性' }, { value:'param', label:'来自参数' }, { value:'static', label:'静态指定' }]
 const WH_SUBTYPES = [
   { value:'writeback', label:'回写', icon:'edit', desc:'使用回写模式编辑外部数据系统。外部系统返回结构响应可用于其他动作编辑规则。如果回写执行失败,所有动作编辑都不会生效,错误会立即显示给终端用户。' },
@@ -1487,7 +1451,6 @@ function backToRules(fromNav) { activeMenu.value = 'rules'; ruleView.value = 'li
 function notifyCodePreview(r) {
   return `// 只读预览 · 在代码仓库中编辑\n@NotificationFunction("${r.notify_func_code || 'unnamed'}")\npublic Notification build(User recipient, Object subject) {\n  return Notification.builder()\n    .heading("${r.notify_title || '通知标题'}")\n    .content("...")\n    .build();\n}`
 }
-function addFuncParamRow(rule, required) { rule.func_params.push({ name:'', param_type:'string', required, value_source: required ? 1 : 1, value_content:'' }) }
 function addFuncException(rule) { rule.func_exceptions.push({ code:'', message:'' }) }
 /* 值来源与入参类型不匹配的粗校验 (静态值不校验) */
 function paramTypeMismatch(rule, fp) {
@@ -1525,7 +1488,6 @@ const rulePickerOpen = ref(false)
 const rDragIdx = ref(null)
 function onRuleDragStart(i, ev) { rDragIdx.value = i; if (ev?.dataTransfer) ev.dataTransfer.effectAllowed = 'move' }
 function onRuleDrop(target) { const from = rDragIdx.value; rDragIdx.value = null; if (from === null || from === target) return; const [it] = rules.value.splice(from, 1); rules.value.splice(target, 0, it) }
-function valuePlaceholder(vs) { return ({1:'表单参数编码',2:'静态值',3:'(当前用户,自动)',4:'(系统时间,自动)',5:'关联对象属性'})[Number(vs)] || '' }
 function addParam(sec) {
   const target = (typeof sec === 'string' && sec) ? sec : (sections.value[0] || '基础参数')
   formParams.value.push({ ...defaultParam(), section: target })
@@ -2280,8 +2242,6 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .fe-code { font-family: var(--bl-mono, monospace); font-size: 12px; line-height: 1.6; color: #d4d4d4; background: #1e1e2e; border-radius: 8px; padding: 14px 16px; white-space: pre-wrap; overflow-x: auto; margin: 0; }
 .fe-repo { font-size: 12px; color: var(--bl-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 400; }
 .fe-repo:hover { text-decoration: underline; }
-.ate-mini-table tr.fe-mismatch td { background: color-mix(in srgb, #f53f3f 8%, transparent); }
-.ate-mini-table tr.fe-mismatch .bl-input { border-color: #f53f3f; }
 /* 内容配置 tab */
 .fd-tabs2 { display: inline-flex; gap: 2px; padding: 3px; background: var(--bl-bg-2); border-radius: 8px; }
 .fd-tab2 { padding: 5px 18px; font-size: 13px; color: var(--bl-text-2); cursor: pointer; background: transparent; border: 0; border-radius: 6px; transition: background .12s, color .12s; }
@@ -2333,7 +2293,8 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .rl-row .bl-input { flex: 1; }
 .rl-row-top .bl-input { flex: 1; }
 .rl-sub { font-size: 12.5px; font-weight: 600; color: var(--bl-text-2); display: flex; align-items: center; gap: 8px; margin-top: 2px; }
-.rl-code { font-family: var(--bl-mono, monospace); font-size: 11.5px; color: var(--bl-text-3); background: var(--bl-bg-1); border: 1px solid var(--bl-divider); border-radius: 6px; padding: 10px 12px; white-space: pre-wrap; }
+/* 折叠卡片里的代码预览: 与完整编辑态同款深色块, 仅收紧尺寸并限高 */
+.rl-code-blk { font-size: 11.5px; padding: 10px 12px; max-height: 132px; overflow: auto; }
 
 /* 添加新规则 + 类型选择器 */
 /* 添加新规则: 整行居中虚线按钮 */
