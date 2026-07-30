@@ -2,7 +2,12 @@ package com.beiktech.bontolink.tool.vector;
 
 import com.beiktech.bontolink.base.embedding.EmbeddingService;
 import com.beiktech.bontolink.ontology.config.OntologyEngineConfig;
+import io.milvus.client.MilvusServiceClient;
+import io.milvus.param.collection.GetCollectionStatisticsParam;
+import io.milvus.param.collection.HasCollectionParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +40,12 @@ public class VectorToolService {
     private final JdbcTemplate jdbcTemplate;
     private final DataSource dataSource;
 
+    @Autowired(required = false)
+    private MilvusServiceClient milvusClient;
+
+    @Value("${bontolink.ontology.vector.milvus-collection:ont_entity_embeddings}")
+    private String milvusCollection;
+
     public VectorToolService(EmbeddingService embeddingService,
                              OntologyEngineConfig engineConfig,
                              JdbcTemplate jdbcTemplate,
@@ -64,6 +75,66 @@ public class VectorToolService {
             return status;
         }
 
+        String vectorType = vc.getType();
+
+        // 如果是 Milvus 向量库
+        if ("milvus".equalsIgnoreCase(vectorType)) {
+            status.put("databaseProduct", "Milvus");
+            if (milvusClient == null) {
+                status.put("available", false);
+                status.put("note", "Milvus 客户端未初始化（检查配置 bontolink.ontology.vector.milvus-host/port）");
+                return status;
+            }
+
+            try {
+                Boolean exists = milvusClient.hasCollection(
+                        HasCollectionParam.newBuilder()
+                                .withCollectionName(milvusCollection)
+                                .build()
+                ).getData();
+
+                if (!Boolean.TRUE.equals(exists)) {
+                    status.put("available", false);
+                    status.put("note", "Milvus collection '" + milvusCollection + "' 不存在，请访问 /api/tool/synonym/milvus/rebuild 初始化");
+                    return status;
+                }
+
+                // 获取向量数量
+                var statsResp = milvusClient.getCollectionStatistics(
+                        GetCollectionStatisticsParam.newBuilder()
+                                .withCollectionName(milvusCollection)
+                                .build()
+                );
+                long rowCount = 0;
+                if (statsResp.getData() != null) {
+                    // Milvus 2.2.x: getData().getStats(index) 遍历 KeyValuePair
+                    var response = statsResp.getData();
+                    for (int i = 0; i < response.getStatsCount(); i++) {
+                        var kv = response.getStats(i);
+                        if ("row_count".equals(kv.getKey())) {
+                            try {
+                                rowCount = Long.parseLong(kv.getValue());
+                            } catch (Exception ignored) {}
+                            break;
+                        }
+                    }
+                }
+
+                status.put("available", true);
+                status.put("collection", milvusCollection);
+                status.put("vectorCount", rowCount);
+                status.put("note", "Milvus 向量库已初始化，当前向量数: " + rowCount);
+                return status;
+
+            } catch (Exception e) {
+                log.error("检查 Milvus 状态失败", e);
+                status.put("available", false);
+                status.put("note", "Milvus 连接失败: " + e.getMessage());
+                return status;
+            }
+        }
+
+        // PostgreSQL + pgvector
         boolean pg = isPostgreSql();
         status.put("databaseProduct", databaseProductName());
         status.put("available", pg);
@@ -115,15 +186,24 @@ public class VectorToolService {
             result.put("message", "向量库未启用 (bontolink.ontology.vector.enabled=false)");
             return result;
         }
+
+        int k = topK > 0 ? topK : vc.getDefaultTopK();
+        double simThreshold = threshold > 0 ? threshold : vc.getSimilarityThreshold();
+
+        String vectorType = vc.getType();
+
+        // Milvus 向量搜索
+        if ("milvus".equalsIgnoreCase(vectorType)) {
+            return searchMilvus(text, k, simThreshold, nsCode);
+        }
+
+        // PostgreSQL + pgvector
         if (!isPostgreSql()) {
             result.put("success", false);
             result.put("available", false);
             result.put("message", "当前数据库非 PostgreSQL，无法执行 pgvector 相似度检索（仅生产 PostgreSQL 支持）");
             return result;
         }
-
-        int k = topK > 0 ? topK : vc.getDefaultTopK();
-        double simThreshold = threshold > 0 ? threshold : vc.getSimilarityThreshold();
 
         try {
             // 1. 向量化
@@ -177,15 +257,83 @@ public class VectorToolService {
         }
     }
 
+    private Map<String, Object> searchMilvus(String text, int topK, double threshold, String nsCode) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        if (milvusClient == null) {
+            result.put("success", false);
+            result.put("message", "Milvus 客户端未初始化");
+            return result;
+        }
+
+        try {
+            float[] vec = embeddingService.embed(text);
+            List<Float> vecList = new ArrayList<>(vec.length);
+            for (float v : vec) vecList.add(v);
+
+            io.milvus.param.dml.SearchParam.Builder builder =
+                    io.milvus.param.dml.SearchParam.newBuilder()
+                            .withCollectionName(milvusCollection)
+                            .withMetricType(io.milvus.param.MetricType.IP)
+                            .withVectorFieldName("embedding")
+                            .withVectors(List.of(vecList))
+                            .withTopK(topK)
+                            .withOutFields(List.of("entity_type", "entity_id", "parent_id", "ns_code", "source_text"));
+            if (nsCode != null && !nsCode.isBlank()) {
+                builder.withExpr("ns_code == \"" + nsCode + "\"");
+            }
+
+            var searchResp = milvusClient.search(builder.build());
+            if (searchResp.getData() == null) {
+                result.put("success", false);
+                result.put("message", "Milvus 搜索失败: " + searchResp.getException());
+                return result;
+            }
+
+            // Milvus 2.2.16 使用 SearchResultsWrapper 解析结果
+            var wrapper = new io.milvus.response.SearchResultsWrapper(searchResp.getData().getResults());
+            List<io.milvus.response.SearchResultsWrapper.IDScore> idScores = wrapper.getIDScore(0);
+
+            List<Map<String, Object>> matches = new ArrayList<>();
+            for (var idScore : idScores) {
+                if (idScore.getScore() < threshold) continue;
+                Map<String, Object> match = new LinkedHashMap<>();
+                match.put("pk", idScore.getStrID());
+                match.put("similarity", idScore.getScore());
+                Map<String, Object> fields = idScore.getFieldValues();
+                if (fields != null) match.putAll(fields);
+                matches.add(match);
+            }
+
+            result.put("success", true);
+            result.put("query", text);
+            result.put("nsCode", nsCode);
+            result.put("similarityThreshold", threshold);
+            result.put("matches", matches);
+            result.put("matchCount", matches.size());
+            return result;
+
+        } catch (Exception e) {
+            log.error("Milvus 搜索失败", e);
+            result.put("success", false);
+            result.put("message", "Milvus 搜索失败: " + e.getMessage());
+            return result;
+        }
+    }
+
     /**
      * 分页浏览向量库全部内容（只读）。
-     *
-     * @param nsCode 可选 namespace 分区过滤
-     * @param page   页码（1 起）
-     * @param size   每页条数
      */
     public Map<String, Object> list(String nsCode, int page, int size) {
-        Map<String, Object> notReady = checkReady();
+        OntologyEngineConfig.VectorConfig vc = engineConfig.getVector();
+        if (!vc.isEnabled()) return err("向量库未启用 (bontolink.ontology.vector.enabled=false)");
+
+        String vectorType = vc.getType();
+        if ("milvus".equalsIgnoreCase(vectorType)) {
+            return listMilvus(nsCode, page, size);
+        }
+
+        // PostgreSQL + pgvector
+        Map<String, Object> notReady = checkReadyPostgres();
         if (notReady != null) return notReady;
         Map<String, Object> result = new LinkedHashMap<>();
         try {
@@ -221,11 +369,86 @@ public class VectorToolService {
         }
     }
 
+    private Map<String, Object> listMilvus(String nsCode, int page, int size) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        if (milvusClient == null) return err("Milvus 客户端未初始化");
+
+        try {
+            int p = Math.max(1, page);
+            int s = size <= 0 ? 50 : size;
+            long offset = (long) (p - 1) * s;
+
+            io.milvus.param.dml.QueryParam.Builder builder =
+                    io.milvus.param.dml.QueryParam.newBuilder()
+                            .withCollectionName(milvusCollection)
+                            .withExpr(nsCode != null && !nsCode.isBlank()
+                                    ? "ns_code == \"" + nsCode + "\""
+                                    : "entity_type != \"__none__\"")   // Milvus 2.2.x: 用有效字段条件
+                            .withOutFields(List.of("entity_type", "entity_id", "parent_id", "ns_code", "source_text"))
+                            .withOffset(offset)
+                            .withLimit((long) s);
+
+            var queryResp = milvusClient.query(builder.build());
+            if (queryResp.getData() == null) {
+                result.put("success", false);
+                result.put("message", "Milvus query 失败: " + queryResp.getException());
+                return result;
+            }
+
+            var wrapper = new io.milvus.response.QueryResultsWrapper(queryResp.getData());
+            List<io.milvus.response.QueryResultsWrapper.RowRecord> rows = wrapper.getRowRecords();
+
+            List<Map<String, Object>> items = new ArrayList<>();
+            for (var row : rows) {
+                items.add(new LinkedHashMap<>(row.getFieldValues()));
+            }
+
+            // 获取总数
+            long totalCount = 0;
+            try {
+                var statsResp = milvusClient.getCollectionStatistics(
+                        io.milvus.param.collection.GetCollectionStatisticsParam.newBuilder()
+                                .withCollectionName(milvusCollection)
+                                .build());
+                if (statsResp.getData() != null) {
+                    for (int i = 0; i < statsResp.getData().getStatsCount(); i++) {
+                        var kv = statsResp.getData().getStats(i);
+                        if ("row_count".equals(kv.getKey())) {
+                            totalCount = Long.parseLong(kv.getValue());
+                            break;
+                        }
+                    }
+                }
+            } catch (Exception ignored) {}
+
+            result.put("success", true);
+            result.put("nsCode", nsCode);
+            result.put("items", items);
+            result.put("total", totalCount);
+            result.put("page", p);
+            result.put("size", s);
+            return result;
+
+        } catch (Exception e) {
+            log.error("Milvus list 失败", e);
+            result.put("success", false);
+            result.put("message", "Milvus list 失败: " + e.getMessage());
+            return result;
+        }
+    }
+
     /**
-     * 单条向量详情（按 class_id，只读）。
+     * 单条向量详情（按 pk，只读）。
      */
     public Map<String, Object> detail(String classId) {
-        Map<String, Object> notReady = checkReady();
+        OntologyEngineConfig.VectorConfig vc = engineConfig.getVector();
+        if (!vc.isEnabled()) return err("向量库未启用 (bontolink.ontology.vector.enabled=false)");
+
+        if ("milvus".equalsIgnoreCase(vc.getType())) {
+            return detailMilvus(classId);
+        }
+
+        Map<String, Object> notReady = checkReadyPostgres();
         if (notReady != null) return notReady;
         Map<String, Object> result = new LinkedHashMap<>();
         if (classId == null || classId.isBlank()) {
@@ -253,10 +476,36 @@ public class VectorToolService {
         }
     }
 
-    /** 就绪检查：未启用/非 PostgreSQL/表不存在时返回错误 map，否则返回 null。 */
-    private Map<String, Object> checkReady() {
-        OntologyEngineConfig.VectorConfig vc = engineConfig.getVector();
-        if (!vc.isEnabled()) return err("向量库未启用 (bontolink.ontology.vector.enabled=false)");
+    private Map<String, Object> detailMilvus(String pk) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        if (milvusClient == null) return err("Milvus 客户端未初始化");
+        if (pk == null || pk.isBlank()) return err("pk 不能为空");
+        try {
+            var queryResp = milvusClient.query(
+                    io.milvus.param.dml.QueryParam.newBuilder()
+                            .withCollectionName(milvusCollection)
+                            .withExpr("pk == \"" + pk + "\"")
+                            .withOutFields(List.of("entity_type", "entity_id", "parent_id", "ns_code", "source_text"))
+                            .build());
+            if (queryResp.getData() == null) return err("查询失败: " + queryResp.getException());
+
+            var wrapper = new io.milvus.response.QueryResultsWrapper(queryResp.getData());
+            List<io.milvus.response.QueryResultsWrapper.RowRecord> rows = wrapper.getRowRecords();
+            if (rows.isEmpty()) return err("未找到向量: " + pk);
+
+            result.put("success", true);
+            result.put("item", new LinkedHashMap<>(rows.get(0).getFieldValues()));
+            return result;
+        } catch (Exception e) {
+            log.warn("Milvus 详情查询失败: {}", pk, e);
+            result.put("success", false);
+            result.put("message", "查询失败: " + e.getMessage());
+            return result;
+        }
+    }
+
+    /** PostgreSQL 就绪检查（非 PG 或表不存在时返回错误 map，否则返回 null）。 */
+    private Map<String, Object> checkReadyPostgres() {
         if (!isPostgreSql()) return err("当前数据库非 PostgreSQL，无法浏览向量库（仅生产 PostgreSQL 支持）");
         try {
             Integer exists = jdbcTemplate.queryForObject(

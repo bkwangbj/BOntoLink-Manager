@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RestController
@@ -44,7 +45,7 @@ public class EntitySynonymController {
         return R.ok(result);
     }
 
-    /** 批量生成：{"entityType":"biz_category","limit":0} limit<=0 表示全量 */
+    /** 批量生成：{"entityType":"biz_category","limit":0} limit<=0 表示全量，异步执行立即返回 */
     @PostMapping("/batch-generate")
     public R<Map<String, Object>> batchGenerate(@RequestBody Map<String, Object> body) {
         String entityType = (String) body.get("entityType");
@@ -52,8 +53,13 @@ public class EntitySynonymController {
             return R.error(400, "entityType 不能为空");
         }
         int limit = body.get("limit") instanceof Number n ? n.intValue() : 0;
-        Map<String, Object> result = synonymService.batchGenerate(entityType, limit);
-        return R.ok(result);
+        // 异步执行，避免长时间阻塞 HTTP 线程（JRebel 热加载时会关闭连接池导致失败）
+        CompletableFuture.runAsync(() -> synonymService.batchGenerate(entityType, limit));
+        Map<String, Object> resp = new LinkedHashMap<>();
+        resp.put("success", true);
+        resp.put("entityType", entityType);
+        resp.put("message", "批量生成已在后台启动，请查看服务日志");
+        return R.ok(resp);
     }
 
     /** 配置状态：embedding provider、Milvus 是否可用、向量维度 */

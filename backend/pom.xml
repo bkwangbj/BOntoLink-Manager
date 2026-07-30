@@ -36,7 +36,7 @@
         <jetcache.version>2.7.7</jetcache.version>
         <jena.version>5.2.0</jena.version>
         <fastjson2.version>2.0.51</fastjson2.version>
-        <milvus-sdk.version>2.3.4</milvus-sdk.version>
+        <milvus-sdk.version>2.2.16</milvus-sdk.version>
     </properties>
 
     <dependencyManagement>

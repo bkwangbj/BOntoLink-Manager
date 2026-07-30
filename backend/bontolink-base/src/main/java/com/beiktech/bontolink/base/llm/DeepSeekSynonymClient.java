@@ -17,9 +17,8 @@ import java.util.Map;
 @Component
 public class DeepSeekSynonymClient {
 
-    private static final String SYSTEM_PROMPT =
-            "你是一个专业的水利行业本体专家。给定一个概念，输出5-8个中文同义词或近义词，" +
-            "严格返回JSON数组格式，不含任何解释或多余文字。示例：[\"水坝\",\"堤坝\",\"拦河坝\"]";
+    @Value("${bontolink.deepseek.system-prompt:你是一个专业的水利行业本体专家。给定一个概念，输出5-8个中文同义词或近义词，严格返回JSON数组格式，不含任何解释或多余文字。示例：[\"水坝\",\"堤坝\",\"拦河坝\"]}")
+    private String systemPrompt;
 
     @Value("${bontolink.deepseek.api-key:}")
     private String apiKey;
@@ -30,9 +29,55 @@ public class DeepSeekSynonymClient {
     @Value("${bontolink.deepseek.model:deepseek-chat}")
     private String model;
 
+    @Value("${bontolink.deepseek.temperature:0.3}")
+    private double temperature;
+
+    @Value("${bontolink.deepseek.max-tokens:256}")
+    private int maxTokens;
+
+    // BeikTech 内部模型配置
+    @Value("${bontolink.beiktech.api-key:}")
+    private String beiktechApiKey;
+
+    @Value("${bontolink.beiktech.base-url:}")
+    private String beiktechBaseUrl;
+
+    @Value("${bontolink.beiktech.model:}")
+    private String beiktechModel;
+
+    @Value("${bontolink.beiktech.temperature:0.3}")
+    private double beiktechTemperature;
+
+    @Value("${bontolink.beiktech.max-tokens:256}")
+    private int beiktechMaxTokens;
+
+    @Value("${bontolink.beiktech.system-prompt:你是一个专业的水利行业本体专家。给定一个概念，输出5-8个中文同义词或近义词，严格返回JSON数组格式，不含任何解释或多余文字。示例：[\"水坝\",\"堤坝\",\"拦河坝\"]}")
+    private String beiktechSystemPrompt;
+
     private volatile RestClient restClient;
+    private volatile RestClient beiktechRestClient;
 
     private RestClient getClient() {
+        // 优先使用 BeikTech 内部模型
+        if (beiktechBaseUrl != null && !beiktechBaseUrl.isBlank()) {
+            if (beiktechRestClient == null) {
+                synchronized (this) {
+                    if (beiktechRestClient == null) {
+                        RestClient.Builder builder = RestClient.builder()
+                                .baseUrl(beiktechBaseUrl)
+                                .defaultHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+                        // BeikTech API 可能需要 Authorization（如果配置了 api-key）
+                        if (beiktechApiKey != null && !beiktechApiKey.isBlank()) {
+                            builder.defaultHeader("Authorization", "Bearer " + beiktechApiKey);
+                        }
+                        beiktechRestClient = builder.build();
+                    }
+                }
+            }
+            return beiktechRestClient;
+        }
+
+        // 回退到 DeepSeek
         if (restClient == null) {
             synchronized (this) {
                 if (restClient == null) {
@@ -47,6 +92,34 @@ public class DeepSeekSynonymClient {
         return restClient;
     }
 
+    private String getActiveModel() {
+        if (beiktechModel != null && !beiktechModel.isBlank()) {
+            return beiktechModel;
+        }
+        return model;
+    }
+
+    private String getActiveSystemPrompt() {
+        if (beiktechBaseUrl != null && !beiktechBaseUrl.isBlank()) {
+            return beiktechSystemPrompt;
+        }
+        return systemPrompt;
+    }
+
+    private double getActiveTemperature() {
+        if (beiktechBaseUrl != null && !beiktechBaseUrl.isBlank()) {
+            return beiktechTemperature;
+        }
+        return temperature;
+    }
+
+    private int getActiveMaxTokens() {
+        if (beiktechBaseUrl != null && !beiktechBaseUrl.isBlank()) {
+            return beiktechMaxTokens;
+        }
+        return maxTokens;
+    }
+
     /**
      * 为给定词和描述生成同义词列表。
      *
@@ -55,8 +128,12 @@ public class DeepSeekSynonymClient {
      * @return 同义词列表，调用失败时返回空列表
      */
     public List<String> generateSynonyms(String word, String desc) {
-        if (apiKey == null || apiKey.isBlank()) {
-            log.warn("DeepSeek api-key 未配置，跳过同义词生成");
+        // 检查是否有可用的配置
+        boolean useBeiktech = beiktechBaseUrl != null && !beiktechBaseUrl.isBlank();
+        boolean useDeepseek = apiKey != null && !apiKey.isBlank();
+
+        if (!useBeiktech && !useDeepseek) {
+            log.warn("未配置任何 LLM API，跳过同义词生成");
             return List.of();
         }
 
@@ -65,15 +142,18 @@ public class DeepSeekSynonymClient {
             userPrompt += "\n描述：" + desc;
         }
 
+        String activeModel = getActiveModel();
         String body = JSON.toJSONString(Map.of(
-                "model", model,
+                "model", activeModel,
                 "messages", List.of(
-                        Map.of("role", "system", "content", SYSTEM_PROMPT),
+                        Map.of("role", "system", "content", getActiveSystemPrompt()),
                         Map.of("role", "user", "content", userPrompt)
                 ),
-                "temperature", 0.3,
-                "max_tokens", 256
+                "temperature", getActiveTemperature(),
+                "max_tokens", getActiveMaxTokens()
         ));
+
+        log.debug("LLM 请求体: {}", body);
 
         try {
             String response = getClient().post()
@@ -82,7 +162,7 @@ public class DeepSeekSynonymClient {
                     .body(String.class);
             return parseResponse(response);
         } catch (Exception e) {
-            log.error("DeepSeek 调用失败: word={}, error={}", word, e.getMessage());
+            log.error("LLM 调用失败: word={}, model={}, error={}", word, getActiveModel(), e.getMessage());
             return List.of();
         }
     }
@@ -99,7 +179,7 @@ public class DeepSeekSynonymClient {
             int start = content.indexOf('[');
             int end = content.lastIndexOf(']');
             if (start < 0 || end <= start) {
-                log.warn("DeepSeek 响应格式异常，无法解析数组: {}", content);
+                log.warn("LLM 响应格式异常，无法解析数组: {}", content);
                 return List.of();
             }
             JSONArray arr = JSON.parseArray(content.substring(start, end + 1));
@@ -110,7 +190,7 @@ public class DeepSeekSynonymClient {
             }
             return result;
         } catch (Exception e) {
-            log.warn("DeepSeek 响应解析失败: {}", e.getMessage());
+            log.warn("LLM 响应解析失败: {}", e.getMessage());
             return List.of();
         }
     }

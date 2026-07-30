@@ -9,6 +9,12 @@ spring:
       minimum-idle: 2
       pool-name: BontoLinkPGPool
       connection-test-query: SELECT 1
+      keepalive-time: 60000        # 60s 心跳，防止服务端踢空闲连接
+      connection-timeout: 30000
+      idle-timeout: 300000
+      max-lifetime: 1800000
+      validation-timeout: 5000
+      initialization-fail-timeout: -1  # 启动时连接失败不中止，运行时重试
   flyway:
     # 包含 PostgreSQL 专用迁移 + 通用种子数据
     locations: classpath:db/migration/postgresql,classpath:db/migration/common

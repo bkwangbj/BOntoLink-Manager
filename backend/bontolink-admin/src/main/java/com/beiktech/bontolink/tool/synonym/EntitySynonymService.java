@@ -1,18 +1,19 @@
 package com.beiktech.bontolink.tool.synonym;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
 import com.beiktech.bontolink.base.embedding.EmbeddingService;
-import com.beiktech.bontolink.base.llm.DeepSeekSynonymClient;
+import com.beiktech.bontolink.base.llm.SynonymClient;
 import io.milvus.client.MilvusServiceClient;
-import io.milvus.param.dml.UpsertParam;
-import io.milvus.grpc.MutationResult;
-import io.milvus.response.MutationResultWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Slf4j
@@ -20,19 +21,24 @@ import java.util.*;
 public class EntitySynonymService {
 
     @Autowired
-    private DeepSeekSynonymClient deepSeekClient;
+    private SynonymClient synonymClient;
 
     @Autowired
     private EmbeddingService embeddingService;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private ApplicationContext ctx;
 
     @Autowired(required = false)
     private MilvusServiceClient milvusClient;
 
     @Value("${bontolink.ontology.vector.milvus-collection:ont_entity_embeddings}")
     private String collection;
+
+    /** 每次调用时从 context 获取最新的 JdbcTemplate，避免 JRebel 热加载后旧连接池问题 */
+    private JdbcTemplate db() {
+        return ctx.getBean(JdbcTemplate.class);
+    }
 
     // ── 单条生成 ────────────────────────────────────────────────────────────
 
@@ -42,7 +48,7 @@ public class EntitySynonymService {
             return Map.of("success", false, "message", "实体不存在: " + entityType + "/" + entityId);
         }
 
-        List<String> synonyms = deepSeekClient.generateSynonyms(info.word, info.desc);
+        List<String> synonyms = synonymClient.generateSynonyms(info.word, info.desc);
         saveSynonyms(entityType, entityId, info.word, synonyms, info.nsCode);
         if (milvusClient != null) {
             upsertToMilvus(entityType, entityId, info, synonyms);
@@ -69,7 +75,7 @@ public class EntitySynonymService {
                 generate(entityType, id);
                 success++;
             } catch (Exception e) {
-                log.warn("批量生成失败: type={} id={} err={}", entityType, id, e.getMessage());
+                log.warn("批量生成失败: type={} id={} err={}", entityType, id, e.getMessage(), e);
                 fail++;
             }
         }
@@ -102,11 +108,11 @@ public class EntitySynonymService {
             default -> throw new IllegalArgumentException("未知 entityType: " + entityType);
         };
         if (limit > 0) sql += " LIMIT " + limit;
-        return jdbcTemplate.queryForList(sql);
+        return db().queryForList(sql);
     }
 
     private EntityInfo fetchClass(String id) {
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+        List<Map<String, Object>> rows = db().queryForList(
                 "SELECT c.id, c.api_name, c.display_name, c.rdfs_label, c.rdfs_comment, c.description," +
                 " b.ns_code FROM ont_class c LEFT JOIN ont_biz_category b ON c.category_code = b.category_code" +
                 " WHERE c.id = ?", id);
@@ -118,7 +124,7 @@ public class EntitySynonymService {
     }
 
     private EntityInfo fetchClassProp(String id) {
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+        List<Map<String, Object>> rows = db().queryForList(
                 "SELECT p.id, p.api_name, p.display_name, p.rdfs_label, p.rdfs_comment, p.class_id," +
                 " b.ns_code FROM ont_class_property p" +
                 " LEFT JOIN ont_class c ON p.class_id = c.id" +
@@ -132,7 +138,7 @@ public class EntitySynonymService {
     }
 
     private EntityInfo fetchLinkType(String id) {
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+        List<Map<String, Object>> rows = db().queryForList(
                 "SELECT l.id, l.rdfs_label, l.rdfs_comment, l.l_display_name, l.r_display_name," +
                 " b.ns_code FROM ont_link_types l" +
                 " LEFT JOIN ont_biz_category b ON l.category_code = b.category_code" +
@@ -145,7 +151,7 @@ public class EntitySynonymService {
     }
 
     private EntityInfo fetchSharedProp(String id) {
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+        List<Map<String, Object>> rows = db().queryForList(
                 "SELECT p.id, p.prop_code, p.rdfs_label, p.rdfs_comment," +
                 " b.ns_code FROM ont_shared_properties p" +
                 " LEFT JOIN ont_biz_category b ON p.category_code = b.category_code" +
@@ -158,7 +164,7 @@ public class EntitySynonymService {
     }
 
     private EntityInfo fetchBizCategory(String id) {
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+        List<Map<String, Object>> rows = db().queryForList(
                 "SELECT id, category_code, rdfs_label, rdfs_comment, description, ns_code, parent_id" +
                 " FROM ont_biz_category WHERE id = ?", id);
         if (rows.isEmpty()) return null;
@@ -169,7 +175,7 @@ public class EntitySynonymService {
     }
 
     private EntityInfo fetchEnumItem(String id) {
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+        List<Map<String, Object>> rows = db().queryForList(
                 "SELECT ei.id, ei.code, ei.api_name, ei.label, ei.enum_id," +
                 " et.rdfs_label AS enum_label, b.ns_code" +
                 " FROM ont_enum_items ei" +
@@ -189,25 +195,51 @@ public class EntitySynonymService {
     private void saveSynonyms(String entityType, String entityId, String word,
                               List<String> synonyms, String nsCode) {
         if (synonyms.isEmpty()) return;
-        String id = "syn-" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
         String domain = nsCode != null ? nsCode : "default";
-        jdbcTemplate.update(
-                "INSERT OR REPLACE INTO sys_synonym_dict" +
-                " (id, word, synonyms, domain, confidence, source, usage_count," +
-                " entity_type, entity_id, create_time, update_time)" +
-                " VALUES (?,?,?,?,0.9,'AI',0,?,?,datetime('now','localtime'),datetime('now','localtime'))",
-                id, word, JSON.toJSONString(synonyms), domain,
+        java.sql.Timestamp now = java.sql.Timestamp.valueOf(LocalDateTime.now());
+
+        // 先删旧记录，再批量插入 —— 兼容 SQLite 和 PostgreSQL
+        db().update(
+                "DELETE FROM sys_synonym_dict WHERE entity_type=? AND entity_id=?",
                 entityType, entityId);
-        log.info("同义词已写库: entityType={} entityId={} word={} count={}", entityType, entityId, word, synonyms.size());
+
+        List<Object[]> rows = new ArrayList<>();
+        for (String synonym : synonyms) {
+            String id = "syn-" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+            rows.add(new Object[]{ id, synonym, JSON.toJSONString(List.of(synonym)),
+                    domain, 0.9, "AI", 0, now, now, entityType, entityId });
+        }
+
+        try {
+            db().batchUpdate(
+                    "INSERT INTO sys_synonym_dict" +
+                    " (id, word, synonyms, domain, confidence, source, usage_count," +
+                    " create_time, update_time, entity_type, entity_id)" +
+                    " VALUES (?,?,?,?,?,?,?,?,?,?,?)" +
+                    " ON CONFLICT (entity_type, entity_id, word) DO UPDATE SET" +
+                    " synonyms=EXCLUDED.synonyms, domain=EXCLUDED.domain," +
+                    " confidence=EXCLUDED.confidence, update_time=EXCLUDED.update_time",
+                    rows);
+            log.info("同义词已写库: entityType={} entityId={} word={} count={}", entityType, entityId, word, synonyms.size());
+        } catch (Exception e) {
+            log.error("同义词写库失败: entityType={} entityId={} word={} sqlParams={}",
+                    entityType, entityId, word, JSON.toJSONString(rows.get(0)), e);
+            throw e;
+        }
     }
 
-    // ── Milvus upsert ─────────────────────────────────────────────────────────
+    // ── Milvus insert ─────────────────────────────────────────────────────────
 
     private void upsertToMilvus(String entityType, String entityId, EntityInfo info, List<String> synonyms) {
         try {
             String pk = entityType + ":" + entityId;
             String sourceText = info.word + (synonyms.isEmpty() ? "" : " " + String.join(" ", synonyms));
             float[] vec = embeddingService.embed(sourceText);
+
+            if (vec == null || vec.length == 0) {
+                log.warn("Milvus insert 跳过: 向量为空 pk={}", pk);
+                return;
+            }
 
             List<String> pks = List.of(pk);
             List<String> types = List.of(entityType);
@@ -217,7 +249,8 @@ public class EntitySynonymService {
             List<String> sources = List.of(sourceText.length() > 2048 ? sourceText.substring(0, 2048) : sourceText);
             List<List<Float>> embeddings = List.of(toFloatList(vec));
 
-            UpsertParam param = UpsertParam.newBuilder()
+            // 直接插入（允许重复 pk，Milvus 会保留最新的）
+            io.milvus.param.dml.InsertParam param = io.milvus.param.dml.InsertParam.newBuilder()
                     .withCollectionName(collection)
                     .withFields(List.of(
                             new io.milvus.param.dml.InsertParam.Field("pk",           pks),
@@ -230,10 +263,11 @@ public class EntitySynonymService {
                     ))
                     .build();
 
-            milvusClient.upsert(param);
-            log.info("Milvus upsert 完成: pk={}", pk);
+            milvusClient.insert(param);
+            log.info("Milvus insert 完成: pk={} dim={}", pk, vec.length);
         } catch (Exception e) {
-            log.warn("Milvus upsert 失败: entityType={} entityId={} err={}", entityType, entityId, e.getMessage());
+            log.warn("Milvus insert 失败: entityType={} entityId={} err={}",
+                    entityType, entityId, e.getMessage());
         }
     }
 

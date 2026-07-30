@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +19,6 @@ import java.util.Map;
 @ConditionalOnProperty(name = "bontolink.embedding.provider", havingValue = "siliconflow")
 public class SiliconFlowEmbeddingService implements EmbeddingService {
 
-    private static final int DIMENSION = 768;
-
     @Value("${bontolink.siliconflow.api-key}")
     private String apiKey;
 
@@ -30,6 +27,9 @@ public class SiliconFlowEmbeddingService implements EmbeddingService {
 
     @Value("${bontolink.siliconflow.model:BAAI/bge-base-zh-v1.5}")
     private String model;
+
+    @Value("${bontolink.siliconflow.dimension:1024}")
+    private int dimension;
 
     @Value("${bontolink.siliconflow.timeout-seconds:30}")
     private int timeoutSeconds;
@@ -54,10 +54,10 @@ public class SiliconFlowEmbeddingService implements EmbeddingService {
     @Override
     public float[] embed(String text) {
         if (text == null || text.isBlank()) {
-            return new float[DIMENSION];
+            return new float[dimension];
         }
         List<float[]> result = embedBatch(List.of(text));
-        return result.isEmpty() ? new float[DIMENSION] : result.get(0);
+        return result.isEmpty() ? new float[dimension] : result.get(0);
     }
 
     @Override
@@ -65,13 +65,24 @@ public class SiliconFlowEmbeddingService implements EmbeddingService {
         if (texts == null || texts.isEmpty()) {
             return List.of();
         }
-        String body = JSON.toJSONString(Map.of("model", model, "input", texts));
-        String response = getClient().post()
-                .body(body)
-                .retrieve()
-                .body(String.class);
+        try {
+            String body = JSON.toJSONString(Map.of("model", model, "input", texts));
+            String response = getClient().post()
+                    .body(body)
+                    .retrieve()
+                    .body(String.class);
 
-        return parseEmbeddings(response, texts.size());
+            return parseEmbeddings(response, texts.size());
+        } catch (Exception e) {
+            log.error("SiliconFlow embedding 失败: model={} texts={} err={}",
+                    model, texts.size(), e.getMessage(), e);
+            // 返回零向量
+            List<float[]> fallback = new ArrayList<>();
+            for (int i = 0; i < texts.size(); i++) {
+                fallback.add(new float[dimension]);
+            }
+            return fallback;
+        }
     }
 
     private List<float[]> parseEmbeddings(String response, int expectedCount) {
@@ -95,6 +106,6 @@ public class SiliconFlowEmbeddingService implements EmbeddingService {
 
     @Override
     public int getDimension() {
-        return DIMENSION;
+        return dimension;
     }
 }
