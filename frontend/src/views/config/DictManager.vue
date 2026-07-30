@@ -77,7 +77,7 @@
                     <td>{{ row.item_value }}</td>
                     <td class="bl-mono bl-muted" style="font-size:11px">{{ parentCode(row) || '—' }}</td>
                     <td>{{ row.sort_no }}</td>
-                    <td><span :class="['bl-tag', row.status === 1 ? 'bl-tag-primary' : 'bl-tag-muted']" style="font-size:11px"><StatusTag :status="row.status" /></span></td>
+                    <td><StatusTag :status="row.status" style="font-size:11px" /></td>
                     <td @click.stop>
                       <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="编辑" @click="openItemForm(row)" v-html="BL.icon('edit', 11)"></button>
                       <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="删除" @click="removeItem(row)" v-html="BL.icon('trash', 11)"></button>

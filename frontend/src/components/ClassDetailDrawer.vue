@@ -4,7 +4,7 @@
       <header class="gr-drawer-hd">
         <div class="gr-drawer-title">
           <div class="gr-drawer-cn">{{ node.label }}
-            <span v-if="detail" class="bl-tag bl-tag-success" style="margin-left:8px;font-size:11px"><StatusTag :status="detail.status" /></span>
+            <StatusTag v-if="detail" :status="detail.status" style="margin-left:8px;font-size:11px" />
           </div>
           <div class="gr-drawer-en bl-mono">{{ node.apiName || node.id }}</div>
         </div>

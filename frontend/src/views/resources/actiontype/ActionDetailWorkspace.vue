@@ -33,20 +33,43 @@
                 <span class="adw-menu-label">{{ m.label }}</span>
                 <span v-if="menuCount(m.k)" class="adw-menu-badge">{{ menuCount(m.k) }}</span>
                 <span v-if="m.k === 'form'" class="adw-menu-chev" :class="{ 'is-open': formNavOpen }" title="展开/收起表单结构" @click.stop="formNavOpen = !formNavOpen" v-html="BL.icon('chevronRight', 12)"></span>
+                <span v-if="m.k === 'rules'" class="adw-menu-chev" :class="{ 'is-open': rulesNavOpen }" title="展开/收起规则列表" @click.stop="rulesNavOpen = !rulesNavOpen" v-html="BL.icon('chevronRight', 12)"></span>
+              </div>
+              <!-- 规则结构树: 按 编辑类 / 副作用 分组 -->
+              <div v-if="m.k === 'rules' && rulesNavOpen" class="adw-tree">
+                <template v-for="g in ruleNavGroups" :key="g.label">
+                  <div class="adw-tree-sec" :class="{ 'is-fold': isNavFold('rule:' + g.label) }" @click="toggleNavFold('rule:' + g.label)">
+                    <span class="bl-truncate">{{ g.label }}</span>
+                    <span class="adw-tree-sec-n">{{ g.items.length }}</span>
+                    <span class="adw-tree-sec-chev" v-html="BL.icon('chevronDown', 12)"></span>
+                  </div>
+                  <template v-if="!isNavFold('rule:' + g.label)">
+                    <div v-for="x in g.items" :key="x.r._k"
+                         :class="['adw-tree-field', activeMenu === 'rules' && ruleSelKey === x.r._k && 'is-on', x.r.status === 0 && 'is-off']"
+                         :title="ruleNavLabel(x.r)" @click="openRuleFromNav(x.i)">
+                      <span class="adw-tree-dt" :style="{ background: kindMeta(x.r.kind).color }" v-html="BL.icon(kindMeta(x.r.kind).icon, 11, '#fff')"></span>
+                      <span class="bl-truncate adw-tree-fname">{{ ruleNavLabel(x.r) }}</span>
+                    </div>
+                  </template>
+                </template>
+                <div v-if="!rules.length" class="adw-tree-empty">暂无规则</div>
               </div>
               <!-- 表单结构树: 可独立收展 (不依赖当前菜单) -->
               <div v-if="m.k === 'form' && formNavOpen" class="adw-tree">
-                <div :class="['adw-tree-root', activeMenu === 'form' && formView === 'list' && 'is-on']" @click="backToList">
-                  <span class="adw-tree-ic" v-html="BL.icon('menu', 11)"></span>表单内容
-                </div>
                 <template v-for="sec in sections" :key="sec">
-                  <div class="adw-tree-sec">{{ sec }}</div>
-                  <div v-for="x in paramsOfSection(sec)" :key="x.i"
-                       :class="['adw-tree-field', activeMenu === 'form' && formView === 'detail' && selIdx === x.i && 'is-on']" @click="openParam(x.i)">
-                    <span class="adw-tree-dt" :style="{ background: dtMeta(x.p.param_type).color }" v-html="BL.icon(dtMeta(x.p.param_type).icon, 11, '#fff')"></span>
-                    <span class="bl-truncate adw-tree-fname">{{ x.p.param_name || x.p.param_code || '未命名' }}</span>
-                    <span class="adw-tree-disp" :title="displayMeta(x.p.display_type).label" v-html="BL.icon(displayMeta(x.p.display_type).icon, 12)"></span>
+                  <div class="adw-tree-sec" :class="{ 'is-fold': isNavFold('form:' + sec) }" @click="toggleNavFold('form:' + sec)">
+                    <span class="bl-truncate">{{ sec }}</span>
+                    <span class="adw-tree-sec-n">{{ paramsOfSection(sec).length }}</span>
+                    <span class="adw-tree-sec-chev" v-html="BL.icon('chevronDown', 12)"></span>
                   </div>
+                  <template v-if="!isNavFold('form:' + sec)">
+                    <div v-for="x in paramsOfSection(sec)" :key="x.i"
+                         :class="['adw-tree-field', activeMenu === 'form' && formView === 'detail' && selIdx === x.i && 'is-on']" @click="openParam(x.i)">
+                      <span class="adw-tree-dt" :style="{ background: dtMeta(x.p.param_type).color }" v-html="BL.icon(dtMeta(x.p.param_type).icon, 11, '#fff')"></span>
+                      <span class="bl-truncate adw-tree-fname">{{ x.p.param_name || x.p.param_code || '未命名' }}</span>
+                      <span class="adw-tree-disp" :title="displayMeta(x.p.display_type).label" v-html="BL.icon(displayMeta(x.p.display_type).icon, 12)"></span>
+                    </div>
+                  </template>
                 </template>
                 <div v-if="!formParams.length" class="adw-tree-empty">暂无参数</div>
               </div>
@@ -147,7 +170,7 @@
                  draggable="true" @dragstart="onRuleDragStart(ri, $event)" @dragover.prevent @drop="onRuleDrop(ri)" @dragend="rDragIdx = null"
                  :class="{ 'is-dragging': rDragIdx === ri, 'is-off': rule.status === 0 }">
               <div class="rl-hd" @click="rule._collapsed = !rule._collapsed">
-                <span class="rl-grip" @mousedown.stop v-html="BL.icon('move', 13)"></span>
+                <span class="rl-grip" @mousedown.stop v-html="BL.icon('grip', 13)"></span>
                 <span class="rl-ic" :style="{ background: kindMeta(rule.kind).color }" v-html="BL.icon(kindMeta(rule.kind).icon, 12, '#fff')"></span>
                 <span class="rl-kind">{{ kindMeta(rule.kind).label }}</span>
                 <input class="rl-name" v-model="rule.rule_name" placeholder="规则名称" @click.stop />
@@ -161,6 +184,7 @@
               <div v-else class="rl-body">
                 <!-- 对象/链接规则 -->
                 <template v-if="['create_object','modify_object','delete_object','create_link','delete_link'].includes(rule.kind)">
+                  <div class="rl-row" style="justify-content:flex-end"><button class="bl-btn bl-btn-sm bl-btn-primary" @click="openObjectEdit(ri)"><span v-html="BL.icon('edit', 12, '#fff')"></span><span style="margin-left:4px">完整编辑</span></button></div>
                   <div v-if="rule.kind.includes('link')" class="rl-row"><span class="rl-lbl">链接类型编码</span><input class="bl-input bl-input-sm bl-mono" v-model="rule.link_type_code" placeholder="link_type_id" /></div>
                   <!-- 目标对象参数 (修改/删除对象) -->
                   <div v-if="rule.kind === 'modify_object' || rule.kind === 'delete_object'" class="rl-row">
@@ -197,8 +221,7 @@
                   <div class="rl-row"><span class="rl-lbl">绑定函数</span><input class="bl-input bl-input-sm bl-mono" v-model="rule.func_code" placeholder="函数编码" /></div>
                   <div class="rl-row"><span class="rl-lbl">函数版本</span><input class="bl-input bl-input-sm" v-model="rule.func_version" style="max-width:120px" /><label class="adw-sw" style="margin-left:16px"><input type="checkbox" v-model="rule.func_autoupgrade" :true-value="1" :false-value="0" /> 自动升级到兼容版本</label></div>
                   <div class="rl-sub">必填入参 · {{ (rule.func_params||[]).filter(p=>p.required).length }} 个 <button class="bl-btn bl-btn-text bl-btn-sm" @click="openParamMap(rule)"><span v-html="BL.icon('link', 11)"></span><span style="margin-left:3px">快速入参映射</span></button></div>
-                  <div class="rl-code">// 代码预览(只读) · {{ rule.func_code || '未绑定函数' }}@{{ rule.func_version }}
-// 在代码仓库中编辑函数逻辑</div>
+                  <pre class="fe-code rl-code-blk">{{ funcCodePreview(rule) }}</pre>
                 </template>
                 <!-- 通知规则 (折叠卡片态: 快速配置 + 完整编辑入口) -->
                 <template v-else-if="rule.kind === 'notification'">
@@ -218,6 +241,102 @@
             <div v-if="!rules.length" class="bl-empty" style="padding:20px;font-size:12px">暂无规则,点下方「添加新规则」</div>
 
             <button class="rl-add-btn" @click="rulePickerOpen = true"><span v-html="BL.icon('plus', 14)"></span><span style="margin-left:5px">添加新规则</span></button>
+            </template>
+
+            <!-- ===== 对象 / 链接规则 完整编辑态 ===== -->
+            <template v-else-if="ruleView === 'object' && selEditRule">
+              <div class="fd-detail-hd">
+                <div class="fd-phd2" style="justify-content:space-between">
+                  <div class="bl-row" style="gap:8px;min-width:0">
+                    <button class="fd-back" @click="backToRules"><span v-html="BL.icon('chevronLeft', 13)"></span><span>返回规则</span></button>
+                    <span class="fd-phd2-sep"></span>
+                    <span class="rl-ic" :style="{ background: kindMeta(selEditRule.kind).color }" v-html="BL.icon(kindMeta(selEditRule.kind).icon, 12, '#fff')"></span>
+                    <input class="fd-pname2" v-model="selEditRule.rule_name" :placeholder="kindMeta(selEditRule.kind).label + ' 规则名称'" />
+                  </div>
+                  <button class="bl-btn bl-btn-sm bl-btn-primary" @click="onSave" :disabled="saving">保存</button>
+                </div>
+              </div>
+              <div class="fd-detail-body">
+                <div class="fe-info"><span v-html="BL.icon('info', 14, '#165DFF')"></span><span>规则按从上到下顺序依次执行,后行的规则会覆盖前序规则对同一对象同属性的修改。可在「规则总览」拖拽调整规则顺序。</span></div>
+
+                <!-- 1 基础配置 -->
+                <div class="adw-card"><div class="adw-card-hd">基础配置</div>
+                  <div class="adw-grid">
+                    <template v-if="!selEditRule.kind.includes('link')">
+                      <label class="adw-fld"><span class="adw-lbl">对象类型 <i>*</i></span>
+                        <BlSelect v-model="selEditRule.obj_class_id" :options="objClassOptions" clearable placeholder="选择对象类型" @update:modelValue="loadRuleClassProps" />
+                      </label>
+                      <label v-if="selEditRule.kind === 'create_object'" class="adw-fld"><span class="adw-lbl">主键属性</span>
+                        <BlSelect v-model="selEditRule.obj_pk_property" :options="objPkOptions" placeholder="系统自动生成" />
+                      </label>
+                      <label v-else class="adw-fld"><span class="adw-lbl">目标对象参数 <i>*</i></span>
+                        <BlSelect v-model="selEditRule.target_param_code" :options="objectParamOptions" clearable :placeholder="objectParamOptions.length ? '选择对象引用参数' : '暂无对象引用参数,请先在表单添加'" />
+                      </label>
+                    </template>
+                    <template v-else>
+                      <label class="adw-fld"><span class="adw-lbl">链接类型 <i>*</i></span>
+                        <BlSelect v-model="selEditRule.link_type_code" :options="linkTypeOptions" clearable placeholder="选择链接类型" />
+                      </label>
+                      <label class="adw-fld"><span class="adw-lbl">链接基数</span><input class="bl-input" :value="linkCardLabel(selEditRule.link_type_code)" disabled /></label>
+                      <label class="adw-fld"><span class="adw-lbl">源对象参数 <i>*</i></span>
+                        <BlSelect v-model="selEditRule.link_src_param" :options="objectParamOptions" clearable placeholder="源对象引用参数" />
+                      </label>
+                      <label class="adw-fld"><span class="adw-lbl">对端对象参数 <i>*</i></span>
+                        <BlSelect v-model="selEditRule.link_dst_param" :options="objectParamOptions" clearable placeholder="目标对象引用参数" />
+                      </label>
+                    </template>
+                  </div>
+                </div>
+
+                <!-- 2 属性映射 -->
+                <div v-if="!selEditRule.kind.startsWith('delete')" class="adw-card">
+                  <div class="adw-card-hd adw-card-hd-flex"><span>属性映射</span><span class="bl-muted" style="font-size:11.5px;font-weight:400">配置对象属性的取值来源</span></div>
+                  <table class="bl-table ate-mini-table">
+                    <thead><tr><th class="t-left">属性名称</th><th v-if="selEditRule.kind === 'modify_object'" class="t-left">操作</th><th class="t-left">值来源类型</th><th class="t-left">取值配置</th><th class="t-center">必填</th><th class="t-center">操作</th></tr></thead>
+                    <tbody>
+                      <tr v-for="(m, mi) in selEditRule.prop_mappings" :key="mi">
+                        <td><BlSelect v-if="objRulePropOptions.length" v-model="m.property_code" :options="objRulePropOptions" size="sm" clearable placeholder="选择属性" /><input v-else class="bl-input bl-input-xs bl-mono" v-model="m.property_code" placeholder="属性编码" /></td>
+                        <td v-if="selEditRule.kind === 'modify_object'"><BlSelect v-model="m.prop_operator" :options="PROP_OPERATOR_OPTS" size="sm" /></td>
+                        <td><BlSelect v-model="m.value_source" :options="VALUE_SOURCE_OPTS" size="sm" /></td>
+                        <td>
+                          <BlSelect v-if="Number(m.value_source)===1" v-model="m.value_content" :options="formParamOptions" size="sm" clearable placeholder="表单参数" />
+                          <BlSelect v-else-if="Number(m.value_source)===5" v-model="m.value_content" :options="objectParamOptions" size="sm" clearable placeholder="对象引用参数" />
+                          <input v-else-if="Number(m.value_source)===2" class="bl-input bl-input-xs" v-model="m.value_content" placeholder="静态值" />
+                          <span v-else class="bl-muted" style="font-size:12px;padding-left:4px">{{ Number(m.value_source)===3 ? '取动作提交时的当前登录用户' : '取动作提交时的服务器时间' }}</span>
+                        </td>
+                        <td class="t-center"><input type="checkbox" v-model="m.is_required" :true-value="1" :false-value="0" /></td>
+                        <td class="t-center"><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="移除" @click="selEditRule.prop_mappings.splice(mi,1)" v-html="BL.icon('x', 11)"></button></td>
+                      </tr>
+                      <tr v-if="!selEditRule.prop_mappings.length"><td :colspan="selEditRule.kind === 'modify_object' ? 6 : 5" class="bl-muted" style="text-align:center;padding:12px;font-size:12px">暂无属性映射</td></tr>
+                    </tbody>
+                  </table>
+                  <button class="fe-add-row" @click="addMapping(selEditRule)"><span v-html="BL.icon('plus', 12)"></span><span style="margin-left:4px">添加属性映射</span></button>
+                </div>
+
+                <!-- 3 关联链接配置 (创建对象时顺带建链接) -->
+                <div v-if="selEditRule.kind === 'create_object'" class="adw-card">
+                  <div class="adw-card-hd adw-card-hd-flex"><span>关联链接配置(多对多)</span><span class="bl-muted" style="font-size:11.5px;font-weight:400">创建对象同时建立多对多关联</span></div>
+                  <div v-for="(lk, li) in selEditRule.obj_links" :key="li" class="fe-link-item">
+                    <div class="fe-link-hd">
+                      <span v-html="BL.icon('link', 13, '#14C9C9')"></span>
+                      <span class="fe-link-lbl">链接类型</span>
+                      <BlSelect v-model="lk.link_type_code" :options="linkTypeOptions" size="sm" clearable placeholder="选择链接类型" style="width:220px" />
+                      <span class="bl-tag" style="margin-left:6px">{{ linkCardLabel(lk.link_type_code) }}</span>
+                      <span style="flex:1"></span>
+                      <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon at-del-op" title="移除链接" @click="selEditRule.obj_links.splice(li,1)" v-html="BL.icon('trash2', 12)"></button>
+                    </div>
+                    <div class="fe-link-bd">
+                      <div class="fe-row"><span class="fe-lbl">本端对象</span><span class="bl-muted" style="font-size:12.5px">当前创建的{{ objRuleClassName || '对象' }}(本规则生成)</span></div>
+                      <div class="fe-row"><span class="fe-lbl">对端对象来源</span><BlSelect v-model="lk.peer_param" :options="objectParamOptions" size="sm" clearable :placeholder="objectParamOptions.length ? '表单参数:对端对象' : '暂无对象引用参数,请先在表单添加'" style="flex:1;max-width:320px" /></div>
+                    </div>
+                  </div>
+                  <div v-if="!selEditRule.obj_links.length" class="bl-muted" style="font-size:12px;padding:8px 2px">暂无关联链接</div>
+                  <button class="fe-add-row" @click="addObjLink(selEditRule)"><span v-html="BL.icon('link', 12)"></span><span style="margin-left:4px">添加多对多链接</span></button>
+                </div>
+
+                <!-- 删除类规则说明 -->
+                <div v-if="selEditRule.kind.startsWith('delete')" class="fe-warn">⚠ 删除规则只支持通过对象引用参数指定已存在的目标,不能删除本次提交中新建的临时对象;删除对象会级联移除其所有链接。</div>
+              </div>
             </template>
 
             <!-- ===== 函数规则 完整编辑态 ===== -->
@@ -249,35 +368,9 @@
 
                 <!-- 2 入参映射配置 (必选 / 可选分组) -->
                 <div class="adw-card"><div class="adw-card-hd">入参映射配置 <span class="bl-muted" style="font-size:11px;font-weight:400">(值来源与入参类型不匹配会标红)</span></div>
-                  <div class="fe-subhd">必选入参 <span class="bl-muted">(函数定义决定,不可删除)</span></div>
-                  <table class="bl-table ate-mini-table"><thead><tr><th class="t-left">参数名</th><th class="t-left">类型</th><th class="t-center">必填</th><th class="t-left">值来源类型</th><th class="t-left">取值配置</th><th></th></tr></thead>
-                    <tbody>
-                      <tr v-for="(fp, fi) in selEditRule.func_params.filter(p=>p.required)" :key="'req'+fi" :class="{ 'fe-mismatch': paramTypeMismatch(selEditRule, fp) }">
-                        <td><input class="bl-input bl-input-xs bl-mono" v-model="fp.name" placeholder="param_name" /></td>
-                        <td><BlSelect v-model="fp.param_type" :options="FUNC_PTYPE_OPTS" size="sm" /></td>
-                        <td class="t-center"><span class="bl-tag bl-tag-danger">必填</span></td>
-                        <td><BlSelect v-model="fp.value_source" :options="VALUE_SOURCE_OPTS" size="sm" /></td>
-                        <td><BlSelect v-if="Number(fp.value_source)===1" v-model="fp.value_content" :options="formParamOptions" size="sm" clearable placeholder="选表单参数" /><BlSelect v-else-if="Number(fp.value_source)===5" v-model="fp.value_content" :options="objectParamOptions" size="sm" clearable placeholder="选对象引用参数" /><input v-else-if="Number(fp.value_source)===2" class="bl-input bl-input-xs" v-model="fp.value_content" placeholder="静态值" /><span v-else class="bl-muted" style="font-size:12px;padding-left:4px">自动</span></td>
-                        <td class="t-center"><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="selEditRule.func_params.splice(selEditRule.func_params.indexOf(fp),1)" v-html="BL.icon('x', 11)"></button></td>
-                      </tr>
-                      <tr v-if="!selEditRule.func_params.some(p=>p.required)"><td colspan="6" class="bl-muted" style="text-align:center;padding:8px;font-size:12px">暂无必选入参</td></tr>
-                    </tbody></table>
-                  <button class="bl-btn bl-btn-text bl-btn-sm" style="margin-top:4px" @click="addFuncParamRow(selEditRule, 1)"><span v-html="BL.icon('plus', 11)"></span><span style="margin-left:3px">添加必选入参</span></button>
-
-                  <div class="fe-subhd" style="margin-top:14px">可选入参</div>
-                  <table class="bl-table ate-mini-table"><thead><tr><th class="t-left">参数名</th><th class="t-left">类型</th><th class="t-center">必填</th><th class="t-left">值来源类型</th><th class="t-left">取值配置</th><th></th></tr></thead>
-                    <tbody>
-                      <tr v-for="(fp, fi) in selEditRule.func_params.filter(p=>!p.required)" :key="'opt'+fi" :class="{ 'fe-mismatch': paramTypeMismatch(selEditRule, fp) }">
-                        <td><input class="bl-input bl-input-xs bl-mono" v-model="fp.name" placeholder="param_name" /></td>
-                        <td><BlSelect v-model="fp.param_type" :options="FUNC_PTYPE_OPTS" size="sm" /></td>
-                        <td class="t-center"><span class="bl-tag">可选</span></td>
-                        <td><BlSelect v-model="fp.value_source" :options="VALUE_SOURCE_OPTS" size="sm" /></td>
-                        <td><BlSelect v-if="Number(fp.value_source)===1" v-model="fp.value_content" :options="formParamOptions" size="sm" clearable placeholder="选表单参数" /><BlSelect v-else-if="Number(fp.value_source)===5" v-model="fp.value_content" :options="objectParamOptions" size="sm" clearable placeholder="选对象引用参数" /><input v-else-if="Number(fp.value_source)===2" class="bl-input bl-input-xs" v-model="fp.value_content" placeholder="静态值" /><span v-else class="bl-muted" style="font-size:12px;padding-left:4px">自动</span></td>
-                        <td class="t-center"><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="selEditRule.func_params.splice(selEditRule.func_params.indexOf(fp),1)" v-html="BL.icon('x', 11)"></button></td>
-                      </tr>
-                      <tr v-if="!selEditRule.func_params.some(p=>!p.required)"><td colspan="6" class="bl-muted" style="text-align:center;padding:8px;font-size:12px">暂无可选入参</td></tr>
-                    </tbody></table>
-                  <button class="bl-btn bl-btn-text bl-btn-sm" style="margin-top:4px" @click="addFuncParamRow(selEditRule, 0)"><span v-html="BL.icon('plus', 11)"></span><span style="margin-left:3px">添加可选入参</span></button>
+                  <FuncParamMapTable :params="selEditRule.func_params" :required="1" :form-options="formParamOptions" :object-options="objectParamOptions" :mismatch="fp => paramTypeMismatch(selEditRule, fp)" />
+                  <div style="height:14px"></div>
+                  <FuncParamMapTable :params="selEditRule.func_params" :required="0" :form-options="formParamOptions" :object-options="objectParamOptions" :mismatch="fp => paramTypeMismatch(selEditRule, fp)" />
                 </div>
 
                 <!-- 3 函数代码预览 -->
@@ -491,13 +584,24 @@
                 </div>
               </div>
               <div class="fd-detail-body">
-              <div v-for="sec in sections" :key="sec" class="fd-part" @dragover.prevent @drop="onFieldDropSection(sec)">
-                <div class="fd-part-hd"><span v-html="BL.icon('chevronDown', 12)"></span><span class="fd-part-name" title="点击重命名分区" @click.stop="renameSection(sec)">{{ sec }}<span class="fd-part-edit" v-html="BL.icon('edit', 11)"></span></span><span class="fd-part-count">{{ paramsOfSection(sec).length }}</span><button v-if="sections.length > 1" class="fd-part-del" title="删除分区" @click.stop="removeSection(sec)" v-html="BL.icon('trash2', 12)"></button></div>
+              <div v-for="sec in sections" :key="sec"
+                   :class="['fd-part', secCollapsed.has(sec) && 'is-collapsed', secDrag === sec && 'is-secdrag']"
+                   @dragover.prevent @drop="onPartDrop(sec)">
+                <div class="fd-part-hd" draggable="true" title="点击收起/展开, 拖动调整分区顺序"
+                     @dragstart="onSecDragStart(sec, $event)" @dragend="secDrag = null" @click="toggleSec(sec)">
+                  <span class="fd-part-grip" v-html="BL.icon('grip', 12)"></span>
+                  <span class="fd-part-name" title="重命名分区" @click.stop="renameSection(sec)">{{ sec }}</span>
+                  <span class="fd-part-count">{{ paramsOfSection(sec).length }} 个参数</span>
+                  <span style="flex:1"></span>
+                  <button class="fd-part-op" title="重命名分区" @click.stop="renameSection(sec)" v-html="BL.icon('edit', 12)"></button>
+                  <button v-if="sections.length > 1" class="fd-part-del" title="删除分区" @click.stop="removeSection(sec)" v-html="BL.icon('trash2', 12)"></button>
+                  <span class="fd-part-chev" v-html="BL.icon('chevronDown', 13)"></span>
+                </div>
                 <div class="fd-part-body">
                   <div v-for="x in paramsOfSection(sec)" :key="x.i" class="fd-row" :class="{ 'is-dragging': fDragIdx === x.i }"
                        draggable="true" @dragstart="onFieldDragStart(x.i, $event)" @dragover.prevent @drop.stop="onFieldDrop(x.p, sec)" @dragend="fDragIdx = null"
                        @click="openParam(x.i)">
-                    <span class="fd-grip" v-html="BL.icon('move', 12)"></span>
+                    <span class="fd-grip" v-html="BL.icon('grip', 12)"></span>
                     <span class="fd-dt" :style="{ background: dtMeta(x.p.param_type).color }" v-html="BL.icon(dtMeta(x.p.param_type).icon, 12, '#fff')"></span>
                     <div class="fd-row-txt">
                       <div class="fd-row-name bl-truncate">{{ x.p.param_name || x.p.param_code || '未命名参数' }}</div>
@@ -513,12 +617,45 @@
                 </div>
               </div>
               <button class="rl-add-btn" style="margin-top:12px" @click="addSection"><span v-html="BL.icon('plus', 14)"></span><span style="margin-left:5px">添加分区</span></button>
-              <div class="adw-card" style="margin-top:16px">
-                <div class="adw-card-hd">全局表单配置</div>
-                <div class="gfc-grid">
-                  <div class="gfc-item"><span>自定义提交按钮</span><span class="adw-showsw" :class="{ 'is-on': globalConf.custom_submit === 1 }" @click="globalConf.custom_submit = globalConf.custom_submit ? 0 : 1"><span class="adw-showsw-dot"></span></span></div>
-                  <div class="gfc-item"><span>自定义成功提示</span><span class="adw-showsw" :class="{ 'is-on': globalConf.custom_success === 1 }" @click="globalConf.custom_success = globalConf.custom_success ? 0 : 1"><span class="adw-showsw-dot"></span></span></div>
+              <div class="adw-card gd-card" style="margin-top:16px">
+                <div class="adw-card-hd adw-card-hd-flex"><span>全局显示配置<span class="bl-tag at-mini-tag" style="margin-left:8px">表单级默认</span></span>
+                  <span class="bl-muted" style="font-size:12px;font-weight:400">{{ formParams.length - dspOverParams.length }} / {{ formParams.length }} 个参数继承全局,{{ dspOverParams.length }} 个已单独覆盖</span></div>
+                <div class="fd-inh-tip">此处的配置作为<b>全表单参数的默认值</b>;单个参数可在其「显示」标签页取消继承、单独覆盖,<b>参数级优先于全局</b>。修改全局配置会立即影响所有仍在继承的参数。</div>
+                <div class="gd-sub">通用布局</div>
+                <div class="gd-grid">
+                  <label class="adw-fld"><span class="adw-lbl">字段宽度</span><BlSelect v-model="globalConf.width" :options="DSP_WIDTHS" /></label>
+                  <label class="adw-fld"><span class="adw-lbl">标签位置</span><BlSelect v-model="globalConf.labelPos" :options="DSP_LABEL_POS" /></label>
+                  <label class="adw-fld"><span class="adw-lbl">清空按钮</span><span class="adw-showsw adw-showsw-sm" :class="{ 'is-on': globalConf.clear === 1 }" @click="globalConf.clear = globalConf.clear ? 0 : 1"><span class="adw-showsw-dot"></span></span></label>
+                  <label class="adw-fld"><span class="adw-lbl">标签宽度</span><BlSelect v-model="globalConf.labelW" :disabled="globalConf.labelPos !== 'left'" :options="DSP_LABEL_WS" /></label>
+                  <label class="adw-fld"><span class="adw-lbl">标签对齐</span><BlSelect v-model="globalConf.labelAlign" :disabled="globalConf.labelPos !== 'left'" :options="DSP_LABEL_ALIGNS" /></label>
+                  <div class="adw-fld"><span class="bl-muted" style="font-size:12px">{{ globalConf.labelPos === 'left' ? (globalConf.labelW === 'auto' ? `当前自适应宽度约 ${autoLabelW()}px` : '固定宽度可保证各字段控件左边缘对齐') : '标签宽度 / 对齐仅在「标签位置 = 左侧显示」时生效' }}</span></div>
                 </div>
+                <div class="gd-sub">辅助提示</div>
+                <div class="gd-grid">
+                  <label class="adw-fld"><span class="adw-lbl">帮助文案</span><span class="adw-showsw adw-showsw-sm" :class="{ 'is-on': globalConf.helpOn === 1 }" @click="globalConf.helpOn = globalConf.helpOn ? 0 : 1"><span class="adw-showsw-dot"></span></span></label>
+                  <label class="adw-fld" style="grid-column:2/-1"><span class="adw-lbl">默认文案</span><input class="bl-input" v-model="globalConf.helpText" placeholder="全局默认帮助文案" /></label>
+                </div>
+                <div class="gd-sub">表单级样式<span class="bl-muted" style="font-weight:400;font-size:11px;margin-left:6px">无参数级覆盖</span></div>
+                <div class="gd-grid">
+                  <label class="adw-fld"><span class="adw-lbl">必填标识</span><BlSelect v-model="globalConf.reqMark" :options="[{value:'prefix',label:'名称前红色星号'},{value:'suffix',label:'名称后红色星号'}]" /></label>
+                  <label class="adw-fld"><span class="adw-lbl">字段间距</span><BlSelect v-model="globalConf.density" :options="[{value:'compact',label:'紧凑'},{value:'normal',label:'标准'},{value:'loose',label:'宽松'}]" /></label>
+                  <label class="adw-fld"><span class="adw-lbl">分区标题</span><span class="adw-showsw adw-showsw-sm" :class="{ 'is-on': globalConf.sectionTitle === 1 }" @click="globalConf.sectionTitle = globalConf.sectionTitle ? 0 : 1"><span class="adw-showsw-dot"></span></span><span class="bl-muted" style="font-size:12px;margin-left:8px">在表单中展示分区标题</span></label>
+                </div>
+                <div class="gd-sub">提交交互</div>
+                <div class="gd-grid">
+                  <label class="adw-fld"><span class="adw-lbl">自定义提交按钮</span><span class="adw-showsw adw-showsw-sm" :class="{ 'is-on': globalConf.custom_submit === 1 }" @click="globalConf.custom_submit = globalConf.custom_submit ? 0 : 1"><span class="adw-showsw-dot"></span></span></label>
+                  <label class="adw-fld"><span class="adw-lbl">自定义成功提示</span><span class="adw-showsw adw-showsw-sm" :class="{ 'is-on': globalConf.custom_success === 1 }" @click="globalConf.custom_success = globalConf.custom_success ? 0 : 1"><span class="adw-showsw-dot"></span></span></label>
+                </div>
+                <template v-if="dspOverParams.length">
+                  <div class="gd-sub">已覆盖全局的参数({{ dspOverParams.length }})</div>
+                  <div v-for="x in dspOverParams" :key="x.i" class="gd-over" @click="openParam(x.i)">
+                    <span class="fd-dt" :style="{ background: dtMeta(x.p.param_type).color }" v-html="BL.icon(dtMeta(x.p.param_type).icon, 11, '#fff')"></span>
+                    <b>{{ x.p.param_name || x.p.param_code }}</b>
+                    <span class="bl-muted" style="font-size:12px">覆盖了 {{ dspOverLabels(x.p) }}</span>
+                    <span style="flex:1"></span>
+                    <button class="bl-btn bl-btn-text bl-btn-sm" @click.stop="resetDsp(x.p)">恢复继承</button>
+                  </div>
+                </template>
               </div>
               </div>
             </template>
@@ -531,44 +668,52 @@
                   <button class="fd-back" title="返回表单内容" @click="backToList"><span v-html="BL.icon('chevronLeft', 13)"></span><span>返回</span></button>
                   <span class="fd-phd2-sep"></span>
                   <span class="fd-dt" :style="{ background: dtMeta(selParam.param_type).color }" v-html="BL.icon(dtMeta(selParam.param_type).icon, 13, '#fff')"></span>
-                  <input class="fd-pname2" v-model="selParam.param_name" placeholder="参数名称" />
-                  <span class="bl-mono bl-muted" style="font-size:12px;flex-shrink:0">{{ selParam.param_code || '未设编码' }}</span>
+                  <input class="fd-pname2" v-model="selParam.param_name" :size="nameSize(selParam.param_name)" placeholder="参数名称" />
+                  <span class="bl-tag" :title="selParam.param_code || '未设编码'" :style="{ background:`color-mix(in srgb, ${dtMeta(selParam.param_type).color} 12%, transparent)`, color:dtMeta(selParam.param_type).color }">{{ dtMeta(selParam.param_type).label }}</span>
                   <span style="flex:1"></span>
-                  <span class="bl-tag" :style="{ background:`color-mix(in srgb, ${dtMeta(selParam.param_type).color} 12%, transparent)`, color:dtMeta(selParam.param_type).color }">{{ dtMeta(selParam.param_type).label }}</span>
+                  <button class="bl-btn bl-btn-sm bl-btn-primary" @click="onSave" :disabled="saving">保存</button>
                   <button class="bl-btn bl-btn-text bl-btn-icon at-del-op" title="删除参数" @click="removeParamAt(selIdx)" v-html="BL.icon('trash2', 13)"></button>
                 </div>
-                <div class="fd-anchors">
-                  <button v-for="t in DETAIL_TABS" :key="t.k" :class="['fd-anchor-btn', detailTab === t.k && 'is-on']" @click="scrollToAnchor(t.k)">{{ t.label }}</button>
+                <div class="fd-tabs">
+                  <button v-for="t in DETAIL_TABS" :key="t.k" :class="['fd-tab-btn', detailTab === t.k && 'is-on']" @click="switchDetailTab(t.k)">{{ t.label }}</button>
                 </div>
               </div>
 
               <!-- 下方独立滚动区: 全部区块从上到下 -->
               <div class="fd-detail-body" ref="scrollEl">
-              <div class="fd-anchor-wrap">
-                <!-- 详情 -->
-                <section class="fd-sec" :ref="el => setAnchor('detail', el)">
-                  <div class="adw-card"><div class="adw-card-hd">基础信息</div>
-                    <div class="adw-grid">
-                      <label class="adw-fld"><span class="adw-lbl">参数编码</span><input class="bl-input bl-mono" v-model="selParam.param_code" placeholder="param_code" /></label>
-                      <label class="adw-fld"><span class="adw-lbl">参数名称</span><input class="bl-input" v-model="selParam.param_name" /></label>
-                      <label class="adw-fld"><span class="adw-lbl">数据类型</span><BlSelect v-model="selParam.param_type" :options="PARAM_TYPE_OPTS" /></label>
-                      <label class="adw-fld"><span class="adw-lbl">所属分区</span><BlSelect v-model="selParam.section" :options="sections.map(s=>({value:s,label:s}))" /></label>
-                      <label class="adw-fld adw-fld-full" style="grid-column:1/-1"><span class="adw-lbl">描述</span><input class="bl-input" v-model="selParam.help_text" placeholder="参数说明" /></label>
-                    </div>
-                  </div>
-                  <div class="adw-card"><div class="adw-card-hd">通用设置</div>
-                    <div class="fd-triple">
-                      <div class="fd-tri"><div class="fd-tri-hd"><span>可见</span><span class="adw-showsw" :class="{'is-on':selParam.visible===1}" @click="selParam.visible = selParam.visible?0:1"><span class="adw-showsw-dot"></span></span></div><a class="fd-ovr">+ 添加覆盖规则</a></div>
-                      <div class="fd-tri"><div class="fd-tri-hd"><span>禁用</span><span class="adw-showsw" :class="{'is-on':selParam.disabled===1}" @click="selParam.disabled = selParam.disabled?0:1"><span class="adw-showsw-dot"></span></span></div><a class="fd-ovr">+ 添加覆盖规则</a></div>
-                      <div class="fd-tri"><div class="fd-tri-hd"><span>必填</span><span class="adw-showsw" :class="{'is-on':selParam.is_required===1}" @click="selParam.is_required = selParam.is_required?0:1"><span class="adw-showsw-dot"></span></span></div><a class="fd-ovr">+ 添加覆盖规则</a></div>
-                    </div>
-                  </div>
-                </section>
-
+              <div class="fd-tab-wrap">
                 <!-- 值 -->
-                <section class="fd-sec" :ref="el => setAnchor('value', el)">
+                <section v-show="detailTab === 'value'" class="fd-sec">
+                  <div class="adw-card"><div class="adw-card-hd">参数类型</div>
+                    <div class="adw-grid">
+                      <label class="adw-fld"><span class="adw-lbl">数据类型</span><BlSelect v-model="selParam.param_type" :options="PARAM_TYPE_OPTS" @change="onParamTypeChange" /></label>
+                      <label class="adw-fld"><span class="adw-lbl">前端组件</span><span class="fd-ro-txt">{{ displayMeta(selParam.display_type).label }}</span></label>
+                    </div>
+                  </div>
+                  <div class="adw-card"><div class="adw-card-hd adw-card-hd-flex"><span>通用设置</span><span class="bl-muted" style="font-size:12px;font-weight:400">控制参数在表单中的展示、编辑与校验行为</span></div>
+                    <div class="fd-triple">
+                      <div class="fd-tri">
+                        <div class="fd-tri-hd"><span>可见</span><span v-if="ovCountOf('visible')" class="bl-tag bl-tag-primary at-mini-tag">{{ ovCountOf('visible') }} 条覆盖</span><span style="flex:1"></span><span class="adw-showsw" :class="{'is-on':selParam.visible===1}" @click="selParam.visible = selParam.visible?0:1"><span class="adw-showsw-dot"></span></span></div>
+                        <a class="fd-ovr" @click="addOverrideFor('visible')">+ 添加覆盖规则</a>
+                      </div>
+                      <div class="fd-tri">
+                        <div class="fd-tri-hd"><span>禁用</span><span v-if="ovCountOf('disabled')" class="bl-tag bl-tag-primary at-mini-tag">{{ ovCountOf('disabled') }} 条覆盖</span><span style="flex:1"></span><span class="adw-showsw" :class="{'is-on':selParam.disabled===1}" @click="selParam.disabled = selParam.disabled?0:1"><span class="adw-showsw-dot"></span></span></div>
+                        <a class="fd-ovr" @click="addOverrideFor('disabled')">+ 添加覆盖规则</a>
+                      </div>
+                      <div class="fd-tri">
+                        <div class="fd-tri-hd"><span>必填</span><span v-if="ovCountOf('required')" class="bl-tag bl-tag-primary at-mini-tag">{{ ovCountOf('required') }} 条覆盖</span><span style="flex:1"></span><span class="adw-showsw" :class="{'is-on':selParam.is_required===1}" @click="selParam.is_required = selParam.is_required?0:1"><span class="adw-showsw-dot"></span></span></div>
+                        <a class="fd-ovr" @click="addOverrideFor('required')">+ 添加覆盖规则</a>
+                      </div>
+                    </div>
+                  </div>
                   <div class="adw-card"><div class="adw-card-hd">约束设置</div>
-                    <label class="adw-sw" style="margin-bottom:12px"><input type="checkbox" v-model="selParam.allow_multi" :true-value="1" :false-value="0" /> 允许多值</label>
+                    <label class="adw-sw" style="margin-bottom:12px"><input type="checkbox" v-model="selParam.allow_multi" :true-value="1" :false-value="0" /> 允许多值 <span class="bl-muted" style="font-size:11px;margin-left:4px">({{ selParam.param_type === 'object' ? '用户可选择多个对象引用' : '用户可选择多个字符串值' }})</span></label>
+                    <!-- 对象引用参数: 选择类型锁定为「对象下拉选择」+ 筛选规则配置 (文档 3.3) -->
+                    <template v-if="selParam.param_type === 'object'">
+                      <div class="fd-locked"><span v-html="BL.icon('box', 13, '#165DFF')"></span><span>对象下拉选择</span><span style="flex:1"></span><span v-html="BL.icon('check', 13, '#165DFF')"></span></div>
+                      <ObjectSetFilter variant="object" v-bind="objsetBind" />
+                    </template>
+                    <template v-else>
                     <div class="fd-modetab">
                       <button v-for="m in INPUT_MODES" :key="m.v" :class="['fd-mode', selParam.input_mode === m.v && 'is-on']" @click="selParam.input_mode = m.v">{{ m.label }}</button>
                     </div>
@@ -580,26 +725,42 @@
                     <div v-else-if="selParam.input_mode === 'multi'" class="fd-mode-body">
                       <div class="fd-src"><label class="fd-src-opt" :class="{'is-on':selParam.option_source==='manual'}" @click="selParam.option_source='manual'">手动定义选项</label><label class="fd-src-opt" :class="{'is-on':selParam.option_source==='objectset'}" @click="selParam.option_source='objectset'">从对象集获取</label></div>
                       <template v-if="selParam.option_source === 'manual'">
-                        <div v-for="(o, oi) in selParam.options" :key="oi" class="fd-opt"><span class="fd-grip" v-html="BL.icon('move', 11)"></span><input class="bl-input bl-input-sm bl-mono" v-model="o.value" placeholder="参数值" /><input class="bl-input bl-input-sm" v-model="o.label" placeholder="显示名称" /><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="selParam.options.splice(oi,1)" v-html="BL.icon('x', 11)"></button></div>
+                        <div v-for="(o, oi) in selParam.options" :key="oi" class="fd-opt"><span class="fd-grip" v-html="BL.icon('grip', 11)"></span><input class="bl-input bl-input-sm bl-mono" v-model="o.value" placeholder="参数值" /><input class="bl-input bl-input-sm" v-model="o.label" placeholder="显示名称" /><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="selParam.options.splice(oi,1)" v-html="BL.icon('x', 11)"></button></div>
                         <button class="bl-btn bl-btn-text bl-btn-sm" @click="addOption(selParam)"><span v-html="BL.icon('plus', 11)"></span><span style="margin-left:3px">添加选项</span></button>
                       </template>
-                      <div v-else class="fd-warn">从对象集获取选项:起始对象集 / 按属性过滤 / 关联搜索 / 返回属性 —— 将在后续迭代接入对象集选择器。</div>
+                      <ObjectSetFilter v-else variant="multi" v-bind="objsetBind" />
                       <label class="adw-sw" style="margin-top:10px;display:flex"><input type="checkbox" v-model="selParam.allow_other" :true-value="1" :false-value="0" /> 允许其他值(用户可自定义输入)</label>
                     </div>
                     <div v-else class="fd-mode-body"><div class="bl-muted" style="font-size:12px">「{{ selParam.input_mode === 'user' ? '用户' : '用户组' }}」模式:下拉从系统人员/用户组获取,无需额外配置。</div></div>
+                    </template>
                   </div>
                   <div class="adw-card"><div class="adw-card-hd">默认值</div>
                     <label class="adw-sw" style="margin-bottom:10px"><input type="checkbox" v-model="selParam.default_enabled" :true-value="1" :false-value="0" /> 启用默认值 <span class="bl-muted" style="font-size:11px;margin-left:4px">(用户可自行修改)</span></label>
                     <template v-if="selParam.default_enabled">
                       <div class="fd-src"><label class="fd-src-opt" :class="{'is-on':selParam.default_type==='objectprop'}" @click="selParam.default_type='objectprop'">对象参数属性</label><label class="fd-src-opt" :class="{'is-on':selParam.default_type==='static'}" @click="selParam.default_type='static'">设为静态值</label></div>
                       <input v-if="selParam.default_type === 'static'" class="bl-input" v-model="selParam.default_value" placeholder="固定默认值" />
-                      <div v-else class="fd-warn">对象参数属性:两级级联(选表单内对象参数 → 选其属性字段),后续迭代接入。</div>
+                      <!-- 对象参数属性: 两级级联 (选表单内对象参数 → 选其属性字段), 文档 2.3.3 类型一 -->
+                      <div v-else class="fd-cascade">
+                        <div class="fd-cascade-row">
+                          <span class="fd-cascade-lbl">对象参数</span>
+                          <BlSelect v-model="selParam.default_obj_param" :options="objectParamOptions" clearable
+                                    :placeholder="objectParamOptions.length ? '选择表单内对象参数' : '暂无对象引用参数,请先在表单添加'"
+                                    @change="selParam.default_obj_prop = ''" style="flex:1" />
+                        </div>
+                        <div class="fd-cascade-row">
+                          <span class="fd-cascade-lbl">属性字段</span>
+                          <BlSelect v-model="selParam.default_obj_prop" :options="defObjPropOptions" clearable
+                                    :placeholder="defObjPlaceholder" style="flex:1" />
+                          <span v-if="defObjProp" :class="['bl-tag', defObjProp.status === 0 ? 'bl-tag-warning' : 'bl-tag-success']">{{ defObjProp.status === 0 ? '停用' : '启用' }}</span>
+                        </div>
+                        <div :class="['fd-cascade-hint', defObjFallback && 'is-warn']">{{ defObjHint }}</div>
+                      </div>
                     </template>
                   </div>
                 </section>
 
                 <!-- 显示 -->
-                <section class="fd-sec" :ref="el => setAnchor('display', el)">
+                <section v-show="detailTab === 'display'" class="fd-sec">
                   <div class="adw-card"><div class="adw-card-hd">显示组件</div>
                     <div class="fd-disp-grid">
                       <button v-for="d in DISPLAY_TYPES" :key="d.v" :class="['fd-disp-opt', selParam.display_type === d.v && 'is-on']" @click="selParam.display_type = d.v">
@@ -608,23 +769,110 @@
                     </div>
                     <div class="adw-grid" style="margin-top:14px">
                       <label class="adw-fld"><span class="adw-lbl">占位文字</span><input class="bl-input" v-model="selParam.placeholder" placeholder="输入框占位提示" /></label>
-                      <label class="adw-fld"><span class="adw-lbl">帮助说明</span><input class="bl-input" v-model="selParam.help_text" placeholder="字段下方帮助文字" /></label>
+                    </div>
+                  </div>
+
+                  <div class="adw-card"><div class="adw-card-hd adw-card-hd-flex"><span>通用布局</span>
+                      <span class="adw-card-hd-act"><span class="bl-muted" style="font-size:12px;font-weight:400;line-height:26px">{{ dspOverCount(selParam) ? `本参数已覆盖 ${dspOverCount(selParam)} 项全局配置` : '全部继承表单全局配置' }}</span>
+                      <button class="bl-btn bl-btn-text bl-btn-sm" @click="gotoGlobalDisplay">查看全局配置</button></span></div>
+                    <div class="fd-inh-tip">下列配置默认<b>继承表单全局显示配置</b>;取消勾选「跟随全局」即为本参数单独覆盖,参数级优先于全局。</div>
+                    <div class="fd-inh-row">
+                      <span class="fd-inh-lbl">字段宽度</span>
+                      <BlSelect :model-value="dspOf(selParam).width" :disabled="isInherit(selParam,'width')" :options="DSP_WIDTHS" @update:modelValue="v => setDsp(selParam,'width',v)" />
+                      <label class="fd-inh-ck"><input type="checkbox" :checked="isInherit(selParam,'width')" @change="toggleInherit(selParam,'width')" /> 跟随全局</label>
+                      <span v-if="!isInherit(selParam,'width')" class="bl-tag bl-tag-primary at-mini-tag">已覆盖</span>
+                    </div>
+                    <div class="fd-inh-row">
+                      <span class="fd-inh-lbl">标签位置</span>
+                      <BlSelect :model-value="dspOf(selParam).labelPos" :disabled="isInherit(selParam,'labelPos')" :options="DSP_LABEL_POS" @update:modelValue="v => setDsp(selParam,'labelPos',v)" />
+                      <label class="fd-inh-ck"><input type="checkbox" :checked="isInherit(selParam,'labelPos')" @change="toggleInherit(selParam,'labelPos')" /> 跟随全局</label>
+                      <span v-if="!isInherit(selParam,'labelPos')" class="bl-tag bl-tag-primary at-mini-tag">已覆盖</span>
+                    </div>
+                    <div class="fd-inh-row" :class="{ 'is-na': dspOf(selParam).labelPos !== 'left' }">
+                      <span class="fd-inh-lbl">标签宽度</span>
+                      <BlSelect :model-value="dspOf(selParam).labelW" :disabled="isInherit(selParam,'labelW') || dspOf(selParam).labelPos !== 'left'" :options="DSP_LABEL_WS" @update:modelValue="v => setDsp(selParam,'labelW',v)" />
+                      <label class="fd-inh-ck"><input type="checkbox" :checked="isInherit(selParam,'labelW')" :disabled="dspOf(selParam).labelPos !== 'left'" @change="toggleInherit(selParam,'labelW')" /> 跟随全局</label>
+                      <span v-if="!isInherit(selParam,'labelW')" class="bl-tag bl-tag-primary at-mini-tag">已覆盖</span>
+                    </div>
+                    <div class="fd-inh-row" :class="{ 'is-na': dspOf(selParam).labelPos !== 'left' }">
+                      <span class="fd-inh-lbl">标签对齐</span>
+                      <BlSelect :model-value="globalConf.labelAlign" disabled :options="DSP_LABEL_ALIGNS" />
+                      <span class="bl-muted" style="font-size:12px;flex:1">表单级统一配置,不支持单参数覆盖</span>
+                    </div>
+                    <div class="fd-inh-row">
+                      <span class="fd-inh-lbl">清空按钮</span>
+                      <span class="fd-inh-ctl"><span class="adw-showsw adw-showsw-sm" :class="{ 'is-on': dspOf(selParam).clear === 1, 'is-lock': isInherit(selParam,'clear') }" @click="!isInherit(selParam,'clear') && setDsp(selParam,'clear', dspOf(selParam).clear ? 0 : 1)"><span class="adw-showsw-dot"></span></span></span>
+                      <label class="fd-inh-ck"><input type="checkbox" :checked="isInherit(selParam,'clear')" @change="toggleInherit(selParam,'clear')" /> 跟随全局</label>
+                      <span v-if="!isInherit(selParam,'clear')" class="bl-tag bl-tag-primary at-mini-tag">已覆盖</span>
+                    </div>
+                  </div>
+
+                  <div class="adw-card"><div class="adw-card-hd">辅助提示</div>
+                    <div class="fd-inh-row">
+                      <span class="fd-inh-lbl">帮助文案</span>
+                      <span class="fd-inh-ctl"><span class="adw-showsw adw-showsw-sm" :class="{ 'is-on': dspOf(selParam).helpOn === 1, 'is-lock': isInherit(selParam,'helpOn') }" @click="!isInherit(selParam,'helpOn') && setDsp(selParam,'helpOn', dspOf(selParam).helpOn ? 0 : 1)"><span class="adw-showsw-dot"></span></span></span>
+                      <label class="fd-inh-ck"><input type="checkbox" :checked="isInherit(selParam,'helpOn')" @change="toggleInherit(selParam,'helpOn')" /> 跟随全局</label>
+                      <span v-if="!isInherit(selParam,'helpOn')" class="bl-tag bl-tag-primary at-mini-tag">已覆盖</span>
+                    </div>
+                    <div class="fd-inh-row">
+                      <span class="fd-inh-lbl">文案内容</span>
+                      <input class="bl-input" style="flex:1;max-width:320px" v-model="selParam.help_text" :disabled="!dspOf(selParam).helpOn" placeholder="留空则使用全局默认文案" />
+                      <span class="bl-muted" style="font-size:12px">{{ dspOf(selParam).helpOn ? (selParam.help_text ? '' : '留空 → 使用全局:' + globalConf.helpText) : '帮助文案未开启' }}</span>
                     </div>
                   </div>
                 </section>
 
                 <!-- 覆盖 -->
-                <section class="fd-sec fd-sec-last" :ref="el => setAnchor('override', el)">
+                <section v-show="detailTab === 'override'" class="fd-sec fd-sec-last">
                   <div class="adw-card"><div class="adw-card-hd">覆盖规则</div>
-                    <div v-for="(ov, ovi) in selParam.overrides" :key="ovi" class="fd-ov-row">
-                      <BlSelect v-model="ov.target" :options="[{value:'visible',label:'可见'},{value:'disabled',label:'禁用'},{value:'required',label:'必填'}]" size="sm" style="width:90px" />
-                      <span class="bl-muted" style="font-size:12px">设为</span>
-                      <BlSelect v-model="ov.value" :options="[{value:1,label:'是'},{value:0,label:'否'}]" size="sm" style="width:70px" />
-                      <input class="bl-input bl-input-sm" style="flex:1" v-model="ov.condition" placeholder="满足条件(如 当前用户.角色 = 管理员)" />
-                      <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="selParam.overrides.splice(ovi,1)" v-html="BL.icon('x', 11)"></button>
+                    <!-- 规则说明区 (文档 1.4.4.3 优先级匹配) -->
+                    <div class="ov-note">多个覆盖块按从上到下的优先级依次匹配,<b>仅第一个条件命中的块生效</b>,后续块直接忽略、不叠加;所有块均不命中时,沿用「值」页的全局默认配置。</div>
+
+                    <!-- 覆盖块列表 -->
+                    <div v-for="(ov, ovi) in selParam.overrides" :key="ov._k || ovi" class="ov-card">
+                      <div class="ov-card-hd">
+                        <span class="ov-prio">优先级 {{ ovi + 1 }}</span>
+                        <span class="bl-truncate ov-title">{{ blockTitle(ov) }}</span>
+                        <span style="flex:1"></span>
+                        <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="上移" :disabled="ovi === 0" @click="moveOverride(ovi, -1)" v-html="BL.icon('chevronUp', 12)"></button>
+                        <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="下移" :disabled="ovi === selParam.overrides.length - 1" @click="moveOverride(ovi, 1)" v-html="BL.icon('chevronDown', 12)"></button>
+                        <button class="bl-btn bl-btn-text bl-btn-sm" @click="openOverrideEdit(ovi)">编辑</button>
+                        <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon at-del-op" title="删除" @click="removeOverride(ovi)" v-html="BL.icon('trash2', 12)"></button>
+                      </div>
+                      <div class="ov-card-bd">
+                        <div class="ov-sum"><span class="ov-sum-tag ov-sum-if">If</span><span>{{ ifSummary(ov.cond) }}</span></div>
+                        <div class="ov-sum"><span class="ov-sum-tag ov-sum-then">Then</span><span>{{ thenSummary(ov.actions) }}</span></div>
+                      </div>
                     </div>
-                    <button class="bl-btn bl-btn-text bl-btn-sm" @click="selParam.overrides.push({ target:'visible', value:1, condition:'' })"><span v-html="BL.icon('plus', 11)"></span><span style="margin-left:3px">添加覆盖规则</span></button>
-                    <div class="fd-warn" style="margin-top:10px">覆盖规则:按条件动态控制该参数的 可见/禁用/必填,条件构建器(If-Then)将在后续迭代接入完整条件树。</div>
+
+                    <!-- 空状态 -->
+                    <div v-if="!selParam.overrides.length" class="ov-empty">
+                      <span class="ov-empty-ic" v-html="BL.icon('code', 22, '#c9cdd4')"></span>
+                      <div class="ov-empty-t">还没有覆盖规则</div>
+                      <div class="ov-empty-d">覆盖规则让同一个表单适配多种场景,无需为细微差异重复建动作。<br>例如:当前用户角色为管理员时该字段可见且非必填;工单类型为故障单时强制必填。</div>
+                      <button class="bl-btn bl-btn-primary bl-btn-sm" @click="openOverrideNew('')"><span v-html="BL.icon('plus', 12, '#fff')"></span><span style="margin-left:4px">添加条件覆盖</span></button>
+                    </div>
+                    <button v-else class="fe-add-row" @click="openOverrideNew('')"><span v-html="BL.icon('plus', 12)"></span><span style="margin-left:4px">添加条件覆盖</span></button>
+                  </div>
+                </section>
+
+                <!-- 详情 -->
+                <section v-show="detailTab === 'detail'" class="fd-sec fd-sec-last">
+                  <div class="adw-card"><div class="adw-card-hd">基础信息</div>
+                    <div class="adw-grid">
+                      <label class="adw-fld"><span class="adw-lbl">参数编码</span><input class="bl-input bl-mono" v-model="selParam.param_code" placeholder="param_code" /></label>
+                      <label class="adw-fld"><span class="adw-lbl">参数名称</span><input class="bl-input" v-model="selParam.param_name" /></label>
+                      <label class="adw-fld"><span class="adw-lbl">所属分区</span><BlSelect v-model="selParam.section" :options="sections.map(s=>({value:s,label:s}))" /></label>
+                      <label class="adw-fld"><span class="adw-lbl">数据类型</span><span class="fd-ro-txt">{{ dtMeta(selParam.param_type).label }}</span></label>
+                    </div>
+                  </div>
+                  <div class="adw-card"><div class="adw-card-hd">依赖与引用</div>
+                    <div class="adw-grid">
+                      <label class="adw-fld"><span class="adw-lbl">规则引用</span>
+                        <span v-if="isRefByRule(selParam.param_code)" class="bl-tag bl-tag-warning">已被规则引用</span>
+                        <span v-else class="bl-tag">未被规则引用</span></label>
+                      <label class="adw-fld"><span class="adw-lbl">覆盖规则数</span><span class="fd-ro-txt">{{ (selParam.overrides || []).length }} 条</span></label>
+                    </div>
                   </div>
                 </section>
               </div>
@@ -645,15 +893,48 @@
         </main>
 
         <!-- ===== 右侧预览 384px (仅表单菜单) ===== -->
-        <aside v-if="activeMenu === 'form'" class="adw-preview">
-          <div class="adw-preview-hd">表单预览</div>
+        <aside v-if="activeMenu === 'form'" class="adw-preview" :style="{ flex: `0 0 ${pvWidth}px` }">
+          <div class="adw-pv-drag" :class="pvResizing && 'is-resizing'" @mousedown="onPvDragStart" title="拖动调整预览宽度"></div>
+          <div class="adw-preview-hd adw-card-hd-flex"><span>表单预览</span>
+            <span class="adw-pv-mode" :class="pvGrid && 'is-real'">{{ pvGrid ? '真实栅格' : '单列示意' }}</span>
+            <span style="flex:1"></span>
+            <button class="bl-btn bl-btn-text bl-btn-sm" @click="togglePvWide">{{ pvWide ? '收窄' : '加宽' }}</button></div>
           <div class="adw-preview-body">
-            <div class="adw-preview-form">
+            <div :class="['adw-preview-form', 'is-' + globalConf.density]">
               <div class="adw-preview-title">{{ form.rdfs_label || '动作表单' }}</div>
-              <div v-for="x in visibleParams" :key="x.i" :class="['adw-preview-fld', selIdx === x.i && formView === 'detail' && 'is-sel']" @click="openParam(x.i)">
-                <div class="adw-preview-lbl">{{ x.p.param_name || x.p.param_code }} <i v-if="x.p.is_required" style="color:#f53f3f">*</i></div>
+              <template v-for="g in previewGroups" :key="g.sec">
+              <div v-if="globalConf.sectionTitle === 1" class="adw-pv-sec">{{ g.sec }}</div>
+              <div class="adw-pv-grid">
+              <div v-for="x in g.items" :key="x.i"
+                   :class="['adw-preview-fld', selIdx === x.i && formView === 'detail' && 'is-sel', dspOf(x.p).labelPos === 'left' && 'is-side']"
+                   :style="pvGrid ? { width: widthPct(x.p) } : null"
+                   @click="openParam(x.i)">
+                <div v-if="dspOf(x.p).labelPos !== 'none'" class="adw-preview-lbl"
+                     :style="dspOf(x.p).labelPos === 'left' ? { flex:`0 0 ${labelWpx(x.p)}px`, textAlign: globalConf.labelAlign } : null">
+                  <i v-if="x.p.is_required && globalConf.reqMark === 'prefix'" class="adw-pv-req">*</i>{{ x.p.param_name || x.p.param_code }}<i v-if="x.p.is_required && globalConf.reqMark === 'suffix'" class="adw-pv-req is-suffix">*</i>
+                </div>
+                <div class="adw-pv-ctl">
+                <!-- 已定位的字段进入试填态: 第一次点击只定位参数, 再点才真正操作控件 -->
+                <div v-if="pvLive(x.i)" class="adw-pv-live" @click.stop>
+                  <div v-if="x.p.display_type === 'switch'" class="adw-pv-switch">
+                    <span class="adw-showsw" :class="{ 'is-on': pvVals[x.p.param_code] }" @click="pvVals[x.p.param_code] = !pvVals[x.p.param_code]"><span class="adw-showsw-dot"></span></span>
+                  </div>
+                  <textarea v-else-if="x.p.display_type === 'textarea'" class="bl-textarea" rows="2" v-model="pvVals[x.p.param_code]" :placeholder="x.p.placeholder || previewPlaceholder(x.p)"></textarea>
+                  <BlSelect v-else-if="['select','user','tree'].includes(x.p.display_type)" size="sm" clearable
+                            :model-value="pvVals[x.p.param_code] ?? ''" @update:modelValue="v => pvVals[x.p.param_code] = v"
+                            :options="pvOptList(x.p)" :placeholder="x.p.placeholder || '请选择…'" />
+                  <div v-else-if="x.p.display_type === 'radio'" class="adw-pv-opts">
+                    <label v-for="(o, oi) in previewOpts(x.p)" :key="oi" class="adw-pv-opt is-live" @click="pvVals[x.p.param_code] = o"><span class="adw-pv-radio" :class="{ 'is-on': pvVals[x.p.param_code] === o }"></span>{{ o }}</label>
+                  </div>
+                  <div v-else-if="x.p.display_type === 'checkbox'" class="adw-pv-opts">
+                    <label v-for="(o, oi) in previewOpts(x.p)" :key="oi" class="adw-pv-opt is-live" @click="pvToggleOpt(x.p, o)"><span class="adw-pv-checkbox" :class="{ 'is-on': pvChecked(x.p, o) }"></span>{{ o }}</label>
+                  </div>
+                  <div v-else-if="x.p.display_type === 'readonly' || x.p.disabled" class="adw-preview-input is-ro">{{ x.p.placeholder || previewPlaceholder(x.p) }}</div>
+                  <input v-else class="bl-input" :type="x.p.display_type === 'number' || x.p.param_type === 'number' ? 'number' : 'text'"
+                         v-model="pvVals[x.p.param_code]" :placeholder="x.p.placeholder || previewPlaceholder(x.p)" />
+                </div>
                 <!-- 开关 -->
-                <div v-if="x.p.display_type === 'switch'" class="adw-pv-switch"><span class="adw-showsw"><span class="adw-showsw-dot"></span></span></div>
+                <div v-else-if="x.p.display_type === 'switch'" class="adw-pv-switch"><span class="adw-showsw"><span class="adw-showsw-dot"></span></span></div>
                 <!-- 多行 -->
                 <div v-else-if="x.p.display_type === 'textarea'" class="adw-preview-input" style="height:56px;align-items:flex-start;padding-top:8px" :class="{ 'is-ro': x.p.disabled }">{{ x.p.placeholder || previewPlaceholder(x.p) }}</div>
                 <!-- 下拉/单选/复选/人员/树: 带箭头 -->
@@ -668,12 +949,15 @@
                 </div>
                 <!-- 输入/数字/只读 -->
                 <div v-else class="adw-preview-input" :class="{ 'is-ro': x.p.disabled || x.p.display_type === 'readonly' }">{{ x.p.placeholder || previewPlaceholder(x.p) }}</div>
-                <div v-if="x.p.help_text" class="adw-pv-help">{{ x.p.help_text }}</div>
+                <div v-if="previewHelp(x.p)" class="adw-pv-help">{{ previewHelp(x.p) }}</div>
+                </div>
               </div>
+              </div>
+              </template>
               <div v-if="!visibleParams.length" class="bl-muted" style="text-align:center;padding:24px;font-size:12px">无表单字段</div>
             </div>
           </div>
-          <div class="adw-preview-ft"><span class="bl-muted" style="font-size:12px">共 {{ visibleParams.length }} 个字段</span></div>
+          <div class="adw-preview-ft"><span class="bl-muted" style="font-size:12px">共 {{ visibleParams.length }} 个字段 · {{ previewGroups.length }} 个分区</span></div>
         </aside>
         </div>
       </aside>
@@ -698,6 +982,7 @@
           <div class="fd-warn rlp-warn">
             <div><b>1.</b> 仅多对多链接使用「创建 / 删除链接」规则;一对多、一对一外键链接请使用「修改对象」规则编辑外键属性。</div>
             <div style="margin-top:4px"><b>2.</b> 配置函数规则后,将无法再添加其他 Ontology 规则。</div>
+            <div style="margin-top:4px"><b>3.</b> 每个动作只能有一条启用的「创建对象」规则;需要创建多个对象请拆分成多个动作或改用函数规则。</div>
           </div>
         </div>
       </div>
@@ -711,20 +996,19 @@
         <div class="rlm-hd"><span v-html="BL.icon('link', 14)"></span><span style="margin-left:6px">函数入参映射</span><span style="flex:1"></span><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="paramMapOpen = false" v-html="BL.icon('x', 14)"></button></div>
         <div class="rlm-body" v-if="paramMapRule">
           <div class="fd-warn">为函数 <b>{{ paramMapRule.func_code || '(未绑定)' }}</b> 的入参绑定取值来源;类型不匹配将在校验阶段拦截。</div>
-          <table class="bl-table ate-mini-table"><thead><tr><th class="t-left">入参名</th><th class="t-center">必填</th><th class="t-left">值来源</th><th class="t-left">值内容</th><th></th></tr></thead>
-            <tbody><tr v-for="(fp, fi) in paramMapRule.func_params" :key="fi">
-              <td><input class="bl-input bl-input-xs bl-mono" v-model="fp.name" placeholder="param_name" /></td>
-              <td class="t-center"><input type="checkbox" v-model="fp.required" :true-value="1" :false-value="0" /></td>
-              <td><BlSelect v-model="fp.value_source" :options="VALUE_SOURCE_OPTS" size="sm" /></td>
-              <td><input class="bl-input bl-input-xs" v-model="fp.value_content" :placeholder="valuePlaceholder(fp.value_source)" /></td>
-              <td class="t-center"><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="paramMapRule.func_params.splice(fi,1)" v-html="BL.icon('x', 11)"></button></td>
-            </tr><tr v-if="!paramMapRule.func_params.length"><td colspan="5" class="bl-muted" style="text-align:center;padding:12px;font-size:12px">暂无入参,点下方添加</td></tr></tbody></table>
-          <button class="bl-btn bl-btn-sm" style="margin-top:8px" @click="addFuncParam"><span v-html="BL.icon('plus', 11)"></span><span style="margin-left:3px">添加入参</span></button>
+          <FuncParamMapTable :params="paramMapRule.func_params" :required="1" :form-options="formParamOptions" :object-options="objectParamOptions" :mismatch="fp => paramTypeMismatch(paramMapRule, fp)" />
+          <div style="height:14px"></div>
+          <FuncParamMapTable :params="paramMapRule.func_params" :required="0" :form-options="formParamOptions" :object-options="objectParamOptions" :mismatch="fp => paramTypeMismatch(paramMapRule, fp)" />
         </div>
         <div class="rlm-ft"><button class="bl-btn bl-btn-primary bl-btn-sm" @click="paramMapOpen = false">完成</button></div>
       </div>
     </div>
   </Teleport>
+
+  <!-- 覆盖规则配置弹窗 (文档 1.4.4.3) -->
+  <OverrideModal v-model:open="ovModalOpen" :block="ovEditingBlock" :preset-type="ovPresetType"
+                 :param-name="selParam ? (selParam.param_name || selParam.param_code) : ''"
+                 :param-fields="ovParamFields" :defaults="ovDefaults" @save="onOverrideSave" />
 </template>
 
 <script setup>
@@ -736,6 +1020,11 @@ import IconPickerField from '@/components/IconPickerField.vue'
 import ColorPickerField from '@/components/ColorPickerField.vue'
 import CodeEditor from '@/components/CodeEditor.vue'
 import ConditionGroup from './ConditionGroup.vue'
+import ObjectSetFilter from './ObjectSetFilter.vue'
+import OverrideModal from './OverrideModal.vue'
+import FuncParamMapTable from './FuncParamMapTable.vue'
+import { normalizeOverrides, serializeOverrides, blockTitle, ifSummary, thenSummary, emptyBlock } from './overrideModel.js'
+import { VALUE_SOURCE_OPTS, FUNC_PTYPE_OPTS } from './funcParamModel.js'
 const COMPACT_COLORS = ['#165DFF', '#00B42A', '#722ED1', '#FF7D00', '#EB2F96', '#13C2C2', '#FADB14', '#F53F3F']
 
 const props = defineProps({
@@ -763,6 +1052,7 @@ function onDragStart(e) {
 function onDragMove(e) {
   const next = Math.min(drawerMaxPx(), Math.max(DRAWER_MIN, dragStartW + (dragStartX - e.clientX)))
   drawerWidth.value = next; drawerMaxed.value = next === drawerMaxPx()
+  if (pvWidth.value > pvMaxPx()) { pvWidth.value = pvMaxPx(); savePvWidth() }
 }
 function onDragEnd() {
   resizing.value = false; document.body.style.cursor = ''; document.body.style.userSelect = ''
@@ -774,7 +1064,7 @@ function toggleMax() {
   else { drawerWidth.value = drawerMaxPx(); drawerMaxed.value = true }
   localStorage.setItem('bl.adw.width', String(drawerWidth.value))
 }
-onBeforeUnmount(() => { window.removeEventListener('mousemove', onDragMove); window.removeEventListener('mouseup', onDragEnd); scrollEl.value?.removeEventListener('scroll', onDetailScroll) })
+onBeforeUnmount(() => { window.removeEventListener('mousemove', onDragMove); window.removeEventListener('mouseup', onDragEnd); window.removeEventListener('mousemove', onPvDragMove); window.removeEventListener('mouseup', onPvDragEnd); scrollEl.value?.removeEventListener('scroll', onDetailScroll) })
 
 const MENUS = [
   { k: 'overview', label: '概览', icon: 'box' },
@@ -788,22 +1078,22 @@ const ACTION_TYPES = {
   21:{label:'创建链接',color:'#14C9C9',icon:'link'}, 22:{label:'删除链接',color:'#F53F3F',icon:'link'}, 30:{label:'函数',color:'#722ED1',icon:'code'}, 40:{label:'Webhook',color:'#FF7D00',icon:'zap'},
   51:{label:'接口·创建',color:'#0FC6C2',icon:'plug'}, 52:{label:'接口·修改',color:'#0FC6C2',icon:'plug'}, 53:{label:'接口·删除',color:'#0FC6C2',icon:'plug'}, 54:{label:'接口·查询',color:'#0FC6C2',icon:'plug'}, 60:{label:'通知',color:'#B71DE8',icon:'bell'},
 }
-const VALUE_SOURCES = { 1:'来自参数', 2:'静态值', 3:'当前用户', 4:'系统时间', 5:'对象参数属性' }
 const PROP_OPERATORS = { set:'赋值', add:'增加', sub:'减少', append:'追加', clear:'清空' }
-/* 文档 5.3.3 四类取值来源顺序: 来自参数 / 对象参数属性 / 静态值 / 当前用户 / 系统时间 */
-const VALUE_SOURCE_OPTS = [1, 5, 2, 3, 4].map(v => ({ value: v, label: VALUE_SOURCES[v] }))
 const PROP_OPERATOR_OPTS = Object.entries(PROP_OPERATORS).map(([v, l]) => ({ value: v, label: l }))
-const PARAM_TYPE_OPTS = ['string','number','boolean','object','date'].map(t => ({ value: t, label: t }))
 /* 表单设计器: 数据类型 / 显示组件 / 录入模式 */
-const DATA_TYPE_META = { string:{icon:'edit',color:'#2563eb',label:'字符串'}, number:{icon:'code',color:'#1f2937',label:'数值'}, boolean:{icon:'check',color:'#10b981',label:'布尔'}, object:{icon:'box',color:'#8b5cf6',label:'对象引用'}, date:{icon:'zap',color:'#0891b2',label:'日期'}, enum:{icon:'menu',color:'#dc2626',label:'枚举'} }
+/* 图标取「类型本身的写法」而非动作: 字母 A=文本 / #=数值 / 勾=布尔 / 立方=对象 / 日历=日期 / 带勾方框=枚举 */
+const DATA_TYPE_META = { string:{icon:'textType',color:'#2563eb',label:'字符串'}, number:{icon:'hash',color:'#1f2937',label:'数值'}, boolean:{icon:'check',color:'#10b981',label:'布尔'}, object:{icon:'cube',color:'#8b5cf6',label:'对象引用'}, date:{icon:'calendar',color:'#0891b2',label:'日期'}, enum:{icon:'checkSquare',color:'#dc2626',label:'枚举'} }
+/* 下拉标签与头部类型胶囊同源 (都取 DATA_TYPE_META.label), 避免一处中文一处英文 */
+const PARAM_TYPE_OPTS = ['string','number','boolean','enum','object','date'].map(t => ({ value: t, label: `${DATA_TYPE_META[t].label} (${t})` }))
+/* 图标画控件本身的形态: 单选=圆点 / 复选=方框勾, 二者此前同用一个勾无法区分 */
 const DISPLAY_TYPES = [
-  { v:'input', label:'单行输入框', icon:'edit' }, { v:'textarea', label:'多行文本域', icon:'menu' },
-  { v:'select', label:'下拉选择', icon:'chevronDown' }, { v:'radio', label:'单选按钮组', icon:'check' },
-  { v:'number', label:'数字步进器', icon:'code' }, { v:'switch', label:'开关', icon:'zap' },
-  { v:'user', label:'人员选择器', icon:'user' }, { v:'readonly', label:'只读文本', icon:'lock' }, { v:'checkbox', label:'复选框', icon:'check' },
+  { v:'input', label:'单行输入框', icon:'fieldInput' }, { v:'textarea', label:'多行文本域', icon:'fieldTextarea' },
+  { v:'select', label:'下拉选择', icon:'fieldSelect' }, { v:'radio', label:'单选按钮组', icon:'radioDot' },
+  { v:'number', label:'数字步进器', icon:'stepperUpDown' }, { v:'switch', label:'开关', icon:'toggleSwitch' },
+  { v:'user', label:'人员选择器', icon:'user' }, { v:'readonly', label:'只读文本', icon:'lock' }, { v:'checkbox', label:'复选框', icon:'checkSquare' },
 ]
 const INPUT_MODES = [{ v:'input', label:'用户输入' }, { v:'multi', label:'多选' }, { v:'user', label:'用户' }, { v:'usergroup', label:'用户组' }]
-const DETAIL_TABS = [{ k:'detail', label:'详情' }, { k:'value', label:'值' }, { k:'display', label:'显示' }, { k:'override', label:'覆盖' }]
+const DETAIL_TABS = [{ k:'value', label:'值' }, { k:'display', label:'显示' }, { k:'override', label:'覆盖' }, { k:'detail', label:'详情' }]
 /* 规则类型 */
 const RULE_KINDS = [
   { kind:'create_object', label:'创建对象', icon:'plus', color:'#00B42A', ruleType:1, group:'Ontology 编辑规则', desc:'创建指定类型的新对象实例' },
@@ -825,8 +1115,11 @@ function defaultParam() {
   return { param_code:'', param_name:'', param_type:'string', is_required:1, value_source:1, default_value:'', property_code:'',
     section:'基础参数', visible:1, disabled:0, display_type:'input', placeholder:'', help_text:'',
     allow_multi:0, input_mode:'input', min_length_on:0, min_length:'', max_length_on:0, max_length:'', regex_on:0, regex:'',
-    options:[], allow_other:0, option_source:'manual', default_enabled:0, default_type:'static', overrides:[] }
+    options:[], allow_other:0, option_source:'manual', objset:defaultObjset(),
+    default_enabled:0, default_type:'static', default_obj_param:'', default_obj_prop:'', overrides:[], dsp:{} }
 }
+/* 从对象集获取选项 (文档 1.4.4.1.3) */
+function defaultObjset() { return { class_id:'', set_var:'', filters:[], link_on:0, link_type_code:'', label_prop:'' } }
 function normalizeParam(p) {
   const cfg = parseCfg(p.config)
   const d = defaultParam()
@@ -836,15 +1129,20 @@ function normalizeParam(p) {
     placeholder:cfg.placeholder||'', help_text:cfg.help_text||'', allow_multi:cfg.allow_multi??0, input_mode:cfg.input_mode||'input',
     min_length_on:cfg.min_length_on??0, min_length:cfg.min_length??'', max_length_on:cfg.max_length_on??0, max_length:cfg.max_length??'',
     regex_on:cfg.regex_on??0, regex:cfg.regex||'', options:cfg.options||[], allow_other:cfg.allow_other??0, option_source:cfg.option_source||'manual',
-    default_enabled:cfg.default_enabled??0, default_type:cfg.default_type||'static', overrides:cfg.overrides||[] }
+    objset:{ ...defaultObjset(), ...(cfg.objset||{}), filters:(cfg.objset?.filters||[]).map(f=>({ property_code:f.property_code||'', operator:f.operator||'eq', value:f.value||'' })) },
+    default_enabled:cfg.default_enabled??0, default_type:cfg.default_type||'static',
+    default_obj_param:cfg.default_obj_param||'', default_obj_prop:cfg.default_obj_prop||'',
+    overrides:normalizeOverrides(cfg.overrides), dsp:cfg.dsp||{} }
 }
 function paramConfig(p) {
   return { value_source:p.value_source, property_code:p.property_code||null, section:p.section, visible:p.visible, disabled:p.disabled,
     display_type:p.display_type, placeholder:p.placeholder, help_text:p.help_text, allow_multi:p.allow_multi, input_mode:p.input_mode,
     min_length_on:p.min_length_on, min_length:p.min_length, max_length_on:p.max_length_on, max_length:p.max_length, regex_on:p.regex_on, regex:p.regex,
-    options:p.options, allow_other:p.allow_other, option_source:p.option_source, default_enabled:p.default_enabled, default_type:p.default_type, overrides:p.overrides }
+    options:p.options, allow_other:p.allow_other, option_source:p.option_source, objset:p.objset || defaultObjset(),
+    default_enabled:p.default_enabled, default_type:p.default_type, default_obj_param:p.default_obj_param || '', default_obj_prop:p.default_obj_prop || '',
+    overrides:serializeOverrides(p.overrides), dsp:p.dsp || {} }
 }
-function autoDisplay(t) { return ({ string:'input', number:'number', boolean:'switch', object:'select', date:'input' })[t] || 'input' }
+function autoDisplay(t) { return ({ string:'input', number:'number', boolean:'switch', enum:'select', object:'select', date:'input' })[t] || 'input' }
 
 function defaultForm() {
   return { id:'', rid:'', api_name:'', m_type:1, action_type:11, object_class_id:'', link_type_id:'', function_code:'',
@@ -862,7 +1160,13 @@ const sectionCount = ref(0)
 const submitTree = reactive({ logic:'all', children:[] })
 const activeMenu = ref('overview')
 const formNavOpen = ref(false)
-function onMenuClick(m) { activeMenu.value = m.k; if (m.k === 'form') formNavOpen.value = true }
+const rulesNavOpen = ref(false)
+/* 根节点即该模块的列表页入口, 因此点菜单要回到列表视图而不只是切菜单 */
+function onMenuClick(m) {
+  activeMenu.value = m.k
+  if (m.k === 'form') { formNavOpen.value = true; backToList() }
+  if (m.k === 'rules') { rulesNavOpen.value = true; backToRules(true) }
+}
 const editMode = ref(false)
 const saving = ref(false)
 const formSel = ref(0)
@@ -874,6 +1178,31 @@ const classPropsOptions = computed(() => classProps.value.map(p => ({ value:p.co
 const objectParamOptions = computed(() => formParams.value.filter(p => p.param_type === 'object' && String(p.param_code||'').trim()).map(p => ({ value:p.param_code, label:`${p.param_name||p.param_code} (${p.param_code})` })))
 const formParamOptions = computed(() => formParams.value.filter(p => String(p.param_code||'').trim()).map(p => ({ value:p.param_code, label:`${p.param_name||p.param_code} (${p.param_code})` })))
 const classOptions = computed(() => (props.allClasses || []).map(c => ({ id:c.id, cn:c.display_name||c.rdfs_label||c.api_name, api_name:c.api_name, category_code:c.category_code })))
+const objClassOptions = computed(() => classOptions.value.map(c => ({ value:c.id, label:`${c.cn} (${c.api_name})` })))
+const linkTypeCode = l => l.link_type_id || l.linkTypeId || l.id
+const linkTypeOptions = computed(() => (props.allLinkTypes || []).map(l => ({ value:linkTypeCode(l), label:l.rdfs_label || l.rdfsLabel || linkTypeCode(l) })))
+const LINK_CARD = { one_one:'一对一', one_many:'一对多', many_one:'多对一', many_many:'多对多' }
+function linkCardLabel(code) {
+  const l = (props.allLinkTypes || []).find(x => linkTypeCode(x) === code)
+  if (!l) return '—'
+  return LINK_CARD[`${l.l_cardinality || l.lCardinality || 'one'}_${l.r_cardinality || l.rCardinality || 'one'}`] || '—'
+}
+/* 规则目标对象的属性候选 (按规则自身的对象类型加载, 与动作主体可以不同) */
+const ruleClassPropsCache = reactive({})
+async function loadRuleClassProps(classId) {
+  if (!classId || ruleClassPropsCache[classId]) return
+  const list = await resourceApi.properties(classId).catch(() => [])
+  const arr = Array.isArray(list) ? list : (list?.data || [])
+  ruleClassPropsCache[classId] = arr.map(p => ({ code:p.api_name||p.prop_code, name:p.display_name||p.rdfs_label||p.api_name, status:Number(p.status ?? 1) }))
+}
+const objRuleClassId = computed(() => selEditRule.value?.obj_class_id || form.object_class_id || '')
+const objRuleClassName = computed(() => classOptions.value.find(c => c.id === objRuleClassId.value)?.cn || '')
+const objRulePropOptions = computed(() => {
+  const arr = ruleClassPropsCache[objRuleClassId.value] || (objRuleClassId.value === form.object_class_id ? classProps.value : [])
+  return arr.map(p => ({ value:p.code, label:`${p.name} (${p.code})` }))
+})
+const objPkOptions = computed(() => [{ value:'', label:'系统自动生成' }, ...objRulePropOptions.value])
+function addObjLink(rule) { rule.obj_links.push({ link_type_code:'', peer_param:'' }) }
 const headMeta = computed(() => ACTION_TYPES[Number(form.action_type)] || M_TYPES[form.m_type] || { color:'#165DFF', icon:'zap' })
 const headColor = computed(() => form.color || headMeta.value.color)
 const headIcon = computed(() => headMeta.value.icon)
@@ -912,7 +1241,22 @@ const visibleParams = computed(() => formParams.value.map((p, i) => ({ p, i })).
 function menuCount(k) { return k === 'rules' ? rules.value.length : k === 'form' ? formParams.value.length : 0 }
 function paramTypeIcon(t) { return ({ string:'edit', number:'code', boolean:'check', object:'box', date:'zap' })[t] || 'edit' }
 function previewPlaceholder(p) { return ({ string:'请输入…', number:'0', boolean:'是 / 否', object:'选择对象…', date:'选择日期…' })[p.param_type] || '请输入…' }
-function previewOpts(p) { const o = (p.options || []).map(x => x.label || x.value).filter(Boolean); return o.length ? o : ['选项一', '选项二'] }
+/* 预览试填: 值只存在内存, 不参与保存; 仅当前定位的字段可交互, 避免误触改坏别的字段 */
+const pvVals = reactive({})
+function pvLive(i) { return selIdx.value === i && formView.value === 'detail' }
+function pvOptList(p) { return previewOpts(p).map(o => ({ value: o, label: o })) }
+function pvToggleOpt(p, o) {
+  const cur = Array.isArray(pvVals[p.param_code]) ? pvVals[p.param_code] : []
+  pvVals[p.param_code] = cur.includes(o) ? cur.filter(v => v !== o) : [...cur, o]
+}
+function pvChecked(p, o) { const v = pvVals[p.param_code]; return Array.isArray(v) && v.includes(o) }
+function previewOpts(p) {
+  if (p.option_source === 'objectset') {
+    const cn = classOptions.value.find(c => c.id === p.objset?.class_id)?.cn
+    return [cn ? `${cn} 实例(运行时加载)` : '(从对象集动态获取)']
+  }
+  const o = (p.options || []).map(x => x.label || x.value).filter(Boolean); return o.length ? o : ['选项一', '选项二']
+}
 
 /* 条件树 ↔ 扁平节点 */
 function buildSubmitTree(nodes) {
@@ -961,6 +1305,7 @@ function readMeta(){ return (form.metadata && typeof form.metadata === 'object')
 async function load() {
   loadDomainOpts()
   activeMenu.value = 'overview'; editMode.value = false; formSel.value = 0; ruleView.value = 'list'; ruleEditIdx.value = -1
+  ruleSelKey.value = null
   const res = await actionTypeApi.get(props.actionId).catch(() => null)
   Object.assign(form, defaultForm(), res || {})
   rules.value = (res?.rules || []).map(normalizeRule)
@@ -970,8 +1315,19 @@ async function load() {
   submit.enabled = Number(ss?.enabled)||0; submit.validate_mode = ss?.validate_mode||'all'; submit.error_message = ss?.error_message||''
   buildSubmitTree(ss?.nodes)
   const meta = readMeta()
-  globalConf.custom_submit = Number(meta.form_global?.custom_submit) || 0
-  globalConf.custom_success = Number(meta.form_global?.custom_success) || 0
+  const fg = meta.form_global || {}
+  globalConf.custom_submit = Number(fg.custom_submit) || 0
+  globalConf.custom_success = Number(fg.custom_success) || 0
+  globalConf.width = fg.width || 'full'
+  globalConf.labelPos = fg.labelPos || 'top'
+  globalConf.labelW = fg.labelW || '90'
+  globalConf.labelAlign = fg.labelAlign || 'left'
+  globalConf.clear = fg.clear ?? 1
+  globalConf.helpOn = fg.helpOn ?? 0
+  globalConf.helpText = fg.helpText || '请按要求填写该字段'
+  globalConf.reqMark = fg.reqMark || 'prefix'
+  globalConf.density = fg.density || 'normal'
+  globalConf.sectionTitle = fg.sectionTitle ?? 1
   if (form.object_class_id) loadClassProps()
   formSnapshot = JSON.stringify(pickEditable())
   nextTick(() => { fullSnapshot = snapshotAll() })
@@ -1000,6 +1356,8 @@ function normalizeRule(r) {
     func_code:cfg.func_code||'', func_version:cfg.func_version||'v1', func_autoupgrade:cfg.func_autoupgrade??1, func_params:(cfg.func_params||[]).map(fp=>({ name:fp.name||'', param_type:fp.param_type||'string', required:fp.required??1, value_source:Number(fp.value_source)||1, value_content:fp.value_content||'' })),
     func_exec_identity:cfg.func_exec_identity||'caller', func_error_strategy:cfg.func_error_strategy||'rollback', func_timeout:cfg.func_timeout??30, func_retry:cfg.func_retry??0, func_concurrent:cfg.func_concurrent??0, func_return_attachment:cfg.func_return_attachment??1, func_exceptions:(cfg.func_exceptions||[]).map(e=>({ code:e.code||'', message:e.message||'' })),
     link_src_param:cfg.link_src_param||'', link_dst_param:cfg.link_dst_param||'',
+    obj_class_id:cfg.obj_class_id||form.object_class_id||'', obj_pk_property:cfg.obj_pk_property||'',
+    obj_links:(cfg.obj_links||[]).map(l=>({ link_type_code:l.link_type_code||'', peer_param:l.peer_param||'' })),
     notify_channel:cfg.notify_channel||'push', notify_title:cfg.notify_title||'', notify_content:cfg.notify_content||'', notify_to:cfg.notify_to||'',
     notify_recipient_source:cfg.notify_recipient_source||'object_prop', notify_recipient_object_param:cfg.notify_recipient_object_param||'', notify_recipient_user_attr:cfg.notify_recipient_user_attr||'', notify_recipient_field:cfg.notify_recipient_field||'',
     notify_content_mode:cfg.notify_content_mode||'desc', notify_func_code:cfg.notify_func_code||'',
@@ -1014,6 +1372,7 @@ function ruleConfig(r) {
   return { kind:r.kind, func_code:r.func_code, func_version:r.func_version, func_autoupgrade:r.func_autoupgrade, func_params:r.func_params,
     func_exec_identity:r.func_exec_identity, func_error_strategy:r.func_error_strategy, func_timeout:r.func_timeout, func_retry:r.func_retry, func_concurrent:r.func_concurrent, func_return_attachment:r.func_return_attachment, func_exceptions:r.func_exceptions,
     link_src_param:r.link_src_param, link_dst_param:r.link_dst_param,
+    obj_class_id:r.obj_class_id, obj_pk_property:r.obj_pk_property, obj_links:r.obj_links,
     notify_channel:r.notify_channel, notify_title:r.notify_title, notify_content:r.notify_content, notify_to:r.notify_to,
     notify_recipient_source:r.notify_recipient_source, notify_recipient_object_param:r.notify_recipient_object_param, notify_recipient_user_attr:r.notify_recipient_user_attr, notify_recipient_field:r.notify_recipient_field,
     notify_content_mode:r.notify_content_mode, notify_func_code:r.notify_func_code,
@@ -1026,11 +1385,13 @@ function ruleConfig(r) {
 function addRuleKind(kind) {
   const meta = kindMeta(kind)
   rules.value.push({ _k:++ruleKey, rule_type:meta.ruleType, rule_name:meta.label, target_param_code:'', link_type_code:'', status:1, kind, _collapsed:false,
-    func_code:'', func_version:'v1', func_autoupgrade:1, func_params:[], func_exec_identity:'caller', func_error_strategy:'rollback', func_timeout:30, func_retry:0, func_concurrent:0, func_return_attachment:1, func_exceptions:[], link_src_param:'', link_dst_param:'', notify_channel:'push', notify_title:'', notify_content:'', notify_to:'',
+    func_code:'', func_version:'v1', func_autoupgrade:1, func_params:[], func_exec_identity:'caller', func_error_strategy:'rollback', func_timeout:30, func_retry:0, func_concurrent:0, func_return_attachment:1, func_exceptions:[], link_src_param:'', link_dst_param:'',
+    obj_class_id:form.object_class_id||'', obj_pk_property:'', obj_links:[], notify_channel:'push', notify_title:'', notify_content:'', notify_to:'',
     notify_recipient_source:'object_prop', notify_recipient_object_param:'', notify_recipient_user_attr:'', notify_recipient_field:'', notify_content_mode:'desc', notify_func_code:'', notify_ch_push:1, notify_ch_email:0, notify_ch_sms:0,
     notify_link_enabled:0, notify_link_type:'object_detail', notify_link_target:'', notify_link_text:'', notify_custom_html:0, notify_html_content:'', notify_permission_scope:'all',
     wh_url:'', wh_method:'POST', wh_timing:'after', wh_body:'', wh_subtype:'sideeffect', wh_code:'', wh_version:'v1', wh_input_mode:'manual', wh_input_func:'', wh_input_func_version:'', wh_params:[], prop_mappings:[] })
   rulePickerOpen.value = false
+  rulesNavOpen.value = true; ruleSelKey.value = ruleKey
 }
 /* 折叠态预览文本 */
 function rulePreview(r) {
@@ -1045,12 +1406,10 @@ function rulePreview(r) {
 const paramMapOpen = ref(false)
 const paramMapRule = ref(null)
 function openParamMap(rule) { paramMapRule.value = rule; paramMapOpen.value = true }
-function addFuncParam() { if (paramMapRule.value) paramMapRule.value.func_params.push({ name:'', param_type:'string', required:1, value_source:1, value_content:'' }) }
 /* 函数规则 完整编辑态 */
 const FUNC_UPGRADE_OPTS = [{ value:1, label:'自动升级到兼容版本' }, { value:0, label:'锁定当前版本' }]
 const FUNC_IDENTITY_OPTS = [{ value:'caller', label:'以调用者身份执行' }, { value:'service', label:'以服务账号身份执行' }]
 const FUNC_ERR_OPTS = [{ value:'rollback', label:'中断操作,回滚所有 Ontology 变更' }, { value:'continue', label:'继续执行,记录异常日志' }]
-const FUNC_PTYPE_OPTS = [{ value:'string', label:'字符串' }, { value:'number', label:'数字' }, { value:'boolean', label:'布尔' }, { value:'object', label:'对象' }, { value:'date', label:'日期' }]
 const NOTIFY_RECIPIENT_SRC = [{ value:'object_prop', label:'来自对象参数属性' }, { value:'param', label:'来自参数' }, { value:'static', label:'静态指定' }]
 const WH_SUBTYPES = [
   { value:'writeback', label:'回写', icon:'edit', desc:'使用回写模式编辑外部数据系统。外部系统返回结构响应可用于其他动作编辑规则。如果回写执行失败,所有动作编辑都不会生效,错误会立即显示给终端用户。' },
@@ -1060,18 +1419,38 @@ const NOTIFY_LINK_TYPES = [{ value:'object_detail', label:'对象详情区' }, {
 const ruleView = ref('list')
 const ruleEditIdx = ref(-1)
 const selEditRule = computed(() => rules.value[ruleEditIdx.value] || null)
-function openFuncEdit(ri) { ruleEditIdx.value = ri; ruleView.value = 'func' }
-function openNotifyEdit(ri) { ruleEditIdx.value = ri; ruleView.value = 'notify' }
-function openWebhookEdit(ri) { ruleEditIdx.value = ri; ruleView.value = 'webhook' }
+/* 左导航规则树: 按 编辑类(ruleType=1) / 副作用(ruleType=2) 分组, 组内保持规则生效顺序 */
+const RULE_NAV_GROUPS = [{ ruleType: 1, label: '编辑类' }, { ruleType: 2, label: '副作用' }]
+const ruleSelKey = ref(null)
+const ruleNavGroups = computed(() => RULE_NAV_GROUPS
+  .map(g => ({ label: g.label, items: rules.value.map((r, i) => ({ r, i })).filter(x => kindMeta(x.r.kind).ruleType === g.ruleType) }))
+  .filter(g => g.items.length))
+function ruleNavLabel(r) { const m = kindMeta(r.kind); return r.rule_name ? `${m.label}: ${r.rule_name}` : m.label }
+/* 点下级菜单 = 直接进该规则的完整编辑页 */
+const RULE_VIEW_BY_KIND = { function:'func', notification:'notify', webhook:'webhook' }
+function openRuleFromNav(i) {
+  const rule = rules.value[i]
+  if (!rule) return
+  activeMenu.value = 'rules'
+  ruleSelKey.value = rule._k
+  const view = RULE_VIEW_BY_KIND[rule.kind] || 'object'
+  if (view === 'object') openObjectEdit(i); else { ruleEditIdx.value = i; ruleView.value = view }
+}
+function openObjectEdit(ri) {
+  ruleEditIdx.value = ri; ruleSelKey.value = rules.value[ri]?._k ?? null; ruleView.value = 'object'
+  loadRuleClassProps(rules.value[ri]?.obj_class_id || form.object_class_id)
+}
+function openFuncEdit(ri) { ruleEditIdx.value = ri; ruleSelKey.value = rules.value[ri]?._k ?? null; ruleView.value = 'func' }
+function openNotifyEdit(ri) { ruleEditIdx.value = ri; ruleSelKey.value = rules.value[ri]?._k ?? null; ruleView.value = 'notify' }
+function openWebhookEdit(ri) { ruleEditIdx.value = ri; ruleSelKey.value = rules.value[ri]?._k ?? null; ruleView.value = 'webhook' }
 function addWhParam(rule) { rule.wh_params.push({ name:'', param_type:'string', value_source:1, value_content:'' }) }
 function whInputCodePreview(r) {
   return `import { Function, UserFacingError } from "@foundry/functions-api"\nimport { Company } from "@foundry/ontology-api"\n\n// 定义一个接口, 用于表达 Webhook 输入约束结构\nexport interface MyWebhookInput {\n  name: string;      // 公司名称\n  industry: string;  // 所属行业\n  country: string;   // 所在国家\n}\n\n// 定义一个类, 包含承接 Webhook 输入的函数\nexport class MyWebhookFunctions {\n  @Function()\n  public ${r.wh_input_func || 'returnWebhookInput'}(company: Company): MyWebhookInput {\n    if (!company.name || !company.industry || !company.country) {\n      throw new UserFacingError("");\n    }\n    return { /* MyWebhookInput 实例 */ };\n  }\n}`
 }
-function backToRules() { ruleView.value = 'list'; ruleEditIdx.value = -1 }
+function backToRules(fromNav) { activeMenu.value = 'rules'; ruleView.value = 'list'; ruleEditIdx.value = -1; if (fromNav === true) ruleSelKey.value = null }
 function notifyCodePreview(r) {
   return `// 只读预览 · 在代码仓库中编辑\n@NotificationFunction("${r.notify_func_code || 'unnamed'}")\npublic Notification build(User recipient, Object subject) {\n  return Notification.builder()\n    .heading("${r.notify_title || '通知标题'}")\n    .content("...")\n    .build();\n}`
 }
-function addFuncParamRow(rule, required) { rule.func_params.push({ name:'', param_type:'string', required, value_source: required ? 1 : 1, value_content:'' }) }
 function addFuncException(rule) { rule.func_exceptions.push({ code:'', message:'' }) }
 /* 值来源与入参类型不匹配的粗校验 (静态值不校验) */
 function paramTypeMismatch(rule, fp) {
@@ -1083,18 +1462,24 @@ function funcCodePreview(r) {
   const args = (r.func_params || []).map(p => `${p.name || 'arg'}: ${p.param_type || 'any'}`).join(', ')
   return `// 只读预览 · 在代码仓库中编辑\n@OntologyEditFunction("${r.func_code || 'unnamed'}", version = "${r.func_version || 'v1'}")\npublic void ${r.func_code || 'run'}(${args}): void {\n  // 函数逻辑在代码仓库维护\n}`
 }
-function removeRule(rule) { rules.value = rules.value.filter(r => r !== rule) }
+function removeRule(rule) {
+  rules.value = rules.value.filter(r => r !== rule)
+  if (ruleSelKey.value === rule._k) ruleSelKey.value = null
+}
 /* 添加规则弹框: 按当前规则禁用冲突项 (函数规则与其它 Ontology 编辑规则互斥) */
+/* 已启用规则 (禁用态的规则不参与冲突判定, 与 ruleConflicts 口径一致) */
+const activeRules = computed(() => rules.value.filter(r => Number(r.status ?? 1) === 1))
 function kindDisabled(k) {
   if (k.group !== 'Ontology 编辑规则') return false
-  const hasFn = rules.value.some(r => r.kind === 'function')
-  if (hasFn) return true
-  if (k.kind === 'function') return rules.value.some(r => kindMeta(r.kind).ruleType === 1 && r.kind !== 'function')
+  if (activeRules.value.some(r => r.kind === 'function')) return true
+  if (k.kind === 'function') return activeRules.value.some(r => kindMeta(r.kind).ruleType === 1 && r.kind !== 'function')
+  if (k.kind === 'create_object') return activeRules.value.some(r => r.kind === 'create_object')
   return false
 }
 function kindDisabledReason(k) {
   if (!kindDisabled(k)) return ''
-  if (rules.value.some(r => r.kind === 'function')) return '已配置函数规则,不能再叠加其他 Ontology 规则'
+  if (activeRules.value.some(r => r.kind === 'function')) return '已配置函数规则,不能再叠加其他 Ontology 规则'
+  if (k.kind === 'create_object') return '已有「创建对象」规则:同一对象在单次提交中不能被创建两次(主键冲突 / 数据重复)'
   return '已有其他 Ontology 编辑规则,不能再添加函数规则'
 }
 function addMapping(rule) { rule.prop_mappings.push({ property_code:'', property_name:'', prop_operator:'set', value_source:1, value_content:'', is_required:0 }) }
@@ -1103,7 +1488,6 @@ const rulePickerOpen = ref(false)
 const rDragIdx = ref(null)
 function onRuleDragStart(i, ev) { rDragIdx.value = i; if (ev?.dataTransfer) ev.dataTransfer.effectAllowed = 'move' }
 function onRuleDrop(target) { const from = rDragIdx.value; rDragIdx.value = null; if (from === null || from === target) return; const [it] = rules.value.splice(from, 1); rules.value.splice(target, 0, it) }
-function valuePlaceholder(vs) { return ({1:'表单参数编码',2:'静态值',3:'(当前用户,自动)',4:'(系统时间,自动)',5:'关联对象属性'})[Number(vs)] || '' }
 function addParam(sec) {
   const target = (typeof sec === 'string' && sec) ? sec : (sections.value[0] || '基础参数')
   formParams.value.push({ ...defaultParam(), section: target })
@@ -1146,8 +1530,13 @@ async function importParams() {
 /* —— 表单设计器状态 —— */
 const formView = ref('list')       // 'list' | 'detail'
 const selIdx = ref(-1)
-const detailTab = ref('detail')
-const globalConf = reactive({ custom_submit: 0, custom_success: 0 })
+const detailTab = ref('value')
+const globalConf = reactive({
+  custom_submit: 0, custom_success: 0,
+  width: 'full', labelPos: 'top', labelW: '90', labelAlign: 'left',
+  clear: 1, helpOn: 0, helpText: '请按要求填写该字段', reqMark: 'prefix',
+  density: 'normal', sectionTitle: 1,
+})
 const selParam = computed(() => formParams.value[selIdx.value] || null)
 const sections = computed(() => {
   const s = []
@@ -1155,40 +1544,128 @@ const sections = computed(() => {
   return s.length ? s : ['基础参数']
 })
 function paramsOfSection(sec) { return formParams.value.map((p, i) => ({ p, i })).filter(x => (x.p.section || '基础参数') === sec) }
-function openParam(i) { activeMenu.value = 'form'; selIdx.value = i; detailTab.value = 'detail'; formView.value = 'detail'; nextTick(() => { scrollEl.value && (scrollEl.value.scrollTop = 0) }) }
+function openParam(i) { activeMenu.value = 'form'; selIdx.value = i; detailTab.value = 'value'; formView.value = 'detail'; nextTick(() => { scrollEl.value && (scrollEl.value.scrollTop = 0) }) }
 function backToList() { activeMenu.value = 'form'; formView.value = 'list'; selIdx.value = -1 }
 
-/* —— 参数详情: 头部固定 + 下方独立滚动容器 + 页签锚点定位/高亮 —— */
 const scrollEl = ref(null)
-const anchorEls = {}
-function setAnchor(k, el) { if (el) anchorEls[k] = el; else delete anchorEls[k] }
-function scrollToAnchor(k) {
-  detailTab.value = k
-  const el = anchorEls[k]
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+function switchDetailTab(k) { detailTab.value = k; nextTick(() => { scrollEl.value && (scrollEl.value.scrollTop = 0) }) }
+function ovCountOf(target) {
+  return (selParam.value?.overrides || []).filter(o => (o.actions || []).some(a => a.type === target)).length
 }
-function onDetailScroll() {
-  const root = scrollEl.value
-  if (!root || formView.value !== 'detail') return
-  // 触底: 高亮最后一段 (无需留白占位)
-  if (root.scrollTop + root.clientHeight >= root.scrollHeight - 4) { detailTab.value = DETAIL_TABS[DETAIL_TABS.length - 1].k; return }
-  const rootTop = root.getBoundingClientRect().top
-  let cur = DETAIL_TABS[0].k
-  for (const t of DETAIL_TABS) {
-    const el = anchorEls[t.k]
-    if (el && el.getBoundingClientRect().top - rootTop <= 12) cur = t.k
+/* ===== 覆盖规则 (文档 1.4.4.3) ===== */
+const ovModalOpen = ref(false)
+const ovEditIdx = ref(-1)
+const ovPresetType = ref('')
+/* 条件只能引用「当前字段上方」的参数 — 避免循环依赖 */
+const ovParamFields = computed(() => formParams.value.slice(0, Math.max(0, selIdx.value))
+  .filter(p => String(p.param_code || '').trim())
+  .map(p => ({ code: p.param_code, name: p.param_name || p.param_code, dataType: p.param_type, options: p.options || [] })))
+const ovDefaults = computed(() => ({
+  visible: Number(selParam.value?.visible ?? 1),
+  required: Number(selParam.value?.is_required ?? 0),
+  disabled: Number(selParam.value?.disabled ?? 0),
+}))
+const ovEditingBlock = computed(() => ovEditIdx.value >= 0 ? selParam.value?.overrides?.[ovEditIdx.value] || null : null)
+function openOverrideNew(presetType) { ovEditIdx.value = -1; ovPresetType.value = presetType || ''; ovModalOpen.value = true }
+function openOverrideEdit(i) { ovEditIdx.value = i; ovPresetType.value = ''; ovModalOpen.value = true }
+function onOverrideSave(block) {
+  const list = selParam.value.overrides
+  if (ovEditIdx.value >= 0) list.splice(ovEditIdx.value, 1, block); else list.push(block)
+  ovEditIdx.value = -1
+}
+async function removeOverride(i) {
+  const ok = await BL.confirm({ title: '删除覆盖规则', content: `确定删除「${blockTitle(selParam.value.overrides[i])}」?`, danger: true, okText: '删除' })
+  if (ok) selParam.value.overrides.splice(i, 1)
+}
+function moveOverride(i, dir) {
+  const list = selParam.value.overrides, j = i + dir
+  if (j < 0 || j >= list.length) return
+  const [it] = list.splice(i, 1); list.splice(j, 0, it)
+}
+function addOverrideFor(target) {
+  openOverrideNew(target)
+  switchDetailTab('override')
+}
+
+/* —— 表单级显示配置 → 参数级覆盖 的继承解析 ——
+   dsp 为空对象表示全部继承; 某 key 有值即该项被本参数单独覆盖 */
+const DSP_KEYS = ['width', 'labelPos', 'labelW', 'clear', 'helpOn']
+const DSP_WIDTHS = [{ value:'full', label:'占满整行' }, { value:'half', label:'二分之一' }, { value:'third', label:'三分之一' }, { value:'quarter', label:'四分之一' }]
+const DSP_LABEL_POS = [{ value:'top', label:'顶部显示' }, { value:'left', label:'左侧显示' }, { value:'none', label:'隐藏标签' }]
+const DSP_LABEL_WS = [{ value:'auto', label:'自适应(按最长标签)' }, { value:'80', label:'80px' }, { value:'90', label:'90px' }, { value:'100', label:'100px' }, { value:'120', label:'120px' }, { value:'160', label:'160px' }]
+const DSP_LABEL_ALIGNS = [{ value:'left', label:'左对齐' }, { value:'right', label:'右对齐' }]
+function dspOf(p) {
+  const d = p?.dsp || {}
+  return {
+    width: d.width ?? globalConf.width,
+    labelPos: d.labelPos ?? globalConf.labelPos,
+    labelW: d.labelW ?? globalConf.labelW,
+    clear: d.clear ?? globalConf.clear,
+    helpOn: d.helpOn ?? globalConf.helpOn,
   }
-  detailTab.value = cur
 }
-watch([activeMenu, formView], () => {
-  nextTick(() => {
-    const el = scrollEl.value
-    if (el && activeMenu.value === 'form' && formView.value === 'detail') {
-      el.removeEventListener('scroll', onDetailScroll)
-      el.addEventListener('scroll', onDetailScroll, { passive: true })
+function isInherit(p, k) { return (p?.dsp || {})[k] == null }
+function setDsp(p, k, v) { if (!p.dsp) p.dsp = {}; p.dsp[k] = v }
+function toggleInherit(p, k) {
+  if (!p.dsp) p.dsp = {}
+  if (isInherit(p, k)) p.dsp[k] = dspOf(p)[k]   // 覆盖时以当前生效值为起点, 避免取消继承瞬间值跳变
+  else delete p.dsp[k]
+}
+function dspOverCount(p) { return DSP_KEYS.filter(k => !isInherit(p, k)).length }
+const DSP_LABELS = { width:'字段宽度', labelPos:'标签位置', labelW:'标签宽度', clear:'清空按钮', helpOn:'帮助文案' }
+function dspOverLabels(p) { return DSP_KEYS.filter(k => !isInherit(p, k)).map(k => DSP_LABELS[k]).join('、') }
+const dspOverParams = computed(() => formParams.value.map((p, i) => ({ p, i })).filter(x => dspOverCount(x.p) > 0))
+function resetDsp(p) { p.dsp = {} }
+function gotoGlobalDisplay() {
+  backToList()
+  nextTick(() => { document.querySelector('.gd-card')?.scrollIntoView({ behavior: 'smooth', block: 'center' }) })
+}
+/* 标签宽度「自适应」按当前左标签字段中最长的名称估算, 保证同一表单内控件左边缘对齐 */
+function autoLabelW() {
+  const ns = formParams.value.filter(p => dspOf(p).labelPos === 'left').map(p => (p.param_name || p.param_code || '').length)
+  if (!ns.length) return 80
+  return Math.min(200, Math.max(56, Math.max(...ns) * 14 + 12))
+}
+function labelWpx(p) { const v = dspOf(p).labelW; return v === 'auto' ? autoLabelW() : Number(v) || 90 }
+function previewHelp(p) { return dspOf(p).helpOn ? (p.help_text || globalConf.helpText) : '' }
+function widthPct(p) { return ({ full:'100%', half:'50%', third:'33.33%', quarter:'25%' })[dspOf(p).width] || '100%' }
+/* 预览栏可调宽: 够宽(≥PV_GRID_MIN)才按真实栅格铺排, 否则退化单列, 免去全屏浮层 */
+const PV_MIN = 300, PV_NARROW = 384, PV_WIDE = 660, PV_GRID_MIN = 380, PV_RESERVE = 640
+const pvStoredW = Number(localStorage.getItem('bl.adw.pvWidth')) || 0
+const pvWidth = ref(pvStoredW >= PV_MIN ? pvStoredW : PV_NARROW)
+const pvResizing = ref(false)
+const pvGrid = computed(() => pvWidth.value >= PV_GRID_MIN)
+const pvWide = computed(() => pvWidth.value > PV_NARROW)
+function pvMaxPx() { return Math.max(PV_MIN, drawerWidth.value - PV_RESERVE) }
+function savePvWidth() { localStorage.setItem('bl.adw.pvWidth', String(pvWidth.value)) }
+let pvStartX = 0, pvStartW = 0
+function onPvDragStart(e) {
+  pvResizing.value = true; pvStartX = e.clientX; pvStartW = pvWidth.value
+  document.body.style.cursor = 'col-resize'; document.body.style.userSelect = 'none'
+  window.addEventListener('mousemove', onPvDragMove); window.addEventListener('mouseup', onPvDragEnd)
+}
+function onPvDragMove(e) { pvWidth.value = Math.min(pvMaxPx(), Math.max(PV_MIN, pvStartW + (pvStartX - e.clientX))) }
+function onPvDragEnd() {
+  pvResizing.value = false; document.body.style.cursor = ''; document.body.style.userSelect = ''
+  savePvWidth()
+  window.removeEventListener('mousemove', onPvDragMove); window.removeEventListener('mouseup', onPvDragEnd)
+}
+/* 加宽时抽屉本身不够放就顺带把抽屉撑开, 否则「加宽」点了看不出变化 */
+function togglePvWide() {
+  if (pvWide.value) pvWidth.value = PV_NARROW
+  else {
+    const need = PV_WIDE + PV_RESERVE
+    if (drawerWidth.value < need) {
+      drawerWidth.value = Math.min(drawerMaxPx(), need)
+      localStorage.setItem('bl.adw.width', String(drawerWidth.value))
     }
-  })
-})
+    pvWidth.value = Math.min(pvMaxPx(), PV_WIDE)
+  }
+  savePvWidth()
+}
+const previewGroups = computed(() => sections.value
+  .map(sec => ({ sec, items: visibleParams.value.filter(x => (x.p.section || '基础参数') === sec) }))
+  .filter(g => g.items.length))
 async function removeParamAt(i) {
   const p = formParams.value[i]
   if (!p) return
@@ -1198,6 +1675,36 @@ async function removeParamAt(i) {
   if (!ok) return
   formParams.value.splice(i, 1)
   if (selIdx.value === i) backToList()
+}
+/* 左侧导航分组收起状态; 键加 rule:/form: 前缀避免规则分组与同名分区互相干扰 */
+const navFold = reactive(new Set())
+function isNavFold(k) { return navFold.has(k) }
+function toggleNavFold(k) { navFold.has(k) ? navFold.delete(k) : navFold.add(k) }
+
+/* 分区收展仅为配置期视图状态, 不入库 */
+const secCollapsed = reactive(new Set())
+function toggleSec(sec) { secCollapsed.has(sec) ? secCollapsed.delete(sec) : secCollapsed.add(sec) }
+
+/* 分区顺序由 formParams 中各分区首个参数的位置决定, 因此排序 = 按新分区顺序整体重排参数 */
+const secDrag = ref(null)
+function onSecDragStart(sec, e) { secDrag.value = sec; e.dataTransfer.effectAllowed = 'move' }
+function onPartDrop(sec) {
+  if (secDrag.value) { moveSection(secDrag.value, sec); secDrag.value = null; return }
+  onFieldDropSection(sec)
+}
+function moveSection(src, target) {
+  const order = sections.value.slice()
+  const from = order.indexOf(src), to = order.indexOf(target)
+  if (from < 0 || to < 0 || from === to) return
+  order.splice(from, 1)
+  order.splice(to, 0, src)
+  const bucket = new Map(order.map(s => [s, []]))
+  formParams.value.forEach(p => {
+    const s = p.section || '基础参数'
+    if (!bucket.has(s)) bucket.set(s, [])
+    bucket.get(s).push(p)
+  })
+  formParams.value = order.flatMap(s => bucket.get(s) || [])
 }
 function addSection() {
   let n = sections.value.length + 1, name = `分区 ${n}`
@@ -1239,7 +1746,81 @@ function isRefByRule(code) {
     (r.func_params || []).some(fp => Number(fp.value_source) === 1 && fp.value_content === code))
 }
 function addOption(p) { p.options.push({ value: '', label: '' }) }
-function mapXsd(dt){ const s=String(dt||'').toLowerCase(); if(/(int|decimal|double|float)/.test(s))return'number'; if(s.includes('bool'))return'boolean'; if(s.includes('date')||s.includes('time'))return'date'; return'string' }
+/* 标题输入框的 size: 中日韩全角按 2 个字符宽算 */
+function nameSize(s) {
+  let w = 0
+  for (const ch of String(s || '')) w += /[⺀-鿿＀-￯]/.test(ch) ? 2 : 1
+  return Math.min(30, Math.max(5, w + 1))
+}
+/* 切数据类型: 前端组件跟着换; 枚举必须走「多选」页签配选项, 用户输入/用户组对枚举无意义 */
+function onParamTypeChange(t) {
+  const p = selParam.value; if (!p) return
+  p.display_type = autoDisplay(t)
+  if (t === 'enum' && p.input_mode !== 'multi') p.input_mode = 'multi'
+}
+
+/* ===== 从对象集获取选项 / 对象引用参数筛选规则 (文档 1.4.4.1.3 / 3.3.2) ===== */
+/* 该对象类型的属性候选 (复用规则页的按类缓存) */
+const objsetProps = computed(() => {
+  const id = selParam.value?.objset?.class_id
+  if (!id) return []
+  return ruleClassPropsCache[id] || (id === form.object_class_id ? classProps.value : [])
+})
+const objsetPropOptions = computed(() => objsetProps.value.map(p => ({ value:p.code, label:`${p.name} (${p.code})` })))
+const objsetLabelProp = computed(() => objsetProps.value.find(p => p.code === selParam.value?.objset?.label_prop) || null)
+/* 关联搜索路径文案: 关联搜索至 {链接类型} 的 {对端对象} */
+const objsetLinkPath = computed(() => {
+  const code = selParam.value?.objset?.link_type_code
+  if (!code) return '选择链接类型后,可通过关联对象的属性搜索当前对象集'
+  const l = (props.allLinkTypes || []).find(x => linkTypeCode(x) === code)
+  const peer = classOptions.value.find(c => c.id === (l?.r_object_type_id || l?.rObjectTypeId))?.cn || '关联对象'
+  return `关联搜索至 ${l ? (l.rdfs_label || l.rdfsLabel || code) : code} 的 ${peer}`
+})
+/* ===== 默认值 · 对象参数属性 两级级联 (文档 2.3.3 类型一) ===== */
+/* 第一级选中的对象参数, 其指向的对象类型来自该参数自身的「起始对象集」配置 */
+const defObjParam = computed(() => formParams.value.find(p => p.param_code === selParam.value?.default_obj_param) || null)
+/* 对象参数没配起始对象集时, 回退到动作主体对象, 否则属性下拉会空到没法用 */
+const defObjOwnClassId = computed(() => defObjParam.value?.objset?.class_id || '')
+const defObjClassId = computed(() => defObjOwnClassId.value || form.object_class_id || '')
+const defObjFallback = computed(() => !!selParam.value?.default_obj_param && !defObjOwnClassId.value)
+const defObjPropOptions = computed(() => {
+  const arr = ruleClassPropsCache[defObjClassId.value] || (defObjClassId.value === form.object_class_id ? classProps.value : [])
+  return arr.map(p => ({ value:p.code, label:`${p.name} (${p.code})` }))
+})
+const defObjProp = computed(() => {
+  const arr = ruleClassPropsCache[defObjClassId.value] || []
+  return arr.find(p => p.code === selParam.value?.default_obj_prop) || null
+})
+const defObjClassName = computed(() => classOptions.value.find(c => c.id === defObjClassId.value)?.cn || '')
+const defObjPlaceholder = computed(() => {
+  if (!selParam.value?.default_obj_param) return '请先选择对象参数'
+  if (!defObjClassId.value) return '无法确定对象类型,请先给该对象参数配置起始对象集'
+  return defObjPropOptions.value.length ? '选择属性字段' : `「${defObjClassName.value || '该对象'}」暂无属性`
+})
+const defObjHint = computed(() => {
+  const p = selParam.value; if (!p) return ''
+  const pn = defObjParam.value?.param_name || p.default_obj_param
+  if (defObjFallback.value) return `「${pn}」还没配置起始对象集,属性暂按动作主体对象「${defObjClassName.value || '—'}」列出;建议先到该参数的「约束设置」里选定对象集。`
+  if (!p.default_obj_param || !p.default_obj_prop) return '表单打开时,自动取所选对象参数上的该属性值回填为本参数默认值,用户仍可自行修改。'
+  const cn = defObjPropOptions.value.find(o => o.value === p.default_obj_prop)?.label || p.default_obj_prop
+  return `表单打开时自动取「${pn}」的「${cn}」回填,用户仍可自行修改。`
+})
+watch(defObjClassId, id => { if (id) loadRuleClassProps(id) }, { immediate: true })
+
+/* 传给 ObjectSetFilter 的整包 props (字符串多选 / 对象引用参数共用) */
+const objsetBind = computed(() => ({
+  objset: selParam.value?.objset,
+  classOptions: classOptions.value,
+  varOptions: objectParamOptions.value,
+  propOptions: objsetPropOptions.value,
+  labelProp: objsetLabelProp.value,
+  linkTypeOptions: linkTypeOptions.value,
+  linkPath: objsetLinkPath.value,
+  fallbackClassId: form.object_class_id || '',
+}))
+/* 进入参数详情 / 切换起始对象集时按需拉属性 */
+watch(() => selParam.value?.objset?.class_id, id => { if (id) loadRuleClassProps(id) }, { immediate: true })
+function mapXsd(dt){ const s=String(dt||'').toLowerCase(); if(s.includes('enum'))return'enum'; if(/(int|decimal|double|float)/.test(s))return'number'; if(s.includes('bool'))return'boolean'; if(s.includes('date')||s.includes('time'))return'date'; return'string' }
 
 async function onSave() {
   if (!String(form.rdfs_label||'').trim()) { activeMenu.value='overview'; editMode.value=true; return BL.warning('请填写动作名称') }
@@ -1253,7 +1834,7 @@ async function onSave() {
     }
     if (formParams.value.length) body.form_enabled = 1
     body.submit_criteria_enabled = submit.enabled ? 1 : form.submit_criteria_enabled
-    const meta = readMeta(); meta.form_global = { custom_submit: globalConf.custom_submit, custom_success: globalConf.custom_success }
+    const meta = readMeta(); meta.form_global = { ...globalConf }
     body.metadata = JSON.stringify(meta)
     await actionTypeApi.update(form.id, body)
     BL.success('已保存'); editMode.value = false; formSnapshot = JSON.stringify(pickEditable()); fullSnapshot = snapshotAll()
@@ -1313,7 +1894,7 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .adw-nav { flex: 0 0 220px; background: var(--bl-bg-1); border-right: 1px solid var(--bl-border); display: flex; flex-direction: column; overflow: hidden; }
 .adw-title-ic { width: 30px; height: 30px; border-radius: 7px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
 .adw-menu { flex: 1; overflow-y: auto; padding: 8px; }
-.adw-menu-item { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 6px; font-size: 13.5px; color: var(--bl-text-2); cursor: pointer; border-left: 2px solid transparent; }
+.adw-menu-item { display: flex; align-items: center; gap: 8px; padding: 8px 6px; border-radius: 6px; font-size: 13.5px; color: var(--bl-text-2); cursor: pointer; border-left: 2px solid transparent; }
 .adw-menu-item:hover { background: var(--bl-bg-hover); }
 .adw-menu-item.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); font-weight: 600; border-left-color: var(--bl-primary); }
 .adw-menu-ic { display: inline-flex; }
@@ -1324,16 +1905,26 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .adw-menu-chev:hover { background: var(--bl-bg-hover); }
 .adw-menu-chev.is-open { transform: rotate(90deg); }
 /* 表单结构树 */
-.adw-tree { padding: 4px 0 4px 20px; }
-.adw-tree-sec { font-size: 11.5px; color: var(--bl-text-3); font-weight: 600; padding: 6px 12px 4px; }
+.adw-tree { padding: 4px 0 4px 10px; }
+/* 右侧内边距 6px 与 .adw-menu-item 对齐, 让计数/箭头和一级菜单同一竖线 */
+.adw-tree-sec { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--bl-text-3); font-weight: 600;
+  padding: 6px 6px 4px 12px; cursor: pointer; user-select: none; border-radius: 6px; }
+.adw-tree-sec:hover { color: var(--bl-text-2); background: var(--bl-bg-hover); }
+/* margin-left 8 + 容器 gap 4 = 12, 与一级菜单 (gap 8 + chev margin 4) 等距 */
+.adw-tree-sec-chev { margin-left: 8px; display: inline-flex; color: var(--bl-text-4); transition: transform .15s; }
+.adw-tree-sec.is-fold .adw-tree-sec-chev { transform: rotate(-90deg); }
+/* 计数盒子尺寸对齐 .adw-menu-badge (只是不要底色), 数字才会落在同一竖线 */
+.adw-tree-sec-n { margin-left: auto; min-width: 16px; height: 16px; padding: 0 5px; font-size: 10px; font-weight: 400;
+  color: var(--bl-text-4); display: inline-flex; align-items: center; justify-content: center; }
 .adw-tree-item { display: flex; align-items: center; gap: 6px; padding: 6px 12px 6px 20px; font-size: 12.5px; color: var(--bl-text-2); cursor: pointer; border-radius: 6px; }
 .adw-tree-item:hover { background: var(--bl-bg-hover); }
 .adw-tree-item.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); }
-.adw-tree-ic { color: var(--bl-text-3); display: inline-flex; }
 .adw-tree-empty { padding: 8px 20px; font-size: 12px; color: var(--bl-text-3); }
 
 /* 中间内容 */
-.adw-main { flex: 1; min-width: 0; overflow-y: auto; padding: 16px; }
+/* 中栏隐藏滚动条(滚轮/触控板照常滚), 避免与右侧预览面板之间露出一条空白滚动槽; 同 AppSidebar .nav 的做法 */
+.adw-main { flex: 1; min-width: 0; overflow-y: auto; padding: 10px 10px; scrollbar-width: none; -ms-overflow-style: none; }
+.adw-main::-webkit-scrollbar { width: 0; height: 0; display: none; }
 .adw-page-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
 .adw-page-title { font-size: 16px; font-weight: 600; }
 
@@ -1406,27 +1997,37 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .adw-row-sel { background: var(--bl-primary-soft); }
 
 /* 表单结构树 (字段双图标) */
-.adw-tree-root { display: flex; align-items: center; gap: 6px; padding: 7px 12px; font-size: 13px; font-weight: 600; color: var(--bl-text-2); cursor: pointer; border-radius: 6px; }
-.adw-tree-root:hover { background: var(--bl-bg-hover); }
-.adw-tree-root.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); }
-.adw-tree-field { display: flex; align-items: center; gap: 7px; padding: 7px 12px 7px 18px; font-size: 12.5px; color: var(--bl-text-2); cursor: pointer; border-radius: 6px; border-left: 2px solid transparent; }
+.adw-tree-field { display: flex; align-items: center; gap: 7px; padding: 7px 6px 7px 8px; font-size: 12.5px; color: var(--bl-text-2); cursor: pointer; border-radius: 6px; border-left: 2px solid transparent; }
 .adw-tree-field:hover { background: var(--bl-bg-hover); }
 .adw-tree-field:hover .adw-tree-disp { color: var(--bl-text-1); }
 .adw-tree-field.is-on { background: var(--bl-primary-soft); color: var(--bl-primary); border-left-color: var(--bl-primary); }
 .adw-tree-field.is-on .adw-tree-disp { color: var(--bl-primary); }
 .adw-tree-dt { width: 18px; height: 18px; border-radius: 4px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
+.adw-tree-field.is-off { opacity: .55; }
 .adw-tree-fname { flex: 1; min-width: 0; }
 .adw-tree-disp { flex-shrink: 0; color: var(--bl-text-3); display: inline-flex; }
 
 /* 表单列表页 - 分区 */
 .fd-part { border: 1px solid var(--bl-border); border-radius: 10px; margin-bottom: 12px; overflow: hidden; background: var(--bl-bg-1); }
-.fd-part-hd { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--bl-divider); color: var(--bl-text-2); }
-.fd-part-hd > span:first-child { color: var(--bl-text-3); display: inline-flex; }
+.fd-part-hd { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--bl-divider); color: var(--bl-text-2); cursor: pointer; user-select: none; }
+.fd-part-hd:hover { background: var(--bl-bg-hover); }
+.fd-part-grip { color: var(--bl-text-3); display: inline-flex; cursor: grab; }
+.fd-part-hd:hover .fd-part-grip { color: var(--bl-text-2); }
+.fd-part-hd:active .fd-part-grip { cursor: grabbing; }
+.fd-part-chev { color: var(--bl-text-3); display: inline-flex; margin-left: 4px; transition: transform .15s; }
+.fd-part.is-collapsed .fd-part-chev { transform: rotate(-90deg); }
+.fd-part.is-collapsed .fd-part-hd { border-bottom: 0; }
+.fd-part.is-collapsed .fd-part-body { display: none; }
+.fd-part.is-secdrag { opacity: .45; }
+.fd-part-op { padding: 2px; border: 0; background: transparent; color: var(--bl-text-3); cursor: pointer; display: inline-flex;
+  align-items: center; border-radius: 5px; opacity: 0; transition: opacity .12s, color .12s, background .12s; }
+.fd-part:hover .fd-part-op { opacity: 1; }
+.fd-part-op:hover { color: var(--bl-primary); background: var(--bl-primary-soft); }
 .fd-part-name { display: inline-flex; align-items: center; font-size: 13px; font-weight: 600; color: var(--bl-text-1); cursor: pointer; border-radius: 5px; padding: 1px 4px; margin-left: -4px; }
 .fd-part-name:hover { color: var(--bl-primary); background: var(--bl-bg-hover); }
-.fd-part-edit { margin-left: 5px; display: inline-flex; color: var(--bl-text-3); opacity: 0; transition: opacity .12s; }
-.fd-part-name:hover .fd-part-edit { opacity: 1; }
-.fd-part-count { margin-left: auto; padding: 0 7px; border-radius: 10px; background: var(--bl-bg-2); color: var(--bl-text-2); font-size: 11px; }
+/* 抽屉可拖窄, 分区名过长时截断而非折行, 否则头部会撑成两行 */
+.fd-part-name { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+.fd-part-count { padding: 0 7px; border-radius: 10px; background: var(--bl-bg-2); color: var(--bl-text-2); font-size: 11px; flex-shrink: 0; }
 .fd-part-del { margin-left: 6px; padding: 2px; border: 0; background: transparent; color: var(--bl-text-3); cursor: pointer; display: inline-flex; align-items: center; border-radius: 5px; opacity: 0; transition: opacity .12s, color .12s, background .12s; }
 .fd-part:hover .fd-part-del { opacity: 1; }
 .fd-part-del:hover { color: #f53f3f; background: color-mix(in srgb, #f53f3f 12%, transparent); }
@@ -1435,8 +2036,9 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .fd-row { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-bottom: 1px solid var(--bl-divider); cursor: pointer; background: transparent; transition: background .12s; }
 .fd-row:hover { background: var(--bl-bg-hover); }
 .fd-row.is-dragging { opacity: .4; }
-.fd-grip { color: var(--bl-text-3); cursor: grab; display: inline-flex; flex-shrink: 0; opacity: 0; transition: opacity .12s; }
-.fd-row:hover .fd-grip { opacity: 1; }
+/* 常显但压低不透明度: 拖拽入口需要可被发现, 又不该跟参数名抢注意力 */
+.fd-grip { color: var(--bl-text-3); cursor: grab; display: inline-flex; flex-shrink: 0; opacity: .45; transition: opacity .12s, color .12s; }
+.fd-row:hover .fd-grip, .fd-opt:hover .fd-grip { opacity: 1; color: var(--bl-text-2); }
 .fd-grip:active { cursor: grabbing; }
 /* 分区内添加参数 */
 .fd-part-add { display: flex; align-items: center; justify-content: center; gap: 4px; width: 100%; padding: 9px; background: transparent; border: 0; color: var(--bl-text-3); font-size: 12.5px; cursor: pointer; transition: color .12s, background .12s; }
@@ -1458,30 +2060,55 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .fd-back { display: inline-flex; align-items: center; gap: 2px; padding: 3px 8px 3px 4px; font-size: 12.5px; color: var(--bl-text-2); background: transparent; border: 0; cursor: pointer; border-radius: 6px; flex-shrink: 0; }
 .fd-back:hover { color: var(--bl-primary); background: var(--bl-bg-hover); }
 .fd-phd2-sep { width: 1px; height: 16px; background: var(--bl-divider); flex-shrink: 0; }
-.fd-pname2 { border: 0; outline: none; background: transparent; font-size: 16px; font-weight: 700; color: var(--bl-text-1); padding: 0; min-width: 80px; max-width: 240px; }
+/* 宽度跟着内容走, 让类型胶囊紧贴标题; size 属性是不支持 field-sizing 的浏览器的兜底 */
+.fd-pname2 { border: 0; outline: none; background: transparent; font-size: 16px; font-weight: 700; color: var(--bl-text-1); padding: 0;
+  field-sizing: content; width: auto; min-width: 48px; max-width: 240px; }
 .fd-pname2:focus { border-bottom: 1px solid var(--bl-primary); }
 
 /* 表单详情: 头部固定 + 下方独立滚动, 收紧内边距节省高度 */
-.adw-page.is-detail { margin: -16px; height: calc(100% + 32px); padding: 8px 16px 0; display: flex; flex-direction: column; min-height: 0; }
+.adw-page.is-detail { margin: -10px; height: calc(100% + 20px); padding: 8px 10px 0; display: flex; flex-direction: column; min-height: 0; }
 .fd-detail-hd { flex: 0 0 auto; background: var(--bl-bg-2); }
-.fd-detail-body { flex: 1; min-height: 0; overflow-y: auto; margin-right: -16px; padding: 10px 8px 20px 0; }
+.fd-detail-body { flex: 1; min-height: 0; overflow-y: auto; margin-right: -10px; padding: 10px 8px 2px 0; }
 
 /* 锚点导航 */
-.fd-anchors { display: flex; gap: 2px; padding: 8px 0 4px; background: var(--bl-bg-2); }
-.fd-anchor-btn { padding: 6px 16px; font-size: 13px; color: var(--bl-text-2); cursor: pointer; background: transparent; border: 0; border-radius: 6px; transition: background .12s, color .12s; }
-.fd-anchor-btn:hover { color: var(--bl-text-1); background: var(--bl-bg-hover); }
-.fd-anchor-btn.is-on { color: var(--bl-primary); background: var(--bl-primary-soft); font-weight: 600; }
+.fd-tabs { display: flex; gap: 2px; padding: 8px 0 4px; background: var(--bl-bg-2); }
+.fd-tab-btn { padding: 6px 16px; font-size: 13px; color: var(--bl-text-2); cursor: pointer; background: transparent; border: 0; border-radius: 6px; transition: background .12s, color .12s; }
+.fd-tab-btn:hover { color: var(--bl-text-1); background: var(--bl-bg-hover); }
+.fd-tab-btn.is-on { color: var(--bl-primary); background: var(--bl-primary-soft); font-weight: 600; }
 
 /* 区块容器 */
-.fd-anchor-wrap { max-width: 780px; }
+.fd-tab-wrap { max-width: 780px; }
 .fd-sec { scroll-margin-top: 8px; }
 
 /* 通用设置 三宫格 */
-.fd-triple { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.fd-tri { border: 1px solid var(--bl-border); border-radius: 8px; padding: 12px; }
-.fd-tri-hd { display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+.fd-triple { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+.fd-tri { padding: 4px 16px; border-right: 1px solid var(--bl-divider); }
+.fd-tri:first-child { padding-left: 0; }
+.fd-tri:last-child { border-right: 0; padding-right: 0; }
+.fd-tri-hd { display: flex; align-items: center; gap: 8px; font-size: var(--bl-fs-13); font-weight: 600; margin-bottom: 10px; }
 .fd-ovr { font-size: 12px; color: var(--bl-primary); cursor: pointer; }
 .fd-ovr:hover { text-decoration: underline; }
+.fd-ro-txt { font-size: var(--bl-fs-13); color: var(--bl-text-2); line-height: 32px; }
+
+/* 继承 / 覆盖行: 控件 + 「跟随全局」勾选 + 覆盖标记 */
+.fd-inh-tip { font-size: var(--bl-fs-12); color: var(--bl-text-2); background: var(--bl-primary-soft); border: 1px solid var(--bl-primary-border);
+  border-radius: var(--bl-radius-2); padding: 8px 12px; line-height: 1.7; margin-bottom: var(--bl-sp-3); }
+.fd-inh-row { display: flex; align-items: center; gap: var(--bl-sp-3); padding: 8px 0; border-bottom: 1px dashed var(--bl-divider); }
+.fd-inh-row:last-child { border-bottom: 0; }
+.fd-inh-row.is-na { opacity: .5; }
+.fd-inh-lbl { width: 90px; flex-shrink: 0; font-size: var(--bl-fs-13); color: var(--bl-text-3); }
+.fd-inh-row > :deep(.bs), .fd-inh-row > .bl-input { width: 220px; flex-shrink: 0; }
+.fd-inh-ctl { width: 220px; flex-shrink: 0; display: flex; align-items: center; }
+.fd-inh-ck { display: inline-flex; align-items: center; gap: 6px; font-size: var(--bl-fs-12); color: var(--bl-text-3); cursor: pointer; flex-shrink: 0; }
+.adw-showsw.is-lock { opacity: .55; pointer-events: none; }
+
+/* 全局显示配置卡 */
+.gd-sub { font-size: var(--bl-fs-13); font-weight: 600; color: var(--bl-text-2); margin: var(--bl-sp-4) 0 var(--bl-sp-2); }
+.gd-sub:first-of-type { margin-top: var(--bl-sp-2); }
+.gd-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--bl-sp-3) var(--bl-sp-5); }
+.gd-over { display: flex; align-items: center; gap: var(--bl-sp-2); padding: 7px 10px; border: 1px solid var(--bl-border);
+  border-radius: var(--bl-radius-2); margin-bottom: 6px; font-size: var(--bl-fs-13); cursor: pointer; }
+.gd-over:hover { border-color: var(--bl-primary); background: var(--bl-primary-soft); }
 
 /* 约束-模式选项卡 */
 .fd-modetab { display: flex; gap: 4px; background: var(--bl-bg-2); padding: 3px; border-radius: 8px; margin-bottom: 14px; }
@@ -1493,7 +2120,31 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .fd-src-opt { flex: 1; text-align: center; padding: 9px 0; border: 1px solid var(--bl-border); border-radius: 8px; font-size: 13px; color: var(--bl-text-2); cursor: pointer; }
 .fd-src-opt.is-on { border-color: var(--bl-primary); background: var(--bl-primary-soft); color: var(--bl-primary); font-weight: 600; }
 .fd-opt { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+/* 默认值 · 对象参数属性 两级级联 */
+.fd-cascade { display: flex; flex-direction: column; gap: 10px; }
+.fd-cascade-row { display: flex; align-items: center; gap: 8px; }
+.fd-cascade-lbl { flex-shrink: 0; width: 66px; font-size: 12.5px; color: var(--bl-text-2); }
+.fd-cascade-hint { font-size: 12px; color: var(--bl-text-3); line-height: 1.6; padding-left: 74px; }
+.fd-cascade-hint.is-warn { color: #92400E; background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 6px; padding: 8px 12px; margin-left: 74px; }
 .fd-warn { background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 6px; padding: 8px 12px; font-size: 12px; color: #92400E; }
+/* 覆盖规则列表 (文档 1.4.4.3) */
+.ov-note { background: var(--bl-primary-soft); border: 1px solid color-mix(in srgb, var(--bl-primary) 22%, transparent);
+  border-radius: 8px; padding: 9px 13px; font-size: 12px; line-height: 1.7; color: var(--bl-text-2); margin-bottom: 12px; }
+.ov-card { border: 1px solid var(--bl-border); border-radius: 9px; margin-bottom: 10px; overflow: hidden; }
+.ov-card-hd { display: flex; align-items: center; gap: 8px; padding: 8px 10px 8px 12px; background: var(--bl-bg-2); }
+.ov-prio { flex-shrink: 0; font-size: 11px; font-weight: 600; color: var(--bl-primary); background: var(--bl-primary-soft); padding: 2px 7px; border-radius: 4px; }
+.ov-title { font-size: 12.5px; font-weight: 600; color: var(--bl-text-1); min-width: 0; }
+.ov-card-bd { padding: 9px 12px; display: flex; flex-direction: column; gap: 6px; }
+.ov-sum { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--bl-text-2); line-height: 1.6; }
+.ov-sum-tag { flex-shrink: 0; font-size: 10.5px; font-weight: 700; padding: 1px 6px; border-radius: 4px; margin-top: 1px; }
+.ov-sum-if { background: var(--bl-primary-soft); color: var(--bl-primary); }
+.ov-sum-then { background: #FEF3C7; color: #92400E; }
+.ov-empty { text-align: center; padding: 28px 16px; }
+.ov-empty-ic { display: inline-flex; }
+.ov-empty-t { font-size: 13.5px; font-weight: 600; color: var(--bl-text-2); margin: 8px 0 6px; }
+.ov-empty-d { font-size: 12px; color: var(--bl-text-3); line-height: 1.8; margin-bottom: 14px; }
+/* 对象引用参数: 选择类型锁定卡 (文档 3.3.1 样式高亮锁定, 不支持切换) */
+.fd-locked { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border: 1px solid var(--bl-primary); background: var(--bl-primary-soft); border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--bl-primary); cursor: default; }
 :root[data-theme="dark"] .fd-warn { background: color-mix(in srgb, #D97706 16%, transparent); border-color: color-mix(in srgb, #D97706 40%, transparent); color: #FBBF24; }
 
 /* 显示组件网格 */
@@ -1510,6 +2161,10 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .adw-showsw.is-on { background: var(--bl-primary); }
 .adw-showsw-dot { position: absolute; left: 2px; top: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: left .15s; box-shadow: 0 1px 2px rgba(0,0,0,.3); }
 .adw-showsw.is-on .adw-showsw-dot { left: 20px; }
+/* 小号开关: 用于配置项密集的行 (全局显示配置 / 参数显示配置), 与规则页 .rl-sw 同尺寸 */
+.adw-showsw-sm { width: 32px; height: 18px; border-radius: 9px; }
+.adw-showsw-sm .adw-showsw-dot { width: 14px; height: 14px; }
+.adw-showsw-sm.is-on .adw-showsw-dot { left: 16px; }
 
 /* 预览增强 */
 .adw-preview-fld { cursor: pointer; border-radius: 6px; padding: 4px 12px 8px; }
@@ -1523,15 +2178,39 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .adw-pv-radio { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--bl-border-strong); flex-shrink: 0; }
 .adw-pv-checkbox { width: 14px; height: 14px; border-radius: 3px; border: 1.5px solid var(--bl-border-strong); flex-shrink: 0; }
 .adw-pv-help { font-size: 11px; color: var(--bl-text-3); margin-top: 4px; }
+/* 试填态: 真实控件, 尺寸对齐静态示意 */
+.adw-pv-live .bl-input, .adw-pv-live .bl-textarea { width: 100%; font-size: 12px; box-sizing: border-box; }
+.adw-pv-live .bl-input { height: 32px; }
+.adw-pv-opt.is-live { cursor: pointer; }
+.adw-pv-radio.is-on { border-width: 4px; border-color: var(--bl-primary); }
+.adw-pv-checkbox.is-on { position: relative; background: var(--bl-primary); border-color: var(--bl-primary); }
+.adw-pv-checkbox.is-on::after { content: ''; position: absolute; left: 4px; top: 1px; width: 3px; height: 7px; border: solid #fff; border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
 
 /* 右预览 */
-.adw-preview { flex: 0 0 384px; background: var(--bl-bg-1); border-left: 1px solid var(--bl-border); display: flex; flex-direction: column; overflow: hidden; }
-.adw-preview-hd { padding: 12px 16px; font-size: 13px; font-weight: 600; border-bottom: 1px solid var(--bl-divider); }
-.adw-preview-body { flex: 1; overflow-y: auto; padding: 16px 6px 16px 16px; }
+.adw-preview { position: relative; background: var(--bl-bg-1); border-left: 1px solid var(--bl-border); display: flex; flex-direction: column; overflow: hidden; }
+.adw-pv-drag { position: absolute; left: -2px; top: 0; bottom: 0; width: 5px; cursor: col-resize; background: transparent; transition: background-color .15s; z-index: 3; }
+.adw-pv-drag:hover, .adw-pv-drag.is-resizing { background: var(--bl-primary); }
+.adw-pv-mode { margin-left: 8px; font-size: 11px; font-weight: 400; color: var(--bl-text-3); border: 1px solid var(--bl-border); border-radius: 4px; padding: 1px 6px; }
+.adw-pv-mode.is-real { color: var(--bl-primary); border-color: color-mix(in srgb, var(--bl-primary) 40%, transparent); background: var(--bl-primary-soft); }
+.adw-preview-hd { padding: 8px 16px; font-size: 13px; font-weight: 600; border-bottom: 1px solid var(--bl-divider); }
+.adw-preview-body { flex: 1; overflow-y: auto; padding: 16px 8px 16px 16px; }
 .adw-preview-form {border-radius: 10px; padding: 0px; }
 .adw-preview-title { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
 .adw-preview-fld { margin-bottom: 12px; }
 .adw-preview-lbl { font-size: 12px; color: var(--bl-text-2); margin-bottom: 5px; }
+.adw-pv-sec { font-size: 11px; color: var(--bl-text-3); margin: 14px 0 8px; padding-bottom: 4px; border-bottom: 1px dashed var(--bl-border); }
+.adw-pv-grid { display: flex; flex-wrap: wrap; margin: 0 -6px; }
+/* 默认单列; 仅全屏预览时由内联 width 覆盖为真实栅格比例 */
+.adw-pv-grid > .adw-preview-fld { width: 100%; box-sizing: border-box; padding-left: 6px; padding-right: 6px; }
+/* 字段间距: 表单级样式, 无参数级覆盖 */
+.adw-preview-form.is-compact .adw-preview-fld { margin-bottom: 6px; }
+.adw-preview-form.is-loose .adw-preview-fld { margin-bottom: 20px; }
+/* 标签位于左侧: 标签列定宽 + 控件占满剩余, 宽度由 labelWpx 内联给出 */
+.adw-preview-fld.is-side { display: flex; align-items: flex-start; gap: 8px; }
+.adw-preview-fld.is-side .adw-preview-lbl { margin-bottom: 0; padding-top: 7px; padding-right: 6px; }
+.adw-preview-fld.is-side .adw-pv-ctl { flex: 1; min-width: 0; }
+.adw-pv-req { color: var(--bl-danger); font-style: normal; margin-right: 2px; }
+.adw-pv-req.is-suffix { margin-right: 0; margin-left: 2px; }
 .adw-preview-input { height: 32px; border: 1px solid var(--bl-border); border-radius: var(--bl-radius-2); background: var(--bl-bg-1); display: flex; align-items: center; padding: 0 10px; font-size: 12px; color: var(--bl-text-3); }
 .adw-preview-ft { padding: 10px 16px; border-top: 1px solid var(--bl-divider); }
 
@@ -1547,13 +2226,22 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 /* 函数规则 完整编辑态 */
 .fe-warn { background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 8px; padding: 10px 14px; font-size: 12.5px; line-height: 1.6; color: #92400E; margin-bottom: 14px; }
 :root[data-theme="dark"] .fe-warn { background: color-mix(in srgb, #D97706 16%, transparent); border-color: color-mix(in srgb, #D97706 40%, transparent); color: #FBBF24; }
+.fe-info { display: flex; align-items: flex-start; gap: 8px; background: var(--bl-primary-soft); border: 1px solid color-mix(in srgb, var(--bl-primary) 25%, transparent); border-radius: 8px; padding: 10px 14px; font-size: 12.5px; line-height: 1.6; color: var(--bl-text-2); margin-bottom: 14px; }
+.fe-info > span:first-child { flex-shrink: 0; display: inline-flex; margin-top: 1px; }
+/* 满宽虚线「添加一行」按钮 */
+.fe-add-row { width: 100%; display: flex; align-items: center; justify-content: center; padding: 9px; margin-top: 10px; background: transparent; border: 1px dashed var(--bl-border-strong); border-radius: 8px; color: var(--bl-text-2); font-size: 12.5px; cursor: pointer; transition: border-color .12s, color .12s, background .12s; }
+.fe-add-row:hover { border-color: var(--bl-primary); color: var(--bl-primary); background: var(--bl-primary-soft); }
+/* 关联链接配置项 */
+.fe-link-item { border: 1px solid var(--bl-divider); border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
+.fe-link-hd { display: flex; align-items: center; gap: 8px; padding: 9px 12px; background: var(--bl-bg-2); }
+.fe-link-lbl { font-size: 12.5px; color: var(--bl-text-2); flex-shrink: 0; }
+.fe-link-bd { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.fe-link-bd .fe-lbl { width: 96px; }
 .fe-subhd { font-size: 12.5px; font-weight: 600; color: var(--bl-text-2); margin-bottom: 6px; }
 .fe-subhd .bl-muted { font-weight: 400; }
 .fe-code { font-family: var(--bl-mono, monospace); font-size: 12px; line-height: 1.6; color: #d4d4d4; background: #1e1e2e; border-radius: 8px; padding: 14px 16px; white-space: pre-wrap; overflow-x: auto; margin: 0; }
 .fe-repo { font-size: 12px; color: var(--bl-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 400; }
 .fe-repo:hover { text-decoration: underline; }
-.ate-mini-table tr.fe-mismatch td { background: color-mix(in srgb, #f53f3f 8%, transparent); }
-.ate-mini-table tr.fe-mismatch .bl-input { border-color: #f53f3f; }
 /* 内容配置 tab */
 .fd-tabs2 { display: inline-flex; gap: 2px; padding: 3px; background: var(--bl-bg-2); border-radius: 8px; }
 .fd-tab2 { padding: 5px 18px; font-size: 13px; color: var(--bl-text-2); cursor: pointer; background: transparent; border: 0; border-radius: 6px; transition: background .12s, color .12s; }
@@ -1590,7 +2278,8 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .rl-card.is-off .rl-preview, .rl-card.is-off .rl-body { opacity: .5; }
 .rl-hd { display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; user-select: none; }
 .rl-hd:hover { background: var(--bl-bg-hover); }
-.rl-grip { color: var(--bl-text-3); cursor: grab; display: inline-flex; }
+.rl-grip { color: var(--bl-text-3); cursor: grab; display: inline-flex; transition: color .12s; }
+.rl-grip:hover { color: var(--bl-text-2); }
 .rl-ic { width: 22px; height: 22px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .rl-kind { font-size: 12px; font-weight: 600; color: var(--bl-text-2); background: var(--bl-bg-2); padding: 2px 8px; border-radius: 5px; flex-shrink: 0; }
 .rl-name { border: 0; background: transparent; font-size: 13.5px; font-weight: 600; color: var(--bl-text-1); outline: none; min-width: 120px; max-width: 280px; }
@@ -1604,7 +2293,8 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .rl-row .bl-input { flex: 1; }
 .rl-row-top .bl-input { flex: 1; }
 .rl-sub { font-size: 12.5px; font-weight: 600; color: var(--bl-text-2); display: flex; align-items: center; gap: 8px; margin-top: 2px; }
-.rl-code { font-family: var(--bl-mono, monospace); font-size: 11.5px; color: var(--bl-text-3); background: var(--bl-bg-1); border: 1px solid var(--bl-divider); border-radius: 6px; padding: 10px 12px; white-space: pre-wrap; }
+/* 折叠卡片里的代码预览: 与完整编辑态同款深色块, 仅收紧尺寸并限高 */
+.rl-code-blk { font-size: 11.5px; padding: 10px 12px; max-height: 132px; overflow: auto; }
 
 /* 添加新规则 + 类型选择器 */
 /* 添加新规则: 整行居中虚线按钮 */

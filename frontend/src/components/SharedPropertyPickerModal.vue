@@ -119,7 +119,7 @@
                       <td class="t-left"><span class="bl-truncate" :title="domainLabel(p.category_code)">{{ domainLabel(p.category_code) || '通用' }}</span></td>
                       <td class="t-center"><span class="bl-tag">{{ p.data_type || '—' }}</span></td>
                       <td class="t-center">
-                        <span :class="['bl-tag', p.status === 1 ? 'bl-tag-success' : 'bl-tag-muted']"><StatusTag :status="p.status" /></span>
+                        <StatusTag :status="p.status" />
                       </td>
                       <td class="t-left"><span class="bl-muted bl-truncate" :title="p.rdfs_comment">{{ p.rdfs_comment || '—' }}</span></td>
                     </tr>

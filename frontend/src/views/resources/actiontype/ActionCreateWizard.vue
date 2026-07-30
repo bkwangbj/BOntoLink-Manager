@@ -348,10 +348,11 @@ const ACTION_TYPES = {
   ],
   6: [{ v: 60, label: '通知动作', color: '#B71DE8', icon: 'bell', desc: '发送站内/邮件/短信通知', prefix: 'notify' }],
 }
-const PARAM_TYPES = ['string', 'number', 'boolean', 'object', 'date']
+const PARAM_TYPE_LABELS = { string:'字符串', number:'数值', boolean:'布尔', enum:'枚举', object:'对象引用', date:'日期' }
+const PARAM_TYPES = ['string', 'number', 'boolean', 'enum', 'object', 'date']
 const VALUE_SOURCES = { 1: '表单参数', 2: '静态值', 3: '当前用户', 4: '系统时间', 5: '关联对象属性' }
 const VALUE_SOURCE_OPTS = Object.entries(VALUE_SOURCES).map(([v, l]) => ({ value: Number(v), label: l }))
-const PARAM_TYPE_OPTS = ['string', 'number', 'boolean', 'object', 'date'].map(t => ({ value: t, label: t }))
+const PARAM_TYPE_OPTS = PARAM_TYPES.map(t => ({ value: t, label: `${PARAM_TYPE_LABELS[t]} (${t})` }))
 const DEFAULT_TYPE_OPTS = [{ value: 'static', label: '静态' }, { value: 'source', label: '来源' }]
 const DEFAULT_STATIC_OPTS = [{ value: 'none', label: '无默认值' }, { value: 'now', label: '当前系统时间' }, { value: 'user', label: '当前登录用户' }, { value: 'custom', label: '自定义静态值…' }]
 const VISIBILITY_OPTS = [{ value: 'project', label: '项目内所有成员可见' }, { value: 'creator', label: '仅创建者可见' }, { value: 'assigned', label: '指定成员可见' }]
@@ -558,6 +559,7 @@ async function importFromClass() {
 }
 function mapXsdType(dt) {
   const s = String(dt || '').toLowerCase()
+  if (s.includes('enum')) return 'enum'
   if (s.includes('int') || s.includes('decimal') || s.includes('double') || s.includes('float')) return 'number'
   if (s.includes('bool')) return 'boolean'
   if (s.includes('date') || s.includes('time')) return 'date'

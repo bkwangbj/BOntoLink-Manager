@@ -135,7 +135,7 @@
     <!-- 子头:视图页签(前) + 布局名 + 结果数 -->
     <div class="ixe-subhead" v-if="classId">
       <div class="ixe-vtabs">
-        <button :class="['ixe-vtab', viewMode==='list' && 'is-on']" @click="viewMode='list'">
+        <button :class="['ixe-vtab', viewMode==='list' && 'is-on']" @click="guardLeave(() => viewMode='list')">
           <span v-html="BL.icon('list', 14)"></span>列表
         </button>
         <button :class="['ixe-vtab', viewMode==='charts' && 'is-on']" @click="viewMode='charts'">
@@ -152,11 +152,11 @@
         <span class="bl-truncate">{{ currentDesignId ? designName : (draftName || defaultLayoutName) }}</span>
         <span v-html="BL.icon('chevronDown', 11)"></span>
         <div v-if="layoutMenu" class="ixe-layout-menu" @click.stop>
-          <div class="ixe-layout-item" :class="!currentDesignId && 'is-on'" @click="resetDesign">{{ defaultLayoutName }}</div>
+          <div class="ixe-layout-item" :class="!currentDesignId && 'is-on'" @click="guardLeave(resetDesign)">{{ defaultLayoutName }}</div>
           <template v-if="designsForMode.length">
             <div class="ixe-layout-sep"></div>
             <div v-for="d in designsForMode" :key="d.id" class="ixe-layout-item" :class="d.id===currentDesignId && 'is-on'"
-                 @click="applyDesign(d)">
+                 @click="guardLeave(() => applyDesign(d))">
               <span class="bl-grow bl-truncate">{{ d.name }}</span>
               <button class="ixe-layout-edit" title="重命名/编辑" @click.stop="editDesign(d)" v-html="BL.icon('edit', 12)"></button>
               <button class="ixe-layout-del" title="删除" @click.stop="removeDesign(d)" v-html="BL.icon('trash', 12)"></button>
@@ -166,7 +166,7 @@
           <!-- 看板模式:新建看板(保存/另存为由 maker 自带按钮承担) -->
           <template v-if="viewMode==='charts'">
             <div class="ixe-layout-sep"></div>
-            <div class="ixe-layout-item ixe-layout-new" @click="newDashboard">
+            <div class="ixe-layout-item ixe-layout-new" @click="guardLeave(newDashboard)">
               <span v-html="BL.icon('file', 13, 'var(--bl-primary)')"></span><span>新建看板</span>
             </div>
           </template>
@@ -177,21 +177,34 @@
 
     <!-- 主体:图表看板 + 右结果列 -->
     <div class="ixe-main" v-if="classId">
-      <!-- 看板模式:内嵌数据可视化设计器(按数据特征自动出图,可增删改) -->
-      <MakerEmbed v-if="viewMode==='charts'" ref="chartsRef" class="ixe-dash" :class-id="classId"
+      <!-- 看板模式:内嵌数据可视化设计器(首次进入后常驻,v-show 切换保设计态) -->
+      <MakerEmbed v-if="chartsMounted" v-show="viewMode==='charts'" ref="chartsRef" class="ixe-dash" :class-id="classId"
                   :columns="displayColumns" :filter-params="filterParams" :saved-config="savedConfig"
                   :start-in-design="dashStartDesign"
                   toolbar-target="#ixe-maker-tools"
                   @save-as="saveAs" @save-page="onSavePage" @new-dashboard="newDashboard" />
 
       <!-- 列表模式:列表探索(滚动加载 + 预览/多实例/比较) -->
-      <InstanceListView v-else ref="listRef" class="ixe-listview" :class-id="classId" :type-name="curType?.display_name"
+      <InstanceListView v-show="viewMode!=='charts'" ref="listRef" class="ixe-listview" :class-id="classId" :type-name="curType?.display_name"
                         :columns="displayColumns" :filter-params="filterParams" :default-config="listDefaultConfig"
                         @open-instance="(p)=>$emit('open-instance', p)"
                         @config-change="onListConfigChange"
                         @selection-change="(ids)=>listSelectedIds=ids" />
     </div>
     <div v-else class="ixe-pick bl-empty">从左上角下拉选择一个对象类型开始探索</div>
+
+    <!-- 未保存修改守卫 弹框(切换看板/列表时) -->
+    <div v-if="leaveGuard" class="ixe-save-mask" @click.self="guardCancel">
+      <div class="ixe-save-modal" style="width:400px">
+        <div class="ixe-save-hd"><span>未保存的修改</span></div>
+        <div class="ixe-save-body"><div style="font-size:13px;color:var(--bl-text-2);line-height:1.7">当前看板有未保存的改动,切换后将丢失。是否先保存本次修改?</div></div>
+        <div class="ixe-save-ft">
+          <button class="bl-btn" @click="guardCancel">取消</button>
+          <button class="bl-btn" @click="guardDiscard">不保存</button>
+          <button class="bl-btn bl-btn-primary" @click="guardSave">保存并切换</button>
+        </div>
+      </div>
+    </div>
 
     <!-- 保存为探索设计 弹框 -->
     <div v-if="saveModal" class="ixe-save-mask" @click.self="saveModal=false">
@@ -292,6 +305,37 @@ const props = defineProps({
 defineEmits(['open-instance'])
 
 const viewMode = ref('list')   // list(列表,默认) | charts(看板/可视化设计器)
+/* 看板一旦挂载就常驻(v-show 切换),避免切到列表再切回销毁 → 丢失设计态/未保存布局 */
+const chartsMounted = ref(false)
+let chartsLoadedOnce = false   // 该对象类型的看板是否已首次加载;返回看板不再重载覆盖现场
+
+/* —— 看板未保存修改守卫:设计模式下改了图表,切换看板/列表时弹提示 —— */
+const leaveGuard = ref(null)   // { proceed } 有未保存修改拦截切换时;null=无
+let dashBaseline = null         // 上次加载/保存后的基线 JSON
+function snapshotDash() { try { const c = chartsRef.value?.getConfig?.(); dashBaseline = c ? JSON.stringify(c) : null } catch { dashBaseline = null } }
+function scheduleSnapshot() { nextTick(() => setTimeout(snapshotDash, 700)) }   // 等 maker 重建渲染稳定后取基线
+function dashDirty() {
+  if (viewMode.value !== 'charts' || !chartsRef.value || dashBaseline == null) return false
+  try { return JSON.stringify(chartsRef.value.getConfig() || null) !== dashBaseline } catch { return false }
+}
+function guardLeave(proceed) {
+  layoutMenu.value = false
+  if (dashDirty()) leaveGuard.value = { proceed }
+  else proceed()
+}
+async function guardSave() {
+  try { await onSavePage(chartsRef.value.getConfig(), false); snapshotDash() } catch { /* 拦截器已弹错误 */ }
+  const p = leaveGuard.value?.proceed; leaveGuard.value = null; if (p) p()
+}
+function guardDiscard() { const p = leaveGuard.value?.proceed; leaveGuard.value = null; if (p) p() }
+function guardCancel() { leaveGuard.value = null }
+watch(viewMode, v => {
+  if (v === 'charts') {
+    chartsMounted.value = true
+    // display:none → block 后 ECharts 需重算尺寸
+    nextTick(() => setTimeout(() => window.dispatchEvent(new Event('resize')), 60))
+  }
+})
 
 const rootEl = ref(null)
 const searchPanelOpen = ref(false)
@@ -407,6 +451,7 @@ async function onSavePage(config, isAuto) {
       if (!isAuto) BL.success('已保存为默认看板')
     } catch { /* http 拦截器已弹错误 */ }
   }
+  snapshotDash()   // 保存后重置"未保存"基线
 }
 
 /* 列表模式下勾选的实例 id */
@@ -548,8 +593,8 @@ function applyDesign(d) {
   // pills 补回唯一 id(老数据可能无 id)
   pills.value = (d.pills || []).map(p => ({ ...p, id: p.id != null ? p.id : ++pidSeq }))
   page.value = 1
-  // 整盘恢复看板布局(MakerEmbed 监听 savedConfig 变化重建)
-  savedConfig.value = d.layoutConfig || null
+  // 整盘恢复看板布局(MakerEmbed 监听 savedConfig 变化重建);仅看板设计动 savedConfig,列表设计不动(否则重建隐藏的 maker → 回预览态)
+  if ((d.viewMode || 'charts') === 'charts') savedConfig.value = d.layoutConfig || null
   reload()
 }
 async function resetDesign() {
@@ -745,7 +790,8 @@ async function loadMeta() {
   } catch { columns.value = []; links.value = [] }
   loadDesigns()
   loadDefaultList()   // 加载该对象类型的默认列表列配置
-  if (viewMode.value === 'charts') enterChartsDefault()   // 看板:有默认板→加载,无→弹推荐
+  chartsLoadedOnce = false   // 新对象类型 → 看板需重新加载默认板
+  if (viewMode.value === 'charts') { chartsLoadedOnce = true; enterChartsDefault() }   // 看板:有默认板→加载,无→弹推荐
   else savedConfig.value = null
   reload()
 }
@@ -874,18 +920,22 @@ const vClickOutside = {
 /* 切换看板/列表模式:保存旧模式所选设计,恢复新模式上次所选(无则回到该模式默认) */
 watch(viewMode, (nv, ov) => {
   if (ov) lastByMode[ov] = currentDesignId.value
+  // 看板已首次加载后再返回 → 保留现场,不重载覆盖(修复:切到列表再切回丢失设计/未保存布局)
+  if (nv === 'charts' && chartsLoadedOnce) return
   const targetId = lastByMode[nv]
   const d = targetId ? designsForType.value.find(x => x.id === targetId) : null
-  if (d) { applyDesign(d); return }              // 恢复该模式上次所选设计(含其布局/筛选)
+  if (d) { applyDesign(d); if (nv === 'charts') chartsLoadedOnce = true; return }  // 恢复该模式上次所选设计
   // 该模式无历史选中 → 默认
   currentDesignId.value = null
   designName.value = '默认探索布局'
   draftName.value = ''
   dashStartDesign.value = false
-  if (nv === 'charts') enterChartsDefault()   // 看板:有默认板→加载,无→弹推荐
-  else savedConfig.value = null
+  if (nv === 'charts') { chartsLoadedOnce = true; enterChartsDefault() }   // 看板:有默认板→加载,无→弹推荐
+  // 列表模式不触碰 savedConfig(它只属于看板;置空会重建隐藏的 maker → 切回时变预览态)
 })
 watch(() => props.initialClassId, (v) => { if (v && v !== classId.value) selectType(v) })
+// 看板配置换板加载 → 等渲染稳定后取"未保存"基线(list 模式不触碰 savedConfig,此处只在 charts 生效)
+watch(savedConfig, () => { if (viewMode.value === 'charts') scheduleSnapshot() })
 onMounted(() => { if (classId.value) loadMeta() })
 </script>
 
