@@ -125,7 +125,7 @@
                       </td>
                       <td class="t-left"><span class="bl-mono bl-truncate" :title="r.api_name">{{ r.api_name }}</span></td>
                       <td class="t-center">
-                        <span :class="['bl-tag', r.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']"><StatusTag :status="r.status" /></span>
+                        <StatusTag :status="r.status" />
                       </td>
                       <td class="t-left"><span class="bl-muted vtp-time">{{ shortTime(r.update_time) }}</span></td>
                     </tr>

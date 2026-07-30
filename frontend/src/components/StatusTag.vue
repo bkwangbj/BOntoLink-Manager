@@ -15,11 +15,13 @@ const props = defineProps({
 })
 
 const label = ref('—')
-const { getValue } = useDict()
+const { getDict, getValue } = useDict()
 
-watch(() => props.status, (s) => {
+/* 必须等字典加载完再取值: 否则首屏 getValue 命中空缓存返回码值, status 不变就永远停在 "1" */
+watch(() => props.status, async (s) => {
   if (s == null || s === '') { label.value = '—'; return }
-  const v = getValue(props.dictCode, String(s))
-  label.value = v || String(s)
+  label.value = String(s)
+  await getDict(props.dictCode)
+  label.value = getValue(props.dictCode, String(s)) || String(s)
 }, { immediate: true })
 </script>

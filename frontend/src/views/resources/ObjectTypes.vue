@@ -122,9 +122,7 @@
                       <button class="bl-btn bl-btn-text bl-btn-icon bl-btn-sm" title="复制 RID" @click.stop="copyText(row.data.rid)" v-html="BL.icon('copy', 11)"></button>
                     </td>
                     <td>
-                      <span :class="['bl-tag', row.data.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']">
-                        <StatusTag :status="row.data.status" />
-                      </span>
+                      <StatusTag :status="row.data.status" />
                     </td>
                     <td @click.stop>
                       <div class="bl-row" style="gap:0">

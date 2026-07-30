@@ -72,7 +72,7 @@
                 <td class="bl-truncate" style="max-width:220px" :title="r.rdfs_comment">{{ r.rdfs_comment || '—' }}</td>
                 <td><span class="bl-mono bl-muted bl-truncate" :title="r.rid" style="max-width:140px;display:inline-block">{{ r.rid }}</span></td>
                 <td>
-                  <span :class="['bl-tag', r.status === 1 ? 'bl-tag-success' : 'bl-tag-danger']"><StatusTag :status="r.status" /></span>
+                  <StatusTag :status="r.status" />
                 </td>
                 <td @click.stop class="t-actions">
                   <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" :title="r.status===1?'禁用':'启用'" @click="toggleOne(r)" v-html="BL.icon('zap', 12)"></button>
