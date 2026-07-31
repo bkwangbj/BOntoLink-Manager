@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -28,7 +26,8 @@ public class PhysicalTableService {
     @Autowired private PhysicalTableMapper mapper;
     @Autowired private DataSourceConnector connector;
     private final ObjectMapper json = new ObjectMapper();
-    private static final DateTimeFormatter TS = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    private Timestamp now() { return new Timestamp(System.currentTimeMillis()); }
 
     /** 列出某数据源已落库的物理表(dsId 为空则全部), 并把 columns_json 解析为 columns 数组 */
     public List<Map<String, Object>> list(String dsId) {
@@ -44,7 +43,7 @@ public class PhysicalTableService {
         SysDataSource ds = dsService.get(dsId);
         if (ds == null) throw new IllegalArgumentException("数据源不存在");
         List<Map<String, Object>> current = readFromDatabase(ds);
-        String now = LocalDateTime.now().format(TS);
+        Timestamp now = now();
 
         // 已存在: physical_table -> 行
         Map<String, Map<String, Object>> existing = new LinkedHashMap<>();
@@ -104,7 +103,7 @@ public class PhysicalTableService {
 
     /** 修改中文名 */
     public Map<String, Object> updateName(String id, String displayName) {
-        mapper.updateDisplayName(id, displayName, LocalDateTime.now().format(TS));
+        mapper.updateDisplayName(id, displayName, now());
         Map<String, Object> r = mapper.findById(id);
         if (r != null) enrich(r);
         return r;

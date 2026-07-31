@@ -408,14 +408,19 @@ public class CategoryService {
         }
         Set<String> domainCodes = new HashSet<>();
         Set<String> groupCodes = new HashSet<>();
+        Set<String> groupIds = new HashSet<>();
         for (BizCategory c : subtree) {
-            if (c.getCategoryCode() == null) continue;
-            if (c.getCategoryType() != null && c.getCategoryType() == 3) groupCodes.add(c.getCategoryCode());
-            else domainCodes.add(c.getCategoryCode());
+            if (c.getCategoryType() != null && c.getCategoryType() == 3) {
+                if (c.getCategoryCode() != null) groupCodes.add(c.getCategoryCode());
+                if (c.getId() != null) groupIds.add(c.getId());
+            } else {
+                if (c.getCategoryCode() != null) domainCodes.add(c.getCategoryCode());
+            }
         }
         Set<String> classIds = new HashSet<>();
         if (!domainCodes.isEmpty()) classIds.addAll(ontologyMapper.findClassIdsByCategoryCodes(domainCodes));
         if (!groupCodes.isEmpty())  classIds.addAll(ontologyMapper.findClassIdsByGroupCategoryCodes(groupCodes));
+        if (!groupIds.isEmpty())    classIds.addAll(ontologyMapper.findClassIdsByGroupIds(groupIds));
         return classIds;
     }
 
@@ -464,6 +469,7 @@ public class CategoryService {
 
         Set<String> domainCodes = new HashSet<>();  // 行业/领域 节点的 category_code → 直查 ont_class
         Set<String> groupCodes  = new HashSet<>();  // 分组节点的 category_code → 走 ont_biz_group_class
+        Set<String> groupIds    = new HashSet<>();  // 分组节点的 id（与 ont_biz_group.id 复用）
         Set<String> nsCodes     = new HashSet<>();
         for (BizCategory c : subtree) {
             if (c.getCategoryCode() != null) {
@@ -473,12 +479,16 @@ public class CategoryService {
                     domainCodes.add(c.getCategoryCode());
                 }
             }
+            if (c.getCategoryType() != null && c.getCategoryType() == 3 && c.getId() != null) {
+                groupIds.add(c.getId());
+            }
             if (c.getNsCode() != null) nsCodes.add(c.getNsCode());
         }
 
         Set<String> classIds = new HashSet<>();
         if (!domainCodes.isEmpty()) classIds.addAll(ontologyMapper.findClassIdsByCategoryCodes(domainCodes));
         if (!groupCodes.isEmpty())  classIds.addAll(ontologyMapper.findClassIdsByGroupCategoryCodes(groupCodes));
+        if (!groupIds.isEmpty())    classIds.addAll(ontologyMapper.findClassIdsByGroupIds(groupIds));
 
         int childCount    = idx.getOrDefault(id, Collections.emptyList()).size();
         int classCount    = classIds.size();

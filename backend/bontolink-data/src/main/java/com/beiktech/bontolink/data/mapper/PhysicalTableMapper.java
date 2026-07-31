@@ -46,7 +46,7 @@ public interface PhysicalTableMapper {
     /** 改中文名 */
     @Update("UPDATE ont_physical_table SET display_name = #{displayName}, update_time = #{updateTime} WHERE id = #{id}")
     int updateDisplayName(@Param("id") String id, @Param("displayName") String displayName,
-                          @Param("updateTime") String updateTime);
+                          @Param("updateTime") java.sql.Timestamp updateTime);
 
     // 删除单条物理表记录
     @Delete("DELETE FROM ont_physical_table WHERE id = #{id}")

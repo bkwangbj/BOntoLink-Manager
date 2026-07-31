@@ -65,7 +65,7 @@ public interface TypeClassMapper {
 
     @Update("UPDATE ont_type_class SET is_deprecated = #{deprecated}, deprecated_reason = #{reason}, updated_at = #{updatedAt} WHERE id = #{id}")
     int setDeprecated(@Param("id") String id, @Param("deprecated") int deprecated,
-                      @Param("reason") String reason, @Param("updatedAt") String updatedAt);
+                      @Param("reason") String reason, @Param("updatedAt") java.sql.Timestamp updatedAt);
 
     @Delete("DELETE FROM ont_type_class WHERE id = #{id}")
     int delete(@Param("id") String id);

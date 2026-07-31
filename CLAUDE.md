@@ -20,7 +20,9 @@
 - **Java 21** + **Spring Boot**
 - **MyBatis** (注解式 SQL,`mapUnderscoreToCamelCase: true`)
 - **SQLite** (单机文件 `backend/bontolink.db`)
+- **PostgreSQL** (生产环境,方言兼容见"数据库命名"章节)
 - **Maven** 构建
+- **FastJSON2** (JSON 序列化,已排除 fastjson v1 传递依赖)
 - **响应包装**: `R<T> = { code, msg, data }`,失败 `R.error(400, "...")`
 
 ### 前端
@@ -76,6 +78,14 @@ until curl -sf http://localhost:8088/bontolink/api/health > /dev/null; do sleep 
 curl -s http://localhost:8088/bontolink/api/xxx | head -c 600
 ```
 
+### Maven 依赖管理
+- **JSON 库**: 统一用 **FastJSON2** (包名 `com.alibaba.fastjson2`)
+  - 父 pom `dependencyManagement` 统一版本号: `${fastjson2.version}`
+  - **已排除 fastjson v1 传递依赖**(`fastjson2` 自身依赖 + `milvus-sdk-java` 传递依赖)
+  - 新代码 `import com.alibaba.fastjson2.JSON` / `JSONObject` / `JSONArray`
+  - 禁止引入 `com.alibaba.fastjson.*` (v1 包名)
+- 验证: `mvn dependency:tree -Dincludes=com.alibaba:fastjson` 应返回空(只保留 fastjson2)
+
 ---
 
 ## 必读关键约定
@@ -100,7 +110,14 @@ curl -s http://localhost:8088/bontolink/api/xxx | head -c 600
 - **表名**: `ont_xxx_yyy` (lowercase + underscore)
 - **主键**: `id TEXT PRIMARY KEY` 格式 `"{prefix}-" + UUID`(如 `class-...`,`link-types-...`,`shared-properties-...`)
 - **字段**: `snake_case` (`category_code`,`prop_type`,`created_at`)
-- **时间戳**: `TEXT NOT NULL DEFAULT (datetime('now','localtime'))`
+- **时间戳列类型**: 
+  - SQLite: `TEXT` (格式 `'yyyy-MM-dd HH:mm:ss'`)
+  - PostgreSQL: `TIMESTAMP` (无时区)
+- **时间戳默认值**: `DEFAULT CURRENT_TIMESTAMP` (两方言通用)
+- **Java 更新时间戳**: 
+  - **不要**传字符串 `"2026-07-30 10:00:00"` (PG 拒绝隐式转换)
+  - **方案 A**(推荐): SQL 里直接 `updated_at = CURRENT_TIMESTAMP`，不从 Java 传参
+  - **方案 B**: 传 `java.sql.Timestamp` 对象，MyBatis 自动适配两方言
 - **状态**: `status INTEGER` (1=启用/0=禁用) 或 `'active'/'inactive'/'deprecated'`(EnumTypes / LinkTypes)
 - **RID**: `rid TEXT` 格式 `"ri.ont.{module}.{code}"`
 
@@ -215,6 +232,7 @@ PageHeader (标题 + 统计 + 筛选 + 搜索 + 新建按钮)
 
 | 现象 | 根因 | 修复 |
 |---|---|---|
+| PG 报 `updated_at` 字段类型错误 | 传 `"2026-07-30 10:00:00"` 字符串给 TIMESTAMP 列,PG 拒绝隐式转换(SQLite 接受) | Mapper 参数改 `java.sql.Timestamp`,Controller 里 `row.put("updatedAt", new Timestamp(System.currentTimeMillis()))` |
 | sticky 表格出现空白列 | `table-layout: auto` 实际列宽 ≠ sticky `left:` 偏移 | 用 `table-layout: fixed` 或移除 sticky |
 | sticky 表头横滚被覆盖 | 角落 sticky 列 z-index 不够 | 角落格 `z-index: 4`(普通 sticky 3) |
 | 抽屉里弹模态被遮挡 | 模态 z-index ≤ 抽屉(1010) | 大弹框 z-index ≥ 1200 |

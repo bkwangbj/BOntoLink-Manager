@@ -6,8 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.sql.Timestamp;
 import java.util.*;
 
 /** 类型类绑定实例接口。路径:/api/tc-bind */
@@ -17,8 +16,7 @@ public class TypeClassBindController {
 
     @Autowired private TypeClassBindMapper mapper;
     private final ObjectMapper om = new ObjectMapper();
-    private static final DateTimeFormatter TS = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private String now() { return LocalDateTime.now().format(TS); }
+    private Timestamp now() { return new Timestamp(System.currentTimeMillis()); }
     private String toJsonStr(Object v) {
         if (v == null) return null;
         if (v instanceof String) return (String) v;

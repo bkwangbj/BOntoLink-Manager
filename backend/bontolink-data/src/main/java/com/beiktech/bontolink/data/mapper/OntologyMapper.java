@@ -201,6 +201,12 @@ public interface OntologyMapper {
             "</script>")
     java.util.List<String> findClassIdsByGroupCategoryCodes(@Param("codes") java.util.Collection<String> codes);
 
+    /** 通过分组节点的 id（与 ont_biz_group.id 复用）直查关联的 class_id */
+    @Select("<script>SELECT DISTINCT ref_id FROM ont_biz_group_class WHERE group_type = 'object_types' AND group_id IN " +
+            "<foreach collection='ids' item='i' open='(' separator=',' close=')'>#{i}</foreach>" +
+            "</script>")
+    java.util.List<String> findClassIdsByGroupIds(@Param("ids") java.util.Collection<String> ids);
+
     /** 按 class_id 集合统计出向关系数 */
     @Select("<script>SELECT COUNT(*) FROM ont_class_link WHERE source_class_id IN " +
             "<foreach collection='ids' item='i' open='(' separator=',' close=')'>#{i}</foreach>" +

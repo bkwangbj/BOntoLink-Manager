@@ -9,8 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -25,9 +24,8 @@ public class TypeClassController {
     @Autowired private TypeClassCategoryMapper categoryMapper;
     @Autowired private TypeClassBindMapper bindMapper;
     private final ObjectMapper om = new ObjectMapper();
-    private static final DateTimeFormatter TS = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private String now() { return LocalDateTime.now().format(TS); }
+    private Timestamp now() { return new Timestamp(System.currentTimeMillis()); }
 
     private List<String> jsonList(Object v) {
         if (v instanceof List<?> l) { List<String> r = new ArrayList<>(); for (Object o : l) r.add(String.valueOf(o)); return r; }

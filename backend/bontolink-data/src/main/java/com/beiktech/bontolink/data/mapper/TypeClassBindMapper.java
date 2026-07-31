@@ -51,7 +51,7 @@ public interface TypeClassBindMapper {
 
     /** 只更新绑定参数值 */
     @Update("UPDATE ont_type_class_bind SET value = #{value}, updated_at = #{updatedAt} WHERE id = #{id}")
-    int updateValue(@Param("id") String id, @Param("value") String value, @Param("updatedAt") String updatedAt);
+    int updateValue(@Param("id") String id, @Param("value") String value, @Param("updatedAt") java.sql.Timestamp updatedAt);
 
     /** 渲染解析:某对象类型下全部属性的类型类绑定(联属性名 + 类型类元数据),供图表/图谱真实渲染 */
     @Select("""

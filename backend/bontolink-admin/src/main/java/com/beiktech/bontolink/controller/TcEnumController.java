@@ -5,8 +5,7 @@ import com.beiktech.bontolink.data.mapper.TcEnumMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.sql.Timestamp;
 import java.util.*;
 
 /** 类型类统一枚举字典接口。路径:/api/tc-enum */
@@ -15,8 +14,7 @@ import java.util.*;
 public class TcEnumController {
 
     @Autowired private TcEnumMapper mapper;
-    private static final DateTimeFormatter TS = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private String now() { return LocalDateTime.now().format(TS); }
+    private Timestamp now() { return new Timestamp(System.currentTimeMillis()); }
 
     /** 全部枚举名 */
     @GetMapping("/names")

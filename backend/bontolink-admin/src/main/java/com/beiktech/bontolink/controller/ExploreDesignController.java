@@ -6,8 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -22,9 +21,8 @@ public class ExploreDesignController {
 
     @Autowired private ExploreDesignMapper mapper;
     private final ObjectMapper om = new ObjectMapper();
-    private static final DateTimeFormatter TS = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private String now() { return LocalDateTime.now().format(TS); }
+    private Timestamp now() { return new Timestamp(System.currentTimeMillis()); }
 
     /** 把行的 config(JSON 字符串)还原为对象返回给前端 */
     private Map<String, Object> unwrap(Map<String, Object> row) {

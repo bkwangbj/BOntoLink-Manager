@@ -34,6 +34,7 @@ backend/bontolink.db-wal
 backend/db-backup/
 backend/flyway-run.log
 *.cmd
+**/logs/
 backend/mvnw
 .workbuddy
 # JRebel 和临时文件
