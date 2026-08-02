@@ -321,6 +321,19 @@ export const datasourceApi = {
   resizePool:  (id, maxPoolSize) => http.post(`/datasource/${id}/pool/resize`, { maxPoolSize })
 }
 
+/* 外部数据源(HTTP 接口类), 与上面的数据库类数据源在列表页合并展示 */
+export const extDatasourceApi = {
+  list:       () => http.get('/ext-datasource'),
+  get:        (id) => http.get(`/ext-datasource/${id}`),
+  create:     (data) => http.post('/ext-datasource', data),
+  update:     (id, data) => http.put(`/ext-datasource/${id}`, data),
+  remove:     (id) => http.delete(`/ext-datasource/${id}`),
+  batchRemove:(ids) => http.post('/ext-datasource/batch-delete', { ids }),
+  test:       (id) => http.post(`/ext-datasource/${id}/test`),
+  groups:     (id) => http.get(`/ext-datasource/${id}/groups`),
+  interfaces: (id) => http.get(`/ext-datasource/${id}/interfaces`),
+}
+
 /* 物理表/视图元数据 — 落库于 ont_physical_table, 同步源为后端自身库 */
 export const physicalTableApi = {
   list:       (dsId) => http.get('/physical-tables', { params: dsId ? { dsId } : {} }),

@@ -60,6 +60,7 @@
               <th>
                 <span class="th-sort" @click="toggleSort('refCount')">引用数<span class="th-arrow">{{ sortArrow('refCount') }}</span></span>
               </th>
+              <th v-if="hasExt">接口数</th>
               <th>
                 <span class="th-sort" @click="toggleSort('status')">状态<span class="th-arrow">{{ sortArrow('status') }}</span></span>
               </th>
@@ -70,7 +71,7 @@
             <template v-for="row in displayRows" :key="row.key">
               <!-- 分组标题行 -->
               <tr v-if="row.type==='group'" class="ds-group-row" @click="toggleDomain(row.key)">
-                <td colspan="6">
+                <td :colspan="hasExt ? 7 : 6">
                   <span class="ds-group-chev" v-html="BL.icon(row.collapsed ? 'chevronRight' : 'chevronDown', 12)"></span>
                   <span class="ds-group-label">{{ row.label }}</span>
                   <span class="ds-group-count">{{ row.count }}</span>
@@ -94,6 +95,12 @@
                   <span class="bl-truncate" :title="dsDomainPath(row.data)">{{ dsIndustry(row.data) }}</span>
                 </td>
                 <td><span class="bl-tag">{{ row.data.refCount || 0 }}</span></td>
+                <!-- 外部接口类才有接口数, 点击进入接口管理页 -->
+                <td v-if="hasExt">
+                  <a v-if="row.data.isExt" class="ds-api-link" :title="'管理该数据源的接口'" @click.stop="openApiManager(row.data)">
+                    {{ row.data.apiCount || 0 }}<span v-html="BL.icon('chevronRight', 11)"></span></a>
+                  <span v-else class="bl-muted" style="font-size:12px">—</span>
+                </td>
                 <td>
                   <span :class="['bl-tag', statusTag(row.data).cls]">{{ statusTag(row.data).text }}</span>
                 </td>
@@ -411,6 +418,12 @@
       </aside>
       </transition>
     </div>
+
+    <!-- 新建: 先选数据源形式 -->
+    <DsKindPicker v-model:open="kindPickerOpen" @pick="onKindPicked" />
+    <!-- 外部接口类数据源的配置抽屉 -->
+    <ExtDatasourceDrawer v-model:open="extDrawerOpen" :record="extRecord" :domain-options="domainOptions"
+                         :default-category="selectedCategoryCode || ''" @saved="loadAll" />
   </div>
 </template>
 
@@ -420,7 +433,9 @@ import { useRoute, useRouter } from 'vue-router'
 import PageHeader from '@/components/PageHeader.vue'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import { BL } from '@/lib/bl.js'
-import { datasourceApi, namespaceApi, categoryApi, physicalTableApi } from '@/api'
+import { datasourceApi, extDatasourceApi, namespaceApi, categoryApi, physicalTableApi } from '@/api'
+import DsKindPicker from './datasource/DsKindPicker.vue'
+import ExtDatasourceDrawer from './datasource/ExtDatasourceDrawer.vue'
 import CategoryTreeFilter from '@/components/CategoryTreeFilter.vue'
 import Pager from '@/components/Pager.vue'
 import { usePagination } from '@/lib/usePagination'
@@ -692,7 +707,12 @@ function collapseAllGroups() {
 }
 
 async function loadAll() {
-  rows.value    = await datasourceApi.list().catch(() => [])
+  const [dbList, extList] = await Promise.all([
+    datasourceApi.list().catch(() => []),
+    extDatasourceApi.list().catch(() => []),
+  ])
+  /* 两类数据源合并展示: 外部接口类归一成同样的字段名, 并打上 isExt 标记 */
+  rows.value = [...dbList, ...(extList || []).map(normalizeExt)]
   overview.value= await datasourceApi.overview().catch(() => ({}))
   driverMap.value = await datasourceApi.drivers().catch(() => ({}))
   if (!domainOptions.value.length) {
@@ -840,14 +860,33 @@ function trendPoints(key) {
   return arr.map((_, i) => `${xs[i].toFixed(1)},${norm[i].toFixed(1)}`).join(' ')
 }
 
-function openCreate() {
+/* 新建先选形式(数据库 / 外部接口), 两者配置项与详情页完全不同 */
+const kindPickerOpen = ref(false)
+const extDrawerOpen = ref(false)
+const extRecord = ref(null)
+function openCreate() { kindPickerOpen.value = true }
+function onKindPicked(kind) {
+  if (kind === 'ext') { extRecord.value = null; extDrawerOpen.value = true; return }
   Object.keys(form).forEach(k => delete form[k])
   Object.assign(form, { dsType:'mysql', status:1, refCount:0, maxConn:100, categoryCode: selectedCategoryCode.value || '' })
   selected.value = null
   drawerTab.value = 'config'
   drawerOpen.value = true
 }
+/* 外部数据源字段归一成列表页统一的驼峰命名 */
+function normalizeExt(r) {
+  return { ...r, id: r.id, isExt: true,
+    dsName: r.ds_name, dsCode: r.ds_code, dsType: r.ds_type,
+    categoryCode: r.category_code, status: Number(r.status ?? 1),
+    refCount: 0, apiCount: Number(r.api_count ?? 0),
+    connectStatus: Number(r.status ?? 1) === 1 ? 'online' : 'offline' }
+}
+const hasExt = computed(() => rows.value.some(r => r.isExt))
+function openApiManager(d) {
+  BL.info(`接口管理页开发中：${d.dsName} 共 ${d.apiCount || 0} 个接口`)
+}
 function openEdit(d) {
+  if (d?.isExt) { extRecord.value = d; extDrawerOpen.value = true; return }
   // 先清掉旧字段，再覆盖；避免新数据缺字段时残留前一条的值
   Object.keys(form).forEach(k => delete form[k])
   Object.assign(form, d)
@@ -880,7 +919,8 @@ async function doTest(d) {
 async function doDelete(d) {
   const ok = await BL.confirm({ title:'删除数据源', content:`确定删除「${d.dsName}」？删除后关联引用会失效。`, danger:true, okText:'删除' })
   if (!ok) return
-  await datasourceApi.remove(d.id)
+  if (d.isExt) await extDatasourceApi.remove(d.id)
+  else await datasourceApi.remove(d.id)
   BL.success('已删除')
   if (selected.value?.id === d.id) selected.value = null
   await loadAll()
@@ -1161,6 +1201,9 @@ watch(() => selected.value?.id, () => { monTab.value = 'basic' })
 .hd-filter { width: 130px; }
 .ds-name { font-weight: 500; color: var(--bl-text-1); }
 .ds-code { font-size: var(--bl-fs-11); }
+/* 外部接口类的接口数, 点击进接口管理页 */
+.ds-api-link { display: inline-flex; align-items: center; gap: 2px; color: var(--bl-primary); cursor: pointer; font-size: 12.5px; }
+.ds-api-link:hover { text-decoration: underline; }
 
 .cfg-hd {
   height: 48px; padding: 0 14px;
