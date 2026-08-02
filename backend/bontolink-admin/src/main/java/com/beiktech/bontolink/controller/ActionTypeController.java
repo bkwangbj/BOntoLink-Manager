@@ -388,7 +388,8 @@ public class ActionTypeController {
     }
 
     private static final Map<Integer, String> VALUE_SOURCE_LABEL = Map.of(
-        1, "表单参数", 2, "静态值", 3, "当前用户", 4, "系统时间", 5, "关联对象属性");
+        1, "表单参数", 2, "静态值", 3, "当前用户", 4, "系统时间",
+        5, "关联对象属性", 6, "主对象", 7, "本动作创建的对象");
 
     /** 按值来源解析取值 */
     private Object resolveValue(int vs, Object content, String propCode, Map<String, Object> params, String user, String now) {
@@ -402,6 +403,8 @@ public class ActionTypeController {
             case 3: return user;                                // 当前用户
             case 4: return now;                                 // 系统时间
             case 5: return "[关联对象." + (c.isEmpty() ? propCode : c) + "]"; // 关联对象属性(占位)
+            case 6: return "[主对象." + (c.isEmpty() ? propCode : c) + "]";   // 主对象属性(占位, 需详情页上下文)
+            case 7: return "[本动作新建." + c + "]";                          // 前序创建规则的产物(占位, 需事务内实例引用)
             default: return c;
         }
     }

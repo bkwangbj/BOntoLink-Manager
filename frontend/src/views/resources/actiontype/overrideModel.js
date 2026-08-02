@@ -1,17 +1,24 @@
-/* 覆盖规则 (Overrides) 数据模型与摘要生成 — 文档 1.4.4.3 */
+/* 覆盖规则 (Overrides) 数据模型与摘要生成 — 文档 1.4.4.3
+ * 运算符与类型兼容判断统一取自 conditionModel, 此处只保留覆盖规则特有的语义(动作、模板、冗余判定)。
+ */
+import { pickOps, opsFor as opsForAll, numLike as numLikeAll, needValue, normalizeOp, condReady as condReadyAll } from './conditionModel.js'
 
 let seq = 0
 export function ovUid() { return 'ov-' + Date.now().toString(36) + '-' + (seq++) }
 
-/* Then 动作类型: 可见 / 必填 / 禁用 / 默认值 / 约束规则 */
+/* Then 动作类型: 可见 / 必填 / 禁用 */
 export const OV_ACTIONS = [
   { value: 'visible', label: '可见', bool: true },
   { value: 'required', label: '必填', bool: true },
   { value: 'disabled', label: '禁用', bool: true },
+]
+/* 已下线的动作类型 — 仅用于老数据回显, 不再出现在下拉里 */
+const OV_LEGACY_ACTIONS = [
   { value: 'default', label: '默认值', bool: false },
   { value: 'constraint', label: '约束规则', bool: false },
 ]
-export const OV_ACTION_LABEL = Object.fromEntries(OV_ACTIONS.map(a => [a.value, a.label]))
+export const OV_ACTION_LABEL = Object.fromEntries([...OV_ACTIONS, ...OV_LEGACY_ACTIONS].map(a => [a.value, a.label]))
+export function ovActionMeta(type) { return OV_ACTIONS.find(a => a.value === type) || OV_LEGACY_ACTIONS.find(a => a.value === type) || null }
 
 /* 条件模板: 文档只允许「基于当前用户」「基于参数」两类 */
 export const OV_SUBJECTS = [
@@ -25,25 +32,14 @@ export const OV_USER_FIELDS = [
   { code: 'org', name: '所属部门', dataType: 'string' },
 ]
 
-export const OV_OPERATORS = [
-  { key: 'eq', label: '等于', dt: 'any' },
-  { key: 'ne', label: '不等于', dt: 'any' },
-  { key: 'contains', label: '包含', dt: 'str' },
-  { key: 'startsWith', label: '开头是', dt: 'str' },
-  { key: 'gt', label: '大于', dt: 'num' },
-  { key: 'lt', label: '小于', dt: 'num' },
-  { key: 'empty', label: '为空', dt: 'any' },
-  { key: 'notEmpty', label: '不为空', dt: 'any' },
-]
-export const OV_NO_VALUE_OPS = ['empty', 'notEmpty']
+/* 覆盖规则沿用的运算符子集与顺序 */
+export const OV_OPERATORS = pickOps(['eq', 'ne', 'contains', 'startsWith', 'gt', 'lt', 'empty', 'notEmpty'])
+export const OV_NO_VALUE_OPS = OV_OPERATORS.filter(o => o.noValue).map(o => o.key)
 export const OV_OP_LABEL = Object.fromEntries(OV_OPERATORS.map(o => [o.key, o.label]))
 const LOGIC_LABEL = { all: '全部满足', any: '任一满足', none: '全部不满足' }
 
-export function numLike(dt) { return /(int|decimal|double|float|number|date)/i.test(String(dt || '')) }
-export function opsFor(dataType) {
-  const isNum = numLike(dataType)
-  return OV_OPERATORS.filter(o => o.dt === 'any' || (o.dt === 'num' ? isNum : !isNum))
-}
+export const numLike = numLikeAll
+export function opsFor(dataType) { return opsForAll(dataType, OV_OPERATORS) }
 
 /* —— 空白结构 —— */
 export function emptyCondGroup() { return { _k: ovUid(), type: 'group', logic: 'all', children: [] } }
@@ -56,17 +52,13 @@ export function emptyBlock(presetType) {
 }
 
 /* —— 单条条件 —— */
-export function condReady(c) {
-  if (!c || !c.subject || !c.field || !c.operator) return false
-  if (OV_NO_VALUE_OPS.includes(c.operator)) return true
-  return String(c.value ?? '').trim() !== ''
-}
+export const condReady = condReadyAll
 export function condText(c) {
   if (!c || !c.subject) return '在右侧配置条件…'
   const who = c.subject === 'user' ? '当前用户' : '参数'
   const f = c.fieldName || c.field || '(未选属性)'
-  const op = OV_OP_LABEL[c.operator] || '(未选运算符)'
-  if (OV_NO_VALUE_OPS.includes(c.operator)) return `${who} ${f} ${op}`
+  const op = OV_OP_LABEL[normalizeOp(c.operator)] || '(未选运算符)'
+  if (!needValue(c.operator)) return `${who} ${f} ${op}`
   return `${who} ${f} ${op} ${String(c.value ?? '').trim() || '(未填值)'}`
 }
 
@@ -80,7 +72,7 @@ export function ifSummary(group) {
 }
 export function actionText(a) {
   const label = OV_ACTION_LABEL[a.type] || a.type
-  const meta = OV_ACTIONS.find(x => x.value === a.type)
+  const meta = ovActionMeta(a.type)
   if (meta && meta.bool) return `${a.value ? '' : '非'}${label}`
   if (a.type === 'default') return `默认值 = ${String(a.value ?? '').trim() || '(空)'}`
   return `约束: ${String(a.value ?? '').trim() || '(未填)'}`
@@ -99,7 +91,7 @@ export function blockTitle(block) {
 }
 /* 覆盖值与字段全局默认一致 → 冗余 */
 export function isRedundant(a, defaults) {
-  const meta = OV_ACTIONS.find(x => x.value === a.type)
+  const meta = ovActionMeta(a.type)
   if (!meta || !meta.bool || !defaults) return false
   return Number(defaults[a.type] ?? -1) === Number(a.value)
 }
@@ -130,7 +122,7 @@ function normalizeGroup(g) {
     _k: g._k || ovUid(), type: 'group', logic: g.logic || 'all',
     children: g.children.map(ch => ch.type === 'group' ? normalizeGroup(ch)
       : { _k: ch._k || ovUid(), type: 'cond', subject: ch.subject || '', field: ch.field || '', fieldName: ch.fieldName || '',
-          dataType: ch.dataType || '', operator: ch.operator || '', value: ch.value ?? '' }),
+          dataType: ch.dataType || '', operator: normalizeOp(ch.operator), value: ch.value ?? '' }),
   }
 }
 /* 存库前剔除内部 key */

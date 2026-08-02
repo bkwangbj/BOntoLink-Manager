@@ -95,49 +95,54 @@
                 <div v-else class="acw-table-wrap">
                   <table class="bl-table acw-map-table">
                     <colgroup>
-                      <col style="width:38px" /><col style="width:104px" /><col style="width:88px" /><col style="width:72px" />
-                      <col style="width:70px" /><col style="width:100px" /><col style="width:104px" /><col style="min-width:110px" />
-                      <col style="width:72px" /><col style="width:146px" />
+                      <col style="width:38px" /><col style="width:170px" /><col style="width:72px" />
+                      <col style="width:150px" /><col style="width:112px" /><col style="width:120px" /><col style="min-width:110px" />
+                      <col style="width:76px" /><col style="width:150px" />
                     </colgroup>
                     <thead>
                       <tr>
-                        <th class="t-center">序号</th><th class="t-left">属性编码</th><th class="t-left">属性名称</th><th class="t-left">数据类型</th>
+                        <th class="t-left">序号</th><th class="t-left">属性</th><th class="t-left">数据类型</th>
                         <th class="t-center">表单展示</th><th class="t-left">赋值方式</th><th class="t-left">参数代码</th><th class="t-left">对象及属性</th>
                         <th class="t-left">默认值类型</th><th class="t-left">默认值配置</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(r, i) in mapRows" :key="r.property_code">
-                        <td class="t-center bl-muted">{{ i + 1 }}</td>
-                        <td class="bl-mono bl-muted">{{ r.property_code }}</td>
-                        <td>{{ r.property_name }}</td>
+                      <tr v-for="(r, i) in mapRows" :key="r.property_code" :class="{ 'is-skip': r.show === 'none' }">
+                        <td class="bl-muted">{{ i + 1 }}</td>
+                        <td>
+                          <div class="acw-prop-cell">
+                            <div class="acw-prop-name">{{ r.property_name }}<span v-if="r.is_primary" class="acw-pk" title="主键">主键</span></div>
+                            <div class="acw-prop-code bl-mono bl-muted">{{ r.property_code }}</div>
+                          </div>
+                        </td>
                         <td><span class="bl-tag acw-dt-tag">{{ dataTypeLabel(r.data_type) }}</span></td>
                         <td class="t-center">
-                          <span class="acw-showsw" :class="{ 'is-on': r.show === 1 }" role="switch" :aria-checked="r.show === 1"
-                                :title="r.show === 1 ? '表单显示' : '表单隐藏'" @click="r.show = r.show === 1 ? 0 : 1">
-                            <span class="acw-showsw-dot"></span>
-                          </span>
+                          <div class="acw-seg">
+                            <button v-for="s in SHOW_MODES" :key="s.v" type="button" :class="['acw-seg-b', r.show === s.v && 'is-on']"
+                                    :title="s.desc" @click="r.show = s.v">{{ s.label }}</button>
+                          </div>
                         </td>
-                        <td><BlSelect v-model="r.value_source" :options="VALUE_SOURCE_OPTS" size="sm" /></td>
-                        <td><input class="bl-input bl-input-xs bl-mono" v-model="r.param_code" :disabled="r.value_source !== 1" :placeholder="r.value_source !== 1 ? '无参数' : '参数代码'" /></td>
+                        <td><BlSelect v-model="r.value_source" :options="VALUE_SOURCE_OPTS" size="sm" :disabled="r.show === 'none'" @change="onValueSourceChange(r)" /></td>
+                        <td><input class="bl-input bl-input-xs bl-mono" v-model="r.param_code" :disabled="!cellOn(r, 'param')" placeholder="参数代码" /></td>
                         <td>
-                          <div class="acw-ref-box" :class="{ 'is-disabled': r.value_source !== 5 }" :title="r.ref_prop || ''"
-                               @click="r.value_source === 5 && openRefPicker(r, 'ref')">
-                            <span class="acw-ref-text" :class="{ 'is-ph': !r.ref_prop }">{{ r.ref_prop || (r.value_source !== 5 ? '不适用' : '点击选择') }}</span>
+                          <div class="acw-ref-box" :class="{ 'is-disabled': !cellOn(r, 'ref') }" :title="r.ref_prop || ''"
+                               @click="cellOn(r, 'ref') && openRefPicker(r, 'ref')">
+                            <span class="acw-ref-text" :class="{ 'is-ph': !r.ref_prop }">{{ r.ref_prop || (cellOn(r, 'ref') ? '点击选择' : '不适用') }}</span>
                             <span class="acw-ref-ic" v-html="BL.icon('search', 12)"></span>
                           </div>
                         </td>
-                        <td><BlSelect v-model="r.default_type" :options="DEFAULT_TYPE_OPTS" size="sm" /></td>
+                        <td><BlSelect v-model="r.default_type" :options="DEFAULT_TYPE_OPTS" size="sm" :disabled="!cellOn(r, 'dtype')" @change="r.default_source = ''" /></td>
                         <td>
-                          <div v-if="r.default_type === 'source'" class="acw-ref-box" :title="r.default_source || ''" @click="openRefPicker(r, 'default')">
-                            <span class="acw-ref-text" :class="{ 'is-ph': !r.default_source }">{{ r.default_source || '点击选择' }}</span>
+                          <!-- 系统时间 / 当前用户: 类型锁定为静态, 配置由赋值方式决定 -->
+                          <BlSelect v-if="r.value_source === 3 && r.show !== 'none'" v-model="r.default_custom" :options="USER_ATTR_OPTS" size="sm" placeholder="选择用户属性" />
+                          <div v-else-if="r.value_source === 4 && r.show !== 'none'" class="acw-locked">当前系统时间</div>
+                          <div v-else-if="!cellOn(r, 'dval')" class="acw-locked is-off">不适用</div>
+                          <!-- 静态值 + 来源: 点选枚举等候选值, 存 JSON -->
+                          <div v-else-if="r.default_type === 'source'" class="acw-ref-box" :title="r.default_source || ''" @click="openSourcePicker(r)">
+                            <span class="acw-ref-text" :class="{ 'is-ph': !r.default_source }">{{ sourceLabel(r) || '点击选择' }}</span>
                             <span class="acw-ref-ic" v-html="BL.icon('search', 12)"></span>
                           </div>
-                          <BlSelect v-else-if="r.default_static_sel !== 'custom'" v-model="r.default_static_sel" :options="DEFAULT_STATIC_OPTS" size="sm" />
-                          <div v-else class="acw-custom-wrap">
-                            <input class="bl-input bl-input-xs" v-model="r.default_custom" placeholder="静态值" />
-                            <button class="acw-custom-back" title="返回" @click="r.default_static_sel = 'none'; r.default_custom = ''" v-html="BL.icon('x', 10)"></button>
-                          </div>
+                          <input v-else class="bl-input bl-input-xs" v-model="r.default_custom" placeholder="静态值" />
                         </td>
                       </tr>
                     </tbody>
@@ -177,7 +182,7 @@
               <div class="acw-sec3">基础信息</div>
               <div class="acw-m3-grid">
                 <div class="acw-m3-fld"><span class="acw-m3-lbl">动作名称 <i>*</i></span><input class="bl-input" v-model="form.rdfs_label" placeholder="如: 新建监测样地" /></div>
-                <div class="acw-m3-fld"><span class="acw-m3-lbl">动作编码 <i>*</i></span><input class="bl-input bl-mono" v-model="form.api_name" placeholder="create_plot" /></div>
+                <div class="acw-m3-fld"><span class="acw-m3-lbl">API 编码 <i>*</i></span><input class="bl-input bl-mono" v-model="form.api_name" placeholder="create_plot" /></div>
                 <div class="acw-m3-fld"><span class="acw-m3-lbl">按钮文案</span><input class="bl-input" v-model="form.button_text" placeholder="展示在详情/批量操作栏" /></div>
                 <div class="acw-m3-fld"><span class="acw-m3-lbl">本体类 ID</span><input class="bl-input bl-mono" :value="subjectApi" disabled placeholder="—" /></div>
               </div>
@@ -217,7 +222,8 @@
             <!-- ========== 步骤 4: 提交校验标准 ========== -->
             <template v-else-if="step === 4">
               <div class="acw-sec3" style="font-size:14px; font-weight:700; border-bottom:0; margin-bottom:8px">执行规则</div>
-              <ConditionGroup :node="submitTree" :depth="0" :object-fields="objectFields" :param-fields="paramFieldsForCond" />
+              <ConditionGroup :node="submitTree" :depth="0" :object-fields="objectFields" :param-fields="paramFieldsForCond"
+                              :subjects="['object', 'user', 'usergroup']" :subject-labels="{ object: subjectName }" />
               <div class="acw-m3-fld acw-m3-full" style="margin-top:18px">
                 <span class="acw-m3-lbl">失败提示消息</span>
                 <textarea class="bl-textarea" v-model="form.submit_error_message" rows="3" placeholder="校验不通过时向用户展示的提示,如: 您没有权限执行此操作,或提交数据不符合业务规则,请检查后重试。"></textarea>
@@ -300,6 +306,10 @@ import SearchSelect from '@/components/SearchSelect.vue'
 import BlSelect from '@/components/BlSelect.vue'
 import ObjectRefPickerModal from './ObjectRefPickerModal.vue'
 import ConditionGroup from './ConditionGroup.vue'
+import { VALUE_SOURCE_OPTS as ALL_VALUE_SOURCE_OPTS } from './funcParamModel.js'
+import { USER_ATTR_OPTS } from './ruleModel.js'
+/* 「主对象」「本动作创建的对象」只在规则的属性映射里可用, 向导不提供 */
+const VALUE_SOURCE_OPTS = ALL_VALUE_SOURCE_OPTS.filter(o => o.value !== 6 && o.value !== 7)
 import IconPickerField from '@/components/IconPickerField.vue'
 import ColorPickerField from '@/components/ColorPickerField.vue'
 
@@ -350,11 +360,42 @@ const ACTION_TYPES = {
 }
 const PARAM_TYPE_LABELS = { string:'字符串', number:'数值', boolean:'布尔', enum:'枚举', object:'对象引用', date:'日期' }
 const PARAM_TYPES = ['string', 'number', 'boolean', 'enum', 'object', 'date']
-const VALUE_SOURCES = { 1: '表单参数', 2: '静态值', 3: '当前用户', 4: '系统时间', 5: '关联对象属性' }
-const VALUE_SOURCE_OPTS = Object.entries(VALUE_SOURCES).map(([v, l]) => ({ value: Number(v), label: l }))
 const PARAM_TYPE_OPTS = PARAM_TYPES.map(t => ({ value: t, label: `${PARAM_TYPE_LABELS[t]} (${t})` }))
 const DEFAULT_TYPE_OPTS = [{ value: 'static', label: '静态' }, { value: 'source', label: '来源' }]
-const DEFAULT_STATIC_OPTS = [{ value: 'none', label: '无默认值' }, { value: 'now', label: '当前系统时间' }, { value: 'user', label: '当前登录用户' }, { value: 'custom', label: '自定义静态值…' }]
+/* 表单展示三态: 无 = 该属性完全不参与本动作(不生成参数, 也不生成属性映射) */
+const SHOW_MODES = [
+  { v: 'show', label: '展示', desc: '表单中可见可填' },
+  { v: 'hidden', label: '隐藏', desc: '生成参数但不渲染, 由赋值方式静默写入' },
+  { v: 'none', label: '无', desc: '该属性不参与本动作' },
+]
+
+/* 各单元格是否可编辑 — 由「表单展示 + 赋值方式」共同决定 */
+function cellOn(r, cell) {
+  if (r.show === 'none') return false
+  const vs = Number(r.value_source)
+  if (cell === 'param') return vs === 1
+  if (cell === 'ref') return vs === 5
+  if (cell === 'dtype') return vs === 2          // 仅「静态值」可切静态/来源
+  if (cell === 'dval') return vs === 2 || vs === 3 || vs === 4
+  return false
+}
+/* 切换赋值方式时把后续列对齐到该模式的固定取值, 避免留下上一模式的残值 */
+function onValueSourceChange(r) {
+  const vs = Number(r.value_source)
+  /* 参数代码始终保留默认命名, 切回「表单参数」时不用重新想名字 */
+  if (!r.param_code) r.param_code = defaultParamCode(r.property_code)
+  if (vs !== 5) r.ref_prop = ''
+  if (vs === 3) { r.default_type = 'static'; r.default_source = ''; if (!USER_ATTR_OPTS.some(o => o.value === r.default_custom)) r.default_custom = 'user_id' }
+  else if (vs === 4) { r.default_type = 'static'; r.default_source = ''; r.default_custom = '' }
+  else if (vs === 2) { r.default_type = r.default_type || 'static' }
+  else { r.default_type = 'static'; r.default_source = ''; r.default_custom = '' }
+}
+function defaultParamCode(code) { return 'p_' + String(code || '').replace(/^p_/, '') }
+function sourceLabel(r) {
+  const raw = String(r.default_source || '')
+  if (!raw.startsWith('[')) return raw
+  try { const a = JSON.parse(raw); return a.length > 1 ? `${a[0]} 等 ${a.length} 项` : (a[0] || '') } catch { return raw }
+}
 const VISIBILITY_OPTS = [{ value: 'project', label: '项目内所有成员可见' }, { value: 'creator', label: '仅创建者可见' }, { value: 'assigned', label: '指定成员可见' }]
 const SAVE_MODE_OPTS = [{ value: 'compile', label: '保存并编译校验' }, { value: 'draft', label: '仅保存草稿' }]
 const COMPACT_COLORS = ['#165DFF', '#00B42A', '#722ED1', '#FF7D00', '#EB2F96', '#13C2C2', '#FADB14', '#F53F3F']
@@ -417,12 +458,15 @@ async function loadMapRows() {
     mapRows.value = arr.map(p => {
       const code = p.api_name || p.prop_code || ''
       const lc = String(code).toLowerCase()
-      let vs = 1, show = 1, dsel = 'none'
-      if (/(create_?time|created_?at|update_?time|updated_?at)/.test(lc)) { vs = 4; show = 0; dsel = 'now' }
-      else if (/(creator|created_?by|create_?user|owner)/.test(lc)) { vs = 3; show = 0; dsel = 'user' }
-      return { property_code: code, property_name: p.display_name || p.rdfs_label || code, data_type: p.data_type || '', required: p.is_required ? 1 : 0,
-               show, value_source: vs, param_code: code, ref_prop: '',
-               default_type: 'static', default_static_sel: dsel, default_custom: '', default_source: '' }
+      /* 审计类字段默认由系统写入并隐藏, 不必让用户填 */
+      let vs = 1, show = 'show', dcustom = ''
+      if (/(create_?time|created_?at|update_?time|updated_?at)/.test(lc)) { vs = 4; show = 'hidden' }
+      else if (/(creator|created_?by|create_?user|owner)/.test(lc)) { vs = 3; show = 'hidden'; dcustom = 'user_id' }
+      return { property_code: code, property_name: p.display_name || p.rdfs_label || code, data_type: p.data_type || '',
+               comment: p.rdfs_comment || '',      // 带到参数描述, 免得再手抄一遍属性语义
+               required: p.is_required ? 1 : 0, is_primary: Number(p.is_primary ?? p.isPrimary ?? 0) === 1,
+               show, value_source: vs, param_code: defaultParamCode(code), ref_prop: '',
+               default_type: 'static', default_custom: dcustom, default_source: '' }
     })
     mapLoadedClass.value = form.object_class_id
   } finally { mapLoading.value = false }
@@ -457,6 +501,8 @@ function openRefPicker(r, target) {
   refPickerTarget.value = target
   refPickerOpen.value = true
 }
+/* 「静态值 + 来源」的候选值选择 — 目前复用对象属性选择器, 枚举多选待接数据源 */
+function openSourcePicker(r) { openRefPicker(r, 'default') }
 function onRefPicked(ref) {
   const r = refPickerRow.value
   if (!r) return
@@ -465,10 +511,10 @@ function onRefPicked(ref) {
 }
 /* 默认值配置 → 落库值 (静态: 无/系统时间/登录用户/自定义; 来源: 关联对象.属性) */
 function computeDefault(r) {
-  if (r.default_type === 'source') return r.default_source || null
-  if (r.default_static_sel === 'now') return 'CURRENT_TIME'
-  if (r.default_static_sel === 'user') return 'CURRENT_USER'
-  if (r.default_static_sel === 'custom') return r.default_custom || null
+  const vs = Number(r.value_source)
+  if (vs === 4) return 'CURRENT_TIME'
+  if (vs === 3) return 'CURRENT_USER' + (r.default_custom ? '.' + r.default_custom : '')
+  if (vs === 2) return r.default_type === 'source' ? (r.default_source || null) : (r.default_custom || null)
   return null
 }
 
@@ -490,6 +536,12 @@ const subjectSummary = computed(() => {
   if (form.m_type === 2) { const l = (props.allLinkTypes || []).find(x => x.id === form.link_type_id); return l ? (l.rdfs_label || l.link_type_id) : '—' }
   if (form.m_type === 3) return form.function_code || '—'
   return '—'
+})
+/* 条件左栏第一项显示所选对象类 / 链接类型本身的名字, 而不是笼统的「对象」 */
+const subjectName = computed(() => {
+  if (form.m_type === 1) { const c = classOptions.value.find(x => x.id === form.object_class_id); return c ? c.cn : '对象' }
+  if (form.m_type === 2) { const l = (props.allLinkTypes || []).find(x => x.id === form.link_type_id); return l ? (l.rdfs_label || l.link_type_id) : '链接' }
+  return '对象'
 })
 const subjectApi = computed(() => {
   if (form.m_type === 1) { const c = classOptions.value.find(x => x.id === form.object_class_id); return c ? c.api_name : '' }
@@ -624,19 +676,24 @@ async function onFinish() {
     // 步骤2 映射: 对象动作用「属性映射矩阵」, 生成 form_params + 编辑类规则; 其它用手动参数表
     let formParamsOut = [], rulesOut = []
     if (form.m_type === 1 && mapRows.value.length) {
-      formParamsOut = mapRows.value
-        .filter(r => r.show === 1 && r.value_source === 1 && String(r.param_code).trim())
+      /* 「无」= 该属性完全不参与本动作: 既不生成表单参数, 也不生成属性映射 */
+      const joined = mapRows.value.filter(r => r.show !== 'none')
+      /* 展示 + 隐藏都建成表单参数(隐藏的 visible=0), 只有「无」不进表单 */
+      formParamsOut = joined
+        .filter(r => String(r.param_code).trim())
         .map((r, i) => ({
           param_code: r.param_code, param_name: r.property_name, param_type: mapXsdType(r.data_type),
           is_required: r.required, default_value: computeDefault(r),
-          config: JSON.stringify({ value_source: 1, property_code: r.property_code,
-            default_type: r.default_type, default_static_sel: r.default_static_sel, default_source: r.default_source || null }),
+          config: JSON.stringify({ value_source: Number(r.value_source), property_code: r.property_code,
+            visible: r.show === 'hidden' ? 0 : 1, description: r.comment || '',
+            default_type: r.default_type, default_source: r.default_source || null }),
           sort: i,
         }))
-      const mappings = mapRows.value.map((r, j) => ({
+      const mappings = joined.map((r, j) => ({
         property_code: r.property_code, property_name: r.property_name, prop_operator: 'set',
         value_source: r.value_source,
-        value_content: r.value_source === 1 ? r.param_code : r.value_source === 2 ? r.default_value : r.value_source === 5 ? r.ref_prop : null,
+        value_content: Number(r.value_source) === 1 ? r.param_code
+          : Number(r.value_source) === 5 ? r.ref_prop : computeDefault(r),
         is_required: r.required, sort: j,
       }))
       rulesOut = [{ action_type: form.action_type, rule_type: 1, rule_name: '属性映射', sort: 0, prop_mappings: mappings }]
@@ -781,6 +838,20 @@ select.bl-input.bl-input-xs { background-position: right 7px center; padding-rig
 /* 默认值 自定义静态值 输入 */
 .acw-custom-wrap { display: flex; align-items: center; gap: 3px; }
 .acw-custom-wrap .bl-input { flex: 1; min-width: 0; }
+/* 属性列: 名称在上, 编码在下, 主键单独标记 */
+.acw-prop-cell { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.acw-prop-name { font-size: 12.5px; color: var(--bl-text-1); display: flex; align-items: center; gap: 5px; }
+.acw-prop-code { font-size: 11px; line-height: 1.3; }
+.acw-pk { flex-shrink: 0; font-size: 10px; font-weight: 600; color: #D97706; background: color-mix(in srgb, #D97706 14%, transparent); border-radius: 3px; padding: 0 4px; }
+/* 表单展示三态 */
+.acw-seg { display: inline-flex; padding: 2px; background: var(--bl-bg-2); border-radius: 6px; gap: 2px; }
+.acw-seg-b { border: 0; background: transparent; font-size: 11.5px; color: var(--bl-text-2); padding: 3px 8px; border-radius: 4px; cursor: pointer; white-space: nowrap; }
+.acw-seg-b:hover { color: var(--bl-text-1); }
+.acw-seg-b.is-on { background: var(--bl-bg-1); color: var(--bl-primary); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+/* 由赋值方式锁定的默认值配置 */
+.acw-locked { height: 28px; display: flex; align-items: center; padding: 0 8px; border: 1px solid var(--bl-divider); border-radius: var(--bl-radius-2); background: var(--bl-bg-2); font-size: 12px; color: var(--bl-text-2); }
+.acw-locked.is-off { color: var(--bl-text-3); }
+.acw-map-table tr.is-skip td:not(:nth-child(-n+4)) { opacity: .45; }
 .acw-custom-back { flex-shrink: 0; width: 20px; height: 24px; border: 0; background: transparent; color: var(--bl-text-3); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; }
 .acw-custom-back:hover { background: var(--bl-bg-hover); color: var(--bl-text-1); }
 /* 对象及属性 选择器 (输入框 + 内嵌放大镜, 一体) */
