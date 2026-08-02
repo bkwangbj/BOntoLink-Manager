@@ -28,9 +28,13 @@ app/frontend/package-lock.json
 .history/
 
 # SQLite 运行时数据库(由 Flyway 迁移从 db/migration 重建,不入库)
+# 在 bontolink-admin 模块下启动时生成在该模块目录, 一并忽略
 backend/bontolink.db
 backend/bontolink.db-shm
 backend/bontolink.db-wal
+backend/*/bontolink.db
+backend/*/bontolink.db-shm
+backend/*/bontolink.db-wal
 backend/db-backup/
 backend/flyway-run.log
 *.cmd
