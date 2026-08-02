@@ -207,6 +207,10 @@ import { actionTypeApi, categoryApi, resourceApi } from '@/api'
 import SearchSelect from '@/components/SearchSelect.vue'
 import BlSelect from '@/components/BlSelect.vue'
 import ConditionGroup from './ConditionGroup.vue'
+import { normalizeOp } from './conditionModel.js'
+import { VALUE_SOURCE_OPTS as ALL_VALUE_SOURCE_OPTS } from './funcParamModel.js'
+/* 「主对象」「本动作创建的对象」只在规则的属性映射里可用, 这里不提供 */
+const VALUE_SOURCE_OPTS = ALL_VALUE_SOURCE_OPTS.filter(o => o.value !== 6 && o.value !== 7)
 
 const props = defineProps({
   open: Boolean,
@@ -231,11 +235,9 @@ const ACTION_TYPES = {
 }
 const M_TYPE_ACTIONS = { 1:[11,12,13,14], 2:[21,22], 3:[30], 4:[40], 5:[51,52,53,54], 6:[60] }
 const PARAM_TYPES = ['string','number','boolean','object','date']
-const VALUE_SOURCES = { 1:'表单参数', 2:'静态值', 3:'当前用户', 4:'系统时间', 5:'关联对象属性' }
 const PROP_OPERATORS = { set:'赋值', add:'增加', sub:'减少', append:'追加', clear:'清空' }
 const M_TYPE_OPTS = Object.entries(M_TYPES).map(([k, m]) => ({ value: Number(k), label: m.label }))
 const STATUS_OPTS = [{ value: 0, label: '草稿' }, { value: 1, label: '已发布' }, { value: 2, label: '已停用' }]
-const VALUE_SOURCE_OPTS = Object.entries(VALUE_SOURCES).map(([v, l]) => ({ value: Number(v), label: l }))
 const PROP_OPERATOR_OPTS = Object.entries(PROP_OPERATORS).map(([v, l]) => ({ value: v, label: l }))
 const PARAM_TYPE_OPTS = PARAM_TYPES.map(t => ({ value: t, label: t }))
 
@@ -263,7 +265,7 @@ function buildSubmitTree(nodes) {
     if (n.node_type === 'group') return { _k: 'ek-' + (etk++), type: 'group', logic: n.logic_op || 'all', children: childrenOf(n.id) }
     const parts = String(n.left_code || '').split(':')
     const subj = parts[0] === 'user' ? 'user' : parts[0] === 'param' ? 'param' : 'object'
-    return { _k: 'ek-' + (etk++), type: 'cond', subject: subj, field: parts[1] || '', operator: n.operator || 'eq', value: n.right_value || '' }
+    return { _k: 'ek-' + (etk++), type: 'cond', subject: subj, field: parts[1] || '', operator: normalizeOp(n.operator) || 'eq', value: n.right_value || '' }
   })
   submitTree.logic = root.logic_op || 'all'
   submitTree.children = childrenOf(root.id)

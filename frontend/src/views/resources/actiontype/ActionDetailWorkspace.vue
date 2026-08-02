@@ -67,7 +67,8 @@
                          :class="['adw-tree-field', activeMenu === 'form' && formView === 'detail' && selIdx === x.i && 'is-on']" @click="openParam(x.i)">
                       <span class="adw-tree-dt" :style="{ background: dtMeta(x.p.param_type).color }" v-html="BL.icon(dtMeta(x.p.param_type).icon, 11, '#fff')"></span>
                       <span class="bl-truncate adw-tree-fname">{{ x.p.param_name || x.p.param_code || '未命名' }}</span>
-                      <span class="adw-tree-disp" :title="displayMeta(x.p.display_type).label" v-html="BL.icon(displayMeta(x.p.display_type).icon, 12)"></span>
+                      <span v-if="x.p.visible === 0" class="adw-tree-disp" title="表单中隐藏" v-html="BL.icon('eyeOff', 12)"></span>
+                      <span v-else class="adw-tree-disp" :title="displayMeta(x.p.display_type).label" v-html="BL.icon(displayMeta(x.p.display_type).icon, 12)"></span>
                     </div>
                   </template>
                 </template>
@@ -112,7 +113,7 @@
               <div class="adw-card-hd">基础元信息</div>
               <div class="adw-grid">
                 <label class="adw-fld"><span class="adw-lbl">动作名称 <i>*</i></span><input class="bl-input" v-model="form.rdfs_label" :disabled="!editMode" /></label>
-                <label class="adw-fld"><span class="adw-lbl">动作编码</span><input class="bl-input bl-mono" :value="form.api_name" disabled /></label>
+                <label class="adw-fld"><span class="adw-lbl">API 编码</span><input class="bl-input bl-mono" :value="form.api_name" disabled /></label>
                 <label class="adw-fld"><span class="adw-lbl">动作类型</span><input class="bl-input" :value="typeLabel" disabled /></label>
                 <label class="adw-fld"><span class="adw-lbl">关联主体</span><input class="bl-input" :value="subjectSummary" disabled /></label>
                 <label class="adw-fld"><span class="adw-lbl">按钮文案</span><input class="bl-input" v-model="form.button_text" :disabled="!editMode" placeholder="展示在详情/批量操作栏" /></label>
@@ -158,9 +159,8 @@
           </div>
 
           <!-- ========= 规则 (移植) ========= -->
-          <div v-else-if="activeMenu === 'rules'" class="adw-page" :class="{ 'is-detail': ruleView !== 'list' }">
-            <template v-if="ruleView === 'list'">
-            <div class="adw-page-hd"><div class="adw-page-title">规则 <span class="bl-muted" style="font-size:11.5px">(按从上至下顺序生效,后置规则覆盖前置)</span></div><button class="bl-btn bl-btn-primary" @click="onSave" :disabled="saving">保存</button></div>
+          <div v-else-if="activeMenu === 'rules'" class="adw-page">
+            <div class="adw-page-hd"><div class="adw-page-title">规则 <span class="bl-muted" style="font-size:11.5px">(按从上至下顺序生效,后置规则覆盖前置)</span></div><button class="bl-btn bl-btn-sm bl-btn-primary" @click="onSave" :disabled="saving">保存</button></div>
             <div v-if="ruleConflicts.length" class="rl-conflict">
               <div class="rl-conflict-hd"><span v-html="BL.icon('lock', 13)"></span><span>检测到 {{ ruleConflicts.length }} 处无效规则组合,保存前需修正:</span></div>
               <div v-for="(c, ci) in ruleConflicts" :key="ci" class="rl-conflict-item">· {{ c }}</div>
@@ -169,7 +169,7 @@
             <div v-for="(rule, ri) in rules" :key="rule._k" class="rl-card"
                  draggable="true" @dragstart="onRuleDragStart(ri, $event)" @dragover.prevent @drop="onRuleDrop(ri)" @dragend="rDragIdx = null"
                  :class="{ 'is-dragging': rDragIdx === ri, 'is-off': rule.status === 0 }">
-              <div class="rl-hd" @click="rule._collapsed = !rule._collapsed">
+              <div class="rl-hd" @click="toggleRuleCard(rule)">
                 <span class="rl-grip" @mousedown.stop v-html="BL.icon('grip', 13)"></span>
                 <span class="rl-ic" :style="{ background: kindMeta(rule.kind).color }" v-html="BL.icon(kindMeta(rule.kind).icon, 12, '#fff')"></span>
                 <span class="rl-kind">{{ kindMeta(rule.kind).label }}</span>
@@ -184,390 +184,29 @@
               <div v-else class="rl-body">
                 <!-- 对象/链接规则 -->
                 <template v-if="['create_object','modify_object','delete_object','create_link','delete_link'].includes(rule.kind)">
-                  <div class="rl-row" style="justify-content:flex-end"><button class="bl-btn bl-btn-sm bl-btn-primary" @click="openObjectEdit(ri)"><span v-html="BL.icon('edit', 12, '#fff')"></span><span style="margin-left:4px">完整编辑</span></button></div>
-                  <div v-if="rule.kind.includes('link')" class="rl-row"><span class="rl-lbl">链接类型编码</span><input class="bl-input bl-input-sm bl-mono" v-model="rule.link_type_code" placeholder="link_type_id" /></div>
-                  <!-- 目标对象参数 (修改/删除对象) -->
-                  <div v-if="rule.kind === 'modify_object' || rule.kind === 'delete_object'" class="rl-row">
-                    <span class="rl-lbl">目标对象参数</span>
-                    <BlSelect v-model="rule.target_param_code" :options="objectParamOptions" size="sm" clearable :placeholder="objectParamOptions.length ? '选择对象引用参数' : '暂无对象引用参数,请先在表单添加'" style="flex:1;max-width:300px" />
-                  </div>
-                  <!-- 链接两端 (创建/删除链接) -->
-                  <template v-if="rule.kind.includes('link')">
-                    <div class="rl-row"><span class="rl-lbl">源对象参数</span><BlSelect v-model="rule.link_src_param" :options="objectParamOptions" size="sm" clearable placeholder="源对象引用参数" style="flex:1;max-width:300px" /></div>
-                    <div class="rl-row"><span class="rl-lbl">目标对象参数</span><BlSelect v-model="rule.link_dst_param" :options="objectParamOptions" size="sm" clearable placeholder="目标对象引用参数" style="flex:1;max-width:300px" /></div>
-                  </template>
-                  <template v-if="!rule.kind.startsWith('delete')">
-                    <div class="rl-sub">属性赋值映射 <button class="bl-btn bl-btn-text bl-btn-sm" @click="addMapping(rule)"><span v-html="BL.icon('plus', 11)"></span><span style="margin-left:3px">加属性</span></button></div>
-                    <table class="bl-table ate-mini-table"><thead><tr><th class="t-left">写入属性</th><th class="t-left">操作</th><th class="t-left">值来源</th><th class="t-left">值内容</th><th class="t-center">必填</th><th></th></tr></thead>
-                      <tbody><tr v-for="(m, mi) in rule.prop_mappings" :key="mi">
-                        <td><BlSelect v-if="classProps.length" v-model="m.property_code" :options="classPropsOptions" size="sm" clearable placeholder="属性编码" /><input v-else class="bl-input bl-input-xs bl-mono" v-model="m.property_code" placeholder="属性编码" /></td>
-                        <td><BlSelect v-model="m.prop_operator" :options="PROP_OPERATOR_OPTS" size="sm" /></td>
-                        <td><BlSelect v-model="m.value_source" :options="VALUE_SOURCE_OPTS" size="sm" /></td>
-                        <td>
-                          <BlSelect v-if="Number(m.value_source)===1" v-model="m.value_content" :options="formParamOptions" size="sm" clearable placeholder="选表单参数" />
-                          <BlSelect v-else-if="Number(m.value_source)===5" v-model="m.value_content" :options="objectParamOptions" size="sm" clearable placeholder="选对象引用参数" />
-                          <input v-else-if="Number(m.value_source)===2" class="bl-input bl-input-xs" v-model="m.value_content" placeholder="静态值" />
-                          <span v-else class="bl-muted" style="font-size:12px;padding-left:4px">自动(系统上下文)</span>
-                        </td>
-                        <td class="t-center"><input type="checkbox" v-model="m.is_required" :true-value="1" :false-value="0" /></td>
-                        <td class="t-center"><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="rule.prop_mappings.splice(mi,1)" v-html="BL.icon('x', 11)"></button></td>
-                      </tr><tr v-if="!rule.prop_mappings.length"><td colspan="6" class="bl-muted" style="text-align:center;padding:10px;font-size:12px">暂无属性映射</td></tr></tbody></table>
-                  </template>
-                  <div v-else class="fd-warn">删除规则:目标对象/链接仅支持对象引用参数,不支持本次新建的临时对象。</div>
+                  <RuleObjectEditor :rule="rule" :class-options="objClassOptions" :pk-options="objPkOptionsOf(rule)"
+                                    :prop-options="rulePropOptionsOf(rule)" :class-name="ruleClassNameOf(rule)"
+                                    :form-param-options="formParamOptions" :object-param-options="objectParamOptions"
+                                    :link-type-options="linkTypeOptions" :link-card-label="linkCardLabel"
+                                    :main-object-props="mainObjectProps" :show-on-detail="Number(form.show_on_detail) || 0"
+                                    :prior-created="priorCreatedOf(rule)"
+                                    @load-props="v => loadRuleClassProps(v)" />
                 </template>
-                <!-- 函数规则 (折叠卡片态: 快速配置 + 完整编辑入口) -->
-                <template v-else-if="rule.kind === 'function'">
-                  <div class="rl-row" style="justify-content:space-between"><span class="fd-warn" style="flex:1">配置函数规则后不可叠加其他 Ontology 编辑规则;可与通知 / Webhook / 表单校验共存。</span><button class="bl-btn bl-btn-sm bl-btn-primary" style="flex-shrink:0;margin-left:10px" @click="openFuncEdit(ri)"><span v-html="BL.icon('edit', 12, '#fff')"></span><span style="margin-left:4px">完整编辑</span></button></div>
-                  <div class="rl-row"><span class="rl-lbl">绑定函数</span><input class="bl-input bl-input-sm bl-mono" v-model="rule.func_code" placeholder="函数编码" /></div>
-                  <div class="rl-row"><span class="rl-lbl">函数版本</span><input class="bl-input bl-input-sm" v-model="rule.func_version" style="max-width:120px" /><label class="adw-sw" style="margin-left:16px"><input type="checkbox" v-model="rule.func_autoupgrade" :true-value="1" :false-value="0" /> 自动升级到兼容版本</label></div>
-                  <div class="rl-sub">必填入参 · {{ (rule.func_params||[]).filter(p=>p.required).length }} 个 <button class="bl-btn bl-btn-text bl-btn-sm" @click="openParamMap(rule)"><span v-html="BL.icon('link', 11)"></span><span style="margin-left:3px">快速入参映射</span></button></div>
-                  <pre class="fe-code rl-code-blk">{{ funcCodePreview(rule) }}</pre>
-                </template>
-                <!-- 通知规则 (折叠卡片态: 快速配置 + 完整编辑入口) -->
-                <template v-else-if="rule.kind === 'notification'">
-                  <div class="rl-row" style="justify-content:space-between"><span class="fd-warn" style="flex:1">通知内容基于编辑应用前的本体状态生成,在所有编辑提交后发送。</span><button class="bl-btn bl-btn-sm bl-btn-primary" style="flex-shrink:0;margin-left:10px" @click="openNotifyEdit(ri)"><span v-html="BL.icon('edit', 12, '#fff')"></span><span style="margin-left:4px">完整编辑</span></button></div>
-                  <div class="rl-row"><span class="rl-lbl">通知标题</span><input class="bl-input bl-input-sm" v-model="rule.notify_title" placeholder="支持 {参数} 动态渲染" /></div>
-                  <div class="rl-row rl-row-top"><span class="rl-lbl">通知正文</span><textarea class="bl-textarea" v-model="rule.notify_content" rows="2" placeholder="通知正文,支持参数占位"></textarea></div>
-                  <div class="rl-sub">渠道:<span class="bl-muted" style="font-weight:400">{{ [rule.notify_ch_push&&'平台内消息', rule.notify_ch_email&&'邮件', rule.notify_ch_sms&&'短信'].filter(Boolean).join(' / ') || '未选择' }}</span></div>
-                </template>
-                <!-- Webhook (折叠卡片态: 快速配置 + 完整编辑入口) -->
-                <template v-else-if="rule.kind === 'webhook'">
-                  <div class="rl-row" style="justify-content:space-between"><span class="fd-warn" style="flex:1">Webhook 向外部系统发起 HTTP 请求,分「回写 / 副作用」两种类型,行为与失败影响不同。</span><button class="bl-btn bl-btn-sm bl-btn-primary" style="flex-shrink:0;margin-left:10px" @click="openWebhookEdit(ri)"><span v-html="BL.icon('edit', 12, '#fff')"></span><span style="margin-left:4px">完整编辑</span></button></div>
-                  <div class="rl-row"><span class="rl-lbl">类型</span><BlSelect v-model="rule.wh_subtype" :options="WH_SUBTYPES.map(t=>({value:t.value,label:t.label}))" style="max-width:140px" /><span class="rl-lbl" style="margin-left:16px">Webhook</span><input class="bl-input bl-input-sm bl-mono" style="flex:1" v-model="rule.wh_code" placeholder="选择 / 输入 Webhook 编码" /></div>
-                  <div class="rl-sub">必填输入项 · {{ (rule.wh_params||[]).length }} 个 <button class="bl-btn bl-btn-text bl-btn-sm" @click="openWebhookEdit(ri)"><span v-html="BL.icon('link', 11)"></span><span style="margin-left:3px">配置输入参数</span></button></div>
-                </template>
+                <RuleFuncEditor v-else-if="rule.kind === 'function'" :rule="rule" :subject-summary="subjectSummary"
+                                :form-param-options="formParamOptions" :object-param-options="objectParamOptions"
+                                :mismatch="paramTypeMismatch" :code-preview="funcCodePreview" />
+                <RuleNotifyEditor v-else-if="rule.kind === 'notification'" :rule="rule"
+                                  :form-param-options="formParamOptions" :object-param-options="objectParamOptions"
+                                  :code-preview="notifyCodePreview" />
+                <RuleWebhookEditor v-else-if="rule.kind === 'webhook'" :rule="rule" :accent-color="kindMeta('webhook').color"
+                                   :form-param-options="formParamOptions" :object-param-options="objectParamOptions"
+                                   :code-preview="whInputCodePreview" />
               </div>
             </div>
             <div v-if="!rules.length" class="bl-empty" style="padding:20px;font-size:12px">暂无规则,点下方「添加新规则」</div>
 
             <button class="rl-add-btn" @click="rulePickerOpen = true"><span v-html="BL.icon('plus', 14)"></span><span style="margin-left:5px">添加新规则</span></button>
-            </template>
 
-            <!-- ===== 对象 / 链接规则 完整编辑态 ===== -->
-            <template v-else-if="ruleView === 'object' && selEditRule">
-              <div class="fd-detail-hd">
-                <div class="fd-phd2" style="justify-content:space-between">
-                  <div class="bl-row" style="gap:8px;min-width:0">
-                    <button class="fd-back" @click="backToRules"><span v-html="BL.icon('chevronLeft', 13)"></span><span>返回规则</span></button>
-                    <span class="fd-phd2-sep"></span>
-                    <span class="rl-ic" :style="{ background: kindMeta(selEditRule.kind).color }" v-html="BL.icon(kindMeta(selEditRule.kind).icon, 12, '#fff')"></span>
-                    <input class="fd-pname2" v-model="selEditRule.rule_name" :placeholder="kindMeta(selEditRule.kind).label + ' 规则名称'" />
-                  </div>
-                  <button class="bl-btn bl-btn-sm bl-btn-primary" @click="onSave" :disabled="saving">保存</button>
-                </div>
-              </div>
-              <div class="fd-detail-body">
-                <div class="fe-info"><span v-html="BL.icon('info', 14, '#165DFF')"></span><span>规则按从上到下顺序依次执行,后行的规则会覆盖前序规则对同一对象同属性的修改。可在「规则总览」拖拽调整规则顺序。</span></div>
-
-                <!-- 1 基础配置 -->
-                <div class="adw-card"><div class="adw-card-hd">基础配置</div>
-                  <div class="adw-grid">
-                    <template v-if="!selEditRule.kind.includes('link')">
-                      <label class="adw-fld"><span class="adw-lbl">对象类型 <i>*</i></span>
-                        <BlSelect v-model="selEditRule.obj_class_id" :options="objClassOptions" clearable placeholder="选择对象类型" @update:modelValue="loadRuleClassProps" />
-                      </label>
-                      <label v-if="selEditRule.kind === 'create_object'" class="adw-fld"><span class="adw-lbl">主键属性</span>
-                        <BlSelect v-model="selEditRule.obj_pk_property" :options="objPkOptions" placeholder="系统自动生成" />
-                      </label>
-                      <label v-else class="adw-fld"><span class="adw-lbl">目标对象参数 <i>*</i></span>
-                        <BlSelect v-model="selEditRule.target_param_code" :options="objectParamOptions" clearable :placeholder="objectParamOptions.length ? '选择对象引用参数' : '暂无对象引用参数,请先在表单添加'" />
-                      </label>
-                    </template>
-                    <template v-else>
-                      <label class="adw-fld"><span class="adw-lbl">链接类型 <i>*</i></span>
-                        <BlSelect v-model="selEditRule.link_type_code" :options="linkTypeOptions" clearable placeholder="选择链接类型" />
-                      </label>
-                      <label class="adw-fld"><span class="adw-lbl">链接基数</span><input class="bl-input" :value="linkCardLabel(selEditRule.link_type_code)" disabled /></label>
-                      <label class="adw-fld"><span class="adw-lbl">源对象参数 <i>*</i></span>
-                        <BlSelect v-model="selEditRule.link_src_param" :options="objectParamOptions" clearable placeholder="源对象引用参数" />
-                      </label>
-                      <label class="adw-fld"><span class="adw-lbl">对端对象参数 <i>*</i></span>
-                        <BlSelect v-model="selEditRule.link_dst_param" :options="objectParamOptions" clearable placeholder="目标对象引用参数" />
-                      </label>
-                    </template>
-                  </div>
-                </div>
-
-                <!-- 2 属性映射 -->
-                <div v-if="!selEditRule.kind.startsWith('delete')" class="adw-card">
-                  <div class="adw-card-hd adw-card-hd-flex"><span>属性映射</span><span class="bl-muted" style="font-size:11.5px;font-weight:400">配置对象属性的取值来源</span></div>
-                  <table class="bl-table ate-mini-table">
-                    <thead><tr><th class="t-left">属性名称</th><th v-if="selEditRule.kind === 'modify_object'" class="t-left">操作</th><th class="t-left">值来源类型</th><th class="t-left">取值配置</th><th class="t-center">必填</th><th class="t-center">操作</th></tr></thead>
-                    <tbody>
-                      <tr v-for="(m, mi) in selEditRule.prop_mappings" :key="mi">
-                        <td><BlSelect v-if="objRulePropOptions.length" v-model="m.property_code" :options="objRulePropOptions" size="sm" clearable placeholder="选择属性" /><input v-else class="bl-input bl-input-xs bl-mono" v-model="m.property_code" placeholder="属性编码" /></td>
-                        <td v-if="selEditRule.kind === 'modify_object'"><BlSelect v-model="m.prop_operator" :options="PROP_OPERATOR_OPTS" size="sm" /></td>
-                        <td><BlSelect v-model="m.value_source" :options="VALUE_SOURCE_OPTS" size="sm" /></td>
-                        <td>
-                          <BlSelect v-if="Number(m.value_source)===1" v-model="m.value_content" :options="formParamOptions" size="sm" clearable placeholder="表单参数" />
-                          <BlSelect v-else-if="Number(m.value_source)===5" v-model="m.value_content" :options="objectParamOptions" size="sm" clearable placeholder="对象引用参数" />
-                          <input v-else-if="Number(m.value_source)===2" class="bl-input bl-input-xs" v-model="m.value_content" placeholder="静态值" />
-                          <span v-else class="bl-muted" style="font-size:12px;padding-left:4px">{{ Number(m.value_source)===3 ? '取动作提交时的当前登录用户' : '取动作提交时的服务器时间' }}</span>
-                        </td>
-                        <td class="t-center"><input type="checkbox" v-model="m.is_required" :true-value="1" :false-value="0" /></td>
-                        <td class="t-center"><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="移除" @click="selEditRule.prop_mappings.splice(mi,1)" v-html="BL.icon('x', 11)"></button></td>
-                      </tr>
-                      <tr v-if="!selEditRule.prop_mappings.length"><td :colspan="selEditRule.kind === 'modify_object' ? 6 : 5" class="bl-muted" style="text-align:center;padding:12px;font-size:12px">暂无属性映射</td></tr>
-                    </tbody>
-                  </table>
-                  <button class="fe-add-row" @click="addMapping(selEditRule)"><span v-html="BL.icon('plus', 12)"></span><span style="margin-left:4px">添加属性映射</span></button>
-                </div>
-
-                <!-- 3 关联链接配置 (创建对象时顺带建链接) -->
-                <div v-if="selEditRule.kind === 'create_object'" class="adw-card">
-                  <div class="adw-card-hd adw-card-hd-flex"><span>关联链接配置(多对多)</span><span class="bl-muted" style="font-size:11.5px;font-weight:400">创建对象同时建立多对多关联</span></div>
-                  <div v-for="(lk, li) in selEditRule.obj_links" :key="li" class="fe-link-item">
-                    <div class="fe-link-hd">
-                      <span v-html="BL.icon('link', 13, '#14C9C9')"></span>
-                      <span class="fe-link-lbl">链接类型</span>
-                      <BlSelect v-model="lk.link_type_code" :options="linkTypeOptions" size="sm" clearable placeholder="选择链接类型" style="width:220px" />
-                      <span class="bl-tag" style="margin-left:6px">{{ linkCardLabel(lk.link_type_code) }}</span>
-                      <span style="flex:1"></span>
-                      <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon at-del-op" title="移除链接" @click="selEditRule.obj_links.splice(li,1)" v-html="BL.icon('trash2', 12)"></button>
-                    </div>
-                    <div class="fe-link-bd">
-                      <div class="fe-row"><span class="fe-lbl">本端对象</span><span class="bl-muted" style="font-size:12.5px">当前创建的{{ objRuleClassName || '对象' }}(本规则生成)</span></div>
-                      <div class="fe-row"><span class="fe-lbl">对端对象来源</span><BlSelect v-model="lk.peer_param" :options="objectParamOptions" size="sm" clearable :placeholder="objectParamOptions.length ? '表单参数:对端对象' : '暂无对象引用参数,请先在表单添加'" style="flex:1;max-width:320px" /></div>
-                    </div>
-                  </div>
-                  <div v-if="!selEditRule.obj_links.length" class="bl-muted" style="font-size:12px;padding:8px 2px">暂无关联链接</div>
-                  <button class="fe-add-row" @click="addObjLink(selEditRule)"><span v-html="BL.icon('link', 12)"></span><span style="margin-left:4px">添加多对多链接</span></button>
-                </div>
-
-                <!-- 删除类规则说明 -->
-                <div v-if="selEditRule.kind.startsWith('delete')" class="fe-warn">⚠ 删除规则只支持通过对象引用参数指定已存在的目标,不能删除本次提交中新建的临时对象;删除对象会级联移除其所有链接。</div>
-              </div>
-            </template>
-
-            <!-- ===== 函数规则 完整编辑态 ===== -->
-            <template v-else-if="ruleView === 'func' && selEditRule">
-              <div class="fd-detail-hd">
-                <div class="fd-phd2" style="justify-content:space-between">
-                  <div class="bl-row" style="gap:8px;min-width:0">
-                    <button class="fd-back" @click="backToRules"><span v-html="BL.icon('chevronLeft', 13)"></span><span>返回规则</span></button>
-                    <span class="fd-phd2-sep"></span>
-                    <span class="rl-ic" :style="{ background: kindMeta('function').color }" v-html="BL.icon('code', 12, '#fff')"></span>
-                    <input class="fd-pname2" v-model="selEditRule.rule_name" placeholder="函数规则名称" />
-                  </div>
-                  <button class="bl-btn bl-btn-sm bl-btn-primary" @click="onSave" :disabled="saving">保存</button>
-                </div>
-              </div>
-              <div class="fd-detail-body">
-                <div class="fe-warn">⚠ 配置函数规则后,不可叠加其他 Ontology 编辑规则(创建 / 修改 / 删除对象、创建 / 删除链接均不可用),所有对象编辑逻辑由本函数全权处理;可与通知 / Webhook 等副作用规则共存。</div>
-
-                <!-- 1 基础配置 -->
-                <div class="adw-card"><div class="adw-card-hd">基础配置</div>
-                  <div class="adw-grid">
-                    <label class="adw-fld"><span class="adw-lbl">绑定函数 <i>*</i></span><div class="adw-color-row"><input class="bl-input bl-mono" style="flex:1" v-model="selEditRule.func_code" placeholder="函数编码" /><button class="bl-btn bl-btn-sm" @click="BL.info('函数选择器后续接入')">选择</button></div></label>
-                    <label class="adw-fld"><span class="adw-lbl">所属本体</span><input class="bl-input" :value="subjectSummary" disabled /></label>
-                    <label class="adw-fld"><span class="adw-lbl">函数版本 <i>*</i></span><input class="bl-input bl-mono" v-model="selEditRule.func_version" placeholder="v1.0.0" /></label>
-                    <label class="adw-fld"><span class="adw-lbl">版本升级策略</span><BlSelect v-model="selEditRule.func_autoupgrade" :options="FUNC_UPGRADE_OPTS" /></label>
-                    <label class="adw-fld"><span class="adw-lbl">执行身份</span><BlSelect v-model="selEditRule.func_exec_identity" :options="FUNC_IDENTITY_OPTS" /></label>
-                  </div>
-                </div>
-
-                <!-- 2 入参映射配置 (必选 / 可选分组) -->
-                <div class="adw-card"><div class="adw-card-hd">入参映射配置 <span class="bl-muted" style="font-size:11px;font-weight:400">(值来源与入参类型不匹配会标红)</span></div>
-                  <FuncParamMapTable :params="selEditRule.func_params" :required="1" :form-options="formParamOptions" :object-options="objectParamOptions" :mismatch="fp => paramTypeMismatch(selEditRule, fp)" />
-                  <div style="height:14px"></div>
-                  <FuncParamMapTable :params="selEditRule.func_params" :required="0" :form-options="formParamOptions" :object-options="objectParamOptions" :mismatch="fp => paramTypeMismatch(selEditRule, fp)" />
-                </div>
-
-                <!-- 3 函数代码预览 -->
-                <div class="adw-card"><div class="adw-card-hd" style="display:flex;justify-content:space-between;align-items:center;border-left:0;padding-left:0"><span style="border-left:3px solid var(--bl-primary);padding-left:8px">函数代码预览</span><a class="fe-repo" @click="BL.info('跳转代码仓库,后续接入')"><span v-html="BL.icon('code', 11)"></span> 在代码仓库中编辑</a></div>
-                  <CodeEditor :model-value="funcCodePreview(selEditRule)" language="text" disabled :rows="8" />
-                </div>
-
-                <!-- 4 执行配置 -->
-                <div class="adw-card"><div class="adw-card-hd">执行配置</div>
-                  <div class="adw-grid">
-                    <label class="adw-fld"><span class="adw-lbl">执行身份</span><BlSelect v-model="selEditRule.func_exec_identity" :options="FUNC_IDENTITY_OPTS" /></label>
-                    <label class="adw-fld"><span class="adw-lbl">异常处理策略</span><BlSelect v-model="selEditRule.func_error_strategy" :options="FUNC_ERR_OPTS" /></label>
-                    <label class="adw-fld"><span class="adw-lbl">超时时长 (秒)</span><input class="bl-input" type="number" v-model="selEditRule.func_timeout" /></label>
-                    <label class="adw-fld"><span class="adw-lbl">最大重试次数</span><input class="bl-input" type="number" v-model="selEditRule.func_retry" /></label>
-                  </div>
-                  <div class="adw-switch-row" style="margin-top:12px">
-                    <label class="adw-sw"><span class="adw-showsw rl-sw" :class="{ 'is-on': selEditRule.func_concurrent===1 }" @click="selEditRule.func_concurrent = selEditRule.func_concurrent?0:1"><span class="adw-showsw-dot"></span></span> 并发执行</label>
-                    <label class="adw-sw"><span class="adw-showsw rl-sw" :class="{ 'is-on': selEditRule.func_return_attachment===1 }" @click="selEditRule.func_return_attachment = selEditRule.func_return_attachment?0:1"><span class="adw-showsw-dot"></span></span> 返回附件(可写回本体或推送到前端)</label>
-                  </div>
-                </div>
-
-                <!-- 5 异常映射 -->
-                <div class="adw-card"><div class="adw-card-hd">异常映射 <span class="bl-muted" style="font-size:11px;font-weight:400">(函数抛出异常码 → 前端提示文案)</span></div>
-                  <table class="bl-table ate-mini-table"><thead><tr><th class="t-left">异常码</th><th class="t-left">提示文案</th><th></th></tr></thead>
-                    <tbody>
-                      <tr v-for="(ex, ei) in selEditRule.func_exceptions" :key="ei">
-                        <td style="width:180px"><input class="bl-input bl-input-xs bl-mono" v-model="ex.code" placeholder="如 E_PERMISSION" /></td>
-                        <td><input class="bl-input bl-input-xs" v-model="ex.message" placeholder="向用户展示的提示" /></td>
-                        <td class="t-center"><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="selEditRule.func_exceptions.splice(ei,1)" v-html="BL.icon('x', 11)"></button></td>
-                      </tr>
-                      <tr v-if="!selEditRule.func_exceptions.length"><td colspan="3" class="bl-muted" style="text-align:center;padding:8px;font-size:12px">暂无异常映射,未匹配的异常将展示默认错误提示</td></tr>
-                    </tbody></table>
-                  <button class="bl-btn bl-btn-text bl-btn-sm" style="margin-top:4px" @click="addFuncException(selEditRule)"><span v-html="BL.icon('plus', 11)"></span><span style="margin-left:3px">添加异常映射</span></button>
-                </div>
-              </div>
-            </template>
-
-            <!-- ===== 通知规则 完整编辑态 (5.3.8) ===== -->
-            <template v-else-if="ruleView === 'notify' && selEditRule">
-              <div class="fd-detail-hd">
-                <div class="fd-phd2" style="justify-content:space-between">
-                  <div class="bl-row" style="gap:8px;min-width:0">
-                    <button class="fd-back" @click="backToRules"><span v-html="BL.icon('chevronLeft', 13)"></span><span>返回规则</span></button>
-                    <span class="fd-phd2-sep"></span>
-                    <span class="rl-ic" :style="{ background: kindMeta('notification').color }" v-html="BL.icon('bell', 12, '#fff')"></span>
-                    <input class="fd-pname2" v-model="selEditRule.rule_name" placeholder="通知规则名称" />
-                  </div>
-                  <button class="bl-btn bl-btn-sm bl-btn-primary" @click="onSave" :disabled="saving">保存</button>
-                </div>
-              </div>
-              <div class="fd-detail-body">
-                <div class="fe-warn">通知属于副作用规则,在所有编辑参数明执行成功、事务提交完成后触发;通知发送失败不影响主操作结果。</div>
-
-                <!-- 1 收件人配置 -->
-                <div class="adw-card"><div class="adw-card-hd">收件人配置</div>
-                  <div class="fe-row"><span class="fe-lbl">收件人来源</span><BlSelect v-model="selEditRule.notify_recipient_source" :options="NOTIFY_RECIPIENT_SRC" style="flex:1" /></div>
-                  <div v-if="selEditRule.notify_recipient_source === 'object_prop'" class="fe-row" style="margin-top:12px">
-                    <span class="fe-lbl">对象参数</span>
-                    <BlSelect v-model="selEditRule.notify_recipient_object_param" :options="objectParamOptions" size="sm" clearable placeholder="对象参数" style="width:180px" />
-                    <span class="fe-lbl fe-lbl-inline">用户ID属性</span>
-                    <BlSelect v-model="selEditRule.notify_recipient_user_attr" :options="[]" size="sm" clearable placeholder="选择(待接口)" style="flex:1;max-width:260px" />
-                  </div>
-                  <div v-else-if="selEditRule.notify_recipient_source === 'param'" class="fe-row" style="margin-top:12px"><span class="fe-lbl">收件人参数</span><BlSelect v-model="selEditRule.notify_recipient_object_param" :options="formParamOptions" size="sm" clearable placeholder="选表单参数" style="flex:1;max-width:320px" /></div>
-                  <div v-else class="fe-row" style="margin-top:12px"><span class="fe-lbl">静态收件人</span><input class="bl-input bl-input-sm" style="flex:1" v-model="selEditRule.notify_to" placeholder="用户 / 用户组标识,多个用逗号分隔" /></div>
-                </div>
-
-                <!-- 2 内容配置 (模板 / 来自函数) -->
-                <div class="adw-card"><div class="adw-card-hd">内容配置</div>
-                  <div class="fd-tabs2">
-                    <button :class="['fd-tab2', selEditRule.notify_content_mode !== 'function' && 'is-on']" @click="selEditRule.notify_content_mode = 'desc'">模板</button>
-                    <button :class="['fd-tab2', selEditRule.notify_content_mode === 'function' && 'is-on']" @click="selEditRule.notify_content_mode = 'function'">来自函数</button>
-                  </div>
-                  <template v-if="selEditRule.notify_content_mode !== 'function'">
-                    <div class="fe-row" style="margin-top:14px"><span class="fe-lbl">主题</span><input class="bl-input" style="flex:1" v-model="selEditRule.notify_title" placeholder="工单 {{ticketId}} 优先级已变更" /></div>
-                    <div class="fe-row fe-row-top" style="margin-top:12px"><span class="fe-lbl">正文</span><textarea class="bl-textarea" style="flex:1" v-model="selEditRule.notify_content" rows="4" placeholder="您好 {{recipient_first_name}},{{current_user_first_name}} 已将工单 {{ticketId}} 的优先级变更为 {{priority}}。请及时跟进处理。"></textarea></div>
-                  </template>
-                  <template v-else>
-                    <div class="fe-row" style="margin-top:14px"><span class="fe-lbl">通知函数</span><input class="bl-input bl-input-sm bl-mono" style="flex:1;max-width:320px" v-model="selEditRule.notify_func_code" placeholder="函数编码" /><button class="bl-btn bl-btn-sm" style="margin-left:8px" @click="BL.info('函数选择器后续接入')">选择</button></div>
-                    <div class="adw-card-hd" style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;border-left:0;padding-left:0"><span style="border-left:3px solid var(--bl-primary);padding-left:8px">消息代码预览</span><a class="fe-repo" @click="BL.info('跳转代码仓库,后续接入')"><span v-html="BL.icon('code', 11)"></span> 在代码仓库中编辑</a></div>
-                    <CodeEditor :model-value="notifyCodePreview(selEditRule)" language="text" disabled :rows="8" />
-                  </template>
-                </div>
-
-                <!-- 3 通知渠道 -->
-                <div class="adw-card"><div class="adw-card-hd">通知渠道</div>
-                  <div class="fe-row"><span class="fe-lbl">启用渠道</span>
-                    <label class="adw-sw" style="margin-right:22px"><input type="checkbox" v-model="selEditRule.notify_ch_push" :true-value="1" :false-value="0" /> 平台内推送</label>
-                    <label class="adw-sw" style="margin-right:22px"><input type="checkbox" v-model="selEditRule.notify_ch_email" :true-value="1" :false-value="0" /> 邮件通知</label>
-                    <label class="adw-sw"><input type="checkbox" v-model="selEditRule.notify_ch_sms" :true-value="1" :false-value="0" /> 短信通知</label>
-                  </div>
-                </div>
-
-                <!-- 4 链接配置 -->
-                <div class="adw-card"><div class="adw-card-hd adw-card-hd-flex"><span>链接配置</span><span class="adw-showsw rl-sw" :class="{ 'is-on': selEditRule.notify_link_enabled === 1 }" @click="selEditRule.notify_link_enabled = selEditRule.notify_link_enabled ? 0 : 1"><span class="adw-showsw-dot"></span></span></div>
-                  <div v-if="selEditRule.notify_link_enabled" class="fe-row fe-row-wrap">
-                    <span class="fe-lbl">链接类型</span><BlSelect v-model="selEditRule.notify_link_type" :options="NOTIFY_LINK_TYPES" size="sm" style="width:150px" />
-                    <span class="fe-lbl fe-lbl-inline">链接目标</span><BlSelect v-model="selEditRule.notify_link_target" :options="objectParamOptions" size="sm" clearable placeholder="目标对象" style="width:150px" />
-                    <span class="fe-lbl fe-lbl-inline">按钮文字</span><input class="bl-input bl-input-sm" style="flex:1;min-width:160px;max-width:220px" v-model="selEditRule.notify_link_text" placeholder="查看工单详情" />
-                  </div>
-                  <div v-else class="bl-muted" style="font-size:12px">未启用,通知不带跳转按钮。</div>
-                </div>
-
-                <!-- 5 高级配置 -->
-                <div class="adw-card"><div class="adw-card-hd">高级配置</div>
-                  <div class="adw-card-hd-flex" style="border-left:0;padding-left:0;margin-bottom:2px"><span style="font-size:13px;font-weight:600;color:var(--bl-text-1)">自定义邮件 HTML 内容</span><span class="adw-showsw rl-sw" :class="{ 'is-on': selEditRule.notify_custom_html === 1 }" @click="selEditRule.notify_custom_html = selEditRule.notify_custom_html ? 0 : 1"><span class="adw-showsw-dot"></span></span></div>
-                  <textarea v-if="selEditRule.notify_custom_html" class="bl-textarea bl-mono" style="margin-top:10px" v-model="selEditRule.notify_html_content" rows="4" placeholder="<html>… 支持参数占位 …</html>"></textarea>
-                  <div class="fe-row fe-row-wrap" style="margin-top:16px">
-                    <span class="fe-lbl">权限范围</span>
-                    <label class="fe-radio"><input type="radio" value="all" v-model="selEditRule.notify_permission_scope" /><span class="fe-radio-lbl">要求所有用户具有权限(默认)</span></label>
-                    <label class="fe-radio" style="margin-left:24px"><input type="radio" value="authorized" v-model="selEditRule.notify_permission_scope" /><span class="fe-radio-lbl">要求任意用户具有权限</span></label>
-                  </div>
-                </div>
-              </div>
-            </template>
-
-            <!-- ===== Webhook 完整编辑态 (5.3.9) ===== -->
-            <template v-else-if="ruleView === 'webhook' && selEditRule">
-              <div class="fd-detail-hd">
-                <div class="fd-phd2" style="justify-content:space-between">
-                  <div class="bl-row" style="gap:8px;min-width:0">
-                    <button class="fd-back" @click="backToRules"><span v-html="BL.icon('chevronLeft', 13)"></span><span>返回规则</span></button>
-                    <span class="fd-phd2-sep"></span>
-                    <span class="rl-ic" :style="{ background: kindMeta('webhook').color }" v-html="BL.icon('zap', 12, '#fff')"></span>
-                    <input class="fd-pname2" v-model="selEditRule.rule_name" placeholder="Webhook 规则名称" />
-                  </div>
-                  <button class="bl-btn bl-btn-sm bl-btn-primary" @click="onSave" :disabled="saving">保存 Webhook 规则</button>
-                </div>
-              </div>
-              <div class="fd-detail-body">
-                <div class="fe-warn">Webhook 用于向外部系统发送 HTTP 请求,实现跨系统数据同步与流程联动;分为回写(事务提交前执行)和副作用(事务提交后执行)两种类型。</div>
-
-                <!-- 1 Webhook 类型 -->
-                <div class="adw-card"><div class="adw-card-hd">Webhook 类型</div>
-                  <div class="wh-type-grid">
-                    <button v-for="t in WH_SUBTYPES" :key="t.value" :class="['wh-type-card', selEditRule.wh_subtype===t.value && 'is-on']" @click="selEditRule.wh_subtype=t.value">
-                      <span class="wh-type-ic" :style="{ background: selEditRule.wh_subtype===t.value ? kindMeta('webhook').color : 'var(--bl-bg-3)' }" v-html="BL.icon(t.icon, 13, '#fff')"></span>
-                      <span class="wh-type-lbl">{{ t.label }}</span>
-                      <span v-if="selEditRule.wh_subtype===t.value" class="wh-type-chk" v-html="BL.icon('check', 14)"></span>
-                    </button>
-                  </div>
-                  <div class="bl-muted" style="font-size:12px;line-height:1.6;margin-top:10px">{{ WH_SUBTYPES.find(t=>t.value===selEditRule.wh_subtype)?.desc }}</div>
-                </div>
-
-                <!-- 2 基本信息 -->
-                <div class="adw-card"><div class="adw-card-hd">Webhook 基本信息</div>
-                  <div class="adw-grid">
-                    <label class="adw-fld"><span class="adw-lbl">选择 Webhook <i>*</i></span><div class="adw-color-row"><input class="bl-input" style="flex:1" v-model="selEditRule.wh_code" placeholder="选择已注册的 Webhook" /><button class="bl-btn bl-btn-sm" @click="BL.info('Webhook 选择器后续接入')">选择</button></div></label>
-                    <label class="adw-fld"><span class="adw-lbl">版本</span><input class="bl-input bl-mono" v-model="selEditRule.wh_version" placeholder="v1" /></label>
-                  </div>
-                </div>
-
-                <!-- 3 输入参数 -->
-                <div class="adw-card"><div class="adw-card-hd adw-card-hd-flex"><span>Webhook 输入参数</span><a class="fe-repo" @click="BL.info('跳转动作参数定义,后续接入')">跳过动作参数定义</a></div>
-                  <label class="fd-ck" style="display:flex;gap:8px;margin-bottom:10px"><input type="checkbox" :checked="selEditRule.wh_input_mode==='function'" @change="selEditRule.wh_input_mode = selEditRule.wh_input_mode==='function' ? 'manual' : 'function'" /> 选择返回 Webhook 预期输入约束的函数</label>
-                  <div v-if="selEditRule.wh_input_mode==='function'" class="adw-grid" style="margin-bottom:12px">
-                    <label class="adw-fld"><span class="adw-lbl">函数</span><div class="adw-color-row"><input class="bl-input bl-mono" style="flex:1" v-model="selEditRule.wh_input_func" placeholder="returnWebhookInput" /><button class="bl-btn bl-btn-sm" @click="BL.info('函数选择器后续接入')">选择</button></div></label>
-                    <label class="adw-fld"><span class="adw-lbl">版本</span><input class="bl-input bl-mono" v-model="selEditRule.wh_input_func_version" placeholder="0.22.0" /></label>
-                  </div>
-                  <div class="fe-subhd">必须输入项</div>
-                  <table class="bl-table ate-mini-table"><thead><tr><th class="t-left">输入项名</th><th class="t-left">类型</th><th class="t-left">值来源</th><th class="t-left">取值配置</th><th></th></tr></thead>
-                    <tbody>
-                      <tr v-for="(p, pi) in selEditRule.wh_params" :key="pi">
-                        <td><input class="bl-input bl-input-xs bl-mono" v-model="p.name" placeholder="input_name" /></td>
-                        <td><BlSelect v-model="p.param_type" :options="FUNC_PTYPE_OPTS" size="sm" /></td>
-                        <td><BlSelect v-model="p.value_source" :options="VALUE_SOURCE_OPTS" size="sm" /></td>
-                        <td>
-                          <BlSelect v-if="Number(p.value_source)===1" v-model="p.value_content" :options="formParamOptions" size="sm" clearable placeholder="选表单参数" />
-                          <BlSelect v-else-if="Number(p.value_source)===5" v-model="p.value_content" :options="objectParamOptions" size="sm" clearable placeholder="选对象引用参数" />
-                          <input v-else-if="Number(p.value_source)===2" class="bl-input bl-input-xs" v-model="p.value_content" placeholder="静态值" />
-                          <span v-else class="bl-muted" style="font-size:12px;padding-left:4px">自动</span>
-                        </td>
-                        <td class="t-center"><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="selEditRule.wh_params.splice(pi,1)" v-html="BL.icon('x', 11)"></button></td>
-                      </tr>
-                      <tr v-if="!selEditRule.wh_params.length"><td colspan="5" class="bl-muted" style="text-align:center;padding:8px;font-size:12px">暂无输入项</td></tr>
-                    </tbody></table>
-                  <button class="bl-btn bl-btn-text bl-btn-sm" style="margin-top:4px" @click="addWhParam(selEditRule)"><span v-html="BL.icon('plus', 11)"></span><span style="margin-left:3px">添加输入项</span></button>
-                  <template v-if="selEditRule.wh_input_mode==='function'">
-                    <div class="adw-card-hd" style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;border-left:0;padding-left:0"><span style="border-left:3px solid var(--bl-primary);padding-left:8px">函数代码预览</span><a class="fe-repo" @click="BL.info('跳转代码仓库,后续接入')"><span v-html="BL.icon('code', 11)"></span> 在代码仓库中编辑</a></div>
-                    <CodeEditor :model-value="whInputCodePreview(selEditRule)" language="text" disabled :rows="10" />
-                  </template>
-                </div>
-
-                <!-- 4 执行说明 -->
-                <div class="adw-card"><div class="adw-card-hd">执行说明</div>
-                  <div v-if="selEditRule.wh_subtype==='writeback'" class="fe-hints">
-                    <div>✓ 回写模式在所有编辑保存提交之前执行,失败则终止整个动作</div>
-                    <div>✓ 外部系统返回结构响应可用于后续编辑规则,通知数据中引用(回写响应)</div>
-                    <div>✓ 每个动作仅可配置 1 个回写型 Webhook</div>
-                  </div>
-                  <div v-else class="fe-hints">
-                    <div>✓ 副作用模式在所有编辑保存提交之后执行,事务提交完成后</div>
-                    <div>✓ 执行失败不影响主操作结果,仅记录日志</div>
-                    <div>✓ 每个动作可配置多个副作用 Webhook,支持并行执行</div>
-                  </div>
-                </div>
-              </div>
-            </template>
           </div>
 
           <!-- ========= 表单 (P1 移植参数表; P2 升级为设计器) ========= -->
@@ -609,6 +248,8 @@
                     </div>
                     <span v-if="!x.p.param_code" class="bl-tag at-mini-tag">新建</span>
                     <span v-else-if="x.p.param_type === 'object'" class="bl-tag at-mini-tag">对象引用</span>
+                    <span v-if="x.p.visible === 0" class="fd-hidden" title="表单中隐藏, 不渲染给用户"><span v-html="BL.icon('eyeOff', 12)"></span>隐藏</span>
+                    <span v-if="srcTagOf(x.p)" class="fd-src-tag is-sm" :title="`取自关联对象「${srcTagOf(x.p).name}」`"><span v-html="BL.icon('box', 10, '#fff')"></span>{{ srcTagOf(x.p).name }}</span>
                     <span class="fd-disp" :title="'显示组件:' + displayMeta(x.p.display_type).label"><span class="fd-disp-ic" v-html="BL.icon(displayMeta(x.p.display_type).icon, 13)"></span><span class="fd-disp-txt">{{ displayMeta(x.p.display_type).label }}</span></span>
                     <span class="fd-chev" v-html="BL.icon('chevronRight', 12)"></span>
                   </div>
@@ -664,15 +305,35 @@
             <template v-else-if="selParam">
               <!-- 固定头部: 参数信息行 + 锚点导航 -->
               <div class="fd-detail-hd">
-                <div class="fd-phd2">
+                <!-- 头部三列: 返回 | 参数信息(上下两行) | 操作 -->
+                <div class="fd-phd">
                   <button class="fd-back" title="返回表单内容" @click="backToList"><span v-html="BL.icon('chevronLeft', 13)"></span><span>返回</span></button>
-                  <span class="fd-phd2-sep"></span>
-                  <span class="fd-dt" :style="{ background: dtMeta(selParam.param_type).color }" v-html="BL.icon(dtMeta(selParam.param_type).icon, 13, '#fff')"></span>
-                  <input class="fd-pname2" v-model="selParam.param_name" :size="nameSize(selParam.param_name)" placeholder="参数名称" />
-                  <span class="bl-tag" :title="selParam.param_code || '未设编码'" :style="{ background:`color-mix(in srgb, ${dtMeta(selParam.param_type).color} 12%, transparent)`, color:dtMeta(selParam.param_type).color }">{{ dtMeta(selParam.param_type).label }}</span>
-                  <span style="flex:1"></span>
-                  <button class="bl-btn bl-btn-sm bl-btn-primary" @click="onSave" :disabled="saving">保存</button>
-                  <button class="bl-btn bl-btn-text bl-btn-icon at-del-op" title="删除参数" @click="removeParamAt(selIdx)" v-html="BL.icon('trash2', 13)"></button>
+                  <span class="fd-phd-sep"></span>
+                  <div class="fd-phd-mid">
+                    <div class="fd-phd-r1">
+                      <span class="fd-dt" :style="{ background: dtMeta(selParam.param_type).color }" v-html="BL.icon(dtMeta(selParam.param_type).icon, 13, '#fff')"></span>
+                      <input class="fd-pname2" v-model="selParam.param_name" :size="nameSize(selParam.param_name)" placeholder="参数名称" />
+                      <span class="fd-code-tag bl-mono" :class="{ 'is-empty': !selParam.param_code }" :title="'参数编码:' + (selParam.param_code || '未设置')">{{ selParam.param_code || '未设编码' }}</span>
+                      <span class="bl-tag" :style="{ background:`color-mix(in srgb, ${dtMeta(selParam.param_type).color} 12%, transparent)`, color:dtMeta(selParam.param_type).color }">{{ dtMeta(selParam.param_type).label }}</span>
+                      <span v-if="selParam.is_required" class="fd-req-tag">必填</span>
+                      <span v-if="selParam.visible === 0" class="fd-hidden" title="表单中隐藏"><span v-html="BL.icon('eyeOff', 12)"></span>隐藏</span>
+                      <span v-if="srcTagOf(selParam)" class="fd-src-tag" :title="`该参数取自关联对象「${srcTagOf(selParam).name}」的属性 ${selParam.property_code}`">
+                        <span v-html="BL.icon('box', 11, '#fff')"></span>{{ srcTagOf(selParam).name }}
+                        <i v-if="srcTagOf(selParam).api" class="bl-mono">{{ srcTagOf(selParam).api }}</i>
+                      </span>
+                    </div>
+                    <div class="fd-phd-r2">
+                      <span>{{ selParam.section || '基础参数' }}</span>
+                      <span class="fd-meta-dot"></span><span>{{ displayMeta(selParam.display_type).label }}</span>
+                      <span class="fd-meta-dot"></span><span>{{ dspLabel('width', dspOf(selParam).width) }}</span>
+                      <span class="fd-meta-dot"></span><span>{{ dspLabel('labelPos', dspOf(selParam).labelPos) }}</span>
+                      <template v-if="selParam.description"><span class="fd-meta-dot"></span><span class="bl-truncate">{{ selParam.description }}</span></template>
+                    </div>
+                  </div>
+                  <div class="fd-phd-act">
+                    <button class="bl-btn bl-btn-sm bl-btn-primary" @click="onSave" :disabled="saving">保存</button>
+                    <button class="bl-btn bl-btn-text bl-btn-icon at-del-op" title="删除参数" @click="removeParamAt(selIdx)" v-html="BL.icon('trash2', 13)"></button>
+                  </div>
                 </div>
                 <div class="fd-tabs">
                   <button v-for="t in DETAIL_TABS" :key="t.k" :class="['fd-tab-btn', detailTab === t.k && 'is-on']" @click="switchDetailTab(t.k)">{{ t.label }}</button>
@@ -687,7 +348,8 @@
                   <div class="adw-card"><div class="adw-card-hd">参数类型</div>
                     <div class="adw-grid">
                       <label class="adw-fld"><span class="adw-lbl">数据类型</span><BlSelect v-model="selParam.param_type" :options="PARAM_TYPE_OPTS" @change="onParamTypeChange" /></label>
-                      <label class="adw-fld"><span class="adw-lbl">前端组件</span><span class="fd-ro-txt">{{ displayMeta(selParam.display_type).label }}</span></label>
+                      <label class="adw-fld"><span class="adw-lbl">前端组件</span>
+                        <IconGridSelect v-model="selParam.display_type" :options="DISPLAY_TYPE_OPTS" :columns="2" /></label>
                     </div>
                   </div>
                   <div class="adw-card"><div class="adw-card-hd adw-card-hd-flex"><span>通用设置</span><span class="bl-muted" style="font-size:12px;font-weight:400">控制参数在表单中的展示、编辑与校验行为</span></div>
@@ -761,15 +423,13 @@
 
                 <!-- 显示 -->
                 <section v-show="detailTab === 'display'" class="fd-sec">
-                  <div class="adw-card"><div class="adw-card-hd">显示组件</div>
-                    <div class="fd-disp-grid">
-                      <button v-for="d in DISPLAY_TYPES" :key="d.v" :class="['fd-disp-opt', selParam.display_type === d.v && 'is-on']" @click="selParam.display_type = d.v">
-                        <span v-html="BL.icon(d.icon, 15)"></span><span>{{ d.label }}</span>
-                      </button>
+                  <!-- 占位文字: 只有会渲染输入区的组件才有意义, 其余组件不显示该配置 -->
+                  <div v-if="hasPlaceholder(selParam)" class="adw-card"><div class="adw-card-hd">占位文字</div>
+                    <div class="fd-ph-row">
+                      <input class="bl-input" v-model="selParam.placeholder" :placeholder="previewPlaceholder(selParam)" />
+                      <button v-if="selParam.placeholder" class="bl-btn bl-btn-text bl-btn-sm" @click="selParam.placeholder = ''">恢复默认</button>
                     </div>
-                    <div class="adw-grid" style="margin-top:14px">
-                      <label class="adw-fld"><span class="adw-lbl">占位文字</span><input class="bl-input" v-model="selParam.placeholder" placeholder="输入框占位提示" /></label>
-                    </div>
+                    <div class="fd-ph-tip">显示在<b>{{ displayMeta(selParam.display_type).label }}</b>内的灰色提示语,用户开始输入后消失。留空则用默认文案「{{ previewPlaceholder(selParam) }}」。</div>
                   </div>
 
                   <div class="adw-card"><div class="adw-card-hd adw-card-hd-flex"><span>通用布局</span>
@@ -828,31 +488,51 @@
                     <!-- 规则说明区 (文档 1.4.4.3 优先级匹配) -->
                     <div class="ov-note">多个覆盖块按从上到下的优先级依次匹配,<b>仅第一个条件命中的块生效</b>,后续块直接忽略、不叠加;所有块均不命中时,沿用「值」页的全局默认配置。</div>
 
-                    <!-- 覆盖块列表 -->
+                    <!-- 覆盖块列表: 就地编辑, 不再弹框 -->
                     <div v-for="(ov, ovi) in selParam.overrides" :key="ov._k || ovi" class="ov-card">
-                      <div class="ov-card-hd">
+                      <div class="ov-card-hd" @click="toggleOvFold(ov)">
                         <span class="ov-prio">优先级 {{ ovi + 1 }}</span>
                         <span class="bl-truncate ov-title">{{ blockTitle(ov) }}</span>
                         <span style="flex:1"></span>
-                        <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="上移" :disabled="ovi === 0" @click="moveOverride(ovi, -1)" v-html="BL.icon('chevronUp', 12)"></button>
-                        <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="下移" :disabled="ovi === selParam.overrides.length - 1" @click="moveOverride(ovi, 1)" v-html="BL.icon('chevronDown', 12)"></button>
-                        <button class="bl-btn bl-btn-text bl-btn-sm" @click="openOverrideEdit(ovi)">编辑</button>
-                        <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon at-del-op" title="删除" @click="removeOverride(ovi)" v-html="BL.icon('trash2', 12)"></button>
+                        <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="上移" :disabled="ovi === 0" @click.stop="moveOverride(ovi, -1)" v-html="BL.icon('chevronUp', 12)"></button>
+                        <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="下移" :disabled="ovi === selParam.overrides.length - 1" @click.stop="moveOverride(ovi, 1)" v-html="BL.icon('chevronDown', 12)"></button>
+                        <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon at-del-op" title="删除" @click.stop="removeOverride(ovi)" v-html="BL.icon('trash2', 12)"></button>
+                        <span class="ov-chev" :class="{ 'is-fold': ovFold.has(ov._k) }" v-html="BL.icon('chevronDown', 13)"></span>
                       </div>
-                      <div class="ov-card-bd">
+                      <!-- 折叠态: 只看摘要 -->
+                      <div v-if="ovFold.has(ov._k)" class="ov-card-bd">
                         <div class="ov-sum"><span class="ov-sum-tag ov-sum-if">If</span><span>{{ ifSummary(ov.cond) }}</span></div>
                         <div class="ov-sum"><span class="ov-sum-tag ov-sum-then">Then</span><span>{{ thenSummary(ov.actions) }}</span></div>
                       </div>
+                      <!-- 展开态: If 条件 + Then 动作 直接编辑 -->
+                      <div v-else class="ov-edit">
+                        <div class="ov-tag ov-tag-if">If</div>
+                        <ConditionGroup :node="ov.cond" :depth="0" :param-fields="ovParamFields" :user-fields="OV_USER_FIELDS"
+                                        :subjects="['user', 'param']" :logics="['all', 'any', 'none']"
+                                        :operators="OV_OP_KEYS" :value-options-of="ovValueOptions" show-ready />
+                        <div class="ov-tag ov-tag-then">Then</div>
+                        <div class="ov-acts">
+                          <div v-for="(a, ai) in ov.actions" :key="a._k" :class="['ov-act', isRedundant(a, ovDefaults) && 'is-redundant']">
+                            <span class="ov-act-lbl">设为</span>
+                            <BlSelect v-model="a.type" :options="ovActionOptsOf(a)" size="sm" style="width:112px" @change="onOvActTypeChange(a)" />
+                            <template v-if="ovBoolAction(a.type)">
+                              <span class="adw-showsw adw-showsw-sm" :class="{ 'is-on': Number(a.value) === 1 }"
+                                    @click="a.value = Number(a.value) ? 0 : 1"><span class="adw-showsw-dot"></span></span>
+                              <span class="bl-muted" style="font-size:12px">{{ Number(a.value) ? '是' : '否' }}</span>
+                            </template>
+                            <input v-else class="bl-input bl-input-sm" style="flex:1;min-width:0" v-model="a.value"
+                                   :placeholder="a.type === 'default' ? '默认值内容' : '约束说明 / 正则'" />
+                            <span v-if="isRedundant(a, ovDefaults)" class="ov-redundant" title="与该字段的全局默认配置一致, 此覆盖不产生任何变化">与默认值相同,配置冗余</span>
+                            <span style="flex:1"></span>
+                            <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" title="删除覆盖动作" @click="ov.actions.splice(ai,1)" v-html="BL.icon('x', 11)"></button>
+                          </div>
+                          <div v-if="!ov.actions.length" class="ov-empty-line">暂无覆盖动作,点下方添加</div>
+                          <a class="ov-add-act" @click="addOvAction(ov)">+ 添加覆盖</a>
+                        </div>
+                      </div>
                     </div>
 
-                    <!-- 空状态 -->
-                    <div v-if="!selParam.overrides.length" class="ov-empty">
-                      <span class="ov-empty-ic" v-html="BL.icon('code', 22, '#c9cdd4')"></span>
-                      <div class="ov-empty-t">还没有覆盖规则</div>
-                      <div class="ov-empty-d">覆盖规则让同一个表单适配多种场景,无需为细微差异重复建动作。<br>例如:当前用户角色为管理员时该字段可见且非必填;工单类型为故障单时强制必填。</div>
-                      <button class="bl-btn bl-btn-primary bl-btn-sm" @click="openOverrideNew('')"><span v-html="BL.icon('plus', 12, '#fff')"></span><span style="margin-left:4px">添加条件覆盖</span></button>
-                    </div>
-                    <button v-else class="fe-add-row" @click="openOverrideNew('')"><span v-html="BL.icon('plus', 12)"></span><span style="margin-left:4px">添加条件覆盖</span></button>
+                    <button class="fe-add-row" @click="addOverride('')"><span v-html="BL.icon('plus', 12)"></span><span style="margin-left:4px">添加条件覆盖</span></button>
                   </div>
                 </section>
 
@@ -865,6 +545,8 @@
                       <label class="adw-fld"><span class="adw-lbl">所属分区</span><BlSelect v-model="selParam.section" :options="sections.map(s=>({value:s,label:s}))" /></label>
                       <label class="adw-fld"><span class="adw-lbl">数据类型</span><span class="fd-ro-txt">{{ dtMeta(selParam.param_type).label }}</span></label>
                     </div>
+                    <label class="adw-fld" style="margin-top:12px"><span class="adw-lbl">参数描述</span>
+                      <textarea class="bl-textarea" v-model="selParam.description" rows="3" placeholder="说明该参数的业务含义与填写要求(仅配置人员可见,不展示给终端用户)"></textarea></label>
                   </div>
                   <div class="adw-card"><div class="adw-card-hd">依赖与引用</div>
                     <div class="adw-grid">
@@ -882,11 +564,12 @@
 
           <!-- ========= 安全与提交 (移植条件树) ========= -->
           <div v-else-if="activeMenu === 'submit'" class="adw-page">
-            <div class="adw-page-hd"><div class="adw-page-title">安全与提交准入</div><button class="bl-btn bl-btn-primary" @click="onSave" :disabled="saving">保存</button></div>
+            <div class="adw-page-hd"><div class="adw-page-title">安全与提交准入</div><button class="bl-btn bl-btn-sm bl-btn-primary" @click="onSave" :disabled="saving">保存</button></div>
             <label class="adw-sw" style="margin-bottom:12px"><input type="checkbox" v-model="submit.enabled" :true-value="1" :false-value="0" /> 启用提交标准校验</label>
             <template v-if="submit.enabled">
               <div class="ate-grp-hd" style="margin-bottom:8px"><div class="ate-grp-title">执行规则</div></div>
-              <ConditionGroup :node="submitTree" :depth="0" :object-fields="editorObjectFields" :param-fields="editorParamFields" />
+              <ConditionGroup :node="submitTree" :depth="0" :object-fields="editorObjectFields" :param-fields="editorParamFields"
+                              :subjects="['object', 'user', 'usergroup']" :subject-labels="{ object: subjectName }" />
               <label class="adw-fld" style="margin-top:14px"><span class="adw-lbl">校验失败提示</span><textarea class="bl-textarea" v-model="submit.error_message" rows="2" placeholder="不满足条件时的提示"></textarea></label>
             </template>
           </div>
@@ -913,14 +596,14 @@
                      :style="dspOf(x.p).labelPos === 'left' ? { flex:`0 0 ${labelWpx(x.p)}px`, textAlign: globalConf.labelAlign } : null">
                   <i v-if="x.p.is_required && globalConf.reqMark === 'prefix'" class="adw-pv-req">*</i>{{ x.p.param_name || x.p.param_code }}<i v-if="x.p.is_required && globalConf.reqMark === 'suffix'" class="adw-pv-req is-suffix">*</i>
                 </div>
-                <div class="adw-pv-ctl">
-                <!-- 已定位的字段进入试填态: 第一次点击只定位参数, 再点才真正操作控件 -->
-                <div v-if="pvLive(x.i)" class="adw-pv-live" @click.stop>
+                <!-- 预览一律渲染真实控件, 未定位的字段只是关掉交互(点它先定位参数, 再点才可试填) -->
+                <div class="adw-pv-ctl" :class="{ 'is-static': !pvLive(x.i) }" @click.stop="pvLive(x.i) || openParam(x.i)">
                   <div v-if="x.p.display_type === 'switch'" class="adw-pv-switch">
                     <span class="adw-showsw" :class="{ 'is-on': pvVals[x.p.param_code] }" @click="pvVals[x.p.param_code] = !pvVals[x.p.param_code]"><span class="adw-showsw-dot"></span></span>
                   </div>
-                  <textarea v-else-if="x.p.display_type === 'textarea'" class="bl-textarea" rows="2" v-model="pvVals[x.p.param_code]" :placeholder="x.p.placeholder || previewPlaceholder(x.p)"></textarea>
-                  <BlSelect v-else-if="['select','user','tree'].includes(x.p.display_type)" size="sm" clearable
+                  <textarea v-else-if="x.p.display_type === 'textarea'" class="bl-textarea" rows="2" v-model="pvVals[x.p.param_code]"
+                            :disabled="x.p.disabled" :placeholder="x.p.placeholder || previewPlaceholder(x.p)"></textarea>
+                  <BlSelect v-else-if="['select','user','tree'].includes(x.p.display_type)" size="sm" clearable :disabled="!!x.p.disabled"
                             :model-value="pvVals[x.p.param_code] ?? ''" @update:modelValue="v => pvVals[x.p.param_code] = v"
                             :options="pvOptList(x.p)" :placeholder="x.p.placeholder || '请选择…'" />
                   <div v-else-if="x.p.display_type === 'radio'" class="adw-pv-opts">
@@ -929,27 +612,10 @@
                   <div v-else-if="x.p.display_type === 'checkbox'" class="adw-pv-opts">
                     <label v-for="(o, oi) in previewOpts(x.p)" :key="oi" class="adw-pv-opt is-live" @click="pvToggleOpt(x.p, o)"><span class="adw-pv-checkbox" :class="{ 'is-on': pvChecked(x.p, o) }"></span>{{ o }}</label>
                   </div>
-                  <div v-else-if="x.p.display_type === 'readonly' || x.p.disabled" class="adw-preview-input is-ro">{{ x.p.placeholder || previewPlaceholder(x.p) }}</div>
                   <input v-else class="bl-input" :type="x.p.display_type === 'number' || x.p.param_type === 'number' ? 'number' : 'text'"
+                         :disabled="x.p.disabled || x.p.display_type === 'readonly'"
                          v-model="pvVals[x.p.param_code]" :placeholder="x.p.placeholder || previewPlaceholder(x.p)" />
-                </div>
-                <!-- 开关 -->
-                <div v-else-if="x.p.display_type === 'switch'" class="adw-pv-switch"><span class="adw-showsw"><span class="adw-showsw-dot"></span></span></div>
-                <!-- 多行 -->
-                <div v-else-if="x.p.display_type === 'textarea'" class="adw-preview-input" style="height:56px;align-items:flex-start;padding-top:8px" :class="{ 'is-ro': x.p.disabled }">{{ x.p.placeholder || previewPlaceholder(x.p) }}</div>
-                <!-- 下拉/单选/复选/人员/树: 带箭头 -->
-                <div v-else-if="['select','user','tree'].includes(x.p.display_type)" class="adw-preview-input" :class="{ 'is-ro': x.p.disabled }"><span style="flex:1">{{ x.p.placeholder || '请选择…' }}</span><span v-html="BL.icon('chevronDown', 12)"></span></div>
-                <!-- 单选按钮组 -->
-                <div v-else-if="x.p.display_type === 'radio'" class="adw-pv-opts">
-                  <label v-for="(o, oi) in previewOpts(x.p)" :key="oi" class="adw-pv-opt"><span class="adw-pv-radio"></span>{{ o }}</label>
-                </div>
-                <!-- 复选框 -->
-                <div v-else-if="x.p.display_type === 'checkbox'" class="adw-pv-opts">
-                  <label v-for="(o, oi) in previewOpts(x.p)" :key="oi" class="adw-pv-opt"><span class="adw-pv-checkbox"></span>{{ o }}</label>
-                </div>
-                <!-- 输入/数字/只读 -->
-                <div v-else class="adw-preview-input" :class="{ 'is-ro': x.p.disabled || x.p.display_type === 'readonly' }">{{ x.p.placeholder || previewPlaceholder(x.p) }}</div>
-                <div v-if="previewHelp(x.p)" class="adw-pv-help">{{ previewHelp(x.p) }}</div>
+                  <div v-if="previewHelp(x.p)" class="adw-pv-help">{{ previewHelp(x.p) }}</div>
                 </div>
               </div>
               </div>
@@ -963,6 +629,9 @@
       </aside>
     </transition>
   </Teleport>
+
+  <!-- 添加参数: 从对象属性中挑选 -->
+  <PropertyPickerModal v-model:open="propPickerOpen" :sources="propSources" :used-codes="usedPropCodes" @pick="onPropsPicked" />
 
   <!-- 添加规则 选择弹框 -->
   <Teleport to="body">
@@ -989,26 +658,6 @@
     </div>
   </Teleport>
 
-  <!-- 入参映射弹窗 -->
-  <Teleport to="body">
-    <div v-if="paramMapOpen" class="rlm-mask" @click.self="paramMapOpen = false">
-      <div class="rlm-modal">
-        <div class="rlm-hd"><span v-html="BL.icon('link', 14)"></span><span style="margin-left:6px">函数入参映射</span><span style="flex:1"></span><button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" @click="paramMapOpen = false" v-html="BL.icon('x', 14)"></button></div>
-        <div class="rlm-body" v-if="paramMapRule">
-          <div class="fd-warn">为函数 <b>{{ paramMapRule.func_code || '(未绑定)' }}</b> 的入参绑定取值来源;类型不匹配将在校验阶段拦截。</div>
-          <FuncParamMapTable :params="paramMapRule.func_params" :required="1" :form-options="formParamOptions" :object-options="objectParamOptions" :mismatch="fp => paramTypeMismatch(paramMapRule, fp)" />
-          <div style="height:14px"></div>
-          <FuncParamMapTable :params="paramMapRule.func_params" :required="0" :form-options="formParamOptions" :object-options="objectParamOptions" :mismatch="fp => paramTypeMismatch(paramMapRule, fp)" />
-        </div>
-        <div class="rlm-ft"><button class="bl-btn bl-btn-primary bl-btn-sm" @click="paramMapOpen = false">完成</button></div>
-      </div>
-    </div>
-  </Teleport>
-
-  <!-- 覆盖规则配置弹窗 (文档 1.4.4.3) -->
-  <OverrideModal v-model:open="ovModalOpen" :block="ovEditingBlock" :preset-type="ovPresetType"
-                 :param-name="selParam ? (selParam.param_name || selParam.param_code) : ''"
-                 :param-fields="ovParamFields" :defaults="ovDefaults" @save="onOverrideSave" />
 </template>
 
 <script setup>
@@ -1018,13 +667,19 @@ import { actionTypeApi, categoryApi, resourceApi } from '@/api'
 import BlSelect from '@/components/BlSelect.vue'
 import IconPickerField from '@/components/IconPickerField.vue'
 import ColorPickerField from '@/components/ColorPickerField.vue'
-import CodeEditor from '@/components/CodeEditor.vue'
 import ConditionGroup from './ConditionGroup.vue'
 import ObjectSetFilter from './ObjectSetFilter.vue'
-import OverrideModal from './OverrideModal.vue'
-import FuncParamMapTable from './FuncParamMapTable.vue'
-import { normalizeOverrides, serializeOverrides, blockTitle, ifSummary, thenSummary, emptyBlock } from './overrideModel.js'
+import IconGridSelect from './IconGridSelect.vue'
+import RuleObjectEditor from './RuleObjectEditor.vue'
+import PropertyPickerModal from './PropertyPickerModal.vue'
+import RuleFuncEditor from './RuleFuncEditor.vue'
+import RuleNotifyEditor from './RuleNotifyEditor.vue'
+import RuleWebhookEditor from './RuleWebhookEditor.vue'
+import { newMapping, WH_SUBTYPES } from './ruleModel.js'
+import { normalizeOverrides, serializeOverrides, blockTitle, ifSummary, thenSummary, emptyBlock,
+  OV_ACTIONS, OV_ACTION_LABEL, ovActionMeta, OV_USER_FIELDS, OV_OPERATORS, isRedundant, ovUid } from './overrideModel.js'
 import { VALUE_SOURCE_OPTS, FUNC_PTYPE_OPTS } from './funcParamModel.js'
+import { normalizeOp } from './conditionModel.js'
 const COMPACT_COLORS = ['#165DFF', '#00B42A', '#722ED1', '#FF7D00', '#EB2F96', '#13C2C2', '#FADB14', '#F53F3F']
 
 const props = defineProps({
@@ -1078,8 +733,6 @@ const ACTION_TYPES = {
   21:{label:'创建链接',color:'#14C9C9',icon:'link'}, 22:{label:'删除链接',color:'#F53F3F',icon:'link'}, 30:{label:'函数',color:'#722ED1',icon:'code'}, 40:{label:'Webhook',color:'#FF7D00',icon:'zap'},
   51:{label:'接口·创建',color:'#0FC6C2',icon:'plug'}, 52:{label:'接口·修改',color:'#0FC6C2',icon:'plug'}, 53:{label:'接口·删除',color:'#0FC6C2',icon:'plug'}, 54:{label:'接口·查询',color:'#0FC6C2',icon:'plug'}, 60:{label:'通知',color:'#B71DE8',icon:'bell'},
 }
-const PROP_OPERATORS = { set:'赋值', add:'增加', sub:'减少', append:'追加', clear:'清空' }
-const PROP_OPERATOR_OPTS = Object.entries(PROP_OPERATORS).map(([v, l]) => ({ value: v, label: l }))
 /* 表单设计器: 数据类型 / 显示组件 / 录入模式 */
 /* 图标取「类型本身的写法」而非动作: 字母 A=文本 / #=数值 / 勾=布尔 / 立方=对象 / 日历=日期 / 带勾方框=枚举 */
 const DATA_TYPE_META = { string:{icon:'textType',color:'#2563eb',label:'字符串'}, number:{icon:'hash',color:'#1f2937',label:'数值'}, boolean:{icon:'check',color:'#10b981',label:'布尔'}, object:{icon:'cube',color:'#8b5cf6',label:'对象引用'}, date:{icon:'calendar',color:'#0891b2',label:'日期'}, enum:{icon:'checkSquare',color:'#dc2626',label:'枚举'} }
@@ -1092,6 +745,7 @@ const DISPLAY_TYPES = [
   { v:'number', label:'数字步进器', icon:'stepperUpDown' }, { v:'switch', label:'开关', icon:'toggleSwitch' },
   { v:'user', label:'人员选择器', icon:'user' }, { v:'readonly', label:'只读文本', icon:'lock' }, { v:'checkbox', label:'复选框', icon:'checkSquare' },
 ]
+const DISPLAY_TYPE_OPTS = DISPLAY_TYPES.map(d => ({ value: d.v, label: d.label, icon: d.icon }))
 const INPUT_MODES = [{ v:'input', label:'用户输入' }, { v:'multi', label:'多选' }, { v:'user', label:'用户' }, { v:'usergroup', label:'用户组' }]
 const DETAIL_TABS = [{ k:'value', label:'值' }, { k:'display', label:'显示' }, { k:'override', label:'覆盖' }, { k:'detail', label:'详情' }]
 /* 规则类型 */
@@ -1113,7 +767,8 @@ const WH_TIMINGS = [{ value:'before', label:'编辑应用前' }, { value:'after'
 
 function defaultParam() {
   return { param_code:'', param_name:'', param_type:'string', is_required:1, value_source:1, default_value:'', property_code:'',
-    section:'基础参数', visible:1, disabled:0, display_type:'input', placeholder:'', help_text:'',
+    section:'基础参数', visible:1, disabled:0, display_type:'input', placeholder:'', help_text:'', description:'',
+    src_class_id:'', src_class_name:'', src_class_api:'',
     allow_multi:0, input_mode:'input', min_length_on:0, min_length:'', max_length_on:0, max_length:'', regex_on:0, regex:'',
     options:[], allow_other:0, option_source:'manual', objset:defaultObjset(),
     default_enabled:0, default_type:'static', default_obj_param:'', default_obj_prop:'', overrides:[], dsp:{} }
@@ -1126,7 +781,8 @@ function normalizeParam(p) {
   return { ...d, param_code:p.param_code, param_name:p.param_name, param_type:p.param_type||'string', is_required:Number(p.is_required)||0,
     value_source:Number(cfg.value_source)||1, default_value:p.default_value||'', property_code:cfg.property_code||'',
     section:cfg.section||'基础参数', visible:cfg.visible??1, disabled:cfg.disabled??0, display_type:cfg.display_type||autoDisplay(p.param_type),
-    placeholder:cfg.placeholder||'', help_text:cfg.help_text||'', allow_multi:cfg.allow_multi??0, input_mode:cfg.input_mode||'input',
+    placeholder:cfg.placeholder||'', help_text:cfg.help_text||'', description:cfg.description||'', allow_multi:cfg.allow_multi??0, input_mode:cfg.input_mode||'input',
+    src_class_id:cfg.src_class_id||'', src_class_name:cfg.src_class_name||'', src_class_api:cfg.src_class_api||'',
     min_length_on:cfg.min_length_on??0, min_length:cfg.min_length??'', max_length_on:cfg.max_length_on??0, max_length:cfg.max_length??'',
     regex_on:cfg.regex_on??0, regex:cfg.regex||'', options:cfg.options||[], allow_other:cfg.allow_other??0, option_source:cfg.option_source||'manual',
     objset:{ ...defaultObjset(), ...(cfg.objset||{}), filters:(cfg.objset?.filters||[]).map(f=>({ property_code:f.property_code||'', operator:f.operator||'eq', value:f.value||'' })) },
@@ -1136,11 +792,13 @@ function normalizeParam(p) {
 }
 function paramConfig(p) {
   return { value_source:p.value_source, property_code:p.property_code||null, section:p.section, visible:p.visible, disabled:p.disabled,
-    display_type:p.display_type, placeholder:p.placeholder, help_text:p.help_text, allow_multi:p.allow_multi, input_mode:p.input_mode,
+    display_type:p.display_type, placeholder:p.placeholder, help_text:p.help_text, description:p.description||'', allow_multi:p.allow_multi, input_mode:p.input_mode,
+    src_class_id:p.src_class_id||'', src_class_name:p.src_class_name||'', src_class_api:p.src_class_api||'',
     min_length_on:p.min_length_on, min_length:p.min_length, max_length_on:p.max_length_on, max_length:p.max_length, regex_on:p.regex_on, regex:p.regex,
     options:p.options, allow_other:p.allow_other, option_source:p.option_source, objset:p.objset || defaultObjset(),
     default_enabled:p.default_enabled, default_type:p.default_type, default_obj_param:p.default_obj_param || '', default_obj_prop:p.default_obj_prop || '',
-    overrides:serializeOverrides(p.overrides), dsp:p.dsp || {} }
+    /* 自动给出的第一条若一直没填, 不落库 */
+    overrides:serializeOverrides((p.overrides || []).filter(b => b.cond?.children?.length || b.actions?.length)), dsp:p.dsp || {} }
 }
 function autoDisplay(t) { return ({ string:'input', number:'number', boolean:'switch', enum:'select', object:'select', date:'input' })[t] || 'input' }
 
@@ -1193,16 +851,31 @@ async function loadRuleClassProps(classId) {
   if (!classId || ruleClassPropsCache[classId]) return
   const list = await resourceApi.properties(classId).catch(() => [])
   const arr = Array.isArray(list) ? list : (list?.data || [])
-  ruleClassPropsCache[classId] = arr.map(p => ({ code:p.api_name||p.prop_code, name:p.display_name||p.rdfs_label||p.api_name, status:Number(p.status ?? 1) }))
+  ruleClassPropsCache[classId] = arr.map(p => ({ code:p.api_name||p.prop_code, name:p.display_name||p.rdfs_label||p.api_name,
+    status:Number(p.status ?? 1), dataType:p.data_type, required:!!p.is_required }))
 }
-const objRuleClassId = computed(() => selEditRule.value?.obj_class_id || form.object_class_id || '')
-const objRuleClassName = computed(() => classOptions.value.find(c => c.id === objRuleClassId.value)?.cn || '')
-const objRulePropOptions = computed(() => {
-  const arr = ruleClassPropsCache[objRuleClassId.value] || (objRuleClassId.value === form.object_class_id ? classProps.value : [])
-  return arr.map(p => ({ value:p.code, label:`${p.name} (${p.code})` }))
-})
-const objPkOptions = computed(() => [{ value:'', label:'系统自动生成' }, ...objRulePropOptions.value])
-function addObjLink(rule) { rule.obj_links.push({ link_type_code:'', peer_param:'' }) }
+/* 每条规则各自的对象类 → 各自的属性候选 (多条规则可指向不同对象类) */
+function ruleClassIdOf(r) { return r?.obj_class_id || form.object_class_id || '' }
+function ruleClassNameOf(r) { return classOptions.value.find(c => c.id === ruleClassIdOf(r))?.cn || '' }
+function rulePropOptionsOf(r) {
+  const id = ruleClassIdOf(r)
+  const arr = ruleClassPropsCache[id] || (id === form.object_class_id ? classProps.value : [])
+  return arr.map(p => ({ value:p.code, label:`${p.name} (${p.code})`, dataType:p.dataType, required:!!p.required }))
+}
+/* 排在该规则之前的「创建对象」规则 — 它们的产物可被后面的规则引用 (value_source=7) */
+function priorCreatedOf(rule) {
+  const idx = rules.value.indexOf(rule)
+  return rules.value.slice(0, idx < 0 ? 0 : idx)
+    .filter(r => r.kind === 'create_object' && (r.obj_class_id || form.object_class_id))
+    .map(r => {
+      const id = r.obj_class_id || form.object_class_id
+      const cn = classOptions.value.find(c => c.id === id)?.cn || '对象'
+      return { classId: id, label: `${cn} (由「${r.rule_name || '创建对象'}」创建)` }
+    })
+}
+/* 主对象 = 动作绑定的对象, 其属性可作为规则赋值来源 (value_source=6) */
+const mainObjectProps = computed(() => classProps.value.map(p => ({ value:p.code, label:`${p.name} (${p.code})` })))
+function objPkOptionsOf(r) { return [{ value:'', label:'系统自动生成' }, ...rulePropOptionsOf(r)] }
 const headMeta = computed(() => ACTION_TYPES[Number(form.action_type)] || M_TYPES[form.m_type] || { color:'#165DFF', icon:'zap' })
 const headColor = computed(() => form.color || headMeta.value.color)
 const headIcon = computed(() => headMeta.value.icon)
@@ -1212,6 +885,12 @@ const subjectSummary = computed(() => {
   if (form.m_type === 2) { const l = (props.allLinkTypes||[]).find(x => x.id === form.link_type_id); return l ? (l.rdfs_label||l.link_type_id) : '—' }
   if (form.m_type === 3) return form.function_code || '—'
   return '—'
+})
+/* 条件左栏第一项显示所选对象类 / 链接类型本身的名字, 而不是笼统的「对象」 */
+const subjectName = computed(() => {
+  if (form.m_type === 1) return classOptions.value.find(x => x.id === form.object_class_id)?.cn || '对象'
+  if (form.m_type === 2) { const l = (props.allLinkTypes||[]).find(x => x.id === form.link_type_id); return l ? (l.rdfs_label||l.link_type_id) : '链接' }
+  return '对象'
 })
 const activeRuleCount = computed(() => rules.value.filter(r => Number(r.status ?? 1) === 1).length)
 /* 文档 5.3.5 无效规则组合检测 (保存阶段拦截) */
@@ -1266,7 +945,7 @@ function buildSubmitTree(nodes) {
   const childrenOf = (pid) => nodes.filter(n => n.parent_id === pid).sort((a,b)=>(a.sort||0)-(b.sort||0)).map(n => {
     if (n.node_type === 'group') return { _k:'ek-'+(etk++), type:'group', logic:n.logic_op||'all', children:childrenOf(n.id) }
     const parts = String(n.left_code||'').split(':'); const subj = parts[0]==='user'?'user':parts[0]==='param'?'param':'object'
-    return { _k:'ek-'+(etk++), type:'cond', subject:subj, field:parts[1]||'', operator:n.operator||'eq', value:n.right_value||'' }
+    return { _k:'ek-'+(etk++), type:'cond', subject:subj, field:parts[1]||'', operator:normalizeOp(n.operator)||'eq', value:n.right_value||'' }
   })
   submitTree.logic = root.logic_op || 'all'; submitTree.children = childrenOf(root.id)
 }
@@ -1304,7 +983,7 @@ function parseCfg(s){ try { return JSON.parse(s||'{}') } catch { return {} } }
 function readMeta(){ return (form.metadata && typeof form.metadata === 'object') ? { ...form.metadata } : parseCfg(form.metadata) }
 async function load() {
   loadDomainOpts()
-  activeMenu.value = 'overview'; editMode.value = false; formSel.value = 0; ruleView.value = 'list'; ruleEditIdx.value = -1
+  activeMenu.value = 'overview'; editMode.value = false; formSel.value = 0
   ruleSelKey.value = null
   const res = await actionTypeApi.get(props.actionId).catch(() => null)
   Object.assign(form, defaultForm(), res || {})
@@ -1403,22 +1082,7 @@ function rulePreview(r) {
   return `${(r.prop_mappings||[]).length} 项属性赋值`
 }
 /* 入参映射弹窗 */
-const paramMapOpen = ref(false)
-const paramMapRule = ref(null)
-function openParamMap(rule) { paramMapRule.value = rule; paramMapOpen.value = true }
 /* 函数规则 完整编辑态 */
-const FUNC_UPGRADE_OPTS = [{ value:1, label:'自动升级到兼容版本' }, { value:0, label:'锁定当前版本' }]
-const FUNC_IDENTITY_OPTS = [{ value:'caller', label:'以调用者身份执行' }, { value:'service', label:'以服务账号身份执行' }]
-const FUNC_ERR_OPTS = [{ value:'rollback', label:'中断操作,回滚所有 Ontology 变更' }, { value:'continue', label:'继续执行,记录异常日志' }]
-const NOTIFY_RECIPIENT_SRC = [{ value:'object_prop', label:'来自对象参数属性' }, { value:'param', label:'来自参数' }, { value:'static', label:'静态指定' }]
-const WH_SUBTYPES = [
-  { value:'writeback', label:'回写', icon:'edit', desc:'使用回写模式编辑外部数据系统。外部系统返回结构响应可用于其他动作编辑规则。如果回写执行失败,所有动作编辑都不会生效,错误会立即显示给终端用户。' },
-  { value:'sideeffect', label:'副作用', icon:'zap', desc:'副作用模式在本体对象修改完成、事务提交后执行。支持配置多个副作用 Webhook;执行失败不影响主操作结果,用户可看到有物或待提示后异步执行。' },
-]
-const NOTIFY_LINK_TYPES = [{ value:'object_detail', label:'对象详情区' }, { value:'external', label:'外部链接' }, { value:'action', label:'触发其它动作' }]
-const ruleView = ref('list')
-const ruleEditIdx = ref(-1)
-const selEditRule = computed(() => rules.value[ruleEditIdx.value] || null)
 /* 左导航规则树: 按 编辑类(ruleType=1) / 副作用(ruleType=2) 分组, 组内保持规则生效顺序 */
 const RULE_NAV_GROUPS = [{ ruleType: 1, label: '编辑类' }, { ruleType: 2, label: '副作用' }]
 const ruleSelKey = ref(null)
@@ -1426,32 +1090,22 @@ const ruleNavGroups = computed(() => RULE_NAV_GROUPS
   .map(g => ({ label: g.label, items: rules.value.map((r, i) => ({ r, i })).filter(x => kindMeta(x.r.kind).ruleType === g.ruleType) }))
   .filter(g => g.items.length))
 function ruleNavLabel(r) { const m = kindMeta(r.kind); return r.rule_name ? `${m.label}: ${r.rule_name}` : m.label }
-/* 点下级菜单 = 直接进该规则的完整编辑页 */
-const RULE_VIEW_BY_KIND = { function:'func', notification:'notify', webhook:'webhook' }
+/* 点下级菜单 = 回列表并展开那条规则的卡片 (所有规则都已改为卡片内就地编辑) */
 function openRuleFromNav(i) {
   const rule = rules.value[i]
   if (!rule) return
   activeMenu.value = 'rules'
   ruleSelKey.value = rule._k
-  const view = RULE_VIEW_BY_KIND[rule.kind] || 'object'
-  if (view === 'object') openObjectEdit(i); else { ruleEditIdx.value = i; ruleView.value = view }
+  rules.value.forEach(r => { r._collapsed = r !== rule })
+  loadRuleClassProps(ruleClassIdOf(rule))
 }
-function openObjectEdit(ri) {
-  ruleEditIdx.value = ri; ruleSelKey.value = rules.value[ri]?._k ?? null; ruleView.value = 'object'
-  loadRuleClassProps(rules.value[ri]?.obj_class_id || form.object_class_id)
-}
-function openFuncEdit(ri) { ruleEditIdx.value = ri; ruleSelKey.value = rules.value[ri]?._k ?? null; ruleView.value = 'func' }
-function openNotifyEdit(ri) { ruleEditIdx.value = ri; ruleSelKey.value = rules.value[ri]?._k ?? null; ruleView.value = 'notify' }
-function openWebhookEdit(ri) { ruleEditIdx.value = ri; ruleSelKey.value = rules.value[ri]?._k ?? null; ruleView.value = 'webhook' }
-function addWhParam(rule) { rule.wh_params.push({ name:'', param_type:'string', value_source:1, value_content:'' }) }
 function whInputCodePreview(r) {
   return `import { Function, UserFacingError } from "@foundry/functions-api"\nimport { Company } from "@foundry/ontology-api"\n\n// 定义一个接口, 用于表达 Webhook 输入约束结构\nexport interface MyWebhookInput {\n  name: string;      // 公司名称\n  industry: string;  // 所属行业\n  country: string;   // 所在国家\n}\n\n// 定义一个类, 包含承接 Webhook 输入的函数\nexport class MyWebhookFunctions {\n  @Function()\n  public ${r.wh_input_func || 'returnWebhookInput'}(company: Company): MyWebhookInput {\n    if (!company.name || !company.industry || !company.country) {\n      throw new UserFacingError("");\n    }\n    return { /* MyWebhookInput 实例 */ };\n  }\n}`
 }
-function backToRules(fromNav) { activeMenu.value = 'rules'; ruleView.value = 'list'; ruleEditIdx.value = -1; if (fromNav === true) ruleSelKey.value = null }
+function backToRules(fromNav) { activeMenu.value = 'rules'; if (fromNav === true) ruleSelKey.value = null }
 function notifyCodePreview(r) {
   return `// 只读预览 · 在代码仓库中编辑\n@NotificationFunction("${r.notify_func_code || 'unnamed'}")\npublic Notification build(User recipient, Object subject) {\n  return Notification.builder()\n    .heading("${r.notify_title || '通知标题'}")\n    .content("...")\n    .build();\n}`
 }
-function addFuncException(rule) { rule.func_exceptions.push({ code:'', message:'' }) }
 /* 值来源与入参类型不匹配的粗校验 (静态值不校验) */
 function paramTypeMismatch(rule, fp) {
   if (Number(fp.value_source) !== 1) return false
@@ -1482,16 +1136,70 @@ function kindDisabledReason(k) {
   if (k.kind === 'create_object') return '已有「创建对象」规则:同一对象在单次提交中不能被创建两次(主键冲突 / 数据重复)'
   return '已有其他 Ontology 编辑规则,不能再添加函数规则'
 }
-function addMapping(rule) { rule.prop_mappings.push({ property_code:'', property_name:'', prop_operator:'set', value_source:1, value_content:'', is_required:0 }) }
+function addMapping(rule) { rule.prop_mappings.push(newMapping()) }
+/* 手风琴: 同时只展开一条, 否则几条规则全展开后页面长到没法用 */
+function toggleRuleCard(rule) {
+  const open = rule._collapsed
+  rules.value.forEach(r => { r._collapsed = true })
+  if (open) {
+    rule._collapsed = false
+    loadRuleClassProps(ruleClassIdOf(rule))
+    ruleSelKey.value = rule._k
+  }
+}
 /* 规则拖拽排序 (顺序生效) */
 const rulePickerOpen = ref(false)
 const rDragIdx = ref(null)
 function onRuleDragStart(i, ev) { rDragIdx.value = i; if (ev?.dataTransfer) ev.dataTransfer.effectAllowed = 'move' }
 function onRuleDrop(target) { const from = rDragIdx.value; rDragIdx.value = null; if (from === null || from === target) return; const [it] = rules.value.splice(from, 1); rules.value.splice(target, 0, it) }
-function addParam(sec) {
-  const target = (typeof sec === 'string' && sec) ? sec : (sections.value[0] || '基础参数')
-  formParams.value.push({ ...defaultParam(), section: target })
-  openParam(formParams.value.length - 1)
+/* 添加参数 = 从对象属性里挑 (主体对象 + 规则中创建的对象), 已加入的不再列出 */
+const propPickerOpen = ref(false)
+const propPickerSec = ref('')
+const propSources = ref([])
+async function addParam(sec) {
+  propPickerSec.value = (typeof sec === 'string' && sec) ? sec : (sections.value[0] || '基础参数')
+  const out = []
+  if (form.object_class_id) {
+    await loadClassProps()
+    const c = classOptions.value.find(x => x.id === form.object_class_id)
+    out.push({ key: 'subject', classId: form.object_class_id, color: '#165DFF',
+      label: c?.cn || '本动作对象', sub: c?.api_name || '', props: classProps.value })
+  }
+  /* 创建对象规则会产出新对象, 它们的属性同样可以做成表单参数 */
+  for (const r of rules.value) {
+    if (r.kind !== 'create_object') continue
+    const id = r.obj_class_id || form.object_class_id
+    if (!id || out.some(s => s.classId === id)) continue
+    await loadRuleClassProps(id)
+    const c = classOptions.value.find(x => x.id === id)
+    out.push({ key: 'rule-' + r._k, classId: id, color: '#00B42A',
+      label: c?.cn || '规则创建的对象', sub: `规则:${r.rule_name || '创建对象'}`,
+      props: ruleClassPropsCache[id] || [] })
+  }
+  propSources.value = out
+  if (!out.length) {   // 没有可选来源时退回原来的手工新建
+    formParams.value.push({ ...defaultParam(), section: propPickerSec.value })
+    return openParam(formParams.value.length - 1)
+  }
+  propPickerOpen.value = true
+}
+const usedPropCodes = computed(() => formParams.value.map(p => p.property_code || p.param_code).filter(Boolean))
+function onPropsPicked(list) {
+  const sec = propPickerSec.value
+  list.forEach(p => {
+    const t = mapXsd(p.dataType)
+    const cls = classOptions.value.find(c => c.id === p.classId)
+    formParams.value.push({ ...defaultParam(), section: sec, param_code: 'p_' + p.code, param_name: p.name,
+      param_type: t, display_type: autoDisplay(t), is_required: p.required ? 1 : 0, property_code: p.code,
+      /* 记住取自哪个对象类, 头部据此标出来源 */
+      src_class_id: p.classId || '', src_class_name: cls?.cn || '', src_class_api: cls?.api_name || '' })
+  })
+  BL.success(`已添加 ${list.length} 个参数`)
+}
+/* 非本动作主体对象的参数才需要标来源, 否则每个参数都挂一个标签太吵 */
+function srcTagOf(p) {
+  if (!p?.src_class_id || p.src_class_id === form.object_class_id) return null
+  return { name: p.src_class_name || '关联对象', api: p.src_class_api || '' }
 }
 /* 字段拖拽排序 (支持跨分区: 落点采用目标分区) */
 const fDragIdx = ref(null)
@@ -1552,10 +1260,34 @@ function switchDetailTab(k) { detailTab.value = k; nextTick(() => { scrollEl.val
 function ovCountOf(target) {
   return (selParam.value?.overrides || []).filter(o => (o.actions || []).some(a => a.type === target)).length
 }
-/* ===== 覆盖规则 (文档 1.4.4.3) ===== */
-const ovModalOpen = ref(false)
-const ovEditIdx = ref(-1)
-const ovPresetType = ref('')
+/* ===== 覆盖规则 (文档 1.4.4.3) — 就地编辑, 折叠态只看摘要 ===== */
+const ovFold = ref(new Set())
+const OV_ACTION_OPTS = OV_ACTIONS.map(a => ({ value: a.value, label: a.label }))
+const OV_OP_KEYS = OV_OPERATORS.map(o => o.key)
+function ovBoolAction(t) { return !!ovActionMeta(t)?.bool }
+/* 老数据里已下线的类型仍要能显示出来, 临时补进该行的下拉 */
+function ovActionOptsOf(a) {
+  const opts = OV_ACTION_OPTS.slice()
+  if (a.type && !opts.some(o => o.value === a.type)) opts.push({ value: a.type, label: OV_ACTION_LABEL[a.type] || a.type })
+  return opts
+}
+function toggleOvFold(ov) {
+  const s = new Set(ovFold.value)
+  s.has(ov._k) ? s.delete(ov._k) : s.add(ov._k)
+  ovFold.value = s
+}
+/* 枚举类参数给出候选值, 其余自由输入 */
+function ovValueOptions(c) {
+  if (!c || c.subject !== 'param') return []
+  const f = ovParamFields.value.find(x => x.code === c.field)
+  return (f?.options || []).filter(o => String(o.value ?? '').trim()).map(o => ({ value: o.value, label: o.label || o.value }))
+}
+function addOvAction(ov) {
+  const used = ov.actions.map(a => a.type)
+  const next = OV_ACTIONS.find(a => !used.includes(a.value)) || OV_ACTIONS[0]
+  ov.actions.push({ _k: ovUid(), type: next.value, value: next.bool ? 1 : '' })
+}
+function onOvActTypeChange(a) { a.value = ovBoolAction(a.type) ? 1 : '' }
 /* 条件只能引用「当前字段上方」的参数 — 避免循环依赖 */
 const ovParamFields = computed(() => formParams.value.slice(0, Math.max(0, selIdx.value))
   .filter(p => String(p.param_code || '').trim())
@@ -1565,26 +1297,37 @@ const ovDefaults = computed(() => ({
   required: Number(selParam.value?.is_required ?? 0),
   disabled: Number(selParam.value?.disabled ?? 0),
 }))
-const ovEditingBlock = computed(() => ovEditIdx.value >= 0 ? selParam.value?.overrides?.[ovEditIdx.value] || null : null)
-function openOverrideNew(presetType) { ovEditIdx.value = -1; ovPresetType.value = presetType || ''; ovModalOpen.value = true }
-function openOverrideEdit(i) { ovEditIdx.value = i; ovPresetType.value = ''; ovModalOpen.value = true }
-function onOverrideSave(block) {
-  const list = selParam.value.overrides
-  if (ovEditIdx.value >= 0) list.splice(ovEditIdx.value, 1, block); else list.push(block)
-  ovEditIdx.value = -1
+function addOverride(presetType) {
+  const b = emptyBlock(presetType || '')
+  selParam.value.overrides.push(b)          // 新块默认展开, 直接就能填
+  return b
 }
 async function removeOverride(i) {
-  const ok = await BL.confirm({ title: '删除覆盖规则', content: `确定删除「${blockTitle(selParam.value.overrides[i])}」?`, danger: true, okText: '删除' })
-  if (ok) selParam.value.overrides.splice(i, 1)
+  const list = selParam.value.overrides
+  /* 未填过的空块直接删, 不必确认 */
+  const b = list[i]
+  const blank = !b?.cond?.children?.length && !b?.actions?.length
+  if (!blank) {
+    const ok = await BL.confirm({ title: '删除覆盖规则', content: `确定删除「${blockTitle(b)}」?`, danger: true, okText: '删除' })
+    if (!ok) return
+  }
+  list.splice(i, 1)
 }
 function moveOverride(i, dir) {
   const list = selParam.value.overrides, j = i + dir
   if (j < 0 || j >= list.length) return
   const [it] = list.splice(i, 1); list.splice(j, 0, it)
 }
+/* 「值」页快捷入口: 复用进入页面时自动给出的空规则, 避免多出一条 */
 function addOverrideFor(target) {
-  openOverrideNew(target)
   switchDetailTab('override')
+  nextTick(() => {
+    const list = selParam.value?.overrides || []
+    const last = list[list.length - 1]
+    if (last && !last.cond?.children?.length && !last.actions?.length) {
+      if (target) last.actions.push({ _k: ovUid(), type: target, value: target === 'disabled' ? 1 : 0 })
+    } else addOverride(target)
+  })
 }
 
 /* —— 表单级显示配置 → 参数级覆盖 的继承解析 ——
@@ -1613,6 +1356,11 @@ function toggleInherit(p, k) {
 }
 function dspOverCount(p) { return DSP_KEYS.filter(k => !isInherit(p, k)).length }
 const DSP_LABELS = { width:'字段宽度', labelPos:'标签位置', labelW:'标签宽度', clear:'清空按钮', helpOn:'帮助文案' }
+/* 头部元信息行: 把 width/labelPos 的值翻成中文 */
+function dspLabel(key, v) {
+  const list = key === 'width' ? DSP_WIDTHS : DSP_LABEL_POS
+  return list.find(x => x.value === v)?.label || v || ''
+}
 function dspOverLabels(p) { return DSP_KEYS.filter(k => !isInherit(p, k)).map(k => DSP_LABELS[k]).join('、') }
 const dspOverParams = computed(() => formParams.value.map((p, i) => ({ p, i })).filter(x => dspOverCount(x.p) > 0))
 function resetDsp(p) { p.dsp = {} }
@@ -1739,6 +1487,9 @@ async function removeSection(sec) {
 }
 function dtMeta(t) { return DATA_TYPE_META[t] || DATA_TYPE_META.string }
 function displayMeta(v) { return DISPLAY_TYPES.find(d => d.v === v) || DISPLAY_TYPES[0] }
+/* 开关/单选/复选/只读没有可输入区域, 占位文字对它们无效 */
+const PLACEHOLDER_TYPES = ['input', 'textarea', 'number', 'select', 'user', 'tree']
+function hasPlaceholder(p) { return !!p && PLACEHOLDER_TYPES.includes(p.display_type) }
 function isRefByRule(code) {
   if (!String(code || '').trim()) return false
   return rules.value.some(r =>
@@ -1824,7 +1575,7 @@ function mapXsd(dt){ const s=String(dt||'').toLowerCase(); if(s.includes('enum')
 
 async function onSave() {
   if (!String(form.rdfs_label||'').trim()) { activeMenu.value='overview'; editMode.value=true; return BL.warning('请填写动作名称') }
-  if (ruleConflicts.value.length) { activeMenu.value = 'rules'; ruleView.value = 'list'; return BL.error('存在无效规则组合,请先修正:' + ruleConflicts.value[0]) }
+  if (ruleConflicts.value.length) { activeMenu.value = 'rules'; return BL.error('存在无效规则组合,请先修正:' + ruleConflicts.value[0]) }
   saving.value = true
   try {
     const body = { ...form,
@@ -2048,6 +1799,12 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .fd-row-name { font-size: 13px; color: var(--bl-text-1); }
 .fd-row-warn { font-size: 11px; color: var(--bl-warning); margin-top: 2px; }
 .fd-disp { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; padding: 3px 8px; border-radius: 6px; background: var(--bl-bg-2); color: var(--bl-text-2); }
+.fd-ph-row { display: flex; align-items: center; gap: 8px; }
+.fd-ph-row .bl-input { flex: 1; min-width: 0; }
+.fd-ph-tip { font-size: 11.5px; color: var(--bl-text-3); line-height: 1.6; margin-top: 8px; }
+/* 隐藏参数: 列表里仍然列出, 但明确标出不渲染给用户 */
+.fd-hidden { display: inline-flex; align-items: center; gap: 3px; flex-shrink: 0; font-size: 11.5px; padding: 2px 7px; border-radius: 5px; color: var(--bl-text-3); background: var(--bl-bg-2); }
+.fd-hidden > span { display: inline-flex; }
 .fd-disp-ic { display: inline-flex; color: var(--bl-text-3); }
 .fd-disp-txt { font-size: 12px; }
 .fd-chev { color: var(--bl-text-3); display: inline-flex; flex-shrink: 0; }
@@ -2056,7 +1813,28 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 
 /* 参数详情页 */
 /* 紧凑头部 (单行: 返回 + 参数信息) */
-.fd-phd2 { display: flex; align-items: center; gap: 8px; margin: -8px -16px 0; padding: 4px 16px; background: var(--bl-bg-1); border-bottom: 1px solid var(--bl-divider); height: 43px; }
+.fd-phd2 { display: flex; align-items: center; gap: 8px; margin: -8px -16px 0; padding: 5px 16px; background: var(--bl-bg-1); min-height: 40px; }
+/* 参数详情头部: 返回 | 参数信息(上下两行) | 操作 三列 */
+.fd-phd { display: flex; align-items: center; gap: 6px; margin: -8px -16px 0; padding: 7px 16px; background: var(--bl-bg-1); }
+.fd-phd-sep { width: 1px; align-self: stretch; background: var(--bl-divider); flex-shrink: 0; }
+.fd-phd-mid { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.fd-phd-r1 { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.fd-phd-r2 { display: flex; align-items: center; gap: 7px; font-size: 11.5px; color: var(--bl-text-3); min-width: 0; }
+.fd-phd-r2 > span { flex-shrink: 0; }
+.fd-phd-r2 > span.bl-truncate { flex: 1; min-width: 0; }
+.fd-phd-act { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.fd-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--bl-border-strong); }
+/* 头部三个标签统一高度: 全局 .bl-tag 是 22px, 自定义的两个跟齐 */
+.fd-phd-r1 .bl-tag, .fd-code-tag, .fd-req-tag { height: 22px; display: inline-flex; align-items: center; flex-shrink: 0; border-radius: 4px; font-size: 11.5px; box-sizing: border-box; }
+.fd-code-tag { color: var(--bl-text-2); background: var(--bl-bg-2); border: 1px solid var(--bl-divider); padding: 0 7px; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fd-code-tag.is-empty { color: #f53f3f; border-color: color-mix(in srgb, #f53f3f 35%, transparent); background: color-mix(in srgb, #f53f3f 8%, transparent); }
+.fd-req-tag { font-weight: 600; color: #f53f3f; background: color-mix(in srgb, #f53f3f 12%, transparent); padding: 0 7px; }
+/* 参数取自关联对象(非本动作主体)时的来源标记 */
+.fd-src-tag { display: inline-flex; align-items: center; gap: 4px; height: 22px; flex-shrink: 0; padding: 0 8px; border-radius: 4px; box-sizing: border-box;
+  font-size: 11.5px; color: #fff; background: #00B42A; max-width: 260px; overflow: hidden; white-space: nowrap; }
+.fd-src-tag > span { display: inline-flex; flex-shrink: 0; }
+.fd-src-tag > i { font-style: normal; opacity: .8; font-size: 10.5px; overflow: hidden; text-overflow: ellipsis; }
+.fd-src-tag.is-sm { height: 19px; font-size: 11px; padding: 0 6px; }
 .fd-back { display: inline-flex; align-items: center; gap: 2px; padding: 3px 8px 3px 4px; font-size: 12.5px; color: var(--bl-text-2); background: transparent; border: 0; cursor: pointer; border-radius: 6px; flex-shrink: 0; }
 .fd-back:hover { color: var(--bl-primary); background: var(--bl-bg-hover); }
 .fd-phd2-sep { width: 1px; height: 16px; background: var(--bl-divider); flex-shrink: 0; }
@@ -2071,7 +1849,7 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .fd-detail-body { flex: 1; min-height: 0; overflow-y: auto; margin-right: -10px; padding: 10px 8px 2px 0; }
 
 /* 锚点导航 */
-.fd-tabs { display: flex; gap: 2px; padding: 8px 0 4px; background: var(--bl-bg-2); }
+.fd-tabs { display: flex; gap: 2px; padding: 8px 0 4px; background: var(--bl-bg-2); border-top: 1px solid var(--bl-divider); }
 .fd-tab-btn { padding: 6px 16px; font-size: 13px; color: var(--bl-text-2); cursor: pointer; background: transparent; border: 0; border-radius: 6px; transition: background .12s, color .12s; }
 .fd-tab-btn:hover { color: var(--bl-text-1); background: var(--bl-bg-hover); }
 .fd-tab-btn.is-on { color: var(--bl-primary); background: var(--bl-primary-soft); font-weight: 600; }
@@ -2131,7 +1909,22 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .ov-note { background: var(--bl-primary-soft); border: 1px solid color-mix(in srgb, var(--bl-primary) 22%, transparent);
   border-radius: 8px; padding: 9px 13px; font-size: 12px; line-height: 1.7; color: var(--bl-text-2); margin-bottom: 12px; }
 .ov-card { border: 1px solid var(--bl-border); border-radius: 9px; margin-bottom: 10px; overflow: hidden; }
-.ov-card-hd { display: flex; align-items: center; gap: 8px; padding: 8px 10px 8px 12px; background: var(--bl-bg-2); }
+.ov-card-hd { display: flex; align-items: center; gap: 8px; padding: 8px 10px 8px 12px; background: var(--bl-bg-2); cursor: pointer; }
+.ov-chev { display: inline-flex; color: var(--bl-text-3); transition: transform .15s; flex-shrink: 0; }
+.ov-chev.is-fold { transform: rotate(-90deg); }
+/* 就地编辑区 (原覆盖弹框内容) */
+.ov-edit { padding: 12px; border-top: 1px solid var(--bl-divider); }
+.ov-tag { display: inline-block; font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; }
+.ov-tag-if { background: var(--bl-primary-soft); color: var(--bl-primary); }
+.ov-tag-then { background: #FEF3C7; color: #92400E; margin-top: 16px; }
+.ov-acts { display: flex; flex-direction: column; gap: 8px; }
+.ov-act { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--bl-border); border-radius: 8px; }
+.ov-act.is-redundant { border-color: #FDE68A; background: #FEF3C7; }
+.ov-act-lbl { font-size: 12.5px; color: var(--bl-text-2); flex-shrink: 0; }
+.ov-redundant { font-size: 11.5px; color: #92400E; flex-shrink: 0; }
+.ov-empty-line { font-size: 12px; color: var(--bl-text-3); }
+.ov-add-act { font-size: 12.5px; color: var(--bl-primary); cursor: pointer; align-self: flex-start; }
+.ov-add-act:hover { text-decoration: underline; }
 .ov-prio { flex-shrink: 0; font-size: 11px; font-weight: 600; color: var(--bl-primary); background: var(--bl-primary-soft); padding: 2px 7px; border-radius: 4px; }
 .ov-title { font-size: 12.5px; font-weight: 600; color: var(--bl-text-1); min-width: 0; }
 .ov-card-bd { padding: 9px 12px; display: flex; flex-direction: column; gap: 6px; }
@@ -2139,19 +1932,11 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .ov-sum-tag { flex-shrink: 0; font-size: 10.5px; font-weight: 700; padding: 1px 6px; border-radius: 4px; margin-top: 1px; }
 .ov-sum-if { background: var(--bl-primary-soft); color: var(--bl-primary); }
 .ov-sum-then { background: #FEF3C7; color: #92400E; }
-.ov-empty { text-align: center; padding: 28px 16px; }
-.ov-empty-ic { display: inline-flex; }
-.ov-empty-t { font-size: 13.5px; font-weight: 600; color: var(--bl-text-2); margin: 8px 0 6px; }
-.ov-empty-d { font-size: 12px; color: var(--bl-text-3); line-height: 1.8; margin-bottom: 14px; }
 /* 对象引用参数: 选择类型锁定卡 (文档 3.3.1 样式高亮锁定, 不支持切换) */
 .fd-locked { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border: 1px solid var(--bl-primary); background: var(--bl-primary-soft); border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--bl-primary); cursor: default; }
 :root[data-theme="dark"] .fd-warn { background: color-mix(in srgb, #D97706 16%, transparent); border-color: color-mix(in srgb, #D97706 40%, transparent); color: #FBBF24; }
 
 /* 显示组件网格 */
-.fd-disp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.fd-disp-opt { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 1px solid var(--bl-border); border-radius: 8px; background: var(--bl-bg-1); color: var(--bl-text-2); cursor: pointer; font-size: 13px; }
-.fd-disp-opt:hover { border-color: var(--bl-primary); }
-.fd-disp-opt.is-on { border-color: var(--bl-primary); background: var(--bl-primary-soft); color: var(--bl-primary); font-weight: 600; }
 
 /* 覆盖 */
 .fd-ov-row { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
@@ -2169,8 +1954,6 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 /* 预览增强 */
 .adw-preview-fld { cursor: pointer; border-radius: 6px; padding: 4px 12px 8px; }
 .adw-preview-fld.is-sel { background: var(--bl-primary-soft); outline: 1px solid var(--bl-primary); }
-.adw-preview-input.is-ro { background: var(--bl-bg-2); color: var(--bl-text-3); }
-.adw-preview-input { justify-content: space-between; }
 .adw-pv-switch { padding: 2px 0; }
 /* 预览: 单选按钮组 / 复选框 */
 .adw-pv-opts { display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 5px 0; }
@@ -2178,9 +1961,11 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .adw-pv-radio { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--bl-border-strong); flex-shrink: 0; }
 .adw-pv-checkbox { width: 14px; height: 14px; border-radius: 3px; border: 1.5px solid var(--bl-border-strong); flex-shrink: 0; }
 .adw-pv-help { font-size: 11px; color: var(--bl-text-3); margin-top: 4px; }
-/* 试填态: 真实控件, 尺寸对齐静态示意 */
-.adw-pv-live .bl-input, .adw-pv-live .bl-textarea { width: 100%; font-size: 12px; box-sizing: border-box; }
-.adw-pv-live .bl-input { height: 32px; }
+/* 预览控件与真实表单同款; 未定位的字段只是禁用交互, 不另画一套外观 */
+.adw-pv-ctl .bl-input, .adw-pv-ctl .bl-textarea { width: 100%; font-size: 12px; box-sizing: border-box; }
+.adw-pv-ctl .bl-input { height: 32px; }
+.adw-pv-ctl.is-static { cursor: pointer; }
+.adw-pv-ctl.is-static > * { pointer-events: none; }
 .adw-pv-opt.is-live { cursor: pointer; }
 .adw-pv-radio.is-on { border-width: 4px; border-color: var(--bl-primary); }
 .adw-pv-checkbox.is-on { position: relative; background: var(--bl-primary); border-color: var(--bl-primary); }
@@ -2211,7 +1996,6 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .adw-preview-fld.is-side .adw-pv-ctl { flex: 1; min-width: 0; }
 .adw-pv-req { color: var(--bl-danger); font-style: normal; margin-right: 2px; }
 .adw-pv-req.is-suffix { margin-right: 0; margin-left: 2px; }
-.adw-preview-input { height: 32px; border: 1px solid var(--bl-border); border-radius: var(--bl-radius-2); background: var(--bl-bg-1); display: flex; align-items: center; padding: 0 10px; font-size: 12px; color: var(--bl-text-3); }
 .adw-preview-ft { padding: 10px 16px; border-top: 1px solid var(--bl-divider); }
 
 /* ===== 规则折叠卡片 (P3) ===== */
@@ -2242,11 +2026,6 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .fe-code { font-family: var(--bl-mono, monospace); font-size: 12px; line-height: 1.6; color: #d4d4d4; background: #1e1e2e; border-radius: 8px; padding: 14px 16px; white-space: pre-wrap; overflow-x: auto; margin: 0; }
 .fe-repo { font-size: 12px; color: var(--bl-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 400; }
 .fe-repo:hover { text-decoration: underline; }
-/* 内容配置 tab */
-.fd-tabs2 { display: inline-flex; gap: 2px; padding: 3px; background: var(--bl-bg-2); border-radius: 8px; }
-.fd-tab2 { padding: 5px 18px; font-size: 13px; color: var(--bl-text-2); cursor: pointer; background: transparent; border: 0; border-radius: 6px; transition: background .12s, color .12s; }
-.fd-tab2:hover { color: var(--bl-text-1); }
-.fd-tab2.is-on { background: var(--bl-bg-1); color: var(--bl-primary); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
 /* 收件人级联 */
 .fe-cascade { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
 /* 完整编辑态 表单行 (label 左 + 控件) */
@@ -2261,13 +2040,6 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .fe-radio-lbl { font-size: 13px; color: var(--bl-text-1); }
 .fe-radio-desc { font-size: 11.5px; color: var(--bl-text-3); margin-top: 2px; line-height: 1.5; }
 /* Webhook 类型选择卡 */
-.wh-type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.wh-type-card { display: flex; align-items: center; gap: 10px; padding: 16px 18px; background: var(--bl-bg-1); border: 1.5px solid var(--bl-border); border-radius: 10px; cursor: pointer; transition: border-color .12s, background .12s; }
-.wh-type-card:hover { border-color: var(--bl-primary); }
-.wh-type-card.is-on { border-color: var(--bl-primary); background: var(--bl-primary-soft); }
-.wh-type-ic { width: 26px; height: 26px; border-radius: 7px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
-.wh-type-lbl { font-size: 14px; font-weight: 600; color: var(--bl-text-1); }
-.wh-type-chk { margin-left: auto; color: var(--bl-primary); display: inline-flex; }
 /* 执行说明 */
 .fe-hints { display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; color: var(--bl-text-2); line-height: 1.6; }
 .fe-hints > div { color: var(--bl-success, #00b42a); }
@@ -2293,8 +2065,6 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .rl-row .bl-input { flex: 1; }
 .rl-row-top .bl-input { flex: 1; }
 .rl-sub { font-size: 12.5px; font-weight: 600; color: var(--bl-text-2); display: flex; align-items: center; gap: 8px; margin-top: 2px; }
-/* 折叠卡片里的代码预览: 与完整编辑态同款深色块, 仅收紧尺寸并限高 */
-.rl-code-blk { font-size: 11.5px; padding: 10px 12px; max-height: 132px; overflow: auto; }
 
 /* 添加新规则 + 类型选择器 */
 /* 添加新规则: 整行居中虚线按钮 */

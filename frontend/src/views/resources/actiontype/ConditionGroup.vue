@@ -4,7 +4,9 @@
       <span class="cg-hd-txt">
         <span v-if="depth > 0" class="cg-badge">{{ depth === 1 ? '子组' : '嵌套组' }}</span>
         满足以下
-        <select class="cg-logic" :class="node.logic === 'any' ? 'is-any' : 'is-all'" v-model="node.logic"><option value="all">全部</option><option value="any">任一</option></select>
+        <select class="cg-logic" :class="node.logic === 'all' ? 'is-all' : 'is-any'" v-model="node.logic">
+          <option v-for="l in logics" :key="l" :value="l">{{ LOGIC_LABEL[l] }}</option>
+        </select>
         条件:</span>
       <button v-if="depth > 0" class="cg-x" title="删除该条件组" @click="$emit('remove')" v-html="BL.icon('x', 12)"></button>
     </div>
@@ -17,18 +19,21 @@
         <span class="cg-grip cg-grip-item" title="拖拽排序" @mousedown="dragArmed = true" @mouseup="dragArmed = false" v-html="BL.icon('move', 12)"></span>
         <div class="cg-item-body">
           <!-- 嵌套逻辑组 -->
-          <ConditionGroup v-if="child.type === 'group'" :node="child" :depth="depth + 1" :object-fields="objectFields" :param-fields="paramFields" @remove="removeChild(i)" />
-          <!-- 条件行 -->
-          <div v-else class="cg-cond">
-            <div class="cg-chip cg-chip-field" @click="openField(child)">
-              <span class="cg-sub-ic" :style="{ background: subjColor(child.subject) }" v-html="BL.icon(subjIcon(child.subject), 11, '#fff')"></span>
-              <span :class="{ 'cg-ph': !child.field }" class="bl-truncate">{{ fieldLabel(child) }}</span>
-            </div>
-            <div class="cg-chip cg-chip-op" @click="openOp(child)">
-              <span :class="{ 'cg-ph': !child.operator }">{{ opLabel(child.operator) }}</span>
-            </div>
-            <input v-if="!NO_VALUE_OPS.includes(child.operator)" class="cg-in cg-val" v-model="child.value" placeholder="值" />
-            <span v-else class="cg-noval">—</span>
+          <ConditionGroup v-if="child.type === 'group'" :node="child" :depth="depth + 1" v-bind="passThrough" @remove="removeChild(i)" />
+          <!-- 条件行: 属性 / 运算符 均为内联下拉, 不弹框 -->
+          <div v-else :class="['cg-cond', showReady && !condReady(child) && 'is-todo']">
+            <FieldPicker class="cg-sel-field" size="sm" :subject="child.subject" :field="child.field" :subjects="subjects"
+                         :subject-labels="subjectLabels" :object-fields="objectFields" :user-fields="userFieldList" :param-fields="paramFields"
+                         @pick="f => onFieldPick(child, f)" />
+            <BlSelect class="cg-sel-op" :model-value="child.operator || ''" @update:modelValue="v => child.operator = v"
+                      :options="opOptions(child)" size="sm" placeholder="运算符" />
+            <template v-if="needValue(child.operator)">
+              <BlSelect v-if="valueOptions(child).length" class="cg-val" :model-value="child.value ?? ''"
+                        @update:modelValue="v => child.value = v" :options="valueOptions(child)" size="sm" clearable placeholder="选择值" />
+              <input v-else class="cg-in cg-val" v-model="child.value" placeholder="值" />
+            </template>
+            <span v-else class="cg-noval">该运算符无需比较值</span>
+            <span v-if="showReady && !condReady(child)" class="cg-todo" title="条件未配置完整" v-html="BL.icon('info', 12)"></span>
             <button class="cg-x" title="删除条件" @click="removeChild(i)" v-html="BL.icon('trash', 12)"></button>
           </div>
         </div>
@@ -44,60 +49,53 @@
       </div>
     </div>
 
-    <ConditionPicker v-model:open="fieldPickerOpen" mode="field" :object-fields="objectFields" :param-fields="paramFields"
-                     :current="pickerChild && pickerChild.field" @pick="onFieldPick" />
-    <ConditionPicker v-model:open="opPickerOpen" mode="operator"
-                     :data-type="pickerChild && pickerChild.dataType" :current="pickerChild && pickerChild.operator" @pick="onOpPick" />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { BL } from '@/lib/bl.js'
-import ConditionPicker from './ConditionPicker.vue'
+import BlSelect from '@/components/BlSelect.vue'
+import FieldPicker from './FieldPicker.vue'
+import { pickOps, opsFor, needValue, condReady, condUid, USER_FIELDS } from './conditionModel.js'
 
 defineOptions({ name: 'ConditionGroup' })
 const props = defineProps({
-  node: { type: Object, required: true },       // { logic:'all'|'any', children:[] }
+  node: { type: Object, required: true },       // { logic, children:[] }
   depth: { type: Number, default: 0 },
-  objectFields: { type: Array, default: () => [] },  // [{ code, name }]
+  objectFields: { type: Array, default: () => [] },  // [{ code, name, dataType }]
   paramFields: { type: Array, default: () => [] },
+  userFields: { type: Array, default: null },        // 不传则用内置的通用用户属性
+  subjects: { type: Array, default: () => ['object', 'user', 'param'] },
+  subjectLabels: { type: Object, default: () => ({}) },   // 覆盖主体显示名, 如 object → 具体对象类名
+  logics: { type: Array, default: () => ['all', 'any'] },
+  operators: { type: Array, default: () => ['eq', 'ne', 'regex', 'contains', 'in', 'gt', 'lt', 'ge', 'le', 'empty', 'notEmpty'] },
+  valueOptionsOf: { type: Function, default: () => [] },   // (cond) => [{value,label}], 给枚举类字段候选值
+  showReady: { type: Boolean, default: false },            // 标记未配置完整的条件
 })
 defineEmits(['remove'])
 
-const OPERATORS = { eq: '等于', ne: '不等于', gt: '大于', lt: '小于', ge: '大于等于', le: '小于等于', contains: '包含', in: '包含于', regex: '匹配正则', empty: '为空', notempty: '非空' }
-const NO_VALUE_OPS = ['empty', 'notempty']
-const USER_FIELDS = [{ code: 'user_group', name: '所属用户组' }, { code: 'username', name: '用户名' }, { code: 'role', name: '角色' }, { code: 'org', name: '所属组织' }]
+const LOGIC_LABEL = { all: '全部', any: '任一', none: '全部不' }
+const userFieldList = computed(() => props.userFields || USER_FIELDS)
+const OPERATORS = computed(() => pickOps(props.operators))
+/* 嵌套子组透传全部配置, 保证深层条件行与顶层行为一致 */
+const passThrough = computed(() => ({
+  objectFields: props.objectFields, paramFields: props.paramFields, userFields: props.userFields,
+  subjects: props.subjects, logics: props.logics, operators: props.operators,
+  valueOptionsOf: props.valueOptionsOf, showReady: props.showReady,
+}))
+function valueOptions(c) { return props.valueOptionsOf(c) || [] }
 
-let seq = 0
-function uid() { return 'cn-' + Date.now().toString(36) + '-' + (seq++) }
-function addCond() { props.node.children.push({ _k: uid(), type: 'cond', subject: 'object', field: '', operator: 'eq', value: '' }) }
-function addGroup() { props.node.children.push({ _k: uid(), type: 'group', logic: 'any', children: [] }) }
+function addCond() { props.node.children.push({ _k: condUid(), type: 'cond', subject: props.subjects[0] || 'object', field: '', fieldName: '', dataType: '', operator: '', value: '' }) }
+function addGroup() { props.node.children.push({ _k: condUid(), type: 'group', logic: props.logics.includes('any') ? 'any' : props.logics[0], children: [] }) }
 function removeChild(i) { props.node.children.splice(i, 1) }
 
-/* 主体图标/配色 + 字段/运算符显示 */
-function subjIcon(s) { return s === 'user' ? 'user' : s === 'param' ? 'edit' : 'box' }
-function subjColor(s) { return s === 'user' ? '#722ED1' : s === 'param' ? '#00B42A' : '#165DFF' }
-function fieldLabel(child) {
-  if (!child.field) return '选择属性'
-  if (child.fieldName) return child.fieldName
-  const list = child.subject === 'user' ? USER_FIELDS : child.subject === 'param' ? props.paramFields : props.objectFields
-  const f = (list || []).find(x => x.code === child.field)
-  return f ? f.name : child.field
+function onFieldPick(c, f) {
+  c.subject = f.subject; c.field = f.field; c.fieldName = f.fieldName; c.dataType = f.dataType
+  /* 换了字段类型后, 原运算符可能不再适用(如字符串选了「大于」), 清掉让用户重选 */
+  if (c.operator && !opOptions(c).some(o => o.value === c.operator)) c.operator = ''
 }
-function opLabel(op) { return OPERATORS[op] || '运算符' }
-
-/* 弹窗选择器 */
-const fieldPickerOpen = ref(false)
-const opPickerOpen = ref(false)
-const pickerChild = ref(null)
-function openField(child) { pickerChild.value = child; fieldPickerOpen.value = true }
-function openOp(child) { pickerChild.value = child; opPickerOpen.value = true }
-function onFieldPick(res) {
-  const c = pickerChild.value; if (!c) return
-  c.subject = res.subject; c.field = res.field; c.fieldName = res.fieldName; c.dataType = res.dataType
-}
-function onOpPick(res) { const c = pickerChild.value; if (c) c.operator = res.operator }
+function opOptions(c) { return opsFor(c.dataType, OPERATORS.value).map(o => ({ value: o.key, label: o.label })) }
 
 /* 拖拽排序 (仅在同组内重排 children) */
 const dragArmed = ref(false)
@@ -143,16 +141,14 @@ function onDragEnd() { dragIdx.value = null; overIdx.value = null; dragArmed.val
 .cg-body { padding: 10px 12px; }
 .cg-cond { display: flex; align-items: center; gap: 6px; padding: 7px 8px; border: 1px solid var(--bl-border); border-radius: 6px; background: var(--bl-bg-1); }
 .cg-grip { color: var(--bl-text-3); cursor: grab; display: inline-flex; flex-shrink: 0; }
-.cg-sub-ic { width: 20px; height: 20px; border-radius: 4px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
 .cg-in { height: 28px; padding: 0 8px; border: 1px solid var(--bl-border); border-radius: var(--bl-radius-2); background: var(--bl-bg-1); font-size: 12px; color: var(--bl-text-1); outline: none; transition: border-color .15s, box-shadow .15s; }
 .cg-in:focus { border-color: var(--bl-primary); box-shadow: 0 0 0 2px var(--bl-primary-soft); }
-.cg-chip { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 8px; border: 1px solid var(--bl-border); border-radius: 4px; background: var(--bl-bg-1); cursor: pointer; font-size: 12px; color: var(--bl-text-1); min-width: 0; }
-.cg-chip:hover { border-color: var(--bl-primary); }
-.cg-chip-field { max-width: 200px; }
-.cg-chip-op { min-width: 76px; justify-content: center; }
-.cg-ph { color: var(--bl-text-3); }
+.cg-sel-field { flex: 0 0 200px; min-width: 0; }
+.cg-sel-op { flex: 0 0 116px; min-width: 0; }
 .cg-val { flex: 1; min-width: 80px; }
 .cg-noval { flex: 1; color: var(--bl-text-3); font-size: 12px; }
+.cg-cond.is-todo { border-style: dashed; }
+.cg-todo { color: #D97706; display: inline-flex; flex-shrink: 0; }
 .cg-x { flex-shrink: 0; width: 26px; height: 26px; border: 0; background: transparent; color: var(--bl-text-3); cursor: pointer; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; }
 .cg-x:hover { background: var(--bl-bg-hover); color: #f53f3f; }
 .cg-empty { padding: 10px; text-align: center; color: var(--bl-text-3); font-size: 12px; }

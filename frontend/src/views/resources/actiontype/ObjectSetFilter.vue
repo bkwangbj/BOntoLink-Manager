@@ -1,7 +1,5 @@
 <template>
   <div class="os-wrap">
-    <div class="fd-warn os-warn"><span v-html="BL.icon('info', 13, '#92400E')"></span><span>此筛选条件对所有可查看此操作的用户可见。</span><a class="os-more" @click="BL.info('帮助文档待接入')">了解更多</a></div>
-
     <!-- 起始对象集 -->
     <div class="os-lbl">起始对象集</div>
     <button class="os-pick" @click="pickerOpen = true">
@@ -20,7 +18,7 @@
     <div v-for="(f, fi) in objset.filters" :key="fi" class="os-cond os-cond-row">
       <BlSelect v-model="f.property_code" :options="propOptions" size="sm" clearable placeholder="选择属性" style="width:180px;flex-shrink:0" />
       <BlSelect v-model="f.operator" :options="OS_OPERATORS" size="sm" style="width:100px;flex-shrink:0" />
-      <input v-if="!OS_NO_VALUE_OPS.includes(f.operator)" class="bl-input bl-input-sm" style="flex:1;min-width:0" v-model="f.value" placeholder="比较值" />
+      <input v-if="needValue(f.operator)" class="bl-input bl-input-sm" style="flex:1;min-width:0" v-model="f.value" placeholder="比较值" />
       <span v-else class="bl-muted os-cond-na">该运算符无需比较值</span>
       <button class="bl-btn bl-btn-text bl-btn-sm bl-btn-icon" style="flex-shrink:0" title="移除过滤条件" @click="objset.filters.splice(fi,1)" v-html="BL.icon('x', 11)"></button>
     </div>
@@ -91,6 +89,7 @@
 import { ref, computed } from 'vue'
 import { BL } from '@/lib/bl.js'
 import BlSelect from '@/components/BlSelect.vue'
+import { pickOps, needValue } from './conditionModel.js'
 
 const props = defineProps({
   objset: { type: Object, required: true },
@@ -104,11 +103,8 @@ const props = defineProps({
   variant: { type: String, default: 'multi' },        // 'multi' 字符串多选 | 'object' 对象引用参数
 })
 
-const OS_OPERATORS = [
-  { value:'eq', label:'等于' }, { value:'ne', label:'不等于' }, { value:'contains', label:'包含' },
-  { value:'startsWith', label:'开头是' }, { value:'empty', label:'为空' }, { value:'notEmpty', label:'不为空' },
-]
-const OS_NO_VALUE_OPS = ['empty', 'notEmpty']
+/* 对象集过滤沿用的运算符子集与顺序; BlSelect 要 {value,label} 形态 */
+const OS_OPERATORS = pickOps(['eq', 'ne', 'contains', 'startsWith', 'empty', 'notEmpty']).map(o => ({ value: o.key, label: o.label }))
 
 const pickerOpen = ref(false)
 const kw = ref('')
@@ -144,10 +140,6 @@ function reset() {
 
 <style scoped>
 .os-wrap { display: flex; flex-direction: column; }
-.os-warn { display: flex; align-items: center; gap: 6px; }
-.os-warn > span:first-child { flex-shrink: 0; display: inline-flex; }
-.os-more { color: var(--bl-primary); cursor: pointer; margin-left: 2px; }
-.os-more:hover { text-decoration: underline; }
 .os-lbl { font-size: 12.5px; font-weight: 600; color: var(--bl-text-2); margin-top: 10px; margin-bottom: 6px; }
 .os-pick { width: 100%; display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 8px; font-size: 13px; color: var(--bl-text-1); cursor: pointer; }
 .os-pick:hover { border-color: var(--bl-primary); }
@@ -165,7 +157,6 @@ function reset() {
 /* 满宽虚线「添加一行」按钮 (与规则页 .fe-add-row 同形) */
 .fe-add-row { width: 100%; display: flex; align-items: center; justify-content: center; padding: 9px; margin-top: 10px; background: transparent; border: 1px dashed var(--bl-border-strong); border-radius: 8px; color: var(--bl-text-2); font-size: 12.5px; cursor: pointer; transition: border-color .12s, color .12s, background .12s; }
 .fe-add-row:hover { border-color: var(--bl-primary); color: var(--bl-primary); background: var(--bl-primary-soft); }
-.fd-warn { background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 6px; padding: 8px 12px; font-size: 12px; color: #92400E; }
 /* 对象集选择弹窗 */
 .rlm-mask { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; z-index: 1300; }
 .rlm-modal { width: 640px; max-width: 92vw; max-height: 82vh; background: var(--bl-bg-1); border-radius: 12px; box-shadow: 0 16px 48px rgba(0,0,0,.3); display: flex; flex-direction: column; overflow: hidden; }
