@@ -1,7 +1,16 @@
 <template>
   <div class="bs" ref="rootEl">
-    <div :class="['bs-control', 'bl-input', size === 'sm' && 'bl-input-sm', { 'is-disabled': disabled, 'is-open': open }]" @click="toggle">
-      <span :class="['bs-value', !selectedLabel && 'is-ph']">{{ selectedLabel || placeholder }}</span>
+    <div :class="['bs-control', 'bl-input', size === 'sm' && 'bl-input-sm', { 'is-disabled': disabled, 'is-open': open, 'is-multi': multiple }]" @click="toggle">
+      <template v-if="multiple">
+        <span v-if="!selectedList.length" class="bs-value is-ph">{{ placeholder }}</span>
+        <span v-else class="bs-tags">
+          <span v-for="o in selectedList" :key="o.value" class="bs-tag">
+            <span class="bl-truncate">{{ o.label }}</span>
+            <span class="bs-tag-x" title="移除" @click.stop="pick(o.value)" v-html="BL.icon('x', 9)"></span>
+          </span>
+        </span>
+      </template>
+      <span v-else :class="['bs-value', !selectedLabel && 'is-ph']">{{ selectedLabel || placeholder }}</span>
       <span class="bs-arrow" :class="{ 'is-open': open }" v-html="BL.icon('chevronDown', 12)"></span>
     </div>
     <Teleport to="body">
@@ -11,12 +20,12 @@
           <input ref="searchEl" class="bs-search-input" v-model="q" :placeholder="searchPlaceholder" @keydown.esc="close" />
         </div>
         <div class="bs-list">
-          <div v-if="clearable && modelValue !== '' && modelValue != null" class="bs-opt bs-opt-clear" @click="pick('')">{{ placeholder }}</div>
+          <div v-if="clearable && hasValue" class="bs-opt bs-opt-clear" @click="clearAll">{{ multiple ? '清空已选' : placeholder }}</div>
           <div v-for="o in filtered" :key="o.value"
-               :class="['bs-opt', String(o.value) === String(modelValue) && 'is-sel', o.disabled && 'is-disabled']"
+               :class="['bs-opt', isSel(o.value) && 'is-sel', o.disabled && 'is-disabled']"
                @click="!o.disabled && pick(o.value)">
             <span v-html="highlight(o.label)"></span>
-            <span v-if="String(o.value) === String(modelValue)" class="bs-check" v-html="BL.icon('check', 12)"></span>
+            <span v-if="isSel(o.value)" class="bs-check" v-html="BL.icon('check', 12)"></span>
           </div>
           <div v-if="!filtered.length" class="bs-empty">无匹配项</div>
         </div>
@@ -30,7 +39,7 @@ import { ref, computed, nextTick, onBeforeUnmount } from 'vue'
 import { BL } from '@/lib/bl.js'
 
 const props = defineProps({
-  modelValue: { type: [String, Number], default: '' },
+  modelValue: { type: [String, Number, Array], default: '' },   // multiple 时为数组
   options: { type: Array, default: () => [] },      // [{ value, label, disabled? }]
   placeholder: { type: String, default: '请选择' },
   searchPlaceholder: { type: String, default: '输入关键词搜索…' },
@@ -38,6 +47,7 @@ const props = defineProps({
   clearable: { type: Boolean, default: false },
   searchable: { type: [Boolean, String], default: 'auto' },  // true | false | 'auto'(>8 项才显示搜索)
   size: { type: String, default: '' },              // '' | 'sm'
+  multiple: { type: Boolean, default: false },      // 多选: 值为数组, 选中不收起面板
 })
 const emit = defineEmits(['update:modelValue', 'change'])
 
@@ -52,6 +62,16 @@ const selectedLabel = computed(() => {
   const o = props.options.find(x => String(x.value) === String(props.modelValue))
   return o ? o.label : ''
 })
+/* 多选: 已选值按选中顺序展示, 选项表里查不到的值(属性被删了)仍原样列出, 不静默丢掉 */
+const selectedValues = computed(() => (Array.isArray(props.modelValue) ? props.modelValue : []).map(String))
+const selectedList = computed(() => selectedValues.value.map(v =>
+  props.options.find(o => String(o.value) === v) || { value: v, label: v }))
+const hasValue = computed(() => props.multiple
+  ? selectedValues.value.length > 0
+  : (props.modelValue !== '' && props.modelValue != null))
+function isSel(v) {
+  return props.multiple ? selectedValues.value.includes(String(v)) : String(v) === String(props.modelValue)
+}
 const showSearch = computed(() => props.searchable === true || (props.searchable === 'auto' && props.options.length > 8))
 const filtered = computed(() => {
   const k = q.value.trim().toLowerCase()
@@ -106,7 +126,18 @@ function onDocDown(e) {
   if (t && (t.scrollHeight > t.clientHeight || t.scrollWidth > t.clientWidth) && (e.offsetX > t.clientWidth || e.offsetY > t.clientHeight)) return
   close()
 }
-function pick(v) { emit('update:modelValue', v); emit('change', v); close() }
+function pick(v) {
+  if (!props.multiple) { emit('update:modelValue', v); emit('change', v); close(); return }
+  const arr = selectedValues.value.slice()
+  const i = arr.indexOf(String(v))
+  i >= 0 ? arr.splice(i, 1) : arr.push(String(v))
+  emit('update:modelValue', arr); emit('change', arr)   // 多选不收起, 方便连续勾选
+}
+function clearAll() {
+  const v = props.multiple ? [] : ''
+  emit('update:modelValue', v); emit('change', v)
+  if (!props.multiple) close()
+}
 onBeforeUnmount(close)
 </script>
 
@@ -117,6 +148,13 @@ onBeforeUnmount(close)
 .bs-control.is-open { border-color: var(--bl-primary); }
 .bs-value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .bs-value.is-ph { color: var(--bl-text-3); }
+/* 多选: 已选项以 tag 铺在控件里, 行高随之自适应 */
+.bs-control.is-multi { flex-wrap: wrap; height: auto; min-height: 32px; padding-top: 3px; padding-bottom: 3px; }
+.bs-tags { display: flex; flex-wrap: wrap; gap: 4px; flex: 1; min-width: 0; }
+.bs-tag { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; padding: 1px 6px; border-radius: 4px;
+  background: var(--bl-primary-soft); color: var(--bl-primary); font-size: 12px; }
+.bs-tag-x { display: inline-flex; flex-shrink: 0; opacity: .7; cursor: pointer; }
+.bs-tag-x:hover { opacity: 1; }
 .bs-arrow { flex-shrink: 0; color: var(--bl-text-3); transition: transform .15s; display: inline-flex; }
 .bs-arrow.is-open { transform: rotate(180deg); }
 </style>

@@ -59,12 +59,36 @@
               <div class="sec">{{ subjectLabel }}</div>
               <div class="acw-subject">
                 <template v-if="form.m_type === 1">
-                  <SearchSelect v-model="form.object_class_id" :options="objectClassOptions"
-                                placeholder="— 请选择对象类 —" style="max-width:420px" @change="onObjectClassChange" />
+                  <!-- 整行即选择器: 不再是下拉 + 按钮两个入口 -->
+                  <div class="acw-pick" :class="{ 'is-empty': !selectedClass }" style="max-width:420px"
+                       :title="selectedClass ? '点击更换对象类' : '点击从对象类型库中选择'"
+                       @click="classPickerOpen = true">
+                    <template v-if="selectedClass">
+                      <span class="acw-pick-ic" :style="{ background: selectedClass.color || '#165DFF' }"
+                            v-html="BL.icon(selectedClass.icon || 'cube', 13, '#fff')"></span>
+                      <span class="acw-pick-text bl-truncate">
+                        {{ selectedClass.cn }}<span class="acw-pick-api bl-mono bl-muted">{{ selectedClass.api_name }}</span>
+                      </span>
+                      <button class="acw-pick-x" title="清除" @click.stop="clearClass" v-html="BL.icon('x', 11)"></button>
+                    </template>
+                    <span v-else class="acw-pick-text is-ph">点击选择对象类</span>
+                    <span class="acw-pick-act"><span v-html="BL.icon('search', 12)"></span>{{ selectedClass ? '更换' : '选择' }}</span>
+                  </div>
                 </template>
                 <template v-else-if="form.m_type === 2">
-                  <SearchSelect v-model="form.link_type_id" :options="linkTypeOptions"
-                                placeholder="— 请选择链接类型 —" style="max-width:420px" />
+                  <div class="acw-pick" :class="{ 'is-empty': !selectedLink }" style="max-width:420px"
+                       :title="selectedLink ? '点击更换链接类型' : '点击从链接类型库中选择'"
+                       @click="linkPickerOpen = true">
+                    <template v-if="selectedLink">
+                      <span class="acw-pick-ic" style="background:#722ED1" v-html="BL.icon('link', 13, '#fff')"></span>
+                      <span class="acw-pick-text bl-truncate">
+                        {{ selectedLink.cn }}<span class="acw-pick-api bl-mono bl-muted">{{ selectedLink.ends }}</span>
+                      </span>
+                      <button class="acw-pick-x" title="清除" @click.stop="form.link_type_id = ''" v-html="BL.icon('x', 11)"></button>
+                    </template>
+                    <span v-else class="acw-pick-text is-ph">点击选择链接类型</span>
+                    <span class="acw-pick-act"><span v-html="BL.icon('search', 12)"></span>{{ selectedLink ? '更换' : '选择' }}</span>
+                  </div>
                 </template>
                 <template v-else-if="form.m_type === 3">
                   <input class="bl-input bl-mono" v-model="form.function_code" placeholder="函数编码 function_code" style="max-width:420px" />
@@ -96,13 +120,14 @@
                   <table class="bl-table acw-map-table">
                     <colgroup>
                       <col style="width:38px" /><col style="width:170px" /><col style="width:72px" />
-                      <col style="width:150px" /><col style="width:112px" /><col style="width:120px" /><col style="min-width:110px" />
+                      <col style="width:150px" /><col style="width:112px" /><col style="width:118px" /><col style="width:120px" /><col style="min-width:110px" />
                       <col style="width:76px" /><col style="width:150px" />
                     </colgroup>
                     <thead>
                       <tr>
                         <th class="t-left">序号</th><th class="t-left">属性</th><th class="t-left">数据类型</th>
-                        <th class="t-center">表单展示</th><th class="t-left">赋值方式</th><th class="t-left">参数代码</th><th class="t-left">对象及属性</th>
+                        <th class="t-center">表单展示</th><th class="t-left">赋值方式</th>
+                        <th class="t-left">参数名称</th><th class="t-left">参数代码</th><th class="t-left">对象及属性</th>
                         <th class="t-left">默认值类型</th><th class="t-left">默认值配置</th>
                       </tr>
                     </thead>
@@ -123,6 +148,7 @@
                           </div>
                         </td>
                         <td><BlSelect v-model="r.value_source" :options="VALUE_SOURCE_OPTS" size="sm" :disabled="r.show === 'none'" @change="onValueSourceChange(r)" /></td>
+                        <td><input class="bl-input bl-input-xs" v-model="r.param_name" :disabled="!cellOn(r, 'param')" :placeholder="r.property_name" /></td>
                         <td><input class="bl-input bl-input-xs bl-mono" v-model="r.param_code" :disabled="!cellOn(r, 'param')" placeholder="参数代码" /></td>
                         <td>
                           <div class="acw-ref-box" :class="{ 'is-disabled': !cellOn(r, 'ref') }" :title="r.ref_prop || ''"
@@ -290,11 +316,28 @@
     </transition>
   </Teleport>
 
+  <!-- 关联对象类: 带领域树 / 属性数的卡片式挑选 -->
+  <ObjectTypePickerModal v-model:open="classPickerOpen" :multi="false" required
+                         :model-value="form.object_class_id ? [form.object_class_id] : []"
+                         subtitle="选择本动作要操作的对象类" @confirm="onClassPicked" />
+
+  <!-- 关联链接类型: 与对象类同一套挑选形态 -->
+  <LinkTypePickerModal v-model:open="linkPickerOpen" :multi="false" required
+                       :model-value="form.link_type_id ? [form.link_type_id] : []"
+                       subtitle="选择本动作要操作的链接类型" @confirm="onLinkPicked" />
+
   <ObjectRefPickerModal v-model:open="refPickerOpen"
                         :source-class-id="form.object_class_id"
                         :all-classes="allClasses"
                         :all-link-types="allLinkTypes"
                         @pick="onRefPicked" />
+
+  <!-- 枚举属性的「来源」= 限定该动作可选的枚举值范围 -->
+  <EnumValuePickerModal v-model:open="enumPickerOpen"
+                        :enum-id="enumPickerRow?.enum_id || ''"
+                        :subtitle="enumPickerSubtitle"
+                        :model-value="parseSourceList(enumPickerRow)"
+                        @confirm="onEnumValuesPicked" />
 </template>
 
 <script setup>
@@ -304,7 +347,10 @@ import { actionTypeApi, resourceApi, categoryApi } from '@/api'
 import FieldRow from '@/views/config/category/FieldRow.vue'
 import SearchSelect from '@/components/SearchSelect.vue'
 import BlSelect from '@/components/BlSelect.vue'
+import ObjectTypePickerModal from '@/components/ObjectTypePickerModal.vue'
+import LinkTypePickerModal from '@/components/LinkTypePickerModal.vue'
 import ObjectRefPickerModal from './ObjectRefPickerModal.vue'
+import EnumValuePickerModal from '@/components/EnumValuePickerModal.vue'
 import ConditionGroup from './ConditionGroup.vue'
 import { VALUE_SOURCE_OPTS as ALL_VALUE_SOURCE_OPTS } from './funcParamModel.js'
 import { USER_ATTR_OPTS } from './ruleModel.js'
@@ -382,8 +428,9 @@ function cellOn(r, cell) {
 /* 切换赋值方式时把后续列对齐到该模式的固定取值, 避免留下上一模式的残值 */
 function onValueSourceChange(r) {
   const vs = Number(r.value_source)
-  /* 参数代码始终保留默认命名, 切回「表单参数」时不用重新想名字 */
+  /* 参数名称/代码始终保留默认命名, 切回「表单参数」时不用重新想名字 */
   if (!r.param_code) r.param_code = defaultParamCode(r.property_code)
+  if (!r.param_name) r.param_name = r.property_name
   if (vs !== 5) r.ref_prop = ''
   if (vs === 3) { r.default_type = 'static'; r.default_source = ''; if (!USER_ATTR_OPTS.some(o => o.value === r.default_custom)) r.default_custom = 'user_id' }
   else if (vs === 4) { r.default_type = 'static'; r.default_source = ''; r.default_custom = '' }
@@ -391,10 +438,22 @@ function onValueSourceChange(r) {
   else { r.default_type = 'static'; r.default_source = ''; r.default_custom = '' }
 }
 function defaultParamCode(code) { return 'p_' + String(code || '').replace(/^p_/, '') }
+/* default_source 两种形态: 关联对象属性(纯文本) | 枚举候选范围 JSON [{code,label}] */
+function parseSourceList(r) {
+  const raw = String(r?.default_source || '')
+  if (!raw.startsWith('[')) return []
+  try {
+    const a = JSON.parse(raw)
+    return Array.isArray(a) ? a.map(x => (x && typeof x === 'object') ? x : { code: String(x), label: String(x) }) : []
+  } catch { return [] }
+}
 function sourceLabel(r) {
   const raw = String(r.default_source || '')
   if (!raw.startsWith('[')) return raw
-  try { const a = JSON.parse(raw); return a.length > 1 ? `${a[0]} 等 ${a.length} 项` : (a[0] || '') } catch { return raw }
+  const a = parseSourceList(r)
+  if (!a.length) return raw
+  const first = a[0].label || a[0].code
+  return a.length > 1 ? `${first} 等 ${a.length} 项` : first
 }
 const VISIBILITY_OPTS = [{ value: 'project', label: '项目内所有成员可见' }, { value: 'creator', label: '仅创建者可见' }, { value: 'assigned', label: '指定成员可见' }]
 const SAVE_MODE_OPTS = [{ value: 'compile', label: '保存并编译校验' }, { value: 'draft', label: '仅保存草稿' }]
@@ -424,7 +483,8 @@ const mapLoadedClass = ref('')
 const submitTree = reactive({ logic: 'all', children: [] })
 const objectFields = computed(() => mapRows.value.map(r => ({ code: r.property_code, name: r.property_name, dataType: r.data_type })))
 const paramFieldsForCond = computed(() => {
-  if (form.m_type === 1) return mapRows.value.filter(r => r.show === 1).map(r => ({ code: r.param_code || r.property_code, name: r.property_name, dataType: r.data_type }))
+  /* show 是 'show'/'hidden'/'none' 三态, 与出参一样「无」之外都会生成参数 */
+  if (form.m_type === 1) return mapRows.value.filter(r => r.show !== 'none').map(r => ({ code: r.param_code || r.property_code, name: r.param_name || r.property_name, dataType: r.data_type }))
   return (form.params || []).map(p => ({ code: p.param_code, name: p.param_name || p.param_code, dataType: p.param_type }))
 })
 /* 递归拍平条件树 → 后端节点数组 (含 parent_id 引用) */
@@ -462,10 +522,13 @@ async function loadMapRows() {
       let vs = 1, show = 'show', dcustom = ''
       if (/(create_?time|created_?at|update_?time|updated_?at)/.test(lc)) { vs = 4; show = 'hidden' }
       else if (/(creator|created_?by|create_?user|owner)/.test(lc)) { vs = 3; show = 'hidden'; dcustom = 'user_id' }
-      return { property_code: code, property_name: p.display_name || p.rdfs_label || code, data_type: p.data_type || '',
+      const pname = p.display_name || p.rdfs_label || code
+      return { property_code: code, property_name: pname, data_type: p.data_type || '',
                comment: p.rdfs_comment || '',      // 带到参数描述, 免得再手抄一遍属性语义
                required: p.is_required ? 1 : 0, is_primary: Number(p.is_primary ?? p.isPrimary ?? 0) === 1,
-               show, value_source: vs, param_code: defaultParamCode(code), ref_prop: '',
+               /* 值类型是 Enum 约束时带上枚举 ID, 「来源」才能弹出该枚举的候选值 */
+               enum_id: p.enum_id || p.enumId || '', enum_label: p.enum_label || p.enum_api_name || '',
+               show, value_source: vs, param_name: pname, param_code: defaultParamCode(code), ref_prop: '',
                default_type: 'static', default_custom: dcustom, default_source: '' }
     })
     mapLoadedClass.value = form.object_class_id
@@ -501,15 +564,41 @@ function openRefPicker(r, target) {
   refPickerTarget.value = target
   refPickerOpen.value = true
 }
-/* 「静态值 + 来源」的候选值选择 — 目前复用对象属性选择器, 枚举多选待接数据源 */
-function openSourcePicker(r) { openRefPicker(r, 'default') }
+/* 枚举候选范围选择器 */
+const enumPickerOpen = ref(false)
+const enumPickerRow = ref(null)
+const enumPickerSubtitle = computed(() => {
+  const r = enumPickerRow.value
+  if (!r) return ''
+  return `属性 ${r.property_name}(${r.property_code}) — 勾选的值即本动作可选范围`
+})
+/* 枚举属性挑候选枚举值; 库里多数枚举属性没绑值类型, 故 enum_id 允许为空, 由弹框内现场指定 */
+function isEnumProp(r) { return !!r.enum_id || String(r.data_type || '').toLowerCase().includes('enum') }
+/* 「静态值 + 来源」: 枚举属性挑候选枚举值, 其余仍走关联对象属性 */
+function openSourcePicker(r) {
+  if (isEnumProp(r)) { enumPickerRow.value = r; enumPickerOpen.value = true; return }
+  openRefPicker(r, 'default')
+}
+function onEnumValuesPicked({ enum_id, enum_label, values }) {
+  const r = enumPickerRow.value
+  if (!r) return
+  r.enum_id = enum_id || r.enum_id
+  r.enum_label = enum_label || r.enum_label
+  r.default_source = (values && values.length) ? JSON.stringify(values) : ''
+}
 function onRefPicked(ref) {
   const r = refPickerRow.value
   if (!r) return
   if (refPickerTarget.value === 'default') r.default_source = ref.display
   else r.ref_prop = ref.display
 }
-/* 默认值配置 → 落库值 (静态: 无/系统时间/登录用户/自定义; 来源: 关联对象.属性) */
+/* 枚举候选范围 (仅枚举属性 + 默认值类型=来源 时有值) */
+function enumRangeOf(r) {
+  if (!isEnumProp(r) || r.default_type !== 'source') return null
+  const list = parseSourceList(r)
+  return list.length ? list : null
+}
+/* 默认值配置 → 落库值 (静态: 无/系统时间/登录用户/自定义; 来源: 关联对象.属性 或 枚举范围 JSON) */
 function computeDefault(r) {
   const vs = Number(r.value_source)
   if (vs === 4) return 'CURRENT_TIME'
@@ -522,8 +611,6 @@ const currentActionTypes = computed(() => ACTION_TYPES[form.m_type] || [])
 const classOptions = computed(() => (props.allClasses || []).map(c => ({
   id: c.id, cn: c.display_name || c.rdfs_label || c.api_name, api_name: c.api_name, category_code: c.category_code
 })))
-const objectClassOptions = computed(() => classOptions.value.map(c => ({ value: c.id, label: `${c.cn} (${c.api_name})` })))
-const linkTypeOptions = computed(() => (props.allLinkTypes || []).map(l => ({ value: l.id, label: l.rdfs_label || l.link_type_id })))
 const subjectLabel = computed(() => ({ 1: '关联对象类', 2: '关联链接类型', 3: '关联函数' })[form.m_type] || '目标配置')
 const currentTypeMeta = computed(() => currentActionTypes.value.find(t => t.v === form.action_type) || {})
 const currentTypeLabel = computed(() => currentTypeMeta.value.label || '—')
@@ -566,6 +653,37 @@ function pickActionType(t) {
   form.action_type = t.v
   form.color = t.color
   form.icon = t.icon
+  suggestNaming()
+}
+const classPickerOpen = ref(false)
+/* 图标/配色取自对象类自身, 让这里和对象类型列表页认知一致 */
+const selectedClass = computed(() => {
+  if (!form.object_class_id) return null
+  const c = (props.allClasses || []).find(x => x.id === form.object_class_id)
+  if (!c) return null
+  return { cn: c.display_name || c.rdfs_label || c.api_name, api_name: c.api_name, icon: c.icon, color: c.color }
+})
+function onClassPicked({ ids }) {
+  if (!ids?.length) return
+  form.object_class_id = ids[0]
+  onObjectClassChange()
+}
+function clearClass() {
+  form.object_class_id = ''
+  mapLoadedClass.value = ''
+  mapRows.value = []
+}
+
+const linkPickerOpen = ref(false)
+const selectedLink = computed(() => {
+  if (!form.link_type_id) return null
+  const l = (props.allLinkTypes || []).find(x => x.id === form.link_type_id)
+  if (!l) return null
+  return { cn: l.rdfs_label || l.link_type_id, ends: `${l.l_class_name || ''} → ${l.r_class_name || ''}` }
+})
+function onLinkPicked({ ids }) {
+  if (!ids?.length) return
+  form.link_type_id = ids[0]
   suggestNaming()
 }
 function onObjectClassChange() {
@@ -673,8 +791,8 @@ async function onFinish() {
   if (!/^[a-z][a-z0-9_]*$/.test(form.api_name || '')) { step.value = 3; return BL.warning('动作编码不合法') }
   saving.value = true
   try {
-    // 步骤2 映射: 对象动作用「属性映射矩阵」, 生成 form_params + 编辑类规则; 其它用手动参数表
-    let formParamsOut = [], rulesOut = []
+    // 步骤2 映射: 对象动作用「属性映射矩阵」, 只生成 form_params; 规则留给用户在详情页按需添加
+    let formParamsOut = []
     if (form.m_type === 1 && mapRows.value.length) {
       /* 「无」= 该属性完全不参与本动作: 既不生成表单参数, 也不生成属性映射 */
       const joined = mapRows.value.filter(r => r.show !== 'none')
@@ -682,21 +800,15 @@ async function onFinish() {
       formParamsOut = joined
         .filter(r => String(r.param_code).trim())
         .map((r, i) => ({
-          param_code: r.param_code, param_name: r.property_name, param_type: mapXsdType(r.data_type),
+          param_code: r.param_code, param_name: r.param_name || r.property_name, param_type: mapXsdType(r.data_type),
           is_required: r.required, default_value: computeDefault(r),
           config: JSON.stringify({ value_source: Number(r.value_source), property_code: r.property_code,
             visible: r.show === 'hidden' ? 0 : 1, description: r.comment || '',
-            default_type: r.default_type, default_source: r.default_source || null }),
+            default_type: r.default_type, default_source: r.default_source || null,
+            /* 枚举「来源」= 候选范围, 单独给出便于表单渲染时裁剪下拉选项 */
+            ...(enumRangeOf(r) ? { enum_id: r.enum_id, enum_options: enumRangeOf(r) } : {}) }),
           sort: i,
         }))
-      const mappings = joined.map((r, j) => ({
-        property_code: r.property_code, property_name: r.property_name, prop_operator: 'set',
-        value_source: r.value_source,
-        value_content: Number(r.value_source) === 1 ? r.param_code
-          : Number(r.value_source) === 5 ? r.ref_prop : computeDefault(r),
-        is_required: r.required, sort: j,
-      }))
-      rulesOut = [{ action_type: form.action_type, rule_type: 1, rule_name: '属性映射', sort: 0, prop_mappings: mappings }]
     } else {
       formParamsOut = form.params
         .filter(p => String(p.param_code).trim())
@@ -722,7 +834,6 @@ async function onFinish() {
       status: form.status,
       form_params: formParamsOut,
     }
-    if (rulesOut.length) body.rules = rulesOut
     // 提交校验: 有条件树或提示消息即启用
     const submitNodes = flattenSubmitTree()
     const hasSubmit = submitTree.children.length > 0 || !!String(form.submit_error_message).trim()
@@ -811,7 +922,23 @@ select.bl-input.bl-input-xs { background-position: right 7px center; padding-rig
 .acw-type-ic { width: 34px; height: 34px; border-radius: 7px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .acw-type-name { font-weight: 600; font-size: 13.5px; margin-bottom: 2px; }
 .acw-type-check { position: absolute; top: 10px; right: 10px; width: 18px; height: 18px; background: var(--bl-primary); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
-.acw-subject { padding: 4px 0; }
+.acw-subject { padding: 4px 0; display: flex; align-items: center; gap: 8px; }
+/* 对象类选择: 整块可点, 与步骤2「对象及属性」的 acw-ref-box 同一套手感 */
+.acw-pick { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 6px 0 8px;
+  border: 1px solid var(--bl-border); border-radius: var(--bl-radius-2); background: var(--bl-bg-1);
+  cursor: pointer; font-size: 13px; transition: border-color .15s, background-color .15s; }
+.acw-pick:hover { border-color: var(--bl-primary); }
+.acw-pick.is-empty { border-style: dashed; }
+.acw-pick-ic { width: 22px; height: 22px; border-radius: 5px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
+.acw-pick-text { flex: 1; min-width: 0; color: var(--bl-text-1); }
+.acw-pick-text.is-ph { color: var(--bl-text-3); }
+.acw-pick-api { margin-left: 7px; font-size: 12px; }
+.acw-pick-x { flex-shrink: 0; border: 0; background: transparent; color: var(--bl-text-3); cursor: pointer;
+  display: inline-flex; padding: 3px; border-radius: 3px; }
+.acw-pick-x:hover { color: var(--bl-danger); background: var(--bl-bg-2); }
+.acw-pick-act { flex-shrink: 0; display: inline-flex; align-items: center; gap: 3px; height: 24px; padding: 0 9px;
+  border-radius: var(--bl-radius-2); background: var(--bl-bg-2); color: var(--bl-text-2); font-size: 12px; }
+.acw-pick:hover .acw-pick-act { background: var(--bl-primary-soft); color: var(--bl-primary); }
 
 /* 步骤2 表格 */
 .acw-row-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }

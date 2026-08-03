@@ -10,50 +10,40 @@
             <button class="bl-btn bl-btn-text bl-btn-icon" title="关闭" @click="onCancel" v-html="BL.icon('x', 14)"></button>
           </div>
 
-          <!-- 上：已选对象类型 -->
-          <div class="otp-sel">
+          <!-- 上：已选对象类型。单选时卡片自带勾选标记 + 底部确定, 这块纯属重复, 只在多选时保留 -->
+          <div v-if="multi" class="otp-sel">
             <div v-if="selectedRows.length" class="otp-sel-grid">
               <div v-for="r in selectedRows" :key="r.id" class="otp-tag">
                 <span class="otp-tag-ic" :style="{ background: r.color || '#165DFF' }" v-html="BL.icon(r.icon || 'cube', 12, '#fff')"></span>
                 <div class="otp-tag-body">
                   <div class="otp-tag-title bl-truncate">
                     {{ r.display_name || r.rdfs_label || r.api_name }}
-                    <span class="otp-tag-stat">属性 {{ r.propTotal ?? 0 }}</span>
-                    <span :class="['bl-tag', r.status===1?'bl-tag-success':'bl-tag-danger']">{{ r.status===1?'有效':'禁用' }}</span>
+                    <span class="otp-tag-stat" :title="`普通属性 ${r.propNormal ?? 0} 项 / 全部属性 ${r.propTotal ?? 0} 项`">属性 {{ r.propNormal ?? 0 }} | {{ r.propTotal ?? 0 }}</span>
+                    <span v-if="r.status !== 1" class="bl-tag bl-tag-danger">禁用</span>
                   </div>
-                  <div class="otp-tag-cmt bl-muted bl-truncate2">{{ r.rdfs_comment || '—' }}</div>
+                  <div class="otp-tag-cmt bl-muted bl-truncate">
+                    <span class="bl-mono">{{ r.api_name }}</span>
+                    <span style="margin:0 5px">·</span>{{ r.categoryLabel || '未分类' }}
+                  </div>
                 </div>
                 <button class="otp-tag-x" title="移除" @click="toggle(r)" v-html="BL.icon('x', 10)"></button>
               </div>
             </div>
-            <div v-else class="otp-empty-sel">请在下方选择参与的对象类型</div>
-            <div class="otp-sel-actions">
-              <button class="bl-btn bl-btn-text bl-btn-sm" :disabled="!selectedIds.size" @click="clearAll">
-                <span v-html="BL.icon('trash', 12)"></span><span style="margin-left:4px">清空</span>
-              </button>
-              <button class="bl-btn bl-btn-primary bl-btn-sm" :disabled="!selectedIds.size && required" @click="onConfirm">确定 ({{ selectedIds.size }})</button>
-            </div>
+            <div v-else class="otp-empty-sel">{{ multi ? '请在下方选择参与的对象类型' : '请在下方选择一个对象类型' }}</div>
           </div>
 
           <!-- 下：选择操作区（左树 + 右卡片） -->
           <div class="otp-body">
             <aside class="otp-tree">
-              <div class="otp-tree-title">行业 / 领域</div>
-              <div class="otp-tree-wrap">
-                <div :class="['otp-tn', !activeNode && 'is-active']" @click="activeNode = null">
-                  <span class="otp-tn-toggle otp-tn-toggle-empty"></span>
-                  <span class="otp-tn-ico" style="background: var(--bl-primary)" v-html="BL.icon('grid', 13, '#fff')"></span>
-                  <span class="otp-tn-label bl-truncate">全部</span>
-                  <span class="otp-tn-count">{{ allClasses.length }}</span>
-                </div>
-              </div>
-              <TreeRow v-for="n in treeRoot" :key="n.id" :node="n" :active="activeNode" :counts="catCounts" @pick="onPickNode" />
+              <CategoryCountTree :nodes="tree" :counts="catCounts" :active="activeNode"
+                                 :all-count="allClasses.length" @pick="onPickNode" />
             </aside>
             <section class="otp-pane">
               <div class="otp-pane-hd">
                 <div class="bl-row" style="gap:6px;align-items:center;font-size:13px;color:var(--bl-text-2)">
                   <span class="bl-muted">范围：</span><b>{{ activeNodeLabel }}</b>
                   <span class="bl-muted">共 {{ filtered.length }} 项</span>
+                  <span class="otp-tip">双击卡片可直接确定</span>
                 </div>
                 <div class="otp-search">
                   <span class="ot-ic" v-html="BL.icon('search', 13)"></span>
@@ -65,17 +55,22 @@
                 <div v-for="r in filtered" :key="r.id"
                      :class="['otp-card', selectedIds.has(r.id) && 'is-on']"
                      :style="{ '--otp-side': r.color || '#165DFF' }"
-                     @click="toggle(r)">
+                     title="单击选择，双击直接确定"
+                     @click="toggle(r)" @dblclick="pickAndConfirm(r)">
                   <div class="otp-card-ic" :style="{ background: r.color || '#165DFF' }" v-html="BL.icon(r.icon || 'cube', 14, '#fff')"></div>
                   <div class="otp-card-body">
                     <div class="otp-card-title">
                       <span class="bl-truncate">{{ r.display_name || r.rdfs_label || r.api_name }}</span>
-                      <span :class="['bl-tag', r.status===1?'bl-tag-success':'bl-tag-danger']">{{ r.status===1?'有效':'禁用' }}</span>
+                      <span v-if="r.status !== 1" class="bl-tag bl-tag-danger">禁用</span>
                     </div>
-                    <div class="otp-card-meta bl-truncate">
-                      <span class="bl-mono bl-muted">{{ r.api_name }}</span>
-                      <span class="bl-muted">·</span>
-                      <span class="bl-muted">属性 {{ r.propTotal ?? 0 }}</span>
+                    <div class="otp-card-api bl-mono bl-muted bl-truncate" :title="r.api_name">{{ r.api_name }}</div>
+                    <div class="otp-card-meta">
+                      <span class="otp-card-dom bl-truncate" :title="r.categoryLabel || '未分类'">
+                        <i class="otp-meta-ic" v-html="BL.icon('folder', 11)"></i>{{ r.categoryLabel || '未分类' }}
+                      </span>
+                      <span class="otp-card-prop" :title="`普通属性 ${r.propNormal ?? 0} 项 / 全部属性 ${r.propTotal ?? 0} 项`">
+                        属性 <b>{{ r.propNormal ?? 0 }}</b><i>|</i><b>{{ r.propTotal ?? 0 }}</b>
+                      </span>
                     </div>
                     <div v-if="r.rdfs_comment" class="otp-card-cmt bl-muted bl-truncate2">{{ r.rdfs_comment }}</div>
                   </div>
@@ -85,6 +80,18 @@
               <div v-else class="bl-empty" style="padding:48px">暂无匹配数据</div>
             </section>
           </div>
+
+          <!-- 底部操作行 -->
+          <div class="otp-ft">
+            <button class="bl-btn bl-btn-text bl-btn-sm" :disabled="!selectedIds.size" @click="clearAll">
+              <span v-html="BL.icon('trash', 12)"></span><span style="margin-left:4px">清空</span>
+            </button>
+            <span style="flex:1"></span>
+            <button class="bl-btn bl-btn-sm" @click="onCancel">取消</button>
+            <button class="bl-btn bl-btn-primary bl-btn-sm" :disabled="!selectedIds.size && required" @click="onConfirm">
+              确定<template v-if="multi"> ({{ selectedIds.size }})</template>
+            </button>
+          </div>
         </div>
       </div>
     </transition>
@@ -92,9 +99,9 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, h } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { BL } from '@/lib/bl.js'
-import { nodeProfile } from '@/lib/domain.js'
+import CategoryCountTree from '@/components/CategoryCountTree.vue'
 import { resourceApi, categoryApi } from '@/api'
 
 const props = defineProps({
@@ -114,14 +121,6 @@ const activeNode = ref(null)    // 当前选中的树节点（category_code 串�
 const q = ref('')
 
 const selectedRows = computed(() => allClasses.value.filter(c => selectedIds.value.has(c.id)))
-
-// 仅显示「行业(type=1)」与「领域(type=2)」节点
-const treeRoot = computed(() => {
-  const trim = (nodes) => (nodes || [])
-    .filter(n => n.categoryType === 1 || n.categoryType === 2)
-    .map(n => ({ ...n, children: trim(n.children) }))
-  return trim(tree.value)
-})
 
 // 每个 category_code 下的对象类数量统计
 const catCounts = computed(() => {
@@ -176,6 +175,13 @@ function toggle(row) {
   selectedIds.value = s
 }
 function clearAll() { selectedIds.value = new Set() }
+/* 双击 = 选中并确定。不能复用 toggle: 双击的两次 click 会先选中再取消, 这里直接置为选中 */
+function pickAndConfirm(row) {
+  const s = props.multi ? new Set(selectedIds.value) : new Set()
+  s.add(row.id)
+  selectedIds.value = s
+  onConfirm()
+}
 function onConfirm() {
   const ids = [...selectedIds.value]
   const rows = allClasses.value.filter(c => selectedIds.value.has(c.id))
@@ -209,57 +215,6 @@ watch(() => props.modelValue, (v) => {
   selectedIds.value = new Set(v || [])
 })
 
-// 内嵌树行组件（参考 Category.vue 的 TreeNode 设计：色块图标 + 树形虚线引线 + 圆角徽标）
-const TreeRow = {
-  props: { node: Object, active: Object, counts: Object },
-  emits: ['pick'],
-  setup(p, { emit }) {
-    const open = ref(true)
-    return () => {
-      const kids = (p.node.children || []).filter(c => c.categoryType === 1 || c.categoryType === 2)
-      const has = kids.length > 0
-      const isOn = p.active && p.active.id === p.node.id
-      const total = (() => {
-        const codes = []
-        const walk = (n) => { if (n.categoryCode) codes.push(n.categoryCode); (n.children || []).forEach(walk) }
-        walk(p.node)
-        return codes.reduce((s, c) => s + (p.counts[c] || 0), 0)
-      })()
-      const prof = nodeProfile(p.node)
-      return h('div', { class: 'otp-tree-wrap' }, [
-        h('div', {
-          class: ['otp-tn', isOn && 'is-active'],
-          onClick: () => emit('pick', p.node)
-        }, [
-          has
-            ? h('span', {
-                class: 'otp-tn-toggle',
-                onClick: (e) => { e.stopPropagation(); open.value = !open.value }
-              }, [h('span', { innerHTML: BL.icon(open.value ? 'chevronDown' : 'chevronRight', 12) })])
-            : h('span', { class: 'otp-tn-toggle otp-tn-toggle-empty' }),
-          h('span', {
-            class: 'otp-tn-ico',
-            style: { background: prof.color },
-            innerHTML: BL.icon(prof.icon, 13, '#fff')
-          }),
-          h('span', {
-            class: 'otp-tn-label bl-truncate',
-            title: p.node.rdfsLabel || p.node.label || p.node.categoryCode
-          }, p.node.rdfsLabel || p.node.label || p.node.categoryCode),
-          h('span', { class: 'otp-tn-count', title: `${total} 个对象` }, String(total))
-        ]),
-        open.value && has
-          ? h('div', { class: 'otp-tn-children' },
-              kids.map(c => h(TreeRow, {
-                node: c, active: p.active, counts: p.counts,
-                onPick: (n) => emit('pick', n),
-                key: c.id
-              })))
-          : null
-      ])
-    }
-  }
-}
 </script>
 
 <style scoped>
@@ -298,7 +253,7 @@ const TreeRow = {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 8px;
   overflow-y: auto;       /* 超出 max-height 时滚动 */
-  max-height: calc(30vh - 60px);   /* 留出底部 actions 区高度 */
+  max-height: 30vh;
   padding-right: 4px;     /* 给滚动条留白 */
 }
 .otp-tag {
@@ -325,7 +280,11 @@ const TreeRow = {
   background: var(--bl-bg-1); border: 1px dashed var(--bl-border);
   border-radius: 4px;
 }
-.otp-sel-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.otp-ft {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; border-top: 1px solid var(--bl-divider);
+  background: var(--bl-bg-1); flex-shrink: 0;
+}
 
 /* 下：树 + 卡片 — 左侧浅灰底，右侧白底；高度由父级 flex:1 决定，左右始终同高 */
 .otp-body {
@@ -333,21 +292,8 @@ const TreeRow = {
   overflow: hidden; min-height: 0;
   background: var(--bl-bg-1);
 }
-.otp-tree {
-  border-right: 1px solid var(--bl-border);
-  padding: 8px 6px; overflow: auto;
-  background: color-mix(in srgb, var(--bl-bg-2) 45%, var(--bl-bg-1));
-  min-height: 0;
-}
-.otp-tree-title {
-  font-size: 11px; color: var(--bl-text-3);
-  padding: 6px 10px 8px; margin-bottom: 4px;
-  border-bottom: 1px dashed var(--bl-divider);
-  font-weight: 600; letter-spacing: 0.3px;
-  display: flex; align-items: center; gap: 4px;
-}
-/* 树节点 .otp-tn-* 的实际样式定义在文件末尾的非 scoped <style> 块里，
-   因为 TreeRow 是通过 h() 渲染的内嵌子组件，scoped CSS 不会注入到它的子元素上。 */
+/* 树本体样式在 CategoryCountTree 里, 这里只负责分栏边框 */
+.otp-tree { border-right: 1px solid var(--bl-border); overflow: hidden; min-height: 0; }
 
 .otp-pane { display: flex; flex-direction: column; overflow: hidden; min-height: 0; background: var(--bl-bg-1); }
 .otp-pane-hd {
@@ -357,6 +303,7 @@ const TreeRow = {
 }
 /* 空数据态填满右侧 */
 .otp-pane > .bl-empty { flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; }
+.otp-tip { font-size: 11.5px; color: var(--bl-text-3); background: var(--bl-bg-2); border-radius: 9px; padding: 1px 8px; }
 .otp-search { position: relative; width: 280px; }
 .otp-search .bl-input { padding-left: 28px; padding-right: 24px; height: 30px; }
 .otp-search .ot-ic { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: var(--bl-text-3); }
@@ -368,7 +315,7 @@ const TreeRow = {
 .otp-grid {
   flex: 1; overflow: auto; padding: 12px;
   display: grid; gap: 10px;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
   align-content: start;
 }
 .otp-card {
@@ -380,7 +327,8 @@ const TreeRow = {
   border-left: 4px solid var(--otp-side, var(--bl-primary));
   border-radius: 6px;
   cursor: pointer; transition: border-color .15s, box-shadow .15s, background-color .15s;
-  min-height: 74px; box-sizing: border-box;
+  min-height: 86px; box-sizing: border-box;
+  user-select: none;   /* 双击确定时不要选中卡片文字 */
 }
 .otp-card:hover { border-color: var(--bl-primary); border-left-color: var(--otp-side); box-shadow: var(--bl-shadow-1); }
 .otp-card.is-on { border-color: var(--bl-primary); border-left-color: var(--otp-side); background: var(--bl-primary-soft); }
@@ -395,10 +343,22 @@ const TreeRow = {
   font-size: 13.5px; font-weight: 500; line-height: 1.4;
 }
 .otp-card-title .bl-truncate { flex: 1; min-width: 0; }
+.otp-card-api { font-size: 11.5px; line-height: 1.3; }
+/* 领域占剩余宽度, 属性数固定靠右, 长领域名截断也不会把数字挤走 */
 .otp-card-meta {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 11.5px; line-height: 1.4;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11.5px; line-height: 1.4; margin-top: 1px;
 }
+.otp-card-dom { flex: 1; min-width: 0; display: inline-flex; align-items: center; gap: 3px; color: var(--bl-text-3); }
+.otp-meta-ic { display: inline-flex; flex-shrink: 0; color: var(--bl-text-3); }
+.otp-card-prop {
+  flex-shrink: 0; display: inline-flex; align-items: baseline; gap: 2px;
+  color: var(--bl-text-3); background: var(--bl-bg-2);
+  border-radius: 9px; padding: 1px 8px; font-feature-settings: "tnum";
+}
+.otp-card-prop b { color: var(--bl-text-2); font-weight: 600; }
+.otp-card-prop i { color: var(--bl-border-strong); font-style: normal; margin: 0 2px; }
+.otp-card.is-on .otp-card-prop { background: var(--bl-bg-1); }
 .otp-card-cmt { font-size: 12px; line-height: 1.4; color: var(--bl-text-3); }
 .otp-card-check {
   position: absolute; right: 8px; top: 8px;
@@ -410,98 +370,4 @@ const TreeRow = {
 
 .otp-fade-enter-active, .otp-fade-leave-active { transition: opacity .15s; }
 .otp-fade-enter-from, .otp-fade-leave-to { opacity: 0; }
-</style>
-
-<!-- 非 scoped 样式：TreeRow 是通过 h() 渲染的内嵌子组件，scoped CSS 不会注入 data-v 属性到其子元素，必须用全局选择器。
-     用 .otp-tree 容器前缀做命名隔离，避免与其他组件冲突。 -->
-<style>
-.otp-tree .otp-tree-wrap { position: relative; }
-.otp-tree .otp-tn {
-  display: flex; align-items: center; gap: 6px;
-  padding: 6px 8px;
-  margin: 1px 0;
-  border-radius: var(--bl-radius-2);
-  font-size: var(--bl-fs-13);
-  cursor: pointer;
-  user-select: none;
-  position: relative;
-  z-index: 1;
-  color: var(--bl-text-1);
-  transition: background-color .12s ease, color .12s ease;
-}
-.otp-tree .otp-tn:hover { background: var(--bl-bg-hover); }
-.otp-tree .otp-tn.is-active {
-  background: var(--bl-primary-soft);
-  color: var(--bl-primary);
-  font-weight: 500;
-}
-
-.otp-tree .otp-tn-toggle {
-  width: 16px; height: 16px;
-  display: inline-flex; align-items: center; justify-content: center;
-  color: var(--bl-text-1);
-  flex-shrink: 0;
-  position: relative; z-index: 2;
-}
-.otp-tree .otp-tn-toggle:hover { color: var(--bl-primary); }
-/* 有箭头的 toggle 盖一层本地背景色，让竖虚线被向外延展 3px 遮住 */
-.otp-tree .otp-tn-toggle:not(.otp-tn-toggle-empty) {
-  background: var(--bl-bg-2);
-  border-radius: 3px;
-  outline: 3px solid #f5f7fa;
-}
-.otp-tree .otp-tn:hover .otp-tn-toggle:not(.otp-tn-toggle-empty) {
-  background: var(--bl-bg-hover);
-  outline-color: var(--bl-bg-hover);
-}
-.otp-tree .otp-tn.is-active .otp-tn-toggle:not(.otp-tn-toggle-empty) {
-  background: var(--bl-primary-soft);
-  outline-color: var(--bl-primary-soft);
-}
-.otp-tree .otp-tn-toggle-empty {
-  width: 16px; height: 16px; background: transparent; flex-shrink: 0;
-}
-
-.otp-tree .otp-tn-ico {
-  width: 20px; height: 20px; border-radius: 4px;
-  display: inline-flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.otp-tree .otp-tn-label {
-  flex: 1; min-width: 0;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-.otp-tree .otp-tn-count {
-  flex-shrink: 0; margin-left: auto;
-  font-size: 11px; color: var(--bl-text-3);
-  background: var(--bl-bg-2);
-  border-radius: 9px; padding: 0 7px; min-width: 20px;
-  height: 17px; line-height: 17px; text-align: center;
-  font-feature-settings: "tnum";
-  transition: background-color .12s ease, color .12s ease;
-}
-.otp-tree .otp-tn.is-active .otp-tn-count {
-  background: var(--bl-primary-soft-ss, var(--bl-bg-1));
-  color: var(--bl-primary);
-}
-
-/* 树引线（与 Category TreeNode 完全对齐） */
-.otp-tree .otp-tn-children {
-  margin-left: 20px;
-  padding-left: 0;
-  position: relative;
-}
-.otp-tree .otp-tn-children::before {
-  content: '';
-  position: absolute;
-  left: 14px; top: -2px; bottom: 18px;
-  border-left: 1px dashed var(--bl-border-strong);
-}
-.otp-tree .otp-tn-children > .otp-tree-wrap > .otp-tn::before {
-  content: '';
-  position: absolute;
-  left: 14px; top: 50%;
-  width: 14px;
-  border-top: 1px dashed var(--bl-border-strong);
-}
 </style>

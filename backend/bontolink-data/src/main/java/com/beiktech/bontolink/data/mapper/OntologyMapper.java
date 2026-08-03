@@ -97,6 +97,7 @@ public interface OntologyMapper {
             "       cp.class_ds_id, cp.physical_table, cp.physical_column, " +
             "       cp.sort, cp.metadata, " +
             "       vt.constraint_type AS vt_constraint_type, vt.base_type AS vt_base_type, " +
+            "       vt.enum_id AS enum_id, " +
             "       et.api_name AS enum_api_name, et.rdfs_label AS enum_label " +
             "  FROM ont_class_property cp " +
             "  LEFT JOIN ont_value_types vt ON vt.id = cp.value_type " +

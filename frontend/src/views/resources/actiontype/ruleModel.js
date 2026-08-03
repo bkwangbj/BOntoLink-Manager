@@ -10,7 +10,8 @@ export const USER_ATTR_OPTS = [
 export const PROP_OPERATOR_OPTS = Object.entries(PROP_OPERATORS).map(([v, l]) => ({ value: v, label: l }))
 
 export function newMapping() {
-  return { property_code: '', property_name: '', prop_operator: 'set', value_source: 1, value_content: '', is_required: 0 }
+  return { property_code: '', property_name: '', prop_operator: 'set', value_source: 1, value_content: '',
+    param_name: '', default_type: 'static', default_source: '', is_required: 0 }
 }
 export function newObjLink() { return { link_type_code: '', peer_param: '' } }
 export function newWhParam() { return { name: '', param_type: 'string', value_source: 1, value_content: '' } }

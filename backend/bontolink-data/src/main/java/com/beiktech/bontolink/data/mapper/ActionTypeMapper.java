@@ -129,9 +129,11 @@ public interface ActionTypeMapper {
 
     @Insert("""
         INSERT INTO ont_action_rule_property_mapping(
-            id, rule_id, property_code, property_name, prop_operator, value_source, value_content, is_primary_key, is_required, sort)
+            id, rule_id, property_code, property_name, prop_operator, value_source, value_content,
+            param_name, default_type, default_source, is_primary_key, is_required, sort)
         VALUES (
-            #{id}, #{rule_id}, #{property_code}, #{property_name}, #{prop_operator}, #{value_source}, #{value_content}, #{is_primary_key}, #{is_required}, #{sort})
+            #{id}, #{rule_id}, #{property_code}, #{property_name}, #{prop_operator}, #{value_source}, #{value_content},
+            #{param_name}, #{default_type}, #{default_source}, #{is_primary_key}, #{is_required}, #{sort})
     """)
     int insertRulePropMapping(Map<String, Object> row);
 

@@ -184,7 +184,8 @@
               <div v-else class="rl-body">
                 <!-- 对象/链接规则 -->
                 <template v-if="['create_object','modify_object','delete_object','create_link','delete_link'].includes(rule.kind)">
-                  <RuleObjectEditor :rule="rule" :class-options="objClassOptions" :pk-options="objPkOptionsOf(rule)"
+                  <RuleObjectEditor :rule="rule" :all-classes="allClasses" :pk-options="objPkOptionsOf(rule)"
+                                    :main-class-id="form.object_class_id || ''" :main-class-name="subjectName"
                                     :prop-options="rulePropOptionsOf(rule)" :class-name="ruleClassNameOf(rule)"
                                     :form-param-options="formParamOptions" :object-param-options="objectParamOptions"
                                     :link-type-options="linkTypeOptions" :link-card-label="linkCardLabel"
@@ -251,6 +252,7 @@
                     <span v-if="x.p.visible === 0" class="fd-hidden" title="表单中隐藏, 不渲染给用户"><span v-html="BL.icon('eyeOff', 12)"></span>隐藏</span>
                     <span v-if="srcTagOf(x.p)" class="fd-src-tag is-sm" :title="`取自关联对象「${srcTagOf(x.p).name}」`"><span v-html="BL.icon('box', 10, '#fff')"></span>{{ srcTagOf(x.p).name }}</span>
                     <span class="fd-disp" :title="'显示组件:' + displayMeta(x.p.display_type).label"><span class="fd-disp-ic" v-html="BL.icon(displayMeta(x.p.display_type).icon, 13)"></span><span class="fd-disp-txt">{{ displayMeta(x.p.display_type).label }}</span></span>
+                    <button class="fd-row-del" title="删除参数" @click.stop="removeParamAt(x.i)" v-html="BL.icon('trash2', 12)"></button>
                     <span class="fd-chev" v-html="BL.icon('chevronRight', 12)"></span>
                   </div>
                   <div v-if="!paramsOfSection(sec).length" class="fd-part-empty">该分区暂无参数,可拖入或点下方添加</div>
@@ -317,22 +319,25 @@
                       <span class="bl-tag" :style="{ background:`color-mix(in srgb, ${dtMeta(selParam.param_type).color} 12%, transparent)`, color:dtMeta(selParam.param_type).color }">{{ dtMeta(selParam.param_type).label }}</span>
                       <span v-if="selParam.is_required" class="fd-req-tag">必填</span>
                       <span v-if="selParam.visible === 0" class="fd-hidden" title="表单中隐藏"><span v-html="BL.icon('eyeOff', 12)"></span>隐藏</span>
-                      <span v-if="srcTagOf(selParam)" class="fd-src-tag" :title="`该参数取自关联对象「${srcTagOf(selParam).name}」的属性 ${selParam.property_code}`">
-                        <span v-html="BL.icon('box', 11, '#fff')"></span>{{ srcTagOf(selParam).name }}
-                        <i v-if="srcTagOf(selParam).api" class="bl-mono">{{ srcTagOf(selParam).api }}</i>
-                      </span>
+                      <span class="fd-r1-disp" :title="'显示组件:' + displayMeta(selParam.display_type).label">
+                        <span v-html="BL.icon(displayMeta(selParam.display_type).icon, 12)"></span>{{ displayMeta(selParam.display_type).label }}</span>
                     </div>
                     <div class="fd-phd-r2">
-                      <span>{{ selParam.section || '基础参数' }}</span>
-                      <span class="fd-meta-dot"></span><span>{{ displayMeta(selParam.display_type).label }}</span>
-                      <span class="fd-meta-dot"></span><span>{{ dspLabel('width', dspOf(selParam).width) }}</span>
-                      <span class="fd-meta-dot"></span><span>{{ dspLabel('labelPos', dspOf(selParam).labelPos) }}</span>
+                      <!-- 该参数落到哪个对象的哪个属性上 — 主体对象与规则创建的对象都在这里点明 -->
+                      <span v-if="paramOwner" class="fd-own" :title="`${paramOwner.isSubject ? '主对象' : '引用对象'} ${paramOwner.className}${paramOwner.classApi ? '(' + paramOwner.classApi + ')' : ''} · 属性 ${paramOwner.propName}${paramOwner.propCode ? '(' + paramOwner.propCode + ')' : ''}`">
+                        <span class="fd-own-k">{{ paramOwner.isSubject ? '主对象' : '引用对象' }}</span>
+                        <span class="fd-own-ic" :style="{ background: paramOwner.isSubject ? '#165DFF' : '#00B42A' }" v-html="BL.icon('box', 9, '#fff')"></span>
+                        <span class="fd-own-t bl-truncate">{{ paramOwner.className }}</span>
+                        <i v-if="paramOwner.classApi" class="bl-mono fd-own-sub">{{ paramOwner.classApi }}</i>
+                        <span class="fd-meta-dot"></span>
+                        <span class="fd-own-t bl-truncate">{{ paramOwner.propName }}</span>
+                        <i v-if="paramOwner.propCode" class="bl-mono fd-own-sub">{{ paramOwner.propCode }}</i>
+                      </span>
                       <template v-if="selParam.description"><span class="fd-meta-dot"></span><span class="bl-truncate">{{ selParam.description }}</span></template>
                     </div>
                   </div>
                   <div class="fd-phd-act">
                     <button class="bl-btn bl-btn-sm bl-btn-primary" @click="onSave" :disabled="saving">保存</button>
-                    <button class="bl-btn bl-btn-text bl-btn-icon at-del-op" title="删除参数" @click="removeParamAt(selIdx)" v-html="BL.icon('trash2', 13)"></button>
                   </div>
                 </div>
                 <div class="fd-tabs">
@@ -404,16 +409,14 @@
                       <!-- 对象参数属性: 两级级联 (选表单内对象参数 → 选其属性字段), 文档 2.3.3 类型一 -->
                       <div v-else class="fd-cascade">
                         <div class="fd-cascade-row">
-                          <span class="fd-cascade-lbl">对象参数</span>
-                          <BlSelect v-model="selParam.default_obj_param" :options="objectParamOptions" clearable
-                                    :placeholder="objectParamOptions.length ? '选择表单内对象参数' : '暂无对象引用参数,请先在表单添加'"
-                                    @change="selParam.default_obj_prop = ''" style="flex:1" />
+                          <span class="fd-cascade-lbl">对象</span>
+                          <BlSelect v-model="selParam.default_obj_class" :options="objClassOptions" clearable
+                                    placeholder="选择对象" @change="selParam.default_obj_prop = ''" style="flex:1" />
                         </div>
                         <div class="fd-cascade-row">
-                          <span class="fd-cascade-lbl">属性字段</span>
-                          <BlSelect v-model="selParam.default_obj_prop" :options="defObjPropOptions" clearable
+                          <span class="fd-cascade-lbl">属性</span>
+                          <BlSelect v-model="defObjPropList" :options="defObjPropOptions" multiple clearable
                                     :placeholder="defObjPlaceholder" style="flex:1" />
-                          <span v-if="defObjProp" :class="['bl-tag', defObjProp.status === 0 ? 'bl-tag-warning' : 'bl-tag-success']">{{ defObjProp.status === 0 ? '停用' : '启用' }}</span>
                         </div>
                         <div :class="['fd-cascade-hint', defObjFallback && 'is-warn']">{{ defObjHint }}</div>
                       </div>
@@ -633,6 +636,10 @@
   <!-- 添加参数: 从对象属性中挑选 -->
   <PropertyPickerModal v-model:open="propPickerOpen" :sources="propSources" :used-codes="usedPropCodes" @pick="onPropsPicked" />
 
+  <ParamCreateModal ref="paramCreateRef" v-model:open="paramCreateOpen" :section="propPickerSec"
+                    :display-types="DISPLAY_TYPE_OPTS" :used-codes="usedParamCodes" :can-pick-prop="propSources.length > 0"
+                    @pick-prop="propPickerOpen = true" @rows-change="pendingPropCodes = $event" @submit="onParamCreated" />
+
   <!-- 添加规则 选择弹框 -->
   <Teleport to="body">
     <div v-if="rulePickerOpen" class="rlm-mask" @click.self="rulePickerOpen = false">
@@ -672,6 +679,7 @@ import ObjectSetFilter from './ObjectSetFilter.vue'
 import IconGridSelect from './IconGridSelect.vue'
 import RuleObjectEditor from './RuleObjectEditor.vue'
 import PropertyPickerModal from './PropertyPickerModal.vue'
+import ParamCreateModal from './ParamCreateModal.vue'
 import RuleFuncEditor from './RuleFuncEditor.vue'
 import RuleNotifyEditor from './RuleNotifyEditor.vue'
 import RuleWebhookEditor from './RuleWebhookEditor.vue'
@@ -771,10 +779,12 @@ function defaultParam() {
     src_class_id:'', src_class_name:'', src_class_api:'',
     allow_multi:0, input_mode:'input', min_length_on:0, min_length:'', max_length_on:0, max_length:'', regex_on:0, regex:'',
     options:[], allow_other:0, option_source:'manual', objset:defaultObjset(),
-    default_enabled:0, default_type:'static', default_obj_param:'', default_obj_prop:'', overrides:[], dsp:{} }
+    default_enabled:0, default_type:'static', default_obj_class:'', default_obj_param:'', default_obj_prop:'', overrides:[], dsp:{} }
 }
 /* 从对象集获取选项 (文档 1.4.4.1.3) */
-function defaultObjset() { return { class_id:'', set_var:'', filters:[], link_on:0, link_type_code:'', label_prop:'' } }
+/* link_filters = 关联搜索到对端对象后, 再按对端对象的属性过滤 */
+function defaultObjset() { return { class_id:'', set_var:'', filters:[], link_on:0, link_type_code:'', link_filters:[], label_prop:'' } }
+function normFilters(arr) { return (arr || []).map(f => ({ property_code:f.property_code||'', operator:f.operator||'eq', value:f.value||'' })) }
 function normalizeParam(p) {
   const cfg = parseCfg(p.config)
   const d = defaultParam()
@@ -785,9 +795,10 @@ function normalizeParam(p) {
     src_class_id:cfg.src_class_id||'', src_class_name:cfg.src_class_name||'', src_class_api:cfg.src_class_api||'',
     min_length_on:cfg.min_length_on??0, min_length:cfg.min_length??'', max_length_on:cfg.max_length_on??0, max_length:cfg.max_length??'',
     regex_on:cfg.regex_on??0, regex:cfg.regex||'', options:cfg.options||[], allow_other:cfg.allow_other??0, option_source:cfg.option_source||'manual',
-    objset:{ ...defaultObjset(), ...(cfg.objset||{}), filters:(cfg.objset?.filters||[]).map(f=>({ property_code:f.property_code||'', operator:f.operator||'eq', value:f.value||'' })) },
+    objset:{ ...defaultObjset(), ...(cfg.objset||{}),
+      filters:normFilters(cfg.objset?.filters), link_filters:normFilters(cfg.objset?.link_filters) },
     default_enabled:cfg.default_enabled??0, default_type:cfg.default_type||'static',
-    default_obj_param:cfg.default_obj_param||'', default_obj_prop:cfg.default_obj_prop||'',
+    default_obj_class:cfg.default_obj_class||'', default_obj_param:cfg.default_obj_param||'', default_obj_prop:cfg.default_obj_prop||'',
     overrides:normalizeOverrides(cfg.overrides), dsp:cfg.dsp||{} }
 }
 function paramConfig(p) {
@@ -796,7 +807,8 @@ function paramConfig(p) {
     src_class_id:p.src_class_id||'', src_class_name:p.src_class_name||'', src_class_api:p.src_class_api||'',
     min_length_on:p.min_length_on, min_length:p.min_length, max_length_on:p.max_length_on, max_length:p.max_length, regex_on:p.regex_on, regex:p.regex,
     options:p.options, allow_other:p.allow_other, option_source:p.option_source, objset:p.objset || defaultObjset(),
-    default_enabled:p.default_enabled, default_type:p.default_type, default_obj_param:p.default_obj_param || '', default_obj_prop:p.default_obj_prop || '',
+    default_enabled:p.default_enabled, default_type:p.default_type, default_obj_class:p.default_obj_class || '',
+    default_obj_param:p.default_obj_param || '', default_obj_prop:p.default_obj_prop || '',
     /* 自动给出的第一条若一直没填, 不落库 */
     overrides:serializeOverrides((p.overrides || []).filter(b => b.cond?.children?.length || b.actions?.length)), dsp:p.dsp || {} }
 }
@@ -852,7 +864,8 @@ async function loadRuleClassProps(classId) {
   const list = await resourceApi.properties(classId).catch(() => [])
   const arr = Array.isArray(list) ? list : (list?.data || [])
   ruleClassPropsCache[classId] = arr.map(p => ({ code:p.api_name||p.prop_code, name:p.display_name||p.rdfs_label||p.api_name,
-    status:Number(p.status ?? 1), dataType:p.data_type, required:!!p.is_required }))
+    status:Number(p.status ?? 1), dataType:p.data_type, required:!!p.is_required,
+    isPrimary:Number(p.is_primary ?? p.isPrimary ?? 0) === 1 }))
 }
 /* 每条规则各自的对象类 → 各自的属性候选 (多条规则可指向不同对象类) */
 function ruleClassIdOf(r) { return r?.obj_class_id || form.object_class_id || '' }
@@ -860,7 +873,9 @@ function ruleClassNameOf(r) { return classOptions.value.find(c => c.id === ruleC
 function rulePropOptionsOf(r) {
   const id = ruleClassIdOf(r)
   const arr = ruleClassPropsCache[id] || (id === form.object_class_id ? classProps.value : [])
-  return arr.map(p => ({ value:p.code, label:`${p.name} (${p.code})`, dataType:p.dataType, required:!!p.required }))
+  /* name/code 分开给一份, 属性映射表要按「中文名 + 小字编码」两行展示 */
+  return arr.map(p => ({ value:p.code, label:`${p.name} (${p.code})`, name:p.name, dataType:p.dataType,
+    required:!!p.required, isPrimary:!!p.isPrimary }))
 }
 /* 排在该规则之前的「创建对象」规则 — 它们的产物可被后面的规则引用 (value_source=7) */
 function priorCreatedOf(rule) {
@@ -989,6 +1004,9 @@ async function load() {
   Object.assign(form, defaultForm(), res || {})
   rules.value = (res?.rules || []).map(normalizeRule)
   formParams.value = (res?.form_params || []).map(normalizeParam)
+  emptySections.value = []
+  loadClassProps()   // 参数详情页要按 property_code 显示属性中文名
+
   sectionCount.value = (res?.form_sections || []).length
   const ss = res?.submit_standard
   submit.enabled = Number(ss?.enabled)||0; submit.validate_mode = ss?.validate_mode||'all'; submit.error_message = ss?.error_message||''
@@ -1045,7 +1063,8 @@ function normalizeRule(r) {
     notify_custom_html:cfg.notify_custom_html??0, notify_html_content:cfg.notify_html_content||'', notify_permission_scope:cfg.notify_permission_scope||'all',
     wh_url:cfg.wh_url||'', wh_method:cfg.wh_method||'POST', wh_timing:cfg.wh_timing||'after', wh_body:cfg.wh_body||'',
     wh_subtype:cfg.wh_subtype||'sideeffect', wh_code:cfg.wh_code||'', wh_version:cfg.wh_version||'v1', wh_input_mode:cfg.wh_input_mode||'manual', wh_input_func:cfg.wh_input_func||'', wh_input_func_version:cfg.wh_input_func_version||'', wh_params:(cfg.wh_params||[]).map(p=>({ name:p.name||'', param_type:p.param_type||'string', value_source:Number(p.value_source)||1, value_content:p.value_content||'' })),
-    prop_mappings:(r.prop_mappings||[]).map(m => ({ property_code:m.property_code||'', property_name:m.property_name||'', prop_operator:m.prop_operator||'set', value_source:Number(m.value_source)||1, value_content:m.value_content||'', is_required:Number(m.is_required)||0 })) }
+    prop_mappings:(r.prop_mappings||[]).map(m => ({ property_code:m.property_code||'', property_name:m.property_name||'', prop_operator:m.prop_operator||'set', value_source:Number(m.value_source)||1, value_content:m.value_content||'',
+      param_name:m.param_name||'', default_type:m.default_type||'static', default_source:m.default_source||'', is_required:Number(m.is_required)||0 })) }
 }
 function ruleConfig(r) {
   return { kind:r.kind, func_code:r.func_code, func_version:r.func_version, func_autoupgrade:r.func_autoupgrade, func_params:r.func_params,
@@ -1152,10 +1171,12 @@ const rulePickerOpen = ref(false)
 const rDragIdx = ref(null)
 function onRuleDragStart(i, ev) { rDragIdx.value = i; if (ev?.dataTransfer) ev.dataTransfer.effectAllowed = 'move' }
 function onRuleDrop(target) { const from = rDragIdx.value; rDragIdx.value = null; if (from === null || from === target) return; const [it] = rules.value.splice(from, 1); rules.value.splice(target, 0, it) }
-/* 添加参数 = 从对象属性里挑 (主体对象 + 规则中创建的对象), 已加入的不再列出 */
+/* 添加参数 = 先填「名称 / 编码 / 组件类型」, 名称可手输也可从对象属性里挑 (主体对象 + 规则中创建的对象) */
 const propPickerOpen = ref(false)
 const propPickerSec = ref('')
 const propSources = ref([])
+const paramCreateOpen = ref(false)
+const paramCreateRef = ref(null)
 async function addParam(sec) {
   propPickerSec.value = (typeof sec === 'string' && sec) ? sec : (sections.value[0] || '基础参数')
   const out = []
@@ -1177,25 +1198,58 @@ async function addParam(sec) {
       props: ruleClassPropsCache[id] || [] })
   }
   propSources.value = out
-  if (!out.length) {   // 没有可选来源时退回原来的手工新建
-    formParams.value.push({ ...defaultParam(), section: propPickerSec.value })
-    return openParam(formParams.value.length - 1)
-  }
-  propPickerOpen.value = true
+  pendingPropCodes.value = []
+  paramCreateOpen.value = true
 }
-const usedPropCodes = computed(() => formParams.value.map(p => p.property_code || p.param_code).filter(Boolean))
+watch(paramCreateOpen, v => { if (!v) pendingPropCodes.value = [] })
+/* 表单里已用掉的属性 + 新建框里待创建的, 两者都不该再出现在属性面板 */
+const pendingPropCodes = ref([])
+const usedPropCodes = computed(() => [
+  ...formParams.value.map(p => p.property_code || p.param_code).filter(Boolean),
+  ...pendingPropCodes.value,
+])
+const usedParamCodes = computed(() => formParams.value.map(p => p.param_code).filter(Boolean))
+/* 选中的属性一律回填到新建框的清单, 让用户还能改名/改编码/删行 */
 function onPropsPicked(list) {
-  const sec = propPickerSec.value
-  list.forEach(p => {
+  if (!list.length) return
+  paramCreateRef.value?.addFromProps(list.map(p => {
     const t = mapXsd(p.dataType)
     const cls = classOptions.value.find(c => c.id === p.classId)
-    formParams.value.push({ ...defaultParam(), section: sec, param_code: 'p_' + p.code, param_name: p.name,
-      param_type: t, display_type: autoDisplay(t), is_required: p.required ? 1 : 0, property_code: p.code,
+    return { name: p.name, code: p.code, param_code: 'p_' + p.code, param_type: t, display_type: autoDisplay(t),
+      required: p.required ? 1 : 0, classId: p.classId || '', srcName: cls?.cn || '', srcApi: cls?.api_name || '' }
+  }))
+}
+function onParamCreated(list) {
+  const sec = propPickerSec.value
+  list.forEach(d => {
+    formParams.value.push({ ...defaultParam(), section: sec,
+      param_code: d.param_code, param_name: d.param_name, param_type: d.param_type, display_type: d.display_type,
+      is_required: d.is_required ?? 1, property_code: d.property_code || '',
       /* 记住取自哪个对象类, 头部据此标出来源 */
-      src_class_id: p.classId || '', src_class_name: cls?.cn || '', src_class_api: cls?.api_name || '' })
+      src_class_id: d.src_class_id || '', src_class_name: d.src_class_name || '', src_class_api: d.src_class_api || '' })
   })
+  pendingPropCodes.value = []
+  /* 单条直接进详情继续配, 多条留在列表看整体 */
+  if (list.length === 1) return openParam(formParams.value.length - 1)
   BL.success(`已添加 ${list.length} 个参数`)
 }
+/* 详情页头部: 该参数写到哪个对象的哪个属性 (取自属性的显示属性名, 手工参数注明未关联) */
+const paramOwner = computed(() => {
+  const p = selParam.value
+  if (!p) return null
+  const cid = p.src_class_id || form.object_class_id
+  if (!cid) return null
+  const c = classOptions.value.find(x => x.id === cid)
+  const code = p.property_code || ''
+  const arr = ruleClassPropsCache[cid] || (cid === form.object_class_id ? classProps.value : [])
+  const hit = code ? arr.find(x => x.code === code) : null
+  return {
+    isSubject: cid === form.object_class_id,
+    className: c?.cn || '未知对象', classApi: c?.api_name || '',
+    propName: code ? (hit?.name || code) : '未关联属性',
+    propCode: hit?.name ? code : (code || ''),
+  }
+})
 /* 非本动作主体对象的参数才需要标来源, 否则每个参数都挂一个标签太吵 */
 function srcTagOf(p) {
   if (!p?.src_class_id || p.src_class_id === form.object_class_id) return null
@@ -1246,9 +1300,12 @@ const globalConf = reactive({
   density: 'normal', sectionTitle: 1,
 })
 const selParam = computed(() => formParams.value[selIdx.value] || null)
+/* 新建但还没放参数的空分区: 分区本身只由参数的 section 字段承载, 故单独记一份, 免得为了留住分区塞占位参数 */
+const emptySections = ref([])
 const sections = computed(() => {
   const s = []
   formParams.value.forEach(p => { const sec = p.section || '基础参数'; if (!s.includes(sec)) s.push(sec) })
+  emptySections.value.forEach(sec => { if (!s.includes(sec)) s.push(sec) })
   return s.length ? s : ['基础参数']
 })
 function paramsOfSection(sec) { return formParams.value.map((p, i) => ({ p, i })).filter(x => (x.p.section || '基础参数') === sec) }
@@ -1457,7 +1514,7 @@ function moveSection(src, target) {
 function addSection() {
   let n = sections.value.length + 1, name = `分区 ${n}`
   while (sections.value.includes(name)) { n++; name = `分区 ${n}` }
-  formParams.value.push({ ...defaultParam(), param_code: '', param_name: '新参数', section: name })
+  emptySections.value = [...emptySections.value, name]
 }
 async function renameSection(sec) {
   const name = await BL.prompt({
@@ -1473,6 +1530,7 @@ async function renameSection(sec) {
   const nn = String(name).trim()
   if (!nn || nn === sec) return
   formParams.value.forEach(p => { if ((p.section || '基础参数') === sec) p.section = nn })
+  emptySections.value = emptySections.value.map(s => s === sec ? nn : s)
 }
 async function removeSection(sec) {
   if (sections.value.length <= 1) return BL.warning('至少保留一个分区')
@@ -1483,6 +1541,7 @@ async function removeSection(sec) {
     if (!ok) return
   }
   formParams.value = formParams.value.filter(p => (p.section || '基础参数') !== sec)
+  emptySections.value = emptySections.value.filter(s => s !== sec)
   if (formView.value === 'detail') backToList()
 }
 function dtMeta(t) { return DATA_TYPE_META[t] || DATA_TYPE_META.string }
@@ -1517,44 +1576,69 @@ const objsetProps = computed(() => {
   if (!id) return []
   return ruleClassPropsCache[id] || (id === form.object_class_id ? classProps.value : [])
 })
-const objsetPropOptions = computed(() => objsetProps.value.map(p => ({ value:p.code, label:`${p.name} (${p.code})` })))
+const objsetPropOptions = computed(() => objsetProps.value.map(p => ({ value:p.code, label:`${p.name} (${p.code})`, status:p.status })))
 const objsetLabelProp = computed(() => objsetProps.value.find(p => p.code === selParam.value?.objset?.label_prop) || null)
+/* 关联搜索的对端对象: 链接两端哪端不是起始对象, 哪端就是对端 */
+const objsetPeerClassId = computed(() => {
+  const code = selParam.value?.objset?.link_type_code
+  if (!code) return ''
+  const l = (props.allLinkTypes || []).find(x => linkTypeCode(x) === code)
+  if (!l) return ''
+  const lid = l.l_object_type_id || l.lObjectTypeId || ''
+  const rid = l.r_object_type_id || l.rObjectTypeId || ''
+  const start = selParam.value?.objset?.class_id
+  return start && lid === start ? rid : (start && rid === start ? lid : (rid || lid))
+})
+const objsetPeerClassName = computed(() => classOptions.value.find(c => c.id === objsetPeerClassId.value)?.cn || '关联对象')
+const objsetLinkPropOptions = computed(() => {
+  const id = objsetPeerClassId.value
+  if (!id) return []
+  const arr = ruleClassPropsCache[id] || (id === form.object_class_id ? classProps.value : [])
+  return arr.map(p => ({ value:p.code, label:`${p.name} (${p.code})`, status:p.status }))
+})
+watch(objsetPeerClassId, id => { if (id) loadRuleClassProps(id) }, { immediate: true })
 /* 关联搜索路径文案: 关联搜索至 {链接类型} 的 {对端对象} */
 const objsetLinkPath = computed(() => {
   const code = selParam.value?.objset?.link_type_code
   if (!code) return '选择链接类型后,可通过关联对象的属性搜索当前对象集'
   const l = (props.allLinkTypes || []).find(x => linkTypeCode(x) === code)
-  const peer = classOptions.value.find(c => c.id === (l?.r_object_type_id || l?.rObjectTypeId))?.cn || '关联对象'
-  return `关联搜索至 ${l ? (l.rdfs_label || l.rdfsLabel || code) : code} 的 ${peer}`
+  return `关联搜索至 ${l ? (l.rdfs_label || l.rdfsLabel || code) : code} 的 ${objsetPeerClassName.value}`
 })
 /* ===== 默认值 · 对象参数属性 两级级联 (文档 2.3.3 类型一) ===== */
 /* 第一级选中的对象参数, 其指向的对象类型来自该参数自身的「起始对象集」配置 */
 const defObjParam = computed(() => formParams.value.find(p => p.param_code === selParam.value?.default_obj_param) || null)
 /* 对象参数没配起始对象集时, 回退到动作主体对象, 否则属性下拉会空到没法用 */
 const defObjOwnClassId = computed(() => defObjParam.value?.objset?.class_id || '')
-const defObjClassId = computed(() => defObjOwnClassId.value || form.object_class_id || '')
-const defObjFallback = computed(() => !!selParam.value?.default_obj_param && !defObjOwnClassId.value)
+/* 直接选定的对象优先; 老配置(挂在对象引用参数上)仍按该参数的起始对象集解析 */
+const defObjClassId = computed(() => selParam.value?.default_obj_class || defObjOwnClassId.value || '')
+const defObjFallback = computed(() => !!selParam.value?.default_obj_param && !selParam.value?.default_obj_class && !defObjOwnClassId.value)
 const defObjPropOptions = computed(() => {
   const arr = ruleClassPropsCache[defObjClassId.value] || (defObjClassId.value === form.object_class_id ? classProps.value : [])
   return arr.map(p => ({ value:p.code, label:`${p.name} (${p.code})` }))
 })
-const defObjProp = computed(() => {
-  const arr = ruleClassPropsCache[defObjClassId.value] || []
-  return arr.find(p => p.code === selParam.value?.default_obj_prop) || null
+/* default_obj_prop 存逗号分隔编码, 单个时与旧的单选值一致, 存量配置不用迁移 */
+const defObjPropList = computed({
+  get: () => String(selParam.value?.default_obj_prop || '').split(',').map(s => s.trim()).filter(Boolean),
+  set: v => { if (selParam.value) selParam.value.default_obj_prop = (v || []).join(',') },
 })
 const defObjClassName = computed(() => classOptions.value.find(c => c.id === defObjClassId.value)?.cn || '')
 const defObjPlaceholder = computed(() => {
-  if (!selParam.value?.default_obj_param) return '请先选择对象参数'
-  if (!defObjClassId.value) return '无法确定对象类型,请先给该对象参数配置起始对象集'
-  return defObjPropOptions.value.length ? '选择属性字段' : `「${defObjClassName.value || '该对象'}」暂无属性`
+  if (!defObjClassId.value) return '请先选择对象'
+  return defObjPropOptions.value.length ? '选择属性 (可多选)' : `「${defObjClassName.value || '该对象'}」暂无属性`
 })
 const defObjHint = computed(() => {
   const p = selParam.value; if (!p) return ''
-  const pn = defObjParam.value?.param_name || p.default_obj_param
-  if (defObjFallback.value) return `「${pn}」还没配置起始对象集,属性暂按动作主体对象「${defObjClassName.value || '—'}」列出;建议先到该参数的「约束设置」里选定对象集。`
-  if (!p.default_obj_param || !p.default_obj_prop) return '表单打开时,自动取所选对象参数上的该属性值回填为本参数默认值,用户仍可自行修改。'
-  const cn = defObjPropOptions.value.find(o => o.value === p.default_obj_prop)?.label || p.default_obj_prop
-  return `表单打开时自动取「${pn}」的「${cn}」回填,用户仍可自行修改。`
+  if (defObjFallback.value) {
+    const pn = defObjParam.value?.param_name || p.default_obj_param
+    return `原配置挂在对象参数「${pn}」上, 但它没有起始对象集, 无法确定对象类型;请在上方直接选择对象。`
+  }
+  const codes = defObjPropList.value
+  if (!defObjClassId.value || !codes.length) return '表单打开时,自动取所选对象上的该属性值回填为本参数默认值,用户仍可自行修改。'
+  const on = defObjClassName.value || '该对象'
+  const cn = codes.map(c => defObjPropOptions.value.find(o => o.value === c)?.label || c).join('、')
+  return codes.length > 1
+    ? `表单打开时自动取「${on}」的「${cn}」按顺序拼接后回填,用户仍可自行修改。`
+    : `表单打开时自动取「${on}」的「${cn}」回填,用户仍可自行修改。`
 })
 watch(defObjClassId, id => { if (id) loadRuleClassProps(id) }, { immediate: true })
 
@@ -1567,6 +1651,8 @@ const objsetBind = computed(() => ({
   labelProp: objsetLabelProp.value,
   linkTypeOptions: linkTypeOptions.value,
   linkPath: objsetLinkPath.value,
+  linkPropOptions: objsetLinkPropOptions.value,
+  linkClassName: objsetPeerClassName.value,
   fallbackClassId: form.object_class_id || '',
 }))
 /* 进入参数详情 / 切换起始对象集时按需拉属性 */
@@ -1580,7 +1666,8 @@ async function onSave() {
   try {
     const body = { ...form,
       form_params: formParams.value.filter(p => String(p.param_code).trim()).map((p,i) => ({ param_code:p.param_code, param_name:p.param_name, param_type:p.param_type, is_required:p.is_required, default_value:p.value_source===5?null:p.default_value, config:JSON.stringify(paramConfig(p)), sort:i })),
-      rules: rules.value.map((r,i) => ({ action_type:form.action_type, rule_type:kindMeta(r.kind).ruleType, rule_name:r.rule_name, status:Number(r.status??1), target_param_code:r.target_param_code||null, link_type_code:r.link_type_code||null, rule_config:JSON.stringify(ruleConfig(r)), sort:i, prop_mappings:(r.prop_mappings||[]).filter(m=>String(m.property_code).trim()).map((m,j)=>({ property_code:m.property_code, property_name:m.property_name||null, prop_operator:m.prop_operator, value_source:m.value_source, value_content:m.value_content||null, is_required:m.is_required, sort:j })) })),
+      rules: rules.value.map((r,i) => ({ action_type:form.action_type, rule_type:kindMeta(r.kind).ruleType, rule_name:r.rule_name, status:Number(r.status??1), target_param_code:r.target_param_code||null, link_type_code:r.link_type_code||null, rule_config:JSON.stringify(ruleConfig(r)), sort:i, prop_mappings:(r.prop_mappings||[]).filter(m=>String(m.property_code).trim()).map((m,j)=>({ property_code:m.property_code, property_name:m.property_name||null, prop_operator:m.prop_operator, value_source:m.value_source, value_content:m.value_content||null,
+        param_name:m.param_name||null, default_type:m.default_type||null, default_source:m.default_source||null, is_required:m.is_required, sort:j })) })),
       submit_standard: { enabled:submit.enabled, validate_mode:submitTree.logic, error_message:submit.error_message||null, nodes: submit.enabled ? flattenSubmitTree() : [] },
     }
     if (formParams.value.length) body.form_enabled = 1
@@ -1807,6 +1894,11 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .fd-hidden > span { display: inline-flex; }
 .fd-disp-ic { display: inline-flex; color: var(--bl-text-3); }
 .fd-disp-txt { font-size: 12px; }
+/* 行内删除: 常驻会太吵, 只在 hover 该行时露出 */
+.fd-row-del { padding: 2px; border: 0; background: transparent; color: var(--bl-text-3); cursor: pointer; flex-shrink: 0;
+  display: inline-flex; align-items: center; border-radius: 5px; opacity: 0; transition: opacity .12s, color .12s, background .12s; }
+.fd-row:hover .fd-row-del { opacity: 1; }
+.fd-row-del:hover { color: #f53f3f; background: color-mix(in srgb, #f53f3f 12%, transparent); }
 .fd-chev { color: var(--bl-text-3); display: inline-flex; flex-shrink: 0; }
 .fd-part-empty { padding: 14px; text-align: center; color: var(--bl-text-3); font-size: 12px; }
 .fd-actions { display: flex; gap: 10px; margin: 12px 0 0; }
@@ -1819,9 +1911,21 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .fd-phd-sep { width: 1px; align-self: stretch; background: var(--bl-divider); flex-shrink: 0; }
 .fd-phd-mid { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .fd-phd-r1 { display: flex; align-items: center; gap: 8px; min-width: 0; }
-.fd-phd-r2 { display: flex; align-items: center; gap: 7px; font-size: 11.5px; color: var(--bl-text-3); min-width: 0; }
+.fd-phd-r2 { padding-top: 8px; display: flex; align-items: center; gap: 7px; font-size: 11.5px; color: var(--bl-text-3); min-width: 0; }
 .fd-phd-r2 > span { flex-shrink: 0; }
 .fd-phd-r2 > span.bl-truncate { flex: 1; min-width: 0; }
+/* 组件类型跟在标题标签后左对齐, 与「枚举」「必填」等标签同高 */
+.fd-r1-disp { display: inline-flex; align-items: center; gap: 4px; height: 22px; flex-shrink: 0; box-sizing: border-box;
+  padding: 0 8px; border-radius: 4px; font-size: 11.5px; color: var(--bl-text-2); background: var(--bl-bg-2); }
+.fd-r1-disp > span { display: inline-flex; color: var(--bl-text-3); }
+/* 参数落点 (对象 + 属性): 第二行左起第一项, 单行, 挤不下时先截对象/属性名 */
+/* 选择器带上父级, 否则被 .fd-phd-r2 > span { flex-shrink: 0 } 压掉, 挤不下时会溢出 */
+.fd-phd-r2 > .fd-own { display: inline-flex; align-items: center; gap: 5px; min-width: 0; flex-shrink: 1;
+  padding: 1px 8px; border-radius: 5px; }
+.fd-own-k { color: var(--bl-text-3); flex-shrink: 0; }
+.fd-own-ic { width: 13px; height: 13px; border-radius: 3px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
+.fd-own-t { color: var(--bl-text-1); min-width: 0; }
+.fd-own-sub { font-size: 10.5px; color: var(--bl-text-3); font-style: normal; flex-shrink: 0; }
 .fd-phd-act { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
 .fd-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--bl-border-strong); }
 /* 头部三个标签统一高度: 全局 .bl-tag 是 22px, 自定义的两个跟齐 */

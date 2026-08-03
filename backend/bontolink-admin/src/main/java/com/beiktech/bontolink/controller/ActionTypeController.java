@@ -210,6 +210,9 @@ public class ActionTypeController {
                 mm.put("prop_operator", m.getOrDefault("prop_operator", "set"));
                 mm.put("value_source", toInt(m.getOrDefault("value_source", 1)));
                 mm.put("value_content", m.get("value_content"));
+                mm.put("param_name", m.get("param_name"));
+                mm.put("default_type", m.get("default_type"));
+                mm.put("default_source", m.get("default_source"));
                 mm.put("is_primary_key", toInt(m.get("is_primary_key")));
                 mm.put("is_required", toInt(m.get("is_required")));
                 mm.put("sort", m.getOrDefault("sort", mi++));
