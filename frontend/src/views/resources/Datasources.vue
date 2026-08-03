@@ -87,7 +87,7 @@
                     <span class="ds-ic" :style="{ background: typeColor(row.data.dsType) }" v-html="BL.icon(typeIcon(row.data.dsType), 12, '#fff')"></span>
                     <div class="ds-name-text">
                       <div class="ds-name bl-truncate" :title="row.data.dsName">{{ row.data.dsName }}</div>
-                      <div class="ds-code bl-mono bl-muted">{{ row.data.dsCode }} · {{ row.data.dsType.toUpperCase() }}</div>
+                      <div class="ds-code bl-mono bl-muted">{{ row.data.dsCode }} · {{ typeLabel(row.data) }}</div>
                     </div>
                   </div>
                 </td>
@@ -423,7 +423,8 @@
     <DsKindPicker v-model:open="kindPickerOpen" @pick="onKindPicked" />
     <!-- 外部接口类数据源的配置抽屉 -->
     <ExtDatasourceDrawer v-model:open="extDrawerOpen" :record="extRecord" :domain-options="domainOptions"
-                         :default-category="selectedCategoryCode || ''" @saved="loadAll" />
+                         :default-category="selectedCategoryCode || ''" @saved="loadAll"
+                         @open-apis="id => router.push(`/resources/datasources/${id}/apis`)" />
   </div>
 </template>
 
@@ -740,6 +741,8 @@ async function loadAll() {
 }
 
 async function select(d) {
+  /* 外部接口类走它自己的抽屉(配置/监控/日志/接口), 与数据库类的字段完全不同 */
+  if (d?.isExt) { selected.value = d; extRecord.value = d; extDrawerOpen.value = true; return }
   selected.value = d
   // 点击行: 打开抽屉到"监控"页签
   drawerOpen.value = true
@@ -882,9 +885,13 @@ function normalizeExt(r) {
     connectStatus: Number(r.status ?? 1) === 1 ? 'online' : 'offline' }
 }
 const hasExt = computed(() => rows.value.some(r => r.isExt))
-function openApiManager(d) {
-  BL.info(`接口管理页开发中：${d.dsName} 共 ${d.apiCount || 0} 个接口`)
+/* 外部接口类按文档口径显示, 数据库类沿用大写驱动名 */
+const EXT_TYPE_LABEL = { http_rest: 'REST API', webhook: 'Webhook', graphql: 'GraphQL' }
+function typeLabel(d) {
+  if (d?.isExt) return EXT_TYPE_LABEL[d.dsType] || d.dsType
+  return String(d?.dsType || '').toUpperCase()
 }
+function openApiManager(d) { router.push(`/resources/datasources/${d.id}/apis`) }
 function openEdit(d) {
   if (d?.isExt) { extRecord.value = d; extDrawerOpen.value = true; return }
   // 先清掉旧字段，再覆盖；避免新数据缺字段时残留前一条的值
@@ -909,6 +916,11 @@ async function submitForm() {
 }
 
 async function doTest(d) {
+  if (d?.isExt) {
+    const r = await extDatasourceApi.test(d.id).catch(e => ({ ok: false, message: e?.msg || '测试失败' }))
+    r?.ok ? BL.success(r.message) : BL.warning(r?.message || '测试未通过')
+    return
+  }
   const r = await datasourceApi.test(d.id)
   if (r.ok) BL.success(`${r.msg} · ${r.responseMs}ms`)
   else      BL.error(r.msg)
@@ -947,7 +959,12 @@ async function batchRemove() {
   if (!ids.length) return
   const ok = await BL.confirm({ title:'批量删除', content:`确定删除选中 ${ids.length} 个数据源？删除后关联引用会失效。`, danger:true, okText:'删除' })
   if (!ok) return
-  for (const id of ids) await datasourceApi.remove(id).catch(() => {})
+  /* 两类数据源的删除接口不同, 按 isExt 分流 */
+  const extIds = new Set(rows.value.filter(r => r.isExt).map(r => r.id))
+  for (const id of ids) {
+    const call = extIds.has(id) ? extDatasourceApi.remove(id) : datasourceApi.remove(id)
+    await call.catch(() => {})
+  }
   BL.success('已删除')
   checked.value = new Set()
   if (selected.value && ids.includes(selected.value.id)) selected.value = null
