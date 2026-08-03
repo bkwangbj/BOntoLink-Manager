@@ -1,7 +1,10 @@
 <template>
   <Teleport to="body">
     <transition name="eds-drawer">
-      <aside v-if="open" class="eds-drawer">
+      <aside v-if="open" class="eds-drawer" :style="{ width: width + 'px' }">
+        <!-- 左边缘拖拽手柄, 宽度持久化 -->
+        <div class="eds-drag" :class="{ 'is-resizing': resizing }" @mousedown="onDragStart"></div>
+
         <!-- 头部 -->
         <div class="eds-hd">
           <span class="eds-ic" v-html="BL.icon('plug', 18, '#fff')"></span>
@@ -17,7 +20,15 @@
           <button class="bl-btn bl-btn-text bl-btn-icon" title="关闭" @click="close" v-html="BL.icon('x', 14)"></button>
         </div>
 
-        <div class="eds-body">
+        <!-- 页签: 未保存的新建只有配置页 -->
+        <div v-if="isEdit" class="eds-tabs">
+          <button v-for="t in TABS" :key="t.k" :class="['eds-tab', tab === t.k && 'is-on']" @click="switchTab(t.k)">
+            {{ t.label }}
+            <span v-if="t.k === 'apis' && apiCount" class="eds-tab-n">{{ apiCount }}</span>
+          </button>
+        </div>
+
+        <div v-show="tab === 'config'" class="eds-body">
           <!-- 1 基础信息 -->
           <div class="eds-card"><div class="eds-card-hd">基础信息</div>
             <div class="eds-grid">
@@ -27,7 +38,7 @@
                 <input class="bl-input bl-mono" v-model="form.ds_code" :disabled="isEdit" maxlength="64"
                        :placeholder="isEdit ? '' : '英文下划线格式, 创建后不可修改'" /></label>
               <label class="eds-fld"><span class="eds-lbl">所属领域</span>
-                <BlSelect v-model="form.category_code" :options="domainOptions" clearable placeholder="未分类" /></label>
+                <BlSelect v-model="form.category_code" :options="domainOpts" clearable placeholder="未分类" /></label>
               <label class="eds-fld"><span class="eds-lbl">数据源类型 <i>*</i></span>
                 <BlSelect v-model="form.ds_type" :options="DS_TYPE_OPTS" /></label>
               <label class="eds-fld"><span class="eds-lbl">读写属性</span>
@@ -83,7 +94,16 @@
           </div>
         </div>
 
-        <div class="eds-ft">
+        <!-- 监控 -->
+        <div v-if="isEdit && tab === 'monitor'" class="eds-tabbody">
+          <ExtMonitorTab ref="monitorRef" :ds-id="form.id" @goto-logs="gotoLogs" />
+        </div>
+        <!-- 日志 -->
+        <div v-if="isEdit && tab === 'logs'" class="eds-tabbody">
+          <ExtLogsTab ref="logsRef" :ds-id="form.id" :apis="apis" :preset="logPreset" />
+        </div>
+
+        <div v-if="tab === 'config'" class="eds-ft">
           <span v-if="err" class="eds-err">{{ err }}</span>
           <span style="flex:1"></span>
           <button class="bl-btn bl-btn-sm" @click="close">取消</button>
@@ -95,11 +115,13 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, computed, watch, nextTick, onBeforeUnmount } from 'vue'
 import { BL } from '@/lib/bl.js'
 import BlSelect from '@/components/BlSelect.vue'
 import { extDatasourceApi } from '@/api'
 import AuthConfigForm from './AuthConfigForm.vue'
+import ExtMonitorTab from './ExtMonitorTab.vue'
+import ExtLogsTab from './ExtLogsTab.vue'
 import { AUTH_META, defaultAuthConfig, validateAuthConfig } from './authModel.js'
 
 const props = defineProps({
@@ -108,7 +130,7 @@ const props = defineProps({
   domainOptions: { type: Array, default: () => [] },
   defaultCategory: { type: String, default: '' },
 })
-const emit = defineEmits(['update:open', 'saved'])
+const emit = defineEmits(['update:open', 'saved', 'open-apis'])
 
 const DS_TYPE_OPTS = [
   { value: 'http_rest', label: 'REST API' }, { value: 'webhook', label: 'Webhook' }, { value: 'graphql', label: 'GraphQL' },
@@ -118,6 +140,30 @@ const RW_OPTS = [{ value: 1, label: '只读' }, { value: 2, label: '读写' }]
 const STATUS_OPTS = [{ value: 1, label: '启用' }, { value: 0, label: '禁用' }]
 const METHOD_OPTS = ['GET', 'POST', 'PUT', 'DELETE'].map(v => ({ value: v, label: v }))
 const CONTENT_TYPE_OPTS = ['application/json', 'application/x-www-form-urlencoded', 'multipart/form-data'].map(v => ({ value: v, label: v }))
+
+/* 调用方传的是 {code,name}(原页面用原生 option 手写字段), BlSelect 要 {value,label} */
+const domainOpts = computed(() => (props.domainOptions || []).map(d =>
+  d && d.value !== undefined ? d : { value: d?.code ?? '', label: d?.name ?? d?.label ?? '' }))
+
+const TABS = [
+  { k: 'config', label: '配置' }, { k: 'monitor', label: '监控' },
+  { k: 'logs', label: '日志' }, { k: 'apis', label: '接口' },
+]
+const tab = ref('config')
+const apis = ref([])
+const apiCount = computed(() => apis.value.length)
+const logPreset = ref(null)
+const monitorRef = ref(null)
+const logsRef = ref(null)
+
+/* 「接口」页签直接进全屏接口管理器, 不在抽屉里展示 */
+function switchTab(k) {
+  if (k === 'apis') { emit('open-apis', form.id); return }
+  tab.value = k
+  if (k === 'monitor') nextTick(() => monitorRef.value?.reload?.())
+  if (k === 'logs') nextTick(() => logsRef.value?.reload?.())
+}
+function gotoLogs(preset) { logPreset.value = { ...preset }; tab.value = 'logs' }
 
 const isEdit = ref(false)
 const saving = ref(false)
@@ -133,10 +179,14 @@ function blank() {
     ssl_verify:1, log_enable:1, header_enable:0, auth_type:'none', status:1, remark:'' }
 }
 
-watch(() => props.open, v => {
-  if (!v) return
+watch(() => props.open, async v => {
+  if (!v) { apis.value = []; return }
   err.value = ''
+  tab.value = 'config'
+  logPreset.value = null
   isEdit.value = !!props.record?.id
+  /* 接口列表供日志页的接口筛选用 */
+  apis.value = props.record?.id ? await extDatasourceApi.interfaces(props.record.id).catch(() => []) : []
   Object.keys(form).forEach(k => delete form[k])
   Object.assign(form, blank(), props.record || {})
   authConfig.value = parseJson(form.auth_config) || defaultAuthConfig(form.auth_type)
@@ -184,16 +234,55 @@ async function onTest() {
   } catch (e) { BL.error(e?.msg || '测试失败') }
 }
 function close() { emit('update:open', false) }
+
+/* 抽屉宽度拖拽, 与数据库类抽屉同一套手感(左边缘 5px, localStorage 记宽度) */
+const WIDTH_MIN = 560
+const WIDTH_KEY = 'bl.ext-ds-drawer.width'
+function defaultWidth() { return Math.max(WIDTH_MIN, Math.min(920, Math.floor(window.innerWidth * 0.55))) }
+const width = ref(parseInt(localStorage.getItem(WIDTH_KEY) || '0', 10) || defaultWidth())
+const resizing = ref(false)
+let startX = 0, startW = 0
+function onDragStart(e) {
+  resizing.value = true
+  startX = e.clientX
+  startW = width.value
+  document.body.style.cursor = 'col-resize'
+  document.body.style.userSelect = 'none'
+  window.addEventListener('mousemove', onDragMove)
+  window.addEventListener('mouseup', onDragEnd)
+}
+function onDragMove(e) {
+  width.value = Math.min(Math.floor(window.innerWidth * 0.95), Math.max(WIDTH_MIN, startW + (startX - e.clientX)))
+}
+function onDragEnd() {
+  if (!resizing.value) return
+  resizing.value = false
+  document.body.style.cursor = ''
+  document.body.style.userSelect = ''
+  localStorage.setItem(WIDTH_KEY, String(width.value))
+  window.removeEventListener('mousemove', onDragMove)
+  window.removeEventListener('mouseup', onDragEnd)
+}
+onBeforeUnmount(onDragEnd)
 </script>
 
 <style scoped>
 .eds-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 760px; max-width: 96vw; z-index: 1010;
   background: var(--bl-bg-2); border-left: 1px solid var(--bl-border); box-shadow: -8px 0 24px rgba(0,0,0,.12);
   display: flex; flex-direction: column; }
+.eds-drag { position: absolute; left: -2px; top: 0; bottom: 0; width: 5px; cursor: col-resize;
+  background: transparent; transition: background-color .15s; z-index: 1001; }
+.eds-drag:hover, .eds-drag.is-resizing { background: var(--bl-primary); }
 .eds-hd { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--bl-bg-1); border-bottom: 1px solid var(--bl-divider); }
 .eds-ic { width: 36px; height: 36px; border-radius: 9px; background: #00B42A; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
 .eds-title { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; min-width: 0; }
 .eds-sub { font-size: 11.5px; color: var(--bl-text-3); margin-top: 2px; }
+.eds-tabs { display: flex; gap: 2px; padding: 0 16px; background: var(--bl-bg-1); border-bottom: 1px solid var(--bl-divider); flex-shrink: 0; }
+.eds-tab { padding: 9px 16px; border: 0; background: transparent; color: var(--bl-text-2); font-size: 13px; cursor: pointer; }
+.eds-tab:hover { color: var(--bl-text-1); }
+.eds-tab.is-on { color: var(--bl-primary); font-weight: 600; box-shadow: inset 0 -2px 0 var(--bl-primary); }
+.eds-tab-n { margin-left: 5px; font-size: 10.5px; background: var(--bl-bg-3); color: var(--bl-text-2); border-radius: 8px; padding: 1px 6px; }
+.eds-tabbody { flex: 1; overflow-y: auto; padding: 0 16px 16px; min-height: 0; }
 .eds-body { flex: 1; overflow-y: auto; padding: 14px 16px; }
 .eds-card { background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 10px; padding: 16px 18px; margin-bottom: 14px; }
 .eds-card-hd { font-size: 13px; font-weight: 600; color: var(--bl-text-1); padding-left: 8px; border-left: 3px solid var(--bl-primary); margin-bottom: 14px; line-height: 1.2; }
@@ -204,6 +293,12 @@ function close() { emit('update:open', false) }
 .eds-lbl { flex: 0 0 132px; text-align: right; font-size: 12.5px; color: var(--bl-text-2); }
 .eds-lbl i { color: #f53f3f; font-style: normal; margin-left: 2px; }
 .eds-fld .bl-input, .eds-fld > .bs { flex: 1; min-width: 0; }
+/* 窄屏收成单列, 否则 132px 标签 + 两列会把输入框挤没 */
+@media (max-width: 900px) {
+  .eds-grid { grid-template-columns: 1fr; }
+  .eds-lbl { flex: 0 0 104px; }
+  .eds-switches, .eds-headers { padding-left: 0; }
+}
 .eds-switches { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 14px; padding-left: 142px; }
 .eds-ck { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--bl-text-2); cursor: pointer; }
 .eds-headers { margin-top: 12px; padding-left: 142px; }

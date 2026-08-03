@@ -332,6 +332,20 @@ export const extDatasourceApi = {
   test:       (id) => http.post(`/ext-datasource/${id}/test`),
   groups:     (id) => http.get(`/ext-datasource/${id}/groups`),
   interfaces: (id) => http.get(`/ext-datasource/${id}/interfaces`),
+  /* 接口分组 */
+  createGroup: (dsId, data) => http.post(`/ext-datasource/${dsId}/groups`, data),
+  updateGroup: (groupId, data) => http.put(`/ext-datasource/groups/${groupId}`, data),
+  removeGroup: (groupId) => http.delete(`/ext-datasource/groups/${groupId}`),
+  /* 接口定义 */
+  createApi: (dsId, data) => http.post(`/ext-datasource/${dsId}/interfaces`, data),
+  updateApi: (apiId, data) => http.put(`/ext-datasource/interfaces/${apiId}`, data),
+  removeApi: (apiId) => http.delete(`/ext-datasource/interfaces/${apiId}`),
+  /* 在线调试: 真实发起请求并写调用日志 */
+  sendApi: (apiId, payload) => http.post(`/ext-datasource/interfaces/${apiId}/send`, payload),
+  /* 日志与监控 */
+  logs:      (dsId, params) => http.get(`/ext-datasource/${dsId}/logs`, { params }),
+  logDetail: (logId) => http.get(`/ext-datasource/logs/${logId}`),
+  monitor:   (dsId, days) => http.get(`/ext-datasource/${dsId}/monitor`, { params: { days } }),
 }
 
 /* 物理表/视图元数据 — 落库于 ont_physical_table, 同步源为后端自身库 */

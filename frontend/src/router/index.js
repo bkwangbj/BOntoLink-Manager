@@ -16,6 +16,7 @@ const routes = [
   { path: '/resources/functions',    name: 'functions',   component: () => import('@/views/resources/PlaceholderList.vue'), props: { kind: 'functions', title: '函数', cn: '函数', en: 'Functions' }, meta: { title: '函数' } },
   { path: '/resources/interfaces',   name: 'interfaces',  component: () => import('@/views/resources/Interfaces.vue'),  meta: { title: '接口' } },
   { path: '/resources/datasources',  name: 'datasources', component: () => import('@/views/resources/Datasources.vue'), meta: { title: '数据源' } },
+  { path: '/resources/datasources/:dsId/apis', name: 'apiManager', component: () => import('@/views/resources/datasource/ApiManager.vue'), meta: { title: '接口管理', fullscreen: true } },
 
   { path: '/tools/ai',            name: 'ai',           component: () => import('@/views/tools/AiAssistant.vue'), meta: { title: 'AI 助手' } },
   { path: '/tools/import-export', name: 'importExport', component: () => import('@/views/tools/ImportExport.vue'), meta: { title: '导入导出' } },
