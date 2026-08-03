@@ -3,6 +3,7 @@ package com.beiktech.bontolink.tool;
 import com.beiktech.bontolink.common.R;
 import com.beiktech.bontolink.tool.db.DatabaseToolService;
 import com.beiktech.bontolink.tool.jena.JenaToolService;
+import com.beiktech.bontolink.tool.semantic.SemanticExpandService;
 import com.beiktech.bontolink.tool.vector.VectorToolService;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,13 +32,16 @@ public class ToolQueryController {
     private final JenaToolService jenaToolService;
     private final VectorToolService vectorToolService;
     private final DatabaseToolService databaseToolService;
+    private final SemanticExpandService semanticExpandService;
 
     public ToolQueryController(JenaToolService jenaToolService,
                                VectorToolService vectorToolService,
-                               DatabaseToolService databaseToolService) {
+                               DatabaseToolService databaseToolService,
+                               SemanticExpandService semanticExpandService) {
         this.jenaToolService = jenaToolService;
         this.vectorToolService = vectorToolService;
         this.databaseToolService = databaseToolService;
+        this.semanticExpandService = semanticExpandService;
     }
 
     // ============================ 统一入口 ============================
@@ -208,6 +212,64 @@ public class ToolQueryController {
     @GetMapping("/vector/detail/{classId}")
     public R<Map<String, Object>> vectorDetail(@PathVariable String classId) {
         return wrap(vectorToolService.detail(classId));
+    }
+
+    // ============================ 语义扩展 ============================
+
+    /**
+     * 语义扩展：输入问题 → 向量搜索 → Jena 本体结构联动 → 未命中降级。
+     * Body 示例：
+     *   { "question": "水利工程中的堤坝类型", "nsCode": "w_wtr", "topK": 5, "threshold": 0.7 }
+     */
+    @PostMapping("/semantic-expand")
+    public R<Map<String, Object>> semanticExpand(@RequestBody Map<String, Object> body) {
+        String question = body.get("question") == null ? null : String.valueOf(body.get("question"));
+        if (question == null || question.isBlank()) {
+            return R.error(400, "question 不能为空");
+        }
+        String nsCode = body.get("nsCode") == null ? null : String.valueOf(body.get("nsCode"));
+        int topK = toInt(body.get("topK"), 0);
+        double threshold = toDouble(body.get("threshold"), 0);
+        Map<String, Object> result = semanticExpandService.expand(question, nsCode, topK, threshold);
+        return R.ok(result);
+    }
+
+    /**
+     * 最小关系集（子图上下文）：向量搜索命中实体 → 提取 Jena 本体子图结构，供外部调用方喂给 LLM 生成 SPARQL。
+     *
+     * <p>返回结构（可直接作为 SPARQL 生成的上下文）：
+     * <pre>
+     * {
+     *   "prefixes":        { "": "http://...", "owl": "..." },      // SPARQL PREFIX 声明用
+     *   "classes":         [ { localName, uri, label, superClasses, subClasses } ],
+     *   "properties":      [ { localName, uri, label, type, domains, ranges, inverseOf } ],
+     *   "edges":           [ { from, property, to, label } ],       // 命中类之间的 ObjectProperty 边
+     *   "matchedEntities": [ { entityType, entityId, apiName, similarity, nsCode } ]
+     * }
+     * </pre>
+     * Body 示例：
+     *   { "question": "水利工程中的堤坝类型", "nsCode": "w_wtr", "topK": 5, "threshold": 0.7 }
+     */
+    @PostMapping("/subgraph")
+    public R<Map<String, Object>> subgraph(@RequestBody Map<String, Object> body) {
+        String question = body.get("question") == null ? null : String.valueOf(body.get("question"));
+        if (question == null || question.isBlank()) {
+            return R.error(400, "question 不能为空");
+        }
+        String nsCode = body.get("nsCode") == null ? null : String.valueOf(body.get("nsCode"));
+        int topK = toInt(body.get("topK"), 0);
+        double threshold = toDouble(body.get("threshold"), 0);
+        Map<String, Object> result = semanticExpandService.subgraph(question, nsCode, topK, threshold);
+        return R.ok(result);
+    }
+
+    /**
+     * 清除语义扩展服务的枚举项缓存
+     */
+    @DeleteMapping("/semantic/enum-cache")
+    public R<String> clearEnumCache() {
+        semanticExpandService.clearEnumItemsCache();
+        return R.ok("枚举项缓存已清空");
     }
 
     // ============================ 数据库 ============================

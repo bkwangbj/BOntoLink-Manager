@@ -39,9 +39,6 @@ public class OntologyModelManager {
     private final OntologyEngineConfig config;
     private final BizNamespaceMapper namespaceMapper;
 
-    @org.springframework.beans.factory.annotation.Autowired(required = false)
-    private FusekiServerManager fusekiServerManager;
-
     public OntologyModelManager(OntologyVersionMapper versionMapper,
                                  OntologyMapper ontologyMapper,
                                  OntologyEngineConfig config,
@@ -66,6 +63,12 @@ public class OntologyModelManager {
 
     /** 重建计数（监控用） */
     private final AtomicInteger rebuildCount = new AtomicInteger(0);
+
+    /** 版本号缓存：用于在单次请求期间避免重复查询数据库 */
+    private volatile int cachedDbVersion = -1;
+    private volatile long cachedVersionTimestamp = 0;
+    /** 版本号缓存有效期（毫秒），默认 5 秒 */
+    private static final long VERSION_CACHE_TTL_MS = 5000;
 
     /** 默认命名空间前缀 */
     public static final String NS_PREFIX = "http://bontolink.beiktech.com/ontology#";
@@ -133,11 +136,29 @@ public class OntologyModelManager {
     }
 
     /**
-     * 获取数据库中的最新版本号
+     * 获取数据库中的最新版本号（带缓存）
+     * 缓存有效期 5 秒，避免在单次请求中重复查询数据库
      */
     public int getDbVersion() {
+        long now = System.currentTimeMillis();
+        // 如果缓存有效，直接返回
+        if (cachedDbVersion != -1 && (now - cachedVersionTimestamp) < VERSION_CACHE_TTL_MS) {
+            return cachedDbVersion;
+        }
+
+        // 缓存失效，查询数据库并更新缓存
         Integer v = versionMapper.getCurrentVersion();
-        return v != null ? v : 0;
+        cachedDbVersion = v != null ? v : 0;
+        cachedVersionTimestamp = now;
+        return cachedDbVersion;
+    }
+
+    /**
+     * 清除版本号缓存（重建后调用）
+     */
+    private void clearVersionCache() {
+        cachedDbVersion = -1;
+        cachedVersionTimestamp = 0;
     }
 
     /**
@@ -372,6 +393,7 @@ public class OntologyModelManager {
                     String isRequired = prop.get("is_required") != null ? prop.get("is_required").toString() : "0";
                     String enumApiName = (String) prop.get("enum_api_name");
                     String vtConstraintType = (String) prop.get("vt_constraint_type");
+                    String dataType = (String) prop.get("data_type");
 
                     if (propApiName == null) continue;
 
@@ -380,6 +402,11 @@ public class OntologyModelManager {
                     dataProp.addDomain(ontClass);
 
                     if (propDisplayName != null) dataProp.addLabel(propDisplayName, "zh");
+
+                    // 存储 data_type（XSD 数据类型）
+                    if (dataType != null) {
+                        dataProp.addProperty(newModel.createProperty(NS_PREFIX + "dataType"), dataType);
+                    }
 
                     // 枚举约束：加 rdfs:range 指向枚举类
                     if ("Enum".equals(vtConstraintType) && enumApiName != null) {
@@ -586,16 +613,12 @@ public class OntologyModelManager {
                 }
             }
 
-            // 9. 同步版本号并切换模型
+            // 10. 同步版本号并切换模型
+            clearVersionCache();
             int dbVersion = getDbVersion();
             this.currentModel = newModel;
             this.loadedVersion = dbVersion;
             this.rebuildCount.incrementAndGet();
-
-            // 10. 同步到 Fuseki dataset
-            if (fusekiServerManager != null) {
-                fusekiServerManager.syncModel(newModel);
-            }
 
             long elapsed = System.currentTimeMillis() - start;
             log.info("OntModel 重建完成: {} 个语句, {} 个类, {} 个枚举类型, {} 个值类型, {} 条物理表绑定, 耗时 {}ms, 版本 {}",

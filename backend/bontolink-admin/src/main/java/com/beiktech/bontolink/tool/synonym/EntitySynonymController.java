@@ -62,13 +62,14 @@ public class EntitySynonymController {
         return R.ok(resp);
     }
 
-    /** 配置状态：embedding provider、Milvus 是否可用、向量维度 */
+    /** 配置状态 + 批量进度 */
     @GetMapping("/status")
     public R<Map<String, Object>> status() {
         Map<String, Object> s = new LinkedHashMap<>();
         s.put("embeddingProvider", embeddingService.getClass().getSimpleName());
         s.put("dimension", embeddingService.getDimension());
         s.put("milvusAvailable", milvusClient != null);
+        s.put("batch", synonymService.getBatchProgress());
         return R.ok(s);
     }
 
@@ -87,6 +88,64 @@ public class EntitySynonymController {
         } catch (Exception e) {
             log.error("Milvus rebuild failed", e);
             return R.error(500, "重建失败: " + e.getMessage());
+        }
+    }
+
+    /** 从同义词DB表同步到Milvus（不重跑LLM），异步执行 */
+    @PostMapping("/milvus/sync-from-dict")
+    public R<Map<String, Object>> syncFromDict(@RequestBody Map<String, Object> body) {
+        String entityType = (String) body.get("entityType");
+        int limit = body.get("limit") instanceof Number n ? n.intValue() : 0;
+        CompletableFuture.runAsync(() -> synonymService.syncFromDict(entityType, limit));
+        Map<String, Object> resp = new LinkedHashMap<>();
+        resp.put("success", true);
+        resp.put("message", "同步已在后台启动，可通过 /status 查看进度");
+        return R.ok(resp);
+    }
+
+    /** 手动 flush：把内存 buffer 中的向量落盘成 sealed segment，之后 Attu / query 才能看到全部数据 */
+    @PostMapping("/milvus/flush")
+    public R<Map<String, Object>> flushMilvus() {
+        if (milvusClient == null) {
+            return R.error(400, "Milvus 未启用，无法 flush");
+        }
+        try {
+            io.milvus.param.R<io.milvus.grpc.FlushResponse> resp = milvusClient.flush(
+                    io.milvus.param.collection.FlushParam.newBuilder()
+                            .withCollectionNames(java.util.List.of(milvusConfig.getCollectionName()))
+                            .withSyncFlush(true)
+                            .build());
+            Map<String, Object> r = new LinkedHashMap<>();
+            r.put("success", resp.getStatus() == 0);
+            r.put("message", resp.getStatus() == 0 ? "Milvus flush 完成" : "flush 失败: " + resp.getMessage());
+            r.put("flushTimestamp", System.currentTimeMillis());
+            return R.ok(r);
+        } catch (Exception e) {
+            log.error("Milvus flush failed", e);
+            return R.error(500, "flush 失败: " + e.getMessage());
+        }
+    }
+
+    /** 手动 load：把 collection 加载进 querynode（flush 后 query 仍报未加载时用） */
+    @PostMapping("/milvus/load")
+    public R<Map<String, Object>> loadMilvus() {
+        if (milvusClient == null) {
+            return R.error(400, "Milvus 未启用，无法 load");
+        }
+        try {
+            // syncLoad=true 显式等待加载完成
+            io.milvus.param.R<io.milvus.param.RpcStatus> resp = milvusClient.loadCollection(
+                    io.milvus.param.collection.LoadCollectionParam.newBuilder()
+                            .withCollectionName(milvusConfig.getCollectionName())
+                            .withSyncLoad(true)
+                            .build());
+            Map<String, Object> r = new LinkedHashMap<>();
+            r.put("success", resp.getStatus() == 0);
+            r.put("message", resp.getStatus() == 0 ? "Milvus load 完成" : "load 失败: " + resp.getMessage());
+            return R.ok(r);
+        } catch (Exception e) {
+            log.error("Milvus load failed", e);
+            return R.error(500, "load 失败: " + e.getMessage());
         }
     }
 }

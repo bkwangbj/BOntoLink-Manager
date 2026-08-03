@@ -262,8 +262,27 @@ public class OntologyMatchController {
                 return error(500, "OntModel 未就绪");
             }
 
-            String ns = "http://bontolink.beiktech.com/ontology#";
-            org.apache.jena.ontology.OntClass ontClass = model.getOntClass(ns + localName);
+            // 遍历所有已注册命名空间前缀查找类（不能硬编码单一 ns，业务命名空间不同）
+            org.apache.jena.ontology.OntClass ontClass = null;
+            java.util.Map<String, String> prefixMap = model.getNsPrefixMap();
+            for (String pfxUri : prefixMap.values()) {
+                org.apache.jena.ontology.OntClass candidate = model.getOntClass(pfxUri + localName);
+                if (candidate != null) {
+                    ontClass = candidate;
+                    break;
+                }
+            }
+            // 兜底：全量扫描（处理未注册前缀的情况）
+            if (ontClass == null) {
+                org.apache.jena.util.iterator.ExtendedIterator<org.apache.jena.ontology.OntClass> allIter = model.listClasses();
+                while (allIter.hasNext()) {
+                    org.apache.jena.ontology.OntClass c = allIter.next();
+                    if (!c.isAnon() && localName.equals(c.getLocalName())) {
+                        ontClass = c;
+                        break;
+                    }
+                }
+            }
 
             if (ontClass == null) {
                 return error(404, "类不存在: " + localName);

@@ -342,6 +342,100 @@ public class JenaToolService {
     }
 
     /**
+     * 查询枚举类的所有 Individual（枚举项）。
+     *
+     * @param enumApiName 枚举类的 api_name（例如 "AdministrativeRegion"）
+     * @return 枚举项列表，每项包含 uri, localName, label, code, apiName, 以及枚举类的 enumType
+     */
+    public Map<String, Object> getEnumIndividuals(String enumApiName) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        OntModel model = modelManager.getModel();
+        if (model == null) {
+            result.put("success", false);
+            result.put("message", "OntModel 未就绪");
+            return result;
+        }
+
+        try {
+            // 枚举类的 URI: http://bontolink.beiktech.com/ontology#Enum_{api_name}
+            String enumClassUri = NS_PREFIX + "Enum_" + enumApiName;
+            OntClass enumClass = model.getOntClass(enumClassUri);
+
+            if (enumClass == null) {
+                result.put("success", false);
+                result.put("message", "枚举类不存在: " + enumApiName);
+                return result;
+            }
+
+            // 查询枚举类的 enumType 属性
+            Property enumTypeProp = model.getProperty(NS_PREFIX + "enumType");
+            String enumType = null;
+            if (enumTypeProp != null && enumClass.hasProperty(enumTypeProp)) {
+                RDFNode enumTypeNode = enumClass.getPropertyValue(enumTypeProp);
+                if (enumTypeNode != null) {
+                    enumType = enumTypeNode.toString();
+                }
+            }
+
+            // 从本体获取所有 Individual
+            Map<String, Map<String, Object>> itemsMap = new LinkedHashMap<>();
+            ExtendedIterator<? extends org.apache.jena.ontology.OntResource> instances = enumClass.listInstances(false);
+
+            while (instances.hasNext()) {
+                org.apache.jena.ontology.OntResource instance = instances.next();
+                if (instance.isIndividual()) {
+                    Individual individual = instance.asIndividual();
+
+                    // 获取 code 属性（作为 key）
+                    Property codeProp = model.getProperty(NS_PREFIX + "code");
+                    String code = null;
+                    if (codeProp != null && individual.hasProperty(codeProp)) {
+                        RDFNode codeNode = individual.getPropertyValue(codeProp);
+                        if (codeNode != null) {
+                            code = codeNode.toString();
+                        }
+                    }
+
+                    if (code == null) continue;
+
+                    Map<String, Object> item = new LinkedHashMap<>();
+                    item.put("uri", individual.getURI());
+                    item.put("localName", individual.getLocalName());
+                    item.put("label", individual.getLabel("zh"));
+                    item.put("code", code);
+
+                    // 获取 apiName 属性
+                    Property apiNameProp = model.getProperty(NS_PREFIX + "apiName");
+                    if (apiNameProp != null && individual.hasProperty(apiNameProp)) {
+                        RDFNode apiNameNode = individual.getPropertyValue(apiNameProp);
+                        if (apiNameNode != null) {
+                            item.put("apiName", apiNameNode.toString());
+                        }
+                    }
+
+                    itemsMap.put(code, item);
+                }
+            }
+
+            // 补充数据库中的额外字段（parent_code, level, sort_num, status）
+            // 需要依赖注入 JdbcTemplate，但这个 Service 没有，所以在 SemanticExpandService 中处理
+
+            result.put("success", true);
+            result.put("enumClass", enumApiName);
+            result.put("enumType", enumType);  // 枚举类型：general_single / general_multi / biz_single / biz_multi
+            result.put("count", itemsMap.size());
+            result.put("items", new ArrayList<>(itemsMap.values()));
+            return result;
+
+        } catch (Exception e) {
+            log.warn("查询枚举Individual失败: {}", enumApiName, e);
+            result.put("success", false);
+            result.put("message", "查询失败: " + e.getMessage());
+            return result;
+        }
+    }
+
+    /**
      * 查看某个属性的详细信息。
      *
      * <p>返回比属性列表更丰富的元数据：注释（中/英）、定义域、值域、
@@ -408,6 +502,15 @@ public class JenaToolService {
                 if (!r.isAnon() && r.getURI() != null) ranges.add(r.getLocalName());
             }
             result.put("ranges", ranges);
+
+            // 数据类型（dataType）
+            Property dataTypeProp = model.getProperty(NS_PREFIX + "dataType");
+            if (dataTypeProp != null && prop.hasProperty(dataTypeProp)) {
+                RDFNode dataTypeNode = prop.getPropertyValue(dataTypeProp);
+                if (dataTypeNode != null) {
+                    result.put("dataType", dataTypeNode.toString());
+                }
+            }
 
             // 超属性（该属性是其子类）/ 子属性
             List<String> supers = new ArrayList<>();

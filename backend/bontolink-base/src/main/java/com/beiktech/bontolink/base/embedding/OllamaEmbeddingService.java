@@ -2,6 +2,7 @@ package com.beiktech.bontolink.base.embedding;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -35,6 +39,29 @@ public class OllamaEmbeddingService implements EmbeddingService {
     @Value("${bontolink.ollama.timeout-seconds:60}")
     private int timeoutSeconds;
 
+    @Value("${bontolink.ollama.batch-concurrency:4}")
+    private int batchConcurrency;
+
+    // @Value 字段注入完成后才能初始化，用 @PostConstruct
+    private OkHttpClient httpClient;
+    private ExecutorService embedPool;
+
+    @PostConstruct
+    void init() {
+        httpClient = new OkHttpClient.Builder()
+                .connectTimeout(timeoutSeconds, TimeUnit.SECONDS)
+                .readTimeout(timeoutSeconds, TimeUnit.SECONDS)
+                // 复用连接，最多 5 条，空闲 5 分钟后回收
+                .connectionPool(new ConnectionPool(5, 5, TimeUnit.MINUTES))
+                .build();
+        // Ollama 不支持真正批量，多词条时并行调用提升吞吐（方案A 每个实体多条向量）
+        embedPool = Executors.newFixedThreadPool(Math.max(1, batchConcurrency), r -> {
+            Thread t = new Thread(r, "ollama-embed");
+            t.setDaemon(true);
+            return t;
+        });
+    }
+
     @Override
     public float[] embed(String text) {
         if (text == null || text.isBlank()) {
@@ -49,11 +76,22 @@ public class OllamaEmbeddingService implements EmbeddingService {
         if (texts == null || texts.isEmpty()) {
             return List.of();
         }
-        List<float[]> result = new ArrayList<>(texts.size());
-        // Ollama 不支持批量，逐条调用
+        if (texts.size() == 1) {
+            return List.of(embedSingle(texts.get(0)));
+        }
+        // Ollama 不支持真正批量，多词条并行调用（结果顺序与入参一致）
+        List<Future<float[]>> futures = new ArrayList<>(texts.size());
         for (String text : texts) {
-            float[] vec = embedSingle(text);
-            result.add(vec);
+            futures.add(embedPool.submit(() -> embedSingle(text)));
+        }
+        List<float[]> result = new ArrayList<>(texts.size());
+        for (Future<float[]> f : futures) {
+            try {
+                result.add(f.get());
+            } catch (Exception e) {
+                log.error("Ollama 并发 embedding 失败", e);
+                result.add(new float[dimension]);
+            }
         }
         return result;
     }
@@ -62,7 +100,6 @@ public class OllamaEmbeddingService implements EmbeddingService {
      * 参考 AiEmbedding.getQwen3Embedding：使用 prompt + options.embedding=true 格式
      */
     private float[] embedSingle(String text) {
-        // 构造请求体（Ollama 格式）
         JSONObject body = new JSONObject();
         body.put("prompt", text);
         body.put("model", model);
@@ -70,17 +107,12 @@ public class OllamaEmbeddingService implements EmbeddingService {
         options.put("embedding", true);
         body.put("options", options);
 
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(timeoutSeconds, TimeUnit.SECONDS)
-                .readTimeout(timeoutSeconds, TimeUnit.SECONDS)
-                .build();
-
         Request request = new Request.Builder()
                 .url(baseUrl)
                 .post(RequestBody.create(body.toJSONString(), JSON_TYPE))
                 .build();
 
-        try (Response response = client.newCall(request).execute()) {
+        try (Response response = httpClient.newCall(request).execute()) {
             String responseStr = response.body().string();
             JSONObject json = JSONObject.parseObject(responseStr);
 

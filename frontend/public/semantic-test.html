@@ -12,7 +12,7 @@
       padding: 20px;
     }
     .container {
-      max-width: 1400px;
+      max-width: 1600px;
       margin: 0 auto;
       background: white;
       border-radius: 8px;
@@ -22,21 +22,36 @@
     .header {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
-      padding: 24px 32px;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
-    .header h1 { font-size: 24px; margin-bottom: 8px; }
-    .header p { opacity: 0.9; font-size: 14px; }
+    .header h1 { font-size: 18px; margin: 0; }
+    .header p { opacity: 0.9; font-size: 13px; margin: 0; }
+    .header input {
+      margin-left: auto;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 13px;
+      width: 320px;
+    }
     .tabs {
       display: flex;
       border-bottom: 1px solid #e8e8e8;
       background: #fafafa;
+      overflow-x: auto;
+      flex-wrap: wrap;
     }
     .tab {
-      padding: 16px 24px;
+      padding: 10px 16px;
       cursor: pointer;
       border-bottom: 2px solid transparent;
       transition: all 0.3s;
       font-weight: 500;
+      font-size: 13px;
+      white-space: nowrap;
     }
     .tab:hover { background: #f0f0f0; }
     .tab.active {
@@ -46,19 +61,21 @@
     }
     .panel {
       display: none;
-      padding: 32px;
+      padding: 20px;
     }
     .panel.active { display: block; }
     .section {
-      margin-bottom: 32px;
-      padding: 24px;
+      margin-bottom: 20px;
+      padding: 16px;
       background: #fafafa;
       border-radius: 6px;
+      border-left: 3px solid transparent;
     }
+    .section.highlight { border-left-color: #667eea; background: #f0f4ff; }
     .section-title {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 600;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       color: #333;
       display: flex;
       align-items: center;
@@ -66,39 +83,59 @@
     }
     .badge {
       display: inline-block;
-      padding: 2px 8px;
+      padding: 2px 7px;
       border-radius: 3px;
-      font-size: 12px;
-      font-weight: 500;
+      font-size: 11px;
+      font-weight: 600;
     }
     .badge.get { background: #e6f7ff; color: #1890ff; }
     .badge.post { background: #d9f7be; color: #52c41a; }
     .badge.put { background: #fff1b8; color: #faad14; }
     .badge.delete { background: #ffccc7; color: #f5222d; }
+    .two-col {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+    .form-area {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .result-area {
+      min-height: 120px;
+      max-height: 520px;
+      overflow: auto;
+      padding: 12px;
+      background: white;
+      border: 1px solid #e8e8e8;
+      border-radius: 4px;
+      font-size: 12px;
+    }
     .form-row {
       display: flex;
-      gap: 12px;
-      margin-bottom: 12px;
-      align-items: flex-start;
+      gap: 10px;
+      align-items: center;
     }
     .form-row label {
-      min-width: 100px;
-      padding-top: 8px;
-      font-size: 14px;
+      min-width: 80px;
+      font-size: 13px;
       color: #666;
+      flex-shrink: 0;
     }
     .form-row input,
     .form-row select,
     .form-row textarea {
       flex: 1;
-      padding: 8px 12px;
+      padding: 6px 10px;
       border: 1px solid #d9d9d9;
       border-radius: 4px;
-      font-size: 14px;
+      font-size: 13px;
       font-family: inherit;
     }
     .form-row textarea {
-      min-height: 80px;
+      min-height: 70px;
       resize: vertical;
     }
     .form-row input:focus,
@@ -109,11 +146,11 @@
       box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
     }
     .btn {
-      padding: 8px 16px;
+      padding: 6px 14px;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
       transition: all 0.3s;
     }
@@ -146,32 +183,27 @@
       background: #e0e0e0;
     }
     .result {
-      margin-top: 16px;
-      padding: 16px;
-      background: white;
-      border: 1px solid #d9d9d9;
-      border-radius: 4px;
-      font-size: 13px;
-      max-height: 400px;
-      overflow: auto;
+      margin-top: 0;
+      padding: 0;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      font-size: 12px;
+      max-height: none;
+      overflow: visible;
     }
     .result pre {
       white-space: pre-wrap;
       word-wrap: break-word;
       font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 11px;
+      line-height: 1.5;
     }
     .result.success {
-      border-color: #52c41a;
-      background: #f6ffed;
+      color: #135200;
     }
     .result.error {
-      border-color: #f5222d;
-      background: #fff1f0;
-    }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
+      color: #a8071a;
     }
     .status-indicator {
       display: inline-block;
@@ -183,21 +215,27 @@
     .status-indicator.online { background: #52c41a; }
     .status-indicator.offline { background: #f5222d; }
     .hint {
-      font-size: 12px;
+      font-size: 11px;
       color: #999;
       margin-top: 4px;
+    }
+    .desc {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 10px;
+      line-height: 1.6;
     }
     .data-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 12px;
+      margin-top: 8px;
+      font-size: 12px;
     }
     .data-table th,
     .data-table td {
-      padding: 8px 12px;
+      padding: 6px 10px;
       text-align: left;
       border-bottom: 1px solid #e8e8e8;
-      font-size: 13px;
     }
     .data-table th {
       background: #fafafa;
@@ -209,586 +247,455 @@
     }
     .actions {
       display: flex;
-      gap: 8px;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>🔍 语义扩展功能测试</h1>
-      <p>BOntoLink02 - 同义词词典 & 领域术语管理</p>
+      <h1>🔍 BOntoLink 接口测试</h1>
+      <p>语义扩展 / 本体查询 / 向量库 / 数据库</p>
+      <label style="margin-left:auto;font-size:12px;opacity:.8;">后端</label>
+      <input type="text" id="baseUrl" value="http://localhost:8088/bontolink/api" />
     </div>
-
     <div class="tabs">
       <div class="tab active" data-tab="health">健康检查</div>
-      <div class="tab" data-tab="owl">OWL模型</div>
+      <div class="tab" data-tab="semantic-expand">语义扩展</div>
+      <div class="tab" data-tab="subgraph">子图上下文</div>
+      <div class="tab" data-tab="jena">Jena / OWL</div>
+      <div class="tab" data-tab="vector">向量库</div>
       <div class="tab" data-tab="synonym">同义词词典</div>
       <div class="tab" data-tab="domain">领域术语</div>
-      <div class="tab" data-tab="ontology">本体查询</div>
-      <div class="tab" data-tab="data">数据查询</div>
       <div class="tab" data-tab="ai-synonym">AI同义词</div>
       <div class="tab" data-tab="batch">批量操作</div>
     </div>
 
-    <!-- 健康检查面板 -->
+    <!-- 健康检查 -->
     <div class="panel active" id="health">
       <div class="section">
-        <div class="section-title">
-          <span>服务状态检测</span>
+        <div class="section-title">服务状态检测</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>后端地址</label><span style="font-size:13px;color:#999;">见顶部输入框</span></div>
+            <div class="actions">
+              <button class="btn btn-primary" onclick="checkHealth()">检测同义词服务</button>
+              <button class="btn btn-secondary" onclick="owlHealth()">OWL 模型状态</button>
+              <button class="btn btn-secondary" onclick="owlStats()">OWL 详细统计</button>
+            </div>
+          </div>
+          <div class="result-area"><div id="healthResult" class="result"></div></div>
         </div>
-        <div class="form-row">
-          <label>后端地址</label>
-          <input type="text" id="baseUrl" value="http://localhost:8088/bontolink/api" />
+      </div>
+      <div class="section">
+        <div class="section-title"><span class="badge post">POST</span> 强制重建 OWL 模型</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="desc">从数据库重新构建 OntModel。修改本体数据后调用。<br><span style="color:#fa8c16;">⚠ 同步操作，数据量大时耗时数秒。</span></div>
+            <div class="actions"><button class="btn btn-primary" onclick="owlRebuild()">触发重建</button></div>
+          </div>
+          <div class="result-area"><div id="owlRebuildResult" class="result"></div></div>
         </div>
-        <button class="btn btn-primary" onclick="checkHealth()">检测服务状态</button>
-        <div id="healthResult" class="result" style="display:none;"></div>
       </div>
     </div>
 
-    <!-- OWL 模型面板 -->
-    <div class="panel" id="owl">
-      <div class="section">
-        <div class="section-title">
-          <span class="badge get">GET</span> OWL 模型状态
+    <!-- 语义扩展 -->
+    <div class="panel" id="semantic-expand">
+      <div class="section highlight">
+        <div class="section-title"><span class="badge post">POST</span> 语义扩展查询（向量搜索 → Jena 本体结构）</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>问题文本 *</label><input type="text" id="seQuestion" placeholder="例: 水利工程中的堤坝类型" /></div>
+            <div class="form-row">
+              <label>命名空间</label><input type="text" id="seNsCode" placeholder="如 w_wtr" style="max-width:120px;" />
+              <label style="min-width:40px;">TopK</label><input type="number" id="seTopK" value="5" min="1" max="20" style="width:64px;" />
+              <label style="min-width:40px;">阈值</label><input type="number" id="seThreshold" value="0" min="0" max="1" step="0.05" style="width:64px;" />
+            </div>
+            <div class="actions">
+              <button class="btn btn-primary" onclick="semanticExpand()">执行语义扩展</button>
+              <button class="btn btn-secondary" onclick="fillSeExample()">示例问题</button>
+              <button class="btn btn-secondary" onclick="clearSeResult()">清空</button>
+            </div>
+          </div>
+          <div class="result-area"><div id="seResult" class="result"></div></div>
         </div>
-        <p style="color:#666;font-size:13px;margin-bottom:12px;">查看当前 OntModel 的版本号、语句数、类/属性数量及是否正在重建。</p>
-        <div class="actions">
-          <button class="btn btn-primary" onclick="owlHealth()">健康检查</button>
-          <button class="btn btn-secondary" onclick="owlStats()">详细统计</button>
-        </div>
-        <div id="owlStatusResult" class="result" style="display:none;"></div>
-      </div>
-
-      <div class="section" style="border-left:4px solid #f5a623;">
-        <div class="section-title">
-          <span class="badge post">POST</span> 强制重建 OWL 模型
-        </div>
-        <p style="color:#666;font-size:13px;margin-bottom:12px;">
-          从数据库重新构建 OntModel。适用于手动修改了本体数据后需要立即刷新的场景。<br>
-          <span style="color:#f5a623;">注意：重建为同步操作，数据量大时可能耗时数秒。</span>
-        </p>
-        <button class="btn btn-primary" onclick="owlRebuild()">触发重建</button>
-        <div id="owlRebuildResult" class="result" style="display:none;"></div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span class="badge post">POST</span> 本体匹配
-        </div>
-        <p style="color:#666;font-size:13px;margin-bottom:12px;">基于 OntModel 推理进行语义匹配，支持同义词扩展和类层次加权。</p>
-        <div class="form-row">
-          <label>查询文本</label>
-          <input type="text" id="owlMatchQuery" placeholder="例: 水库供水量" />
-        </div>
-        <div class="form-row">
-          <label>返回数量</label>
-          <input type="number" id="owlMatchTopK" value="10" min="1" max="50" style="width:100px;" />
-          <label style="min-width:60px;">阈值</label>
-          <input type="number" id="owlMatchThreshold" value="0.6" min="0" max="1" step="0.05" style="width:100px;" />
-        </div>
-        <button class="btn btn-primary" onclick="owlMatch()">执行匹配</button>
-        <div id="owlMatchResult" class="result" style="display:none;"></div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span class="badge post">POST</span> 语义扩展预览
-        </div>
-        <p style="color:#666;font-size:13px;margin-bottom:12px;">预览查询文本的同义词扩展结果（不触发匹配）。</p>
-        <div class="form-row">
-          <label>查询文本</label>
-          <input type="text" id="owlExpandQuery" placeholder="例: 水费" />
-        </div>
-        <button class="btn btn-primary" onclick="owlPreviewExpansion()">预览扩展</button>
-        <div id="owlExpandResult" class="result" style="display:none;"></div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span class="badge get">GET</span> OWL 类列表
-        </div>
-        <p style="color:#666;font-size:13px;margin-bottom:12px;">列出 OntModel 中所有 OWL 类（localName、label、父类）。</p>
-        <button class="btn btn-primary" onclick="owlListClasses()">加载类列表</button>
-        <div id="owlClassesResult" class="result" style="display:none;"></div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span class="badge get">GET</span> OWL 类详情
-        </div>
-        <p style="color:#666;font-size:13px;margin-bottom:12px;">查看指定类的父类、子类、关联属性（点击类列表中的类名可自动填入）。</p>
-        <div class="form-row">
-          <label>类名 (localName)</label>
-          <input type="text" id="owlClassLocalName" placeholder="从类列表点击填入，或手动输入" />
-        </div>
-        <button class="btn btn-primary" onclick="owlGetClassDetail()">查询详情</button>
-        <div id="owlClassDetailResult" class="result" style="display:none;"></div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span class="badge get">GET</span> OWL 属性列表
-        </div>
-        <p style="color:#666;font-size:13px;margin-bottom:12px;">列出 OntModel 中所有 OWL 属性（类型、domain、range）。</p>
-        <button class="btn btn-primary" onclick="owlListProperties()">加载属性列表</button>
-        <div id="owlPropertiesResult" class="result" style="display:none;"></div>
       </div>
     </div>
 
-    <!-- 同义词词典面板 -->
+    <!-- 子图上下文 -->
+    <div class="panel" id="subgraph">
+      <div class="section highlight">
+        <div class="section-title"><span class="badge post">POST</span> 🕸️ 最小关系集（子图上下文）</div>
+        <div class="desc">向量搜索命中实体 → 从 Jena 提取本体结构 → 返回去重后的类/属性/关系边，供外部调用方喂给 LLM 生成 SPARQL。</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>问题文本 *</label><input type="text" id="sgQuestion" placeholder="例: 水利工程中的堤坝类型" /></div>
+            <div class="form-row">
+              <label>命名空间</label><input type="text" id="sgNsCode" placeholder="如 w_wtr" style="max-width:120px;" />
+              <label style="min-width:40px;">TopK</label><input type="number" id="sgTopK" value="5" min="1" max="20" style="width:64px;" />
+              <label style="min-width:40px;">阈值</label><input type="number" id="sgThreshold" value="0" min="0" max="1" step="0.05" style="width:64px;" />
+            </div>
+            <div class="actions">
+              <button class="btn btn-primary" onclick="fetchSubgraph()">获取子图上下文</button>
+              <button class="btn btn-secondary" onclick="fillSgExample()">示例问题</button>
+              <button class="btn btn-secondary" onclick="document.getElementById('sgResult').innerHTML='';document.getElementById('sgRaw').innerHTML=''">清空</button>
+            </div>
+            <details style="margin-top:10px;font-size:12px;color:#666;"><summary style="cursor:pointer;">字段说明</summary>
+              <div style="margin-top:6px;line-height:1.9;">
+                <div>• <strong>prefixes</strong> — SPARQL PREFIX 块用</div>
+                <div>• <strong>classes</strong> — 命中实体所属 OWL 类</div>
+                <div>• <strong>properties</strong> — 类的属性（含1-hop扩展）</div>
+                <div>• <strong>edges</strong> — 命中类间 ObjectProperty 连接</div>
+              </div>
+            </details>
+          </div>
+          <div class="result-area" style="max-height:600px;">
+            <div id="sgResult" class="result"></div>
+            <details style="margin-top:8px;"><summary style="cursor:pointer;color:#999;font-size:12px;">原始 JSON</summary>
+              <div id="sgRaw" class="result" style="margin-top:6px;"></div>
+            </details>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jena / OWL -->
+    <div class="panel" id="jena">
+      <div class="section">
+        <div class="section-title"><span class="badge get">GET</span> OWL 类列表</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="desc">列出 OntModel 中所有 OWL 类（localName、label、父类）。</div>
+            <div class="actions"><button class="btn btn-primary" onclick="owlListClasses()">加载类列表</button></div>
+          </div>
+          <div class="result-area"><div id="owlClassesResult" class="result"></div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title"><span class="badge get">GET</span> OWL 类详情</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>类名</label><input type="text" id="owlClassLocalName" placeholder="如 Reservoir" /></div>
+            <div class="actions"><button class="btn btn-primary" onclick="owlGetClassDetail()">查询详情</button></div>
+          </div>
+          <div class="result-area"><div id="owlClassDetailResult" class="result"></div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title"><span class="badge get">GET</span> OWL 属性列表</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="desc">列出所有 OWL 属性（类型、domain、range）。</div>
+            <div class="actions"><button class="btn btn-primary" onclick="owlListProperties()">加载属性列表</button></div>
+          </div>
+          <div class="result-area"><div id="owlPropertiesResult" class="result"></div></div>
+        </div>
+      </div>
+<!-- CHUNK2 -->
+      <div class="section">
+        <div class="section-title"><span class="badge post">POST</span> 本体匹配</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>查询文本</label><input type="text" id="owlMatchQuery" placeholder="例: 水库供水量" /></div>
+            <div class="form-row"><label>TopK</label><input type="number" id="owlMatchTopK" value="10" style="width:72px;" /><label style="min-width:40px;">阈值</label><input type="number" id="owlMatchThreshold" value="0.6" step="0.05" style="width:72px;" /></div>
+            <div class="actions"><button class="btn btn-primary" onclick="owlMatch()">执行匹配</button></div>
+          </div>
+          <div class="result-area"><div id="owlMatchResult" class="result"></div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title"><span class="badge post">POST</span> 语义扩展预览</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>查询文本</label><input type="text" id="owlExpandQuery" placeholder="例: 水费" /></div>
+            <div class="actions"><button class="btn btn-primary" onclick="owlPreviewExpansion()">预览扩展</button></div>
+          </div>
+          <div class="result-area"><div id="owlExpandResult" class="result"></div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title"><span class="badge post">POST</span> SPARQL 查询</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>SPARQL</label><textarea id="jenaSparql" placeholder="SELECT ?c WHERE { ?c a owl:Class } LIMIT 10" style="min-height:80px;"></textarea></div>
+            <div class="form-row"><label>Limit</label><input type="number" id="jenaSparqlLimit" value="50" style="width:80px;" /></div>
+            <div class="actions"><button class="btn btn-primary" onclick="runSparql()">执行</button><button class="btn btn-secondary" onclick="loadSparqlTemplates()">加载模板</button></div>
+          </div>
+          <div class="result-area"><div id="jenaSparqlResult" class="result"></div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title"><span class="badge get">GET</span> 类层级树 / 命名空间前缀</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>根节点</label><input type="text" id="jenaHierarchyRoot" placeholder="空=全部顶层类" /><label style="min-width:40px;">深度</label><input type="number" id="jenaHierarchyDepth" value="3" style="width:60px;" /></div>
+            <div class="actions"><button class="btn btn-primary" onclick="jenaHierarchy()">层级树</button><button class="btn btn-secondary" onclick="jenaVocab()">命名空间前缀</button><button class="btn btn-secondary" onclick="jenaKinds()">实体统计</button></div>
+          </div>
+          <div class="result-area"><div id="jenaHierarchyResult" class="result"></div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title"><span class="badge get">GET</span> 枚举值 / 成员浏览</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>类名</label><input type="text" id="jenaMembersClass" placeholder="如 Enum_DWLX" /></div>
+            <div class="form-row"><label>关键字</label><input type="text" id="jenaMembersKeyword" placeholder="可选" /><label style="min-width:40px;">条数</label><input type="number" id="jenaMembersSize" value="50" style="width:64px;" /></div>
+            <div class="actions"><button class="btn btn-primary" onclick="jenaMembers()">浏览成员</button></div>
+          </div>
+          <div class="result-area"><div id="jenaMembersResult" class="result"></div></div>
+        </div>
+      </div>
+    </div>
+<!-- CHUNK3 -->
+    <!-- 向量库 -->
+    <div class="panel" id="vector">
+      <div class="section">
+        <div class="section-title"><span class="badge post">POST</span> 向量相似度检索</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>检索文本 *</label><input type="text" id="vecText" placeholder="例: 水库" /></div>
+            <div class="form-row"><label>TopK</label><input type="number" id="vecTopK" value="10" style="width:72px;" /><label style="min-width:40px;">阈值</label><input type="number" id="vecThreshold" value="0" step="0.05" style="width:72px;" /><label style="min-width:56px;">命名空间</label><input type="text" id="vecNsCode" placeholder="如 w_wtr" /></div>
+            <div class="actions"><button class="btn btn-primary" onclick="vectorSearch()">搜索</button></div>
+          </div>
+          <div class="result-area"><div id="vecSearchResult" class="result"></div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title"><span class="badge get">GET</span> 向量库分页浏览</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>命名空间</label><input type="text" id="vecListNsCode" placeholder="可选" /><label style="min-width:40px;">页码</label><input type="number" id="vecListPage" value="1" style="width:64px;" /><label style="min-width:40px;">条数</label><input type="number" id="vecListSize" value="20" style="width:64px;" /></div>
+            <div class="actions"><button class="btn btn-primary" onclick="vectorList()">浏览</button></div>
+          </div>
+          <div class="result-area"><div id="vecListResult" class="result"></div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title"><span class="badge get">GET</span> 单条向量详情</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>class_id</label><input type="text" id="vecDetailId" placeholder="class-xxxxxxxx-..." /></div>
+            <div class="actions"><button class="btn btn-primary" onclick="vectorDetail()">查询</button></div>
+          </div>
+          <div class="result-area"><div id="vecDetailResult" class="result"></div></div>
+        </div>
+      </div>
+    </div>
+    <!-- 同义词词典 -->
     <div class="panel" id="synonym">
       <div class="section">
-        <div class="section-title">
-          <span class="badge get">GET</span>
-          查询同义词列表
+        <div class="section-title"><span class="badge get">GET</span> 同义词列表</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>关键字</label><input type="text" id="synSearchKw" placeholder="可选" /><label style="min-width:40px;">类型</label><select id="synSearchType"><option value="">全部</option><option value="synonym">synonym</option><option value="related">related</option><option value="abbreviation">abbreviation</option></select></div>
+            <div class="actions"><button class="btn btn-primary" onclick="listSynonyms()">查询</button></div>
+          </div>
+          <div class="result-area"><div id="synListResult" class="result"></div></div>
         </div>
-        <div class="form-row">
-          <label>领域筛选</label>
-          <select id="synonymDomain">
-            <option value="">全部</option>
-            <option value="WATER">水利</option>
-            <option value="FINANCE">财务</option>
-            <option value="GENERAL">通用</option>
-          </select>
-        </div>
-        <div class="actions">
-          <button class="btn btn-primary" onclick="listSynonyms()">查询列表</button>
-          <button class="btn btn-secondary" onclick="clearResult('synonymListResult')">清空结果</button>
-        </div>
-        <div id="synonymListResult" class="result" style="display:none;"></div>
       </div>
-
       <div class="section">
-        <div class="section-title">
-          <span class="badge post">POST</span>
-          新建同义词
+        <div class="section-title"><span class="badge post">POST</span> 新建同义词</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>词条 *</label><input type="text" id="synWord" /></div>
+            <div class="form-row"><label>同义词 *</label><input type="text" id="synSynonym" placeholder="多个用逗号分隔" /></div>
+            <div class="form-row"><label>类型</label><select id="synType"><option value="synonym">synonym</option><option value="related">related</option><option value="abbreviation">abbreviation</option></select></div>
+            <div class="actions"><button class="btn btn-success" onclick="createSynonym()">新建</button></div>
+          </div>
+          <div class="result-area"><div id="synCreateResult" class="result"></div></div>
         </div>
-        <div class="form-row">
-          <label>词条 *</label>
-          <input type="text" id="newSynonymWord" placeholder="例: 水费" />
-        </div>
-        <div class="form-row">
-          <label>同义词 *</label>
-          <input type="text" id="newSynonymList" placeholder="用逗号分隔, 例: 水价,供水费用,水资源费" />
-        </div>
-        <div class="form-row">
-          <label>领域</label>
-          <select id="newSynonymDomain">
-            <option value="GENERAL">通用</option>
-            <option value="WATER">水利</option>
-            <option value="FINANCE">财务</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label>置信度</label>
-          <input type="number" id="newSynonymConfidence" value="0.9" min="0" max="1" step="0.1" />
-        </div>
-        <button class="btn btn-success" onclick="createSynonym()">创建</button>
-        <div id="createSynonymResult" class="result" style="display:none;"></div>
       </div>
-
       <div class="section">
-        <div class="section-title">
-          <span class="badge get">GET</span>
-          查询单个同义词
+        <div class="section-title"><span class="badge get">GET</span> 查询 / <span class="badge put">PUT</span> 更新 / <span class="badge delete">DELETE</span> 删除</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>ID</label><input type="text" id="synId" placeholder="同义词条 ID" /></div>
+            <div class="form-row"><label>新同义词</label><input type="text" id="synUpdateSynonym" placeholder="更新时填写" /></div>
+            <div class="actions"><button class="btn btn-primary" onclick="getSynonym()">查询</button><button class="btn btn-secondary" onclick="updateSynonym()">更新</button><button class="btn btn-danger" onclick="deleteSynonym()">删除</button></div>
+          </div>
+          <div class="result-area"><div id="synCrudResult" class="result"></div></div>
         </div>
-        <div class="form-row">
-          <label>ID</label>
-          <input type="text" id="getSynonymId" placeholder="从列表中复制ID" />
-        </div>
-        <button class="btn btn-primary" onclick="getSynonym()">查询</button>
-        <div id="getSynonymResult" class="result" style="display:none;"></div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span class="badge put">PUT</span>
-          更新同义词
-        </div>
-        <div class="form-row">
-          <label>ID *</label>
-          <input type="text" id="updateSynonymId" placeholder="要更新的ID" />
-        </div>
-        <div class="form-row">
-          <label>词条</label>
-          <input type="text" id="updateSynonymWord" />
-        </div>
-        <div class="form-row">
-          <label>同义词</label>
-          <input type="text" id="updateSynonymList" placeholder="用逗号分隔" />
-        </div>
-        <div class="form-row">
-          <label>置信度</label>
-          <input type="number" id="updateSynonymConfidence" min="0" max="1" step="0.1" />
-        </div>
-        <button class="btn btn-success" onclick="updateSynonym()">更新</button>
-        <div id="updateSynonymResult" class="result" style="display:none;"></div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span class="badge delete">DELETE</span>
-          删除同义词
-        </div>
-        <div class="form-row">
-          <label>ID *</label>
-          <input type="text" id="deleteSynonymId" placeholder="要删除的ID" />
-        </div>
-        <button class="btn btn-danger" onclick="deleteSynonym()">删除</button>
-        <div id="deleteSynonymResult" class="result" style="display:none;"></div>
       </div>
     </div>
-
-    <!-- 领域术语面板 -->
+<!-- CHUNK4 -->
+    <!-- 领域术语 -->
     <div class="panel" id="domain">
       <div class="section">
-        <div class="section-title">
-          <span class="badge get">GET</span>
-          查询领域术语列表
+        <div class="section-title"><span class="badge get">GET</span> 领域术语列表</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>关键字</label><input type="text" id="domSearchKw" placeholder="可选" /><label style="min-width:56px;">领域</label><input type="text" id="domSearchDomain" placeholder="如 hydrology" /></div>
+            <div class="actions"><button class="btn btn-primary" onclick="listDomainTerms()">查询</button></div>
+          </div>
+          <div class="result-area"><div id="domListResult" class="result"></div></div>
         </div>
-        <button class="btn btn-primary" onclick="listDomainTerms()">查询列表</button>
-        <div id="domainTermListResult" class="result" style="display:none;"></div>
       </div>
-
       <div class="section">
-        <div class="section-title">
-          <span class="badge post">POST</span>
-          新建领域术语
+        <div class="section-title"><span class="badge post">POST</span> 新建领域术语</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>术语 *</label><input type="text" id="domTerm" /></div>
+            <div class="form-row"><label>定义</label><input type="text" id="domDefinition" /></div>
+            <div class="form-row"><label>领域</label><input type="text" id="domDomain" /></div>
+            <div class="actions"><button class="btn btn-success" onclick="createDomainTerm()">新建</button></div>
+          </div>
+          <div class="result-area"><div id="domCreateResult" class="result"></div></div>
         </div>
-        <div class="form-row">
-          <label>标准术语 *</label>
-          <input type="text" id="newTermStandard" placeholder="例: 实际供水量" />
-        </div>
-        <div class="form-row">
-          <label>常用表达 *</label>
-          <input type="text" id="newTermCommon" placeholder="用逗号分隔, 例: 供水量,水量" />
-        </div>
-        <div class="form-row">
-          <label>领域</label>
-          <select id="newTermDomain">
-            <option value="WATER">水利</option>
-            <option value="FINANCE">财务</option>
-            <option value="GENERAL">通用</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label>术语类型</label>
-          <select id="newTermType">
-            <option value="ENTITY">实体级</option>
-            <option value="FIELD">字段级</option>
-            <option value="UNIT">单位级</option>
-          </select>
-        </div>
-        <button class="btn btn-success" onclick="createDomainTerm()">创建</button>
-        <div id="createTermResult" class="result" style="display:none;"></div>
       </div>
-
       <div class="section">
-        <div class="section-title">
-          <span class="badge get">GET</span>
-          查询单个领域术语
+        <div class="section-title"><span class="badge get">GET</span> 查询 / <span class="badge put">PUT</span> 更新 / <span class="badge delete">DELETE</span> 删除</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>ID</label><input type="text" id="domId" /></div>
+            <div class="form-row"><label>新定义</label><input type="text" id="domUpdateDef" placeholder="更新时填写" /></div>
+            <div class="actions"><button class="btn btn-primary" onclick="getDomainTerm()">查询</button><button class="btn btn-secondary" onclick="updateDomainTerm()">更新</button><button class="btn btn-danger" onclick="deleteDomainTerm()">删除</button></div>
+          </div>
+          <div class="result-area"><div id="domCrudResult" class="result"></div></div>
         </div>
-        <div class="form-row">
-          <label>ID</label>
-          <input type="text" id="getTermId" placeholder="从列表中复制ID" />
-        </div>
-        <button class="btn btn-primary" onclick="getDomainTerm()">查询</button>
-        <div id="getTermResult" class="result" style="display:none;"></div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span class="badge put">PUT</span>
-          更新领域术语
-        </div>
-        <div class="form-row">
-          <label>ID *</label>
-          <input type="text" id="updateTermId" placeholder="要更新的ID" />
-        </div>
-        <div class="form-row">
-          <label>标准术语</label>
-          <input type="text" id="updateTermStandard" />
-        </div>
-        <div class="form-row">
-          <label>常用表达</label>
-          <input type="text" id="updateTermCommon" placeholder="用逗号分隔" />
-        </div>
-        <button class="btn btn-success" onclick="updateDomainTerm()">更新</button>
-        <div id="updateTermResult" class="result" style="display:none;"></div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span class="badge delete">DELETE</span>
-          删除领域术语
-        </div>
-        <div class="form-row">
-          <label>ID *</label>
-          <input type="text" id="deleteTermId" placeholder="要删除的ID" />
-        </div>
-        <button class="btn btn-danger" onclick="deleteDomainTerm()">删除</button>
-        <div id="deleteTermResult" class="result" style="display:none;"></div>
       </div>
     </div>
-
-    <!-- 本体查询面板 -->
-    <div class="panel" id="ontology">
-      <div class="section" style="background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); border-left: 4px solid #667eea;">
-        <div class="section-title">
-          <span class="badge get">GET</span> 🤖 智能本体查询（NEW）
-        </div>
-        <p style="color: #666; font-size: 13px; margin-bottom: 12px;">
-          输入一段自然语言描述，系统自动提取关键词、扩展同义词，并返回最相关的本体信息
-        </p>
-        <div class="form-row">
-          <input type="text" id="smartQueryInput" placeholder="例如：查询水库的供水量数据" style="flex: 1">
-          <input type="number" id="smartQueryLimit" placeholder="返回数量" value="10" style="width: 100px">
-          <button onclick="smartOntologySearch()">智能查询</button>
-          <button onclick="fillSmartExample()" style="background: #52c41a">示例</button>
-        </div>
-        <pre id="smartQueryResult" class="result"></pre>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span class="badge get">GET</span> 对象类型列表
-        </div>
-        <div class="form-row">
-          <input type="text" id="ontCategoryCode" placeholder="行业代码 (可选, 如 WATER)" style="flex: 1">
-          <button onclick="searchOntClasses()">查询</button>
-        </div>
-        <pre id="ontClassesResult" class="result"></pre>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span class="badge get">GET</span> 对象类型详情
-        </div>
-        <div class="form-row">
-          <input type="text" id="ontClassId" placeholder="对象类型 ID" style="flex: 1">
-          <button onclick="getOntClassDetail()">查询详情</button>
-        </div>
-        <pre id="ontClassDetailResult" class="result"></pre>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span class="badge get">GET</span> 全局搜索
-        </div>
-        <div class="form-row">
-          <input type="text" id="ontSearchKeyword" placeholder="搜索关键词" style="flex: 1">
-          <select id="ontSearchType">
-            <option value="">全部类型</option>
-            <option value="object">对象类型</option>
-            <option value="property">属性</option>
-          </select>
-          <button onclick="globalSearch()">搜索</button>
-        </div>
-        <pre id="globalSearchResult" class="result"></pre>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span class="badge get">GET</span> 类属性查询
-        </div>
-        <div class="form-row">
-          <input type="text" id="ontPropertyClassId" placeholder="对象类型 ID" style="flex: 1">
-          <button onclick="getClassProperties()">查询属性</button>
-        </div>
-        <pre id="classPropertiesResult" class="result"></pre>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span class="badge get">GET</span> RID 查询 (新接口 - 待修复)
-        </div>
-        <div class="form-row">
-          <input type="text" id="ontRid" placeholder="RID (如 ri.ont.class.xxxx-xxxx)" style="flex: 1">
-          <button onclick="findByRid()">查询</button>
-        </div>
-        <pre id="ridResult" class="result"></pre>
-      </div>
-    </div>
-
-    <!-- 数据查询面板 -->
-    <div class="panel" id="data">
-      <div class="section">
-        <div class="section-title">
-          <span class="badge get">GET</span> 数据源列表
-        </div>
-        <button onclick="getDatasources()">查询所有数据源</button>
-        <pre id="datasourcesResult" class="result"></pre>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span class="badge get">GET</span> 数据源详情
-        </div>
-        <div class="form-row">
-          <input type="text" id="datasourceId" placeholder="数据源 ID" style="flex: 1">
-          <button onclick="getDatasourceDetail()">查询详情</button>
-        </div>
-        <pre id="datasourceDetailResult" class="result"></pre>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span class="badge get">GET</span> 数据源统计概览
-        </div>
-        <button onclick="getDatasourceOverview()">查询统计</button>
-        <pre id="datasourceOverviewResult" class="result"></pre>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span class="badge get">GET</span> 实例数据查询
-        </div>
-        <div class="form-row">
-          <input type="text" id="instanceClassId" placeholder="对象类型 ID" style="flex: 2">
-          <input type="number" id="instancePage" placeholder="页码" value="1" style="flex: 1">
-          <input type="number" id="instanceSize" placeholder="每页数量" value="20" style="flex: 1">
-          <button onclick="getInstanceList()">查询实例</button>
-        </div>
-        <pre id="instanceListResult" class="result"></pre>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span class="badge get">GET</span> 对象类型统计
-        </div>
-        <button onclick="getObjectTypesStats()">查询统计</button>
-        <pre id="objectTypesStatsResult" class="result"></pre>
-      </div>
-    </div>
-
-    <!-- AI 同义词面板 -->
+    <!-- AI 同义词 -->
     <div class="panel" id="ai-synonym">
-      <!-- 状态栏 -->
       <div class="section">
-        <div class="section-title">配置状态</div>
-        <div class="actions">
-          <button class="btn btn-primary" onclick="aiSynonymStatus()">检查状态</button>
+        <div class="section-title">AI 同义词生成服务状态</div>
+        <div class="two-col">
+          <div class="form-area"><div class="actions"><button class="btn btn-primary" onclick="aiSynonymStatus()">查看状态</button></div></div>
+          <div class="result-area"><div id="aiStatusResult" class="result"></div></div>
         </div>
-        <div id="aiStatusResult" class="result" style="display:none;"></div>
       </div>
-
-      <!-- 单条生成 -->
       <div class="section">
-        <div class="section-title">
-          <span class="badge post">POST</span> 单条生成同义词
+        <div class="section-title"><span class="badge post">POST</span> 单词 AI 生成</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>词条 *</label><input type="text" id="aiGenWord" placeholder="例: 水库" /></div>
+            <div class="actions"><button class="btn btn-primary" onclick="aiGenerate()">生成</button></div>
+          </div>
+          <div class="result-area"><div id="aiGenResult" class="result"></div></div>
         </div>
-        <div class="form-row">
-          <label>实体类型</label>
-          <select id="genEntityType">
-            <option value="biz_category">biz_category（行业分类）</option>
-            <option value="class">class（对象类型）</option>
-            <option value="class_prop">class_prop（类属性）</option>
-            <option value="link_type">link_type（链接类型）</option>
-            <option value="shared_prop">shared_prop（共享属性）</option>
-            <option value="enum_item">enum_item（枚举值）</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label>实体 ID</label>
-          <input type="text" id="genEntityId" placeholder="例: biz_category-xxxxxxxx-xxxx-..." />
-        </div>
-        <button class="btn btn-primary" onclick="aiGenerate()">生成</button>
-        <div id="aiGenerateResult" class="result" style="display:none;"></div>
       </div>
-
-      <!-- 批量生成 -->
       <div class="section">
-        <div class="section-title">
-          <span class="badge post">POST</span> 批量生成同义词
+        <div class="section-title"><span class="badge post">POST</span> 批量 AI 生成</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row">
+              <label>实体类型 *</label>
+              <select id="aiBatchType">
+                <option value="class">对象类型 (class)</option>
+                <option value="class_prop">类属性 (class_prop)</option>
+                <option value="enum_item">枚举项 (enum_item)</option>
+                <option value="shared_prop">共享属性 (shared_prop)</option>
+                <option value="link_type">链接类型 (link_type)</option>
+                <option value="biz_category">业务分类 (biz_category)</option>
+              </select>
+            </div>
+            <div class="form-row"><label>数量限制</label><input id="aiBatchLimit" type="number" value="50" placeholder="0=不限制"></div>
+            <div class="actions"><button class="btn btn-primary" onclick="aiBatchGenerate()">批量生成</button></div>
+          </div>
+          <div class="result-area">
+            <div id="aiBatchProgress" style="display:none;margin-bottom:8px">
+              <div style="font-size:13px;color:#555;margin-bottom:4px">
+                <span id="aiBatchProgressLabel">处理中...</span>
+              </div>
+              <div style="background:#e8e8e8;border-radius:4px;height:8px;overflow:hidden">
+                <div id="aiBatchProgressBar" style="background:#1677ff;height:100%;width:0%;transition:width 0.3s"></div>
+              </div>
+            </div>
+            <div id="aiBatchResult" class="result"></div>
+          </div>
         </div>
-        <p style="color:#666;font-size:13px;margin-bottom:12px;">对指定类型的全部（或前 N 条）实体自动生成同义词并写入向量库。limit=0 表示全量。</p>
-        <div class="form-row">
-          <label>实体类型</label>
-          <select id="batchGenEntityType">
-            <option value="biz_category">biz_category（行业分类）</option>
-            <option value="class">class（对象类型）</option>
-            <option value="class_prop">class_prop（类属性）</option>
-            <option value="link_type">link_type（链接类型）</option>
-            <option value="shared_prop">shared_prop（共享属性）</option>
-            <option value="enum_item">enum_item（枚举值）</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label>数量限制</label>
-          <input type="number" id="batchGenLimit" value="5" min="0" style="width:120px;" />
-          <span style="padding-top:8px;color:#999;font-size:13px;">0 = 全量（谨慎，会消耗大量 API 配额）</span>
-        </div>
-        <button class="btn btn-success" onclick="aiBatchGenerate()">批量生成</button>
-        <div id="aiBatchResult" class="result" style="display:none;"></div>
       </div>
-
-      <!-- 重建向量集合 -->
-      <div class="section" style="border-left:4px solid #f5a623;">
-        <div class="section-title">
-          <span class="badge post">POST</span> 重建 Milvus 向量集合
+      <div class="section">
+        <div class="section-title"><span class="badge post">POST</span> 重建向量库</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="desc">从数据库重新构建 Milvus 向量索引（全量）。</div>
+            <div class="actions"><button class="btn btn-primary" onclick="rebuildMilvus()">重建</button></div>
+          </div>
+          <div class="result-area"><div id="rebuildResult" class="result"></div></div>
         </div>
-        <p style="color:#666;font-size:13px;margin-bottom:12px;">
-          Drop 现有集合并重新建 Schema + IVF_FLAT/IP 索引 + Load。<br>
-          <span style="color:#f5a623;">注意：会清空所有已写入的向量，需重新批量生成。</span>
-        </p>
-        <button class="btn btn-danger" onclick="rebuildMilvus()">重建向量集合</button>
-        <div id="rebuildResult" class="result" style="display:none;"></div>
+      </div>
+      <div class="section">
+        <div class="section-title"><span class="badge post">POST</span> 同义词DB → Milvus 同步</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="desc">直接从 sys_synonym_dict 同义词表将现有数据插入向量库，不重新调用 LLM。</div>
+            <div class="form-row">
+              <label>实体类型</label>
+              <select id="syncDictType">
+                <option value="">全部类型</option>
+                <option value="class">对象类型 (class)</option>
+                <option value="class_prop">类属性 (class_prop)</option>
+                <option value="enum_item">枚举项 (enum_item)</option>
+                <option value="shared_prop">共享属性 (shared_prop)</option>
+                <option value="link_type">链接类型 (link_type)</option>
+                <option value="biz_category">业务分类 (biz_category)</option>
+              </select>
+            </div>
+            <div class="form-row"><label>数量限制</label><input id="syncDictLimit" type="number" value="0" placeholder="0=不限制"></div>
+            <div class="actions"><button class="btn btn-primary" onclick="syncDictToMilvus()">开始同步</button></div>
+          </div>
+          <div class="result-area">
+            <div id="syncDictProgress" style="display:none;margin-bottom:8px">
+              <div style="font-size:13px;color:#555;margin-bottom:4px"><span id="syncDictProgressLabel">处理中...</span></div>
+              <div style="background:#e8e8e8;border-radius:4px;height:8px;overflow:hidden">
+                <div id="syncDictProgressBar" style="background:#1677ff;height:100%;width:0%;transition:width 0.3s"></div>
+              </div>
+            </div>
+            <div id="syncDictResult" class="result"></div>
+          </div>
+        </div>
+      </div>
+          <div class="result-area"><div id="rebuildResult" class="result"></div></div>
+        </div>
       </div>
     </div>
-
-    <!-- 批量操作面板 -->
+    <!-- 批量操作 -->
     <div class="panel" id="batch">
       <div class="section">
-        <div class="section-title">
-          <span class="badge post">POST</span>
-          批量导入同义词
-        </div>
-        <div class="form-row">
-          <label>JSON 数组</label>
-          <textarea id="batchSynonymJson" placeholder='[{"word":"水费","synonyms":["水价","供水费用"],"domain":"WATER","confidence":0.95}]'></textarea>
-        </div>
-        <div class="hint">格式: [{"word":"词条","synonyms":["同义词1","同义词2"],"domain":"领域","confidence":0.9}]</div>
-        <button class="btn btn-success" onclick="batchImportSynonyms()">批量导入</button>
-        <div id="batchImportResult" class="result" style="display:none;"></div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          预置测试数据
-        </div>
-        <p style="margin-bottom: 12px; color: #666; font-size: 14px;">快速填充测试数据到上面的批量导入框</p>
-        <div class="actions">
-          <button class="btn btn-secondary" onclick="fillTestData('water')">水利领域</button>
-          <button class="btn btn-secondary" onclick="fillTestData('finance')">财务领域</button>
-          <button class="btn btn-secondary" onclick="fillTestData('general')">通用领域</button>
+        <div class="section-title"><span class="badge post">POST</span> 批量导入同义词</div>
+        <div class="two-col">
+          <div class="form-area">
+            <div class="form-row"><label>JSON 数组</label><textarea id="batchImportData" placeholder='[{"word":"水库","synonyms":["蓄水池","水坝"]}]' style="min-height:120px;"></textarea></div>
+            <div class="actions"><button class="btn btn-primary" onclick="batchImportSynonyms()">批量导入</button><button class="btn btn-secondary" onclick="fillTestData()">填入测试数据</button></div>
+          </div>
+          <div class="result-area"><div id="batchImportResult" class="result"></div></div>
         </div>
       </div>
     </div>
   </div>
+<!-- SCRIPT -->
+<script>
+  function base() { return document.getElementById('baseUrl').value.replace(/\/$/, ''); }
+  function val(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+  function num(id, def) { return parseInt(document.getElementById(id).value) || def; }
+  function flt(id, def) { return parseFloat(document.getElementById(id).value) || def; }
 
-  <script>
-    // 获取后端地址
-    function getBaseUrl() {
-      return document.getElementById('baseUrl').value.replace(/\/$/, '');
+  function show(elId, data, isError) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    el.className = 'result ' + (isError ? 'error' : 'success');
+    el.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+  }
+
+  async function api(method, path, body) {
+    const url = base() + path;
+    const opts = { method, headers: { 'Content-Type': 'application/json' } };
+    if (body) opts.body = JSON.stringify(body);
+    try {
+      const res = await fetch(url, opts);
+      return { ok: res.ok, status: res.status, data: await res.json() };
+    } catch (e) {
+      return { ok: false, data: { error: e.message } };
     }
+  }
 
-    // 显示结果
-    function showResult(elementId, data, isError = false) {
-      const el = document.getElementById(elementId);
-      el.style.display = 'block';
-      el.className = 'result ' + (isError ? 'error' : 'success');
-      el.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
-    }
-
-    // 清空结果
-    function clearResult(elementId) {
-      const el = document.getElementById(elementId);
-      el.style.display = 'none';
-      el.innerHTML = '';
-    }
-
-    // Tab 切换
+  document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', () => {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -797,734 +704,303 @@
         document.getElementById(tab.dataset.tab).classList.add('active');
       });
     });
+  });
 
-    // ========== OWL 模型 ==========
-    async function owlHealth() {
-      try {
-        const response = await fetch(`${getBaseUrl()}/ontology/health`);
-        const data = await response.json();
-        showResult('owlStatusResult', data);
-      } catch (error) {
-        showResult('owlStatusResult', { error: error.message }, true);
+  // ========== 健康检查 ==========
+  async function checkHealth() {
+    const r = await api('GET', '/synonym/health');
+    show('healthResult', r.data, !r.ok);
+  }
+  async function owlHealth() {
+    const r = await api('GET', '/ontology/health');
+    show('healthResult', r.data, !r.ok);
+  }
+  async function owlStats() {
+    const r = await api('GET', '/ontology/stats');
+    show('healthResult', r.data, !r.ok);
+  }
+  async function owlRebuild() {
+    const r = await api('POST', '/ontology/rebuild', {});
+    show('owlRebuildResult', r.data, !r.ok);
+  }
+  // ========== 语义扩展 ==========
+  async function semanticExpand() {
+    const q = val('seQuestion'); if (!q) { alert('请输入问题'); return; }
+    const ns = val('seNsCode'); const topK = num('seTopK', 5); const thr = flt('seThreshold', 0);
+    const r = await api('POST', '/tool/semantic-expand', { question: q, nsCode: ns || null, topK, threshold: thr });
+    show('seResult', r.data, !r.ok);
+  }
+  function fillSeExample() { document.getElementById('seQuestion').value = '水利工程中的堤坝类型'; }
+  function clearSeResult() { document.getElementById('seResult').innerHTML = ''; }
+
+  // ========== 子图上下文 ==========
+  async function fetchSubgraph() {
+    const q = val('sgQuestion'); if (!q) { alert('请输入问题'); return; }
+    const ns = val('sgNsCode'); const topK = num('sgTopK', 5); const thr = flt('sgThreshold', 0);
+    const r = await api('POST', '/tool/subgraph', { question: q, nsCode: ns || null, topK, threshold: thr });
+    const data = r.data?.data || r.data;
+    document.getElementById('sgRaw').innerHTML = '<pre>' + JSON.stringify(r.data, null, 2) + '</pre>';
+    if (!r.ok || !data) { show('sgResult', r.data, true); return; }
+    let html = '';
+    if (data.classes?.length) {
+      html += '<div style="margin-bottom:8px;"><strong>类 (' + data.classes.length + ')</strong><ul style="margin:4px 0 0 16px;">';
+      data.classes.forEach(c => { html += '<li><code>' + c.localName + '</code> — ' + (c.label || '') + '</li>'; });
+      html += '</ul></div>';
+    }
+    if (data.properties?.length) {
+      html += '<div style="margin-bottom:8px;"><strong>属性 (' + data.properties.length + ')</strong><ul style="margin:4px 0 0 16px;">';
+      data.properties.forEach(p => { html += '<li><code>' + p.localName + '</code> [' + (p.type||'') + '] — ' + (p.label||'') + '</li>'; });
+      html += '</ul></div>';
+    }
+    if (data.edges?.length) {
+      html += '<div style="margin-bottom:8px;"><strong>关系边 (' + data.edges.length + ')</strong><ul style="margin:4px 0 0 16px;">';
+      data.edges.forEach(e => { html += '<li>' + e.label + '</li>'; });
+      html += '</ul></div>';
+    }
+    if (data.matchedEntities?.length) {
+      html += '<div><strong>命中实体 (' + data.matchedEntities.length + ')</strong><ul style="margin:4px 0 0 16px;">';
+      data.matchedEntities.forEach(m => { html += '<li>[' + m.entityType + '] <code>' + (m.apiName||m.entityId) + '</code> sim=' + (typeof m.similarity === 'number' ? m.similarity.toFixed(3) : m.similarity) + '</li>'; });
+      html += '</ul></div>';
+    }
+    if (!html) html = '<span style="color:#999;">无内容（向量库未命中或 Jena 无对应类）</span>';
+    const el = document.getElementById('sgResult');
+    el.className = 'result success'; el.innerHTML = html;
+  }
+  function fillSgExample() { document.getElementById('sgQuestion').value = '水利工程中的堤坝类型'; }
+
+  // ========== Jena / OWL ==========
+  async function owlListClasses() {
+    const r = await api('GET', '/tool/jena/classes');
+    show('owlClassesResult', r.data, !r.ok);
+  }
+  async function owlGetClassDetail() {
+    const n = val('owlClassLocalName'); if (!n) { alert('请输入类名'); return; }
+    const r = await api('GET', '/tool/jena/class/' + encodeURIComponent(n));
+    show('owlClassDetailResult', r.data, !r.ok);
+  }
+  async function owlListProperties() {
+    const r = await api('GET', '/tool/jena/properties');
+    show('owlPropertiesResult', r.data, !r.ok);
+  }
+  async function owlMatch() {
+    const q = val('owlMatchQuery'); if (!q) { alert('请输入查询文本'); return; }
+    const r = await api('POST', '/ontology/match', { query: q, topK: num('owlMatchTopK', 10), threshold: flt('owlMatchThreshold', 0.6) });
+    show('owlMatchResult', r.data, !r.ok);
+  }
+  async function owlPreviewExpansion() {
+    const q = val('owlExpandQuery'); if (!q) { alert('请输入查询文本'); return; }
+    const r = await api('POST', '/ontology/preview-expansion', { query: q });
+    show('owlExpandResult', r.data, !r.ok);
+  }
+  async function runSparql() {
+    const s = val('jenaSparql'); if (!s) { alert('请输入 SPARQL'); return; }
+    const r = await api('POST', '/tool/jena/sparql', { sparql: s, limit: num('jenaSparqlLimit', 50) });
+    show('jenaSparqlResult', r.data, !r.ok);
+  }
+  async function loadSparqlTemplates() {
+    const r = await api('GET', '/tool/jena/query/templates');
+    show('jenaSparqlResult', r.data, !r.ok);
+  }
+  async function jenaHierarchy() {
+    const root = val('jenaHierarchyRoot'); const depth = num('jenaHierarchyDepth', 3);
+    const qs = (root ? '?root=' + encodeURIComponent(root) + '&' : '?') + 'depth=' + depth;
+    const r = await api('GET', '/tool/jena/hierarchy' + qs);
+    show('jenaHierarchyResult', r.data, !r.ok);
+  }
+  async function jenaVocab() {
+    const r = await api('GET', '/tool/jena/meta/vocab');
+    show('jenaHierarchyResult', r.data, !r.ok);
+  }
+  async function jenaKinds() {
+    const r = await api('GET', '/tool/jena/meta/kinds');
+    show('jenaHierarchyResult', r.data, !r.ok);
+  }
+  async function jenaMembers() {
+    const cls = val('jenaMembersClass'); if (!cls) { alert('请输入类名'); return; }
+    const kw = val('jenaMembersKeyword'); const sz = num('jenaMembersSize', 50);
+    const qs = '?class=' + encodeURIComponent(cls) + (kw ? '&keyword=' + encodeURIComponent(kw) : '') + '&size=' + sz;
+    const r = await api('GET', '/tool/jena/members' + qs);
+    show('jenaMembersResult', r.data, !r.ok);
+  }
+  // _SCRIPT4_
+  // ========== 向量库 ==========
+  async function vectorSearch() {
+    const t = val('vecText'); if (!t) { alert('请输入检索文本'); return; }
+    const r = await api('POST', '/tool/vector/search', { text: t, topK: num('vecTopK', 10), threshold: flt('vecThreshold', 0), nsCode: val('vecNsCode') || null });
+    show('vecSearchResult', r.data, !r.ok);
+  }
+  async function vectorList() {
+    const ns = val('vecListNsCode'); const page = num('vecListPage', 1); const size = num('vecListSize', 20);
+    const qs = '?page=' + page + '&size=' + size + (ns ? '&nsCode=' + encodeURIComponent(ns) : '');
+    const r = await api('GET', '/tool/vector/list' + qs);
+    show('vecListResult', r.data, !r.ok);
+  }
+  async function vectorDetail() {
+    const id = val('vecDetailId'); if (!id) { alert('请输入 class_id'); return; }
+    const r = await api('GET', '/tool/vector/detail/' + encodeURIComponent(id));
+    show('vecDetailResult', r.data, !r.ok);
+  }
+  // ========== 同义词词典 ==========
+  async function listSynonyms() {
+    const kw = val('synSearchKw'); const type = val('synSearchType');
+    const qs = '?' + (kw ? 'keyword=' + encodeURIComponent(kw) + '&' : '') + (type ? 'type=' + type : '');
+    const r = await api('GET', '/synonym' + qs);
+    show('synListResult', r.data, !r.ok);
+  }
+  async function createSynonym() {
+    const word = val('synWord'); const syn = val('synSynonym');
+    if (!word || !syn) { alert('词条和同义词必填'); return; }
+    const synonyms = syn.split(',').map(s => s.trim()).filter(Boolean);
+    const r = await api('POST', '/synonym', { word, synonyms, type: val('synType') || 'synonym' });
+    show('synCreateResult', r.data, !r.ok);
+  }
+  async function getSynonym() {
+    const id = val('synId'); if (!id) { alert('请输入 ID'); return; }
+    const r = await api('GET', '/synonym/' + id);
+    show('synCrudResult', r.data, !r.ok);
+  }
+  async function updateSynonym() {
+    const id = val('synId'); if (!id) { alert('请输入 ID'); return; }
+    const syn = val('synUpdateSynonym');
+    const body = syn ? { synonyms: syn.split(',').map(s => s.trim()).filter(Boolean) } : {};
+    const r = await api('PUT', '/synonym/' + id, body);
+    show('synCrudResult', r.data, !r.ok);
+  }
+  async function deleteSynonym() {
+    const id = val('synId'); if (!id) { alert('请输入 ID'); return; }
+    if (!confirm('确认删除?')) return;
+    const r = await api('DELETE', '/synonym/' + id);
+    show('synCrudResult', r.data, !r.ok);
+  }
+  // _SCRIPT5_
+  // ========== 领域术语 ==========
+  async function listDomainTerms() {
+    const kw = val('domSearchKw'); const dom = val('domSearchDomain');
+    const qs = '?' + (kw ? 'keyword=' + encodeURIComponent(kw) + '&' : '') + (dom ? 'domain=' + encodeURIComponent(dom) : '');
+    const r = await api('GET', '/domain-term' + qs);
+    show('domListResult', r.data, !r.ok);
+  }
+  async function createDomainTerm() {
+    const term = val('domTerm'); if (!term) { alert('术语必填'); return; }
+    const r = await api('POST', '/domain-term', { term, definition: val('domDefinition') || null, domain: val('domDomain') || null });
+    show('domCreateResult', r.data, !r.ok);
+  }
+  async function getDomainTerm() {
+    const id = val('domId'); if (!id) { alert('请输入 ID'); return; }
+    const r = await api('GET', '/domain-term/' + id);
+    show('domCrudResult', r.data, !r.ok);
+  }
+  async function updateDomainTerm() {
+    const id = val('domId'); if (!id) { alert('请输入 ID'); return; }
+    const r = await api('PUT', '/domain-term/' + id, { definition: val('domUpdateDef') || null });
+    show('domCrudResult', r.data, !r.ok);
+  }
+  async function deleteDomainTerm() {
+    const id = val('domId'); if (!id) { alert('请输入 ID'); return; }
+    if (!confirm('确认删除?')) return;
+    const r = await api('DELETE', '/domain-term/' + id);
+    show('domCrudResult', r.data, !r.ok);
+  }
+  // ========== AI 同义词 ==========
+  async function aiSynonymStatus() {
+    const r = await api('GET', '/ai-synonym/status');
+    show('aiStatusResult', r.data, !r.ok);
+  }
+  async function aiGenerate() {
+    const w = val('aiGenWord'); if (!w) { alert('请输入词条'); return; }
+    const r = await api('POST', '/ai-synonym/generate', { word: w });
+    show('aiGenResult', r.data, !r.ok);
+  }
+  let batchPollTimer = null;
+  async function aiBatchGenerate() {
+    const entityType = val('aiBatchType'); if (!entityType) { alert('请选择实体类型'); return; }
+    const limit = parseInt(val('aiBatchLimit') || '0');
+    const r = await api('POST', '/tool/synonym/batch-generate', { entityType, limit });
+    show('aiBatchResult', r.data, !r.ok);
+    if (r.ok) {
+      document.getElementById('aiBatchProgress').style.display = 'block';
+      document.getElementById('aiBatchProgressBar').style.width = '0%';
+      document.getElementById('aiBatchProgressLabel').textContent = '启动中...';
+      if (batchPollTimer) clearInterval(batchPollTimer);
+      batchPollTimer = setInterval(pollBatchProgress, 1500);
+    }
+  }
+  async function pollBatchProgress() {
+    const r = await api('GET', '/tool/synonym/status');
+    if (!r.ok) return;
+    const batch = r.data && r.data.batch;
+    if (!batch) return;
+    const { status, total, processed, failed } = batch;
+    const pct = total > 0 ? Math.round(processed / total * 100) : 0;
+    document.getElementById('aiBatchProgressBar').style.width = pct + '%';
+    if (status === 'running') {
+      document.getElementById('aiBatchProgressLabel').textContent =
+        `处理中: ${processed} / ${total}  失败: ${failed}  (${pct}%)`;
+    } else {
+      document.getElementById('aiBatchProgressLabel').textContent =
+        total > 0 ? `完成: ${processed} / ${total}  失败: ${failed}` : '空闲';
+      clearInterval(batchPollTimer);
+      batchPollTimer = null;
+      if (total > 0) {
+        document.getElementById('aiBatchProgressBar').style.width = '100%';
+        document.getElementById('aiBatchProgressBar').style.background = failed > 0 ? '#fa8c16' : '#52c41a';
       }
     }
-
-    async function owlStats() {
-      try {
-        const response = await fetch(`${getBaseUrl()}/ontology/stats`);
-        const data = await response.json();
-        showResult('owlStatusResult', data);
-      } catch (error) {
-        showResult('owlStatusResult', { error: error.message }, true);
-      }
-    }
-
-    async function owlRebuild() {
-      const btn = event.target;
-      btn.disabled = true;
-      btn.textContent = '重建中...';
-      try {
-        const response = await fetch(`${getBaseUrl()}/ontology/rebuild`, { method: 'POST' });
-        const data = await response.json();
-        showResult('owlRebuildResult', data, data.code !== 200);
-      } catch (error) {
-        showResult('owlRebuildResult', { error: error.message }, true);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = '触发重建';
-      }
-    }
-
-    async function owlMatch() {
-      try {
-        const query = document.getElementById('owlMatchQuery').value.trim();
-        if (!query) { alert('请输入查询文本'); return; }
-        const topK = parseInt(document.getElementById('owlMatchTopK').value) || 10;
-        const threshold = parseFloat(document.getElementById('owlMatchThreshold').value) || 0.6;
-        const response = await fetch(`${getBaseUrl()}/ontology/match`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ query, topK, threshold })
-        });
-        const data = await response.json();
-        showResult('owlMatchResult', data, data.code !== 200);
-      } catch (error) {
-        showResult('owlMatchResult', { error: error.message }, true);
-      }
-    }
-
-    async function owlPreviewExpansion() {
-      try {
-        const query = document.getElementById('owlExpandQuery').value.trim();
-        if (!query) { alert('请输入查询文本'); return; }
-        const response = await fetch(`${getBaseUrl()}/ontology/preview-expansion`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ query })
-        });
-        const data = await response.json();
-        showResult('owlExpandResult', data, data.code !== 200);
-      } catch (error) {
-        showResult('owlExpandResult', { error: error.message }, true);
-      }
-    }
-
-    // ========== OWL 类/属性浏览 ==========
-    async function owlListClasses() {
-      try {
-        const response = await fetch(`${getBaseUrl()}/ontology/classes`);
-        const data = await response.json();
-        if (data.code !== 200) {
-          showResult('owlClassesResult', data, true);
-          return;
-        }
-        const classes = data.data;
-        // 渲染为可点击的表格
-        let html = `<table class="data-table">
-          <thead><tr><th>localName</th><th>label</th><th>父类</th></tr></thead><tbody>`;
-        for (const c of classes) {
-          const supers = (c.superClasses || []).join(', ') || '—';
-          html += `<tr style="cursor:pointer;" onclick="owlFillClass('${c.localName}')">
-            <td><code style="color:#667eea">${c.localName}</code></td>
-            <td>${c.label || '—'}</td>
-            <td style="color:#999;font-size:12px;">${supers}</td>
-          </tr>`;
-        }
-        html += `</tbody></table><div style="color:#999;font-size:12px;margin-top:8px;">共 ${classes.length} 个类，点击行查看详情</div>`;
-        const el = document.getElementById('owlClassesResult');
-        el.style.display = 'block';
-        el.className = 'result success';
-        el.innerHTML = html;
-      } catch (error) {
-        showResult('owlClassesResult', { error: error.message }, true);
-      }
-    }
-
-    function owlFillClass(localName) {
-      document.getElementById('owlClassLocalName').value = localName;
-      owlGetClassDetail();
-    }
-
-    async function owlGetClassDetail() {
-      try {
-        const localName = document.getElementById('owlClassLocalName').value.trim();
-        if (!localName) { alert('请输入类名'); return; }
-        const response = await fetch(`${getBaseUrl()}/ontology/class/${encodeURIComponent(localName)}`);
-        const data = await response.json();
-        if (data.code !== 200) {
-          showResult('owlClassDetailResult', data, true);
-          return;
-        }
-        const d = data.data;
-        let html = `<div style="margin-bottom:12px;">
-          <strong>URI:</strong> <code style="font-size:12px;color:#999">${d.uri}</code>
-        </div>`;
-        html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">`;
-
-        // 基础信息
-        html += `<div>
-          <div style="font-weight:600;margin-bottom:8px;color:#333;">基础信息</div>
-          <div><span style="color:#666">label:</span> ${d.label || '—'}</div>
-          <div><span style="color:#666">comment:</span> ${d.comment || '—'}</div>
-        </div>`;
-
-        // 父类 & 子类
-        const supers = (d.superClasses || []).map(s =>
-          `<span onclick="owlFillClass('${s}')" style="cursor:pointer;color:#667eea;margin-right:6px;">${s}</span>`
-        ).join('') || '—';
-        const subs = (d.subClasses || []).map(s =>
-          `<span onclick="owlFillClass('${s}')" style="cursor:pointer;color:#667eea;margin-right:6px;">${s}</span>`
-        ).join('') || '—';
-        html += `<div>
-          <div style="font-weight:600;margin-bottom:8px;color:#333;">层次关系</div>
-          <div><span style="color:#666">父类:</span> ${supers}</div>
-          <div style="margin-top:4px;"><span style="color:#666">子类:</span> ${subs}</div>
-        </div>`;
-        html += `</div>`;
-
-        // 关联属性
-        if (d.properties && d.properties.length > 0) {
-          html += `<div style="margin-top:16px;">
-            <div style="font-weight:600;margin-bottom:8px;color:#333;">关联属性（${d.properties.length}个）</div>
-            <table class="data-table">
-              <thead><tr><th>localName</th><th>label</th><th>类型</th></tr></thead><tbody>`;
-          for (const p of d.properties) {
-            const badge = p.type === 'ObjectProperty' ? 'background:#e6f7ff;color:#1890ff' :
-                          p.type === 'DatatypeProperty' ? 'background:#f6ffed;color:#52c41a' :
-                          'background:#fafafa;color:#666';
-            html += `<tr>
-              <td><code>${p.localName}</code></td>
-              <td>${p.label || '—'}</td>
-              <td><span style="padding:1px 6px;border-radius:3px;font-size:12px;${badge}">${p.type}</span></td>
-            </tr>`;
-          }
-          html += `</tbody></table></div>`;
+  }
+  async function rebuildMilvus() {
+    if (!confirm('确认重建向量库？耗时较长。')) return;
+    const r = await api('POST', '/tool/synonym/milvus/rebuild', {});
+    show('rebuildResult', r.data, !r.ok);
+  }
+  let syncDictPollTimer = null;
+  async function syncDictToMilvus() {
+    const entityType = val('syncDictType');
+    const limit = parseInt(val('syncDictLimit') || '0');
+    const r = await api('POST', '/tool/synonym/milvus/sync-from-dict', { entityType: entityType || null, limit });
+    show('syncDictResult', r.data, !r.ok);
+    if (r.ok) {
+      document.getElementById('syncDictProgress').style.display = 'block';
+      document.getElementById('syncDictProgressBar').style.width = '0%';
+      document.getElementById('syncDictProgressBar').style.background = '#1677ff';
+      document.getElementById('syncDictProgressLabel').textContent = '启动中...';
+      if (syncDictPollTimer) clearInterval(syncDictPollTimer);
+      syncDictPollTimer = setInterval(async () => {
+        const sr = await api('GET', '/tool/synonym/status');
+        if (!sr.ok) return;
+        const batch = sr.data && sr.data.batch;
+        if (!batch) return;
+        const { status, total, processed, failed } = batch;
+        const pct = total > 0 ? Math.round(processed / total * 100) : 0;
+        document.getElementById('syncDictProgressBar').style.width = pct + '%';
+        if (status === 'running') {
+          document.getElementById('syncDictProgressLabel').textContent =
+            `处理中: ${processed} / ${total}  失败: ${failed}  (${pct}%)`;
         } else {
-          html += `<div style="margin-top:12px;color:#999;font-size:13px;">无直接关联属性</div>`;
+          document.getElementById('syncDictProgressLabel').textContent =
+            total > 0 ? `完成: ${processed} / ${total}  失败: ${failed}` : '空闲';
+          clearInterval(syncDictPollTimer);
+          syncDictPollTimer = null;
+          if (total > 0) {
+            document.getElementById('syncDictProgressBar').style.width = '100%';
+            document.getElementById('syncDictProgressBar').style.background = failed > 0 ? '#fa8c16' : '#52c41a';
+          }
         }
-
-        const el = document.getElementById('owlClassDetailResult');
-        el.style.display = 'block';
-        el.className = 'result success';
-        el.innerHTML = html;
-      } catch (error) {
-        showResult('owlClassDetailResult', { error: error.message }, true);
-      }
+      }, 1500);
     }
-
-    async function owlListProperties() {
-      try {
-        const response = await fetch(`${getBaseUrl()}/ontology/properties`);
-        const data = await response.json();
-        if (data.code !== 200) {
-          showResult('owlPropertiesResult', data, true);
-          return;
-        }
-        const props = data.data;
-        let html = `<table class="data-table">
-          <thead><tr><th>localName</th><th>label</th><th>类型</th><th>domain</th><th>range</th></tr></thead><tbody>`;
-        for (const p of props) {
-          const badge = p.type === 'ObjectProperty' ? 'background:#e6f7ff;color:#1890ff' :
-                        p.type === 'DatatypeProperty' ? 'background:#f6ffed;color:#52c41a' :
-                        'background:#fafafa;color:#666';
-          const domains = (p.domains || []).join(', ') || '—';
-          const ranges = (p.ranges || []).join(', ') || '—';
-          html += `<tr>
-            <td><code style="font-size:12px">${p.localName}</code></td>
-            <td>${p.label || '—'}</td>
-            <td><span style="padding:1px 6px;border-radius:3px;font-size:11px;${badge}">${p.type}</span></td>
-            <td style="color:#667eea;font-size:12px">${domains}</td>
-            <td style="color:#999;font-size:12px">${ranges}</td>
-          </tr>`;
-        }
-        html += `</tbody></table><div style="color:#999;font-size:12px;margin-top:8px;">共 ${props.length} 个属性</div>`;
-        const el = document.getElementById('owlPropertiesResult');
-        el.style.display = 'block';
-        el.className = 'result success';
-        el.innerHTML = html;
-      } catch (error) {
-        showResult('owlPropertiesResult', { error: error.message }, true);
-      }
-    }
-
-    // ========== 健康检查 ==========
-    async function checkHealth() {
-      try {
-        const baseUrl = getBaseUrl();
-        const response = await fetch(`${baseUrl}/synonym-dict/health`);
-        const data = await response.json();
-        showResult('healthResult', {
-          status: 'online',
-          statusCode: response.status,
-          response: data
-        });
-      } catch (error) {
-        showResult('healthResult', {
-          status: 'offline',
-          error: error.message
-        }, true);
-      }
-    }
-
-    // ========== 同义词词典 ==========
-    async function listSynonyms() {
-      try {
-        const baseUrl = getBaseUrl();
-        const domain = document.getElementById('synonymDomain').value;
-        const url = domain ? `${baseUrl}/synonym-dict?domain=${domain}` : `${baseUrl}/synonym-dict`;
-        const response = await fetch(url);
-        const data = await response.json();
-        showResult('synonymListResult', data);
-      } catch (error) {
-        showResult('synonymListResult', { error: error.message }, true);
-      }
-    }
-
-    async function createSynonym() {
-      try {
-        const word = document.getElementById('newSynonymWord').value.trim();
-        const synonymList = document.getElementById('newSynonymList').value.trim();
-        const domain = document.getElementById('newSynonymDomain').value;
-        const confidence = parseFloat(document.getElementById('newSynonymConfidence').value);
-
-        if (!word || !synonymList) {
-          alert('请填写词条和同义词');
-          return;
-        }
-
-        const synonyms = synonymList.split(',').map(s => s.trim()).filter(s => s);
-
-        const response = await fetch(`${getBaseUrl()}/synonym-dict`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ word, synonyms, domain, confidence })
-        });
-        const data = await response.json();
-        showResult('createSynonymResult', data);
-      } catch (error) {
-        showResult('createSynonymResult', { error: error.message }, true);
-      }
-    }
-
-    async function getSynonym() {
-      try {
-        const id = document.getElementById('getSynonymId').value.trim();
-        if (!id) {
-          alert('请输入ID');
-          return;
-        }
-        const response = await fetch(`${getBaseUrl()}/synonym-dict/${id}`);
-        const data = await response.json();
-        showResult('getSynonymResult', data);
-      } catch (error) {
-        showResult('getSynonymResult', { error: error.message }, true);
-      }
-    }
-
-    async function updateSynonym() {
-      try {
-        const id = document.getElementById('updateSynonymId').value.trim();
-        if (!id) {
-          alert('请输入ID');
-          return;
-        }
-        const word = document.getElementById('updateSynonymWord').value.trim();
-        const synonymList = document.getElementById('updateSynonymList').value.trim();
-        const confidence = document.getElementById('updateSynonymConfidence').value;
-
-        const body = {};
-        if (word) body.word = word;
-        if (synonymList) body.synonyms = synonymList.split(',').map(s => s.trim()).filter(s => s);
-        if (confidence) body.confidence = parseFloat(confidence);
-
-        const response = await fetch(`${getBaseUrl()}/synonym-dict/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
-        const data = await response.json();
-        showResult('updateSynonymResult', data);
-      } catch (error) {
-        showResult('updateSynonymResult', { error: error.message }, true);
-      }
-    }
-
-    async function deleteSynonym() {
-      try {
-        const id = document.getElementById('deleteSynonymId').value.trim();
-        if (!id) {
-          alert('请输入ID');
-          return;
-        }
-        if (!confirm('确认删除该同义词?')) return;
-
-        const response = await fetch(`${getBaseUrl()}/synonym-dict/${id}`, {
-          method: 'DELETE'
-        });
-        const data = await response.json();
-        showResult('deleteSynonymResult', data);
-      } catch (error) {
-        showResult('deleteSynonymResult', { error: error.message }, true);
-      }
-    }
-
-    // ========== 领域术语 ==========
-    async function listDomainTerms() {
-      try {
-        const response = await fetch(`${getBaseUrl()}/domain-term`);
-        const data = await response.json();
-        showResult('domainTermListResult', data);
-      } catch (error) {
-        showResult('domainTermListResult', { error: error.message }, true);
-      }
-    }
-
-    async function createDomainTerm() {
-      try {
-        const standard_term = document.getElementById('newTermStandard').value.trim();
-        const commonList = document.getElementById('newTermCommon').value.trim();
-        const domain = document.getElementById('newTermDomain').value;
-        const term_type = document.getElementById('newTermType').value;
-
-        if (!standard_term || !commonList) {
-          alert('请填写标准术语和常用表达');
-          return;
-        }
-
-        const common_terms = commonList.split(',').map(s => s.trim()).filter(s => s);
-
-        const response = await fetch(`${getBaseUrl()}/domain-term`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ standard_term, common_terms, domain, term_type })
-        });
-        const data = await response.json();
-        showResult('createTermResult', data);
-      } catch (error) {
-        showResult('createTermResult', { error: error.message }, true);
-      }
-    }
-
-    async function getDomainTerm() {
-      try {
-        const id = document.getElementById('getTermId').value.trim();
-        if (!id) {
-          alert('请输入ID');
-          return;
-        }
-        const response = await fetch(`${getBaseUrl()}/domain-term/${id}`);
-        const data = await response.json();
-        showResult('getTermResult', data);
-      } catch (error) {
-        showResult('getTermResult', { error: error.message }, true);
-      }
-    }
-
-    async function updateDomainTerm() {
-      try {
-        const id = document.getElementById('updateTermId').value.trim();
-        if (!id) {
-          alert('请输入ID');
-          return;
-        }
-        const standard_term = document.getElementById('updateTermStandard').value.trim();
-        const commonList = document.getElementById('updateTermCommon').value.trim();
-
-        const body = {};
-        if (standard_term) body.standard_term = standard_term;
-        if (commonList) body.common_terms = commonList.split(',').map(s => s.trim()).filter(s => s);
-
-        const response = await fetch(`${getBaseUrl()}/domain-term/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
-        const data = await response.json();
-        showResult('updateTermResult', data);
-      } catch (error) {
-        showResult('updateTermResult', { error: error.message }, true);
-      }
-    }
-
-    async function deleteDomainTerm() {
-      try {
-        const id = document.getElementById('deleteTermId').value.trim();
-        if (!id) {
-          alert('请输入ID');
-          return;
-        }
-        if (!confirm('确认删除该领域术语?')) return;
-
-        const response = await fetch(`${getBaseUrl()}/domain-term/${id}`, {
-          method: 'DELETE'
-        });
-        const data = await response.json();
-        showResult('deleteTermResult', data);
-      } catch (error) {
-        showResult('deleteTermResult', { error: error.message }, true);
-      }
-    }
-
-    // ========== 批量操作 ==========
-    async function batchImportSynonyms() {
-      try {
-        const json = document.getElementById('batchSynonymJson').value.trim();
-        if (!json) {
-          alert('请输入JSON数据');
-          return;
-        }
-        const data = JSON.parse(json);
-        const response = await fetch(`${getBaseUrl()}/synonym-dict/batch-import`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-        const result = await response.json();
-        showResult('batchImportResult', result);
-      } catch (error) {
-        showResult('batchImportResult', { error: error.message }, true);
-      }
-    }
-
-    function fillTestData(type) {
-      const testData = {
-        water: [
-          {"word":"水费","synonyms":["水价","供水费用","水资源费"],"domain":"WATER","confidence":0.95},
-          {"word":"水库","synonyms":["蓄水池","水利枢纽","水库工程"],"domain":"WATER","confidence":0.9},
-          {"word":"灌溉","synonyms":["浇灌","灌水","浇水"],"domain":"WATER","confidence":0.85}
-        ],
-        finance: [
-          {"word":"收入","synonyms":["营业收入","收益","盈利"],"domain":"FINANCE","confidence":0.9},
-          {"word":"成本","synonyms":["费用","开支","支出"],"domain":"FINANCE","confidence":0.9},
-          {"word":"利润","synonyms":["盈利","净利润","收益"],"domain":"FINANCE","confidence":0.95}
-        ],
-        general: [
-          {"word":"查询","synonyms":["搜索","检索","查找"],"domain":"GENERAL","confidence":0.9},
-          {"word":"删除","synonyms":["移除","清除","去除"],"domain":"GENERAL","confidence":0.85},
-          {"word":"修改","synonyms":["编辑","更新","变更"],"domain":"GENERAL","confidence":0.9}
-        ]
-      };
-      document.getElementById('batchSynonymJson').value = JSON.stringify(testData[type], null, 2);
-    }
-
-    // ==================== 本体查询函数 ====================
-    async function smartOntologySearch() {
-      try {
-        const query = document.getElementById('smartQueryInput').value.trim();
-        if (!query) {
-          alert('请输入查询描述');
-          return;
-        }
-        const limit = document.getElementById('smartQueryLimit').value || 10;
-        // 使用 /api/search/global?smart=true 启用智能模式
-        const response = await fetch(`${getBaseUrl()}/search/global?q=${encodeURIComponent(query)}&smart=true&limit=${limit}`);
-        const data = await response.json();
-        showResult('smartQueryResult', data);
-      } catch (error) {
-        showResult('smartQueryResult', { error: error.message }, true);
-      }
-    }
-
-    function fillSmartExample() {
-      const examples = [
-        '查询水库的供水量数据',
-        '获取供水企业的收费标准信息',
-        '查找水质监测站点的位置和类型',
-        '统计水资源利用率相关指标',
-        '查询防洪预警系统的数据接口'
-      ];
-      const randomExample = examples[Math.floor(Math.random() * examples.length)];
-      document.getElementById('smartQueryInput').value = randomExample;
-    }
-
-    async function searchOntClasses() {
-      try {
-        const categoryCode = document.getElementById('ontCategoryCode').value.trim();
-        const url = categoryCode
-          ? `${getBaseUrl()}/resource/classes?categoryCode=${categoryCode}`
-          : `${getBaseUrl()}/resource/classes`;
-
-        const response = await fetch(url);
-        const data = await response.json();
-        showResult('ontClassesResult', data);
-      } catch (error) {
-        showResult('ontClassesResult', { error: error.message }, true);
-      }
-    }
-
-    async function getOntClassDetail() {
-      try {
-        const classId = document.getElementById('ontClassId').value.trim();
-        if (!classId) {
-          alert('请输入对象类型 ID');
-          return;
-        }
-        const response = await fetch(`${getBaseUrl()}/resource/classes/${classId}`);
-        const data = await response.json();
-        showResult('ontClassDetailResult', data);
-      } catch (error) {
-        showResult('ontClassDetailResult', { error: error.message }, true);
-      }
-    }
-
-    async function globalSearch() {
-      try {
-        const keyword = document.getElementById('ontSearchKeyword').value.trim();
-        if (!keyword) {
-          alert('请输入搜索关键词');
-          return;
-        }
-        const type = document.getElementById('ontSearchType').value;
-        const url = type
-          ? `${getBaseUrl()}/search/global?q=${encodeURIComponent(keyword)}&type=${type}`
-          : `${getBaseUrl()}/search/global?q=${encodeURIComponent(keyword)}`;
-
-        const response = await fetch(url);
-        const data = await response.json();
-        showResult('globalSearchResult', data);
-      } catch (error) {
-        showResult('globalSearchResult', { error: error.message }, true);
-      }
-    }
-
-    async function getClassProperties() {
-      try {
-        const classId = document.getElementById('ontPropertyClassId').value.trim();
-        if (!classId) {
-          alert('请输入对象类型 ID');
-          return;
-        }
-        const response = await fetch(`${getBaseUrl()}/resource/classes/${classId}/properties`);
-        const data = await response.json();
-        showResult('classPropertiesResult', data);
-      } catch (error) {
-        showResult('classPropertiesResult', { error: error.message }, true);
-      }
-    }
-
-    async function findByRid() {
-      try {
-        const rid = document.getElementById('ontRid').value.trim();
-        if (!rid) {
-          alert('请输入 RID');
-          return;
-        }
-        const response = await fetch(`${getBaseUrl()}/semantic-search/by-rid?rid=${encodeURIComponent(rid)}`);
-        const data = await response.json();
-        showResult('ridResult', data);
-      } catch (error) {
-        showResult('ridResult', { error: error.message }, true);
-      }
-    }
-
-    // ==================== 数据查询函数 ====================
-    async function getDatasources() {
-      try {
-        const response = await fetch(`${getBaseUrl()}/datasource`);
-        const data = await response.json();
-        showResult('datasourcesResult', data);
-      } catch (error) {
-        showResult('datasourcesResult', { error: error.message }, true);
-      }
-    }
-
-    async function getDatasourceDetail() {
-      try {
-        const id = document.getElementById('datasourceId').value.trim();
-        if (!id) {
-          alert('请输入数据源 ID');
-          return;
-        }
-        const response = await fetch(`${getBaseUrl()}/datasource/${id}`);
-        const data = await response.json();
-        showResult('datasourceDetailResult', data);
-      } catch (error) {
-        showResult('datasourceDetailResult', { error: error.message }, true);
-      }
-    }
-
-    async function getDatasourceOverview() {
-      try {
-        const response = await fetch(`${getBaseUrl()}/datasource/overview`);
-        const data = await response.json();
-        showResult('datasourceOverviewResult', data);
-      } catch (error) {
-        showResult('datasourceOverviewResult', { error: error.message }, true);
-      }
-    }
-
-    async function getInstanceList() {
-      try {
-        const classId = document.getElementById('instanceClassId').value.trim();
-        if (!classId) {
-          alert('请输入对象类型 ID');
-          return;
-        }
-        const page = document.getElementById('instancePage').value || 1;
-        const size = document.getElementById('instanceSize').value || 20;
-
-        const response = await fetch(`${getBaseUrl()}/instance/list?classId=${classId}&page=${page}&size=${size}`);
-        const data = await response.json();
-        showResult('instanceListResult', data);
-      } catch (error) {
-        showResult('instanceListResult', { error: error.message }, true);
-      }
-    }
-
-    async function getObjectTypesStats() {
-      try {
-        const response = await fetch(`${getBaseUrl()}/instance/object-types`);
-        const data = await response.json();
-        showResult('objectTypesStatsResult', data);
-      } catch (error) {
-        showResult('objectTypesStatsResult', { error: error.message }, true);
-      }
-    }
-
-    // ==================== AI 同义词 ====================
-    async function aiSynonymStatus() {
-      try {
-        const res = await fetch(`${getBaseUrl()}/tool/synonym/status`);
-        const data = await res.json();
-        const d = data.data || data;
-        let html = `<div style="display:flex;gap:24px;align-items:center;">
-          <div><span style="color:#999;">Embedding Provider:</span> <strong>${d.embeddingProvider || '—'}</strong></div>
-          <div><span style="color:#999;">维度:</span> <strong>${d.dimension || '—'}</strong></div>
-          <div>
-            <span class="status-indicator ${d.milvusAvailable ? 'online' : 'offline'}"></span>
-            Milvus: <strong>${d.milvusAvailable ? '可用' : '不可用'}</strong>
-          </div>
-        </div>`;
-        const el = document.getElementById('aiStatusResult');
-        el.style.display = 'block';
-        el.className = 'result success';
-        el.innerHTML = html;
-      } catch (e) {
-        showResult('aiStatusResult', { error: e.message }, true);
-      }
-    }
-
-    async function aiGenerate() {
-      const entityType = document.getElementById('genEntityType').value;
-      const entityId = document.getElementById('genEntityId').value.trim();
-      if (!entityId) { alert('请输入实体 ID'); return; }
-      const btn = event.target;
-      btn.disabled = true; btn.textContent = '生成中…';
-      try {
-        const res = await fetch(`${getBaseUrl()}/tool/synonym/generate`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ entityType, entityId })
-        });
-        const data = await res.json();
-        showResult('aiGenerateResult', data, data.code !== 200);
-      } catch (e) {
-        showResult('aiGenerateResult', { error: e.message }, true);
-      } finally {
-        btn.disabled = false; btn.textContent = '生成';
-      }
-    }
-
-    async function aiBatchGenerate() {
-      const entityType = document.getElementById('batchGenEntityType').value;
-      const limit = parseInt(document.getElementById('batchGenLimit').value) || 0;
-      if (limit === 0 && !confirm(`全量生成 ${entityType}，可能耗时较长并消耗大量 API 配额，确认继续？`)) return;
-      const btn = event.target;
-      btn.disabled = true; btn.textContent = '生成中…';
-      try {
-        const res = await fetch(`${getBaseUrl()}/tool/synonym/batch-generate`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ entityType, limit })
-        });
-        const data = await res.json();
-        showResult('aiBatchResult', data, data.code !== 200);
-      } catch (e) {
-        showResult('aiBatchResult', { error: e.message }, true);
-      } finally {
-        btn.disabled = false; btn.textContent = '批量生成';
-      }
-    }
-
-    async function rebuildMilvus() {
-      if (!confirm('将 drop 并重建 Milvus 集合，所有已有向量将被清空，确认继续？')) return;
-      const btn = event.target;
-      btn.disabled = true; btn.textContent = '重建中…';
-      try {
-        const res = await fetch(`${getBaseUrl()}/tool/synonym/milvus/rebuild`, { method: 'POST' });
-        const data = await res.json();
-        showResult('rebuildResult', data, data.code !== 200);
-      } catch (e) {
-        showResult('rebuildResult', { error: e.message }, true);
-      } finally {
-        btn.disabled = false; btn.textContent = '重建向量集合';
-      }
-    }
-
-    // 页面加载时自动检查健康状态
-    window.addEventListener('load', () => {
-      setTimeout(checkHealth, 500);
-    });
-  </script>
+  }
+  // ========== 批量操作 ==========
+  async function batchImportSynonyms() {
+    const raw = val('batchImportData');
+    let data; try { data = JSON.parse(raw); } catch(e) { alert('JSON 格式错误: ' + e.message); return; }
+    const r = await api('POST', '/synonym/batch', { items: data });
+    show('batchImportResult', r.data, !r.ok);
+  }
+  function fillTestData() {
+    document.getElementById('batchImportData').value = JSON.stringify([
+      { word: '水库', synonyms: ['蓄水池', '水坝', '水塘'] },
+      { word: '堤坝', synonyms: ['大坝', '堤防', '防洪堤'] }
+    ], null, 2);
+  }
+</script>
 </body>
 </html>

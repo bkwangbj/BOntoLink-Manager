@@ -104,20 +104,6 @@ public class OntologyEngineConfig {
         private int cacheTtlSeconds = 300;
     }
 
-    // ========== Fuseki 嵌入式服务器配置 ==========
-
-    private FusekiConfig fuseki = new FusekiConfig();
-
-    @Data
-    public static class FusekiConfig {
-        /** 是否启用嵌入式 Fuseki 服务器 */
-        private boolean enabled = true;
-        /** Fuseki 监听端口 */
-        private int port = 3030;
-        /** Dataset 名称，访问路径为 /ontology/sparql */
-        private String datasetName = "ontology";
-    }
-
     // ========== 向量库配置 ==========
 
     /**

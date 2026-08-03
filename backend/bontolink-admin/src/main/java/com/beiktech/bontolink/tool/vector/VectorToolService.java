@@ -265,59 +265,88 @@ public class VectorToolService {
             return result;
         }
 
-        try {
-            float[] vec = embeddingService.embed(text);
-            List<Float> vecList = new ArrayList<>(vec.length);
-            for (float v : vec) vecList.add(v);
+        for (int attempt = 1; attempt <= 2; attempt++) {
+            try {
+                float[] vec = embeddingService.embed(text);
+                List<Float> vecList = new ArrayList<>(vec.length);
+                for (float v : vec) vecList.add(v);
 
-            io.milvus.param.dml.SearchParam.Builder builder =
-                    io.milvus.param.dml.SearchParam.newBuilder()
-                            .withCollectionName(milvusCollection)
-                            .withMetricType(io.milvus.param.MetricType.IP)
-                            .withVectorFieldName("embedding")
-                            .withVectors(List.of(vecList))
-                            .withTopK(topK)
-                            .withOutFields(List.of("entity_type", "entity_id", "parent_id", "ns_code", "source_text"));
-            if (nsCode != null && !nsCode.isBlank()) {
-                builder.withExpr("ns_code == \"" + nsCode + "\"");
-            }
+                io.milvus.param.dml.SearchParam.Builder builder =
+                        io.milvus.param.dml.SearchParam.newBuilder()
+                                .withCollectionName(milvusCollection)
+                                .withMetricType(io.milvus.param.MetricType.IP)
+                                .withVectorFieldName("embedding")
+                                .withVectors(List.of(vecList))
+                                .withTopK(topK)
+                                .withOutFields(List.of("entity_type", "entity_id", "parent_id", "ns_code", "source_text", "api_name"));
+                if (nsCode != null && !nsCode.isBlank()) {
+                    builder.withExpr("ns_code == \"" + nsCode + "\"");
+                }
 
-            var searchResp = milvusClient.search(builder.build());
-            if (searchResp.getData() == null) {
+                var searchResp = milvusClient.search(builder.build());
+                if (searchResp.getData() == null) {
+                    result.put("success", false);
+                    result.put("message", "Milvus 搜索失败: " + searchResp.getException());
+                    return result;
+                }
+
+                var wrapper = new io.milvus.response.SearchResultsWrapper(searchResp.getData().getResults());
+                List<io.milvus.response.SearchResultsWrapper.IDScore> idScores = wrapper.getIDScore(0);
+
+                List<Map<String, Object>> matches = new ArrayList<>();
+                // 方案A：同一实体有主词 + 各同义词多条向量，按 entity_id 去重取最高分，
+                // 保证 topK 返回的是不同实体，而非同一实体的多个同义词命中。
+                Map<String, Map<String, Object>> bestByEntity = new LinkedHashMap<>();
+                for (var idScore : idScores) {
+                    if (idScore.getScore() < threshold) continue;
+                    Map<String, Object> match = new LinkedHashMap<>();
+                    match.put("pk", idScore.getStrID());
+                    match.put("similarity", idScore.getScore());
+                    Map<String, Object> fields = idScore.getFieldValues();
+                    if (fields != null) match.putAll(fields);
+                    String eId = match.get("entity_id") instanceof String s && !s.isBlank()
+                            ? s : idScore.getStrID();
+                    Map<String, Object> prev = bestByEntity.get(eId);
+                    if (prev == null || ((Number) prev.get("similarity")).doubleValue() < idScore.getScore()) {
+                        bestByEntity.put(eId, match);
+                    }
+                }
+                matches.addAll(bestByEntity.values());
+
+                result.put("success", true);
+                result.put("query", text);
+                result.put("nsCode", nsCode);
+                result.put("similarityThreshold", threshold);
+                result.put("matches", matches);
+                result.put("matchCount", matches.size());
+                return result;
+
+            } catch (Exception e) {
+                String msg = e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage();
+                boolean connErr = msg.contains("UNAVAILABLE") || msg.contains("DEADLINE_EXCEEDED")
+                        || msg.contains("channel") || msg.contains("connect") || msg.contains("reset")
+                        || msg.contains("end-of-stream") || msg.contains("INTERNAL")
+                        || msg.contains("has not been loaded") || msg.contains("checkIfLoaded");
+                if (attempt == 1 && connErr) {
+                    // 第一次失败且是连接类错误：重新 load collection 后重试一次
+                    log.warn("Milvus 搜索连接异常（第{}次），重新 load collection 后重试: {}", attempt, msg);
+                    try {
+                        milvusClient.loadCollection(
+                                io.milvus.param.collection.LoadCollectionParam.newBuilder()
+                                        .withCollectionName(milvusCollection).build());
+                        Thread.sleep(500);  // 等待连接稳定
+                    } catch (Exception ignored) {}
+                    continue;
+                }
+                log.error("Milvus 搜索失败（第{}次）", attempt, e);
                 result.put("success", false);
-                result.put("message", "Milvus 搜索失败: " + searchResp.getException());
+                result.put("message", "Milvus 搜索失败: " + msg);
                 return result;
             }
-
-            // Milvus 2.2.16 使用 SearchResultsWrapper 解析结果
-            var wrapper = new io.milvus.response.SearchResultsWrapper(searchResp.getData().getResults());
-            List<io.milvus.response.SearchResultsWrapper.IDScore> idScores = wrapper.getIDScore(0);
-
-            List<Map<String, Object>> matches = new ArrayList<>();
-            for (var idScore : idScores) {
-                if (idScore.getScore() < threshold) continue;
-                Map<String, Object> match = new LinkedHashMap<>();
-                match.put("pk", idScore.getStrID());
-                match.put("similarity", idScore.getScore());
-                Map<String, Object> fields = idScore.getFieldValues();
-                if (fields != null) match.putAll(fields);
-                matches.add(match);
-            }
-
-            result.put("success", true);
-            result.put("query", text);
-            result.put("nsCode", nsCode);
-            result.put("similarityThreshold", threshold);
-            result.put("matches", matches);
-            result.put("matchCount", matches.size());
-            return result;
-
-        } catch (Exception e) {
-            log.error("Milvus 搜索失败", e);
-            result.put("success", false);
-            result.put("message", "Milvus 搜索失败: " + e.getMessage());
-            return result;
         }
+        result.put("success", false);
+        result.put("message", "Milvus 搜索重试后仍失败");
+        return result;
     }
 
     /**
@@ -384,11 +413,20 @@ public class VectorToolService {
                             .withExpr(nsCode != null && !nsCode.isBlank()
                                     ? "ns_code == \"" + nsCode + "\""
                                     : "entity_type != \"__none__\"")   // Milvus 2.2.x: 用有效字段条件
-                            .withOutFields(List.of("entity_type", "entity_id", "parent_id", "ns_code", "source_text"))
+                            .withOutFields(List.of("entity_type", "entity_id", "parent_id", "ns_code", "source_text", "api_name"))
                             .withOffset(offset)
                             .withLimit((long) s);
 
             var queryResp = milvusClient.query(builder.build());
+            String qErr = queryResp.getException() != null ? queryResp.getException().getMessage() : null;
+            if (qErr != null && qErr.contains("has not been loaded")) {
+                // collection 未加载：loadCollection 后重试一次
+                log.warn("Milvus list: collection 未加载，重新 load 后重试");
+                milvusClient.loadCollection(
+                        io.milvus.param.collection.LoadCollectionParam.newBuilder()
+                                .withCollectionName(milvusCollection).build());
+                queryResp = milvusClient.query(builder.build());
+            }
             if (queryResp.getData() == null) {
                 result.put("success", false);
                 result.put("message", "Milvus query 失败: " + queryResp.getException());
@@ -481,12 +519,23 @@ public class VectorToolService {
         if (milvusClient == null) return err("Milvus 客户端未初始化");
         if (pk == null || pk.isBlank()) return err("pk 不能为空");
         try {
-            var queryResp = milvusClient.query(
+            io.milvus.param.dml.QueryParam queryParam =
                     io.milvus.param.dml.QueryParam.newBuilder()
                             .withCollectionName(milvusCollection)
-                            .withExpr("pk == \"" + pk + "\"")
-                            .withOutFields(List.of("entity_type", "entity_id", "parent_id", "ns_code", "source_text"))
-                            .build());
+                            // 方案A后 pk 为 entityType:entityId:seq，传入的可能是旧格式或 entity_id，模糊兼容
+                            .withExpr("entity_id == \"" + pk + "\" || pk == \"" + pk + "\"")
+                            .withOutFields(List.of("entity_type", "entity_id", "parent_id", "ns_code", "source_text", "api_name"))
+                            .build();
+            var queryResp = milvusClient.query(queryParam);
+            String qErr = queryResp.getException() != null ? queryResp.getException().getMessage() : null;
+            if (qErr != null && qErr.contains("has not been loaded")) {
+                // collection 未加载：loadCollection 后重试一次
+                log.warn("Milvus detail: collection 未加载，重新 load 后重试");
+                milvusClient.loadCollection(
+                        io.milvus.param.collection.LoadCollectionParam.newBuilder()
+                                .withCollectionName(milvusCollection).build());
+                queryResp = milvusClient.query(queryParam);
+            }
             if (queryResp.getData() == null) return err("查询失败: " + queryResp.getException());
 
             var wrapper = new io.milvus.response.QueryResultsWrapper(queryResp.getData());
