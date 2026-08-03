@@ -424,7 +424,7 @@
     <!-- 外部接口类数据源的配置抽屉 -->
     <ExtDatasourceDrawer v-model:open="extDrawerOpen" :record="extRecord" :domain-options="domainOptions"
                          :default-category="selectedCategoryCode || ''" @saved="loadAll"
-                         @open-apis="id => router.push(`/resources/datasources/${id}/apis`)" />
+                         @open-apis="openApiManager" />
   </div>
 </template>
 
@@ -891,7 +891,14 @@ function typeLabel(d) {
   if (d?.isExt) return EXT_TYPE_LABEL[d.dsType] || d.dsType
   return String(d?.dsType || '').toUpperCase()
 }
-function openApiManager(d) { router.push(`/resources/datasources/${d.id}/apis`) }
+/* 接口管理器是全屏工作台, 开新标签页, 免得把数据源列表和抽屉顶掉。
+   列表行传数据源对象, 抽屉的「接口」页签传 id */
+function openApiManager(d) {
+  const id = typeof d === 'string' ? d : d?.id
+  if (!id) return
+  const { href } = router.resolve(`/resources/datasources/${id}/apis`)
+  window.open(href, '_blank')
+}
 function openEdit(d) {
   if (d?.isExt) { extRecord.value = d; extDrawerOpen.value = true; return }
   // 先清掉旧字段，再覆盖；避免新数据缺字段时残留前一条的值

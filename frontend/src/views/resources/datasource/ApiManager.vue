@@ -10,6 +10,9 @@
     <!-- 右: 标签 + 地址栏 + 上下分栏 -->
     <div class="apm-right">
       <div class="apm-tabbar">
+        <button class="apm-back" title="返回数据源列表" @click="goBack">
+          <span v-html="BL.icon('chevronLeft', 13)"></span>数据源
+        </button>
         <div class="apm-tabs">
           <div v-for="t in tabs" :key="t.key" :class="['apm-tab', t.key === activeKey && 'is-on']" @click="activeKey = t.key">
             <span class="apm-tab-m" :style="{ color: METHOD_COLOR[t.api.method] || '#9b9b9b' }">{{ t.api.method }}</span>
@@ -57,7 +60,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { BL } from '@/lib/bl.js'
 import { extDatasourceApi } from '@/api'
 import ApiTree from './ApiTree.vue'
@@ -67,6 +70,7 @@ import { METHODS, METHOD_COLOR, newApi, parseRequestParams, serializeParams,
          buildSendPayload, validateSendable } from './apiModel.js'
 
 const route = useRoute()
+const router = useRouter()
 const dsId = route.params.dsId
 
 const ds = ref({})
@@ -215,6 +219,16 @@ async function send() {
 
 function openNewWindow() { window.open(window.location.href, '_blank') }
 
+/* 有未保存标签时先确认, 免得一键返回丢掉刚编辑的内容 */
+async function goBack() {
+  const dirty = tabs.value.filter(t => t.dirty).length
+  if (dirty) {
+    const ok = await BL.confirm({ title: '离开接口管理', content: `有 ${dirty} 个接口存在未保存的修改，离开后将丢失。`, danger: true, okText: '仍然离开' })
+    if (!ok) return
+  }
+  router.push('/resources/datasources')
+}
+
 /* 任一编辑动作都标脏, 提示未保存 */
 watch(() => activeTab.value && [activeTab.value.api, activeTab.value.params, activeTab.value.sample],
   () => { if (activeTab.value) activeTab.value.dirty = true }, { deep: true })
@@ -241,6 +255,9 @@ watch(() => activeTab.value && [activeTab.value.api, activeTab.value.params, act
 .apm-tab-x:hover { background: #4a4a4a; color: #fff; }
 .apm-tab-add, .apm-newwin { border: 0; background: transparent; color: #9b9b9b; cursor: pointer; padding: 0 12px; display: inline-flex; align-items: center; }
 .apm-tab-add:hover, .apm-newwin:hover { color: #fff; background: #333; }
+.apm-back { display: inline-flex; align-items: center; gap: 3px; flex-shrink: 0; border: 0; border-right: 1px solid #333;
+  background: transparent; color: #9b9b9b; font-size: 12px; cursor: pointer; padding: 0 12px 0 9px; }
+.apm-back:hover { color: #fff; background: #333; }
 
 .apm-urlbar { display: flex; align-items: center; gap: 8px; padding: 9px 12px; background: #252526; border-bottom: 1px solid #333; flex-shrink: 0; }
 .apm-method { background: #2d2d2d; border: 1px solid #3d3d3d; border-radius: 5px; height: 30px; padding: 0 8px;

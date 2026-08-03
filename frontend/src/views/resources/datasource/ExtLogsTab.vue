@@ -2,15 +2,16 @@
   <div class="elg">
     <!-- 筛选栏: 变更不自动查, 手动点查询 -->
     <div class="elg-filter">
-      <span class="elg-lbl">时间范围</span>
-      <input class="bl-input bl-input-sm" type="date" v-model="q.from" />
-      <span class="elg-to">至</span>
-      <input class="bl-input bl-input-sm" type="date" v-model="q.to" />
-      <BlSelect v-model="q.interfaceId" :options="apiOptions" size="sm" clearable placeholder="全部接口" style="width:170px" />
-      <BlSelect v-model="q.callStatus" :options="STATUS_OPTS" size="sm" clearable placeholder="全部状态" style="width:130px" />
-      <input class="bl-input bl-input-sm elg-kw" v-model="q.kw" placeholder="搜索调用方 / 链路ID / URL" @keyup.enter="search" />
-      <button class="bl-btn bl-btn-sm bl-btn-primary" @click="search"><span v-html="BL.icon('search', 12, '#fff')"></span><span style="margin-left:4px">查询</span></button>
-      <button class="bl-btn bl-btn-sm" @click="reset"><span v-html="BL.icon('refresh', 12)"></span><span style="margin-left:4px">重置</span></button>
+      <div class="elg-range" title="调用时间范围">
+        <input class="bl-input bl-input-sm elg-date" type="date" v-model="q.from" />
+        <span class="elg-to">至</span>
+        <input class="bl-input bl-input-sm elg-date" type="date" v-model="q.to" />
+      </div>
+      <BlSelect v-model="q.interfaceId" :options="apiOptions" size="sm" clearable placeholder="全部接口" class="elg-sel-api" />
+      <BlSelect v-model="q.callStatus" :options="STATUS_OPTS" size="sm" clearable placeholder="全部状态" class="elg-sel-st" />
+      <input class="bl-input bl-input-sm elg-kw" v-model="q.kw" placeholder="调用方 / 链路ID / URL" @keyup.enter="search" />
+      <button class="bl-btn bl-btn-sm bl-btn-primary elg-act" @click="search"><span v-html="BL.icon('search', 12, '#fff')"></span><span class="elg-act-t">查询</span></button>
+      <button class="bl-btn bl-btn-sm bl-btn-icon" title="重置筛选条件" @click="reset" v-html="BL.icon('refresh', 12)"></button>
     </div>
 
     <div class="elg-table-wrap">
@@ -213,12 +214,20 @@ defineExpose({ reload: load })
 </script>
 
 <style scoped>
-.elg { display: flex; flex-direction: column; height: 100%; min-height: 0; }
-.elg-filter { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 12px 0; }
-.elg-lbl { font-size: 12.5px; color: var(--bl-text-2); }
+.elg { display: flex; flex-direction: column; height: 100%; min-height: 0; container-type: inline-size; }
+/* 窄抽屉里也尽量维持单行: 日期成组、下拉定宽、关键字吃掉剩余空间 */
+.elg-filter { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 12px 0; }
+.elg-range { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
 .elg-to { font-size: 12px; color: var(--bl-text-3); }
-.elg-filter .bl-input { width: 138px; }
-.elg-kw { width: 200px !important; }
+.elg-date { width: 122px !important; padding-left: 6px !important; padding-right: 4px !important; }
+.elg-sel-api { width: 124px; flex-shrink: 0; }
+.elg-sel-st { width: 104px; flex-shrink: 0; }
+.elg-kw { flex: 1 1 120px; min-width: 96px; }
+.elg-act { flex-shrink: 0; }
+.elg-act-t { margin-left: 4px; }
+/* 抽屉拖窄到放不下时先牺牲「查询」二字, 图标仍可点。
+   用容器查询而非媒体查询 —— 决定能否单行的是抽屉宽度, 不是视口宽度 */
+@container (max-width: 700px) { .elg-act-t { display: none; } }
 .elg-table-wrap { flex: 1; min-height: 0; overflow: auto; background: var(--bl-bg-1);
   border: 1px solid var(--bl-border); border-radius: 8px; }
 .elg-table { width: 100%; font-size: 12px; }
