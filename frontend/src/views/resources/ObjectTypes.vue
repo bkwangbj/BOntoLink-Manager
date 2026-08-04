@@ -408,14 +408,14 @@
                     </td>
                     <td>
                       <select class="bl-input bl-input-sm" :value="d.rel_type"
-                              @change="onSaveClassDs(d, { rel_type: Number($event.target.value) })">
-                        <option :value="1">主表</option>
-                        <option :value="2">附表</option>
+                              @change="onSaveClassDs(d, { rel_type: String($event.target.value) })">
+                        <option value="1">主表</option>
+                        <option value="2">附表</option>
                       </select>
                     </td>
                     <td>{{ (d.physical_fields || []).length }}</td>
                     <td>
-                      <div v-if="d.rel_type !== 1" class="ot-ds-join">
+                      <div v-if="d.rel_type !== '1'" class="ot-ds-join">
                         <select class="bl-input bl-input-sm bl-mono" :value="joinParts(d).main" title="主表关联字段"
                                 @change="onSaveJoin(d, 'main', $event.target.value)">
                           <option value="">主表字段…</option>
@@ -431,7 +431,7 @@
                       <span v-else class="bl-muted">—</span>
                     </td>
                     <td>
-                      <select v-if="d.rel_type !== 1" class="bl-input bl-input-sm" :value="d.join_type || 'left'"
+                      <select v-if="d.rel_type !== '1'" class="bl-input bl-input-sm" :value="d.join_type || 'left'"
                               @change="onSaveClassDs(d, { join_type: $event.target.value })">
                         <option value="left">LEFT</option>
                         <option value="inner">INNER</option>
@@ -1045,7 +1045,7 @@ async function loadDetail(id) {
 function curClassId() { return selected.value?.id || detail.value?.id || '' }
 /* 主表字段列表 (供附表选择关联字段) */
 const dsMainFields = computed(() => {
-  const main = (detail.value?.classDatasources || []).find(d => d.rel_type === 1)
+  const main = (detail.value?.classDatasources || []).find(d => d.rel_type === "1")
   return (main?.physical_fields || []).map(f => f.name)
 })
 /* join_on_keys 存储格式: "主表字段=附表字段"; 无 '=' 则视为两侧同名 */
@@ -1076,7 +1076,7 @@ async function onSaveClassDs(d, patch) {
 async function onDeleteClassDs(d) {
   const ok = await BL.confirm({
     title: '删除数据源绑定',
-    content: `确定删除「${d.physical_table}」(${d.rel_type === 1 ? '主表' : '附表'}) 的绑定？引用它的属性映射会一并解除。`,
+    content: `确定删除「${d.physical_table}」(${d.rel_type === "1" ? '主表' : '附表'}) 的绑定？引用它的属性映射会一并解除。`,
     danger: true, okText: '删除'
   })
   if (!ok) return

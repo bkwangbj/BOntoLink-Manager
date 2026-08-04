@@ -1,5 +1,5 @@
 <template>
-  <div :class="['erx-card', d.type === 'object' ? 'is-obj' : (d.relType === 1 ? 'is-main' : 'is-supp')]">
+  <div :class="['erx-card', d.type === 'object' ? 'is-obj' : (d.relType === '1' ? 'is-main' : 'is-supp')]">
     <div class="erx-hd">
       <span class="erx-hd-title bl-truncate">{{ d.title }}</span>
       <span class="erx-hd-cnt">{{ d.countText }}</span>

@@ -34,7 +34,7 @@
       <button v-for="ds in datasourcesSorted" :key="ds.id"
               :class="['erx-tab', activeTableId === ds.id && 'is-on']"
               :title="ds.physical_table" @click="activeTableId = ds.id">
-        <span class="erx-tab-dot" :class="ds.rel_type === 1 ? 'is-main' : 'is-supp'"></span>
+        <span class="erx-tab-dot" :class="ds.rel_type === '1' ? 'is-main' : 'is-supp'"></span>
         <span class="bl-truncate">{{ ds.physical_table }}</span>
         <span class="bl-muted" style="margin-left:4px">{{ (ds.physical_fields || []).length }}</span>
       </button>
@@ -85,7 +85,7 @@ const classInfo = ref({})
 const properties = ref([])
 const datasources = ref([])
 const propertiesSorted = computed(() => [...properties.value].sort((a, b) => (a.sort ?? 99999) - (b.sort ?? 99999) || (a.api_name || '').localeCompare(b.api_name || '')))
-const datasourcesSorted = computed(() => [...datasources.value].sort((a, b) => (a.rel_type - b.rel_type) || (a.sort - b.sort)))
+const datasourcesSorted = computed(() => [...datasources.value].sort((a, b) => (a.rel_type.localeCompare(b.rel_type)) || (a.sort - b.sort)))
 const totalProps = computed(() => properties.value.length)
 const mappedCount = computed(() => properties.value.filter(p => p._mapped).length)
 
@@ -173,8 +173,8 @@ function joinKeysOf(s) {
 /* 表间 JOIN 关联键字段集合 (dsId -> Set), 让这些字段也长出关联端口 */
 const joinAnchorFields = computed(() => {
   const map = {}
-  const main = datasources.value.find(d => d.rel_type === 1)
-  const supps = datasources.value.filter(d => d.rel_type !== 1)
+  const main = datasources.value.find(d => d.rel_type === "1")
+  const supps = datasources.value.filter(d => d.rel_type !== "1")
   const add = (id, n) => { if (id && n) (map[id] || (map[id] = new Set())).add(n) }
   supps.forEach(s => { const { main: mk, supp: sk } = joinKeysOf(s); if (main) add(main.id, mk); add(s.id, sk) })
   return map
@@ -309,8 +309,8 @@ function rebuild(resetView = false) {
   }
 
   // 表间关联边: 主表 rel -> 附表 rel (仅多表同框时)
-  const main = visibleDatasources.value.find(d => d.rel_type === 1)
-  const supps = visibleDatasources.value.filter(d => d.rel_type !== 1)
+  const main = visibleDatasources.value.find(d => d.rel_type === "1")
+  const supps = visibleDatasources.value.filter(d => d.rel_type !== "1")
   if (main) {
     supps.forEach((s, idx) => {
       const { main: mk, supp: sk } = joinKeysOf(s)

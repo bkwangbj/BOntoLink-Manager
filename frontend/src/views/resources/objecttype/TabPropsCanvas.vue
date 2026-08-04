@@ -55,9 +55,9 @@
       </button>
       <button v-for="ds in datasourcesSorted" :key="ds.id"
               :class="['er-tab', activeTableId === ds.id && 'is-on']"
-              :title="`${ds.physical_table} · ${ds.rel_type === 1 ? '主表' : '辅助表'}`"
+              :title="`${ds.physical_table} · ${ds.rel_type === '1' ? '主表' : '辅助表'}`"
               @click="activeTableId = ds.id">
-        <span class="er-tab-dot" :class="ds.rel_type === 1 ? 'is-main' : 'is-supp'"></span>
+        <span class="er-tab-dot" :class="ds.rel_type === '1' ? 'is-main' : 'is-supp'"></span>
         <span class="bl-truncate">{{ ds.physical_table }}</span>
         <span class="bl-muted" style="margin-left:4px">{{ (ds.physical_fields || []).length }}</span>
       </button>
@@ -141,9 +141,9 @@
         <!-- 物理表卡片 (当前选中表; 多表时由顶部切换条决定) -->
         <div v-for="(ds, dsIdx) in visibleDatasources" :key="ds.id"
              :ref="el => tableRefs[ds.id] = el"
-             :class="['er-card', 'er-card-tbl', ds.rel_type === 1 ? 'is-main' : 'is-supp']"
+             :class="['er-card', 'er-card-tbl', ds.rel_type === '1' ? 'is-main' : 'is-supp']"
              :style="{ left: layout.tables[ds.id]?.x + 'px', top: layout.tables[ds.id]?.y + 'px', width: layout.obj.w + 'px' }">
-          <div :class="['er-card-hd', ds.rel_type === 1 ? 'er-hd-main' : 'er-hd-supp']">
+          <div :class="['er-card-hd', ds.rel_type === '1' ? 'er-hd-main' : 'er-hd-supp']">
             <span class="bl-truncate">{{ ds.physical_table }} ({{ ds.table_label || ds.alias }})</span>
             <span class="er-hd-cnt">{{ (ds.physical_fields || []).length }} 字段</span>
           </div>
@@ -217,7 +217,7 @@ const classInfo = ref({})
 const properties = ref([])
 const datasources = ref([])
 const propertiesSorted = computed(() => [...properties.value].sort((a, b) => (a.sort ?? 99999) - (b.sort ?? 99999) || (a.api_name || '').localeCompare(b.api_name || '')))
-const datasourcesSorted = computed(() => [...datasources.value].sort((a, b) => (a.rel_type - b.rel_type) || (a.sort - b.sort)))
+const datasourcesSorted = computed(() => [...datasources.value].sort((a, b) => (a.rel_type.localeCompare(b.rel_type)) || (a.sort - b.sort)))
 
 /* 当前选中的物理表: 每个表一张独立的图 (单表直接显示, 多表用顶部切换条切换);
    特殊值 ALL_ID = 显示全部物理表 (含表间 JOIN 关联曲线) */
@@ -237,8 +237,8 @@ const mappedCount = computed(() => properties.value.filter(p => p._mapped).lengt
 /* 被配置为表间 JOIN 关联键的字段 (dsId -> Set<fieldName>); 让这些字段也长出橙色关联圆点 */
 const joinAnchorFields = computed(() => {
   const map = {}
-  const main = datasources.value.find(d => d.rel_type === 1)
-  const supps = datasources.value.filter(d => d.rel_type !== 1)
+  const main = datasources.value.find(d => d.rel_type === "1")
+  const supps = datasources.value.filter(d => d.rel_type !== "1")
   const add = (dsId, name) => { if (dsId && name) (map[dsId] || (map[dsId] = new Set())).add(name) }
   supps.forEach(s => {
     const first = (s.join_on_keys || '').split(',')[0].trim()
@@ -422,8 +422,8 @@ function recomputeLines() {
   mappingLines.value = lines
 
   // 表间关联: 主表 join 补充表 (按 join_on_keys)
-  const main = datasources.value.find(d => d.rel_type === 1)
-  const supps = datasources.value.filter(d => d.rel_type !== 1)
+  const main = datasources.value.find(d => d.rel_type === "1")
+  const supps = datasources.value.filter(d => d.rel_type !== "1")
   const rels = []
   if (main) {
     supps.forEach((s, i) => {

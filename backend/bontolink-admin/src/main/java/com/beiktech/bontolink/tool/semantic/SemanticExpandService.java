@@ -347,7 +347,9 @@ public class SemanticExpandService {
 
         // 4. 扩展：收集命中类的属性，把属性的 range 在命中类集合里的也纳入 propDetailMap
         // 4a. 同时收集属性 ranges 中的枚举类，查询枚举项
+        // 注意：不能在迭代 classDetailMap.values() 期间直接 put，用 pending map 暂存
         Set<String> classSet = classDetailMap.keySet();
+        Map<String, Map<String, Object>> pendingClassDetails = new LinkedHashMap<>();
         for (Map<String, Object> cd : classDetailMap.values()) {
             @SuppressWarnings("unchecked")
             List<Map<String, Object>> props = (List<Map<String, Object>>) cd.get("properties");
@@ -385,11 +387,11 @@ public class SemanticExpandService {
                                 if (items != null && !items.isEmpty()) {
                                     enumItemsMap.put(enumApiName, items);
 
-                                    // 同时将枚举类加入 classDetailMap
-                                    if (!classDetailMap.containsKey(enumApiName)) {
+                                    // 延迟加入：不在迭代中直接修改 classDetailMap
+                                    if (!classDetailMap.containsKey(enumApiName) && !pendingClassDetails.containsKey(enumApiName)) {
                                         Map<String, Object> enumClassDetail = jenaToolService.classDetail(rangeClass);
                                         if (Boolean.TRUE.equals(enumClassDetail.get("success"))) {
-                                            classDetailMap.put(enumApiName, enumClassDetail);
+                                            pendingClassDetails.put(enumApiName, enumClassDetail);
                                         }
                                     }
                                 }
@@ -399,6 +401,8 @@ public class SemanticExpandService {
                 }
             }
         }
+        // 迭代结束后统一合并，避免迭代中修改 classDetailMap
+        classDetailMap.putAll(pendingClassDetails);
 
         // 5. 构建 classes 列表（移除枚举类，不再放入 classes）
         List<Map<String, Object>> classes = new ArrayList<>();

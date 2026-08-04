@@ -293,7 +293,7 @@ public class ClassMetaController {
     public R<?> updateClassDs(@PathVariable String id, @RequestBody Map<String, Object> body) {
         try {
             body.put("id", id);
-            body.putIfAbsent("rel_type", 2);
+            body.putIfAbsent("rel_type", "2");
             body.putIfAbsent("status", 1);
             body.putIfAbsent("sort", 0);
             body.putIfAbsent("alias", null);

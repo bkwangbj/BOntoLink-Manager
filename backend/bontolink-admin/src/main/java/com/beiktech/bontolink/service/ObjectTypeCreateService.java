@@ -86,14 +86,14 @@ public class ObjectTypeCreateService {
             mainTable = str(main.get("physical_table"));
             for (Object k : asList(main.get("pk_keys"))) { if (k != null) mainPk.add(String.valueOf(k)); }
             String dsRowId = insertDs(classId, dsCode, mainTable, str(main.get("alias_name")),
-                    1, "main", joinCsv(main.get("pk_keys")), null, null, propsByTable.get(mainTable), mainPk, 0);
+                    "1", "main", joinCsv(main.get("pk_keys")), null, null, propsByTable.get(mainTable), mainPk, 0);
             dsIdByTable.put(mainTable, dsRowId);
 
             int si = 1;
             for (Map<String, Object> sub : subs) {
                 String st = str(sub.get("physical_table"));
                 String dsRowId2 = insertDs(classId, dsCode, st, str(sub.get("alias_name")),
-                        2, "s" + si, null, str(sub.get("join_on_keys")),
+                        "2", "s" + si, null, str(sub.get("join_on_keys")),
                         firstNonBlank(str(sub.get("join_type")), "LEFT"), propsByTable.get(st), Collections.emptySet(), si);
                 dsIdByTable.put(st, dsRowId2);
                 si++;
@@ -147,7 +147,7 @@ public class ObjectTypeCreateService {
      * @param dsCode        数据源编码
      * @param physicalTable 物理表名
      * @param tableLabel    表别名（展示用）
-     * @param relType       关系类型（1=主表 / 2=附表）
+     * @param relType       关系类型（"1"=主表 / "2"=附表）
      * @param alias         SQL 别名（主表 "main"，附表 "s1"/"s2" 等）
      * @param pkKeys        主键列名逗号分隔（仅主表有效）
      * @param joinOnKeys    附表关联条件（仅附表有效）
@@ -158,7 +158,7 @@ public class ObjectTypeCreateService {
      * @return 新插入行的 id（格式 "class-ds-{UUID}"）
      */
     private String insertDs(String classId, String dsCode, String physicalTable, String tableLabel,
-                            int relType, String alias, String pkKeys, String joinOnKeys, String joinType,
+                            String relType, String alias, String pkKeys, String joinOnKeys, String joinType,
                             List<Map<String, Object>> cols, Set<String> pkSet, int sort) {
         String id = "class-ds-" + UUID.randomUUID();
         Map<String, Object> row = new HashMap<>();
