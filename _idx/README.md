@@ -18,6 +18,7 @@
 | 06 | [数据源](06-datasources.md) | `/resources/datasources` | [→](06-datasources.md) | `Datasources.vue` | 1+ |
 | 07 | [行业分类](07-category.md) | `/config/category` | [→](07-category.md) | `Category.vue` | 3 |
 | 08 | [类型类](08-type-classes.md) | `/config/type-classes` | [→](08-type-classes.md) | `TypeClasses.vue` | 2+ |
+| 09 | [函数](09-functions.md) | `/resources/functions` | [→](09-functions.md) | `Functions.vue` + `function/*` | 6 |
 
 ---
 
@@ -35,7 +36,7 @@
 
 ## 关键约定
 
-- **CSS 前缀**: 每个模块独立 namespace（`ot-`/`lk-`/`vt-`/`et-`/`sp-`/`if-`/`ds-`/`tc-`/`cat-`）
+- **CSS 前缀**: 每个模块独立 namespace（`ot-`/`lk-`/`vt-`/`et-`/`sp-`/`if-`/`ds-`/`tc-`/`cat-`/`fn-`）
 - **ID 格式**: `{prefix}-{UUID}`（如 `class-xxx`, `link-types-xxx`）
 - **数据表**: `ont_xxx_yyy`（lowercase + underscore），主键 `id TEXT PRIMARY KEY`
 - **时间戳**: `created_at` / `updated_at` TEXT NOT NULL DEFAULT `datetime('now','localtime')`

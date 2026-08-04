@@ -107,3 +107,23 @@ export function groupSummary(g, empty = '(未配置条件)') {
   const body = parts.join(g.logic === 'any' ? ' 或 ' : ' 且 ')
   return g.logic === 'none' ? `非( ${body} )` : body
 }
+
+/* —— 数据类型视觉元数据 (与参数详情头部的类型胶囊同源) —— */
+export const DATA_TYPE_META = {
+  string:  { icon: 'textType',    color: '#2563eb', label: '字符串' },
+  number:  { icon: 'hash',        color: '#1f2937', label: '数值' },
+  boolean: { icon: 'check',       color: '#10b981', label: '布尔' },
+  object:  { icon: 'cube',        color: '#8b5cf6', label: '对象引用' },
+  date:    { icon: 'calendar',    color: '#0891b2', label: '日期' },
+  enum:    { icon: 'checkSquare', color: '#dc2626', label: '枚举' },
+}
+/* xsd:decimal / xsd:dateTime 等原始数据类型收敛到上面 6 类 */
+export function mapXsd(dt) {
+  const s = String(dt || '').toLowerCase()
+  if (s.includes('enum')) return 'enum'
+  if (/(int|decimal|double|float)/.test(s)) return 'number'
+  if (s.includes('bool')) return 'boolean'
+  if (s.includes('date') || s.includes('time')) return 'date'
+  return 'string'
+}
+export function dtMeta(t) { return DATA_TYPE_META[t] || DATA_TYPE_META.string }

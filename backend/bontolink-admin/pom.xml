@@ -54,6 +54,12 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- JGit：函数 IDE 代码仓(克隆 / 读写 / 提交 / 推送) -->
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+        </dependency>
+
         <!-- Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

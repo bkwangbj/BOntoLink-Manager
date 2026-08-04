@@ -223,11 +223,11 @@
                 </div>
               </div>
               <div class="acw-m3-grid">
-                <div class="acw-m3-fld acw-pick"><span class="acw-m3-lbl">按钮颜色</span>
-                  <ColorPickerField v-model="form.color" :palette="COMPACT_COLORS" />
+                <div class="acw-m3-fld acw-pickrow"><span class="acw-m3-lbl">按钮图标</span>
+                  <IconPickerField v-model="form.icon" label="" :preset-count="6" :suggest-name="form.rdfs_label || form.api_name" />
                 </div>
-                <div class="acw-m3-fld acw-pick"><span class="acw-m3-lbl">按钮图标</span>
-                  <IconPickerField v-model="form.icon" label="" :preset-count="7" :suggest-name="form.rdfs_label || form.api_name" />
+                <div class="acw-m3-fld acw-pickrow"><span class="acw-m3-lbl">按钮颜色</span>
+                  <ColorPickerField v-model="form.color" :palette="COMPACT_COLORS" />
                 </div>
               </div>
 
@@ -1005,8 +1005,9 @@ select.bl-input.bl-input-xs { background-position: right 7px center; padding-rig
 .acw-sec3 { font-size: 13px; font-weight: 600; color: var(--bl-text-1); margin: 20px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--bl-divider); }
 .acw-sec3:first-child { margin-top: 2px; }
 .acw-m3-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 32px; }
+.acw-m3-grid.is-onecol { grid-template-columns: 1fr; }
 .acw-m3-fld { display: flex; flex-direction: column; gap: 6px; min-width: 0; margin-bottom: 8px; }
-.acw-m3-lbl { font-size: 12px; color: var(--bl-text-2); }
+.acw-m3-lbl { font-size: 12px; color: var(--bl-text-2); text-align: left; }
 .acw-m3-lbl i { color: #f53f3f; font-style: normal; }
 .acw-m3-inline { flex-direction: row; align-items: center; gap: 12px; }
 .acw-m3-inline .acw-m3-lbl { width: 92px; flex-shrink: 0; }
@@ -1023,15 +1024,15 @@ select.bl-input.bl-input-xs { background-position: right 7px center; padding-rig
 .acw-m3-hint { font-size: 11.5px; color: var(--bl-text-3); margin-top: 2px; margin-bottom: 6px; }
 .acw-path-box { padding: 10px 12px; background: var(--bl-bg-2); border-radius: 6px; }
 .acw-path-box .bl-mono { font-size: 12px; color: var(--bl-text-1); word-break: break-all; }
-/* 紧凑单行版 图标/颜色选择器 (约束宽度, 强制单行) */
-.acw-pick { max-width: 560px; }
-.acw-pick :deep(.cpf-swatches) { max-width: none; flex-wrap: nowrap; }
-.acw-pick :deep(.cpf-tail) { margin-left: 10px; }
-/* 图标: 网格改 flex 单行, 「更多选择」拉到同一行行尾成内联按钮 */
-.acw-pick :deep(.ipf) { display: flex; flex-direction: row !important; flex-wrap: wrap; align-items: center; gap: 8px; }
-.acw-pick :deep(.icon-grid) { display: flex !important; flex-wrap: nowrap; gap: 6px; grid-template-columns: none; }
-.acw-pick :deep(.icon-cell) { width: 34px; height: 34px; flex: 0 0 34px; }
-.acw-pick :deep(.ipf-more-row) { width: auto !important; margin: 0 !important; padding: 0 14px; height: 34px; border-radius: 6px; flex: 0 0 auto; }
+/* 元数据步骤的 颜色/图标 选择器 (类名别蹭步骤1的 .acw-pick 对象类选择器): 两列各一个, 标签在上 */
+.acw-pickrow { min-width: 0; }
+.acw-pickrow :deep(.cpf-swatches) { max-width: none; flex-wrap: wrap; }
+.acw-pickrow :deep(.cpf-tail) { margin-left: 10px; }
+/* 图标: 网格改 flex 行排, 「更多选择」跟在同一行行尾; 尺寸与动作详情页的图标块保持一致 (28px) */
+.acw-pickrow :deep(.ipf) { display: flex; flex-direction: row !important; flex-wrap: wrap; align-items: center; gap: 6px; }
+.acw-pickrow :deep(.icon-grid) { display: flex !important; flex-wrap: wrap; gap: 6px; grid-template-columns: none; max-width: none; }
+.acw-pickrow :deep(.icon-cell) { width: 28px; max-width: 28px; height: 28px; aspect-ratio: auto; flex: 0 0 28px; }
+.acw-pickrow :deep(.ipf-more-row) { width: auto !important; max-width: none; margin: 0 !important; padding: 0 10px; height: 28px; flex: 0 0 auto; }
 .acw-color { width: 40px; height: 30px; padding: 2px; border: 1px solid var(--bl-border); border-radius: var(--bl-radius-2); background: var(--bl-bg-1); cursor: pointer; }
 .acw-switch-row { display: inline-flex; gap: 18px; }
 .acw-sw { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--bl-text-2); cursor: pointer; }

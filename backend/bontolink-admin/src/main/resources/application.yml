@@ -28,6 +28,23 @@ spring:
 
 # 缓存配置开关
 bontolink:
+  # 函数在线编排 IDE 的代码仓 (JGit 工作区)
+  # 凭据一律走环境变量, 此处只写变量名, 不落任何明文:
+  #   FN_REPO_URL / FN_REPO_USER / FN_REPO_TOKEN / FN_REPO_BRANCH
+  #   FN_REPO_AUTHOR_NAME / FN_REPO_AUTHOR_EMAIL / FN_REPO_AUTO_PUSH
+  fn-repo:
+    enabled: ${FN_REPO_ENABLED:true}
+    url: ${FN_REPO_URL:}                       # 空则退化为本地仓库, 不做远程同步
+    branch: ${FN_REPO_BRANCH:master}
+    workdir: ${FN_REPO_WORKDIR:../fn-repo}     # 相对 user.dir(backend/), 即 <项目根>/fn-repo
+    username: ${FN_REPO_USER:}
+    token: ${FN_REPO_TOKEN:}
+    author-name: ${FN_REPO_AUTHOR_NAME:BOntoLink}
+    author-email: ${FN_REPO_AUTHOR_EMAIL:bontolink@local}
+    # 默认手动推送:IDE 里保存只在本地提交, 攒批后由「推送」按钮 (POST /api/fn-repo/push) 推远程,
+    # 避免每存一次盘就往 master 推一个提交, 把历史打碎
+    auto-push: ${FN_REPO_AUTO_PUSH:false}
+    bootstrap: ${FN_REPO_BOOTSTRAP:true}
   cache:
     # 缓存类型: local(仅本地Caffeine) / remote(本地+Redis二级缓存) / none(禁用)
     type: local

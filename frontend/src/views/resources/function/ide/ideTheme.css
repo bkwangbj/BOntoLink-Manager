@@ -1,0 +1,112 @@
+/*
+ * 函数在线编排 IDE 的独立主题体系
+ *
+ * 与系统深浅主题解耦(文档「外观」菜单自带 VS / VS Dark / High Contrast Dark 三套),
+ * 全部色值挂在 .fnide[data-ide-theme] 上,不引用 --bl-* 系统 token,
+ * 保证 IDE 在系统切浅色时仍保持自己的配色。
+ */
+
+.fnide {
+  /* 默认 = Visual Studio Dark(文档默认选中) */
+  --ide-bg: #1e1e1e;          /* 编辑区底 */
+  --ide-bg-2: #252526;        /* 侧边栏 / 面板 */
+  --ide-bg-3: #333333;        /* 活动栏 / 标签条 */
+  --ide-bg-4: #2a2a2a;        /* 按键胶囊 */
+  --ide-menu-bg: #1f1f1f;     /* 下拉菜单底 */
+  --ide-border: #3c3c3c;
+  --ide-border-2: #555555;
+  --ide-text: #cccccc;
+  --ide-text-strong: #ffffff;
+  --ide-text-dim: #888888;
+  --ide-hover: #2d2d2e;
+  --ide-active: #094771;      /* 菜单/列表选中 */
+  --ide-blue: #0078d4;
+  --ide-green: #17a264;       /* 勾选标记(文档指定) */
+  --ide-tab-active: #1e1e1e;
+  --ide-tab-inactive: #2d2d2d;
+  --ide-status: #007acc;      /* 底部状态栏 */
+}
+
+.fnide[data-ide-theme="light"] {
+  --ide-bg: #ffffff;
+  --ide-bg-2: #f3f3f3;
+  --ide-bg-3: #e8e8e8;
+  --ide-bg-4: #eaeaea;
+  --ide-menu-bg: #ffffff;
+  --ide-border: #d4d4d4;
+  --ide-border-2: #c8c8c8;
+  --ide-text: #1f1f1f;
+  --ide-text-strong: #000000;
+  --ide-text-dim: #767676;
+  --ide-hover: #e8e8e8;
+  --ide-active: #cce5ff;
+  --ide-blue: #0066b8;
+  --ide-green: #17a264;
+  --ide-tab-active: #ffffff;
+  --ide-tab-inactive: #ececec;
+  --ide-status: #007acc;
+}
+
+.fnide[data-ide-theme="hc"] {
+  --ide-bg: #000000;
+  --ide-bg-2: #000000;
+  --ide-bg-3: #000000;
+  --ide-bg-4: #0a0a0a;
+  --ide-menu-bg: #000000;
+  --ide-border: #6fc3df;
+  --ide-border-2: #6fc3df;
+  --ide-text: #ffffff;
+  --ide-text-strong: #ffffff;
+  --ide-text-dim: #a0a0a0;
+  --ide-hover: #1a1a1a;
+  --ide-active: #0f4a85;
+  --ide-blue: #6fc3df;
+  --ide-green: #17a264;
+  --ide-tab-active: #000000;
+  --ide-tab-inactive: #0d0d0d;
+  --ide-status: #0f4a85;
+}
+
+/* —— 菜单/面板通用件(供 IdeMenuBar / IdeSidePanel 复用) —— */
+.ide-menu-pop {
+  position: absolute; top: 100%; left: 0; z-index: 60;
+  background: var(--ide-menu-bg);
+  border: 1px solid var(--ide-border);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .45);
+  padding: 4px 0;
+  user-select: none;
+}
+.ide-menu-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 16px;
+  font-size: 12.5px; color: var(--ide-text);
+  white-space: nowrap; cursor: pointer;
+}
+.ide-menu-item:hover:not(.is-disabled) { background: var(--ide-active); }
+.ide-menu-item.is-disabled { color: var(--ide-text-dim); cursor: default; }
+.ide-menu-label { flex: 1; }
+.ide-menu-sep { height: 1px; margin: 4px 0; background: var(--ide-border); }
+.ide-menu-group-title {
+  padding: 4px 16px; font-size: 12px; color: #999999;
+}
+/* 勾选位固定 16px,保证文字起始位置对齐(文档:对钩宽度固定 16px) */
+.ide-menu-check { width: 16px; flex-shrink: 0; display: inline-flex; justify-content: center; }
+.ide-menu-check.is-on { color: var(--ide-green); }
+.ide-menu-check.is-dim { color: var(--ide-text-dim); }
+/* 快捷键:每个按键一个独立圆角矩形,模拟物理按键 */
+.ide-keys { display: inline-flex; align-items: center; gap: 3px; flex-shrink: 0; }
+.ide-key {
+  padding: 1px 5px; border-radius: 3px;
+  background: var(--ide-bg-4); border: 1px solid var(--ide-border-2);
+  font-family: Consolas, Monaco, monospace; font-size: 10.5px; color: var(--ide-text-dim);
+}
+.ide-key-plus { color: var(--ide-text-dim); font-size: 10px; }
+.ide-menu-item:hover:not(.is-disabled) .ide-key { border-color: #7fb3e0; }
+/* 纯文本快捷键(运行菜单按文档用等宽浅灰文本,不做按键胶囊) */
+.ide-keys-text {
+  flex-shrink: 0; font-family: Consolas, Monaco, monospace;
+  font-size: 11.5px; color: var(--ide-text-dim);
+}
+.ide-submenu-arrow { color: #aaaaaa; flex-shrink: 0; }
+.ide-menu-item:hover:not(.is-disabled) .ide-submenu-arrow { color: #ffffff; }

@@ -358,12 +358,15 @@ watch(() => [props.rule.obj_class_id, props.propOptions.length], () => {
 .roe-dt { font-size: 11px; padding: 0 6px; height: 20px; }
 .roe-auto { font-size: 12px; padding-left: 4px; }
 /* 表格观感对齐向导第 2 步的属性映射矩阵 */
-/* 11 列在窄抽屉里塞不下, 容器横向滚动; 抽屉拉宽后不定宽的两列自动吃掉富余 */
-.roe-map-wrap { overflow-x: auto; }
-.roe-map { width: 100%; min-width: 900px; font-size: 12px; table-layout: fixed; }
+/* 窄抽屉塞不下 11 列时才横向滚动; 抽屉拉宽后不定宽的两列吃掉富余, 表格严格等于容器宽 */
+.roe-map-wrap { overflow-x: auto; max-width: 100%; }
+.roe-map { width: 100%; max-width: 100%; font-size: 12px; table-layout: fixed; }
 .roe-map thead th { background: var(--bl-thead-bg); font-weight: 600; height: 34px; padding: 0 5px; white-space: nowrap; color: var(--bl-text-1); }
 .roe-map thead th.t-left { text-align: left; }
 .roe-map td { padding: 3px 4px; border-top: 1px solid var(--bl-divider); vertical-align: middle; }
+/* 单元格内容一律裁在列宽内 — 否则超出的下拉/长文本会把 wrap 的 scrollWidth 撑出滚动条 */
+.roe-map th, .roe-map td { overflow: hidden; }
+.roe-map td > * { max-width: 100%; }
 .roe-map td.t-center { text-align: center; }
 .roe-map .bl-input-xs { height: 28px; padding: 0 6px; font-size: 12px; }
 /* 属性单元格: 中文名 + 小字编码两行, 下拉透明覆盖在上面, 点哪都能换属性 */

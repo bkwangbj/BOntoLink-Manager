@@ -22,7 +22,7 @@
     "echarts-gl": "2.1.0",
     "efficient-suite": "1.0.14",
     "element-plus": "2.14.2",
-    "monaco-editor": "0.33.0",
+    "monaco-editor": "0.45.0",
     "pinia": "2.3.1",
     "sortablejs": "1.15.7",
     "tdesign-vue-next": "1.20.1",

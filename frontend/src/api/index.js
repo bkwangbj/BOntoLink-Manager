@@ -192,6 +192,51 @@ export const actionTypeApi = {
   executions:  (id) => http.get(`/action-types/${id}/executions`),
 }
 
+/* 函数 (Functions) — ont_function 主表 + 参数/运行配置/环境变量/调用统计
+   list 默认每个 full_access_path 只返回最新版本; allVersions=true 返回全部版本记录 */
+export const functionApi = {
+  list:         (allVersions = false) => http.get('/functions', { params: { allVersions } }),
+  get:          (id) => http.get(`/functions/${id}`),
+  create:       (data) => http.post('/functions', data),
+  update:       (id, data) => http.put(`/functions/${id}`, data),
+  remove:       (id) => http.delete(`/functions/${id}`),
+  batchRemove:  (ids) => http.post('/functions/batch-delete', { ids }),
+  setStatus:    (id, status) => http.post(`/functions/${id}/status`, { status }),
+  /* 左侧「行业领域分组」树: [{ industry_dir, count, children: [{ category_dir, count }] }] */
+  dirs:         () => http.get('/functions/dirs'),
+  /* 已有代码文件清单 (向导文件选择弹窗) */
+  files:        () => http.get('/functions/files'),
+  /* 实时校验: { name_valid, duplicated, file_exists, message } */
+  checkApiName: (filePath, apiName, excludeId) => http.get('/functions/check-api-name', { params: { filePath, apiName, excludeId } }),
+  versions:     (id) => http.get(`/functions/${id}/versions`),
+  /* 可观测性: { total_calls, success_rate, avg_cost_ms, error_count, trend[], callers[] } */
+  stats:        (id, days = 30) => http.get(`/functions/${id}/stats`, { params: { days } }),
+  saveRuntime:  (id, cfg) => http.put(`/functions/${id}/runtime-config`, cfg),
+  saveEnvVars:  (id, envVars) => http.put(`/functions/${id}/env-vars`, { env_vars: envVars }),
+  saveParamDesc:(id, params) => http.put(`/functions/${id}/param-desc`, { params }),
+}
+
+/* 函数代码仓 (JGit 工作区) — 在线编排 IDE 的文件来源
+   保存只在服务端本地提交, 推送由 push() 显式触发 (auto-push 默认关闭) */
+export const fnRepoApi = {
+  status:  () => http.get('/fn-repo/status'),
+  tree:    () => http.get('/fn-repo/tree'),
+  read:    (path) => http.get('/fn-repo/file', { params: { path } }),
+  write:   (path, content, message) => http.put('/fn-repo/file', { path, content, message }),
+  history: (path, limit = 30) => http.get('/fn-repo/history', { params: { path, limit } }),
+  push:    () => http.post('/fn-repo/push'),
+  bootstrap: () => http.post('/fn-repo/bootstrap'),
+}
+
+/* 函数版本库 (ont_version_repo) — 行业目录 + 领域目录维度的版本序列 */
+export const versionRepoApi = {
+  list:       () => http.get('/version-repos'),
+  get:        (id) => http.get(`/version-repos/${id}`),
+  dirOptions: () => http.get('/version-repos/dir-options'),   // [{ industry_dir, categories: [] }]
+  create:     (data) => http.post('/version-repos', data),
+  update:     (id, data) => http.put(`/version-repos/${id}`, data),
+}
+
 /* 类型类 (Type Classes) — 升级版:定义 + 大类字典 + 绑定 + 枚举字典 */
 export const typeClassApi = {
   // 定义(元数据);params: { categoryCode, applicableType, deprecated, q }

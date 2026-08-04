@@ -11,6 +11,11 @@
             <button class="bl-btn bl-btn-text bl-btn-icon" title="关闭" @click="close" v-html="BL.icon('x', 14)"></button>
           </div>
 
+          <!-- 属性没绑值类型就取不到枚举 ID, 这里说清原因和两条出路, 免得被当成"读不出数据" -->
+          <div v-if="!props.enumId" class="evp-warn">
+            <span v-html="BL.icon('info', 12)"></span>
+            <span>该属性未绑定枚举类型（对象属性的「值类型」为空），无法自动定位它的枚举值。可在左侧现场指定一个枚举类型;要长期生效,请到「对象类型 · 属性」把该属性的值类型设为对应的枚举。</span>
+          </div>
           <div class="evp-body">
             <!-- 左: 枚举类型 (属性未绑定值类型时由用户现场指定) -->
             <div class="evp-left">
@@ -42,7 +47,7 @@
                 <button class="bl-btn bl-btn-sm" :disabled="!picked.size" @click="clearAll">清空</button>
               </div>
               <div class="evp-items">
-                <div v-if="!curEnumId" class="evp-empty">请先在左侧选择枚举类型</div>
+                <div v-if="!curEnumId" class="evp-empty">请先在左侧选择枚举类型<br />（共 {{ enumTypes.length }} 个可用枚举类型）</div>
                 <div v-else-if="loading" class="evp-empty">加载枚举值…</div>
                 <div v-else-if="!items.length" class="evp-empty">该枚举类型下暂无枚举值</div>
                 <div v-else-if="!filtered.length" class="evp-empty">无匹配枚举值</div>
@@ -186,6 +191,9 @@ watch(() => props.open, async v => {
 .evp-hd { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--bl-divider); }
 .evp-title { font-size: 15px; font-weight: 600; }
 .evp-sub { font-size: 12px; color: var(--bl-text-3); margin-top: 3px; }
+.evp-warn { display: flex; align-items: flex-start; gap: 6px; margin: 10px 16px 0; padding: 8px 10px; border-radius: 6px;
+  background: color-mix(in srgb, #f7ba1e 12%, transparent); color: #a8710a; font-size: 12px; line-height: 1.55; }
+.evp-warn > span:first-child { flex-shrink: 0; display: inline-flex; padding-top: 2px; }
 .evp-body { flex: 1; min-height: 0; display: flex; }
 .evp-left { flex: 0 0 230px; border-right: 1px solid var(--bl-divider); display: flex; flex-direction: column; overflow: hidden; }
 .evp-right { flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden; }

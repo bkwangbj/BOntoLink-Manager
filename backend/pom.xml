@@ -37,6 +37,8 @@
         <jena.version>5.2.0</jena.version>
         <fastjson2.version>2.0.51</fastjson2.version>
         <milvus-sdk.version>2.2.16</milvus-sdk.version>
+        <!-- 函数 IDE 的代码仓操作:纯 Java 实现, 不依赖服务器是否装 git -->
+        <jgit.version>6.10.0.202406032230-r</jgit.version>
     </properties>
 
     <dependencyManagement>
@@ -112,6 +114,12 @@
                 <groupId>io.milvus</groupId>
                 <artifactId>milvus-sdk-java</artifactId>
                 <version>${milvus-sdk.version}</version>
+            </dependency>
+            <!-- JGit：函数 IDE 的代码仓读写 / 提交 / 推送 -->
+            <dependency>
+                <groupId>org.eclipse.jgit</groupId>
+                <artifactId>org.eclipse.jgit</artifactId>
+                <version>${jgit.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

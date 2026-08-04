@@ -48,3 +48,10 @@ backend/check_*.sql
 
 # 规格文档(不入库)
 maker统计平台移植改造.pdf
+
+# 函数 IDE 的 Git 工作区(克隆自远程函数代码仓,不纳入本仓库)
+fn-repo/
+../fn-repo/
+
+# 本地数据库备份
+backend/bontolink.db.bak-*

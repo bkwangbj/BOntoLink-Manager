@@ -96,6 +96,7 @@ curl -s http://localhost:8088/bontolink/api/xxx | head -c 600
 |---|---|
 | 对象类型 ObjectTypes | `ot-` |
 | 链接 LinkTypes | `lk-` / `lke-`(编辑器) |
+| 函数 Functions | `fn-` / `fdt-`(行业领域分组树) |
 | 值类型 ValueTypes | `vt-` |
 | 枚举类型 EnumTypes | `et-` |
 | 共享属性 SharedProperties | `sp-` |
@@ -214,6 +215,7 @@ PageHeader (标题 + 统计 + 筛选 + 搜索 + 新建按钮)
 | `/resources/value-types` | `views/config/ValueTypes.vue` | `ont_value_types + ont_valuetypes_usage_config` |
 | `/resources/enum-types` | `views/config/EnumTypes.vue` | `ont_enum_types + ont_enum_items + ont_enum_level_code_rule` |
 | `/resources/shared-props` | `views/resources/SharedProperties.vue` + `sharedproperty/*` | `ont_shared_properties + ont_struct_types + ont_struct_items` |
+| `/resources/functions` | `views/resources/Functions.vue` + `function/*` | `ont_function + ont_function_param + ont_function_runtime_config + ont_function_env_var + ont_version_repo + ont_function_call_stat` |
 | `/resources/interfaces` | `views/resources/Interfaces.vue` | `ont_interface + ont_interface_property + ont_interface_class` |
 | `/resources/datasources` | `views/resources/Datasources.vue` | `sys_data_source` |
 | `/config/category` | `views/config/Category.vue` | `ont_biz_category + ont_biz_namespace` |
@@ -233,6 +235,8 @@ PageHeader (标题 + 统计 + 筛选 + 搜索 + 新建按钮)
 | 现象 | 根因 | 修复 |
 |---|---|---|
 | PG 报 `updated_at` 字段类型错误 | 传 `"2026-07-30 10:00:00"` 字符串给 TIMESTAMP 列,PG 拒绝隐式转换(SQLite 接受) | Mapper 参数改 `java.sql.Timestamp`,Controller 里 `row.put("updatedAt", new Timestamp(System.currentTimeMillis()))` |
+| 改了迁移/资源后重启,后端却仍跑旧脚本(Flyway 说 "up to date") | 增量 `mvn -pl bontolink-admin -am package` **不刷新 fat jar 里的嵌套 `bontolink-data.jar`**,新增的 `db/migration/*.sql` 打不进去 | 必须 `mvn -DskipTests -pl bontolink-data,bontolink-admin -am clean package`;可用 `unzip -p .../bontolink-admin.jar 'BOOT-INF/lib/bontolink-data-1.0.0.jar' > /tmp/d.jar && unzip -l /tmp/d.jar \| grep V3x` 自查 |
+| 启动报 `No value provided for placeholder: ${xxx}` | 迁移脚本里种了含 JS 模板字符串 `${}` 的代码文本,Flyway 当占位符解析 | 种子里的代码一律用字符串拼接;注释里也不能出现该字面量 |
 | sticky 表格出现空白列 | `table-layout: auto` 实际列宽 ≠ sticky `left:` 偏移 | 用 `table-layout: fixed` 或移除 sticky |
 | sticky 表头横滚被覆盖 | 角落 sticky 列 z-index 不够 | 角落格 `z-index: 4`(普通 sticky 3) |
 | 抽屉里弹模态被遮挡 | 模态 z-index ≤ 抽屉(1010) | 大弹框 z-index ≥ 1200 |

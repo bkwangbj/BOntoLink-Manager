@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOntoLink 动态本体管理系统 · 使用帮助</title>
+<style>
+  :root { --pri:#2563eb; --pri-soft:#eff4ff; --bd:#e2e8f0; --t1:#1e293b; --t2:#475569; --t3:#64748b; --t4:#94a3b8; --bg:#f7f9fc; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:15.5px/1.85 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif; color:var(--t1); background:var(--bg); }
+  .hp-top { position:sticky; top:0; z-index:5; background:#fff; border-bottom:1px solid var(--bd); padding:14px 28px; display:flex; align-items:center; gap:10px; }
+  .hp-top .logo { width:26px; height:26px; border-radius:7px; background:linear-gradient(135deg,#2563eb,#7c3aed); display:grid; place-items:center; color:#fff; font-weight:800; font-size:13px; flex:none; }
+  .hp-top h1 { font-size:17px; margin:0; font-weight:700; }
+  .hp-top .sub { color:var(--t4); font-size:14px; }
+  .hp-top .back { margin-left:auto; font-size:13px; color:var(--pri); text-decoration:none; }
+  .hp-top .back:hover { text-decoration:underline; }
+  .hp-wrap { display:flex; max-width:1620px; margin:0 auto; gap:24px; padding:24px 28px 80px; align-items:flex-start; }
+
+  /* 左侧目录 */
+  .hp-toc { position:sticky; top:70px; flex:0 0 224px; font-size:14px; max-height:calc(100vh - 92px); overflow-y:auto; overscroll-behavior:contain;
+            padding:10px 6px 10px 0; background:#fff; border:1px solid var(--bd); border-radius:12px; }
+  .hp-toc::-webkit-scrollbar { width:8px; }
+  .hp-toc::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4px; }
+  .hp-toc::-webkit-scrollbar-thumb:hover { background:#94a3b8; }
+  .hp-toc a { display:block; color:var(--t2); text-decoration:none; padding:6px 12px 6px 20px; margin:1px 0 1px 10px;
+              border-radius:0 7px 7px 0; border-left:2px solid transparent; line-height:1.5; }
+  .hp-toc a:hover { background:var(--pri-soft); color:var(--pri); }
+  .hp-toc a.cur { background:var(--pri-soft); color:var(--pri); font-weight:600; border-left-color:var(--pri); }
+  .hp-toc .g { display:flex; align-items:center; gap:7px; color:var(--t3); font-size:12px; font-weight:700;
+               margin:14px 0 6px; padding:0 10px; letter-spacing:.5px; }
+  .hp-toc .g::before { content:""; width:3px; height:12px; border-radius:2px; background:var(--pri); flex:none; }
+  .hp-toc .g::after { content:""; flex:1; height:1px; background:var(--bd); }
+  .hp-toc .g:first-child { margin-top:2px; }
+  .hp-toc a.ext { margin:2px 10px 4px; padding:8px 12px; border-left:none; border-radius:8px;
+                  background:var(--bg); border:1px solid var(--bd); color:var(--t2); line-height:1.5; }
+  .hp-toc a.ext:hover { background:var(--pri-soft); border-color:#bcd0f7; color:var(--pri); }
+  .hp-toc a.ext .x-t { display:block; font-weight:600; color:var(--t1); }
+  .hp-toc a.ext:hover .x-t { color:var(--pri); }
+  .hp-toc a.ext .x-s { display:block; font-size:12px; color:var(--t4); margin-top:1px; }
+
+  /* 正文 */
+  .hp-body { flex:1; min-width:0; }
+  section { background:#fff; border:1px solid var(--bd); border-radius:12px; padding:24px 28px; margin-bottom:18px; scroll-margin-top:72px; }
+  section h2 { font-size:19px; margin:0 0 4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  section h2 .tag { font-size:12px; font-weight:600; color:var(--pri); background:var(--pri-soft); border-radius:5px; padding:1px 7px; }
+  section h2 .tag.warn { color:#92670c; background:#fffbeb; }
+  section .lead { color:var(--t3); margin:0 0 16px; font-size:14.5px; }
+  h3 { font-size:16px; margin:20px 0 8px; color:var(--t1); font-weight:700; }
+  h4 { font-size:14.5px; margin:14px 0 4px; color:var(--t2); font-weight:700; }
+  p { margin:6px 0; color:var(--t2); }
+  ul,ol { margin:8px 0; padding-left:22px; color:var(--t2); }
+  li { margin:3px 0; }
+  b { color:var(--t1); }
+  code { background:#f1f5f9; border-radius:4px; padding:1px 6px; font-family:"SFMono-Regular",Consolas,monospace; font-size:13.5px; color:#0f766e; }
+  .path { display:inline-block; background:#f1f5f9; border-radius:6px; padding:2px 9px; font-size:14px; color:var(--t2); }
+  .path b { color:var(--pri); }
+  .tip { background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:10px 14px; font-size:14px; color:#92670c; margin:12px 0; line-height:1.8; }
+  .warn { background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:10px 14px; font-size:14px; color:#9f1239; margin:12px 0; line-height:1.8; }
+  .note { background:#f0f9ff; border:1px solid #bae6fd; border-radius:8px; padding:10px 14px; font-size:14px; color:#0c4a6e; margin:12px 0; line-height:1.8; }
+  .steps { counter-reset:s; padding-left:0; list-style:none; }
+  .steps li { counter-increment:s; padding-left:29px; position:relative; margin:8px 0; }
+  .steps li::before { content:counter(s); position:absolute; left:0; top:3px; width:20px; height:20px; background:var(--pri); color:#fff; border-radius:50%; font-size:12px; display:grid; place-items:center; }
+  table { border-collapse:collapse; width:100%; margin:10px 0; font-size:14px; }
+  th,td { border:1px solid var(--bd); padding:8px 12px; text-align:left; vertical-align:top; }
+  th { background:#f8fafc; color:var(--t2); font-weight:600; }
+  .tbl-wrap { overflow-x:auto; }
+
+  /* 截图 */
+  figure.hp-shot { margin:14px 0; }
+  figure.hp-shot img { width:100%; height:auto; display:block; border:1px solid var(--bd); border-radius:10px; cursor:zoom-in; background:#fff; }
+  figure.hp-shot figcaption { font-size:13px; color:var(--t3); margin-top:6px; text-align:center; }
+  .hp-todo { display:flex; align-items:center; justify-content:center; min-height:90px; padding:16px;
+             border:1px dashed #cbd5e1; border-radius:8px; background:#f8fafc; color:var(--t4); font-size:13px; text-align:center; line-height:1.7; }
+  #hpLight { position:fixed; inset:0; z-index:9999; display:none; align-items:center; justify-content:center;
+             background:rgba(15,23,42,.82); padding:28px; cursor:zoom-out; }
+  #hpLight.open { display:flex; }
+  #hpLight img { max-width:100%; max-height:100%; border-radius:8px; box-shadow:0 20px 60px rgba(0,0,0,.5); }
+
+  /* 右栏速查 */
+  .hp-tut { position:sticky; top:70px; flex:0 0 340px; max-height:calc(100vh - 92px); overflow-y:auto; overscroll-behavior:contain;
+            background:#fff; border:1px solid var(--bd); border-radius:12px; padding:14px 14px 18px; font-size:13.5px; }
+  .hp-tut::-webkit-scrollbar { width:8px; }
+  .hp-tut::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4px; }
+  .hp-tut h2 { font-size:15px; margin:0 0 4px; }
+  .hp-tut .tu-lead { color:var(--t3); font-size:12.5px; line-height:1.7; margin:0 0 10px; }
+  .hp-tut .tu-search { width:100%; height:30px; border:1px solid var(--bd); border-radius:7px; padding:0 10px; font-size:13px; margin-bottom:8px; }
+  .hp-tut .tu-search:focus { outline:none; border-color:var(--pri); }
+  .tu-item { border:1px solid var(--bd); border-radius:8px; margin-bottom:6px; background:#fff; }
+  .tu-item[open] { border-color:#bcd0f7; box-shadow:0 1px 4px rgba(37,99,235,.08); }
+  .tu-item > summary { cursor:pointer; padding:8px 10px; font-weight:600; color:var(--t1); line-height:1.5; list-style:none; display:flex; gap:7px; align-items:flex-start; }
+  .tu-item > summary::-webkit-details-marker { display:none; }
+  .tu-item > summary:hover { color:var(--pri); }
+  .tu-n { flex:none; color:var(--pri); font-weight:700; }
+  .tu-steps { margin:0; padding:0 12px 10px 30px; color:var(--t2); font-size:13px; line-height:1.85; }
+  .tu-steps > li { margin-bottom:5px; }
+  .tu-steps code { background:var(--pri-soft); color:var(--pri); border-radius:4px; padding:1px 5px; font-size:12px; }
+  .tu-note { color:var(--t3); font-size:12.5px; background:var(--bg); border-radius:6px; padding:4px 8px; margin-top:4px; }
+  .tu-hide { display:none; }
+  @media (max-width:1400px) { .hp-tut { display:none; } }
+  @media (max-width:900px)  { .hp-toc { display:none; } .hp-wrap { padding:16px; } section { padding:18px 16px; } }
+</style>
+</head>
+<body>
+<div class="hp-top">
+  <div class="logo">BL</div>
+  <h1>BOntoLink 动态本体管理系统</h1><span class="sub">· 使用帮助</span>
+  <a class="back" href="需求规格说明书.md">需求规格说明书 →</a>
+</div>
+
+<div class="hp-wrap">
+  <nav class="hp-toc">
+    <div class="g">开始</div>
+    <a href="#start">快速上手</a>
+    <a href="#concept">概念地图</a>
+    <a href="#ui">界面导览</a>
+    <a href="#limits">能做与不能做</a>
+    <div class="g">建模主线</div>
+    <a href="#category">行业分类与命名空间</a>
+    <a href="#object">对象类型</a>
+    <a href="#props">属性怎么配</a>
+    <a href="#link">链接</a>
+    <a href="#action">动作类型</a>
+    <a href="#shared">共享属性 / 结构属性</a>
+    <a href="#value">值类型</a>
+    <a href="#enum">枚举类型</a>
+    <a href="#interface">接口</a>
+    <a href="#typeclass">类型类</a>
+    <div class="g">数据接入</div>
+    <a href="#datasource">数据源（数据库）</a>
+    <a href="#extds">外部数据源 / 接口管理器</a>
+    <a href="#dict">字典管理</a>
+    <div class="g">查看与检索</div>
+    <a href="#overview">总览</a>
+    <a href="#graph">图谱</a>
+    <a href="#instance">实例探索</a>
+    <a href="#knowledge">知识浏览器</a>
+    <div class="g">通用</div>
+    <a href="#common">通用交互</a>
+    <a href="#naming">编码与命名</a>
+    <a href="#faq">常见问题</a>
+    <div class="g">相关文档</div>
+    <a class="ext" href="需求规格说明书.md">
+      <span class="x-t">需求规格说明书 →</span>
+      <span class="x-s">功能清单与验收标准</span>
+    </a>
+    <a class="ext" href="UI规范.md">
+      <span class="x-t">UI 与交互规范 →</span>
+      <span class="x-s">视觉 / 组件 / 交互基线</span>
+    </a>
+  </nav>
+
+  <main class="hp-body">
+
+  <!-- ==================== 快速上手 ==================== -->
+  <section id="start">
+    <h2>快速上手</h2>
+    <p class="lead">十分钟建出第一个能用的对象类型。这套系统管的是<b>元数据</b>——你定义「有哪些实体、实体有哪些字段、字段什么含义、实体之间怎么连」，上层的报表、问答、探索都读这层定义去取数。</p>
+    <ol class="steps">
+      <li>先<b>选好落点</b>。进 <span class="path">系统配置 → <b>行业分类</b></span>，确认你要建的东西属于哪个「行业 → 领域」。没有就先建一个领域，并给它绑命名空间。</li>
+      <li>进 <span class="path">资源 → <b>对象类型</b></span>，左侧分类树点中刚才那个领域，点右上角 <b>新建</b>，走创建向导：填编码、显示名、api_name、图标和颜色。</li>
+      <li>右侧抽屉切到 <b>属性</b> 页签，逐条加字段。取值有约束的挂<b>值类型</b>，取值是固定几项的先去建<b>枚举类型</b>再经值类型引用。</li>
+      <li>字段是全系统通用的（行政区划代码、统一社会信用代码之类），别在这里重复定义——去 <b>共享属性</b> 建一次，各处引用。</li>
+      <li>要连到别的实体，进 <span class="path">资源 → <b>链接</b></span> 建一条链接类型：选两端对象、定基数、配字段映射。</li>
+      <li>要落到真实数据上，进 <b>数据源</b> 建连接 → 同步物理表 → 回对象类型的「数据源」页签做表与列的映射。</li>
+      <li>建完去 <span class="path">工作区 → <b>实例探索</b></span> 打开它，看能不能正常出数、筛选、出图。<b>能在探索里查出来，才算建成了。</b></li>
+    </ol>
+    <div class="tip">不确定某个功能长什么样，就去<b>总览</b>页点对应的统计卡片跳过去，系统里已经有一批演示数据（48 个对象类型、9 个动作、44 个类型类…），照着现成的看比从空白开始快得多。</div>
+  </section>
+
+  <!-- ==================== 概念地图 ==================== -->
+  <section id="concept">
+    <h2>概念地图</h2>
+    <p class="lead">名词有点多，但它们的关系其实是一条线。先看懂这张图，后面每一章都好读。</p>
+
+    <h3>依赖方向</h3>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>层</th><th>是什么</th><th>被谁用</th></tr>
+      <tr><td><b>行业分类 / 命名空间</b></td><td>所有资源的归属与筛选维度，三层：行业 → 领域 → 分组</td><td>全部模块的左侧过滤树</td></tr>
+      <tr><td><b>枚举类型</b></td><td>有限取值的字典，可多级、可从外部库同步</td><td>值类型的 Enum 约束</td></tr>
+      <tr><td><b>值类型</b></td><td>取值的语义包装：基础类型 + 一条约束</td><td>对象属性 / 共享属性 / 接口属性</td></tr>
+      <tr><td><b>共享属性</b></td><td>跨对象复用的属性定义</td><td>对象类型的属性、结构属性</td></tr>
+      <tr><td><b>对象类型</b></td><td>本体的核心实体</td><td>链接、动作、接口实现、实例探索</td></tr>
+      <tr><td><b>链接类型</b></td><td>两个对象之间的关系，带基数与双向命名</td><td>图谱、跨对象取数</td></tr>
+      <tr><td><b>动作类型</b></td><td>挂在对象上的可执行操作</td><td>上层业务入口</td></tr>
+      <tr><td><b>接口</b></td><td>纯抽象契约，一组属性约定</td><td>对象类型去「实现」它</td></tr>
+      <tr><td><b>类型类</b></td><td>给属性/关系/动作挂的元数据标签 + 参数</td><td>图表、图谱等上层渲染</td></tr>
+      <tr><td><b>数据源</b></td><td>物理库连接 / 外部 HTTP 接口</td><td>对象类型的物理表映射、枚举同步</td></tr>
+    </table>
+    </div>
+
+    <h3>一句话区分几组容易混的</h3>
+    <ul>
+      <li><b>枚举类型 vs 字典管理</b>：枚举类型是<b>业务</b>字典（水质等级、工程等别），参与本体建模、可被值类型引用、可从外部库同步；字典管理是<b>系统</b>字典（下拉选项、状态码），只服务于界面回显。</li>
+      <li><b>值类型 vs 数据类型</b>：数据类型是 XSD 层面的 string/int/date；值类型在它之上加一条语义约束（长度、正则、必须是 RID、必须来自某枚举）。</li>
+      <li><b>共享属性 vs 结构属性</b>：共享属性是一个字段；结构属性是<b>一组</b>共享属性打成的包（如「联系方式」= 姓名 + 电话 + 邮箱）。</li>
+      <li><b>接口 vs 类型类</b>：接口约束「你必须有这些属性」；类型类是「给这个属性/关系贴个标签并带参数」，供上层解释怎么渲染。</li>
+      <li><b>链接类型 vs 对象属性(object 类)</b>：链接是双向的、有基数、可落到中间表的一等公民；对象属性只是把某个字段声明为指向另一个类。要在图谱里画出来、要能跨对象取数，用链接。</li>
+    </ul>
+  </section>
+
+  <!-- ==================== 界面导览 ==================== -->
+  <section id="ui">
+    <h2>界面导览</h2>
+    <p class="lead">左侧导航四组，顶栏三件事，主区域一套统一的三栏骨架。</p>
+
+    <h3>左侧导航</h3>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>分组</th><th>包含</th><th>什么时候用</th></tr>
+      <tr><td><b>工作区</b></td><td>总览 / 图谱 / 实例探索</td><td>看现状、查数据。不改任何东西</td></tr>
+      <tr><td><b>资源</b></td><td>对象类型 / 链接 / 动作类型 / 值类型 / 枚举类型 / 共享属性 / 函数 / 接口 / 数据源</td><td>建模主战场</td></tr>
+      <tr><td><b>辅助工具</b></td><td>AI 助手 / 导入导出 / 知识浏览器</td><td>知识浏览器用来核对本体是否真的进了语义层；另两个当前是占位</td></tr>
+      <tr><td><b>系统配置</b></td><td>行业分类 / 类型类 / 权限安全 / 字典管理</td><td>建模之前的准备工作</td></tr>
+    </table>
+    </div>
+    <p>侧栏最上方是<b>常用领域选择器</b>，选了之后会作为全局上下文，标题显示成「行业 | 领域1/领域2」。分组标题可以点着折叠，折叠状态会记住。最底下可以整体收起侧栏。</p>
+
+    <h3>顶栏</h3>
+    <ul>
+      <li><b>中间搜索框</b>：全局搜索，快捷键 <code>⌘K</code> / <code>Ctrl+K</code>。跨对象、关系、属性、数据源检索，输入即在下方出燕尾下拉，不是弹框。</li>
+      <li><b>右侧三个图标</b>：通知、<b>深浅主题切换</b>、全屏。主题默认跟随系统，手动切一次就固定。</li>
+    </ul>
+
+    <h3>资源页的标准三栏</h3>
+    <figure class="hp-shot">
+      <img src="帮助截图/ui-resource.png" alt="资源页三栏：分类树 + 列表 + 详情抽屉" loading="lazy"
+           onerror="this.outerHTML='<div class=&quot;hp-todo&quot;>待补截图：<b>帮助截图/ui-resource.png</b><br>截「对象类型」整屏，左侧分类树 + 中间列表 + 右侧详情抽屉三部分都要露出来<br>建议宽度 1600px</div>'">
+      <figcaption>资源页三栏：分类树 + 列表 + 详情抽屉</figcaption>
+    </figure>
+    <ul>
+      <li><b>页头</b>（48px）：标题 + 统计 + 视图切换（列表/卡片/分组）+ 筛选 + 搜索 + 新建按钮。</li>
+      <li><b>左：行业分类树</b> —— 六个模块共用同一棵树，但<b>各自记住自己的选中状态</b>，在对象类型里选了「水文」，切到链接不会跟着变。</li>
+      <li><b>中：列表</b> —— 勾选后顶部出现批量操作栏：<span class="path">已选 N 项 ｜ 批量删除 ｜ 启用 ｜ 禁用 ｜ 取消选择</span>，全系统同一套配色。</li>
+      <li><b>右：详情抽屉</b> —— 从右侧滑入，<b>不带蒙层</b>（背景仍可点，可直接切下一条记录）。左缘 5px 是拖拽手柄，宽度会记住；右上角可最大化。</li>
+    </ul>
+    <div class="tip">抽屉里再点开的大弹框永远盖在抽屉之上（抽屉 z-index 1010，大弹框 ≥1200）。如果你看到弹框被抽屉挡住，那是个 bug，不是设计。</div>
+  </section>
+
+  <!-- ==================== 能做与不能做 ==================== -->
+  <section id="limits">
+    <h2>能做与不能做</h2>
+    <p class="lead">先说清边界，省得在系统里找一个根本不存在的功能。</p>
+
+    <h3>① 系统里没有真实的业务数据</h3>
+    <p>本产品管的是<b>元数据</b>——「水库这个实体有哪些字段」。至于「张三水库库容 3200 万方」这条记录，权威副本在你的业务库里。</p>
+    <p><b>实例探索里看到的那些数据是模拟生成的</b>：按对象类型的属性定义确定性地造出来，用于验证「这个模型建得能不能用、筛选和聚合是否符合预期」。种子固定，重启后完全一致。所以：</p>
+    <ul>
+      <li>可以：在探索里验证列、筛选、聚合、关联跳转是否符合预期。</li>
+      <li>不可以：把它当业务数据看，或在里面新增/修改/删除记录。</li>
+    </ul>
+
+    <h3>② 动作的「执行」是模拟执行</h3>
+    <p>试运行会算出<b>「将写入的实例记录」</b>和<b>「将触发的副作用」</b>，并落一条执行记录，但<b>不写任何物理表</b>。它的用途是验证规则顺序、值来源解析、必填校验是否配对了。</p>
+
+    <h3>③ 没有权限体系</h3>
+    <p>「权限安全」页是占位的。当前所有人看到的功能一样，任何人都能改任何东西。多人协作时靠约定，不靠系统。</p>
+
+    <h3>④ 几个还没上线的模块</h3>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>模块</th><th>现状</th><th>影响到什么</th></tr>
+      <tr><td>函数</td><td>占位页</td><td>动作里的「运行函数」规则可以配，但选函数的按钮是占位；对象类型的「函数」页签为空</td></tr>
+      <tr><td>导入导出</td><td>占位页</td><td>跨环境迁移目前只能靠数据库层面的备份还原</td></tr>
+      <tr><td>AI 助手</td><td>占位对话页</td><td>回复是固定话术，没接推理引擎</td></tr>
+      <tr><td>权限安全</td><td>静态表格</td><td>见上</td></tr>
+    </table>
+    </div>
+
+    <h3>⑤ 几条容易踩的相互作用</h3>
+    <ul>
+      <li><b>api_name 建完不能改</b>。对象类型、接口、值类型都是这样。改了会打断下游所有引用，所以界面上直接锁死。想改只能删了重建——而被引用的又删不掉。<b>建之前把编码想好。</b></li>
+      <li><b>被引用的东西删不掉</b>。共享属性 <code>ref_count>0</code>、对象类型有属性/链接/动作引用、受系统保护的类型类，删除都会被拒绝并列出引用清单。这是有意的。</li>
+      <li><b>值类型的基础类型保存后不能改</b>。约束可以改，基础类型不行——因为已经有属性按这个类型落地了。</li>
+      <li><b>改了共享属性，不会回写到已经引用它的对象属性上</b>。共享属性是「引用」不是「继承」。要统一口径，就在建模时引用它，而不是指望事后同步。</li>
+    </ul>
+  </section>
+
+  <!-- ==================== 行业分类 ==================== -->
+  <section id="category">
+    <h2>行业分类与命名空间 <span class="tag">建模前置</span></h2>
+    <p class="lead"><span class="path">系统配置 → 行业分类</span>。这是全系统的归属与筛选维度，其它模块的左侧过滤树都读它。<b>建任何资源之前，先确认落点存在。</b></p>
+
+    <h3>三层结构</h3>
+    <p><b>行业 → 领域 → 分组</b>。行业是最粗的一层（水利、交通、应急…），领域是行业下的业务细分（水文、水资源、水土保持…），分组是领域内按主题把对象类型归到一起。</p>
+    <ul>
+      <li><b>命名空间挂在领域上</b>：ns_code、URI、当前版本、层次路径。领域是本体术语的作用域，所以命名空间绑在这一层。</li>
+      <li><b>分组有成员</b>：进分组节点的「成员」页签，把对象类型加进来，可以拖拽排序。</li>
+      <li>节点的图标和颜色在「显示」页签选，会带到各处的列表和卡片上。</li>
+    </ul>
+
+    <h3>左栏 / 中栏 / 右栏各管什么</h3>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>区域</th><th>内容</th></tr>
+      <tr><td><b>左：树</b></td><td>树 / 列表双视图，展开折叠 + 统计徽标 + 右键菜单。领域节点下挂版本列表。悬停有快速添加菜单</td></tr>
+      <tr><td><b>中：概览或详情</b></td><td>没选中节点时是全局概览（统计卡片 + 行业柱状图 + 行业卡片）；选中后是面包屑 + 统计 + 子节点网格 + 关联图</td></tr>
+      <tr><td><b>右：详情抽屉</b></td><td>页签随节点类型变：行业/领域有「基础信息 / 命名空间 / 显示 / 其他」，分组有「基础信息 / 成员 / 显示 / 其他」</td></tr>
+    </table>
+    </div>
+
+    <div class="tip">搜索框支持<b>中文、拼音、拼音首字母</b>三种输入。分类多了以后打 <code>shuiwen</code> 或 <code>sw</code> 比翻树快。</div>
+    <div class="note">删除节点前系统会做级联校验：有下级节点、或有资源挂在它下面，都会拒绝并告诉你卡在哪。想删就先把下面的东西挪走。</div>
+  </section>
+
+  <!-- ==================== 对象类型 ==================== -->
+  <section id="object">
+    <h2>对象类型 <span class="tag">核心</span></h2>
+    <p class="lead"><span class="path">资源 → 对象类型</span>。一个对象类型 = 类定义 + 属性集 + 关系 + 约束 + 物理映射 + 业务应用。抽屉里 <b>4 组 15 个页签</b>，按颜色分组。</p>
+
+    <h3>新建：走向导</h3>
+    <p>点新建走分步向导，一次把「类 + 数据源 + 属性字段映射」建齐（后端是一个事务，中途失败不会留半截数据）。向导里填的东西：</p>
+    <ul>
+      <li><b>编码 / 显示名 / api_name</b> —— api_name 建完锁死，见 <a href="#naming">编码与命名</a>。</li>
+      <li><b>所属分类</b> —— 决定它出现在哪个领域下。</li>
+      <li><b>图标 + 颜色</b> —— 会带到列表、卡片、图谱、探索的所有地方，选一个有辨识度的。</li>
+    </ul>
+
+    <h3>抽屉的四组页签</h3>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>组</th><th>页签</th><th>做什么</th></tr>
+      <tr><td><b>基础信息</b><br>（蓝）</td><td>概览 / 属性</td><td>类的基本信息与类表达式；属性行内编辑</td></tr>
+      <tr><td><b>关系</b><br>（橙）</td><td>链接关系 / 对象图谱</td><td>以本类为中心的关系画布，<b>可以直接在图上编辑链接</b>；7 维对象图谱</td></tr>
+      <tr><td><b>规则约束</b><br>（紫）</td><td>等价类 / 不相交类 / 互斥并集 / 等价属性 / 不相交属性 / 接口</td><td>OWL 层面的类与属性关系声明</td></tr>
+      <tr><td><b>业务应用</b><br>（绿）</td><td>动作 / 函数 / 被引用 / 数据源 / 使用情况 / 时序图表 / 事件时间轴</td><td>这个类被谁用了、落在哪张物理表上、挂了什么动作</td></tr>
+    </table>
+    </div>
+    <p>抽屉支持<b>二级嵌套</b>：在链接关系图里点开一条链接，会再叠一层抽屉出来编辑，最多叠 8 层，逐层关闭。</p>
+
+    <h3>绑物理表</h3>
+    <ol class="steps">
+      <li>前置：数据源已建好并同步过物理表（见 <a href="#datasource">数据源</a>）。</li>
+      <li>抽屉切「数据源」页签，选数据源和表，指定它是<b>主表</b>还是<b>附表</b>。</li>
+      <li>回「属性」页签，逐个属性填物理表名与列名。</li>
+    </ol>
+    <div class="warn">解绑数据源会<b>级联清空该绑定下所有属性的字段映射</b>。改绑之前先确认映射关系有备份或能重建。</div>
+  </section>
+
+  <!-- ==================== 属性 ==================== -->
+  <section id="props">
+    <h2>属性怎么配</h2>
+    <p class="lead">属性是建模里最费工夫的地方。这一节把一行属性上的每个格子说清楚。</p>
+
+    <h3>三种属性种类</h3>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>prop_type</th><th>含义</th><th>典型例子</th></tr>
+      <tr><td><b>data</b> 数据属性</td><td>取值是字面量</td><td>测站名称、库容、建站年份</td></tr>
+      <tr><td><b>object</b> 对象属性</td><td>取值指向另一个类的实例，需填「值域类」</td><td>所属河流</td></tr>
+      <tr><td><b>annotation</b> 注解属性</td><td>只做说明，不参与推理</td><td>备注、来源说明</td></tr>
+    </table>
+    </div>
+    <div class="tip">要在图谱里画成一条边、要能跨对象取数，用 <a href="#link">链接类型</a> 而不是 object 属性。object 属性只是声明「这个字段指向那个类」。</div>
+
+    <h3>一行属性上的格子</h3>
+    <ul>
+      <li><b>编码 / 显示名</b> —— 编码是机器用的，显示名是人看的。</li>
+      <li><b>数据类型</b> —— XSD 类型（string / integer / decimal / boolean / dateTime…）。</li>
+      <li><b>值类型</b> —— 可选。挂上之后这个属性就带上了语义约束，见 <a href="#value">值类型</a>。</li>
+      <li><b>主键 / 必填 / 派生 / 多值</b> —— 四个开关。派生表示它是算出来的，不直接存。</li>
+      <li><b>父属性</b> —— 属性的层次关系（rdfs:subPropertyOf）。</li>
+      <li><b>排序</b> —— 直接拖行调整，影响所有展示这些属性的地方的顺序。</li>
+    </ul>
+
+    <h3>OWL 特性与 XSD 约束</h3>
+    <p>展开一条属性还能配 <b>7 个 OWL 特性</b>（函数性、反函数性、传递性、对称性、反对称性、自反性、非自反性）与 <b>6 个 XSD 约束</b>（长度、上下限、小数位…）。这些是给推理引擎和校验用的，不影响界面展示。</p>
+
+    <h3>属性格式化</h3>
+    <p>点属性行上的格式化入口，配置这个属性在各处怎么显示（小数位、单位、前后缀、日期格式）。<b>接口属性支持批量格式化</b>：多选后一次设同一套规则。</p>
+  </section>
+
+  <!-- ==================== 链接 ==================== -->
+  <section id="link">
+    <h2>链接 <span class="tag">关系建模</span></h2>
+    <p class="lead"><span class="path">资源 → 链接</span>。编辑器是<b>上下对称的双栏</b>：上面源端，下面目标端，两边字段一模一样。这个布局是有意的——关系本来就是对称的，正反两个方向都要起名字。</p>
+
+    <h3>两端各要填什么</h3>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>字段</th><th>说明</th></tr>
+      <tr><td>对象类型</td><td>这一端是哪个类</td></tr>
+      <tr><td><b>基数</b></td><td>one / many。两端组合出 1:1 / 1:N / N:1 / N:N</td></tr>
+      <tr><td>显示名</td><td>从这一端看过去，这条关系叫什么。比如源端叫「所属河流」，目标端叫「下辖测站」</td></tr>
+      <tr><td>复数名</td><td>基数是 many 时启用，用于「下辖测站们」这种复数表述</td></tr>
+      <tr><td>api_name</td><td>camelCase</td></tr>
+      <tr><td>可见性</td><td>normal 普通 / prominent 突出 / hidden 隐藏</td></tr>
+      <tr><td>启用开关</td><td>单端可以关掉，只保留一个方向</td></tr>
+    </table>
+    </div>
+
+    <h3>关系落到数据上：两种方式</h3>
+    <h4>方式一：字段映射（默认）</h4>
+    <p>两端各出一个字段对上，等价于外键。<b>复合主键就多加几行</b>，按序号排列。</p>
+    <h4>方式二：中间表</h4>
+    <p>打开「数据源关系」开关，填中间表物理表名。这时每行映射除了对象属性名，还要填<b>中间表列名</b>。N:N 关系通常走这种。</p>
+
+    <h3>状态</h3>
+    <p>三态：<b>experimental 实验</b> → <b>active 正式</b> → <b>deprecated 废弃</b>。列表可以按状态和基数筛选。</p>
+
+    <div class="tip">建完在对象类型详情的「链接关系」页签核对一下画出来的方向和基数对不对——那个画布用的是同一个编辑器，可以直接在图上改。</div>
+    <div class="note">保存时 mappings 是<b>整体覆盖</b>（先删后插），不会留孤儿行。所以编辑时要把所有映射行都留在表里，不能只提交改动的那几行。</div>
+  </section>
+
+  <!-- ==================== 动作类型 ==================== -->
+  <section id="action">
+    <h2>动作类型 <span class="tag">可执行</span> <span class="tag warn">模拟执行</span></h2>
+    <p class="lead"><span class="path">资源 → 动作类型</span>。动作是本体从「描述」走向「可操作」的部分：一个动作 = 一张<b>表单</b>（收集输入）+ 一组<b>有序规则</b>（做什么）+ 一套<b>提交标准</b>（什么条件下允许提交）。</p>
+
+    <h3>新建：五步向导</h3>
+    <p>点新建走五步向导，确定主体对象类型、编码、名称与基本配置。建完进详情工作台细配。</p>
+
+    <h3>详情工作台：三栏</h3>
+    <ul>
+      <li><b>左导航</b>：概览 / 表单 / 规则 / 安全与提交。<b>表单和规则可以展开成下级树</b>，直接点到某个参数或某条规则。</li>
+      <li><b>中内容区</b>：当前选中项的完整编辑页。</li>
+      <li><b>右预览</b>：表单实时预览——你配的是下拉还是单选、必填标记在哪，这里立刻看到。</li>
+    </ul>
+
+    <h3>表单页</h3>
+    <ol class="steps">
+      <li>按<b>分区</b>组织参数（如「基础信息」「位置与状态」）。分区名点一下可以重命名，也可以删。</li>
+      <li>每个分区独立的「添加参数到本分区」按钮。参数行 hover 出现拖拽手柄，<b>可以跨分区拖</b>。</li>
+      <li>点参数进详情，四个标签：<b>值 / 显示 / 覆盖 / 详情</b>。标签是粘性锚点，滚动会联动高亮。</li>
+    </ol>
+    <h4>参数的「值」标签</h4>
+    <p>数据类型有 string / number / boolean / object / enum 五种，选了类型之后显示类型（输入框 / 下拉 / 单选 / 多选 / 日期…）会自适应给出合理选项。</p>
+    <p><b>对象引用参数</b>和<b>字符串多选参数</b>可以配「从对象集获取」：</p>
+    <ul>
+      <li><b>起始对象集</b> —— 从「全部对象」里挑一个对象类型，或引用表单里已有的对象参数作为变量。</li>
+      <li><b>按属性过滤</b> —— 属性 + 运算符 + 比较值，一行一条。</li>
+      <li><b>关联搜索</b> —— 选一个链接类型，自动生成「关联搜索至 X 的 Y」，顺着关系跳到对端对象。</li>
+      <li>字符串多选形态末尾还有<b>返回属性</b>（取对象的哪个字段当选项值）。</li>
+    </ul>
+
+    <h3>规则页</h3>
+    <p>规则是<b>有序</b>的折叠卡片，从上到下依次生效，可以拖拽排序，每条可以单独启停。<b>八种规则</b>：</p>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>类别</th><th>规则</th></tr>
+      <tr><td><b>本体编辑类</b></td><td>创建对象 / 修改对象 / 删除对象 / 创建链接 / 删除链接 / 运行函数</td></tr>
+      <tr><td><b>副作用类</b></td><td>通知 / Webhook</td></tr>
+    </table>
+    </div>
+    <h4>属性映射：值从哪来</h4>
+    <p>每条本体编辑类规则的核心是一张属性映射表：<b>目标属性 ← 值来源</b>。四类来源：</p>
+    <ol>
+      <li><b>来自参数</b> —— 取表单里某个参数的值。</li>
+      <li><b>对象参数属性</b> —— 两级级联：先选一个对象类参数，再选它的某个属性。</li>
+      <li><b>静态值</b> —— 写死。</li>
+      <li><b>当前用户 / 系统时间</b> —— 自动填充。</li>
+    </ol>
+    <p>「取值配置」这一格会随所选来源自动换成对应的控件（下拉 / 文本框 / 自动）。</p>
+
+    <h4>四类规则的完整编辑页</h4>
+    <ul>
+      <li><b>函数规则</b>：绑定函数 + 版本 + 自动升级开关 + 代码预览 + <b>入参映射弹窗</b>（类型不匹配会标红）+ 执行配置 + 异常映射。</li>
+      <li><b>通知规则</b>：收件人配置、内容配置（描述 / 函数双 tab）、<b>多选渠道</b>（推送 / 邮件 / 短信）、链接配置、高级配置。</li>
+      <li><b>Webhook 规则</b>：类型卡（回写 / 副作用）、选 Webhook + 版本、输入参数表、执行说明。</li>
+      <li><b>对象 / 链接规则</b>：目标对象参数选择器 + 对象类型 + 主键属性 + 属性映射表（「修改对象」才有操作符列）+ 关联链接配置。</li>
+    </ul>
+
+    <h3>规则冲突</h3>
+    <p>系统会拦三类无效组合，<b>能在入口拦的直接禁用卡片</b>，拦不住的在顶部出红条并阻止保存：</p>
+    <ul>
+      <li>重复创建（已经有一条启用的「创建对象」规则）</li>
+      <li>删除之后又修改</li>
+      <li>副作用排在本体编辑之前</li>
+    </ul>
+
+    <h3>安全与提交</h3>
+    <p>提交标准是一棵<b>嵌套条件树</b>：all（全部满足）和 any（满足其一）可以互相嵌套，配出「A 且 (B 或 C)」这类判断。</p>
+
+    <h3>试运行</h3>
+    <p>管理页操作列的 <b>▶</b> 按钮打开试运行弹窗。填参数后系统会：校验必填 → 解析各条规则的值来源 → 算出<b>「将写入的实例记录」</b>和<b>「将触发的副作用」</b> → 落一条执行记录。</p>
+    <div class="warn"><b>试运行不写任何物理表。</b>它验证的是「规则配对了没有」，不是「数据落进去没有」。执行历史在动作详情里可查。</div>
+
+    <h3>状态</h3>
+    <p><b>0 草稿 → 1 已发布 → 2 已停用</b>。配置期间留在草稿，试运行确认无误再发布。</p>
+  </section>
+
+  <!-- ==================== 共享属性 ==================== -->
+  <section id="shared">
+    <h2>共享属性 / 结构属性</h2>
+    <p class="lead"><span class="path">资源 → 共享属性</span>。双 Tab：普通属性 / 结构属性。<b>凡是会在多个对象类型上重复出现的字段，都应该先在这里定义一次。</b></p>
+
+    <h3>共享属性</h3>
+    <p>新建走三步向导（元数据 → 配置 → 保存位置）。详情抽屉五个页签：<b>基础信息 / OWL 特性 / 约束 / 引用 / 注释</b>，默认只读，点一下切编辑态。</p>
+    <ul>
+      <li><b>prop_code 唯一且建完不可改。</b></li>
+      <li>携带 7 个 OWL 特性、6 个 XSD 约束、4 个 RDFS 语义字段。</li>
+      <li><b>「引用」页签</b>列出哪些对象类型属性用了它——删之前先看这里。</li>
+    </ul>
+    <div class="warn"><code>ref_count &gt; 0</code> 的共享属性<b>删不掉</b>；批量删除会自动跳过被引用的那些，只删干净的。</div>
+    <div class="note">改共享属性<b>不会</b>回写到已经引用它的对象属性上。共享属性是「引用」不是「继承」——要统一口径就在建模时引用它，别指望事后同步。</div>
+
+    <h3>结构属性</h3>
+    <p>把若干共享属性打成一个包。左右双栏：左边结构列表，右边这个结构的条目表，条目可以拖拽重排。</p>
+    <p>典型用法：「联系方式」= 姓名 + 电话 + 邮箱，三个共享属性组成一个结构，之后哪个对象需要联系方式就整包引用。</p>
+  </section>
+
+  <!-- ==================== 值类型 ==================== -->
+  <section id="value">
+    <h2>值类型</h2>
+    <p class="lead"><span class="path">资源 → 值类型</span>。给属性的取值加一层语义包装：<b>基础类型 + 一条约束</b>。三个页签：元数据 / 约束配置 / 预览验证。</p>
+
+    <h3>五种基础类型 × 五种约束</h3>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>约束</th><th>配什么</th><th>什么时候用</th></tr>
+      <tr><td><b>RID</b></td><td>资源标识符格式</td><td>字段存的是本系统资源的 ID</td></tr>
+      <tr><td><b>UUID</b></td><td>—</td><td>字段是 UUID</td></tr>
+      <tr><td><b>Length</b></td><td>长度上下限</td><td>名称、编码这类有长度要求的</td></tr>
+      <tr><td><b>Regex</b></td><td>正则表达式</td><td>身份证、手机号、行政区划码</td></tr>
+      <tr><td><b>Enum</b></td><td>绑定一个枚举类型 + 使用配置</td><td>取值来自固定字典</td></tr>
+    </table>
+    </div>
+    <p>基础类型五种：String / Integer / Decimal / Boolean / DateTime。<b>api_name 和基础类型保存后都不能改</b>，约束可以改。</p>
+
+    <h3>Enum 约束的使用配置</h3>
+    <p>枚举是多级的时候，还要决定怎么用它：</p>
+    <ul>
+      <li><b>最大选择层级</b> —— 只能选到第几级。</li>
+      <li><b>是否允许非叶子节点</b> —— 能不能选中间层。</li>
+      <li><b>显示格式</b> —— label（只显示名称）/ code（只显示编码）/ code_label（编码 + 名称）/ full_label（完整路径）。</li>
+    </ul>
+    <p>使用配置可以复用，也可以设一个系统默认。</p>
+
+    <h3>预览验证</h3>
+    <p>第三个页签输入一个测试值，实时告诉你过不过、不过是卡在哪条约束上，下面还有一份配置概要。<b>配完约束一定在这里试一下</b>，正则写错在这里最容易发现。多级枚举会渲染成树形选择器，按最大选择层级截断可选层。</p>
+  </section>
+
+  <!-- ==================== 枚举类型 ==================== -->
+  <section id="enum">
+    <h2>枚举类型 <span class="tag">可同步</span></h2>
+    <p class="lead"><span class="path">资源 → 枚举类型</span>。业务字典库，支持多级层次与从外部数据库同步。四个页签：详情 / 数据 / 同步规则 / 引用。</p>
+
+    <h3>四种枚举类别</h3>
+    <p><code>general_single</code> 通用单级 / <code>general_multi</code> 通用多级 / <code>biz_single</code> 业务单级 / <code>biz_multi</code> 业务多级。多级的要设最大层级。</p>
+
+    <h3>数据页：两种视图</h3>
+    <p><b>树视图</b>看层次关系，<b>表格视图</b>批量改。两种都支持行内编辑：code、label、父级 code、层级、排序、状态。</p>
+
+    <h3>层次编码规则</h3>
+    <p>多级枚举的编码怎么拼，在「详情」页签的编码管理里配。每一级填：</p>
+    <ul>
+      <li><b>码段名</b>、<b>码长</b>、<b>总长</b></li>
+      <li><b>分隔符</b>（级与级之间用什么连）</li>
+      <li><b>填充字符</b> 与 <b>填充位置</b>（前补 / 后补）</li>
+    </ul>
+    <p>配的同时下面有示例演算，直接看拼出来长什么样。</p>
+
+    <h3>从外部库同步</h3>
+    <ol class="steps">
+      <li>「同步规则」页签，<b>数据源 → 表 → 字段</b> 三级联动：分别指定编码字段、名称字段、排序字段、状态字段、父级字段。</li>
+      <li>需要只取一部分就填<b>过滤 SQL</b>。</li>
+      <li>先点<b>测试连接</b>和<b>预览 SQL</b>，确认取到的是想要的数据。</li>
+      <li>选同步模式，执行同步。</li>
+    </ol>
+    <h4>三种同步模式</h4>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>模式</th><th>行为</th><th>什么时候用</th></tr>
+      <tr><td><b>全量覆盖</b></td><td>清空后重灌</td><td>第一次同步，或本地改乱了要重来</td></tr>
+      <tr><td><b>逐级对比</b></td><td>以业务系统为准，逐级比对增删改</td><td>常规同步，对方是权威源</td></tr>
+      <tr><td><b>增量更新</b></td><td>只加新增的，不动已有的</td><td>本地有人工补充过，不想被冲掉</td></tr>
+    </table>
+    </div>
+    <p>每次同步落一条日志：新增 / 更新 / 删除 / 失败四个计数 + 错误信息 + 操作人。</p>
+    <div class="tip">同步是<b>手动触发</b>的，没有定时调度。需要定期同步就自己排个时间去点，或者由外部调度调接口。</div>
+
+    <h3>引用页签</h3>
+    <p>列出哪些对象属性、接口属性用了这个枚举（经值类型的 Enum 约束）。改枚举项之前先看看影响面。</p>
+  </section>
+
+  <!-- ==================== 接口 ==================== -->
+  <section id="interface">
+    <h2>接口 <span class="tag">抽象契约</span></h2>
+    <p class="lead"><span class="path">资源 → 接口</span>。类似 OOP 里的 interface：声明「实现我的类必须有这些属性」，本身不落地。四个页签：概览 / 显示 / 属性 / 实现。</p>
+
+    <h3>属性页签</h3>
+    <p>行内编辑表格：编码 / 名称 / XSD 类型 / 值类型引用 / <b>必填标记</b> / 格式化 / 注释。必填标记三态：<code>0</code> 可选 / <code>1</code> 必填 / <code>2</code> 多值。</p>
+    <p>多选几行可以<b>批量设格式化规则</b>，不用一条条点。</p>
+
+    <h3>实现页签</h3>
+    <p>列出已经实现这个接口的对象类型，可以解绑，也可以点弹框选新的类绑上。重复绑同一个类不会产生第二条记录。</p>
+    <div class="note">当前<b>只记录绑定关系，不校验对象类型是否真的具备接口声明的全部属性</b>。绑之前自己对一遍，或等一致性校验上线。</div>
+
+    <h3>状态</h3>
+    <p>启用 / 禁用切换。列表支持批量删除、批量启用、批量禁用，也能按行业分组折叠着看。</p>
+  </section>
+
+  <!-- ==================== 类型类 ==================== -->
+  <section id="typeclass">
+    <h2>类型类 <span class="tag">元数据标签</span></h2>
+    <p class="lead"><span class="path">系统配置 → 类型类</span>。给属性 / 关系 / 动作贴的标签，带参数与前端组件映射。上层的图表、图谱靠读这些标签决定怎么渲染。</p>
+
+    <h3>结构</h3>
+    <ul>
+      <li><b>一级分类（Kind）</b> —— 内置 11 个，左侧彩色圆点列表。分类本身可以增删改（右键菜单）。</li>
+      <li><b>类型类定义</b> —— 挂在某个分类下，<code>分类 + 名称前缀</code> 唯一。</li>
+      <li><b>绑定实例</b> —— 把某个类型类绑到具体载体（属性 / 关系 / 动作）上，并给出参数值。</li>
+    </ul>
+
+    <h3>参数怎么配</h3>
+    <p>简单参数用 <b>param_type × frontend_component</b> 两个字段搭：</p>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>param_type</th><th>可选的前端组件</th></tr>
+      <tr><td>boolean</td><td>switch 开关</td></tr>
+      <tr><td>enum</td><td>单选 / 多选下拉</td></tr>
+      <tr><td>text / numeric</td><td>文本框 / 数字框</td></tr>
+      <tr><td>rid</td><td>RID 选择器</td></tr>
+      <tr><td>json</td><td>JSON 编辑器</td></tr>
+    </table>
+    </div>
+    <p>复杂的多字段参数走 <b>JSON Schema</b>（<code>param_json</code>）。抽屉右栏会<b>按 Schema 自动生成表单并实时预览</b>，下面还有原始 JSON 可对照——写 Schema 时左边改右边立刻能看到效果。</p>
+
+    <h3>几个开关</h3>
+    <ul>
+      <li><b>allow_multi_bind</b> —— 同一个载体能不能绑多次。</li>
+      <li><b>is_array_value</b> —— 参数值是不是数组。</li>
+      <li><b>system_protected</b> —— 受保护的内置类型类，<b>删不掉也改不了关键字段</b>。</li>
+    </ul>
+
+    <h3>渲染解析</h3>
+    <p>上层要用的时候不是一条条查绑定，而是调 <code>/api/tc-render/resolve</code>，传对象类型或链接，一次拿回它身上所有绑定与参数值。这是图表、图谱真实渲染的地基。</p>
+  </section>
+
+  <!-- ==================== 数据源 ==================== -->
+  <section id="datasource">
+    <h2>数据源（数据库类）</h2>
+    <p class="lead"><span class="path">资源 → 数据源</span>。三个页签：数据源 / 监控 / 物理表。</p>
+
+    <h3>支持的数据库</h3>
+    <p>12 种：MySQL、PostgreSQL、Oracle、MongoDB、达梦 DM、人大金仓 Kingbase、神通 Oscar、GBase、PolarDB、TDSQL、GaussDB、OceanBase。</p>
+    <p>选了类型之后系统会从驱动目录带出对应的 JDBC 驱动类名，一般不用手填。MongoDB 走独立的 <code>mongo_url</code> 字段。</p>
+
+    <h3>建连接</h3>
+    <ol class="steps">
+      <li>填基本信息：名称、编码、所属行业、数据库类型。</li>
+      <li>填连接配置：JDBC 驱动 / URL / 用户名 / 密码。</li>
+      <li>点<b>测试连接</b>。结果会写回连接状态（online 正常 / offline 离线 / risk 风险）和响应时间。</li>
+      <li>扩展项：备注、最大连接数、启用状态。</li>
+    </ol>
+    <div class="warn">凭证目前是明文存库的，只适合内网可信环境。生产环境落地前需要接密钥托管。</div>
+
+    <h3>监控页签</h3>
+    <p>2×2 面板：</p>
+    <ul>
+      <li><b>全局状态</b> —— 负载条 + 关键指标</li>
+      <li><b>基础配置</b> —— 最小空闲、最大连接</li>
+      <li><b>实时状态</b> —— 活跃连接、等待连接</li>
+      <li><b>响应时间</b></li>
+    </ul>
+    <p>下方两个运维操作：<b>热刷新连接池</b>（配置改了不用重启）、<b>动态调整最大连接数</b>。</p>
+
+    <h3>物理表页签</h3>
+    <p>点同步，从对端把表和视图的元数据拉进来。拉回来的表可以改显示名、可以删（只删本地元数据记录，不动对端）。表多的时候分页看。</p>
+    <div class="warn">删除数据源会<b>级联销毁连接池并清掉它的物理表记录</b>。已经绑了这些表的对象类型，字段映射会一起失效。</div>
+  </section>
+
+  <!-- ==================== 外部数据源 ==================== -->
+  <section id="extds">
+    <h2>外部数据源 / 接口管理器 <span class="tag">HTTP</span></h2>
+    <p class="lead">对方不给数据库、只给一组 HTTP 接口时用这个。它和数据库类数据源<b>在同一个列表页展示</b>，但走独立的表和接口。</p>
+
+    <h3>建外部数据源</h3>
+    <p>新建时选「接口类」，填基址与鉴权。详情是抽屉（不是整页），三块内容：基本信息 / 调用日志 / 监控。</p>
+
+    <h4>九种鉴权类型</h4>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>类型</th><th>适用场景</th></tr>
+      <tr><td>无鉴权</td><td>公开接口、内网免认证服务</td></tr>
+      <tr><td>API Key</td><td>开放平台简单认证。要配 Key 名称、参数位置（Header / Query）、密钥值、前缀</td></tr>
+      <tr><td>Basic Auth</td><td>HTTP 基础认证，可选自动 Base64 编码</td></tr>
+      <tr><td>Bearer Token</td><td>标准 REST 令牌。可配有效期、传递位置、令牌前缀、<b>自动续期</b>及刷新地址</td></tr>
+      <tr><td>OAuth2.0 客户端模式</td><td>服务间调用、机器凭证</td></tr>
+      <tr><td>OAuth2.0 授权码模式</td><td>用户授权、第三方登录对接</td></tr>
+      <tr><td>CAS 单点登录</td><td>企业统一身份认证、内网 SSO</td></tr>
+      <tr><td>JWT 令牌</td><td>自包含令牌、微服务内部认证</td></tr>
+      <tr><td>Digest Auth</td><td>比 Basic 更安全的 HTTP 摘要认证</td></tr>
+    </table>
+    </div>
+    <p>表单是<b>表驱动</b>渲染的，字段之间有联动（比如 Bearer 的「自动续期」打开后才出现「刷新令牌地址」）。</p>
+
+    <h3>接口管理器</h3>
+    <p>数据源行上的入口会<b>在新标签页打开</b>一个类 Postman 的独立工作台。</p>
+    <ul>
+      <li><b>左：目录树</b> —— 分组 + 接口两级。接口前的圆点按状态着色（调试 / 完成）。</li>
+      <li><b>上：标签栏</b> —— 可同时开多个接口，有未保存改动的标签带一个圆点。右上角可在新窗口打开。</li>
+      <li><b>地址栏</b> —— 方法下拉（<span style="color:#00B42A"><b>GET 绿</b></span> / <span style="color:#FF7D00"><b>POST 橙</b></span> / <span style="color:#165DFF"><b>PUT 蓝</b></span> / <span style="color:#F53F3F"><b>DELETE 红</b></span>）+ 基址（灰色不可改）+ 路径输入 + 发送 / 保存。</li>
+      <li><b>请求区</b> —— 五个页签：设置 / 鉴权 / Header / Query / Body。</li>
+      <li><b>响应区</b> —— 四个页签：实时响应 / 请求头 / 响应头 / 成功响应示例。</li>
+    </ul>
+    <p>请求区与响应区之间、左目录与右侧之间都可以拖拽调整比例。</p>
+
+    <h4>Body 的五种模式</h4>
+    <p><code>none</code> / <code>form-data</code> / <code>x-www-form-urlencoded</code> / <code>raw</code> / <code>binary</code>。form-data 的每一行可以是文本或<b>文件</b>（上限 10MB，文件只在内存里、不入库）。</p>
+
+    <h3>日志与监控</h3>
+    <p>点「发送」是<b>真实发起请求</b>，每次调用都落日志。回数据源抽屉：</p>
+    <ul>
+      <li><b>日志页签</b> —— 调用记录列表（筛选栏压成单行）+ 点开看详情。</li>
+      <li><b>监控页签</b> —— 按天的成功率与耗时趋势。</li>
+    </ul>
+    <div class="note">接口级的鉴权配置会<b>覆盖</b>数据源级的。大部分接口用数据源默认那套，个别特殊的在接口的「鉴权」页签单独配。</div>
+    <div class="tip">目前接口只做到「能调通、能看日志」。<b>把接口响应映射成对象类型的属性来源</b>还没做，所以 HTTP 数据源暂时不能像数据库数据源那样直接绑到对象类型上。</div>
+  </section>
+
+  <!-- ==================== 字典管理 ==================== -->
+  <section id="dict">
+    <h2>字典管理</h2>
+    <p class="lead"><span class="path">系统配置 → 字典管理</span>。系统级通用字典——界面上的下拉选项、状态码这类。<b>和「枚举类型」不是一回事</b>，见 <a href="#concept">概念地图</a>。</p>
+    <ul>
+      <li>左侧字典卡片列表（编码 / 名称 / 状态 / 条目数），带搜索。</li>
+      <li>右侧条目表，支持平铺和树形两种结构。</li>
+      <li>改完点右上角 <b>发布重载</b> 刷新全局缓存；也可以在单张卡片上只重载这一个字典。</li>
+    </ul>
+    <div class="tip">改了字典条目<b>必须重载缓存</b>才会在界面上生效——字典是缓存在后端内存里的，不重载就还是旧值。</div>
+  </section>
+
+  <!-- ==================== 总览 ==================== -->
+  <section id="overview">
+    <h2>总览</h2>
+    <p class="lead"><span class="path">工作区 → 总览</span>。15 张统计卡片，三行排布，是全系统的入口地图。</p>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>行</th><th>卡片</th></tr>
+      <tr><td>第一行（4 张）</td><td>行业数 / 领域数 / 分组数 / 数据源数</td></tr>
+      <tr><td>第二行（6 张）</td><td>对象类型 / 关系类型 / 动作类型 / 函数 / 类型类 / 接口</td></tr>
+      <tr><td>第三行（5 张）</td><td>属性数 / 枚举类型 / 值类型 / 结构属性 / 共享属性</td></tr>
+    </table>
+    </div>
+    <p>每张卡显示 <b>启用数 | 总数</b>、中英文名、一句话说明，点一下跳到对应模块。</p>
+    <p>顶部两行 chip 是<b>行业 / 领域两级筛选</b>，选了之后下面 15 个数字全部按范围重算，面包屑显示当前统计范围。「属性数」这张卡不可点（属性没有独立页面）。</p>
+  </section>
+
+  <!-- ==================== 图谱 ==================== -->
+  <section id="graph">
+    <h2>图谱</h2>
+    <p class="lead"><span class="path">工作区 → 图谱</span>。左右<b>双画布</b>：左边行业层级树（行业 / 领域 / 子领域 / 分组），右边对象本体图。中缝可以拖拽分配宽度，也可以把某一侧折叠起来。</p>
+    <ul>
+      <li>每侧独立的工具条：关键字搜索定位、重置、导出图片。</li>
+      <li>画布上悬浮竖排工具条：适配视图（只缩放居中，不改节点位置）、放大 / 缩小、回到初始布局、单侧全屏。</li>
+      <li>右下角下拉可以换<b>树布局</b>。</li>
+      <li>右下角图例可折叠，按节点类型着色。</li>
+    </ul>
+    <div class="note">图谱是<b>只读</b>的核对与浏览视图，不能在图上直接增删节点。要改结构去对应的资源页——建模入口只留一个，校验规则才不用写两遍。<br>例外：对象类型详情里的「链接关系」画布是可以直接编辑链接的，那是另一个组件。</div>
+  </section>
+
+  <!-- ==================== 实例探索 ==================== -->
+  <section id="instance">
+    <h2>实例探索 <span class="tag warn">模拟数据</span></h2>
+    <p class="lead"><span class="path">工作区 → 实例探索</span>。浏览器式的多标签工作区，用来验证「这个模型建得能不能用」。</p>
+    <div class="warn">这里的数据是按对象类型的属性定义<b>确定性生成</b>的模拟数据，不是业务数据。种子固定，重启后完全一致。用来验证列、筛选、聚合是否符合预期，别当真实数据看。</div>
+
+    <h3>搜索语法</h3>
+    <p>顶部全局搜索框支持四种写法（点搜索框右侧的 <b>?</b> 随时可以看）：</p>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>写法</th><th>含义</th></tr>
+      <tr><td><code>大坝 防渗</code></td><td>默认分词，含<b>任一</b>词即命中</td></tr>
+      <tr><td><code>"大坝 防渗"</code></td><td>引号内为精确短语，必须连续完整包含</td></tr>
+      <tr><td><code>黄河 AND 堤防</code><br><code>水库 OR 水闸</code></td><td>逻辑运算，可以加括号：<br><code>("大坝 防渗" OR "渠道 衬砌") AND 河南</code></td></tr>
+      <tr><td><code>闸?门</code> / <code>灌*</code></td><td>通配符：<b>?</b> 单个任意字符，<b>*</b> 任意长度</td></tr>
+    </table>
+    </div>
+
+    <h3>怎么用</h3>
+    <ol class="steps">
+      <li>先用左侧的<b>范围选择</b>（双栏抽屉）按行业 / 领域圈定要看的对象类型，或者直接搜。</li>
+      <li>点一个对象类型进探索页。列表视图里配显示列、加筛选、排序、翻页。</li>
+      <li><b>显示列可以跨关联对象取</b>——比如在「水文测站」列表里直接显示它所属河流的名称。前提是两者之间有链接类型。</li>
+      <li>切图表视图看分组聚合。不知道用什么图就点<b>图表推荐</b>。</li>
+      <li>配好的看板<b>会存到后端</b>（不是浏览器本地），换台机器打开还在。每个对象类型一份默认看板，另外可以存命名设计。</li>
+      <li>点某行开详情抽屉，看全部属性和关联对象，顺着关联继续跳到下一个对象。</li>
+    </ol>
+
+    <h3>多标签</h3>
+    <p>顶部是浏览器风格的标签栏，一个标签一个探索会话，可以同时开好几个对着看。点模块标题回总览首页。</p>
+  </section>
+
+  <!-- ==================== 知识浏览器 ==================== -->
+  <section id="knowledge">
+    <h2>知识浏览器 <span class="tag">语义层核对</span></h2>
+    <p class="lead"><span class="path">辅助工具 → 知识浏览器</span>。建模改动是否真的进了 Jena 模型和向量库，在这里核对。</p>
+
+    <h3>顶部三张状态卡</h3>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>源</th><th>显示什么</th></tr>
+      <tr><td><b>Jena 本体</b></td><td>就绪状态 + 类数 / 属性数 / 三元组数</td></tr>
+      <tr><td><b>向量库</b></td><td>类型（pgvector / Milvus）+ 维度 + 向量条数 + 表是否初始化</td></tr>
+      <tr><td><b>数据库</b></td><td>数据库产品 + 方言 + 表数</td></tr>
+    </table>
+    </div>
+    <p>任一源不可用时显示「未就绪 / 不可用」，页面其余部分照常能用。</p>
+
+    <h3>Jena 页签的七个子页</h3>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>子页</th><th>做什么</th></tr>
+      <tr><td><b>类</b></td><td>全部类列表，可按类名 / 标签过滤，点进去看详情</td></tr>
+      <tr><td><b>属性</b></td><td>同上，属性维度</td></tr>
+      <tr><td><b>成员·个体</b></td><td>某个类下的个体（实例和枚举值通用），关键词 + 分页</td></tr>
+      <tr><td><b>资源页</b></td><td>仿 Fuseki：给任意 URI 列出<b>出站与入站三元组</b>，可以一直点下去</td></tr>
+      <tr><td><b>目录</b></td><td>按类别 / 命名空间浏览全部实体</td></tr>
+      <tr><td><b>类树</b></td><td>类的层次结构，可指定根节点和深度</td></tr>
+      <tr><td><b>SPARQL 查询</b></td><td>内置查询模板 + 自由编写，多种格式返回</td></tr>
+    </table>
+    </div>
+    <div class="tip">刚建完一个对象类型，来这里的<b>类</b>子页搜一下——搜得到说明已经进了语义层，搜不到就去 <code>POST /api/ontology/rebuild</code> 触发重建。</div>
+
+    <h3>向量库页签</h3>
+    <ul>
+      <li>按命名空间分页列出已向量化的类，可以看单条向量详情。</li>
+      <li><b>相似度检索</b>：输入一段自然语言，按余弦相似度返回 topK，可设阈值。用来验证「用户这么问，能不能召回到正确的类」。</li>
+    </ul>
+
+    <h3>语义扩展链路</h3>
+    <p>问答类应用靠这条链路把用户的话对到本体术语上，相关配置在后端接口层：</p>
+    <ul>
+      <li><b>同义词词典</b> —— 增删改 + 批量导入。</li>
+      <li><b>领域术语</b> 与 <b>停用词</b>。</li>
+      <li><b>查询扩展</b> —— 一个词扩成一组同义表述。</li>
+      <li><b>子图抽取</b> —— 围绕命中的术语取出相关子图。</li>
+      <li><b>同义词自动生成</b> —— 单条 / 批量生成，以及 Milvus 的重建 / 同步 / flush / load。</li>
+    </ul>
+  </section>
+
+  <!-- ==================== 通用交互 ==================== -->
+  <section id="common">
+    <h2>通用交互</h2>
+
+    <h3>详情抽屉</h3>
+    <ul>
+      <li>从右侧滑入，<b>没有蒙层</b>——背景可以继续点，直接切到下一条记录，抽屉内容跟着换。</li>
+      <li><b>左缘 5px 是拖拽手柄</b>，拖宽拖窄，宽度会记在浏览器里，下次打开还是这个宽度。</li>
+      <li>右上角有最大化按钮。</li>
+      <li>头部固定：图标 + 标题 + 编码 + 只读/编辑切换 + 最大化 + 关闭。</li>
+    </ul>
+
+    <h3>批量操作</h3>
+    <p>列表勾选后顶部出现操作栏，全系统同一套：</p>
+    <p><span class="path">已选 N 项 ｜ <b style="color:#f53f3f">批量删除</b> ｜ <b style="color:#00b42a">启用</b> ｜ <b style="color:#86909c">禁用</b> ｜ 取消选择</span></p>
+    <p>批量删除会跳过删不掉的（被引用的、受保护的），并告诉你跳了哪些。</p>
+
+    <h3>全局搜索</h3>
+    <p>顶栏搜索框或 <code>⌘K</code> / <code>Ctrl+K</code>。跨对象、关系、属性、数据源等类型，结果在搜索框下方以燕尾下拉展示，按类型分组。</p>
+
+    <h3>主题</h3>
+    <p>顶栏右侧的月亮 / 太阳图标切深浅色。默认跟随系统，手动切一次后固定。另有主题色（蓝 / 绿 / 紫）可选，在设置里。</p>
+
+    <h3>图标</h3>
+    <p>分类节点、对象类型、接口、类型类的图标都从同一个<b>业务图库</b>选：</p>
+    <ul>
+      <li><b>业务库</b> —— 自己上传的 SVG，可以建分组、批量删。</li>
+      <li><b>内置图标库</b> —— 18 个分类组。</li>
+    </ul>
+
+    <h3>反馈与确认</h3>
+    <p>成功 / 警告 / 错误提示统一从右上角出。危险操作（删除、解绑、清空）一律先弹确认框，删除类的确认按钮是红的。</p>
+  </section>
+
+  <!-- ==================== 编码与命名 ==================== -->
+  <section id="naming">
+    <h2>编码与命名</h2>
+    <p class="lead">这一节的规矩看着琐碎，但违反了以后基本改不回来——<code>api_name</code> 建完就锁死。</p>
+
+    <h3>api_name</h3>
+    <ul>
+      <li><b>全局唯一</b>，跨模块也不能重。</li>
+      <li>对象类型、接口、值类型的 api_name <b>创建后不可修改</b>。</li>
+      <li>动作类型的 api_name 用下划线风格：<code>^[a-z][a-z0-9_]*$</code>。</li>
+      <li>链接类型两端的 api_name 用 camelCase。</li>
+    </ul>
+    <p>完整规则见 <b>API_NAME_CODING_STANDARD.md</b>，新增实体前先翻 <b>API_NAME_CHEATSHEET.md</b> 的决策树。项目里还有三套冲突检测工具（SQL / PowerShell / Java），在 <code>tools/</code> 目录。</p>
+
+    <h3>其它编码</h3>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>项</th><th>规则</th><th>例子</th></tr>
+      <tr><td>主键 ID</td><td><code>{前缀}-{UUID}</code>，系统自动生成</td><td><code>class-a1b2…</code>、<code>link-types-…</code></td></tr>
+      <tr><td>RID</td><td><code>ri.ont.{模块}.{编码}</code></td><td><code>ri.ont.interface.…</code></td></tr>
+      <tr><td>分类编码</td><td>小写 + 下划线，全局唯一</td><td><code>w_wtr</code></td></tr>
+      <tr><td>共享属性 prop_code</td><td>唯一，建完不可改</td><td>—</td></tr>
+    </table>
+    </div>
+
+    <h3>状态字段的两套口径</h3>
+    <p>不同模块的状态字段类型不一样，看列表时别混：</p>
+    <ul>
+      <li><b>整数型</b>：<code>1</code> 启用 / <code>0</code> 禁用 —— 对象类型、接口、数据源、分类等。</li>
+      <li><b>文本型</b>：链接类型是 <code>experimental / active / deprecated</code>；动作类型是 <code>0 草稿 / 1 已发布 / 2 已停用</code>。</li>
+    </ul>
+  </section>
+
+  <!-- ==================== FAQ ==================== -->
+  <section id="faq">
+    <h2>常见问题</h2>
+
+    <h3>建完的东西删不掉</h3>
+    <p>大概率是被引用了。系统会告诉你卡在哪：共享属性看「引用」页签，对象类型看「被引用」页签，枚举看「引用」页签。先把引用方改掉或删掉，再回来删。<br>另一种可能是<b>系统保护</b>——内置的类型类 <code>system_protected=1</code>，设计上就删不掉。</p>
+
+    <h3>api_name 填错了怎么办</h3>
+    <p>没有改的办法。只能删了重建；如果已经被引用又删不掉，就只能带着这个名字往下走，或者请管理员从数据库层面处理。<b>所以建之前想清楚。</b></p>
+
+    <h3>改了字典 / 枚举，界面没变</h3>
+    <p>字典要点<b>发布重载</b>刷缓存。枚举改完如果是通过值类型引用的，检查一下值类型的使用配置（显示格式、最大层级）是不是限制住了。</p>
+
+    <h3>数据源测试连接失败</h3>
+    <p>按顺序排查：驱动类名对不对（换个类型再换回来让系统重新带一次）→ JDBC URL 格式 → 网络可达性 → 凭证。MongoDB 走的是 <code>mongo_url</code> 而不是 JDBC 那几个字段。</p>
+
+    <h3>接口管理器点发送没反应</h3>
+    <p>看响应区的「实时响应」页签有没有错误信息。常见原因：基址末尾和路径开头都带了 <code>/</code> 导致双斜杠；鉴权配置没保存（标签上还有脏标记圆点）；请求超时。</p>
+
+    <h3>实例探索里查不到刚建的对象类型</h3>
+    <p>确认三件事：对象类型是<b>启用</b>状态；它<b>有属性</b>（没有属性的类生成不出实例）；顶部的范围选择器没把它排除在外。</p>
+
+    <h3>知识浏览器里搜不到刚建的类</h3>
+    <p>Jena 模型不是每次改动都实时重建的。调 <code>POST /api/ontology/rebuild</code> 触发重建，然后回来看状态卡里的类数有没有变。</p>
+
+    <h3>页面空白 / 改了没生效</h3>
+    <p>浏览器硬刷新 <code>Ctrl + Shift + R</code>。前端有懒加载缓存，路由或组件改动后普通刷新可能拿的还是旧的。</p>
+
+    <h3>抽屉里的弹框被挡住了</h3>
+    <p>这是 bug，不是设计。大弹框的层级应该高于抽屉（抽屉 1010，大弹框 ≥1200）。碰到了报一下。</p>
+  </section>
+
+  </main>
+
+  <!-- ==================== 右栏速查 ==================== -->
+  <aside class="hp-tut" id="hpTut">
+    <h2>常见任务速查</h2>
+    <p class="tu-lead">按「我要做什么」组织的操作清单，点开就是步骤。跟左边的说明对着看。</p>
+    <input class="tu-search" id="tuSearch" placeholder="搜任务，如「枚举」「链接」「鉴权」" oninput="tuFilter(this.value)">
+
+    <details class="tu-item">
+      <summary><span class="tu-n">01</span>建一个新的对象类型</summary>
+      <ol class="tu-steps">
+        <li>确认落点：<code>系统配置 → 行业分类</code> 里有对应的领域</li>
+        <li><code>资源 → 对象类型</code>，左树选中领域，点<b>新建</b></li>
+        <li>向导填编码 / 显示名 / api_name / 图标 / 颜色</li>
+        <li>抽屉「属性」页签逐条加字段</li>
+        <li>去<b>实例探索</b>打开它验证能出数</li>
+        <div class="tu-note">api_name 建完锁死，先想好</div>
+      </ol>
+    </details>
+
+    <details class="tu-item">
+      <summary><span class="tu-n">02</span>给属性限定取值范围</summary>
+      <ol class="tu-steps">
+        <li>取值是固定几项 → 先建<b>枚举类型</b>，把枚举项灌进去</li>
+        <li><code>资源 → 值类型</code> 新建，基础类型选 String，约束选 <b>Enum</b>，绑上刚才的枚举</li>
+        <li>配使用配置：最大选择层级 / 允许非叶子 / 显示格式</li>
+        <li>「预览验证」页签试一个值</li>
+        <li>回对象类型的属性行，值类型选它</li>
+        <div class="tu-note">格式约束（手机号、身份证）用 Regex 约束，不用建枚举</div>
+      </ol>
+    </details>
+
+    <details class="tu-item">
+      <summary><span class="tu-n">03</span>连接两个对象类型</summary>
+      <ol class="tu-steps">
+        <li><code>资源 → 链接</code> 点新建</li>
+        <li>上栏填源端：对象类型 + 基数 + 正向显示名</li>
+        <li>下栏填目标端：对象类型 + 基数 + 反向显示名</li>
+        <li>选落地方式：字段映射，或打开「数据源关系」用中间表</li>
+        <li>加映射行，复合主键就加多行</li>
+        <li>回对象类型的「链接关系」页签核对图上画的方向</li>
+      </ol>
+    </details>
+
+    <details class="tu-item">
+      <summary><span class="tu-n">04</span>让一个字段在多个对象上复用</summary>
+      <ol class="tu-steps">
+        <li><code>资源 → 共享属性</code>，走三步向导建一次</li>
+        <li>各对象类型的属性里引用它</li>
+        <li>要看谁在用：共享属性详情的「引用」页签</li>
+        <div class="tu-note">改共享属性不会回写到已引用的对象属性上</div>
+      </ol>
+    </details>
+
+    <details class="tu-item">
+      <summary><span class="tu-n">05</span>把一组字段打成包</summary>
+      <ol class="tu-steps">
+        <li>先把成员字段都建成<b>共享属性</b></li>
+        <li><code>资源 → 共享属性 → 结构属性</code> Tab，新建结构</li>
+        <li>右侧条目表逐个加共享属性，拖拽排顺序</li>
+      </ol>
+    </details>
+
+    <details class="tu-item">
+      <summary><span class="tu-n">06</span>从外部库同步一份枚举</summary>
+      <ol class="tu-steps">
+        <li>前置：<code>资源 → 数据源</code> 里那个库已连通</li>
+        <li>枚举详情 →「同步规则」页签</li>
+        <li>三级联动选：数据源 → 表 → 各字段（编码/名称/排序/状态/父级）</li>
+        <li>只取一部分就填过滤 SQL</li>
+        <li>点<b>测试连接</b>和<b>预览 SQL</b> 确认</li>
+        <li>选模式执行：全量覆盖 / 逐级对比 / 增量更新</li>
+        <li>看同步日志的四个计数</li>
+        <div class="tu-note">手动触发，没有定时调度</div>
+      </ol>
+    </details>
+
+    <details class="tu-item">
+      <summary><span class="tu-n">07</span>建一个动作</summary>
+      <ol class="tu-steps">
+        <li><code>资源 → 动作类型</code>，五步向导定主体对象</li>
+        <li>详情工作台「表单」页：建分区 → 加参数 → 逐个配值/显示</li>
+        <li>「规则」页：按执行顺序加规则卡片，拖拽排序</li>
+        <li>每条规则配属性映射：目标属性 ← 值来源</li>
+        <li>「安全与提交」页配提交条件树</li>
+        <li>管理页点 <b>▶</b> 试运行，确认执行计划</li>
+        <li>状态从「草稿」改「已发布」</li>
+        <div class="tu-note">试运行不写物理表</div>
+      </ol>
+    </details>
+
+    <details class="tu-item">
+      <summary><span class="tu-n">08</span>动作参数的选项从对象来</summary>
+      <ol class="tu-steps">
+        <li>参数详情 →「值」标签</li>
+        <li>数据类型选 <code>object</code>（对象引用）或字符串<b>多选</b></li>
+        <li>配「从对象集获取」：起始对象集 → 按属性过滤 → 关联搜索</li>
+        <li>字符串多选还要选<b>返回属性</b>（取对象的哪个字段当值）</li>
+        <div class="tu-note">起始对象集可以引用表单里已有的对象参数当变量</div>
+      </ol>
+    </details>
+
+    <details class="tu-item">
+      <summary><span class="tu-n">09</span>接一个数据库</summary>
+      <ol class="tu-steps">
+        <li><code>资源 → 数据源</code> 新建，选 12 种类型之一</li>
+        <li>驱动类名一般自动带出，填 URL / 账号 / 密码</li>
+        <li>点<b>测试连接</b>，看状态变 online</li>
+        <li>「物理表」页签点同步，拉表结构</li>
+        <li>回对象类型「数据源」页签绑表，再逐个属性映射列</li>
+        <div class="tu-note">解绑数据源会清空该绑定下所有字段映射</div>
+      </ol>
+    </details>
+
+    <details class="tu-item">
+      <summary><span class="tu-n">10</span>接一组 HTTP 接口</summary>
+      <ol class="tu-steps">
+        <li>新建<b>外部数据源</b>，填基址</li>
+        <li>选鉴权类型（9 种），按表单填字段</li>
+        <li>打开<b>接口管理器</b>（新标签页）</li>
+        <li>左侧建分组和接口</li>
+        <li>地址栏选方法填路径，配 Header / Query / Body</li>
+        <li>点<b>发送</b>真实调用，看响应区</li>
+        <li>回数据源抽屉看「日志」和「监控」</li>
+        <div class="tu-note">接口级鉴权会覆盖数据源级</div>
+      </ol>
+    </details>
+
+    <details class="tu-item">
+      <summary><span class="tu-n">11</span>声明一个契约（接口）</summary>
+      <ol class="tu-steps">
+        <li><code>资源 → 接口</code> 新建</li>
+        <li>「属性」页签加属性，设必填标记（可选/必填/多值）</li>
+        <li>多选几行可以批量设格式化</li>
+        <li>「实现」页签绑上要实现它的对象类型</li>
+        <div class="tu-note">当前不校验对象类型是否真的有这些属性，自己对一遍</div>
+      </ol>
+    </details>
+
+    <details class="tu-item">
+      <summary><span class="tu-n">12</span>给属性/关系贴元数据标签</summary>
+      <ol class="tu-steps">
+        <li><code>系统配置 → 类型类</code>，左侧选或新建一个分类</li>
+        <li>新建类型类，填名称前缀 + 适用类型</li>
+        <li>配参数：简单的用 param_type + 前端组件；复杂的写 JSON Schema</li>
+        <li>右栏看自动生成的表单预览</li>
+        <li>去对象类型 / 链接的「类型类」页签绑定并填参数值</li>
+      </ol>
+    </details>
+
+    <details class="tu-item">
+      <summary><span class="tu-n">13</span>查一批数据看看</summary>
+      <ol class="tu-steps">
+        <li><code>工作区 → 实例探索</code></li>
+        <li>范围选择器圈定领域，或直接搜（支持 AND/OR/引号/通配符）</li>
+        <li>点对象类型进列表，配显示列（可跨关联对象取）</li>
+        <li>加筛选 + 排序 + 翻页</li>
+        <li>切图表视图，或用图表推荐</li>
+        <li>配置自动存成该对象类型的默认看板</li>
+        <div class="tu-note">数据是模拟生成的，别当业务数据看</div>
+      </ol>
+    </details>
+
+    <details class="tu-item">
+      <summary><span class="tu-n">14</span>确认改动进了语义层</summary>
+      <ol class="tu-steps">
+        <li><code>辅助工具 → 知识浏览器</code></li>
+        <li>看三张状态卡是否就绪</li>
+        <li>Jena「类」子页搜刚建的类</li>
+        <li>搜不到就调 <code>POST /api/ontology/rebuild</code></li>
+        <li>向量库页签用自然语言检索验证召回</li>
+      </ol>
+    </details>
+
+    <details class="tu-item">
+      <summary><span class="tu-n">15</span>删不掉的东西怎么处理</summary>
+      <ol class="tu-steps">
+        <li>看报错里的引用清单</li>
+        <li>共享属性 → 「引用」页签找引用方</li>
+        <li>对象类型 → 「被引用」页签</li>
+        <li>枚举 → 「引用」页签</li>
+        <li>把引用方改掉或删掉，再回来删</li>
+        <div class="tu-note"><code>system_protected=1</code> 的类型类设计上就删不掉</div>
+      </ol>
+    </details>
+
+    <details class="tu-item">
+      <summary><span class="tu-n">16</span>新建一个领域和命名空间</summary>
+      <ol class="tu-steps">
+        <li><code>系统配置 → 行业分类</code></li>
+        <li>选中行业节点，快速添加菜单选「领域」</li>
+        <li>填编码（小写下划线）/ 中文名 / 图标 / 颜色</li>
+        <li>抽屉「命名空间」页签绑 ns_code / URI / 版本</li>
+        <li>需要按主题再分就在领域下建分组，并把对象类型加为成员</li>
+      </ol>
+    </details>
+  </aside>
+</div>
+
+<div id="hpLight" onclick="this.classList.remove('open')"><img id="hpLightImg" src="" alt=""></div>
+
+<script>
+/* 目录高亮：跟随阅读位置 */
+(function () {
+  var links = [].slice.call(document.querySelectorAll('.hp-toc a[href^="#"]'));
+  var map = {};
+  links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+  var secs = [].slice.call(document.querySelectorAll('section[id]'));
+  function onScroll() {
+    var cur = null, top = 90;
+    for (var i = 0; i < secs.length; i++) {
+      if (secs[i].getBoundingClientRect().top <= top) cur = secs[i].id;
+    }
+    if (!cur && secs.length) cur = secs[0].id;
+    links.forEach(function (a) { a.classList.remove('cur'); });
+    if (cur && map[cur]) map[cur].classList.add('cur');
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  onScroll();
+})();
+
+/* 速查搜索：按标题与步骤文本过滤 */
+function tuFilter(q) {
+  q = (q || '').trim().toLowerCase();
+  var items = document.querySelectorAll('#hpTut .tu-item');
+  items.forEach(function (it) {
+    var t = it.textContent.toLowerCase();
+    var hit = !q || t.indexOf(q) >= 0;
+    it.classList.toggle('tu-hide', !hit);
+    if (q && hit) it.setAttribute('open', ''); else if (q) it.removeAttribute('open');
+  });
+}
+
+/* 截图点开放大 */
+document.addEventListener('click', function (e) {
+  var img = e.target.closest('figure.hp-shot img');
+  if (!img) return;
+  document.getElementById('hpLightImg').src = img.src;
+  document.getElementById('hpLight').classList.add('open');
+});
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') document.getElementById('hpLight').classList.remove('open');
+});
+</script>
+</body>
+</html>
