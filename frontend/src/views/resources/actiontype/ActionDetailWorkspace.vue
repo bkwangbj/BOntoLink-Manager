@@ -437,23 +437,11 @@
                         </div>
                         <div class="fd-cascade-row">
                           <span class="fd-cascade-lbl">属性</span>
-                          <div class="fd-cascade-echo">
-                            <template v-if="defObjPropList.length">
-                              <ReturnCard :items="defObjCardItems" :scheme="defObjCardScheme" />
-                              <div class="fd-echo-meta">
-                                <span class="fd-echo-tag">{{ defObjSchemeLabel }}</span>
-                                <span class="bl-muted bl-truncate">{{ defObjCardItems.map(i => i.name).join('、') }}</span>
-                              </div>
-                            </template>
-                            <div v-else class="bl-muted fd-echo-empty">{{ defObjPlaceholder }}</div>
-                          </div>
-                          <button class="bl-btn bl-btn-sm" :disabled="!defObjClassId"
-                                  :title="defObjClassId ? '选择属性与呈现模版' : '请先选择对象'" @click="defObjCardOpen = true">选择</button>
+                          <BlSelect v-model="defObjPropList" :options="defObjPropOptions" multiple clearable
+                                    :placeholder="defObjPlaceholder" style="flex:1" />
                         </div>
                         <div :class="['fd-cascade-hint', defObjFallback && 'is-warn']">{{ defObjHint }}</div>
                       </div>
-                      <ReturnCardPicker v-model:open="defObjCardOpen" :prop-options="defObjPropOptions"
-                                        :prop-codes="defObjPropList" :card-scheme="defObjCardScheme" @confirm="applyDefObjCard" />
                     </template>
                   </div>
                 </section>
@@ -710,8 +698,6 @@ import IconPickerField from '@/components/IconPickerField.vue'
 import ColorPickerField from '@/components/ColorPickerField.vue'
 import ConditionGroup from './ConditionGroup.vue'
 import ObjectSetFilter from './ObjectSetFilter.vue'
-import ReturnCard from './ReturnCard.vue'
-import ReturnCardPicker from './ReturnCardPicker.vue'
 import IconGridSelect from './IconGridSelect.vue'
 import RuleObjectEditor from './RuleObjectEditor.vue'
 import PropertyPickerModal from './PropertyPickerModal.vue'
@@ -815,7 +801,7 @@ function defaultParam() {
     src_class_id:'', src_class_name:'', src_class_api:'',
     allow_multi:0, input_mode:'input', min_length_on:0, min_length:'', max_length_on:0, max_length:'', regex_on:0, regex:'',
     options:[], allow_other:0, option_source:'manual', objset:defaultObjset(),
-    default_enabled:0, default_type:'static', default_obj_class:'', default_obj_param:'', default_obj_prop:'', default_obj_card:'inline', overrides:[], dsp:{} }
+    default_enabled:0, default_type:'static', default_obj_class:'', default_obj_param:'', default_obj_prop:'', overrides:[], dsp:{} }
 }
 /* 从对象集获取选项 (文档 1.4.4.1.3) */
 /* links = 链式关联搜索, 第 N 跳从第 N-1 跳的对端对象继续往外关联, filters 是该跳对端对象的属性过滤 */
@@ -847,7 +833,6 @@ function normalizeParam(p) {
     objset:normObjset(cfg.objset),
     default_enabled:cfg.default_enabled??0, default_type:cfg.default_type||'static',
     default_obj_class:cfg.default_obj_class||'', default_obj_param:cfg.default_obj_param||'', default_obj_prop:cfg.default_obj_prop||'',
-    default_obj_card:cfg.default_obj_card||'inline',
     overrides:normalizeOverrides(cfg.overrides), dsp:cfg.dsp||{} }
 }
 function paramConfig(p) {
@@ -857,7 +842,7 @@ function paramConfig(p) {
     min_length_on:p.min_length_on, min_length:p.min_length, max_length_on:p.max_length_on, max_length:p.max_length, regex_on:p.regex_on, regex:p.regex,
     options:p.options, allow_other:p.allow_other, option_source:p.option_source, objset:p.objset || defaultObjset(),
     default_enabled:p.default_enabled, default_type:p.default_type, default_obj_class:p.default_obj_class || '',
-    default_obj_param:p.default_obj_param || '', default_obj_prop:p.default_obj_prop || '', default_obj_card:p.default_obj_card || 'inline',
+    default_obj_param:p.default_obj_param || '', default_obj_prop:p.default_obj_prop || '',
     /* 自动给出的第一条若一直没填, 不落库 */
     overrides:serializeOverrides((p.overrides || []).filter(b => b.cond?.children?.length || b.actions?.length)), dsp:p.dsp || {} }
 }
@@ -1721,7 +1706,7 @@ const defObjClassId = computed(() => selParam.value?.default_obj_class || defObj
 const defObjFallback = computed(() => !!selParam.value?.default_obj_param && !selParam.value?.default_obj_class && !defObjOwnClassId.value)
 const defObjPropOptions = computed(() => {
   const arr = ruleClassPropsCache[defObjClassId.value] || (defObjClassId.value === form.object_class_id ? classProps.value : [])
-  return arr.map(p => ({ value:p.code, label:`${p.name} (${p.code})`, name:p.name, status:p.status }))
+  return arr.map(p => ({ value:p.code, label:`${p.name} (${p.code})` }))
 })
 /* default_obj_prop 存逗号分隔编码, 单个时与旧的单选值一致, 存量配置不用迁移 */
 const defObjPropList = computed({
@@ -1731,18 +1716,8 @@ const defObjPropList = computed({
 const defObjClassName = computed(() => classOptions.value.find(c => c.id === defObjClassId.value)?.cn || '')
 const defObjPlaceholder = computed(() => {
   if (!defObjClassId.value) return '请先选择对象'
-  return defObjPropOptions.value.length ? '未配置属性 — 点右侧「选择」挑属性与呈现模版' : `「${defObjClassName.value || '该对象'}」暂无属性`
+  return defObjPropOptions.value.length ? '选择属性 (可多选)' : `「${defObjClassName.value || '该对象'}」暂无属性`
 })
-/* 默认值回填的多属性同样按卡片模版拼 (与「返回属性」一套组件) */
-const CARD_SCHEME_LABEL = { title_sub:'标题 + 副标题', title_tags:'标题 + 标签', title_sub_tags:'标题 + 副标题 + 标签', inline:'单行拼接' }
-const defObjCardOpen = ref(false)
-const defObjCardScheme = computed(() => selParam.value?.default_obj_card || 'inline')
-const defObjSchemeLabel = computed(() => CARD_SCHEME_LABEL[defObjCardScheme.value] || CARD_SCHEME_LABEL.inline)
-const defObjCardItems = computed(() => defObjPropList.value.map(c => ({ code:c, name:defObjPropOptions.value.find(o => o.value === c)?.name || c })))
-function applyDefObjCard({ codes, scheme }) {
-  defObjPropList.value = codes
-  if (selParam.value) selParam.value.default_obj_card = scheme
-}
 const defObjHint = computed(() => {
   const p = selParam.value; if (!p) return ''
   if (defObjFallback.value) {
@@ -1754,7 +1729,7 @@ const defObjHint = computed(() => {
   const on = defObjClassName.value || '该对象'
   const cn = codes.map(c => defObjPropOptions.value.find(o => o.value === c)?.label || c).join('、')
   return codes.length > 1
-    ? `表单打开时自动取「${on}」的「${cn}」按「${defObjSchemeLabel.value}」模版拼接后回填,用户仍可自行修改。`
+    ? `表单打开时自动取「${on}」的「${cn}」按顺序拼接后回填,用户仍可自行修改。`
     : `表单打开时自动取「${on}」的「${cn}」回填,用户仍可自行修改。`
 })
 watch(defObjClassId, id => { if (id) loadRuleClassProps(id) }, { immediate: true })
@@ -2141,12 +2116,6 @@ function shortTime(t) { if (!t) return '—'; return String(t).slice(0, 19) }
 .adw-dirty { width: 6px; height: 6px; border-radius: 50%; background: #fff; display: inline-block; margin-right: 5px; vertical-align: 1px; }
 .fd-cascade { display: flex; flex-direction: column; gap: 10px; }
 .fd-cascade-row { display: flex; align-items: center; gap: 8px; }
-/* 属性回显: 与「返回属性」同一套卡片, 右侧「选择」开弹窗 */
-.fd-cascade-echo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px;
-  padding: 8px; border: 1px dashed var(--bl-border-strong); border-radius: 8px; }
-.fd-echo-meta { display: flex; align-items: center; gap: 8px; font-size: 11.5px; min-width: 0; }
-.fd-echo-tag { flex-shrink: 0; padding: 1px 6px; border-radius: 4px; background: var(--bl-primary-soft); color: var(--bl-primary); }
-.fd-echo-empty { font-size: 12.5px; text-align: center; padding: 4px 0; }
 .fd-cascade-lbl { flex-shrink: 0; width: 66px; font-size: 12.5px; color: var(--bl-text-2); }
 .fd-cascade-hint { font-size: 12px; color: var(--bl-text-3); line-height: 1.6; padding-left: 74px; }
 .fd-cascade-hint.is-warn { color: #92400E; background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 6px; padding: 8px 12px; margin-left: 74px; }
