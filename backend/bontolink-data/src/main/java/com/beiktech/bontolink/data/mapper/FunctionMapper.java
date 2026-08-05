@@ -83,6 +83,35 @@ public interface FunctionMapper {
     @Update("UPDATE ont_function SET status = #{status}, update_time = CURRENT_TIMESTAMP WHERE id = #{id}")
     int updateStatus(@Param("id") String id, @Param("status") Object status);
 
+    /** 发布:置状态 + 落发布时间与发布人(不碰其他字段) */
+    @Update("""
+        UPDATE ont_function SET
+          status = 2, publish_time = #{publish_time}, create_user = COALESCE(create_user, #{publish_user}),
+          update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    """)
+    int markPublished(@Param("id") String id,
+                      @Param("publish_time") String publishTime,
+                      @Param("publish_user") String publishUser);
+
+    /** 撤回到草稿:发布时间一并清掉, 否则「草稿」却带着发布时间, 自相矛盾 */
+    @Update("UPDATE ont_function SET status = 1, publish_time = NULL, update_time = CURRENT_TIMESTAMP WHERE id = #{id}")
+    int markDraft(@Param("id") String id);
+
+    /** 某个代码文件里的全部函数(所有版本);IDE 保存后按文件回写用 */
+    @Select("SELECT * FROM ont_function WHERE code_file_path = #{filePath} AND is_deleted = 0")
+    List<Map<String, Object>> listByFilePath(@Param("filePath") String filePath);
+
+    /** IDE 保存后把源码与指纹回写到函数记录 */
+    @Update("""
+        UPDATE ont_function SET
+          code_content = #{code_content}, code_md5 = #{code_md5},
+          file_line_start = #{file_line_start}, file_line_end = #{file_line_end},
+          update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    """)
+    int updateCode(Map<String, Object> row);
+
     @Update("UPDATE ont_function SET visibility = #{visibility}, update_time = CURRENT_TIMESTAMP WHERE id = #{id}")
     int updateVisibility(@Param("id") String id, @Param("visibility") Object visibility);
 

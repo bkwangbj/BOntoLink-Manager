@@ -60,6 +60,12 @@
             <artifactId>org.eclipse.jgit</artifactId>
         </dependency>
 
+        <!-- WebSocket：函数 IDE 的代码运行 / 终端输出流式推送 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
         <!-- Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

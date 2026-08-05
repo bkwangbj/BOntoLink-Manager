@@ -39,6 +39,12 @@ export default defineConfig({
       '/api': {
         target: 'http://127.0.0.1:8088/bontolink',
         changeOrigin: true
+      },
+      // 函数 IDE 的运行/终端走 WebSocket,必须单独代理并开 ws:true
+      '/ws': {
+        target: 'ws://127.0.0.1:8088/bontolink',
+        ws: true,
+        changeOrigin: true
       }
     }
   }

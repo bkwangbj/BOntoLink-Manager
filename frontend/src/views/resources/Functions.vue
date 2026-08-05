@@ -383,8 +383,20 @@ async function onBatchDelete() {
 async function onBatchStatus(status) {
   const ids = [...checked.value]
   if (!ids.length) return
-  await Promise.all(ids.map(id => functionApi.setStatus(id, status).catch(() => null)))
-  BL.success(status === 2 ? '已发布' : '已停用')
+  // 发布走独立接口:除状态外还要落发布时间, 并把当前代码仓分支/commit 登记到版本库
+  if (status === 2) {
+    const ok = await BL.confirm({
+      title: '发布函数',
+      content: `发布选中的 ${ids.length} 个函数?发布会记录发布时间,并把当前代码仓的分支与提交登记进版本库。`,
+      okText: '发布',
+    })
+    if (!ok) return
+    await functionApi.batchPublish(ids).catch(e => BL.error(e?.message || '发布失败'))
+    BL.success('已发布')
+  } else {
+    await Promise.all(ids.map(id => functionApi.setStatus(id, status).catch(() => null)))
+    BL.success('已停用')
+  }
   checked.value = new Set()
   await refresh()
 }

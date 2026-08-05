@@ -67,6 +67,13 @@
   --ide-status: #0f4a85;
 }
 
+/* 全局搜索命中在编辑器里的高亮 —— Monaco 的装饰节点不受 scoped 约束, 只能写全局 */
+.ide-find-match {
+  background: rgba(234, 92, 0, .33);
+  border: 1px solid rgba(234, 92, 0, .6);
+  box-sizing: border-box; border-radius: 2px;
+}
+
 /* —— 菜单/面板通用件(供 IdeMenuBar / IdeSidePanel 复用) —— */
 .ide-menu-pop {
   position: absolute; top: 100%; left: 0; z-index: 60;
@@ -109,4 +116,83 @@
   font-size: 11.5px; color: var(--ide-text-dim);
 }
 .ide-submenu-arrow { color: #aaaaaa; flex-shrink: 0; }
+
+/* —— 侧边面板通用件(idep- 前缀,供 panels/*.vue 共用;非 scoped) —— */
+.idep-bar { display: flex; align-items: center; gap: 4px; padding: 6px; }
+.idep-search { position: relative; flex: 1; min-width: 0; }
+.idep-search-ic { position: absolute; left: 6px; top: 50%; transform: translateY(-50%); color: var(--ide-text-dim); }
+.idep-input {
+  width: 100%; height: 24px; padding: 0 6px 0 22px;
+  background: var(--ide-bg); border: 1px solid var(--ide-border);
+  color: var(--ide-text); font-size: 12px; border-radius: 3px; outline: none;
+}
+.idep-input.is-plain { padding-left: 6px; }
+.idep-input:focus { border-color: var(--ide-blue); }
+.idep-btn {
+  flex-shrink: 0; height: 24px; padding: 0 8px; border-radius: 3px; cursor: pointer;
+  background: transparent; border: 1px solid var(--ide-border); color: var(--ide-text);
+  font-size: 11.5px; display: inline-flex; align-items: center; gap: 3px;
+}
+.idep-btn:hover { background: var(--ide-hover); }
+.idep-btn.is-primary { background: var(--ide-blue); border-color: var(--ide-blue); color: #fff; }
+.idep-btn:disabled { opacity: .5; cursor: default; }
+.idep-icon-btn {
+  width: 24px; height: 24px; flex-shrink: 0; border: 0; border-radius: 3px; cursor: pointer;
+  background: transparent; color: var(--ide-text-dim);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.idep-icon-btn:hover { background: var(--ide-hover); color: var(--ide-text-strong); }
+
+/* 分类标签栏(资源导入) */
+.idep-tabs { display: flex; flex-wrap: wrap; gap: 3px; padding: 6px 6px 0; }
+.idep-tab {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 7px; border-radius: 3px; border: 0; cursor: pointer;
+  background: transparent; color: var(--ide-text-dim); font-size: 11.5px;
+}
+.idep-tab:hover { background: var(--ide-hover); }
+.idep-tab.is-on { background: var(--ide-active); color: var(--ide-text-strong); }
+.idep-tab-n { opacity: .8; }
+
+/* 列表行 */
+.idep-row {
+  display: flex; align-items: center; gap: 6px;
+  min-height: 24px; padding: 3px 8px;
+  font-size: 12px; color: var(--ide-text); cursor: pointer;
+}
+.idep-row:hover { background: var(--ide-hover); }
+.idep-row.is-on { background: var(--ide-active); color: var(--ide-text-strong); }
+.idep-row-ic {
+  width: 16px; height: 16px; flex-shrink: 0; border-radius: 3px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.idep-row-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.idep-row-sub { font-size: 10.5px; color: var(--ide-text-dim); }
+.idep-row-act { flex-shrink: 0; opacity: 0; border: 0; background: transparent; cursor: pointer; color: var(--ide-text-dim); }
+.idep-row:hover .idep-row-act { opacity: 1; }
+.idep-row-act:hover { color: #f14c4c; }
+
+/* 分组头 */
+.idep-group {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 8px; cursor: pointer; user-select: none;
+  font-size: 11px; letter-spacing: .04em; color: var(--ide-text-dim);
+}
+.idep-group:hover { color: var(--ide-text); }
+.idep-group-chev { display: inline-flex; transition: transform .12s; }
+.idep-group-chev.is-open { transform: rotate(90deg); }
+.idep-group-n {
+  margin-left: auto; padding: 0 5px; border-radius: 7px;
+  background: var(--ide-bg-4); font-size: 10px;
+}
+
+.idep-empty { padding: 18px 12px; font-size: 11.5px; color: var(--ide-text-dim); line-height: 18px; }
+.idep-hint { padding: 6px 10px; font-size: 11px; color: var(--ide-text-dim); line-height: 16px; }
+.idep-card {
+  margin: 6px 8px; padding: 8px 10px; border-radius: 4px;
+  background: var(--ide-bg); border: 1px solid var(--ide-border);
+}
+.idep-kv { display: flex; gap: 8px; padding: 3px 0; font-size: 11.5px; }
+.idep-kv span { flex-shrink: 0; color: var(--ide-text-dim); min-width: 56px; }
+.idep-kv b { font-weight: 400; color: var(--ide-text); min-width: 0; word-break: break-all; }
 .ide-menu-item:hover:not(.is-disabled) .ide-submenu-arrow { color: #ffffff; }

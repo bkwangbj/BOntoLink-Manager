@@ -52,9 +52,19 @@ const props = defineProps({
   /** 外观相关状态 */
   settings: { type: Object, required: true },
   /** 底部面板标签显隐 { problems, output, debug, terminal, showIcons } */
-  panel: { type: Object, required: true }
+  panel: { type: Object, required: true },
+  /** 底部面板整体是否展开 —— 决定「隐藏面板 / 显示面板」的文案 */
+  panelOpen: { type: Boolean, default: false },
+  /** 服务端是否有进程在跑 —— 运行菜单的可用/禁用态跟着它变 */
+  running: { type: Boolean, default: false },
+  /** 调试会话是否存在 / 是否停在断点处 */
+  debugging: { type: Boolean, default: false },
+  paused: { type: Boolean, default: false },
+  /** 断点总数 —— 决定「启用/禁用/删除所有断点」是否可点 */
+  breakpointCount: { type: Number, default: 0 }
 })
-const emit = defineEmits(['open-settings', 'patch-settings', 'toggle-panel-tab', 'toggle-panel', 'command-palette', 'help'])
+const emit = defineEmits(['open-settings', 'patch-settings', 'toggle-panel-tab', 'toggle-panel',
+  'run-file', 'stop-run', 'debug-action', 'command-palette', 'help'])
 
 const openKey = ref('')
 const rootEl = ref(null)
@@ -77,17 +87,21 @@ function itemsOf(m) {
     case 'edit': return EDIT_ITEMS
     case 'select': return SELECT_ITEMS.value
     case 'view': return VIEW_ITEMS.value
-    case 'run': return RUN_ITEMS
+    case 'run': return RUN_ITEMS.value
     case 'term': return TERM_ITEMS.value
     case 'help': return HELP_ITEMS
     default: return []
   }
 }
 
-/* —— 语言:全禁用, 当前项带灰对钩 —— */
+/* —— 语言:全禁用, 当前项带灰对钩 ——
+   这里读的是函数记录上的 language, 不是当前文件的语法模式。语言在新建向导里定,
+   改语言等于换文件扩展名 + 重生成代码骨架, 属于函数详情页的事, 所以菜单只做状态展示。 */
 const LANG_ITEMS = computed(() => [
   { label: 'TypeScript', disabled: true, check: Number(props.language) === 2, dimCheck: true },
   { label: 'Python', disabled: true, check: Number(props.language) === 1, dimCheck: true },
+  { sep: true },
+  { groupTitle: '语言在函数详情页维护,此处仅显示' },
 ])
 
 /* —— 编辑 —— */
@@ -161,25 +175,37 @@ const VIEW_ITEMS = computed(() => {
   return out
 })
 
-/* —— 运行:本期仅 UI 与初始禁用态 (文档「当前阶段仅实现菜单 UI」) —— */
-const RUN_ITEMS = [
-  { label: '启动调试', keysText: 'F5', todo: true },
-  { label: '以非调试模式运行', keysText: 'Ctrl + F5', todo: true },
-  { label: '停止调试', keysText: 'Shift + F5', disabled: true },
-  { label: '重启调试', keysText: 'Ctrl + Shift + F5', disabled: true },
-  { sep: true },
-  { label: '逐过程', keysText: 'F10', disabled: true },
-  { label: '单步执行', keysText: 'F11', disabled: true },
-  { label: '单步停止', keysText: 'Shift + F11', disabled: true },
-  { label: '继续', keysText: 'F5', disabled: true },
-  { sep: true },
-  { label: '切换断点', keysText: 'F9', todo: true },
-  { label: '新建断点', submenu: true, todo: true },
-  { sep: true },
-  { label: '启用所有断点', todo: true },
-  { label: '禁用所有断点', todo: true },
-  { label: '删除所有断点', todo: true },
-]
+/**
+ * 运行菜单:
+ * 「以非调试模式运行」「停止」已接真实进程(P7);断点调试相关仍是 UI + 禁用态(P8)。
+ * 禁用/可用随运行状态动态切换 —— 文档 2.2 要求菜单状态与服务端运行状态一致。
+ */
+const RUN_ITEMS = computed(() => {
+  const dbging = props.debugging, paused = props.paused, busy = props.running
+  return [
+    { label: '启动调试', keysText: 'F5', action: 'debug-start', disabled: dbging || busy },
+    { label: '以非调试模式运行', keysText: 'Ctrl + F5', action: 'run-file', disabled: busy || dbging },
+    { label: '停止调试', keysText: 'Shift + F5', action: 'debug-stop', disabled: !dbging },
+    { label: '停止运行', keysText: 'Shift + F5', action: 'stop-run', disabled: !busy },
+    { label: '重启调试', keysText: 'Ctrl + Shift + F5', action: 'debug-restart', disabled: !dbging },
+    { sep: true },
+    { label: '逐过程', keysText: 'F10', action: 'step-over', disabled: !paused },
+    { label: '单步执行', keysText: 'F11', action: 'step-in', disabled: !paused },
+    { label: '单步停止', keysText: 'Shift + F11', action: 'step-out', disabled: !paused },
+    { label: '继续', keysText: 'F5', action: 'continue', disabled: !paused },
+    { sep: true },
+    { label: '切换断点', keysText: 'F9', action: 'toggle-bp' },
+    { sep: true },
+    { groupTitle: '新建断点(在光标所在行)' },
+    { label: '条件断点...', action: 'bp-conditional' },
+    { label: '命中次数断点...', action: 'bp-hitcount' },
+    { label: '日志点...', action: 'bp-logpoint' },
+    { sep: true },
+    { label: '启用所有断点', action: 'bp-enable-all', disabled: !props.breakpointCount },
+    { label: '禁用所有断点', action: 'bp-disable-all', disabled: !props.breakpointCount },
+    { label: '删除所有断点', action: 'clear-bps', disabled: !props.breakpointCount },
+  ]
+})
 
 /* —— 终端:四个标签显隐(多选开关, 点了不关菜单) —— */
 const TERM_ITEMS = computed(() => {
@@ -192,9 +218,14 @@ const TERM_ITEMS = computed(() => {
     { label: '终端', keysText: 'Ctrl + `', check: !!p.terminal, tab: 'terminal', keepOpen: true },
     { sep: true },
     { label: '显示图标', check: !!p.showIcons, tab: 'showIcons', keepOpen: true },
-    { label: '"隐藏" 面板', keysText: 'Ctrl + J', action: 'toggle-panel' },
+    // 面板显隐是互斥的一个开关, 文案跟着当前状态走
+    { label: props.panelOpen ? '隐藏面板' : '显示面板', keysText: 'Ctrl + J', action: 'toggle-panel' },
   ]
 })
+
+const DEBUG_ACTIONS = ['debug-start', 'debug-stop', 'debug-restart', 'step-over', 'step-in',
+  'step-out', 'continue', 'toggle-bp', 'clear-bps',
+  'bp-conditional', 'bp-hitcount', 'bp-logpoint', 'bp-enable-all', 'bp-disable-all']
 
 const HELP_ITEMS = [
   { label: '显示所有命令', keysText: 'Ctrl + Shift + P', action: 'palette' },
@@ -218,9 +249,11 @@ function pick(menu, it) {
   else if (it.action === 'zoom-out') emit('patch-settings', { fontSize: clampFont(props.settings.fontSize - 1) })
   else if (it.action === 'zoom-reset') emit('patch-settings', { fontSize: 14 })
   else if (it.action === 'toggle-panel') emit('toggle-panel')
+  else if (it.action === 'run-file') emit('run-file')
+  else if (it.action === 'stop-run') emit('stop-run')
+  else if (DEBUG_ACTIONS.includes(it.action)) emit('debug-action', it.action)
   else if (it.action === 'palette') emit('command-palette')
   else if (it.action === 'help') emit('help')
-  else if (it.todo) BL.info(`「${it.label}」的调试内核在 P7 / P8 落地,当前仅菜单 UI`)
   // 多选开关点了不收起菜单, 支持连续操作 (文档 2.4)
   if (!it.keepOpen) close()
 }

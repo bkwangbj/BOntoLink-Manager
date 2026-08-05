@@ -2,10 +2,14 @@ package com.beiktech.bontolink.controller;
 
 import com.beiktech.bontolink.common.R;
 import com.beiktech.bontolink.data.mapper.FunctionMapper;
+import com.beiktech.bontolink.service.FnRepoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,6 +27,8 @@ import java.util.stream.Collectors;
 public class FunctionController {
 
     @Autowired private FunctionMapper mapper;
+    /** 发布时要把当前分支与 commit 钉进版本库记录;代码仓不可用时降级为不记录 */
+    @Autowired(required = false) private FnRepoService fnRepo;
 
     /** api_name 命名规则: 小驼峰 */
     private static final String API_NAME_RE = "^[a-z][a-zA-Z0-9]*$";
@@ -284,13 +290,104 @@ public class FunctionController {
         return R.ok(Map.of("deleted", ids.size()));
     }
 
-    /** 状态切换: 1草稿 / 2已发布 / 3已停用 / 4已废弃 */
+    /**
+     * 状态切换: 1草稿 / 2已发布 / 3已停用 / 4已废弃。
+     * 置为「已发布」请走 {@link #publish} —— 那里才会落发布时间与版本库记录。
+     */
     @PostMapping("/{id}/status")
     public R<?> setStatus(@PathVariable String id, @RequestBody Map<String, Object> body) {
         int status = toInt(body.get("status"));
         if (status < 1 || status > 4) return R.error(400, "状态取值必须在 1~4 之间");
-        mapper.updateStatus(id, status);
+        if (status == 2) return publish(id, body);
+        if (status == 1) mapper.markDraft(id);      // 撤回草稿连发布时间一起清
+        else mapper.updateStatus(id, status);       // 停用 / 废弃保留发布历史
         return R.ok();
+    }
+
+    /**
+     * 发布函数(遗留 2)。
+     * <p>
+     * 原先「发布」只改一个 status 字段, 详情页的发布时间永远显示"未发布"。
+     * 完整发布要做三件事:
+     * <ol>
+     *   <li>状态置「已发布」并落 publish_time / publish_user</li>
+     *   <li>版本库(ont_version_repo)登记该行业+领域+版本, 状态置「已发布」</li>
+     *   <li>把当前代码仓的分支与 commit 钉进版本库记录 —— 发布出去的到底是哪份代码, 要可追溯</li>
+     * </ol>
+     */
+    @PostMapping("/{id}/publish")
+    public R<?> publish(@PathVariable String id, @RequestBody(required = false) Map<String, Object> body) {
+        Map<String, Object> fn = mapper.findById(id);
+        if (fn == null) return R.error(404, "未找到函数");
+        Map<String, Object> b = body == null ? Map.of() : body;
+        String user = str(b.get("publish_user"));
+        if (user.isEmpty()) user = str(fn.get("create_user"));
+        String now = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            .withZone(ZoneId.systemDefault()).format(Instant.now());
+
+        mapper.markPublished(id, now, user);
+        Map<String, Object> repoRow = upsertVersionRepo(fn, user, now, str(b.get("release_note")));
+
+        Map<String, Object> row = mapper.findById(id);
+        List<Map<String, Object>> params = mapper.listParams(id);
+        enrich(row, new ArrayList<>(params), mapper.listCallStats(id),
+               LocalDate.now().minusDays(6).toString());
+
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("function", row);
+        out.put("version_repo", repoRow);
+        return R.ok(out);
+    }
+
+    /** 版本库登记:同 行业+领域+版本 已有记录就更新, 没有就新建 */
+    private Map<String, Object> upsertVersionRepo(Map<String, Object> fn, String user, String now, String note) {
+        String industry = str(fn.get("industry_dir"));
+        String category = str(fn.get("category_dir"));
+        String version = str(fn.get("version_no"));
+        Map<String, Object> repoStatus = fnRepo == null ? Map.of() : fnRepo.status();
+        String branch = str(repoStatus.get("current_branch"));
+        String commit = str(repoStatus.get("head"));
+        String url = str(repoStatus.get("remote"));
+
+        Map<String, Object> exist = mapper.findRepoByDirVersion(industry, category, version);
+        Map<String, Object> row = new LinkedHashMap<>();
+        row.put("industry_dir", industry);
+        row.put("category_dir", category);
+        row.put("version_no", version);
+        row.put("repo_branch", branch);
+        row.put("repo_commit_id", commit);
+        row.put("repo_url", url.isEmpty() ? null : url);
+        row.put("version_status", 3);                 // 3 = 已发布
+        row.put("release_note", note.isEmpty() ? (exist == null ? null : exist.get("release_note")) : note);
+        row.put("publish_user", user.isEmpty() ? null : user);
+        row.put("publish_time", now);
+        if (exist != null) {
+            row.put("id", exist.get("id"));
+            row.put("is_default", exist.get("is_default"));
+            mapper.updateRepo(row);
+            return mapper.findRepoById(str(exist.get("id")));
+        }
+        String rid = "ri.ont.version_repo." + UUID.randomUUID().toString().replace("-", "");
+        String rowId = "ont_version_repo-" + UUID.randomUUID();
+        row.put("id", rowId);
+        row.put("rid", rid);
+        row.put("is_default", 0);
+        mapper.insertRepo(row);
+        return mapper.findRepoById(rowId);
+    }
+
+    /** 批量发布(列表页的批量「发布」按钮) */
+    @PostMapping("/batch-publish")
+    public R<?> batchPublish(@RequestBody Map<String, Object> body) {
+        List<?> ids = body.get("ids") instanceof List<?> l ? l : Collections.emptyList();
+        int ok = 0;
+        for (Object id : ids) {
+            Map<String, Object> fn = mapper.findById(String.valueOf(id));
+            if (fn == null) continue;
+            publish(String.valueOf(id), body);
+            ok++;
+        }
+        return R.ok(Map.of("published", ok));
     }
 
     /* ==================== 子配置单独保存 (详情页配置 Tab) ==================== */

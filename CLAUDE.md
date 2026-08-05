@@ -235,6 +235,7 @@ PageHeader (标题 + 统计 + 筛选 + 搜索 + 新建按钮)
 | 现象 | 根因 | 修复 |
 |---|---|---|
 | PG 报 `updated_at` 字段类型错误 | 传 `"2026-07-30 10:00:00"` 字符串给 TIMESTAMP 列,PG 拒绝隐式转换(SQLite 接受) | Mapper 参数改 `java.sql.Timestamp`,Controller 里 `row.put("updatedAt", new Timestamp(System.currentTimeMillis()))` |
+| 打开 Monaco 页面浏览器直接「页面无响应」 | 把 monaco 的 editor 实例 / ITextModel / viewState 存进了普通 `ref`,Vue 3 深度代理这些超大且带循环引用的对象图,主线程跑死(同渲染进程的其他标签页会被一起拖死) | 编辑器实例用 `shallowRef` + `markRaw`;model / viewState 放**普通 Map**,别进响应式;响应式里只留 `{ path, content, dirty }` 这类轻量数据。ResizeObserver 回调里的 `editor.layout()` 也要用 rAF 合帧防回环 |
 | 改了迁移/资源后重启,后端却仍跑旧脚本(Flyway 说 "up to date") | 增量 `mvn -pl bontolink-admin -am package` **不刷新 fat jar 里的嵌套 `bontolink-data.jar`**,新增的 `db/migration/*.sql` 打不进去 | 必须 `mvn -DskipTests -pl bontolink-data,bontolink-admin -am clean package`;可用 `unzip -p .../bontolink-admin.jar 'BOOT-INF/lib/bontolink-data-1.0.0.jar' > /tmp/d.jar && unzip -l /tmp/d.jar \| grep V3x` 自查 |
 | 启动报 `No value provided for placeholder: ${xxx}` | 迁移脚本里种了含 JS 模板字符串 `${}` 的代码文本,Flyway 当占位符解析 | 种子里的代码一律用字符串拼接;注释里也不能出现该字面量 |
 | sticky 表格出现空白列 | `table-layout: auto` 实际列宽 ≠ sticky `left:` 偏移 | 用 `table-layout: fixed` 或移除 sticky |

@@ -11,11 +11,18 @@
 
 /** 函数类型 → 核心装饰器 (文档 3.2 业务枚举与装饰器对照表) */
 const DECORATOR = {
-  1: '@Function()',                 // 常规函数
-  2: '@OntologyEditFunction()',     // 动作函数: 默认开启编辑事务
-  3: '@Function()',                 // 聚合函数
-  4: '@Function()',                 // 衍生函数
-  5: '@Function()',                 // 时序函数
+  1: 'Function',                 // 常规函数
+  2: 'OntologyEditFunction',     // 动作函数: 默认开启编辑事务
+  3: 'Function',                 // 聚合函数
+  4: 'Function',                 // 衍生函数
+  5: 'Function',                 // 时序函数
+}
+
+/** 装饰器所在的平台虚拟模块;IDE 侧注入了对应 .d.ts, 编辑器能解析 */
+const API_MODULE = '@foundry/functions-api'
+
+function decoratorOf(functionType) {
+  return DECORATOR[Number(functionType)] || 'Function'
 }
 
 const PY_BASE_TYPE = { string: 'str', number: 'float', boolean: 'bool', any: 'Any' }
@@ -71,6 +78,7 @@ function buildTs(f, params, ret) {
   const retType = bareType(ret?.param_type) || 'void'
   const objects = collectObjectTypes(params, ret)
   const args = params.map(p => `${p.param_name || 'arg'}: ${bareType(p.param_type)}`).join(', ')
+  const deco = decoratorOf(f.function_type)
 
   const lines = []
   lines.push('/**')
@@ -79,7 +87,9 @@ function buildTs(f, params, ret) {
   lines.push(' *')
   lines.push(` * @generated 由新增函数向导生成 · ${f.version_no || 'v0.0.1'}`)
   lines.push(' */')
-  if (objects.length) lines.push(`import { ${objects.join(', ')} } from "@ontology/objects";`, '')
+  lines.push(`import { ${deco} } from "${API_MODULE}";`, '')
+  // 本体类型由「资源导入」注入为全局声明, 不需要 import
+  if (objects.length) lines.push(`// 本体类型:${objects.join('、')}(在 IDE 左侧「资源导入」面板导入后获得补全与校验)`, '')
 
   // 非基础类型的返回值: 生成一个待补全的数据模型类型定义
   if (retType !== 'void' && !isObjectType(ret?.param_type) && !['string', 'number', 'boolean', 'any'].includes(retType)) {
@@ -91,7 +101,7 @@ function buildTs(f, params, ret) {
 
   lines.push(`export class ${cls} {`)
   params.forEach(p => { if (p.param_desc) lines.push(`  /** @param ${p.param_name} ${p.param_desc} */`) })
-  lines.push(`  ${DECORATOR[Number(f.function_type)] || '@Function()'}`)
+  lines.push(`  @${deco}()`)
   lines.push(`  public ${f.api_name}(${args}): ${retType} {`)
   lines.push('    // TODO: 在此实现业务逻辑')
   lines.push(`    throw new Error("Not implemented: ${f.api_name}");`)
@@ -119,7 +129,7 @@ function buildPy(f, params, ret) {
   if (objects.length) lines.push(`from ontology.objects import ${objects.join(', ')}`)
   lines.push('', '')
   lines.push(`class ${cls}:`)
-  lines.push(`    ${DECORATOR[Number(f.function_type)] || '@Function()'}`)
+  lines.push(`    @${decoratorOf(f.function_type)}()`)
   lines.push(`    def ${method}(${args}) -> "${retType}":`)
   lines.push('        """')
   lines.push(`        ${f.rdfs_comment || f.function_label || f.api_name}`)

@@ -202,6 +202,9 @@ export const functionApi = {
   remove:       (id) => http.delete(`/functions/${id}`),
   batchRemove:  (ids) => http.post('/functions/batch-delete', { ids }),
   setStatus:    (id, status) => http.post(`/functions/${id}/status`, { status }),
+  /* 发布 ≠ 单纯改状态:会落发布时间、发布人, 并把当前分支与 commit 登记进版本库 */
+  publish:      (id, body = {}) => http.post(`/functions/${id}/publish`, body),
+  batchPublish: (ids, body = {}) => http.post('/functions/batch-publish', { ids, ...body }),
   /* 左侧「行业领域分组」树: [{ industry_dir, count, children: [{ category_dir, count }] }] */
   dirs:         () => http.get('/functions/dirs'),
   /* 已有代码文件清单 (向导文件选择弹窗) */
@@ -226,6 +229,20 @@ export const fnRepoApi = {
   history: (path, limit = 30) => http.get('/fn-repo/history', { params: { path, limit } }),
   push:    () => http.post('/fn-repo/push'),
   bootstrap: () => http.post('/fn-repo/bootstrap'),
+  /* 提交对比:先取变更文件清单, 再按文件取前后两份正文喂给 diff 编辑器 */
+  commit:     (commit) => http.get('/fn-repo/commit', { params: { commit } }),
+  commitFile: (commit, path) => http.get('/fn-repo/commit-file', { params: { commit, path } }),
+  /* 分支管理:切换要求工作区干净, 后端会拒绝带未提交改动的切换 */
+  branches:     () => http.get('/fn-repo/branches'),
+  createBranch: (name, checkout = true) => http.post('/fn-repo/branches', { name, checkout }),
+  /* force 只在「有未合并提交」被拒后, 用户二次确认时才传 true */
+  deleteBranch: (name, force = false) => http.delete('/fn-repo/branches', { params: { name, force } }),
+  checkout:     (name) => http.post('/fn-repo/checkout', { name }),
+  /* 合并到当前分支;冲突时后端会自动回滚并返回 conflicts 清单 */
+  merge:        (name, noFf = false) => http.post('/fn-repo/merge', { name, no_ff: noFf }),
+  /* 未提交改动:列出 + 撤销(不传 path = 全部撤销) */
+  changes:      () => http.get('/fn-repo/changes'),
+  discard:      (path) => http.post('/fn-repo/discard', path ? { path } : {}),
 }
 
 /* 函数版本库 (ont_version_repo) — 行业目录 + 领域目录维度的版本序列 */
