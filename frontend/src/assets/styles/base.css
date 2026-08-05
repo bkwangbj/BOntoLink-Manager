@@ -522,6 +522,28 @@ input[type="radio"]:checked::after {
 }
 input[type="checkbox"]:disabled,
 input[type="radio"]:disabled { opacity: .5; cursor: not-allowed; }
+/* 例外: 三方 UI 套件(element-plus / tdesign, 见 maker 设计器)自绘控件内部那个「隐藏的原生 input」
+ * 不能参与上面的自绘 — 否则 el-switch 里本应不可见的 checkbox 会被画成 15×15 方块,
+ * 撑在 el-form-item__label 里把标签文字挤到换行(实例探索「页面设置」面板就是这么坏的)。
+ * 双写类名把特异性抬到 (0,2,1), 压过 input[type="checkbox"]:checked, 不用 !important。 */
+input.el-switch__input.el-switch__input,
+input.el-checkbox__original.el-checkbox__original,
+input.el-radio__original.el-radio__original,
+input.t-checkbox__former.t-checkbox__former,
+input.t-radio__former.t-radio__former {
+  position: absolute;
+  width: 0; height: 0;
+  margin: 0; padding: 0;
+  border: 0; border-radius: 0;
+  background: none;
+  opacity: 0;
+  pointer-events: none;
+}
+input.el-switch__input.el-switch__input::after,
+input.el-checkbox__original.el-checkbox__original::after,
+input.el-radio__original.el-radio__original::after,
+input.t-checkbox__former.t-checkbox__former::after,
+input.t-radio__former.t-radio__former::after { content: none; }
 /* select / input 在暗模式下底色统一 */
 :root[data-theme="dark"] input[type="text"],
 :root[data-theme="dark"] input[type="search"],
