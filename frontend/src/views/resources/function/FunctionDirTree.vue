@@ -169,8 +169,10 @@ defineExpose({ reload: load, clearSelection: () => select(null, null) })
   flex-shrink: 0;
   position: relative;
   background: var(--bl-bg-1);
-  border: 1px solid var(--bl-border);
-  border-radius: var(--bl-radius-3);
+  /* 与 CategoryTreeFilter 同形态: 平铺时只留右侧分栏线 */
+  border: 1px solid var(--bl-panel-border);
+  border-right: var(--bl-panel-split-w) solid var(--bl-panel-split);
+  border-radius: var(--bl-panel-radius);
   display: flex; flex-direction: column;
   overflow: hidden;
   min-width: 180px;
@@ -180,7 +182,7 @@ defineExpose({ reload: load, clearSelection: () => select(null, null) })
   padding: 6px 8px;
   border-bottom: 1px solid var(--bl-divider);
 }
-.fdt-title { flex: 1; font-size: 13px; font-weight: 600; color: var(--bl-text-1); }
+.fdt-title { flex: 1; font-size: var(--bl-fs-14); font-weight: 600; color: var(--bl-text-1); }
 .fdt-search {
   display: flex; align-items: center; gap: 4px;
   padding: 6px 8px;

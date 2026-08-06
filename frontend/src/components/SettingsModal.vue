@@ -32,6 +32,21 @@
                 <span v-if="app.accent===a.k" v-html="BL.icon('check', 12, '#fff')"></span>
               </span>
             </div>
+
+            <!-- 外框风格: 只影响侧栏 + 顶条配色, 内容区不变 -->
+            <div class="block-title" style="margin-top:16px">外框风格</div>
+            <div class="nav-row">
+              <div v-for="n in navStyles" :key="n.k"
+                   :class="['nav-card', app.navStyle===n.k && 'is-active']"
+                   @click="app.setNavStyle(n.k)" :title="n.desc">
+                <div :class="['nav-preview', 'nav-'+n.k]">
+                  <span class="np-side"><i class="np-item is-on"></i><i class="np-item"></i><i class="np-item"></i></span>
+                  <span class="np-main"><i class="np-bar"></i></span>
+                  <span v-if="app.navStyle===n.k" class="nav-check" v-html="BL.icon('check', 12, '#fff')"></span>
+                </div>
+                <div class="nav-label">{{ n.label }}</div>
+              </div>
+            </div>
           </section>
 
           <!-- 语音 / 声音 -->
@@ -119,6 +134,12 @@ const accents = [
   { k: 'black',  color: '#1D2129', label: '极简黑' }
 ]
 
+const navStyles = [
+  { k: 'light',    label: '浅色',     desc: '侧栏与顶条浅底深字, 选中项主色浅底(默认)' },
+  { k: 'gradient', label: '主色渐变', desc: '侧栏与顶条整体跟随主题色渐变' },
+  { k: 'navy',     label: '深蓝墨',   desc: '侧栏与顶条固定深 navy, 主题色只用于选中项' }
+]
+
 function themeIcon(k) {
   const map = { light: 'droplet', dark: 'wave', system: 'grid' }
   return BL.icon(map[k] || 'cog', 12)
@@ -190,6 +211,52 @@ function iconText(ic, t) { return `${BL.icon(ic, 12, '#fff')}<span>${t}</span>` 
 }
 .theme-label { text-align: center; font-size: var(--bl-fs-13); display: inline-flex; align-items: center; gap: 6px; width: 100%; justify-content: center; }
 .theme-mini-ic { color: var(--bl-text-3); display: inline-flex; }
+
+/* 外框风格: 缩略图直接用真实 token 上色, 所见即所得(也随强调色变) */
+.nav-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.nav-card {
+  background: var(--bl-bg-1);
+  border: 2px solid var(--bl-border);
+  border-radius: var(--bl-radius-3);
+  padding: 10px; cursor: pointer;
+  transition: border-color .15s;
+}
+.nav-card:hover { border-color: var(--bl-primary-border); }
+.nav-card.is-active { border-color: var(--bl-primary); }
+.nav-preview {
+  position: relative; height: 58px; border-radius: var(--bl-radius-2);
+  margin-bottom: 8px; overflow: hidden;
+  display: flex; gap: 4px; padding: 5px;
+  border: 1px solid var(--bl-border);
+}
+.np-side { width: 26px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; padding-top: 2px; }
+.np-item { height: 6px; border-radius: 2px; background: var(--np-item); }
+.np-item.is-on { background: var(--np-item-on); box-shadow: -3px 0 0 0 var(--np-bar-c); }
+.np-main { flex: 1; background: var(--bl-bg-0); border-radius: 3px 0 0 0; padding: 4px; }
+.np-bar { display: block; height: 5px; border-radius: 2px; background: var(--bl-border-strong); }
+/* 风格: 浅色 */
+.nav-light {
+  background: linear-gradient(180deg, #DEEAF6, #DDE2F2);
+  --np-item: rgba(255,255,255,.85); --np-item-on: var(--bl-primary-soft); --np-bar-c: transparent;
+}
+.nav-light .np-item.is-on { background: var(--bl-primary); opacity: .75; }
+/* 风格: 主色渐变 */
+.nav-gradient {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--bl-primary) 88%, #071b52), color-mix(in srgb, var(--bl-primary) 92%, #fff));
+  --np-item: rgba(255,255,255,.45); --np-item-on: rgba(255,255,255,.85); --np-bar-c: rgba(255,255,255,.9);
+}
+/* 风格 B: 深蓝墨 */
+.nav-navy {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--bl-primary) 8%, #0b1324), color-mix(in srgb, var(--bl-primary) 14%, #16233d));
+  --np-item: rgba(255,255,255,.28); --np-item-on: color-mix(in srgb, var(--bl-primary) 60%, transparent); --np-bar-c: var(--bl-primary-hover);
+}
+.nav-check {
+  position: absolute; top: 6px; right: 6px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--bl-primary);
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-label { text-align: center; font-size: var(--bl-fs-13); }
 
 /* 主题色 */
 .accent-row { display: flex; gap: 12px; }

@@ -646,10 +646,10 @@ onMounted(async () => { await Promise.all([loadCategories(), loadRows(), loadEnu
 .search-icon { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); }
 .search-input { padding-left: 28px; width: 200px; }
 
-.tc-main { flex: 1; min-height: 0; display: flex; gap: 12px; padding: 12px; overflow: hidden; }
+.tc-main { flex: 1; min-height: 0; display: flex; gap: var(--bl-panel-gap); padding: var(--bl-content-pad); overflow: hidden; }
 
 /* 左:大类导航 */
-.tc-nav { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 8px; overflow: hidden; }
+.tc-nav { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; background: var(--bl-bg-1); border: 1px solid var(--bl-panel-border); border-right: var(--bl-panel-split-w) solid var(--bl-panel-split); border-radius: var(--bl-panel-radius); overflow: hidden; }
 .tc-nav-hd { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-bottom: 1px solid var(--bl-divider); }
 .tc-nav-list { flex: 1; overflow: auto; padding: 6px; }
 .tc-cat { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 6px; cursor: pointer; }
@@ -663,7 +663,7 @@ onMounted(async () => { await Promise.all([loadCategories(), loadRows(), loadEnu
 .tc-nav-ft:hover { background: var(--bl-bg-hover); color: var(--bl-primary); }
 
 /* 中:列表 */
-.tc-list-wrap { flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--bl-bg-1); border: 1px solid var(--bl-border); border-radius: 8px; overflow: hidden; }
+.tc-list-wrap { flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--bl-bg-1); border: 1px solid var(--bl-panel-border); border-radius: var(--bl-panel-radius); overflow: hidden; }
 .tc-batch { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--bl-primary-soft); border-bottom: 1px solid var(--bl-border); }
 .tc-batch-n { font-size: 12px; color: var(--bl-primary); font-weight: 600; }
 .tc-batch-btn { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; padding: 3px 10px; border-radius: 4px; background: var(--bl-bg-1); border: 1px solid var(--bl-border); color: var(--bl-text-2); cursor: pointer; }

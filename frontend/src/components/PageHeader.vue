@@ -18,7 +18,7 @@ const tip = computed(() => props.subtitle ? `${props.title} · ${props.subtitle}
 
 <style scoped>
 .ph {
-  padding: 10px 20px 12px;
+  padding: 10px var(--bl-header-pad-x) 12px;
   display: flex; align-items: center; justify-content: space-between;
   gap: 16px;
   background: var(--bl-bg-1);
@@ -32,7 +32,7 @@ const tip = computed(() => props.subtitle ? `${props.title} · ${props.subtitle}
   overflow: hidden;
 }
 .ph-title {
-  margin: 0; font-size: 18px; font-weight: 600; line-height: 1.2;
+  margin: 0; font-size: var(--bl-fs-14); font-weight: 600; line-height: 1.2;
   flex-shrink: 0;
   white-space: nowrap;
 }

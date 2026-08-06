@@ -1,5 +1,18 @@
 <template>
   <aside :class="['sidebar', collapsed && 'is-collapsed']">
+    <!-- 品牌(顶栏收窄后移到这里); logo 换新图直接替换 /brand-logo.svg 即可 -->
+    <a class="brand" href="#/" title="BOntoLink · 博智联动态本体管理系统">
+      <img :src="logoSrc" alt="BOntoLink 博智联" class="brand-img" />
+    </a>
+
+    <!-- 全局搜索入口: 点开即原来的全局搜索弹层, ⌘K 同样唤起 -->
+    <div class="nav-search" :title="'全局搜索 (⌘K)'" @click="searchOpen = true">
+      <span class="ns-ic" v-html="BL.icon('search', 13)"></span>
+      <span class="ns-txt" v-show="!collapsed">搜索</span>
+      <span class="ns-kbd" v-show="!collapsed">⌘K</span>
+    </div>
+    <GlobalSearchModal v-model:open="searchOpen" />
+
     <!-- 行业领域下拉（最高优先级控件）：点击打开「常用领域选择」弹窗 -->
     <div class="domain-picker" @click="app.openDomainPicker()" :title="hoverTooltip">
       <!-- 已选时显示聚合 icon；未选显示默认 cube -->
@@ -85,8 +98,9 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import NavItem from './NavItem.vue'
+import GlobalSearchModal from './GlobalSearchModal.vue'
 import { BL } from '@/lib/bl.js'
 import { domainIcon, domainColor } from '@/lib/domain.js'
 import { useAppStore } from '@/stores/app.js'
@@ -97,6 +111,22 @@ const collapsed = computed(() => app.sidebarCollapsed)
 
 const namespaces = ref([])
 const userMenuOpen = ref(false)
+/* logo 四选一: 展开=横版 big / 折叠=方版 small; 底色深(深色外框风格 或 深色模式)时取白色版 */
+const isDarkTheme = computed(() =>
+  app.theme === 'dark' || (app.theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches))
+const navOnDark = computed(() => app.navStyle !== 'light' || isDarkTheme.value)
+const logoSrc = computed(() =>
+  `/logo-${collapsed.value ? 'small' : 'big'}${navOnDark.value ? '-white' : ''}.png`)
+/* 全局搜索: 入口从顶栏挪到侧栏, ⌘K 仍然可以直接唤起 */
+const searchOpen = ref(false)
+function onSearchHotkey(e) {
+  if ((e.metaKey || e.ctrlKey) && String(e.key).toLowerCase() === 'k') {
+    e.preventDefault()
+    searchOpen.value = true
+  }
+}
+onMounted(() => document.addEventListener('keydown', onSearchHotkey))
+onBeforeUnmount(() => document.removeEventListener('keydown', onSearchHotkey))
 
 // 已选领域聚合显示：「行业|领域1/领域2; 行业|领域...」
 const aggregateText = computed(() => {
@@ -202,10 +232,12 @@ export default {
 </script>
 
 <style scoped>
+/* 侧栏贯通全高, 主色系纵向渐变 + 白字; 具体色值全部走 --bl-nav-* token */
 .sidebar {
   width: var(--bl-sidebar-w);
-  background: var(--bl-bg-1);
-  border-right: 1px solid var(--bl-border);
+  /* 不画右边线: 外框与内容区靠底色差区分, 加线会在圆角处断出一截 */
+  background: linear-gradient(180deg, var(--bl-nav-from) 0%, var(--bl-nav-to) 100%);
+  color: var(--bl-nav-text);
   display: flex; flex-direction: column;
   transition: width .18s ease;
   flex-shrink: 0;
@@ -214,16 +246,50 @@ export default {
 .sidebar.is-collapsed { width: var(--bl-sidebar-w-collapsed); overflow: visible; }
 .sidebar.is-collapsed .nav { overflow-x: visible; }
 
+/* 品牌: 展开用横版 logo(按高度缩放), 折叠换方版 */
+.brand {
+  height: 36px;
+  display: flex; align-items: center;
+  padding: 0 12px; margin-top: 8px;
+  flex-shrink: 0; overflow: hidden;
+  color: var(--bl-nav-text); text-decoration: none;
+}
+.brand-img {
+  height: 28px; width: auto; max-width: 100%;
+  object-fit: contain; object-position: left center;
+}
+.sidebar.is-collapsed .brand { padding: 0; justify-content: center; }
+.sidebar.is-collapsed .brand-img { height: 26px; }
+
+/* 全局搜索入口 */
+.nav-search {
+  margin: 10px 8px 0;
+  padding: 5px 8px;
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bl-nav-surface);
+  border: 1px solid var(--bl-nav-border);
+  border-radius: var(--bl-radius-2);
+  color: var(--bl-nav-text-dim);
+  font-size: var(--bl-fs-12);
+  cursor: pointer;
+  transition: background-color .15s, color .15s;
+}
+.nav-search:hover { background: var(--bl-nav-hover-bg); color: var(--bl-nav-text); }
+.ns-ic { display: inline-flex; flex-shrink: 0; }
+.ns-txt { flex: 1; min-width: 0; }
+.ns-kbd { font-size: 10.5px; opacity: .8; flex-shrink: 0; }
+.sidebar.is-collapsed .nav-search { justify-content: center; padding: 5px 0; }
+
 .domain-picker {
   margin: 8px;
   padding: 6px 10px;
-  background: var(--bl-bg-2);
+  background: var(--bl-nav-surface);
   border-radius: var(--bl-radius-3);
   display: flex; align-items: center; gap: 6px;
   cursor: pointer; position: relative;
-  border: 1px solid transparent;
+  border: 1px solid var(--bl-nav-border);
 }
-.domain-picker:hover { border-color: var(--bl-primary-border); }
+.domain-picker:hover { background: var(--bl-nav-hover-bg); }
 .dp-icon {
   width: 28px; height: 28px;
   display: flex; align-items: center; justify-content: center;
@@ -231,9 +297,10 @@ export default {
   line-height: 0;
 }
 .dp-text { flex: 1; min-width: 0; }
-.dp-label { font-size: var(--bl-fs-11); color: var(--bl-text-3); }
-.dp-name { font-size: var(--bl-fs-13); font-weight: 600; color: var(--bl-text-1); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dp-arrow { color: var(--bl-text-3); }
+.dp-label { font-size: var(--bl-fs-11); color: var(--bl-nav-text-dim); }
+/* 领域名的行内色由业务色驱动(dp-name 上有 :style), 未选中时回落到白字 */
+.dp-name { font-size: var(--bl-fs-13); font-weight: 600; color: var(--bl-nav-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dp-arrow { color: var(--bl-nav-text-dim); }
 
 .dp-menu { top: 56px; left: 12px; right: 12px; width: auto; max-width: none; }
 .dp-search { padding: 6px; border-bottom: 1px solid var(--bl-divider); }
@@ -254,29 +321,30 @@ export default {
   -ms-overflow-style: none;    /* IE / Edge legacy */
 }
 .nav::-webkit-scrollbar { width: 0; height: 0; display: none; }  /* Chromium / Safari */
-.nav-group { padding-top: 6px; margin-top: 6px; border-top: 1px solid var(--bl-border); }
+.nav-group { padding-top: 6px; margin-top: 6px; border-top: 1px solid var(--bl-nav-border); }
 .nav-group:first-child { border-top: 0; margin-top: 0; padding-top: 0; }
 .sidebar.is-collapsed .nav-group { margin: 4px 0px 0; padding-top: 4px; }
 .nav-group-title {
   padding: 4px 8px 4px 12px;
   font-size: var(--bl-fs-11);
-  color: var(--bl-text-3);
+  color: var(--bl-nav-text-dim);
   letter-spacing: .5px;
   display: flex; align-items: center; justify-content: space-between;
   cursor: pointer;
   border-radius: var(--bl-radius-2);
   user-select: none;
 }
-.nav-group-title:hover { color: var(--bl-text-1); background: var(--bl-bg-hover); }
-.nav-group-arrow { color: var(--bl-text-3); display: inline-flex; }
-.nav-group-title:hover .nav-group-arrow { color: var(--bl-primary); }
+.nav-group-title:hover { color: var(--bl-nav-text); background: var(--bl-nav-hover-bg); }
+.nav-group-arrow { color: var(--bl-nav-text-dim); display: inline-flex; }
+.nav-group-title:hover .nav-group-arrow { color: var(--bl-nav-active-text); }
 
 .footer {
-  border-top: 1px solid var(--bl-divider);
+  border-top: 1px solid var(--bl-nav-border);
   padding: 8px; display: flex; align-items: center; gap: 8px;
   position: relative;
 }
-.collapse-btn { flex-shrink: 0; }
+.collapse-btn { flex-shrink: 0; color: var(--bl-nav-text-dim); }
+.collapse-btn:hover { background: var(--bl-nav-hover-bg); color: var(--bl-nav-text); }
 
 /* 折叠态：纵向堆叠 - 用户头像在上，折叠按钮在下 */
 .sidebar.is-collapsed .footer {
@@ -299,13 +367,19 @@ export default {
   padding: 4px 6px; border-radius: var(--bl-radius-2);
   cursor: pointer; transition: background-color .15s;
 }
-.user-row:hover, .user-row.is-open { background: var(--bl-bg-hover); }
-.avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--bl-primary); color: #fff; font-weight: 600; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+.user-row:hover, .user-row.is-open { background: var(--bl-nav-hover-bg); }
+/* 头像底色跟随系统主色(与「新建」这类主按钮同源), 外圈描一层 nav 边框色保证在任何外框风格上都立得住 */
+.avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--bl-primary); box-shadow: 0 0 0 1px var(--bl-nav-border); color: #fff; font-weight: 600; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
 .avatar-lg { width: 40px; height: 40px; font-size: 16px; }
 .user-info { display: flex; flex-direction: column; min-width: 0; flex: 1; }
-.user-name { font-size: var(--bl-fs-13); font-weight: 500; }
-.user-role { font-size: var(--bl-fs-11); color: var(--bl-text-3); display: inline-flex; align-items: center; gap: 4px; }
-.user-arrow { color: var(--bl-text-3); flex-shrink: 0; transform: rotate(-90deg); }
+.user-name { font-size: var(--bl-fs-13); font-weight: 500; color: var(--bl-nav-text); }
+.user-role { font-size: var(--bl-fs-11); color: var(--bl-nav-text-dim); display: inline-flex; align-items: center; gap: 4px; }
+.user-arrow { color: var(--bl-nav-text-dim); flex-shrink: 0; transform: rotate(-90deg); }
+/* 弹出的用户菜单是白底卡片, 文字回到常规 token, 不受侧栏白字影响 */
+.user-menu { color: var(--bl-text-1); }
+.user-menu .avatar { background: var(--bl-primary); box-shadow: none; }
+.user-menu .user-name { color: var(--bl-text-1); }
+.user-menu .user-role { color: var(--bl-text-3); }
 .user-row.is-open .user-arrow { transform: rotate(90deg); }
 
 .user-menu {

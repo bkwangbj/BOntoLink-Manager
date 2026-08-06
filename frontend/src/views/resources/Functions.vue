@@ -487,10 +487,10 @@ SortIc.props = ['dir']
 .fn-add-btn { width: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
 
 /* 主体 */
-.fn-main { flex: 1; display: flex; gap: 12px; padding: 12px; overflow: hidden; }
+.fn-main { flex: 1; display: flex; gap: var(--bl-panel-gap); padding: var(--bl-content-pad); overflow: hidden; }
 .pane {
   flex: 1; background: var(--bl-bg-1);
-  border: 1px solid var(--bl-border); border-radius: var(--bl-radius-3);
+  border: 1px solid var(--bl-panel-border); border-radius: var(--bl-panel-radius);
   overflow: hidden; display: flex; flex-direction: column;
 }
 .pane-list { min-width: 0; }

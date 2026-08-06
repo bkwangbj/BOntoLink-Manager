@@ -1309,7 +1309,7 @@ watch(() => route.query.openId, applyOpenId)
 .ot-topbar {
   flex-shrink: 0;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 20px 12px; gap: 16px;
+  padding: 10px var(--bl-header-pad-x) 12px; gap: 16px;
   border-bottom: 1px solid var(--bl-border);
   background: var(--bl-bg-1);
 }
@@ -1318,7 +1318,7 @@ watch(() => route.query.openId, applyOpenId)
   min-width: 0; flex: 1; overflow: hidden;
 }
 .ot-title {
-  font-size: 18px; font-weight: 600; line-height: 1.2;
+  font-size: 14px; font-weight: 600; line-height: 1.2;
   color: var(--bl-text-1);
   white-space: nowrap; flex-shrink: 0;
 }
@@ -1339,7 +1339,7 @@ watch(() => route.query.openId, applyOpenId)
 }
 
 /* —— 主体 —— */
-.ot-body { flex: 1; position: relative; display: flex; gap: 12px; padding: 12px; overflow: hidden; }
+.ot-body { flex: 1; position: relative; display: flex; gap: var(--bl-panel-gap); padding: var(--bl-content-pad); overflow: hidden; }
 .ot-pane { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
 
 /* —— 视图切换 tabs:白底条, 与下方列表连为一体的整体白卡片 —— */
@@ -1347,9 +1347,9 @@ watch(() => route.query.openId, applyOpenId)
   display: flex; gap: 2px;
   padding: 4px 10px 0;
   background: var(--bl-bg-1);
-  border: 1px solid var(--bl-border);
+  border: 1px solid var(--bl-panel-border);
   border-bottom: 1px solid var(--bl-divider);
-  border-radius: var(--bl-radius-3) var(--bl-radius-3) 0 0;
+  border-radius: var(--bl-panel-radius) var(--bl-panel-radius) 0 0;
 }
 .ot-tab {
   display: inline-flex; align-items: center; gap: 4px;
@@ -1367,8 +1367,8 @@ watch(() => route.query.openId, applyOpenId)
 .ot-list-card {
   flex: 1; margin: 0; display: flex; flex-direction: column;
   background: var(--bl-bg-1);
-  border: 1px solid var(--bl-border); border-top: 0;
-  border-radius: 0 0 var(--bl-radius-3) var(--bl-radius-3);
+  border: 1px solid var(--bl-panel-border); border-top: 0;
+  border-radius: 0 0 var(--bl-panel-radius) var(--bl-panel-radius);
   overflow: hidden; min-height: 0;
 }
 .ot-list-scroll { flex: 1; min-height: 0; overflow: auto; }

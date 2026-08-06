@@ -244,7 +244,8 @@ onMounted(async () => {
 .ov-root {
   display: flex; flex-direction: column;
   height: 100%;
-  background: var(--bl-bg-2);
+  /* 跟随外框风格: 浅色风格下与主内容区一样是纯白, 其余风格/深色模式回到灰底 */
+  background: var(--bl-main-bg);
   overflow: hidden;
 }
 
@@ -252,7 +253,7 @@ onMounted(async () => {
 .ov-topbar {
   flex-shrink: 0;
   display: flex; align-items: center;
-  padding: 10px 20px 12px;
+  padding: 10px var(--bl-header-pad-x) 12px;
   border-bottom: 1px solid var(--bl-border);
   background: var(--bl-bg-1);
 }
@@ -262,7 +263,7 @@ onMounted(async () => {
 }
 .ov-title-ic { display: inline-flex; align-self: center; }
 .ov-title {
-  font-size: 18px; font-weight: 600; line-height: 1.2;
+  font-size: var(--bl-fs-14); font-weight: 600; line-height: 1.2;
   color: var(--bl-text-1);
   white-space: nowrap;
 }

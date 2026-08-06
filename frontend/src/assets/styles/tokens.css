@@ -28,7 +28,7 @@
 
   /* —— 中性色（文本 4 级 + 背景 3 层 + 边框） —— */
   /* 基础色调取冷蓝灰(带一丝蓝), 对标原型 UI demo 浅色 —— 非纯中性灰 */
-  --bl-text-1: #1f2a3d;     /* 主文字 — 微蓝墨 */
+  --bl-text-1: #68707c;     /* 主文字 — 微蓝墨 */
   --bl-text-2: #5c6b82;
   --bl-text-3: #94a1b5;
   --bl-text-4: #b9c3d3;
@@ -83,9 +83,89 @@
   --bl-shadow-3: 0 12px 32px rgba(0,0,0,0.16);
 
   /* —— 布局 —— */
-  --bl-topbar-h: 56px;
+  --bl-topbar-h: 24px;          /* 顶栏只承载 通知/明暗/全屏 三颗图标 */
   --bl-sidebar-w: 186px;
   --bl-sidebar-w-collapsed: 56px;
+  --bl-main-radius: 8px;        /* 主内容区左上圆角 */
+  --bl-main-bg: var(--bl-bg-1);  /* 主内容区底色: 浅色外框风格下用纯白, 与淡蓝外框拉开 */
+  --bl-main-edge: transparent;   /* 主内容区左/上描边: 浅色下靠底色差已够, 深色下才点亮 */
+  /* —— 内容面板形态 ——
+     浅色外框风格 = 平铺(无框无圆角无留白, 边界只用线); 深底两版 = 卡片(有框有圆角有留白)。
+     九个三栏页面 + 分类树共用这四个变量, 不要在页面里写死。 */
+  --bl-panel-border: transparent;      /* 面板外框 */
+  --bl-panel-split:  var(--bl-divider);/* 左树与右侧内容之间的分栏线 */
+  --bl-panel-split-w: 4px;             /* 分栏线粗细(平铺时加粗当分隔带, 卡片形态回 1px) */
+  --bl-panel-radius: 0px;              /* 面板圆角 */
+  --bl-content-pad:  0px;              /* 内容区四周留白 */
+  --bl-panel-gap:    0px;              /* 左右两栏间距 */
+  --bl-header-pad-x: 10px;             /* 页头(标题/筛选/主按钮 那一行)左右内边距 */
+
+  /* —— 外框架(侧栏 + 顶栏)配色 · 风格「浅色」(默认, 对标设计稿) ——
+     侧栏白底深字, 选中项主色浅底 + 主色文字; 顶条同为浅底, 靠底边线与内容区分隔。
+     组件里不要再写死颜色, 一律用下面这组 --bl-nav-* / --bl-hdr-*。 */
+  /* 浅底渐变(设计稿给定色): 侧栏自上而下、顶条自左而右, 都从蓝调起、收到灰紫调 */
+  --bl-nav-from: #DEEAF6;
+  --bl-nav-to:   #DDE2F2;
+  --bl-hdr-from: #DEEAF6;
+  --bl-hdr-to:   #DDE2F2;
+  --bl-nav-text:        var(--bl-text-2);
+  --bl-nav-text-dim:    var(--bl-text-3);
+  --bl-nav-active-text: var(--bl-primary);
+  --bl-nav-active-bg:   var(--bl-primary-soft);
+  --bl-nav-active-bar:  transparent;              /* 浅色版靠染底表达选中, 不要色条 */
+  --bl-nav-hover-bg:    rgba(255,255,255,.55);
+  --bl-nav-surface:     rgba(255,255,255,.62);    /* 领域选择器 / 搜索入口底 — 在淡蓝底上要用白才浮得起来 */
+  --bl-nav-border:      rgba(255,255,255,.75);
+}
+
+/* —— 外框架配色 · 风格「主色渐变」——
+   整条外框跟随主题色, 侧栏纵向渐变(上深下浅), 顶栏横向渐变, 左上角衔接。 */
+:root[data-nav="gradient"] {
+  --bl-header-pad-x: 16px;
+  --bl-main-bg: var(--bl-bg-0);   /* 深底外框配灰底内容区, 卡片才立得起来 */
+  --bl-panel-border: var(--bl-border);
+  --bl-panel-split:  var(--bl-border);
+  --bl-panel-split-w: 1px;
+  --bl-panel-radius: var(--bl-radius-3);
+  --bl-content-pad:  8px;
+  --bl-panel-gap:    8px;
+  --bl-nav-from: color-mix(in srgb, var(--bl-primary) 88%, #071b52);
+  --bl-nav-to:   color-mix(in srgb, var(--bl-primary) 92%, #ffffff);
+  --bl-hdr-from: color-mix(in srgb, var(--bl-primary) 88%, #071b52);
+  --bl-hdr-to:   color-mix(in srgb, var(--bl-primary) 84%, #ffffff);
+  --bl-nav-text:        rgba(255,255,255,.92);
+  --bl-nav-text-dim:    rgba(255,255,255,.60);
+  --bl-nav-active-text: #ffffff;
+  --bl-nav-active-bg:   rgba(255,255,255,.20);
+  --bl-nav-active-bar:  rgba(255,255,255,.90);
+  --bl-nav-hover-bg:    rgba(255,255,255,.12);
+  --bl-nav-surface:     rgba(255,255,255,.12);
+  --bl-nav-border:      rgba(255,255,255,.16);
+}
+
+/* —— 外框架配色 · 风格 B「深 navy」(对标设计稿) ——
+   外框固定深 navy(浅色模式下也深), 只掺一点主题色保留色系跟随;
+   主题色集中体现在选中项(主色染底 + 左侧色条), 换强调色一眼可见。 */
+:root[data-nav="navy"] {
+  --bl-header-pad-x: 16px;
+  --bl-main-bg: var(--bl-bg-0);
+  --bl-panel-border: var(--bl-border);
+  --bl-panel-split:  var(--bl-border);
+  --bl-panel-split-w: 1px;
+  --bl-panel-radius: var(--bl-radius-3);
+  --bl-content-pad:  8px;
+  --bl-panel-gap:    8px;
+  --bl-nav-from: color-mix(in srgb, var(--bl-primary) 8%, #0b1324);
+  --bl-nav-to:   color-mix(in srgb, var(--bl-primary) 14%, #16233d);
+  --bl-hdr-from: color-mix(in srgb, var(--bl-primary) 8%, #0b1324);
+  --bl-hdr-to:   color-mix(in srgb, var(--bl-primary) 18%, #16233d);
+  --bl-nav-text:        rgba(255,255,255,.88);
+  --bl-nav-text-dim:    rgba(255,255,255,.52);
+  --bl-nav-active-bg:   color-mix(in srgb, var(--bl-primary) 34%, transparent);
+  --bl-nav-active-bar:  var(--bl-primary-hover);
+  --bl-nav-hover-bg:    rgba(255,255,255,.08);
+  --bl-nav-surface:     rgba(255,255,255,.06);
+  --bl-nav-border:      rgba(255,255,255,.10);
 }
 
 /* —— 暗色模式 —— */
@@ -116,6 +196,53 @@
   --bl-primary-active: #2563EB;
   --bl-primary-soft: rgba(59,130,246,.14);
   --bl-primary-border: rgba(59,130,246,.30);
+  /* 深色模式下内容区一律回到页面底色(最深 navy), 纯白只属于浅色模式; 面板也回到卡片形态 */
+  --bl-main-bg: var(--bl-bg-0);
+  /* 深色下外框与内容区都是深蓝, 全靠这条主色系描边划出内容区的左/上边界 */
+  --bl-main-edge: color-mix(in srgb, var(--bl-primary-hover) 45%, transparent);
+  --bl-panel-border: var(--bl-border);
+  --bl-panel-split:  var(--bl-border);
+  --bl-panel-split-w: 1px;
+  --bl-panel-radius: var(--bl-radius-3);
+  --bl-content-pad:  12px;
+  --bl-panel-gap:    12px;
+  --bl-header-pad-x: 20px;
+  /* 「浅色」风格在深色模式下的对应: 文字/选中态跟着 --bl-text-* 自动转深, 但外框底色是写死的淡蓝, 这里换成深底 */
+  --bl-nav-from: var(--bl-bg-1);
+  --bl-nav-to:   var(--bl-bg-2);
+  --bl-hdr-from: var(--bl-bg-1);
+  --bl-hdr-to:   var(--bl-bg-2);
+  --bl-nav-hover-bg: var(--bl-bg-hover);
+  --bl-nav-surface:  var(--bl-bg-2);
+  --bl-nav-border:   var(--bl-border);
+}
+
+/* 深色模式下的「主色渐变」: 外框转深 navy(只掺一丝主题色), 与内容区拉开层差 */
+:root[data-theme="dark"][data-nav="gradient"] {
+  --bl-nav-from: color-mix(in srgb, var(--bl-primary) 14%, #050b18);
+  --bl-nav-to:   color-mix(in srgb, var(--bl-primary) 20%, #0a1220);
+  --bl-hdr-from: color-mix(in srgb, var(--bl-primary) 14%, #050b18);
+  --bl-hdr-to:   color-mix(in srgb, var(--bl-primary) 22%, #0a1220);
+  --bl-nav-text:        rgba(255,255,255,.86);
+  --bl-nav-text-dim:    rgba(255,255,255,.50);
+  --bl-nav-active-bg:   rgba(255,255,255,.14);
+  --bl-nav-hover-bg:    rgba(255,255,255,.08);
+  --bl-nav-surface:     rgba(255,255,255,.07);
+  --bl-nav-border:      rgba(255,255,255,.10);
+}
+
+/* 深色模式下的「深蓝墨」: 比浅色模式再压一档 */
+:root[data-theme="dark"][data-nav="navy"] {
+  --bl-nav-from: color-mix(in srgb, var(--bl-primary) 8%, #050a14);
+  --bl-nav-to:   color-mix(in srgb, var(--bl-primary) 12%, #0d1729);
+  --bl-hdr-from: color-mix(in srgb, var(--bl-primary) 8%, #050a14);
+  --bl-hdr-to:   color-mix(in srgb, var(--bl-primary) 16%, #0d1729);
+  --bl-nav-text:        rgba(255,255,255,.84);
+  --bl-nav-text-dim:    rgba(255,255,255,.46);
+  --bl-nav-active-bg:   color-mix(in srgb, var(--bl-primary) 28%, transparent);
+  --bl-nav-hover-bg:    rgba(255,255,255,.06);
+  --bl-nav-surface:     rgba(255,255,255,.05);
+  --bl-nav-border:      rgba(255,255,255,.08);
 }
 
 /* —— 主题色变量（强调色）切换 —— */

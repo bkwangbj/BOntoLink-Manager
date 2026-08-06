@@ -10,6 +10,7 @@ import { BL } from './lib/bl.js'
 const saved = JSON.parse(localStorage.getItem('bl-prefs') || '{}')
 document.documentElement.setAttribute('data-theme', saved.theme || 'light')
 if (saved.accent) document.documentElement.setAttribute('data-accent', saved.accent)
+if (saved.navStyle && saved.navStyle !== 'light') document.documentElement.setAttribute('data-nav', saved.navStyle)
 
 const app = createApp(App)
 app.use(createPinia())

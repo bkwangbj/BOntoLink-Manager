@@ -2055,14 +2055,15 @@ async function confirmPasteImport() {
 .et-body { flex: 1; display: flex; position: relative; overflow: hidden; }
 /* flex 而非固定 grid: 左树由 CategoryTreeFilter 自己管宽度 (可拖拽),
    右侧 et-main flex:1 撑满,中间 gap 12px,消除固定列残留的空隙 */
-.et-inner { flex: 1; display: flex; gap: 12px; padding: 12px; min-width: 0; overflow: hidden; }
+.et-inner { flex: 1; display: flex; gap: var(--bl-panel-gap); padding: var(--bl-content-pad); min-width: 0; overflow: hidden; }
 .et-inner > .et-main { flex: 1; min-width: 0; }
 
 /* —— 左侧树 (对齐 LeftGroupTree 视觉) —— */
 .et-tree {
   background: var(--bl-bg-1);
-  border: 1px solid var(--bl-border);
-  border-radius: var(--bl-radius-3);
+  border: 1px solid var(--bl-panel-border);
+  border-right: var(--bl-panel-split-w) solid var(--bl-panel-split);
+  border-radius: var(--bl-panel-radius);
   display: flex; flex-direction: column; overflow: hidden;
   min-width: 180px;
 }
@@ -2112,9 +2113,8 @@ async function confirmPasteImport() {
 /* —— 右侧主区 (对齐 .bl-card 视觉: 边框 + 圆角 + 轻阴影) —— */
 .et-main {
   background: var(--bl-bg-1);
-  border: 1px solid var(--bl-border);
-  border-radius: var(--bl-radius-3);
-  box-shadow: var(--bl-shadow-1);
+  border: 1px solid var(--bl-panel-border);
+  border-radius: var(--bl-panel-radius);
   display: flex; flex-direction: column; overflow: hidden; min-width: 0;
 }
 .list-card { flex: 1; display: flex; flex-direction: column; overflow: hidden; }

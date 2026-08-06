@@ -965,7 +965,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeyDown))
   height: 100%;
   width: 100%;
   min-width: 0;
-  background: var(--bl-bg-2);
+  background: var(--bl-main-bg);
   overflow: hidden;            /* 防止任何子项导致横/纵滚 */
   position: relative;          /* 给抽屉 absolute 定位用 */
 }
@@ -974,13 +974,13 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeyDown))
 .gr-topbar {
   flex-shrink: 0;
   display: flex; align-items: center;
-  padding: 10px 20px 12px;
+  padding: 10px var(--bl-header-pad-x) 12px;
   border-bottom: 1px solid var(--bl-border);
   background: var(--bl-bg-1);
 }
 .gr-title-wrap { display: flex; align-items: baseline; gap: 8px; }
 .gr-title-ic { display: inline-flex; align-self: center; }
-.gr-title { font-size: 18px; font-weight: 600; line-height: 1.2; color: var(--bl-text-1); }
+.gr-title { font-size: var(--bl-fs-14); font-weight: 600; line-height: 1.2; color: var(--bl-text-1); }
 .gr-subtitle { font-size: var(--bl-fs-12); color: var(--bl-text-3); margin-left: 4px; }
 
 /* —— 主体 双画布 —— */

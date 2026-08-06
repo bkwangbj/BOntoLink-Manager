@@ -258,8 +258,10 @@ const CtfNode = {
   flex-shrink: 0;
   position: relative;
   background: var(--bl-bg-1);
-  border: 1px solid var(--bl-border);
-  border-radius: var(--bl-radius-3);
+  /* 平铺形态下外框透明、只靠右边那条分栏线与内容分隔; 卡片形态下四边同色即完整边框 */
+  border: 1px solid var(--bl-panel-border);
+  border-right: var(--bl-panel-split-w) solid var(--bl-panel-split);
+  border-radius: var(--bl-panel-radius);
   display: flex; flex-direction: column;
   overflow: hidden;
   min-width: 180px;
@@ -269,7 +271,7 @@ const CtfNode = {
   padding: 6px 8px;
   border-bottom: 1px solid var(--bl-divider);
 }
-.ctf-title { flex: 1; font-size: 13px; font-weight: 600; color: var(--bl-text-1); }
+.ctf-title { flex: 1; font-size: var(--bl-fs-14); font-weight: 600; color: var(--bl-text-1); }
 .ctf-search {
   display: flex; align-items: center; gap: 4px;
   padding: 6px 8px;

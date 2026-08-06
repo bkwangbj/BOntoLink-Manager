@@ -1077,8 +1077,14 @@ onBeforeUnmount(() => {
   border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
 
 /* —— 主体 —— */
-.vt-body { flex: 1; position: relative; display: flex; gap: 12px; padding: 12px; overflow: hidden; }
-.list-card { flex: 1; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.vt-body { flex: 1; position: relative; display: flex; gap: var(--bl-panel-gap); padding: var(--bl-content-pad); overflow: hidden; }
+/* 主面板套的是全局 .bl-card, 这里按外框风格覆盖成平铺/卡片两态(全局卡片本身不动) */
+.list-card {
+  flex: 1; overflow: hidden; display: flex; flex-direction: column; min-width: 0;
+  border: 1px solid var(--bl-panel-border);
+  border-radius: var(--bl-panel-radius);
+  box-shadow: none;
+}
 
 .list-scroll { flex: 1; min-height: 0; overflow: auto; }
 .vt-table { width: 100%; }

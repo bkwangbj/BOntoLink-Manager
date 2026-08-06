@@ -1002,10 +1002,10 @@ const vClickOutside = {
 </script>
 
 <style scoped>
-.gx-root { display: flex; flex-direction: column; height: 100%; background: var(--bl-bg-2); overflow: hidden; position: relative; }
-.gx-topbar { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 10px 20px 12px; border-bottom: 1px solid var(--bl-border); background: var(--bl-bg-1); }
+.gx-root { display: flex; flex-direction: column; height: 100%; background: var(--bl-main-bg); overflow: hidden; position: relative; }
+.gx-topbar { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 10px var(--bl-header-pad-x) 12px; border-bottom: 1px solid var(--bl-border); background: var(--bl-bg-1); }
 .gx-title-ic { display: inline-flex; }
-.gx-title { font-size: 18px; font-weight: 600; color: var(--bl-text-1); }
+.gx-title { font-size: var(--bl-fs-14); font-weight: 600; color: var(--bl-text-1); }
 .gx-subtitle { font-size: 12px; color: var(--bl-text-3); }
 
 .gx-split { flex: 1; display: flex; min-height: 0; }

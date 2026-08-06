@@ -533,14 +533,14 @@ function propTypeColor(p) {
 .sp-main {
   flex: 1;
   display: flex;
-  gap: 12px; padding: 12px;
+  gap: var(--bl-panel-gap); padding: var(--bl-content-pad);
   overflow: hidden;
 }
 .pane {
   flex: 1;
   background: var(--bl-bg-1);
-  border: 1px solid var(--bl-border);
-  border-radius: var(--bl-radius-3);
+  border: 1px solid var(--bl-panel-border);
+  border-radius: var(--bl-panel-radius);
   overflow: hidden;
   display: flex; flex-direction: column;
 }

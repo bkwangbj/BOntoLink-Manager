@@ -14,6 +14,7 @@ export const useAppStore = defineStore('app', {
       sidebarCollapsed: !!p.sidebarCollapsed,
       theme: p.theme || 'light',          // light | dark | system
       accent: p.accent || 'blue',          // blue/green/purple/orange/red/black
+      navStyle: p.navStyle || 'light',     // 外框风格: light(浅色) | gradient(主色渐变) | navy(深蓝墨)
       domain: p.domain || 'w_wtr',         // 当前主工作领域(向后兼容)
       selectedDomains: Array.isArray(p.selectedDomains) ? p.selectedDomains : [], // 多领域工作范围
       domainPickerOpen: false,
@@ -40,7 +41,7 @@ export const useAppStore = defineStore('app', {
     persist() {
       const p = {
         sidebarCollapsed: this.sidebarCollapsed,
-        theme: this.theme, accent: this.accent, domain: this.domain,
+        theme: this.theme, accent: this.accent, navStyle: this.navStyle, domain: this.domain,
         selectedDomains: this.selectedDomains,
         voicePreset: this.voicePreset, voiceNotify: this.voiceNotify, voiceInput: this.voiceInput,
         locale: this.locale
@@ -58,6 +59,13 @@ export const useAppStore = defineStore('app', {
         ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
         : t
       document.documentElement.setAttribute('data-theme', actual)
+    },
+    /* 外框风格只换 nav / hdr 那组 CSS 变量, 结构不变 */
+    setNavStyle(s) {
+      this.navStyle = s
+      this.persist()
+      if (s === 'light') document.documentElement.removeAttribute('data-nav')
+      else document.documentElement.setAttribute('data-nav', s)
     },
     setAccent(a) {
       this.accent = a

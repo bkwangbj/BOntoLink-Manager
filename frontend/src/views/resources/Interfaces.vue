@@ -924,11 +924,17 @@ watch(() => route.query.openId, applyOpenId)
   flex: 1;
   position: relative;
   display: flex;
-  gap: 12px;
-  padding: 12px;
+  gap: var(--bl-panel-gap);
+  padding: var(--bl-content-pad);
   overflow: hidden;
 }
-.list-card { flex: 1; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+/* 同值类型页: 主面板套的是全局 .bl-card, 按外框风格覆盖成平铺/卡片两态 */
+.list-card {
+  flex: 1; overflow: hidden; display: flex; flex-direction: column; min-width: 0;
+  border: 1px solid var(--bl-panel-border);
+  border-radius: var(--bl-panel-radius);
+  box-shadow: none;
+}
 .list-scroll { flex: 1; min-height: 0; overflow: auto; }
 .list-ft {
   flex-shrink: 0;

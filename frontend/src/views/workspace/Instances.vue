@@ -319,7 +319,7 @@ onBeforeUnmount(() => document.removeEventListener('fullscreenchange', onFsChang
 </script>
 
 <style scoped>
-.ix-root { display: flex; flex-direction: column; height: 100%; background: var(--bl-bg-2); overflow: hidden; }
+.ix-root { display: flex; flex-direction: column; height: 100%; background: var(--bl-main-bg); overflow: hidden; }
 /* 工作区最大化：铺满整屏，盖住 App 侧栏与顶栏 */
 .ix-root.is-max { position: fixed; inset: 0; z-index: 200; height: 100vh; }
 
