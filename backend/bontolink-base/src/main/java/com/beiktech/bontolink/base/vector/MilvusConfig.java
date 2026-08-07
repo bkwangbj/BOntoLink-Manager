@@ -40,25 +40,66 @@ public class MilvusConfig {
         return collectionName;
     }
 
+    /**
+     * 当前生效的 Milvus 客户端（volatile 单例，可被 {@link #rebuild()} 替换）。
+     * 所有下游（搜索/同步/keepalive）统一通过 {@link #current()} 获取，确保连接重建后引用同步。
+     */
+    private volatile MilvusServiceClient client;
+
     @Bean
     public MilvusServiceClient milvusServiceClient() {
+        return current();
+    }
+
+    /**
+     * 线程安全地获取当前客户端，首次调用时惰性建立连接。
+     */
+    public MilvusServiceClient current() {
+        MilvusServiceClient c = client;
+        if (c == null) {
+            synchronized (this) {
+                if (client == null) {
+                    client = createClient();
+                }
+                return client;
+            }
+        }
+        return c;
+    }
+
+    /**
+     * 连接异常后重建客户端：关闭旧连接、按原配置新建并重建集合/索引/加载。
+     * 幂等，调用方只需在连接性错误时触发即可。
+     */
+    public synchronized MilvusServiceClient rebuild() {
+        MilvusServiceClient old = client;
+        client = null;
+        if (old != null) {
+            try { old.close(); } catch (Exception e) { log.warn("关闭旧 Milvus 连接失败: {}", e.getMessage()); }
+        }
+        log.warn("重建 Milvus 连接 {}:{}", host, port);
+        MilvusServiceClient c = createClient();
+        client = c;
+        return c;
+    }
+
+    private MilvusServiceClient createClient() {
         log.info("Connecting to Milvus at {}:{}", host, port);
-        MilvusServiceClient client = new MilvusServiceClient(
+        MilvusServiceClient c = new MilvusServiceClient(
                 ConnectParam.newBuilder()
                         .withHost(host)
                         .withPort(port)
-                        // 空闲连接保活：服务端 keepAliveTime=10s / keepAliveTimeout=20s。
-                        // 客户端 ping 间隔 45s（服务端 10s 的整数倍，避免 enforcement 拒绝），
-                        // 超时 25s（必须 > 服务端 20s，否则慢请求时被误判连接失效）
-                        .withKeepAliveTime(45, java.util.concurrent.TimeUnit.SECONDS)
-                        .withKeepAliveTimeout(25, java.util.concurrent.TimeUnit.SECONDS)
+                        // 空闲连接保活：客户端 keepAliveTime 必须小于服务端 keepAliveTimeout，
+                        // 否则服务端会在空闲窗口内判定连接僵死并主动断开（http2 GOAWAY/RST）。
+                        // 这里用 30s 探活 + 15s 响应判定（服务端默认 timeout=30s 时保持足够余量）。
+                        // 移除了 withIdleTimeout(MAX_VALUE) 反模式——那会让 netty 连接池无法回收损坏连接。
+                        .withKeepAliveTime(30, java.util.concurrent.TimeUnit.SECONDS)
+                        .withKeepAliveTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
                         .keepAliveWithoutCalls(true)
-                        // 不主动关闭空闲 channel（默认 30min 会关）
-                        .withIdleTimeout(Long.MAX_VALUE, java.util.concurrent.TimeUnit.MILLISECONDS)
                         .build()
         );
-        ensureCollection(client);
-        return client;
+        ensureCollection(c);
+        return c;
     }
 
     /** drop + recreate，供运维接口调用 */

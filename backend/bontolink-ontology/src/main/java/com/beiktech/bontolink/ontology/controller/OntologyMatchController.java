@@ -532,7 +532,7 @@ public class OntologyMatchController {
 
     private Map<String, Object> success(Object data) {
         Map<String, Object> response = new HashMap<>();
-        response.put("code", 200);
+        response.put("code", 0);
         response.put("msg", "success");
         response.put("data", data);
         return response;

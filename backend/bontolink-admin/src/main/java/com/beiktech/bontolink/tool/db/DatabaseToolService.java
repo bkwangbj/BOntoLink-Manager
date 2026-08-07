@@ -1,12 +1,18 @@
 package com.beiktech.bontolink.tool.db;
 
+import com.beiktech.bontolink.base.datasource.DataSourceConnector;
+import com.beiktech.bontolink.data.entity.SysDataSource;
+import com.beiktech.bontolink.data.mapper.PhysicalTableMapper;
+import com.beiktech.bontolink.service.DataSourceService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.util.*;
 
 /**
@@ -28,6 +34,10 @@ public class DatabaseToolService {
 
     private final JdbcTemplate jdbcTemplate;
     private final DataSource dataSource;
+
+    @Autowired private PhysicalTableMapper physicalTableMapper;
+    @Autowired private DataSourceService dataSourceService;
+    @Autowired private DataSourceConnector connector;
 
     public DatabaseToolService(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
@@ -99,6 +109,29 @@ public class DatabaseToolService {
                 tables = jdbcTemplate.queryForList(
                         "SELECT name, type FROM sqlite_master WHERE type IN ('table','view') ORDER BY name");
             }
+            // 合并已注册的外部物理表(ont_physical_table), 让工具能列出业务库表
+            try {
+                List<Map<String, Object>> phys = physicalTableMapper.listAll();
+                Set<String> names = new HashSet<>();
+                for (Map<String, Object> t : tables) {
+                    Object n = t.get("name") != null ? t.get("name") : t.get("physical_table");
+                    if (n != null) names.add(String.valueOf(n).toLowerCase());
+                }
+                for (Map<String, Object> p : phys) {
+                    Object pn = p.get("physical_table");
+                    if (pn == null) continue;
+                    String nm = String.valueOf(pn);
+                    if (names.add(nm.toLowerCase())) {
+                        Map<String, Object> row = new LinkedHashMap<>();
+                        row.put("name", nm);
+                        row.put("type", p.get("table_type") == null ? "table" : p.get("table_type"));
+                        row.put("source", "external");
+                        tables.add(row);
+                    }
+                }
+            } catch (Exception ignore) {
+                log.debug("合并外部物理表到表清单失败: {}", ignore.getMessage());
+            }
             result.put("success", true);
             result.put("tables", tables);
             result.put("count", tables.size());
@@ -122,6 +155,17 @@ public class DatabaseToolService {
             return result;
         }
         try {
+            // 优先走外部物理表通道: ont_physical_table 中注册的表按其 ds_id 连外部库读真实结构
+            java.util.Map<String, Object> ext;
+            try { ext = physicalTableMapper.findByTableName(table); } catch (Exception ignore) { ext = null; }
+            if (ext != null && ext.get("ds_id") != null) {
+                SysDataSource ds = dataSourceService.get(String.valueOf(ext.get("ds_id")));
+                if (ds != null) {
+                    return readExternalSchema(ds, table);
+                }
+            }
+
+            // 退回主数据源查
             List<Map<String, Object>> columns;
             if (isPostgreSql()) {
                 columns = jdbcTemplate.queryForList(
@@ -134,6 +178,7 @@ public class DatabaseToolService {
             result.put("table", table);
             result.put("columns", columns);
             result.put("count", columns.size());
+            result.put("source", "meta");
             return result;
         } catch (Exception e) {
             log.warn("查看表结构失败: {}", table, e);
@@ -141,6 +186,73 @@ public class DatabaseToolService {
             result.put("message", "查看表结构失败: " + e.getMessage());
             return result;
         }
+    }
+
+    /**
+     * 按外部数据源(sys_data_source)动态建连, 读取指定物理表(可能跨库/schema)的真实结构。
+     * 结果结构保持与主库查询一致: {success, table, columns, count}。
+     */
+    private Map<String, Object> readExternalSchema(SysDataSource ds, String table) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        try {
+            List<Map<String, Object>> columns = new ArrayList<>();
+            boolean found = false;
+            try (Connection conn = connector.open(ds)) {
+                DatabaseMetaData meta = conn.getMetaData();
+                String catalog = conn.getCatalog();
+                // catalog + 任意 schema 下查找精确表名(大小写不敏感)
+                for (String schema : new String[]{null, conn.getSchema()}) {
+                    try (ResultSet rs = meta.getTables(catalog, schema, table, new String[]{"TABLE", "VIEW"})) {
+                        while (rs.next()) {
+                            found = true;
+                            String realSchema = rs.getString("TABLE_SCHEM");
+                            String tableName = rs.getString("TABLE_NAME");
+                            Set<String> pkCols = new HashSet<>();
+                            try (ResultSet pk = meta.getPrimaryKeys(catalog, realSchema, tableName)) {
+                                while (pk.next()) pkCols.add(pk.getString("COLUMN_NAME"));
+                            } catch (Exception ignore) {}
+                            try (ResultSet cr = meta.getColumns(catalog, realSchema, tableName, "%")) {
+                                while (cr.next()) {
+                                    Map<String, Object> c = new LinkedHashMap<>();
+                                    String colName = cr.getString("COLUMN_NAME");
+                                    c.put("name", colName);
+                                    c.put("type", mapExtType(cr.getString("TYPE_NAME")));
+                                    c.put("nullable", cr.getInt("NULLABLE") == DatabaseMetaData.columnNullable ? "YES" : "NO");
+                                    c.put("is_key", pkCols.contains(colName) ? 1 : 0);
+                                    c.put("comment", cr.getString("REMARKS"));
+                                    columns.add(c);
+                                }
+                            }
+                        }
+                    } catch (Exception ignore) {}
+                }
+            }
+            result.put("success", true);
+            result.put("table", table);
+            result.put("columns", columns);
+            result.put("count", columns.size());
+            result.put("foundExternal", found);
+            result.put("source", "external:" + ds.getDsCode());
+            return result;
+        } catch (Exception e) {
+            log.warn("查看外部数据源表结构失败: {} (ds={})", table, ds.getDsCode(), e);
+            result.put("success", false);
+            result.put("message", "外部数据源查询失败: " + e.getMessage());
+            return result;
+        }
+    }
+
+    /** 将外部 JDBC 类型名映射为统一简洁类型(与 PhysicalTableService 一致) */
+    private static String mapExtType(String typeName) {
+        if (typeName == null) return "string";
+        String t = typeName.toLowerCase();
+        if (t.contains("bool") || t.contains("bit")) return "boolean";
+        if (t.contains("timestamp") || t.contains("datetime")) return "dateTime";
+        if (t.contains("date")) return "date";
+        if (t.contains("int") || t.contains("serial")) return "integer";
+        if (t.contains("real") || t.contains("floa") || t.contains("doub")
+                || t.contains("deci") || t.contains("numer") || t.contains("money")) return "decimal";
+        return "string";
     }
 
     private boolean isPostgreSql() {

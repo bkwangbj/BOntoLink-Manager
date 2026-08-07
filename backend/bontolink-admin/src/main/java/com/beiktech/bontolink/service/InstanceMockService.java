@@ -1,9 +1,18 @@
 package com.beiktech.bontolink.service;
 
+import com.beiktech.bontolink.base.datasource.DataSourceConnector;
+import com.beiktech.bontolink.data.entity.SysDataSource;
 import com.beiktech.bontolink.data.mapper.OntologyMapper;
+import com.beiktech.bontolink.data.mapper.SysDataSourceMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.Statement;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,10 +26,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>每条实例 = 一个 {@code LinkedHashMap}，含 id / classId / className / code / title / rid
  * / createdAt 以及把所有属性平铺进去的 {@code props}(键为属性 api_name)。</p>
  */
+@Slf4j
 @Service
 public class InstanceMockService {
 
     @Autowired private OntologyMapper ontologyMapper;
+    @Autowired private SysDataSourceMapper sysDataSourceMapper;
+    @Autowired private DataSourceConnector connector;
 
     /** classId -> 已生成的实例列表(确定性，懒加载缓存) */
     private final Map<String, List<Map<String, Object>>> cache = new ConcurrentHashMap<>();
@@ -51,7 +63,88 @@ public class InstanceMockService {
 
     /** 取某对象类型的全部实例(确定性生成 + 缓存)。返回的是缓存引用，调用方不要直接改。 */
     public List<Map<String, Object>> all(String classId) {
-        return cache.computeIfAbsent(classId, this::generate);
+        return cache.computeIfAbsent(classId, this::resolve);
+    }
+
+    /**
+     * 取数主入口。
+     * <p>类挂了外部主表 → <b>必读真实业务库</b>, 取数失败一律抛出异常(不降级 mock);
+     * 未挂物理表 → 无真实数据可取, 走内存模拟(合法演示路径)。</p>
+     */
+    private List<Map<String, Object>> resolve(String classId) {
+        Map<String, Object> cls = ontologyMapper.findClassById(classId);
+        if (cls == null) throw new IllegalStateException("本体类不存在: " + classId);
+
+        String apiName = str(cls.get("api_name"));
+        String displayName = firstNonBlank(str(cls.get("display_name")), str(cls.get("rdfs_label")), apiName);
+
+        // 主表 = rel_type=1 的第一条 (是否存在外部挂接表是本环节唯一允许回 mock 的分支)
+        Map<String, Object> mainDs = null;
+        for (Map<String, Object> cd : ontologyMapper.listClassDatasources(classId)) {
+            if ("1".equals(str(cd.get("rel_type")))) { mainDs = cd; break; }
+        }
+        if (mainDs == null)      return generate(classId);
+        String dsCode    = str(mainDs.get("ds_code"));
+        String physTable = str(mainDs.get("physical_table"));
+        if (dsCode.isEmpty() || physTable.isEmpty()) return generate(classId);
+
+        SysDataSource ds;
+        try {
+            ds = sysDataSourceMapper.findByDsCode(dsCode);
+        } catch (Exception e) {
+            throw new IllegalStateException("外部数据源查询失败: " + dsCode + " 原因=" + e.getMessage(), e);
+        }
+        if (ds == null) throw new IllegalStateException("外部数据源不存在: " + dsCode);
+        if ("mongodb".equalsIgnoreCase(str(ds.getDsType()))) {
+            throw new IllegalStateException("MongoDB 数据源(" + dsCode + ")暂不支持 JDBC 取数");
+        }
+
+        try {
+            return readByConn(connector.open(ds), physTable, mainDs, classId, apiName, displayName);
+        } catch (Exception e) {
+            throw new IllegalStateException("读取外部库失败: 类=" + classId + " 表=" + physTable
+                    + " 数据源=" + dsCode + " 原因=" + e.getMessage(), e);
+        }
+    }
+
+    /** 外部取数行数上限(与 row cap 一致, 落在 SQL 的 LIMIT 上) */
+    private static final int ROW_CAP = 500;
+
+    /** 用给定连接执行外部主表查询并映射为案例不敏感行(行内已带系统字段)。连接由 try-with-resources 关闭。 */
+    private List<Map<String, Object>> readByConn(Connection conn, String physTable, Map<String, Object> mainDs,
+                                                 String classId, String apiName, String displayName) throws Exception {
+        try (Statement st = conn.createStatement()) {
+            // 查询限时:外部业务库可能在大表/慢查询上长时间阻塞, 不能让 HTTP 同步挂死 → 有界失败而非无限卡住
+            st.setQueryTimeout(15);   // 秒; 超时抛 SQLException → 上层 resolve 抛明确错误
+            // 用 LIMIT 在存储引擎层截断, 只取头部 ROW_CAP 行, 避免大表 SELECT * 全表扫(动辄 10s+ 甚至超时)
+            ResultSet rs = st.executeQuery("SELECT * FROM " + physTable + " LIMIT " + ROW_CAP);
+
+            ResultSetMetaData md = rs.getMetaData();
+            int colCount = md.getColumnCount();
+            List<Map<String, Object>> list = new ArrayList<>();
+            int i = 0;
+            while (rs.next() && i < ROW_CAP) {   // 双保险: SQL 层 LIMIT + 应用层游标上限
+                // 外部行也用大小写不敏感 TreeMap, 与 MyBatis 一致, 且能和属性 api_name 对齐
+                Map<String, Object> row = new java.util.TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+                for (int c = 1; c <= colCount; c++) {
+                    String label = md.getColumnLabel(c);
+                    row.put(label == null ? md.getColumnName(c) : label, rs.getObject(c));
+                }
+                row.put("id", apiName + "-" + (i + 1));
+                row.put("classId", classId);
+                row.put("className", displayName);
+                row.put("classApiName", apiName);
+                String pk = str(mainDs.get("pk_keys"));
+                Object title = !pk.isEmpty() ? row.get(pk.split(",")[0].trim()) : null;
+                row.put("code", title == null ? "" : title);
+                row.put("title", title == null ? displayName : title);
+                row.put("rid", "ri.inst." + apiName + "." + (i + 1));
+                list.add(row);
+                i++;
+            }
+            log.info("外部库读取对象实例: classId={} table={} 行数={}", classId, physTable, i);
+            return list;
+        }
     }
 
     /** 某对象类型的实例总数。 */

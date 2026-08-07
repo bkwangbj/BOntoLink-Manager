@@ -24,6 +24,10 @@ public interface PhysicalTableMapper {
     @Select("SELECT * FROM ont_physical_table WHERE id = #{id}")
     Map<String, Object> findById(@Param("id") String id);
 
+    // 按物理表名查归属数据源的记录(可能多数据源同名, 取第一条)
+    @Select("SELECT * FROM ont_physical_table WHERE physical_table = #{name} ORDER BY update_time DESC LIMIT 1")
+    Map<String, Object> findByTableName(@Param("name") String name);
+
     // 新增物理表记录（含列结构 JSON 快照）
     @Insert("""
         INSERT INTO ont_physical_table(

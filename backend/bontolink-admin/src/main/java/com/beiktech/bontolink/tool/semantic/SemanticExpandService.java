@@ -223,8 +223,22 @@ public class SemanticExpandService {
      * </pre>
      */
     public Map<String, Object> subgraph(String question, String nsCode, int topK, double threshold) {
-        // 1. 向量搜索
-        Map<String, Object> vectorResult = vectorToolService.search(question, topK, threshold, nsCode);
+        // 1. 向量搜索（带重试）
+        Map<String, Object> vectorResult = null;
+        int maxAttempts = 5;
+        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+            vectorResult = vectorToolService.search(question, topK, threshold, nsCode);
+            boolean success = Boolean.TRUE.equals(vectorResult.get("success"));
+            if (success) break;
+
+            if (attempt < maxAttempts) {
+                String msg = vectorResult.get("message") != null
+                        ? String.valueOf(vectorResult.get("message")) : "";
+                log.warn("向量搜索失败（第{}/{}次）: {}", attempt, maxAttempts, msg);
+                try { Thread.sleep((long)(100 + attempt * 100 + Math.random() * 100)); } catch (InterruptedException ignored) {}
+            }
+        }
+
         boolean vectorOk = Boolean.TRUE.equals(vectorResult.get("success"));
 
         @SuppressWarnings("unchecked")
@@ -263,6 +277,10 @@ public class SemanticExpandService {
 
             if (apiName == null) continue;
             switch (entityType.toLowerCase()) {
+                case "synonym" -> {
+                    // synonym 实体的 api_name 是中文词，Jena 里没有对应类，跳过本体查找
+                    // 仅记录在 matchedEntities 供调用方参考，不做 Jena 扩展
+                }
                 case "class", "enum" -> classApiNames.put(apiName, entityType);
                 case "class_prop", "property", "shared_prop", "shared_property", "link_type" ->
                         propertyApiNames.put(apiName, entityType);
@@ -441,6 +459,8 @@ public class SemanticExpandService {
             prop.put("ranges", pd.get("ranges"));
             prop.put("inverseOf", pd.get("inverseOf"));
             prop.put("dataType", pd.get("dataType"));  // XSD 数据类型：xsd:string, xsd:integer 等
+            prop.put("physicalTable", pd.get("physicalTable"));
+            prop.put("dataSourceCode", pd.get("dataSourceCode"));
             properties.add(prop);
         }
 

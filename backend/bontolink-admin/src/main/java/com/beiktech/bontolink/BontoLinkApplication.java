@@ -6,8 +6,10 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
+@EnableScheduling
 @EnableMethodCache(basePackages = "com.beiktech.bontolink.service")
 @EnableCreateCacheAnnotation
 @MapperScan("com.beiktech.bontolink.data.mapper")

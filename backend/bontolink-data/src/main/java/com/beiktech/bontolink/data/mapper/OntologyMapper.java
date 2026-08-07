@@ -95,6 +95,7 @@ public interface OntologyMapper {
             "       cp.is_primary, cp.is_required, cp.is_key, cp.is_derived, " +
             "       cp.is_multi_valued_prop, cp.is_range_constraint_prop, cp.range_class_id, " +
             "       cp.class_ds_id, cp.physical_table, cp.physical_column, " +
+            "       cd.ds_code AS ds_code, cd.table_label AS ds_table_label, " +
             "       cp.sort, cp.metadata, " +
             "       vt.constraint_type AS vt_constraint_type, vt.base_type AS vt_base_type, " +
             "       vt.enum_id AS enum_id, " +
@@ -102,6 +103,7 @@ public interface OntologyMapper {
             "  FROM ont_class_property cp " +
             "  LEFT JOIN ont_value_types vt ON vt.id = cp.value_type " +
             "  LEFT JOIN ont_enum_types et ON et.id = vt.enum_id " +
+            "  LEFT JOIN ont_class_ds cd ON cd.id = cp.class_ds_id " +
             " WHERE cp.class_id = #{classId} ORDER BY cp.sort, cp.id")
     List<Map<String, Object>> listProperties(@Param("classId") String classId);
 
@@ -247,6 +249,10 @@ public interface OntologyMapper {
             " description, icon, color, status, metadata, create_time, update_time " +
             " FROM ont_class WHERE id = #{id}")
     Map<String, Object> findClassById(@Param("id") String id);
+
+    /** 按 api_name（OWL localName，如 t1901_s01_1）反查对象类型。返回 id / api_name / display_name，未命中为 null。 */
+    @Select("SELECT id, api_name, display_name, rdfs_label, status FROM ont_class WHERE api_name = #{apiName} ORDER BY create_time DESC LIMIT 1")
+    Map<String, Object> findClassByApiName(@Param("apiName") String apiName);
 
     /** 单类的属性总数 / 普通属性数（普通 = is_primary = 0） */
     @Select("SELECT COUNT(*) FROM ont_class_property WHERE class_id = #{id}")

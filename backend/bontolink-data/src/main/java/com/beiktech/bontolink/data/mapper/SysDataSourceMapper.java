@@ -21,6 +21,10 @@ public interface SysDataSourceMapper {
     @Select("SELECT * FROM sys_data_source WHERE id = #{id}")
     SysDataSource findById(@Param("id") String id);
 
+    // 按数据源编码查单条数据源(本体对物理表的 ds_code 引用)
+    @Select("SELECT * FROM sys_data_source WHERE ds_code = #{code} LIMIT 1")
+    SysDataSource findByDsCode(@Param("code") String code);
+
     // 按数据源类型分组统计数量（用于首页统计卡片）
     @Select("SELECT ds_type, COUNT(*) AS cnt FROM sys_data_source GROUP BY ds_type")
     List<Map<String, Object>> groupByType();

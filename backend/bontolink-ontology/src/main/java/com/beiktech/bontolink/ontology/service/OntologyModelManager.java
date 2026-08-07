@@ -408,6 +408,16 @@ public class OntologyModelManager {
                         dataProp.addProperty(newModel.createProperty(NS_PREFIX + "dataType"), dataType);
                     }
 
+                    // 数据源 + 物理表关联：对象属性需携带其来源表与外部数据源编码, 供跨库取数
+                    String propDsCode = prop.get("ds_code") != null ? prop.get("ds_code").toString() : null;
+                    String propPhysicalTable = prop.get("physical_table") != null ? prop.get("physical_table").toString() : null;
+                    if (propPhysicalTable != null && !propPhysicalTable.isBlank()) {
+                        dataProp.addProperty(newModel.createProperty(NS_PREFIX + "physicalTable"), propPhysicalTable);
+                    }
+                    if (propDsCode != null && !propDsCode.isBlank()) {
+                        dataProp.addProperty(newModel.createProperty(NS_PREFIX + "dataSourceCode"), propDsCode);
+                    }
+
                     // 枚举约束：加 rdfs:range 指向枚举类
                     if ("Enum".equals(vtConstraintType) && enumApiName != null) {
                         OntClass enumClass = newModel.getOntClass(NS_PREFIX + "Enum_" + enumApiName);
@@ -597,11 +607,11 @@ public class OntologyModelManager {
                     String dsName = (String) ds.get("ds_name");
                     if (dsName != null) tableNode.addProperty(propDsName, dsName);
 
-                    String dsType = (String) ds.get("ds_type");
-                    if (dsType != null) tableNode.addProperty(propDsType, dsType);
+                    Object dsTypeRaw = ds.get("ds_type");
+                    if (dsTypeRaw != null) tableNode.addProperty(propDsType, dsTypeRaw.toString());
 
-                    String relType = (String) ds.get("rel_type");
-                    if (relType != null) tableNode.addProperty(propRelType, relType);
+                    Object relTypeRaw = ds.get("rel_type");
+                    if (relTypeRaw != null) tableNode.addProperty(propRelType, relTypeRaw.toString());
 
                     String pkKeys = (String) ds.get("pk_keys");
                     if (pkKeys != null) tableNode.addProperty(propPkKeys, pkKeys);

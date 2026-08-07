@@ -7,7 +7,7 @@ spring:
   application:
     name: bontolink-admin
   profiles:
-    active: postgresql
+    active: postgresql #postgresql,sqlite
   flyway:
     enabled: true
     # Flyway 脚本在 bontolink-data 模块的 jar 包里
@@ -49,21 +49,29 @@ bontolink:
     # 缓存类型: local(仅本地Caffeine) / remote(本地+Redis二级缓存) / none(禁用)
     type: local
   ontology:
-    jena-enabled: false
+    jena-enabled: true
     storage-mode: memory
     reasoner-type: owl
     vector:
-      type: none
-      milvus-host: 127.0.0.1
-      milvus-port: 19530
+      type: milvus
+      milvus-host: 111.205.247.215
+      milvus-port: 19533
       milvus-collection: ont_entity_embeddings
-      dimension: 768
+      dimension: 1024
     fuseki:
       enabled: false
       port: 3030
       dataset-name: ontology
   embedding:
-    provider: siliconflow   # mock / siliconflow
+    provider: ollama
+  llm:
+    provider: openai
+    base-url: http://work.beiktech.com:8002/v1/chat/completions
+    model: Qwen3-4B
+    api-key: none
+    temperature: 0.3
+    max-tokens: 256
+    timeout-seconds: 60
   deepseek:
     api-key: sk-5f5667ffbfe94c4e924e65de42ab46bd
     base-url: https://api.deepseek.com/v1/chat/completions
@@ -73,6 +81,11 @@ bontolink:
     base-url: https://api.siliconflow.cn/v1/embeddings
     model: BAAI/bge-base-zh-v1.5
     timeout-seconds: 30
+  ollama:
+    base-url: http://work.beiktech.com:11434/api/embeddings
+    model: bge-m3
+    dimension: 1024
+    timeout-seconds: 60
   datasource:
     pool:
       max-pool-size: 5
@@ -119,3 +132,4 @@ logging:
     com.beiktech.bontolink: DEBUG
     org.springframework.jdbc.core: INFO
     org.flywaydb: INFO
+    com.zaxxer.hikari: ERROR

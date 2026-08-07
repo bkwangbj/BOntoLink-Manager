@@ -512,6 +512,18 @@ public class JenaToolService {
                 }
             }
 
+            // 物理表名 + 数据源编码（跨库取数用）
+            Property physicalTableProp = model.getProperty(NS_PREFIX + "physicalTable");
+            if (physicalTableProp != null && prop.hasProperty(physicalTableProp)) {
+                RDFNode n = prop.getPropertyValue(physicalTableProp);
+                if (n != null) result.put("physicalTable", n.toString());
+            }
+            Property dataSourceCodeProp = model.getProperty(NS_PREFIX + "dataSourceCode");
+            if (dataSourceCodeProp != null && prop.hasProperty(dataSourceCodeProp)) {
+                RDFNode n = prop.getPropertyValue(dataSourceCodeProp);
+                if (n != null) result.put("dataSourceCode", n.toString());
+            }
+
             // 超属性（该属性是其子类）/ 子属性
             List<String> supers = new ArrayList<>();
             ExtendedIterator<? extends OntProperty> spi = prop.listSuperProperties();

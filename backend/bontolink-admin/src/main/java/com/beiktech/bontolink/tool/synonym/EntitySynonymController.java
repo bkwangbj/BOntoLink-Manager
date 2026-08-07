@@ -112,9 +112,7 @@ public class EntitySynonymController {
         try {
             io.milvus.param.R<io.milvus.grpc.FlushResponse> resp = milvusClient.flush(
                     io.milvus.param.collection.FlushParam.newBuilder()
-                            .withCollectionNames(java.util.List.of(milvusConfig.getCollectionName()))
-                            .withSyncFlush(true)
-                            .build());
+                            .addCollectionName(milvusConfig.getCollectionName()).build());
             Map<String, Object> r = new LinkedHashMap<>();
             r.put("success", resp.getStatus() == 0);
             r.put("message", resp.getStatus() == 0 ? "Milvus flush 完成" : "flush 失败: " + resp.getMessage());

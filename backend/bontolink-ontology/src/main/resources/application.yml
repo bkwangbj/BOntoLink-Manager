@@ -25,15 +25,24 @@ mybatis:
 # 本体服务配置（属性映射：OntologyEngineConfig）
 bontolink:
   ontology:
-    jena-enabled: false
+    # 是否启用 Jena OntModel（false=纯文本匹配，不加载本体模型）
+    jena-enabled: true
+    # Jena 存储模式: memory / tdb2
     storage-mode: memory
+    # TDB2 目录（storage-mode=tdb2 时生效）
     tdb2-location: ./data/tdb2
+    # 推理器类型: none / rdfs / owl / owl-micro
     reasoner-type: owl
-    fuseki:
-      enabled: false
-      port: 3030
-      dataset-name: ontology
+    # 向量库配置（映射：OntologyEngineConfig.VectorConfig）
     vector:
+      # 是否启用向量库连接（pgvector / milvus）
       enabled: true
-      type: pgvector
-      dimension: 768
+      # 向量库类型: pgvector | milvus
+      type: milvus
+      # 向量维度（需与 embedding 模型匹配,bge-m3 = 1024）
+      dimension: 1024
+      # --- Milvus 连接配置（type=milvus 时生效） ---
+      milvus-host: 127.0.0.1
+      milvus-port: 19530
+      milvus-collection: ont_entity_embeddings
+      milvus-home: "D:\\soft\\milvus"     # 本地安装路径（启动提示用）

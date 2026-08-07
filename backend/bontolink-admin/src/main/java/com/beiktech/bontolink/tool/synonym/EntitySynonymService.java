@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.beiktech.bontolink.base.embedding.EmbeddingService;
 import com.beiktech.bontolink.base.llm.SynonymClient;
 import io.milvus.client.MilvusServiceClient;
+import io.milvus.param.collection.FlushParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -90,18 +91,24 @@ public class EntitySynonymService {
         batchTotal = entities.size();
         batchProcessed.set(0);
         batchFailed.set(0);
+        int sinceFlush = 0;
         try {
             for (Map<String, Object> row : entities) {
                 String id = str(row, "id");
                 try {
                     generate(entityType, id);
                     batchProcessed.incrementAndGet();
+                    if (milvusClient != null && ++sinceFlush >= MILVUS_FLUSH_INTERVAL) {
+                        sinceFlush = 0;
+                        flushMilvus();
+                    }
                 } catch (Exception e) {
                     log.warn("批量生成失败: type={} id={} err={}", entityType, id, e.getMessage(), e);
                     batchProcessed.incrementAndGet();
                     batchFailed.incrementAndGet();
                 }
             }
+            if (milvusClient != null) flushMilvus();
         } finally {
             batchStatus = "idle";
         }
@@ -411,10 +418,7 @@ public class EntitySynonymService {
     private void flushMilvus() {
         if (milvusClient == null) return;
         try {
-            milvusClient.flush(
-                    io.milvus.param.collection.FlushParam.newBuilder()
-                            .withCollectionNames(java.util.List.of(collection))
-                            .build());
+            milvusClient.flush(FlushParam.newBuilder().addCollectionName(collection).build());
             log.info("Milvus flush 完成，buffer 已落盘");
         } catch (Exception e) {
             log.warn("Milvus flush 失败: {}", e.getMessage());

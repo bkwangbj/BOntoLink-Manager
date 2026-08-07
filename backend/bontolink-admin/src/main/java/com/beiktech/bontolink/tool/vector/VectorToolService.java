@@ -1,6 +1,7 @@
 package com.beiktech.bontolink.tool.vector;
 
 import com.beiktech.bontolink.base.embedding.EmbeddingService;
+import com.beiktech.bontolink.base.vector.MilvusConfig;
 import com.beiktech.bontolink.ontology.config.OntologyEngineConfig;
 import io.milvus.client.MilvusServiceClient;
 import io.milvus.param.collection.GetCollectionStatisticsParam;
@@ -11,10 +12,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import org.springframework.scheduling.annotation.Scheduled;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 工具模块 - 向量库查询服务
@@ -39,9 +43,8 @@ public class VectorToolService {
     private final OntologyEngineConfig engineConfig;
     private final JdbcTemplate jdbcTemplate;
     private final DataSource dataSource;
-
-    @Autowired(required = false)
-    private MilvusServiceClient milvusClient;
+    /** Milvus 配置；仅 vector.type=milvus 时存在（否则 null，Service 走 pgvector 分支） */
+    private final MilvusConfig milvusConfig;
 
     @Value("${bontolink.ontology.vector.milvus-collection:ont_entity_embeddings}")
     private String milvusCollection;
@@ -49,11 +52,18 @@ public class VectorToolService {
     public VectorToolService(EmbeddingService embeddingService,
                              OntologyEngineConfig engineConfig,
                              JdbcTemplate jdbcTemplate,
-                             DataSource dataSource) {
+                             DataSource dataSource,
+                             @Autowired(required = false) MilvusConfig milvusConfig) {
         this.embeddingService = embeddingService;
         this.engineConfig = engineConfig;
         this.jdbcTemplate = jdbcTemplate;
         this.dataSource = dataSource;
+        this.milvusConfig = milvusConfig;
+    }
+
+    /** 当前 Milvus 客户端（连接重建后自动取到新实例；Milvus 未启用/未配置时返回 null） */
+    private MilvusServiceClient milvusClient() {
+        return milvusConfig != null ? milvusConfig.current() : null;
     }
 
     /**
@@ -80,14 +90,15 @@ public class VectorToolService {
         // 如果是 Milvus 向量库
         if ("milvus".equalsIgnoreCase(vectorType)) {
             status.put("databaseProduct", "Milvus");
-            if (milvusClient == null) {
+            MilvusServiceClient client = milvusClient();
+            if (client == null) {
                 status.put("available", false);
                 status.put("note", "Milvus 客户端未初始化（检查配置 bontolink.ontology.vector.milvus-host/port）");
                 return status;
             }
 
             try {
-                Boolean exists = milvusClient.hasCollection(
+                Boolean exists = client.hasCollection(
                         HasCollectionParam.newBuilder()
                                 .withCollectionName(milvusCollection)
                                 .build()
@@ -100,7 +111,7 @@ public class VectorToolService {
                 }
 
                 // 获取向量数量
-                var statsResp = milvusClient.getCollectionStatistics(
+                var statsResp = client.getCollectionStatistics(
                         GetCollectionStatisticsParam.newBuilder()
                                 .withCollectionName(milvusCollection)
                                 .build()
@@ -259,13 +270,21 @@ public class VectorToolService {
 
     private Map<String, Object> searchMilvus(String text, int topK, double threshold, String nsCode) {
         Map<String, Object> result = new LinkedHashMap<>();
-        if (milvusClient == null) {
-            result.put("success", false);
-            result.put("message", "Milvus 客户端未初始化");
-            return result;
-        }
+        // 连接性错误累计计数：连续达到阈值即重建客户端（见 handleConnectionError）
+        AtomicInteger connFails = new AtomicInteger(0);
 
-        for (int attempt = 1; attempt <= 2; attempt++) {
+        // 最多5次尝试：前4次遇到连接类错误均触发客户端重建后重试，避免 gRPC 空闲重置导致的间歇性失败。
+        // 不再依赖 loadCollection 来"唤醒"——它本身在连接损坏时就是 http2 exception 的来源。
+        int maxAttempts = 5;
+        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+            MilvusServiceClient mc;
+            try {
+                mc = milvusClient();
+            } catch (Exception e) {
+                result.put("success", false);
+                result.put("message", "Milvus 客户端初始化失败: " + e.getMessage());
+                return result;
+            }
             try {
                 float[] vec = embeddingService.embed(text);
                 List<Float> vecList = new ArrayList<>(vec.length);
@@ -283,7 +302,7 @@ public class VectorToolService {
                     builder.withExpr("ns_code == \"" + nsCode + "\"");
                 }
 
-                var searchResp = milvusClient.search(builder.build());
+                var searchResp = mc.search(builder.build());
                 if (searchResp.getData() == null) {
                     result.put("success", false);
                     result.put("message", "Milvus 搜索失败: " + searchResp.getException());
@@ -294,8 +313,7 @@ public class VectorToolService {
                 List<io.milvus.response.SearchResultsWrapper.IDScore> idScores = wrapper.getIDScore(0);
 
                 List<Map<String, Object>> matches = new ArrayList<>();
-                // 方案A：同一实体有主词 + 各同义词多条向量，按 entity_id 去重取最高分，
-                // 保证 topK 返回的是不同实体，而非同一实体的多个同义词命中。
+                // 同一实体多条向量（主词+同义词），按 entity_id 去重取最高分
                 Map<String, Map<String, Object>> bestByEntity = new LinkedHashMap<>();
                 for (var idScore : idScores) {
                     if (idScore.getScore() < threshold) continue;
@@ -323,22 +341,14 @@ public class VectorToolService {
 
             } catch (Exception e) {
                 String msg = e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage();
-                boolean connErr = msg.contains("UNAVAILABLE") || msg.contains("DEADLINE_EXCEEDED")
-                        || msg.contains("channel") || msg.contains("connect") || msg.contains("reset")
-                        || msg.contains("end-of-stream") || msg.contains("INTERNAL")
-                        || msg.contains("has not been loaded") || msg.contains("checkIfLoaded");
-                if (attempt == 1 && connErr) {
-                    // 第一次失败且是连接类错误：重新 load collection 后重试一次
-                    log.warn("Milvus 搜索连接异常（第{}次），重新 load collection 后重试: {}", attempt, msg);
-                    try {
-                        milvusClient.loadCollection(
-                                io.milvus.param.collection.LoadCollectionParam.newBuilder()
-                                        .withCollectionName(milvusCollection).build());
-                        Thread.sleep(500);  // 等待连接稳定
-                    } catch (Exception ignored) {}
+                boolean connErr = isConnectionError(msg);
+                if (connErr && attempt < maxAttempts) {
+                    // 重建客户端自愈，消除损坏的 gRPC 通道，再重试
+                    handleConnectionError(connFails, msg);
+                    log.warn("Milvus 搜索连接异常（第{}/{}次），已重建客户端并重试: {}", attempt, maxAttempts, msg);
                     continue;
                 }
-                log.error("Milvus 搜索失败（第{}次）", attempt, e);
+                log.error("Milvus 搜索失败（第{}/{}次）", attempt, maxAttempts, e);
                 result.put("success", false);
                 result.put("message", "Milvus 搜索失败: " + msg);
                 return result;
@@ -347,6 +357,43 @@ public class VectorToolService {
         result.put("success", false);
         result.put("message", "Milvus 搜索重试后仍失败");
         return result;
+    }
+
+    /** 判定是否为可自愈的连接层错误（gRPC/HTTP2/通道） */
+    private boolean isConnectionError(String msg) {
+        if (msg == null) return false;
+        String m = msg.toLowerCase();
+        return m.contains("unavailable")
+                || m.contains("deadline_exceeded")
+                || m.contains("channel")
+                || m.contains("connect")
+                || m.contains("reset")
+                || m.contains("end-of-stream")
+                || m.contains("end of stream")
+                || m.contains("internal")
+                || m.contains("http2")
+                || m.contains("has not been loaded")
+                || m.contains("checkifloaded")
+                || m.contains("connection refused")
+                || m.contains("broken pipe");
+    }
+
+    /**
+     * 连接层错误自愈：累计达到阈值即重建 Milvus 客户端（换掉损坏的 gRPC 通道）。
+     * 仅在连接错误时触发重建，业务性错误（如集合不存在）不重建。
+     */
+    private void handleConnectionError(AtomicInteger connFails, String msg) {
+        int n = connFails.incrementAndGet();
+        // 连续连接错误达到阈值（或首次遇到严重错误）即重建
+        if (n >= 2) {
+            connFails.set(0);
+            log.warn("Milvus 连续 {} 次连接错误，触发客户端重建", n);
+            try {
+                milvusConfig.rebuild();
+            } catch (Exception e) {
+                log.error("Milvus 客户端重建失败: {}", e.getMessage());
+            }
+        }
     }
 
     /**
@@ -400,7 +447,8 @@ public class VectorToolService {
 
     private Map<String, Object> listMilvus(String nsCode, int page, int size) {
         Map<String, Object> result = new LinkedHashMap<>();
-        if (milvusClient == null) return err("Milvus 客户端未初始化");
+        MilvusServiceClient mc = milvusClient();
+        if (mc == null) return err("Milvus 客户端未初始化");
 
         try {
             int p = Math.max(1, page);
@@ -417,15 +465,13 @@ public class VectorToolService {
                             .withOffset(offset)
                             .withLimit((long) s);
 
-            var queryResp = milvusClient.query(builder.build());
+            var queryResp = mc.query(builder.build());
             String qErr = queryResp.getException() != null ? queryResp.getException().getMessage() : null;
             if (qErr != null && qErr.contains("has not been loaded")) {
-                // collection 未加载：loadCollection 后重试一次
-                log.warn("Milvus list: collection 未加载，重新 load 后重试");
-                milvusClient.loadCollection(
-                        io.milvus.param.collection.LoadCollectionParam.newBuilder()
-                                .withCollectionName(milvusCollection).build());
-                queryResp = milvusClient.query(builder.build());
+                // 连接/状态异常：重建客户端消除损坏通道后重试一次（不再单点调 loadCollection）
+                log.warn("Milvus list 异常，重建客户端后重试: {}", qErr);
+                mc = milvusConfig.rebuild();
+                queryResp = mc.query(builder.build());
             }
             if (queryResp.getData() == null) {
                 result.put("success", false);
@@ -444,7 +490,7 @@ public class VectorToolService {
             // 获取总数
             long totalCount = 0;
             try {
-                var statsResp = milvusClient.getCollectionStatistics(
+                var statsResp = mc.getCollectionStatistics(
                         io.milvus.param.collection.GetCollectionStatisticsParam.newBuilder()
                                 .withCollectionName(milvusCollection)
                                 .build());
@@ -516,7 +562,8 @@ public class VectorToolService {
 
     private Map<String, Object> detailMilvus(String pk) {
         Map<String, Object> result = new LinkedHashMap<>();
-        if (milvusClient == null) return err("Milvus 客户端未初始化");
+        MilvusServiceClient mc = milvusClient();
+        if (mc == null) return err("Milvus 客户端未初始化");
         if (pk == null || pk.isBlank()) return err("pk 不能为空");
         try {
             io.milvus.param.dml.QueryParam queryParam =
@@ -526,15 +573,13 @@ public class VectorToolService {
                             .withExpr("entity_id == \"" + pk + "\" || pk == \"" + pk + "\"")
                             .withOutFields(List.of("entity_type", "entity_id", "parent_id", "ns_code", "source_text", "api_name"))
                             .build();
-            var queryResp = milvusClient.query(queryParam);
+            var queryResp = mc.query(queryParam);
             String qErr = queryResp.getException() != null ? queryResp.getException().getMessage() : null;
             if (qErr != null && qErr.contains("has not been loaded")) {
-                // collection 未加载：loadCollection 后重试一次
-                log.warn("Milvus detail: collection 未加载，重新 load 后重试");
-                milvusClient.loadCollection(
-                        io.milvus.param.collection.LoadCollectionParam.newBuilder()
-                                .withCollectionName(milvusCollection).build());
-                queryResp = milvusClient.query(queryParam);
+                // 连接/状态异常：重建客户端消除损坏通道后重试一次
+                log.warn("Milvus detail 异常，重建客户端后重试: {}", qErr);
+                mc = milvusConfig.rebuild();
+                queryResp = mc.query(queryParam);
             }
             if (queryResp.getData() == null) return err("查询失败: " + queryResp.getException());
 
@@ -574,6 +619,34 @@ public class VectorToolService {
         r.put("success", false);
         r.put("message", msg);
         return r;
+    }
+
+    /**
+     * 每30秒对 Milvus 发一次轻量 ping + 确保 collection 已加载，防止 gRPC 空闲连接被重置。
+     * 失败只记 WARN，不影响业务。
+     */
+    @Scheduled(initialDelay = 10_000, fixedDelay = 30_000)
+    public void milvusKeepalive() {
+        OntologyEngineConfig.VectorConfig vc = engineConfig.getVector();
+        if (!"milvus".equalsIgnoreCase(vc.getType())) return;
+        MilvusServiceClient mc = milvusClient();
+        if (mc == null) return;
+        try {
+            log.debug("Milvus keepalive 任务触发");
+            // 1. ping 连接（检查 collection 是否存在）
+            mc.hasCollection(
+                    HasCollectionParam.newBuilder().withCollectionName(milvusCollection).build());
+            log.debug("Milvus keepalive 完成");
+            // 2. 探测成功即视为连接健康，不做 loadCollection —— load 在连接损坏时本身是失败源
+        } catch (Exception e) {
+            // 连接异常时主动重建客户端自愈，而非空转等下次
+            log.warn("Milvus keepalive 探测失败，重建客户端: {}", e.getMessage());
+            try {
+                milvusConfig.rebuild();
+            } catch (Exception ex) {
+                log.error("Milvus keepalive 重建客户端失败: {}", ex.getMessage());
+            }
+        }
     }
 
     /** 将 float[] 转为 pgvector 字面量 "[0.123,0.456,...]" */

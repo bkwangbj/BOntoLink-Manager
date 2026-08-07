@@ -12,6 +12,9 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class RequestLoggingFilter extends OncePerRequestFilter {
@@ -31,16 +34,27 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
             String query = wrapped.getQueryString();
             String url = query != null ? uri + "?" + query : uri;
 
+            // 收集所有参数（query + form）
+            Map<String, String[]> params = wrapped.getParameterMap();
+            String paramsStr = params.isEmpty() ? null : params.entrySet().stream()
+                    .map(e -> e.getKey() + "=" + Arrays.toString(e.getValue()))
+                    .collect(Collectors.joining(", "));
+
             byte[] bodyBytes = wrapped.getContentAsByteArray();
+            String body = null;
             if (bodyBytes.length > 0) {
-                String body = new String(bodyBytes, StandardCharsets.UTF_8);
+                body = new String(bodyBytes, StandardCharsets.UTF_8);
                 if (body.length() > 1000) {
                     body = body.substring(0, 1000) + "...(truncated)";
                 }
-                log.info("[{}] {} | body={} | {}ms | {}", wrapped.getMethod(), url, body, elapsed, response.getStatus());
-            } else {
-                log.info("[{}] {} | {}ms | {}", wrapped.getMethod(), url, elapsed, response.getStatus());
             }
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("[").append(wrapped.getMethod()).append("] ").append(url);
+            if (paramsStr != null) sb.append(" | params={").append(paramsStr).append("}");
+            if (body != null)     sb.append(" | body=").append(body);
+            sb.append(" | ").append(elapsed).append("ms | ").append(response.getStatus());
+            log.info("{}", sb);
         }
     }
 }
